@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft.activity;
+package com.casic.titan.demo.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,10 +11,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import com.casic.titan.aircraft.R;
-import com.casic.titan.aircraft.databinding.ActivityMainBinding;
-import com.casic.titan.aircraft.view.MainView;
-import com.casic.titan.aircraft.viewmodel.MainViewModel;
+import com.casic.titan.demo.R;
+import com.casic.titan.demo.databinding.ActivityMainBinding;
+import com.casic.titan.demo.view.MainView;
+import com.casic.titan.demo.viewmodel.MainViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;

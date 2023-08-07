@@ -138,7 +138,7 @@ public class PropertiesUtil {
      * @param defaultValue 默认值
      * @return String
      */
-    public String getPropertyValue(String key, String defaultValue) {
+        public String getPropertyValue(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 

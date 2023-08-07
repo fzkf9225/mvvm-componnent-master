@@ -98,6 +98,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
      *
      * @param listData
      */
+    @SuppressLint("NotifyDataSetChanged")
     protected void setListData(List<T> listData) {
         try {
             boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing || (emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING && mCurrentPage == 1) ||

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.casic.titan.aircraft.fragment.HomeFragment"
+        android:name="com.casic.titan.demo.fragment.HomeFragment"
         android:label="@string/nv_index"
         tools:layout="@layout/fragment_home" />
 

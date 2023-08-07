@@ -1,8 +1,6 @@
-package com.casic.titan.aircraft.module;
+package com.casic.titan.demo.module;
 
-import com.casic.titan.aircraft.impl.ErrorServiceImpl;
-
-import javax.inject.Singleton;
+import com.casic.titan.demo.impl.ErrorServiceImpl;
 
 import dagger.Module;
 import dagger.Provides;

@@ -1,11 +1,11 @@
-package com.casic.titan.aircraft.fragment;
+package com.casic.titan.demo.fragment;
 
 import android.Manifest;
 import android.os.Bundle;
 
-import com.casic.titan.aircraft.R;
-import com.casic.titan.aircraft.databinding.FragmentHomeBinding;
-import com.casic.titan.aircraft.viewmodel.HomeFragmentViewModel;
+import com.casic.titan.demo.R;
+import com.casic.titan.demo.databinding.FragmentHomeBinding;
+import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.userapi.UserService;
 import com.casic.titan.userapi.router.UserRouterService;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
@@ -14,10 +14,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
-import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2023/4/28

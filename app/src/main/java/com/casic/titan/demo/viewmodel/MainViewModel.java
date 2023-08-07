@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft.viewmodel;
+package com.casic.titan.demo.viewmodel;
 
 
 import android.app.Application;
@@ -7,12 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.casic.titan.aircraft.view.MainView;
+import com.casic.titan.demo.view.MainView;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 
 /**

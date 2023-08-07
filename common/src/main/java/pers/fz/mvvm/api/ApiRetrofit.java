@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 
-import dagger.hilt.android.AndroidEntryPoint;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import pers.fz.mvvm.BuildConfig;

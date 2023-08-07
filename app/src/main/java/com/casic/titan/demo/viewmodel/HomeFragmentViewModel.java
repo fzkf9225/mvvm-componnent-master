@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft.viewmodel;
+package com.casic.titan.demo.viewmodel;
 
 
 import android.app.Application;
@@ -6,8 +6,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 
-import com.casic.titan.aircraft.api.ApiServiceHelper;
-import com.casic.titan.aircraft.view.HomeFragmentView;
+import com.casic.titan.demo.api.ApiServiceHelper;
+import com.casic.titan.demo.view.HomeFragmentView;
 import com.casic.titan.usercomponent.api.UserApiService;
 
 import javax.inject.Inject;

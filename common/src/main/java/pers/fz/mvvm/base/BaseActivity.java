@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +14,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.MenuRes;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -32,15 +28,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.api.AppManager;
-import pers.fz.mvvm.autosize.AutoSize;
-import pers.fz.mvvm.autosize.AutoSizeCompat;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
 import pers.fz.mvvm.util.apiUtil.StringUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
@@ -138,6 +130,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             mToolbar = findViewById(R.id.main_bar);
             binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
             mToolbar.setNavigationOnClickListener(v -> finish());
+            binding.setLifecycleOwner(this);
         }
     }
 
@@ -319,31 +312,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().finishActivity(this);
-//        try {
-//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//            if (imm != null) {
-//                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),
-//                        0);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            LogUtil.show("软键盘收起异常：" + e);
-//        }
-    }
-
-    /**
-     * 弹出登录dialog
-     *
-     * @param context     内容
-     * @param message     dialog提示内容
-     * @param requestCode 登录请求code
-     */
-    public void showLoginDialog(Context context, LoginDialog.OnLoginClickListener listener, String message, int requestCode) {
-        LoginDialog.getInstance(context)
-                .setMessage(message)
-                .setCanCancelable(false)
-                .setPositiveButton(listener, requestCode)
-                .show();
     }
 
     @Override

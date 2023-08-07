@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft.impl;
+package com.casic.titan.demo.impl;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 import androidx.activity.result.ActivityResultLauncher;
 
-import com.casic.titan.aircraft.activity.MainActivity;
-import com.casic.titan.aircraft.api.ConstantsHelper;
+import com.casic.titan.demo.activity.MainActivity;
+import com.casic.titan.demo.api.ConstantsHelper;
 import com.casic.titan.userapi.router.UserRouterService;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 

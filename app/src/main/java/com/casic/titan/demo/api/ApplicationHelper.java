@@ -1,8 +1,4 @@
-package com.casic.titan.aircraft.api;
-
-import android.content.Context;
-
-import androidx.multidex.MultiDex;
+package com.casic.titan.demo.api;
 
 import com.casic.titan.mqttcomponent.MQTTHelper;
 import com.casic.titan.wscomponent.WebSocketHelper;

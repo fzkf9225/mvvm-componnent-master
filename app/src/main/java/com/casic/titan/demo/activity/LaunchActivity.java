@@ -1,14 +1,11 @@
-package com.casic.titan.aircraft.activity;
+package com.casic.titan.demo.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.annotation.NonNull;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.core.splashscreen.SplashScreenViewProvider;
 
 import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
@@ -18,7 +15,6 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.databinding.LaunchLayoutBinding;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/5/15.

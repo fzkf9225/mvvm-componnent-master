@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft;
+package com.casic.titan.demo;
 
 import org.junit.Test;
 

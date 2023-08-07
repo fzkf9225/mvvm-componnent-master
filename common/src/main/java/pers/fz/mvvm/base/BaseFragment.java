@@ -5,29 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.autosize.AutoSize;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 
@@ -52,7 +43,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      */
     private PermissionsChecker mPermissionsChecker;
     protected VM mViewModel;
-    protected View mContentView;
     protected VDB binding;
     private ActivityResultLauncher<String[]> permissionLauncher;
     @Inject
@@ -118,7 +108,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
         binding.setLifecycleOwner(this);
-        mContentView = binding.getRoot();
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 onLoginSuccessCallback(result.getData() == null ? null : result.getData().getExtras());
@@ -128,7 +117,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         });
         createViewModel();
         initView(savedInstanceState);
-        return mContentView;
+        return binding.getRoot();
     }
 
     /**

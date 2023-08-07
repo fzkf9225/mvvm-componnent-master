@@ -1,4 +1,4 @@
-package com.casic.titan.aircraft;
+package com.casic.titan.demo;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.casic.titan.aircraft", appContext.getPackageName());
+        assertEquals("com.casic.titan.demo", appContext.getPackageName());
     }
 }
