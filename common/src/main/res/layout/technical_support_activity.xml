@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/default_background"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/image_qrCode"
+                android:layout_width="@dimen/x240"
+                android:layout_height="@dimen/y240"
+                android:layout_centerInParent="true"
+                android:background="@color/white"
+                android:src="@mipmap/icon_wechat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_qrCode"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/vertical_margin_xl"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:layout_marginEnd="@dimen/vertical_margin_xl"
+                android:text="青穗"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xxl" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/list_linear_layout_min_height">
+
+                <TextView
+                    style="@style/list_text_left"
+                    android:text="邮箱\u3000\u3000" />
+
+                <TextView
+                    style="@style/list_text_right_show_all"
+                    android:text="fzkf3318@163.com" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="feedBackBean"
+            type="pers.fz.mvvm.bean.FeedBackBean" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/x35"
+        android:background="@color/default_background"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginRight="@dimen/horizontal_margin_l"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/functionRb"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="功能意见" />
+
+                <RadioButton
+                    android:id="@+id/programRb"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="程序错误" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/proDescribe"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x300"
+                android:layout_margin="@dimen/vertical_margin_l"
+                android:background="@drawable/bg_edittext"
+                android:gravity="top"
+                android:text="@={feedBackBean.problemDescribe}"
+                android:hint="请输入遇到的问题或者功能意见..."
+                android:padding="@dimen/x10"
+                android:textColorHint="#AAAAAA"
+                android:textSize="@dimen/font_size_xl" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/feedBack_RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/horizontal_margin_l"
+                android:layout_marginRight="@dimen/horizontal_margin_l" />
+
+            <View style="@style/h_line"
+                android:layout_marginTop="@dimen/vertical_margin_l"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_l"
+                    android:text="联系人\u3000"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_xl" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="必填，姓名"
+                    android:text="@={feedBackBean.linkman}"
+                    android:lines="1"
+                    android:maxLength="20"
+                    android:padding="@dimen/vertical_margin_l"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_size_xl" />
+            </LinearLayout>
+
+            <View style="@style/h_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_l"
+                    android:text="联系方式"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_xl" />
+
+                <EditText
+                    android:id="@+id/linkWay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="必填，QQ、邮箱、电话号码等"
+                    android:text="@={feedBackBean.linkway}"
+                    android:lines="1"
+                    android:maxLength="50"
+                    android:padding="@dimen/padding_l"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_size_xl" />
+            </LinearLayout>
+
+            <View style="@style/h_line" />
+
+            <Button
+                android:id="@+id/feedBackBtn"
+                style="@style/customs_Button_text_white"
+                android:layout_marginTop="@dimen/vertical_margin_xxxl"
+                android:text="提交" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

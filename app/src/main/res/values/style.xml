@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.SplashScreen" parent="Theme.SplashScreen">
+        <!--背景颜色-->
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <!--设置动画或图片,注意动画在Android12 以下不生效 很难受...-->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!--动画执行时间-->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
+</resources>

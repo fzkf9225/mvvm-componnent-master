@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true" >
+        <activity
+            android:name=".activity.FeedBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.PersonalCenterActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"/>
+        <activity
+            android:name=".activity.ModifyPasswordActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"/>
+<!--        <activity-->
+<!--            android:name=".activity.LoginActivity"-->
+<!--            android:configChanges="keyboardHidden|orientation" />-->
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTop"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:exported="true" />
+    </application>
+
+</manifest>

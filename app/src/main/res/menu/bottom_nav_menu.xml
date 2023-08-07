@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/main_index_selector"
+        android:title="@string/nv_index" />
+
+    <item
+        android:id="@+id/navigation_me"
+        android:icon="@drawable/main_me_selector"
+        android:title="@string/nv_me" />
+
+</menu>

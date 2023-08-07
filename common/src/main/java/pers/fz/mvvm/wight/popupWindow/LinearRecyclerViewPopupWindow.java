@@ -1,0 +1,232 @@
+package pers.fz.mvvm.wight.popupWindow;
+
+import android.content.Context;
+import android.graphics.Rect;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import pers.fz.mvvm.R;
+import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.bean.PopupWindowBean;
+import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.wight.popupWindow.adapter.ChildAdapter;
+import pers.fz.mvvm.wight.popupWindow.adapter.ParentAdapter;
+import pers.fz.mvvm.wight.recyclerview.MyLayoutManager;
+import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
+
+import java.util.List;
+
+/**
+ * PopupWindow 下拉框
+ * @author fz
+ */
+public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements ParentAdapter.OnItemClickListener {
+    private SelectCategory<T> selectCategory;
+    private List<T> popupWindowBeanList;
+
+    private RecyclerView lvParentCategory = null;
+    private RecyclerView lvChildrenCategory = null;
+    private ParentAdapter<T> parentAdapter = null;
+    private ChildAdapter<T> childAdapter = null;
+    private PopupWindow popupWindow;
+
+    private Integer parentPosition, childPosition;
+    private Context activity;
+    private boolean hasRight;
+    private OnHeadViewClickListener onHeadViewClickListener;
+
+    /**
+     * 构造器
+     *
+     * @param popupWindowBeanList
+     * @param activity
+     * @param selectCategory
+     */
+    public LinearRecyclerViewPopupWindow(List<T> popupWindowBeanList,
+                                         Context activity, boolean hasRight,
+                                         SelectCategory<T> selectCategory) {
+
+        this.selectCategory = selectCategory;
+        this.popupWindowBeanList = popupWindowBeanList;
+        this.activity = activity;
+        this.hasRight = hasRight;
+        popupWindow = this;
+        init();
+        initParent();
+        if (!hasRight) {
+            lvChildrenCategory.setVisibility(View.GONE);
+        }
+    }
+
+    private void init() {
+        View contentView = LayoutInflater.from(activity).inflate(R.layout.layout_quyu_choose_view, null);
+        DisplayMetrics appDisplayMetrics = activity.getResources().getDisplayMetrics();
+
+        this.setContentView(contentView);
+        this.setWidth(appDisplayMetrics.widthPixels);
+        this.setHeight(WindowManager.LayoutParams.MATCH_PARENT);
+
+        setOutsideTouchable(true);
+        setTouchable(true);
+        setFocusable(true);
+        contentView.setFocusableInTouchMode(true);
+        setBackgroundDrawable(ContextCompat.getDrawable(activity, R.drawable.pop_bg));
+        lvChildrenCategory =  contentView.findViewById(R.id.lv_children_category);
+        lvParentCategory =  contentView.findViewById(R.id.lv_parent_category);
+    }
+
+    private void initParent() {
+        parentAdapter = new ParentAdapter<>(activity);
+        parentAdapter.setOnItemClickListener(this);
+        parentAdapter.setList(popupWindowBeanList);
+        lvParentCategory.setLayoutManager(new MyLayoutManager(activity));
+        lvParentCategory.setAdapter(parentAdapter);
+        lvParentCategory.addItemDecoration(
+                new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
+                        ContextCompat.getColor(activity, R.color.h_line_color)));
+    }
+
+    public void setParentHeadView(String text) {
+        View headView = LayoutInflater.from(activity).inflate(R.layout.activity_parent_category_item, null);
+        ViewHold viewHold = new ViewHold();
+        viewHold.textView = headView.findViewById(R.id.tv_parent_category_name);
+        viewHold.textView.setText(StringUtil.isEmpty(text) ? "不限" : text);
+        headView.setTag(viewHold);
+        parentAdapter.setHeaderView(headView);
+        headView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
+                viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
+                parentAdapter.setSelectedPosition(-1);
+                dismiss();
+                if (onHeadViewClickListener != null) {
+                    onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, true);
+                }
+            }
+        });
+    }
+
+    private void initChild(List<T> childLists) {
+        childAdapter = new ChildAdapter<>(activity);
+        childAdapter.setOnItemClickListener(childOnItemClickListener);
+        childAdapter.setList(childLists);
+        lvChildrenCategory.setLayoutManager(new MyLayoutManager(activity));
+        lvChildrenCategory.setAdapter(childAdapter);
+        lvChildrenCategory.addItemDecoration(
+                new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
+                        ContextCompat.getColor(activity, R.color.h_line_color)));
+
+        View headView = LayoutInflater.from(activity).inflate(R.layout.activity_parent_category_item, null);
+        ViewHold viewHold = new ViewHold();
+        viewHold.textView = headView.findViewById(R.id.tv_parent_category_name);
+        viewHold.textView.setText("不限");
+        headView.setTag(viewHold);
+        childAdapter.setHeaderView(headView);
+        headView.setOnClickListener(v -> {
+            ViewHold viewHold1 = (ViewHold) childAdapter.getHeaderView().getTag();
+            viewHold1.textView.setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
+            childAdapter.setSelectedPosition(-1);
+            dismiss();
+            if (onHeadViewClickListener != null) {
+                onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, false);
+            }
+        });
+    }
+
+    @Override
+    public void showAsDropDown(View anchor) {
+        if (Build.VERSION.SDK_INT == 24) {
+            Rect rect = new Rect();
+            anchor.getGlobalVisibleRect(rect);
+            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+            setHeight(h);
+        }
+        super.showAsDropDown(anchor);
+    }
+
+    @Override
+    public void showAsDropDown(View anchor, int xoff, int yoff) {
+        if (Build.VERSION.SDK_INT == 24) {
+            Rect rect = new Rect();
+            anchor.getGlobalVisibleRect(rect);
+            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+            setHeight(h);
+        }
+        super.showAsDropDown(anchor, xoff, yoff);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (popupWindowBeanList == null || parentAdapter == null) {
+            return;
+        }
+        if (parentAdapter.getHeaderView() != null) {
+            ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
+            viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.black));
+        }
+
+        if ((parentPosition != null && parentPosition == position) || !hasRight) {
+            dismiss();
+            if (selectCategory != null) {
+                selectCategory.selectCategory(popupWindow,popupWindowBeanList, position, childPosition);
+            }
+        }
+        parentPosition = position;
+        if (parentAdapter.getHeaderView() != null) {
+            ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
+            viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.black));
+        }
+        parentAdapter.setSelectedPosition(position);
+        if (hasRight) {
+            initChild(popupWindowBeanList.get(position).getChildList());
+        }
+    }
+
+    private BaseRecyclerViewAdapter.OnItemClickListener childOnItemClickListener = new ChildAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(View view, int position) {
+            if (popupWindowBeanList == null || popupWindowBeanList.size() <= parentPosition ||
+                    popupWindowBeanList.get(parentPosition).getChildList().size() <= position) {
+                return;
+            }
+            childPosition = position;
+            ViewHold viewHold = (ViewHold) childAdapter.getHeaderView().getTag();
+            viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.black));
+            childAdapter.setSelectedPosition(position);
+            dismiss();
+            if (selectCategory != null) {
+                selectCategory.selectCategory(popupWindow,popupWindowBeanList, parentPosition, childPosition);
+            }
+        }
+    };
+
+    /**
+     * 选择成功回调
+     * 把选中的下标通过方法回调回来
+     */
+    public interface SelectCategory<T> {
+        void selectCategory(PopupWindow popupWindow,List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
+    }
+
+    public void setHeadViewClickListener(OnHeadViewClickListener onHeadViewClickListener) {
+        this.onHeadViewClickListener = onHeadViewClickListener;
+    }
+
+    public interface OnHeadViewClickListener {
+        void onHeadViewClick(PopupWindow popupWindow, boolean isParentPosition);
+    }
+
+    static class ViewHold {
+        TextView textView;
+    }
+}

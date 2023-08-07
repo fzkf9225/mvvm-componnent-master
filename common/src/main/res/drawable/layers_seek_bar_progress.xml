@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <size
+                android:width="5dp"
+                android:height="@dimen/audio_course_item_seek_bar_progress_height" />
+            <solid android:color="#e1e5e8" />
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <solid android:color="#b7bdc8" />
+            </shape>
+        </clip>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <gradient
+                    android:angle="0"
+                    android:centerColor="#b8cafd"
+                    android:endColor="#86a4fd"
+                    android:startColor="#eef2ff" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

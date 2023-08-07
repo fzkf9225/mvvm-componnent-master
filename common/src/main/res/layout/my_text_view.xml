@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 自定义TextView,实现自动的添加全文和收起功能 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- 显示文本TextView -->
+    <TextView
+        android:id="@+id/contentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_desc_color" />
+    <!-- 显示文本TextView结束 -->
+    <!-- 全文（收起）TextView -->
+    <TextView
+        android:id="@+id/tipTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:textColor="@color/themeColor" />
+    <!-- 全文（收起）TextView结束 -->
+</LinearLayout>

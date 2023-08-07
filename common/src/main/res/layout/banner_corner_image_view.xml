@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pers.fz.mvvm.wight.customlayout.CornersImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:corner="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/corner_image"
+        corner:image_view_radius="@dimen/radius_m"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_default_image" />

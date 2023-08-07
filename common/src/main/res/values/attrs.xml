@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="my_text_view">
+        <attr name="contentText" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="RatingBar">
+        <!--星星间距-->
+        <attr name="starDistance" format="dimension" />
+        <!--星星大小-->
+        <attr name="starSize" format="dimension" />
+        <!--星星个数-->
+        <attr name="starCount" format="integer" />
+        <!--星星空图-->
+        <attr name="starEmpty" format="reference" />
+        <!--星星满图-->
+        <attr name="starFill" format="reference" />
+    </declare-styleable>
+    <!--自动换行-->
+    <declare-styleable name="WarpLinearLayout">
+        <attr name="grivate" format="enum"><!--对齐方式 !-->
+            <enum name="right" value="0"></enum>
+            <enum name="left" value="1"></enum>
+            <enum name="center" value="2"></enum>
+        </attr>
+        <attr name="horizontal_Space" format="dimension"></attr>
+        <attr name="vertical_Space" format="dimension"></attr>
+        <attr name="isFull" format="boolean"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="auto3d">
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="bg_selected" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MyScrollerView">
+        <attr name="visibility_height" format="dimension"></attr>
+    </declare-styleable>
+    <declare-styleable name="TickView">
+        <!--没有选中的基调颜色-->
+        <attr name="uncheck_base_color" format="color" />
+        <!--选中后的基调颜色-->
+        <attr name="check_base_color" format="color" />
+        <!--选中后钩的颜色-->
+        <attr name="check_tick_color" format="color" />
+        <!--圆的半径-->
+        <attr name="radius" format="dimension" />
+        <!--动画执行的速度-->
+        <attr name="rate">
+            <enum name="slow" value="0" />
+            <enum name="normal" value="1" />
+            <enum name="fast" value="2" />
+        </attr>
+        <attr name="clickable" format="boolean" />
+    </declare-styleable>
+    <attr name="expandedText" format="string" />
+    <attr name="collapsedText" format="string" />
+    <attr name="trimLines" format="integer" />
+
+    <declare-styleable name="CircleTextView">
+        <attr name="storkColor" format="color" />
+        <attr name="backColor" format="color" />
+        <attr name="storkWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MoreTextView">
+        <attr name="expandedText" />
+        <attr name="collapsedText" />
+        <attr name="trimLines" />
+        <attr name="textSize" />
+        <attr name="textColor" />
+    </declare-styleable>
+
+    <declare-styleable name="CollapsedTextView">
+        <attr name="expandedText" />
+        <attr name="collapsedText" />
+        <attr name="trimLines" />
+    </declare-styleable>
+
+    <declare-styleable name="Topbar">
+        <attr name="ttitle" format="string"/>//标题
+        <attr name="isBrowse" format="boolean"/>//是否可以点击浏览大图
+        <attr name="isAutoBanner" format="boolean"/>//是否自动轮播
+        <attr name="isDownLoadLocal" format="boolean"/>//是否缓存本地
+        <attr name="titleTextSize" format="dimension" />//标题大小
+        <attr name="titleTextColor" format="color" />//标题颜色
+        <attr name="leftTextColor" format="color" />//左边文字大小
+        <attr name="leftBackground" format="reference|color" />//左边背景
+        <attr name="leftText" format="string" /> //左边文字
+        <attr name="rightTextColor" format="color" /> //右边文字颜色
+        <attr name="rightBackground" format="reference|color" />//右边背景
+        <attr name="rightText" format="string" /> //右边文字
+    </declare-styleable>
+
+    <declare-styleable name="CornerTextView">
+        <attr name="corner_storkColor" format="color" />
+        <attr name="corner_backColor" format="color" />
+        <attr name="corner_storkWidth" format="dimension" />
+        <attr name="corner_radius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="Custom_Round_Image_View">
+        <attr name="image_view_radius" format="dimension" />
+        <attr name="left_top_radius" format="dimension" />
+        <attr name="right_top_radius" format="dimension" />
+        <attr name="right_bottom_radius" format="dimension" />
+        <attr name="left_bottom_radius" format="dimension" />
+        <attr name="image_bg" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CornerLabelView">
+        <attr name="side_length" format="dimension" />
+        <attr name="margin_lean_side" format="dimension" />
+        <attr name="bg_color" format="color" />
+        <attr name="text_color" format="color" />
+        <attr name="text_size" format="dimension" />
+        <attr name="text" format="string" />
+        <attr name="position">
+            <enum name="right_top" value="0" />
+            <enum name="right_bottom" value="1" />
+            <enum name="left_bottom" value="2" />
+            <enum name="left_top" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CustomEditText">
+        <attr name="drawable_position">
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="MaterialRipple">
+        <attr name="viewItemBackground" format="reference" />
+        <attr name="viewItemForeground" format="reference" />
+        <attr name="viewItemForegroundBorderless" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="RectgleTextView">
+        <attr name="shapeType" format="integer|enum">
+            <enum name="rectangle" value="0" />
+            <enum name="oval" value="1" />
+            <enum name="LINE" value="2" />
+        </attr>
+        <attr name="totalRadius" format="dimension" />
+        <attr name="radiusTopLeft" format="dimension" />
+        <attr name="radiusBottomLeft" format="dimension" />
+        <attr name="radiusTopRight" format="dimension" />
+        <attr name="radiusBottomRight" format="dimension" />
+        <attr name="topLeft" format="dimension" />
+        <attr name="topRight" format="dimension" />
+        <attr name="bottomLeft" format="dimension" />
+        <attr name="bottomRight" format="dimension" />
+        <attr name="strColor" format="color" />
+        <attr name="strWidth" format="dimension" />
+        <attr name="solidBac" format="color" />
+        <attr name="textPadding" format="dimension" />
+        <attr name="textLeft" format="string" />
+        <attr name="textRight" format="string" />
+        <attr name="iconColor" format="reference|color" />
+        <attr name="textLeftColor" format="reference|color" />
+        <attr name="textRightColor" format="reference|color" />
+        <attr name="textLeftSize" format="dimension" />
+        <attr name="textRightSize" format="dimension" />
+        <attr name="textLeftStyle">
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <attr name="textRightStyle">
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <attr name="textCenterStyle">
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <attr name="autoMaxHeight" format="boolean" />
+        <attr name="gradientOrientation">
+            <enum name="top_bottom" value="0" />
+            <enum name="tp_bl" value="1" />
+            <enum name="right_left" value="2" />
+            <enum name="br_tl" value="3" />
+            <enum name="bottom_top" value="4" />
+            <enum name="bl_tr" value="5" />
+            <enum name="left_right" value="6" />
+            <enum name="tl_br" value="7" />
+        </attr>
+        <attr name="startSolid" format="reference|color" />
+        <attr name="centerSolid" format="reference|color" />
+        <attr name="endSolid" format="reference|color" />
+        <!--        <attr name="fang_zheng_regular_font" format="boolean" />-->
+        <!--        <attr name="fang_zheng_bold_font" format="boolean" />-->
+    </declare-styleable>
+
+</resources>

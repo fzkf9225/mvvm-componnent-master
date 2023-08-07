@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/tv_menu"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/horizontal_margin_xl"
+    android:paddingEnd="@dimen/horizontal_margin_xl"
+    android:gravity="center"
+    android:textSize="@dimen/font_14"
+    android:textColor="@color/themeColor"
+    android:clickable="true" />

@@ -1,0 +1,89 @@
+package com.casic.titan.usercomponent.fragment;
+
+import android.os.Bundle;
+
+import com.casic.titan.userapi.router.UserRouterService;
+import com.casic.titan.usercomponent.R;
+import com.casic.titan.usercomponent.activity.ModifyPasswordActivity;
+import com.casic.titan.usercomponent.activity.PersonalCenterActivity;
+import com.casic.titan.usercomponent.activity.SettingActivity;
+import com.casic.titan.usercomponent.api.UserAccountHelper;
+import com.casic.titan.usercomponent.databinding.MeFragmentBinding;
+
+import javax.inject.Inject;
+
+import pers.fz.mvvm.base.BaseFragment;
+import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.util.media.MediaBuilder;
+import pers.fz.mvvm.util.media.MediaHelper;
+import pers.fz.mvvm.wight.dialog.OpenImageDialog;
+
+/**
+ * Created by fz on 2020/03/26.
+ * describe：我的页面
+ */
+public class MeFragment extends BaseFragment<BaseViewModel, MeFragmentBinding> {
+    private final String TAG = this.getClass().getSimpleName();
+    private MediaHelper mediaHelper;
+    @Inject
+    UserRouterService userRouterService;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.me_fragment;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        mediaHelper = new MediaBuilder(this, this)
+                .setImageMaxSelectedCount(1)
+                .builder();
+        mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
+//            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+//                if (mediaBean.getMediaList() == null || mediaBean.getMediaList().size() == 0) {
+//                    return;
+//                }
+//                UserInfo userInfo = UserAccountHelper.getUser();
+//                userInfo.setAvatar(mediaBean.getMediaList().get(0));
+//                UserAccountHelper.saveLoginState(userInfo, true);
+//                binding.setUser(userInfo);
+//            }
+        });
+        binding.imagePersonalCenter.setOnClickListener(v -> startActivity(PersonalCenterActivity.class));
+        binding.tvUserName.setOnClickListener(v -> {
+            if (UserAccountHelper.isLogin()) {
+                return;
+            }
+            userRouterService.toLogin(requireContext(),loginLauncher);
+        });
+        binding.tvSetting.setOnClickListener(v -> startActivity(SettingActivity.class));
+        binding.tvModifyPassword.setOnClickListener(v -> startActivity(ModifyPasswordActivity.class));
+        binding.headImg.setOnClickListener(v -> {
+            if (!UserAccountHelper.isLogin()) {
+                userRouterService.toLogin(requireContext(),loginLauncher);
+            } else {
+                new OpenImageDialog(requireActivity())
+                        .setMediaType(OpenImageDialog.CAMERA_ALBUM)
+                        .setOnOpenImageClickListener(mediaHelper)
+                        .builder()
+                        .show();
+            }
+        });
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.setUser(UserAccountHelper.getUser());
+    }
+
+    @Override
+    protected void initData(Bundle bundle) {
+
+    }
+
+    /**
+     * 检查登录状态
+     */
+    private void checkUserInfo() {
+
+    }
+}

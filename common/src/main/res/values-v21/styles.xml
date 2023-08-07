@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+        <!--<item name="android:statusBarColor">@color/theme_backgroung_color</item>-->
+        <!--<item name="android:windowBackground">@color/window_background</item>-->
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/themeColor</item>
+        <item name="android:popupMenuStyle">@style/OverflowMenuStyle</item>
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme"/>
+
+    <style name="activityAppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!--按钮选中或者点击获得焦点后的颜色-->
+        <item name="colorAccent">@color/themeColor</item>
+    </style>
+
+</resources>

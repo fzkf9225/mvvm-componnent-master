@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background">
+
+        <TextView
+            android:id="@+id/tv_name_label"
+            style="@style/user_label"
+            android:text="姓名"
+            app:layout_constraintEnd_toStartOf="@+id/tv_name"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/user_content"
+            android:text="@{userInfo.user_name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_name_label"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="张三" />
+
+        <TextView
+            android:id="@+id/tv_sex_label"
+            style="@style/user_label"
+            android:text="性别"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sex"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name_label" />
+
+        <TextView
+            android:id="@+id/tv_sex"
+            style="@style/user_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_sex_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name_label"
+            tools:text="男" />
+
+        <TextView
+            android:id="@+id/tv_tel_label"
+            style="@style/user_label"
+            android:text="联系方式"
+            app:layout_constraintEnd_toStartOf="@+id/tv_tel"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sex_label" />
+
+        <TextView
+            android:id="@+id/tv_tel"
+            style="@style/user_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_tel_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sex_label"
+            tools:text="15210231234" />
+
+        <TextView
+            android:id="@+id/tv_role_label"
+            style="@style/user_label"
+            android:text="角色"
+            app:layout_constraintEnd_toStartOf="@+id/tv_role"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tel_label" />
+
+        <TextView
+            android:id="@+id/tv_role"
+            style="@style/user_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            android:text="@={userInfo.role_name}"
+            app:layout_constraintStart_toEndOf="@+id/tv_role_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tel_label"
+            tools:text="男" />
+
+        <TextView
+            android:id="@+id/tv_user_name_label"
+            style="@style/user_label"
+            android:text="用户名称"
+            app:layout_constraintEnd_toStartOf="@+id/tv_user_name"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_role_label" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            style="@style/user_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            android:text="@={userInfo.nick_name}"
+            app:layout_constraintStart_toEndOf="@+id/tv_user_name_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_role_label"
+            tools:text="男" />
+
+        <TextView
+            android:id="@+id/tv_unit_label"
+            style="@style/user_label"
+            android:text="所属单位"
+            app:layout_constraintEnd_toStartOf="@+id/tv_unit"
+            app:layout_constraintHorizontal_weight="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_name_label" />
+
+        <TextView
+            android:id="@+id/tv_unit"
+            style="@style/user_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_unit_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_name_label"
+            tools:text="男" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+
+        <variable
+            name="userInfo"
+            type="com.casic.titan.usercomponent.bean.UserInfo" />
+    </data>
+</layout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="toolbarConfig"
+            type="pers.fz.mvvm.bean.base.ToolbarConfig" />
+
+        <import type="android.view.View" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <import type="androidx.annotation.LayoutRes" />
+
+        <import type="androidx.annotation.ColorRes" />
+
+        <variable
+            name="context"
+            type="android.content.Context" />
+
+        <import type="pers.fz.mvvm.R" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:minHeight="@dimen/toolbar_height"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/main_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ToolBarStyle_black"
+                app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
+                app:popupTheme="@style/OverflowMenuStyle">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ellipsize="end"
+                    android:maxLength="12"
+                    android:maxLines="1"
+                    android:text="@{toolbarConfig.title}"
+                    android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
+                    android:textSize="@dimen/font_size_xxl" />
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

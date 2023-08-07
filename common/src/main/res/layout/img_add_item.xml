@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <pers.fz.mvvm.wight.customlayout.CornersImageView
+            android:id="@+id/iv_add"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/vertical_margin_l"
+            app:layout_constraintDimensionRatio="h,1:1"
+            android:scaleType="centerCrop"
+            app:image_view_radius="@dimen/radius_s"
+            android:src="@mipmap/ic_tweet_add" />
+        <ImageView
+            android:id="@+id/iv_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_play"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/iv_add"
+            app:layout_constraintEnd_toEndOf="@+id/iv_add"
+            app:layout_constraintTop_toTopOf="@+id/iv_add"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_add"/>
+        <ImageView
+            android:id="@+id/iv_clear_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="@dimen/image_m"
+            android:layout_height="@dimen/image_m"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/vertical_margin_s"
+            android:layout_marginEnd="@dimen/vertical_margin_s"
+            android:background="@drawable/ib_clear_image_selector"
+            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

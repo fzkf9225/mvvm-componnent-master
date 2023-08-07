@@ -1,0 +1,437 @@
+package pers.fz.mvvm.base;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.MenuRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.ViewModelProvider;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.mvvm.R;
+import pers.fz.mvvm.api.AppManager;
+import pers.fz.mvvm.autosize.AutoSize;
+import pers.fz.mvvm.autosize.AutoSizeCompat;
+import pers.fz.mvvm.bean.base.ToolbarConfig;
+import pers.fz.mvvm.databinding.BaseActivityBinding;
+import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.log.ToastUtils;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
+import pers.fz.mvvm.util.theme.ThemeUtils;
+import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.LoginDialog;
+
+/**
+ * Create by CherishTang on 2019/8/1
+ * describe:BaseActivity封装
+ */
+public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener {
+    protected String TAG = this.getClass().getSimpleName();
+    Toolbar mToolbar;
+    public VM mViewModel;
+    protected VDB binding;
+    protected BaseActivityBinding toolbarBind;
+    // 权限检测器
+    private PermissionsChecker mPermissionsChecker;
+    private ActivityResultLauncher<String[]> permissionLauncher;
+    protected ActivityResultLauncher<Intent> loginLauncher;
+
+    @Inject
+    ErrorService errorService;
+
+    protected abstract int getLayoutId();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                onLoginSuccessCallback(result.getData() == null ? null : result.getData().getExtras());
+            } else {
+                onLoginFailCallback(result.getResultCode(), result.getData() == null ? null : result.getData().getExtras());
+            }
+        });
+        super.onCreate(savedInstanceState);
+        AppManager.getAppManager().addActivity(this);
+        if (hasToolBar()) {
+            toolbarBind = DataBindingUtil.setContentView(this, R.layout.base_activity);
+            toolbarBind.setContext(this);
+            toolbarBind.setToolbarConfig(setToolbarStyle());
+            toolbarBind.setLifecycleOwner(this);
+        } else {
+            binding = DataBindingUtil.setContentView(this, getLayoutId());
+            binding.setLifecycleOwner(this);
+        }
+        createViewModel();
+        ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, R.color.white));
+        initView(savedInstanceState);
+        initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
+    }
+
+    /**
+     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
+     *
+     * @return 默认360dp
+     */
+    private float getDefaultWidth() {
+        try {
+            ApplicationInfo info = getPackageManager()
+                    .getApplicationInfo(getPackageName(),
+                            PackageManager.GET_META_DATA);
+            return info.metaData.getInt("design_width_in_dp", 360);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 360;
+    }
+
+    /**
+     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
+     *
+     * @return 默认360dp
+     */
+    private float getDefaultHeight() {
+        try {
+            ApplicationInfo info = getPackageManager()
+                    .getApplicationInfo(getPackageName(),
+                            PackageManager.GET_META_DATA);
+            return info.metaData.getInt("design_height_in_dp", 640);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 640;
+    }
+
+
+    @Override
+    public void setContentView(int layoutResId) {
+        super.setContentView(layoutResId);
+        if (hasToolBar()) {
+            super.setContentView(R.layout.base_activity);
+            FrameLayout container = findViewById(R.id.container);
+            mToolbar = findViewById(R.id.main_bar);
+            binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
+            mToolbar.setNavigationOnClickListener(v -> finish());
+        }
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    /**
+     * 设置toolbar默认样式
+     *
+     * @return toolbar配置
+     */
+    public ToolbarConfig setToolbarStyle() {
+        return new ToolbarConfig.Builder(this).setTitle(setTitleBar()).build();
+    }
+
+    /**
+     * 创建viewModel
+     */
+    public void createViewModel() {
+        if (mViewModel == null) {
+            Class modelClass;
+            Type type = getClass().getGenericSuperclass();
+            if (type instanceof ParameterizedType) {
+                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[0];
+            } else {
+                //如果没有指定泛型参数，则默认使用BaseViewModel
+                modelClass = BaseViewModel.class;
+            }
+            mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
+            mViewModel.setBaseView(this);
+        }
+    }
+
+    /**
+     * 给toolbar添加菜单
+     *
+     * @param menuRes
+     * @param listener
+     */
+    protected void addMenu(@MenuRes int menuRes, Toolbar.OnMenuItemClickListener listener) {
+        if (toolbarBind == null) {
+            return;
+        }
+        toolbarBind.mainBar.inflateMenu(menuRes);
+        toolbarBind.mainBar.setOnMenuItemClickListener(listener);
+    }
+
+    public boolean lacksPermissions(String... permission) {
+        return getPermissionsChecker().lacksPermissions(permission);
+    }
+
+    private PermissionsChecker getPermissionsChecker() {
+        if (mPermissionsChecker == null) {
+            mPermissionsChecker = new PermissionsChecker(this);
+        }
+        return mPermissionsChecker;
+    }
+
+    /**
+     * 设置toolbar背景色和状态栏的颜色，兼容华为小米手机
+     *
+     * @param color
+     */
+    public void setThemeBarAndToolBarColor(@ColorRes int color) {
+        try {
+            ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, color));
+            if (toolbarBind == null) {
+                return;
+            }
+            if (toolbarBind.getToolbarConfig() == null) {
+                return;
+            }
+            toolbarBind.getToolbarConfig().getBuilder().setBgColor(color);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置toolbar背景色和状态栏的颜色，兼容华为小米手机
+     *
+     * @param color
+     */
+    public void setThemeBarAndToolBarColor(@ColorRes int color, @DrawableRes int backRes) {
+        try {
+            ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, color));
+            if (toolbarBind == null) {
+                return;
+            }
+            if (toolbarBind.getToolbarConfig() == null) {
+                return;
+            }
+            toolbarBind.getToolbarConfig().getBuilder().setBgColor(color).setBackIconRes(backRes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 权限请求
+     *
+     * @param permissions 权限
+     */
+    public void requestPermission(String[] permissions) {
+        // 缺少权限时, 进入权限配置页面
+        permissionLauncher.launch(permissions);
+    }
+
+    /**
+     * 注册权限请求监听
+     */
+    protected void registerPermissionLauncher() {
+        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+            for (Map.Entry<String, Boolean> stringBooleanEntry : result.entrySet()) {
+                if (Boolean.FALSE.equals(stringBooleanEntry.getValue())) {
+                    onPermissionRefused();
+                    return;
+                }
+            }
+            onPermissionGranted();
+        });
+    }
+
+    protected void onLoginSuccessCallback(Bundle bundle) {
+
+    }
+
+    protected void onLoginFailCallback(int resultCode, Bundle bundle) {
+
+    }
+
+    /**
+     * 权限同意
+     */
+    protected void onPermissionGranted() {
+
+    }
+
+    /**
+     * 权限拒绝
+     */
+    protected void onPermissionRefused() {
+        showToast("拒绝权限可能会导致应用软件运行异常!");
+    }
+
+    public long lastClick = 0;
+
+    /**
+     * [防止快速点击]
+     *
+     * @return false --> 快读点击
+     */
+    public boolean fastClick(long intervalTime) {
+        if (System.currentTimeMillis() - lastClick <= intervalTime) {
+            return true;
+        }
+        lastClick = System.currentTimeMillis();
+        return false;
+    }
+
+    protected boolean hasToolBar() {
+        return true;
+    }
+
+    public abstract String setTitleBar();
+
+    /**
+     * 初始化布局
+     */
+    public abstract void initView(Bundle savedInstanceState);
+
+    /**
+     * 设置数据
+     */
+    public abstract void initData(Bundle bundle);
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
+//        try {
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//            if (imm != null) {
+//                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),
+//                        0);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LogUtil.show("软键盘收起异常：" + e);
+//        }
+    }
+
+    /**
+     * 弹出登录dialog
+     *
+     * @param context     内容
+     * @param message     dialog提示内容
+     * @param requestCode 登录请求code
+     */
+    public void showLoginDialog(Context context, LoginDialog.OnLoginClickListener listener, String message, int requestCode) {
+        LoginDialog.getInstance(context)
+                .setMessage(message)
+                .setCanCancelable(false)
+                .setPositiveButton(listener, requestCode)
+                .show();
+    }
+
+    @Override
+    public void onLoginClick(View v, int code) {
+        if (errorService == null) {
+            return;
+        }
+        errorService.toLogin(this, loginLauncher);
+    }
+
+    private void closeLoadingDialog() {
+        CustomProgressDialog.getInstance(this).hide();
+    }
+
+    private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
+        CustomProgressDialog.getInstance(this)
+                .setCanCancel(isCanCancel)
+                .setMessage(dialogMessage)
+                .builder()
+                .show();
+    }
+
+    @Override
+    public void showLoading(String dialogMessage) {
+        runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
+    }
+
+    @Override
+    public void refreshLoading(String dialogMessage) {
+        runOnUiThread(() ->
+                CustomProgressDialog.getInstance(this)
+                        .refreshMessage(dialogMessage));
+    }
+
+    @Override
+    public void hideLoading() {
+        runOnUiThread(this::closeLoadingDialog);
+    }
+
+    @Override
+    public void showToast(String msg) {
+        runOnUiThread(() -> {
+            if (StringUtil.isEmpty(msg)) {
+                return;
+            }
+            ToastUtils.showShort(this, msg);
+        });
+    }
+
+    @Override
+    public void onErrorCode(BaseModelEntity model) {
+        if (errorService == null || model == null) {
+            return;
+        }
+        if (!errorService.isLogin(model.getCode())) {
+            errorService.toLogin(this, loginLauncher);
+            return;
+        }
+        if (!errorService.hasPermission(model.getCode())) {
+            errorService.toNoPermission(this);
+        }
+    }
+
+    public void startActivity(Class<?> toClx) {
+        startActivity(toClx, null);
+    }
+
+    public void startActivity(Class<?> toClx, Bundle bundle) {
+        Intent intent = new Intent(this, toClx);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
+    }
+
+    public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Class<?> toClx) {
+        startForResult(activityResultLauncher, toClx, null);
+    }
+
+    public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Class<?> toClx, Bundle bundle) {
+        Intent intent = new Intent(this, toClx);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        activityResultLauncher.launch(intent);
+    }
+
+    public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Intent intent) {
+        activityResultLauncher.launch(intent);
+    }
+}

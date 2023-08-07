@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#272a30</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="text_desc_color">#6a6a6a</color>
+    <color name="user_info_message_notice">#E35B5A</color>
+    <color name="zu_choose_left_item_diveder">#D6D6D5</color>
+    <color name="zu_choose_left_item_bg">#E5E5E5</color>
+    <color name="zu_choose_right_item_bg">#F3F3F3</color>
+    <color name="gray">#666666</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000000</color>
+    <color name="exit_button_background">#008bcc</color>
+    <color name="background">#FFE4E3E3</color>
+    <color name="themeColor">#1c50b5</color>
+    <color name="theme_red">#EA3F25</color>
+    <color name="theme_green">#238C00</color>
+    <color name="theme_orange">#F77832</color>
+    <color name="theme_yellow">#F4D000</color>
+    <color name="hint_text_color">#c4c4c4</color>
+    <color name="h_line_color">#dddddd</color>
+    <color name="login_button_color">#4b88ff</color>
+    <color name="dark_light">#5d5d5d</color>
+
+    <color name="setting_exit">#ef5350</color>
+    <color name="setting_textColor">#343434</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="search_view_background">#9b9b9b</color>
+    <color name="autoColor">#333333</color>
+    <color name="autoBg">#eef0f3</color>
+    
+    <color name="nv_bg_color">#999999</color>
+
+    <color name="bg_color">#EDEDED</color>
+
+    <color name="login_title_textColor">#777777</color>
+    <color name="register_edit_color">#cccccc</color>
+    <color name="house_btn_color">#555555</color>
+
+    <color name="btn_textcolor_unselected">#999999</color>
+
+    <!-- 下拉刷新时，颜色值 -->
+    <color name="swiperefresh_color1">#ff00ddff</color>
+    <color name="swiperefresh_color2">#ffffbb33</color>
+    <color name="swiperefresh_color3">#ffff4444</color>
+    <color name="swiperefresh_color4">#ffaa66cc</color>
+
+    <color name="h_area">#F3F3F3</color>
+
+    <color name="default_background">#fafafa</color>
+    <color name="alpha_default_background">#00fafafa</color>
+
+    <color name="me_custom_item_textcolor">#666666</color>
+    <color name="order_button">#dddddd</color>
+    <color name="zhongjie">#62c17d</color>
+    <color name="qiye">#f3961b</color>
+
+    <color name="price">#f73939</color>
+
+    <color name="green">#5fb878</color>
+
+    <color name="mis_actionbar_color">#21282C</color>
+
+</resources>

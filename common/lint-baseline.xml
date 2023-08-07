@@ -1,0 +1,3260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.0.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.0.0)" variant="all" version="8.0.0">
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`AutoTextView`) and the declare-styleable (`auto3d`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);"
+        errorLine2="                                                             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoTextView.java"
+            line="51"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`CornersImageView`) and the declare-styleable (`Custom_Round_Image_View`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);"
+        errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CornersImageView.java"
+            line="53"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`CustomBannerPicture`) and the declare-styleable (`Topbar`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.Topbar);"
+        errorLine2="                                                              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="61"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`CustomPersonalFragmentTextView`) and the declare-styleable (`auto3d`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);"
+        errorLine2="                                                             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomPersonalFragmentTextView.java"
+            line="43"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`CustomTextView`) and the declare-styleable (`auto3d`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);"
+        errorLine2="                                                             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomTextView.java"
+            line="37"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`RoundImageView`) and the declare-styleable (`CircleImageView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);"
+        errorLine2="                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/RoundImageView.java"
+            line="68"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`ScalingTextView`) and the declare-styleable (`my_text_view`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.my_text_view);"
+        errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/ScalingTextView.java"
+            line="37"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`StarBar`) and the declare-styleable (`RatingBar`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.RatingBar);"
+        errorLine2="                                                                       ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/StarBar.java"
+            line="55"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`TabLayout`) and the declare-styleable (`TextAppearance`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray ta = context.obtainStyledAttributes(this.tabTextAppearance, R.styleable.TextAppearance);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="191"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                        .toUpperCase().substring(0, 17);"
+        errorLine2="                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="216"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            String signOld = (&quot;x-appsecret&quot; + appSecret + postJson + &quot;x-timestamp&quot; + timeStamp).toUpperCase();"
+        errorLine2="                                                                                                ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiRetrofit.java"
+            line="260"
+            column="97"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            return MD5Util.md5Encode(signOld).toUpperCase();"
+        errorLine2="                                              ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiRetrofit.java"
+            line="263"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                holder.size.setText(String.format(&quot;%d%s&quot;,"
+        errorLine2="                                    ^">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/adapter/FolderAdapter.java"
+            line="86"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                size.setText(String.format(&quot;%d%s&quot;, data.images.size(), mContext.getResources().getString(R.string.mis_photo_unit)));"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/adapter/FolderAdapter.java"
+            line="158"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String idNumber=lastCode.toString().toLowerCase();"
+        errorLine2="                                            ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/IDCardUtil.java"
+            line="90"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String checkMods2=checkMods[mod].toString().toLowerCase();"
+        errorLine2="                                                    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/IDCardUtil.java"
+            line="91"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="        String result = String.format(&quot;%.6f&quot;, num);"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/NavigationMap.java"
+            line="244"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                            String manufacturer = Build.MANUFACTURER.toLowerCase();"
+        errorLine2="                                                                     ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/VideoController.java"
+            line="377"
+            column="70"/>
+    </issue>
+
+    <issue
+        id="ExifInterface"
+        message="Avoid using `android.media.ExifInterface`; use `androidx.exifinterface.media.ExifInterface` instead"
+        errorLine1="import android.media.ExifInterface;"
+        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/imgCompressor/ImgCompressor.java"
+            line="9"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 23 (current min is 21): `android.view.View#SYSTEM_UI_FLAG_LIGHT_STATUS_BAR`"
+        errorLine1="            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);"
+        errorLine2="                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="105"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="InternalInsetResource"
+        message="Using internal inset dimension resource `status_bar_height` is not supported"
+        errorLine1="        int resId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeKitKat.java"
+            line="267"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="InternalInsetResource"
+        message="Using internal inset dimension resource `status_bar_height` is not supported"
+        errorLine1="        int resId = context.getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeLollipop.java"
+            line="216"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details."
+        errorLine1="        targetSdk 31"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="10"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="            Class&lt;?> clazz = Class.forName(&quot;com.android.internal.R$dimen&quot;);"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/ScreenUtils.java"
+            line="64"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="            Class&lt;?> layoutParams = Class.forName(&quot;android.view.MiuiWindowManager$LayoutParams&quot;);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeKitKat.java"
+            line="169"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="            Class&lt;?> layoutParams = Class.forName(&quot;android.view.MiuiWindowManager$LayoutParams&quot;);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="100"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Range"
+        message="Value must be ≥ 0 but `getColumnIndex` can be -1"
+        errorLine1="                        photoPath = cursor.getString(cursor"
+        errorLine2="                                                     ^">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/DecodeActivity.java"
+            line="328"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="SdCardPath"
+        message="Do not hardcode &quot;`/data/`&quot;; use `Context.getFilesDir().getPath()` instead"
+        errorLine1="            String cacheDirPath = &quot;/data/data/&quot; + context.getPackageName() + &quot;/cache/&quot;;"
+        errorLine2="                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/utils/FileUtils.java"
+            line="83"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SdCardPath"
+        message="Do not hardcode &quot;/sdcard/&quot;; use `Environment.getExternalStorageDirectory().getPath()` instead"
+        errorLine1="                holder.path.setText(&quot;/sdcard&quot;);"
+        errorLine2="                                    ~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/adapter/FolderAdapter.java"
+            line="85"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SdCardPath"
+        message="Do not hardcode &quot;`/data/`&quot;; use `Context.getFilesDir().getPath()` instead"
+        errorLine1="            if (!new File(&quot;/data/data/&quot; + &quot;com.tencent.map&quot;).exists()) {"
+        errorLine2="                          ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/MapDialog.java"
+            line="122"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            birthDay = new SimpleDateFormat(&quot;yyyyMMdd&quot;).parse(birthDayStr);"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/IDCardUtil.java"
+            line="111"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="        SimpleDateFormat format = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/log/LogcatHelper.java"
+            line="154"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="        test = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="136"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            sdf = new SimpleDateFormat(&quot;yyyy&quot;);"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="167"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            sdf = new SimpleDateFormat(&quot;MM-dd EEE&quot;);"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="175"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            sdf = new SimpleDateFormat(&quot;MM&quot;);"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="199"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            sdf = new SimpleDateFormat(&quot;HH&quot;);"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="207"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="SimpleDateFormat"
+        message="To get local formatting use `getDateInstance()`, `getDateTimeInstance()`, or `getTimeInstance()`, or use `new SimpleDateFormat(String template, Locale locale)` with for example `Locale.US` for ASCII dates."
+        errorLine1="            sdf = new SimpleDateFormat(&quot;mm&quot;);"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/PickTimeView.java"
+            line="246"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="SuspiciousIndentation"
+        message="Suspicious indentation: This is indented but is not nested under the previous expression (`if(longNumber==null)`...)"
+        errorLine1="            if(isNumeric(longNumber)){"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/NumberUtils.java"
+            line="282"
+            column="13"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/NumberUtils.java"
+            line="281"
+            column="9"
+            message="Previous statement here"/>
+    </issue>
+
+    <issue
+        id="SuspiciousIndentation"
+        message="The indentation string here is different from on the previous line (`&quot; &quot;` vs `\t`)"
+        errorLine1="  if (screenResolution.x &lt; screenResolution.y) {"
+        errorLine2="~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/camera/CameraConfigurationManager.java"
+            line="100"
+            column="1"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/camera/CameraConfigurationManager.java"
+            line="98"
+            column="1"
+            message="Previous line indentation here"/>
+    </issue>
+
+    <issue
+        id="WifiManagerPotentialLeak"
+        message="The WIFI_SERVICE must be looked up on the Application context or memory will leak on devices &lt; Android N. Try changing `context` to `context.getApplicationContext()`"
+        errorLine1="            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);"
+        errorLine2="                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="173"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="WifiManagerPotentialLeak"
+        message="The WIFI_SERVICE must be looked up on the Application context or memory will leak on devices &lt; Android N. Try changing `context` to `context.getApplicationContext()`"
+        errorLine1="        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/networkTools/NetworkStateUtil.java"
+            line="96"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="WifiManagerPotentialLeak"
+        message="The WIFI_SERVICE must be looked up on the Application context or memory will leak on devices &lt; Android N. Try changing `context` to `context.getApplicationContext()`"
+        errorLine1="        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/networkTools/NetworkStateUtil.java"
+            line="126"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: ViewCompat.LAYOUT_DIRECTION_LTR, ViewCompat.LAYOUT_DIRECTION_RTL"
+        errorLine1="            return ViewCompat.getLayoutDirection(this) == 0 ? scrollBase + scrollOffset : scrollBase - scrollOffset;"
+        errorLine2="                                                          ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="975"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: SoundEffectConstants.CLICK, SoundEffectConstants.NAVIGATION_LEFT, SoundEffectConstants.NAVIGATION_UP, SoundEffectConstants.NAVIGATION_RIGHT, SoundEffectConstants.NAVIGATION_DOWN, SoundEffectConstants.NAVIGATION_REPEAT_LEFT, SoundEffectConstants.NAVIGATION_REPEAT_UP, SoundEffectConstants.NAVIGATION_REPEAT_RIGHT, SoundEffectConstants.NAVIGATION_REPEAT_DOWN"
+        errorLine1="                    this.playSoundEffect(0);"
+        errorLine2="                                         ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1519"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: MeasureSpec.UNSPECIFIED, MeasureSpec.EXACTLY, MeasureSpec.AT_MOST"
+        errorLine1="                widthMeasureSpec = MeasureSpec.makeMeasureSpec(TabLayout.this.tabMaxWidth, -2147483648);"
+        errorLine2="                                                                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1569"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: View.VISIBLE, View.INVISIBLE, View.GONE"
+        errorLine1="                if (this.iconView != null &amp;&amp; this.iconView.getVisibility() == 0) {"
+        errorLine2="                                                                              ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1576"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: LinearLayout.HORIZONTAL, LinearLayout.VERTICAL"
+        errorLine1="            this.setOrientation(TabLayout.this.inlineLabel ? 0 : 1);"
+        errorLine2="                                                             ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1697"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: LinearLayout.HORIZONTAL, LinearLayout.VERTICAL"
+        errorLine1="            this.setOrientation(TabLayout.this.inlineLabel ? 0 : 1);"
+        errorLine2="                                                                 ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1697"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        message="Must be one of: View.VISIBLE, View.INVISIBLE, View.GONE"
+        errorLine1="                if (view != null &amp;&amp; view.getVisibility() == 0) {"
+        errorLine2="                                                            ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1768"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                TextView tv = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.tab_text_view, null);"
+        errorLine2="                                                                                                            ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/base/BaseViewPagerFragment.java"
+            line="57"
+            column="109"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View inflate = LayoutInflater.from(context).inflate(R.layout.option_bottom_menu_dialog, null);"
+        errorLine2="                                                                                                ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/BottomSheetDialog.java"
+            line="77"
+            column="97"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View inflate = LayoutInflater.from(context).inflate(R.layout.sure_cancel_dialog, null);"
+        errorLine2="                                                                                         ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/ConfirmDialog.java"
+            line="100"
+            column="90"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                ImageView img1 = LayoutInflater.from(mContext).inflate(R.layout.banner_corner_image_view, null).findViewById(R.id.corner_image);"
+        errorLine2="                                                                                                          ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="73"
+            column="107"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        ImageView img1 = LayoutInflater.from(mContext).inflate(R.layout.banner_corner_image_view, null).findViewById(R.id.corner_image);"
+        errorLine2="                                                                                                  ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="101"
+            column="99"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View headerView = LayoutInflater.from(mContext).inflate(R.layout.viewpager_round_layout_index, null);"
+        errorLine2="                                                                                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="123"
+            column="104"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View headerView = LayoutInflater.from(context).inflate(R.layout.viewpager_round_layout, null);"
+        errorLine2="                                                                                                ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomViewPager.java"
+            line="89"
+            column="97"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                R.layout.numberpicker, null);"
+        errorLine2="                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/FloorsPickDialog.java"
+            line="41"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.image_save_dialog, null);"
+        errorLine2="                                                                                            ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/ImageSaveDialog.java"
+            line="42"
+            column="93"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                R.layout.input_dialog, null);"
+        errorLine2="                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/InputDialog.java"
+            line="99"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View contentView = LayoutInflater.from(activity).inflate(R.layout.layout_quyu_choose_view, null);"
+        errorLine2="                                                                                                   ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/popupWindow/LinearRecyclerViewPopupWindow.java"
+            line="71"
+            column="100"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                R.layout.sure_cancel_dialog, null);"
+        errorLine2="                                             ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/LoginDialog.java"
+            line="58"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View dialogView = LayoutInflater.from(context).inflate(R.layout.map_dialog, null);"
+        errorLine2="                                                                                    ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/MapDialog.java"
+            line="67"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View inflate = LayoutInflater.from(context).inflate(R.layout.menu_dialog, null);"
+        errorLine2="                                                                                  ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/MenuDialog.java"
+            line="106"
+            column="83"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        inflate = LayoutInflater.from(context).inflate(R.layout.message_dialog, null);"
+        errorLine2="                                                                                ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/MessageDialog.java"
+            line="67"
+            column="81"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.camera_album_dialog, null);"
+        errorLine2="                                                                                                  ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/OpenImageDialog.java"
+            line="59"
+            column="99"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.shoot_dialog, null);"
+        errorLine2="                                                                                           ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/OpenShootDialog.java"
+            line="64"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                R.layout.numberpicker, null);"
+        errorLine2="                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/PickStringDialog.java"
+            line="49"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View pickerView = LayoutInflater.from(context).inflate(R.layout.picktime_view, null);"
+        errorLine2="                                                                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/PickTimeViewDialog.java"
+            line="103"
+            column="88"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View inflate = LayoutInflater.from(context).inflate(R.layout.tick_message_dialog, null);"
+        errorLine2="                                                                                          ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/TickViewMessageDialog.java"
+            line="71"
+            column="91"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                R.layout.update_dialog, null);"
+        errorLine2="                                        ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/UpdateMessageDialog.java"
+            line="47"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="ProtectedPermissions"
+        message="Permission is only granted to system apps"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.MANAGE_DOCUMENTS&quot;/>"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="10"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ProtectedPermissions"
+        message="Permission is only granted to system apps"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.LOCAL_MAC_ADDRESS&quot; />"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="12"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="QueryPermissionsNeeded"
+        message="As of Android 11, this method no longer returns information about all apps; \&#xA;see https://g.co/dev/packagevisibility for details"
+        errorLine1="        List&lt;PackageInfo> packageInfos = packageManager.getInstalledPackages(0);"
+        errorLine2="                                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/AppManager.java"
+            line="140"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="AppCompatCustomView"
+        message="This custom view should extend `androidx.appcompat.widget.AppCompatTextView` instead"
+        errorLine1="public class CollapsedTextView extends TextView {"
+        errorLine2="                                       ~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CollapsedTextView.java"
+            line="26"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.aspectj:aspectjrt than 1.7.3 is available: 1.9.1"
+        errorLine1="    annotationProcessor &apos;com.alibaba:arouter-compiler:1.5.2&apos;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="104"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.googlecode.mp4parser:isoparser than 1.0.6 is available: 1.1.22"
+        errorLine1="    api &apos;com.tencent:mmkv:1.0.22&apos;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="105"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RestrictedApi"
+        message="AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR can only be accessed from within the same library group (referenced groupId=`com.google.android.material` from groupId=`mvvm-component-master`)"
+        errorLine1="            this.scrollAnimator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);"
+        errorLine2="                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="881"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="RestrictedApi"
+        message="AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR can only be accessed from within the same library group (referenced groupId=`com.google.android.material` from groupId=`mvvm-component-master`)"
+        errorLine1="                    animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);"
+        errorLine2="                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1336"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes (`@dimen/x30` is defined as `15.0dp` in `values\lay_x.xml`"
+        errorLine1="                android:textSize=&quot;@dimen/x30&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/update_dialog.xml"
+            line="50"
+            column="17"/>
+        <location
+            file="src/main/res/values/lay_x.xml"
+            line="32"
+            column="23"
+            message="This dp dimension is used as a text size"/>
+    </issue>
+
+    <issue
+        id="SwitchIntDef"
+        message="Switch statement on an `int` with known associated constant missing case `MeasureSpec.UNSPECIFIED`"
+        errorLine1="        switch (widthMode) {"
+        errorLine2="        ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomViewPager.java"
+            line="165"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SwitchIntDef"
+        message="Switch statement on an `int` with known associated constant missing case `MeasureSpec.UNSPECIFIED`"
+        errorLine1="        switch (heightMode) {"
+        errorLine2="        ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomViewPager.java"
+            line="197"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SwitchIntDef"
+        message="Don&apos;t use a constant here; expected one of: `MeasureSpec.AT_MOST`, `MeasureSpec.EXACTLY`, `MeasureSpec.UNSPECIFIED`"
+        errorLine1="            case 0:"
+        errorLine2="                 ~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="819"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        canvas.drawBitmap(((BitmapDrawable) (BitmapDrawable) getResources()"
+        errorLine2="                                                             ^">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/view/ScannerView.java"
+            line="206"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableTopCompat` instead of `android:drawableTop`"
+        errorLine1="        android:drawableTop=&quot;@drawable/mis_asy&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_camera.xml"
+            line="8"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UsingOnClickInXml"
+        message="Use databinding or explicit wiring of click listener in code"
+        errorLine1="            android:onClick=&quot;onClick&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/welcome_layout.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `getSubscriberId` to get device identifiers is not recommended"
+        errorLine1="                imsi = mTm.getSubscriberId();"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="100"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `getLine1Number` to get device identifiers is not recommended"
+        errorLine1="                numer = mTm.getLine1Number();"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="108"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `getDeviceId` to get device identifiers is not recommended"
+        errorLine1="                    imei = mTm.getDeviceId();"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="153"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `getMacAddress` to get device identifiers is not recommended"
+        errorLine1="            result = wifiInfo.getMacAddress();"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/api/ApiAccountHelper.java"
+            line="185"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ReservedSystemPermission"
+        message="`android.permission.MOUNT_UNMOUNT_FILESYSTEMS` is a reserved permission"
+        errorLine1="    &lt;permission android:name=&quot;android.permission.MOUNT_UNMOUNT_FILESYSTEMS&quot; />"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="21"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ReservedSystemPermission"
+        message="`android.permission.STATUS_BAR_SERVICE` is a reserved permission"
+        errorLine1="        android:name=&quot;android.permission.STATUS_BAR_SERVICE&quot;"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="49"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="SystemPermissionTypo"
+        message="Did you mean `android.permission.ACCESS_MTP`?"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.ACCESS_GPS&quot; /> &lt;!-- 百度地图end -->"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="44"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        WarpLine warpLine = new WarpLine();"
+        errorLine2="                            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoNextLineLinearlayout.java"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        mWarpLineGroup = new ArrayList&lt;WarpLine>();"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoNextLineLinearlayout.java"
+            line="87"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                    warpLine = new WarpLine();"
+        errorLine2="                               ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoNextLineLinearlayout.java"
+            line="93"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                    warpLine = new WarpLine();"
+        errorLine2="                               ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoNextLineLinearlayout.java"
+            line="96"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="            Path path = new Path();"
+        errorLine2="                        ~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CornersImageView.java"
+            line="90"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="            Path path = new Path();"
+        errorLine2="                        ~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="226"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                Rect mRect = new Rect();"
+        errorLine2="                             ~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/pickertime/MyNumberPicker.java"
+            line="305"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                possibleResultPoints = new ArrayList&lt;ResultPoint>(5);"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/view/ScannerView.java"
+            line="153"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            adapter.notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/base/BaseRecyclerViewFragment.java"
+            line="135"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/popupWindow/adapter/ChildAdapter.java"
+            line="43"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/popupWindow/adapter/ParentAdapter.java"
+            line="41"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WarpLinearLayout);"
+        errorLine2="                                            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/AutoNextLineLinearlayout.java"
+            line="214"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CollapsedTextView);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CollapsedTextView.java"
+            line="100"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.Topbar);"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomBannerPicture.java"
+            line="61"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="        Cursor cursor = context.getContentResolver().query(uri, new String[]{"
+        errorLine2="                                                     ~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/FileUtils.java"
+            line="885"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `ParcelFileDescriptor` should be freed up after use with `#close()`"
+        errorLine1="            BitmapFactory.decodeFileDescriptor(contentResolver.openFileDescriptor(srcImageUri, &quot;r&quot;).getFileDescriptor(), null, options);"
+        errorLine2="                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/imgCompressor/ImgCompressor.java"
+            line="93"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `ParcelFileDescriptor` should be freed up after use with `#close()`"
+        errorLine1="            scaledBitmap = BitmapFactory.decodeFileDescriptor(contentResolver.openFileDescriptor(srcImageUri, &quot;r&quot;).getFileDescriptor(), null, options);"
+        errorLine2="                                                                              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/imgCompressor/ImgCompressor.java"
+            line="134"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.my_text_view);"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/ScalingTextView.java"
+            line="37"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `ParcelFileDescriptor` should be freed up after use with `#close()`"
+        errorLine1="            fileDescriptor = context.getContentResolver().openFileDescriptor(path,&quot;r&quot;).getFileDescriptor();"
+        errorLine2="                                                          ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/VideoController.java"
+            line="327"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLayoutParam"
+        message="Invalid layout param in a `FrameLayout`: `layout_weight`"
+        errorLine1="            android:layout_weight=&quot;1&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLayoutParam"
+        message="Invalid layout param in a `FrameLayout`: `layout_weight`"
+        errorLine1="            android:layout_weight=&quot;0&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CollapsedTextView.java"
+            line="121"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/Compat.java"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="    @TargetApi(16)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/Compat.java"
+            line="36"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/Compat.java"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 5"
+        errorLine1="    @TargetApi(VERSION_CODES.ECLAIR)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/Compat.java"
+            line="49"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 11"
+        errorLine1="    @TargetApi(VERSION_CODES.HONEYCOMB)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/Compat.java"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomTextView.java"
+            line="48"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 5"
+        errorLine1="@TargetApi(5)"
+        errorLine2="~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/gestures/EclairGestureDetector.java"
+            line="26"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 8"
+        errorLine1="@TargetApi(8)"
+        errorLine2="~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/gestures/FroyoGestureDetector.java"
+            line="23"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 9"
+        errorLine1="@TargetApi(9)"
+        errorLine2="~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/scrollerproxy/GingerScroller.java"
+            line="22"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 14"
+        errorLine1="@TargetApi(14)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/scrollerproxy/IcsScroller.java"
+            line="21"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 18"
+        errorLine1="@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/InputSurface.java"
+            line="13"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="@TargetApi(16)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/MP4Builder.java"
+            line="44"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="@TargetApi(16)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/Mp4Movie.java"
+            line="12"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/NavigationButton.java"
+            line="45"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="@TargetApi(16)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/OutputSurface.java"
+            line="17"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 21"
+        errorLine1="        if (VERSION.SDK_INT &lt; VERSION_CODES.GINGERBREAD) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/scrollerproxy/ScrollerProxy.java"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 21"
+        errorLine1="        } else if (VERSION.SDK_INT &lt; VERSION_CODES.ICE_CREAM_SANDWICH) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/scrollerproxy/ScrollerProxy.java"
+            line="27"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="                if (VERSION.SDK_INT >= 21) {"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1477"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is never &lt; 21"
+        errorLine1="            if (changed &amp;&amp; selected &amp;&amp; VERSION.SDK_INT &lt; 16) {"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1532"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 14"
+        errorLine1="        @TargetApi(14)"
+        errorLine2="        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/TabLayout.java"
+            line="1555"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="@TargetApi(16)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/TextureRenderer.java"
+            line="13"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 19"
+        errorLine1="@TargetApi(Build.VERSION_CODES.KITKAT)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeKitKat.java"
+            line="26"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="@TargetApi(Build.VERSION_CODES.LOLLIPOP)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeLollipop.java"
+            line="22"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="29"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="41"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="50"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="60"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="86"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 21"
+        errorLine1="        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/theme/ThemeUtils.java"
+            line="88"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="@TargetApi(16)"
+        errorLine2="~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/Track.java"
+            line="27"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="    @TargetApi(16)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/VideoController.java"
+            line="173"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 16"
+        errorLine1="    @TargetApi(16)"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/videocompressor/VideoController.java"
+            line="230"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v21`) is unnecessary; `minSdkVersion` is 21. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v21"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (pers.fz.mvvm.zxing.camera.AutoFocusManager.AutoFocusTask)"
+        errorLine1=" private final class AutoFocusTask extends AsyncTask&lt;Object,Object,Object> {"
+        errorLine2="                     ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/camera/AutoFocusManager.java"
+            line="108"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `CrashHandler` which has field `mContext` pointing to `Context`); this is a memory leak"
+        errorLine1="    public static CrashHandler instance = new CrashHandler();"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/crash/CrashHandler.java"
+            line="50"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `ImgCompressor` which has field `context` pointing to `Context`); this is a memory leak"
+        errorLine1="    private volatile static ImgCompressor instance = null;"
+        errorLine2="                     ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/imgCompressor/ImgCompressor.java"
+            line="44"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="This `AsyncTask` class should be static or leaks might occur (pers.fz.mvvm.zxing.InactivityTimer.InactivityAsyncTask)"
+        errorLine1="    private final class InactivityAsyncTask extends AsyncTask&lt;Object, Object, Object> {"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/zxing/InactivityTimer.java"
+            line="127"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `LoginDialog` which has field `mContext` pointing to `Context`); this is a memory leak"
+        errorLine1="    private static volatile LoginDialog instance = null;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/LoginDialog.java"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `NotificationUtil` which has field `mContext` pointing to `Context`); this is a memory leak"
+        errorLine1="    private static NotificationUtil updateNotificationUtil;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/update/util/NotificationUtil.java"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields; this is a memory leak"
+        errorLine1="    private static Activity mContext;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/update/UpdateManger.java"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `UpdateManger` which has field `mContext` pointing to `Activity`); this is a memory leak"
+        errorLine1="    private static UpdateManger updateManger;"
+        errorLine2="            ~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/update/UpdateManger.java"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_personal_fragment_textview.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/popup_window_menu_item.xml"
+            line="8"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="AnimatorKeep"
+        message="This method is accessed from an ObjectAnimator so it should be annotated with `@Keep` to ensure that it is not discarded or renamed in release builds"
+        errorLine1="    private void setRingProgress(int ringProgress) {"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="331"
+            column="18"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="146"
+            column="67"
+            message="ObjectAnimator usage here"/>
+    </issue>
+
+    <issue
+        id="AnimatorKeep"
+        message="This method is accessed from an ObjectAnimator so it should be annotated with `@Keep` to ensure that it is not discarded or renamed in release builds"
+        errorLine1="    private void setCircleRadius(int circleRadius) {"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="340"
+            column="18"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="150"
+            column="69"
+            message="ObjectAnimator usage here"/>
+    </issue>
+
+    <issue
+        id="AnimatorKeep"
+        message="This method is accessed from an ObjectAnimator so it should be annotated with `@Keep` to ensure that it is not discarded or renamed in release builds"
+        errorLine1="    private void setTickAlpha(int tickAlpha) {"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="357"
+            column="18"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="157"
+            column="53"
+            message="ObjectAnimator usage here"/>
+    </issue>
+
+    <issue
+        id="AnimatorKeep"
+        message="This method is accessed from an ObjectAnimator so it should be annotated with `@Keep` to ensure that it is not discarded or renamed in release builds"
+        errorLine1="    private void setRingStrokeWidth(float strokeWidth) {"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="366"
+            column="18"/>
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/tickview/TickView.java"
+            line="182"
+            column="70"
+            message="ObjectAnimator usage here"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UseValueOf"
+        message="Use `Long.valueOf(o.toString())` instead"
+        errorLine1="            new Long(o.toString());"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/StringUtil.java"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseValueOf"
+        message="Use `Long.valueOf(o.toString())` instead"
+        errorLine1="            return new Long(o.toString());"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/StringUtil.java"
+            line="116"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseValueOf"
+        message="Use `Integer.valueOf(o.toString())` instead"
+        errorLine1="            return new Integer(o.toString());"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/util/apiUtil/StringUtil.java"
+            line="130"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                android:layout_weight=&quot;1&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_search_view.xml"
+            line="39"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/default_background` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/default_background&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_permissions.xml"
+            line="4"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/layout_quyu_choose_view.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#181819` with a theme that also paints a background (inferred theme is `@style/MIS_NO_ACTIONBAR`)"
+        errorLine1="    android:background=&quot;#181819&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_activity_default.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#21282C` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;#21282C&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="4"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@android:color/black&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_fragment_multi_image.xml"
+            line="4"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/white` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/picktime_view.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#FFF` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;#FFF&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/view_error_layout.xml"
+            line="8"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `RelativeLayout` layout or its `LinearLayout` parent is unnecessary"
+        errorLine1="    &lt;RelativeLayout"
+        errorLine2="     ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/act_dialog_pic.xml"
+            line="7"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `LinearLayout` layout or its `LinearLayout` parent is unnecessary"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/update_dialog.xml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `RelativeLayout` layout or its `RelativeLayout` parent is unnecessary"
+        errorLine1="        &lt;RelativeLayout"
+        errorLine2="         ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/viewpager_round_layout.xml"
+            line="18"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-hdpi`: mis_asv.png, mis_asy.png, mis_btn_back.png, mis_btn_selected.png, mis_btn_unselected.png... (8 more)">
+        <location
+            file="src/main/res/drawable-hdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xhdpi`: mis_asv.png, mis_asy.png, mis_btn_selected.png, mis_btn_unselected.png, mis_default_check.png... (13 more)">
+        <location
+            file="src/main/res/drawable-xhdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xxhdpi`: mis_btn_back.png, mis_default_check_s.png, mis_ic_menu_back.png, mis_selector_indicator.png, rounded_searchview.xml... (12 more)">
+        <location
+            file="src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="IconMissingDensityFolder"
+        message="Missing density variation folders in `src\main\res`: drawable-mdpi">
+        <location
+            file="src/main/res"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="            android:textSize=&quot;9sp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/custom_textview.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_activity.xml"
+            line="51"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="    &lt;EditText"
+        errorLine2="     ~~~~~~~~">
+        <location
+            file="src/main/res/layout/input_dialog.xml"
+            line="20"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        message="Custom view `BannerViewPager` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        errorLine1="public class BannerViewPager extends ViewPager {"
+        errorLine2="             ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/BannerViewPager.java"
+            line="21"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ButtonCase"
+        message="The standard Android way to capitalize CANCEL is &quot;Cancel&quot; (tip: use `@android:string/cancel` instead)"
+        errorLine1="    &lt;string name=&quot;mis_permission_dialog_cancel&quot;>CANCEL&lt;/string>"
+        errorLine2="                                                ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="110"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `BannerViewPager` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent webSocketEvent) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/BannerViewPager.java"
+            line="192"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `CustomEditText` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent webSocketEvent) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomEditText.java"
+            line="123"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `CustomScrollView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent ev) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/CustomScrollView.java"
+            line="44"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `MyViewPager` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent ev) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/MyViewPager.java"
+            line="21"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``ImageView`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        imageView.setOnTouchListener(this);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/PhotoViewAttacher.java"
+            line="152"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``ImageView`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="            imageView.setOnTouchListener(null);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/PhotoViewAttacher.java"
+            line="221"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`PhotoViewAttacher#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View v, MotionEvent ev) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/PhotoViewAttacher.java"
+            line="451"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `ScrollViewPager` overrides `onTouchEvent` but not `performClick`"
+        errorLine1=" public boolean onTouchEvent(MotionEvent ev) {"
+        errorLine2="                ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/picDialog/ScrollViewPager.java"
+            line="34"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `StarBar` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent webSocketEvent) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/customlayout/StarBar.java"
+            line="159"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `TxSlideRecyclerView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent e) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/recyclerview/TxSlideRecyclerView.java"
+            line="128"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="56"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="85"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_activity.xml"
+            line="65"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/img_add_item.xml"
+            line="27"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/img_add_item.xml"
+            line="37"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/loading_dialog.xml"
+            line="19"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="7"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="11"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="63"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_image.xml"
+            line="20"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/popup_window_menu_item.xml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="20"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/video_show_item.xml"
+            line="22"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/view_error_layout.xml"
+            line="12"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/welcome_layout.xml"
+            line="17"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/welcome_layout.xml"
+            line="23"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="    android:clickable=&quot;true&quot; />"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/action_layout.xml"
+            line="12"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="61"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="90"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_fragment_multi_image.xml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                singleTextView.setText(&quot;10&quot;);"
+        errorLine2="                                       ~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/FloorsPickDialog.java"
+            line="81"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                holder.path.setText(&quot;/sdcard&quot;);"
+        errorLine2="                                    ~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/adapter/FolderAdapter.java"
+            line="85"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                size.setText(&quot;*&quot;+mContext.getResources().getString(R.string.mis_photo_unit));"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/multi_image_selector/adapter/FolderAdapter.java"
+            line="160"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        updateTitle.setText(&quot;检测到新版本&quot; + versionName);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/pers/fz/mvvm/wight/dialog/UpdateMessageDialog.java"
+            line="52"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;将条形码或二维码置于取景框内系统会自动扫描&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;将条形码或二维码置于取景框内系统会自动扫描&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="74"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;取消&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;建议与镜头保持10CM距离，尽量避免逆光和阴影&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;建议与镜头保持10CM距离，尽量避免逆光和阴影&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="120"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;全部&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;全部&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_parent_category_item.xml"
+            line="21"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请输入&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;请输入&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_search_view.xml"
+            line="42"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;搜索&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;搜索&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_search_view.xml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;保存至本地&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;保存至本地&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/image_save_dialog.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/image_save_dialog.xml"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请输入&quot;, should use `@string` resource"
+        errorLine1="        android:hint=&quot;请输入&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/input_dialog.xml"
+            line="25"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;取消&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/input_dialog.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确定&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/input_dialog.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;启\n动\n页&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;启\n动\n页&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/launch_layout.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;百度地图&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;百度地图&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;高德地图&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;高德地图&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog.xml"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;腾讯地图&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;腾讯地图&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog.xml"
+            line="33"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;谷歌地图&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;谷歌地图&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog.xml"
+            line="43"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;外部浏览器打开&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;外部浏览器打开&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/menu_browser.xml"
+            line="7"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;复制链接地址&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;复制链接地址&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/menu_browser.xml"
+            line="11"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/menu_dialog.xml"
+            line="21"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确认&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确认&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/message_dialog.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;图片&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;图片&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="17"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;完成&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;完成&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="30"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请选择数量&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;请选择数量&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确定&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/option_bottom_menu_dialog.xml"
+            line="22"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请选择&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;请选择&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/option_item.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;不限&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;不限&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/picktime_view.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请选择日期&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;请选择日期&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/picktime_view.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确定&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/picktime_view.xml"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;全部&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;全部&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/popup_window_menu_item.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;拍摄视频&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;拍摄视频&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/shoot_dialog.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;从多媒体文件中选择&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;从多媒体文件中选择&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/shoot_dialog.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/shoot_dialog.xml"
+            line="42"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;取消&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/sure_cancel_dialog.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确定&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/sure_cancel_dialog.xml"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;青穗&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;青穗&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="36"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;邮箱\u3000\u3000&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;邮箱\u3000\u3000&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="52"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;fzkf3318@163.com&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;fzkf3318@163.com&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="56"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;是否更新到1.0.1&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;是否更新到1.0.1&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/update_dialog.xml"
+            line="24"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;1、第一条\n2、第二条&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;1、第一条\n2、第二条&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/update_dialog.xml"
+            line="35"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;更新&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;更新&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/update_dialog.xml"
+            line="48"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;加载中…&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;加载中…&quot;/>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/view_error_layout.xml"
+            line="33"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry"
+        errorLine1="            android:paddingLeft=&quot;20.0dip&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                    android:paddingStart=&quot;@dimen/x24&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/base_activity.xml"
+            line="61"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="    android:paddingStart=&quot;@dimen/x25&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/layout_quyu_choose_view.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="        android:paddingStart=&quot;@dimen/x11&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/layout_quyu_choose_view.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:paddingLeft` with `android:paddingStart=&quot;20.0dip&quot;` to better support right-to-left layouts"
+        errorLine1="            android:paddingLeft=&quot;20.0dip&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;20.0dip&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;20.0dip&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decode.xml"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;8dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;8dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/layout_nav_item.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginRight=&quot;16dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_activity_default.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`end`&quot; instead of &quot;`right`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="            android:layout_gravity=&quot;right&quot;"
+        errorLine2="                                    ~~~~~">
+        <location
+            file="src/main/res/layout/mis_activity_default.xml"
+            line="29"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_toRightOf` with `android:layout_toEndOf=&quot;@+id/btn_back&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_toRightOf=&quot;@+id/btn_back&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginRight=&quot;16dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_cmp_customer_actionbar.xml"
+            line="39"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:drawableRight` with `android:drawableEnd=&quot;@drawable/mis_text_indicator&quot;` to better support right-to-left layouts"
+        errorLine1="            android:drawableRight=&quot;@drawable/mis_text_indicator&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_fragment_multi_image.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;10dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginLeft=&quot;10dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_toRightOf` with `android:layout_toEndOf=&quot;@+id/cover&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_toRightOf=&quot;@+id/cover&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_toLeftOf` with `android:layout_toStartOf=&quot;@+id/indicator&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_toLeftOf=&quot;@+id/indicator&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginLeft=&quot;16dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="26"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="64"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;10dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginLeft=&quot;10dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="67"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;20dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginRight=&quot;20dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_folder.xml"
+            line="68"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`end`&quot; instead of &quot;`right`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="        android:layout_gravity=&quot;top|right&quot;"
+        errorLine2="                                ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_image.xml"
+            line="22"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;5.5dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginRight=&quot;5.5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/mis_list_item_image.xml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`end`&quot; instead of &quot;`right`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="        android:gravity=&quot;right&quot;"
+        errorLine2="                         ~~~~~">
+        <location
+            file="src/main/res/layout/my_text_view.xml"
+            line="19"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`end`&quot; instead of &quot;`right`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="            android:layout_gravity=&quot;right&quot;"
+        errorLine2="                                    ~~~~~">
+        <location
+            file="src/main/res/layout/numberpicker.xml"
+            line="29"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

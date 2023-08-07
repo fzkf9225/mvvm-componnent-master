@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white_16"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/y135"
+            android:paddingTop="@dimen/padding_m"
+            android:paddingBottom="@dimen/padding_m"
+            android:paddingStart="@dimen/padding_xl"
+            android:paddingEnd="@dimen/padding_xl"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/dialog_message_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/autoColor"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/font_size_xxl"
+                tools:text="提示" />
+        <TextView
+                android:id="@+id/dialog_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginBottom="@dimen/horizontal_margin_xl"
+                android:textColor="@color/autoColor"
+                android:gravity="center"
+                android:textSize="@dimen/font_14"
+                tools:text="需要先验证实名制身份信息" />
+    </LinearLayout>
+
+    <View
+            style="@style/h_line"
+            android:layout_height="1dp"/>
+
+    <TextView
+            android:id="@+id/dialog_option"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_xxl"
+            android:gravity="center"
+            android:text="确认"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_xxl" />
+</LinearLayout>

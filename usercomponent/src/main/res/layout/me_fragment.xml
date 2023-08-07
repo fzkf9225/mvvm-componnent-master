@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="com.casic.titan.usercomponent.bean.UserInfo" />
+        <import type="pers.fz.mvvm.util.apiUtil.StringUtil"/>
+    </data>
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:scrollbars="none">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/themeColor"
+                android:paddingStart="@dimen/horizontal_margin_xl"
+                android:paddingTop="@dimen/vertical_margin_xxxl"
+                android:paddingEnd="@dimen/horizontal_margin_xl"
+                android:paddingBottom="@dimen/y158">
+
+                <pers.fz.mvvm.wight.customlayout.RoundImageView
+                    android:id="@+id/headImg"
+                    android:layout_width="@dimen/x120"
+                    android:layout_height="@dimen/y120"
+                    app:headerUrl="@{user.avatar}"
+                    android:src="@mipmap/icon_head_default" />
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/vertical_margin_xl"
+                    android:layout_marginTop="@dimen/vertical_margin_m"
+                    android:layout_toEndOf="@+id/headImg"
+                    android:includeFontPadding="false"
+                    android:text='@{StringUtil.isEmpty(user.user_name)?"点击登录":user.user_name}'
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_xxl" />
+
+                <TextView
+                    android:id="@+id/tv_role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_user_name"
+                    android:layout_marginStart="@dimen/horizontal_margin_xl"
+                    android:layout_marginTop="@dimen/vertical_margin_m"
+                    android:layout_toEndOf="@+id/headImg"
+                    android:includeFontPadding="false"
+                    tools:text="15210233333"
+                    android:text="@{user.real_name}"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_l" />
+
+                <ImageView
+                    android:id="@+id/image_personal_center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_arrow_right"
+                    android:layout_alignTop="@+id/headImg"
+                    android:layout_alignBottom="@+id/headImg"
+                    android:layout_marginEnd="@dimen/horizontal_margin_xl"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_xl"
+                android:layout_marginTop="@dimen/y250"
+                android:layout_marginEnd="@dimen/horizontal_margin_xl"
+                android:background="@drawable/rounded_white_16"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_modify_password"
+                    style="@style/setting_item"
+                    android:drawablePadding="@dimen/padding_m"
+                    android:text="修改密码"
+                    app:drawableEndCompat="@mipmap/ic_arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_setting"
+                    style="@style/setting_item"
+                    android:drawablePadding="@dimen/padding_m"
+                    android:text="系统设置"
+                    app:drawableEndCompat="@mipmap/ic_arrow_right" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+</layout>

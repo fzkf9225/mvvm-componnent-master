@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+<FrameLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:corner="http://schemas.android.com/apk/res-auto">
+
+    <pers.fz.mvvm.wight.customlayout.CornersImageView
+        android:id="@+id/image_video"
+        android:layout_width="@dimen/image_xxl"
+        android:layout_height="@dimen/image_xxl"
+        android:background="@color/white"
+        android:scaleType="centerCrop"
+        corner:image_view_radius="@dimen/radius_s"
+        android:src="@mipmap/ic_default_image" />
+    <ImageView
+        android:id="@+id/image_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/icon_play" />
+
+</FrameLayout>
+</layout>
