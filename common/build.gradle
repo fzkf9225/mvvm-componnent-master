@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk project.COMPILE_SDK_VERSION
     defaultConfig {
-        minSdk 21
-        targetSdk 33
+        minSdk project.MIN_SDK_VERSION
+        targetSdk project.TARGET_SDK_VERSION
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         javaCompileOptions {
@@ -52,64 +52,64 @@ android {
 }
 
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    api 'androidx.viewpager2:viewpager2:1.1.0-beta01'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'net.qiujuer.genius:graphics:2.0.0'
-    implementation 'net.qiujuer.genius:res:2.0.0'
-    implementation 'net.qiujuer.genius:ui:2.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    androidTestImplementation 'junit:junit:4.13.2'
-    implementation 'com.orhanobut:logger:2.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
-    implementation 'com.google.zxing:core:3.5.1'
-    implementation 'com.google.zxing:android-core:3.3.0'
-    api 'com.google.code.gson:gson:2.10.1'
-    api 'com.github.bumptech.glide:glide:4.15.1'
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    api 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
-    api 'com.squareup.retrofit2:retrofit:2.9.0'
-    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
-    api 'io.reactivex.rxjava3:rxjava:3.1.6'
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.viewpager2:viewpager2:1.1.0-beta01"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "net.qiujuer.genius:graphics:2.0.0"
+    implementation "net.qiujuer.genius:res:2.0.0"
+    implementation "net.qiujuer.genius:ui:2.0.0"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    androidTestImplementation "junit:junit:4.13.2"
+    implementation "com.orhanobut:logger:2.2.0"
+    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
+    implementation "com.google.zxing:core:3.5.1"
+    implementation "com.google.zxing:android-core:3.3.0"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.squareup.picasso:picasso:2.71828"
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
+    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
     //ConverterFactory的String依赖包
-    api 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
     //ConverterFactory的Gson依赖包
-    api 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     //CallAdapterFactory的Rx依赖包
-    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
     //SmartRefreshLayout集成
-    api 'io.github.scwang90:refresh-layout-kernel:2.0.6'
-    api 'io.github.scwang90:refresh-header-classics:2.0.6'
-    api 'io.github.scwang90:refresh-footer-classics:2.0.6'
+    implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
+    implementation "io.github.scwang90:refresh-header-classics:$refresh_layout_version"
+    implementation "io.github.scwang90:refresh-footer-classics:$refresh_layout_version"
 
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     //放着没有及时回收造成RxJava内存泄漏
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
     //是否需要ExoPlayer模式
-    implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.1.7-release-jitpack'
+    implementation "com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:$gsy_version"
     //根据你的需求ijk模式的so
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.1.7-release-jitpack'
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:v8.1.7-release-jitpack'
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv5:v8.1.7-release-jitpack'
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:v8.1.7-release-jitpack'
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:v8.1.7-release-jitpack'
-    api 'com.tencent:mmkv:1.2.11'
-    api 'org.aspectj:aspectjrt:1.7.3'
-    api 'com.googlecode.mp4parser:isoparser:1.0.6'
+    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:$gsy_version"
+    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:$gsy_version"
+    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv5:$gsy_version"
+    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:$gsy_version"
+    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:$gsy_version"
+    implementation "com.tencent:mmkv:$mmkvVersion"
+    implementation "org.aspectj:aspectjrt:1.7.3"
+    implementation "com.googlecode.mp4parser:isoparser:1.0.6"
     //MinIO只有Java版本不兼容Android，因此使用这两个包代替
-    api 'com.amazonaws:aws-android-sdk-s3:2.22.5'
-    api 'com.amazonaws:aws-android-sdk-mobile-client:2.22.5'
-    api 'io.github.jeremyliao:live-event-bus-x:1.8.0'
+    implementation "com.amazonaws:aws-android-sdk-s3:2.22.5"
+    implementation "com.amazonaws:aws-android-sdk-mobile-client:2.22.5"
+    implementation "io.github.jeremyliao:live-event-bus-x:1.8.0"
 
-    api 'androidx.navigation:navigation-fragment:2.5.3'
-    api 'androidx.navigation:navigation-ui:2.5.3'
+    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui:$navigationVersion"
     //每个用到的模块都要加这两个，不能使用api
-    implementation "com.google.dagger:hilt-android:2.46.1"
-    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.46.1'
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
-    api 'org.osgeo:proj4j:0.1.0'
+    implementation "org.osgeo:proj4j:0.1.0"
 }

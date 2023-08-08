@@ -10,6 +10,7 @@ import dagger.hilt.android.HiltAndroidApp;
 import pers.fz.mvvm.BuildConfig;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.BaseApplication;
+import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.LogcatHelper;
@@ -26,11 +27,8 @@ public class ApplicationHelper extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.LOG_DEBUG) {
-            LogcatHelper.getInstance(this).start();
-            LogUtil.init();
-        }
-        MMKV.initialize(this);
+        Config.init(this);
+        Config.enableDebug(true);
         new ApiRetrofit.Builder(this)
                 .addDefaultHeader()
                 .setErrorService(errorService)

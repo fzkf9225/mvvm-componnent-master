@@ -9,8 +9,6 @@
     <color name="zu_choose_left_item_bg">#E5E5E5</color>
     <color name="zu_choose_right_item_bg">#F3F3F3</color>
     <color name="gray">#666666</color>
-    <color name="white">#FFF</color>
-    <color name="black">#000000</color>
     <color name="exit_button_background">#008bcc</color>
     <color name="background">#FFE4E3E3</color>
     <color name="themeColor">#1c50b5</color>

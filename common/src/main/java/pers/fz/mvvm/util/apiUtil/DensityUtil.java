@@ -92,7 +92,6 @@ public class DensityUtil {
             double y = Math.pow(appDisplayMetrics.heightPixels / appDisplayMetrics.ydpi, 2);
             // 屏幕尺寸
             double screenInches = Math.sqrt(x + y);
-            LogUtil.show(TAG,"是pad吗："+(isPad || screenInches >= 7.0));
             return isPad || screenInches >= 7.0;
         } catch (Exception e) {
             e.printStackTrace();

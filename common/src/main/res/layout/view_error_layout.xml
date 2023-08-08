@@ -19,8 +19,7 @@
     <net.qiujuer.genius.ui.widget.Loading
         android:id="@+id/animProgress"
         android:layout_width="26dip"
-        android:layout_height="26dip"
-        app:gForegroundColor="?attr/colorPrimary" />
+        android:layout_height="26dip" />
 
     <TextView
         android:id="@+id/tv_error_layout"

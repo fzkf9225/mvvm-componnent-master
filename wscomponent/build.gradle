@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.casic.titan.wscomponent'
-    compileSdk 33
+    compileSdk project.COMPILE_SDK_VERSION
 
     defaultConfig {
 //        applicationId "com.casic.titan.wscomponent"
-        minSdk 21
-        targetSdk 33
+        minSdk project.MIN_SDK_VERSION
+        targetSdk project.TARGET_SDK_VERSION
         consumerProguardFiles "consumer-rules.pro"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,12 +35,12 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
     implementation 'io.netty:netty-all:4.1.9.Final'
     implementation 'com.google.guava:guava:23.6-jre'
     implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'

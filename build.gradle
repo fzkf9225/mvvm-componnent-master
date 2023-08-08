@@ -1,7 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    repositories {
-        maven { url 'https://jitpack.io' }
+    loadVersions:
+    {// 读取versions.properties到ext中，供项目中直接用变量引用版本号
+        def versions_properties_path = 'versions.properties'
+        def versions = new Properties()
+        versions.load(file(versions_properties_path).newReader())
+        versions.forEach { key, value ->
+            ext.set(key, value)
+        }
     }
 }
 plugins {
@@ -10,7 +16,12 @@ plugins {
     id 'com.google.dagger.hilt.android' version '2.46.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
 }
-
+allprojects {
+    ext.COMPILE_SDK_VERSION = 33
+    ext.MIN_SDK_VERSION = 21
+    ext.TARGET_SDK_VERSION = 33
+    ext.VERSION_CODE = 1
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

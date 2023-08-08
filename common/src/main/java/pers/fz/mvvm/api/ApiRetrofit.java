@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
-import pers.fz.mvvm.BuildConfig;
 import pers.fz.mvvm.base.BaseConverterFactory;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.apiUtil.DateUtil;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -229,7 +227,7 @@ public class ApiRetrofit {
 
                             Request request = requestBuilder.build();
                             Response response = chain.proceed(request);
-                            if (BuildConfig.DEBUG) {
+                            if (Config.enableDebug.get()) {
                                 ApiRetrofit.getInstance().printLog(request, response);
                             }
                             return response;
