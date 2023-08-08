@@ -12,12 +12,12 @@ android {
         multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["foo" : "bar"]
+                arguments += ["foo": "bar"]
             }
         }
         ndk {
             //选择要添加的对应cpu类型的.so库。
-            abiFilters 'armeabi-v7a','armeabi-v8a', 'x86'
+            abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86'
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
         }
@@ -29,12 +29,14 @@ android {
 
     buildTypes {
         release {
+            resValue "string", "app_config_file", "prod.properties"
             buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示log
             minifyEnabled true// 混淆
             zipAlignEnabled true// Zipalign优化
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            resValue "string", "app_config_file", "dev.properties"
             buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
             minifyEnabled false// 混淆
             zipAlignEnabled false// Zipalign优化

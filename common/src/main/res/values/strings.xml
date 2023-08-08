@@ -9,7 +9,7 @@
     <string name="cancel" translatable="false">取消</string>
     <string name="album" translatable="false">从相册选择</string>
     <string name="camera" translatable="false">拍照</string>
-
+    <string name="app_config_file" translatable="false">app_config_file</string>
     <string name="login_project_code_hint" translatable="false">项目编号</string>
     <string name="login_user_hint" translatable="false">请输入用户名</string>
     <string name="login_tel_hint" translatable="false">请输入手机号码</string>

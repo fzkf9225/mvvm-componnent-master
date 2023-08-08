@@ -1,6 +1,7 @@
 package pers.fz.mvvm.util.apiUtil;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import pers.fz.mvvm.BuildConfig;
+import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.log.LogUtil;
 
 
 /**
@@ -16,6 +19,7 @@ import pers.fz.mvvm.BuildConfig;
  * describe:
  **/
 public class PropertiesUtil {
+    private final static String TAG = PropertiesUtil.class.getSimpleName();
     private volatile Properties properties = new Properties();
 
     private static final class PropertiesUtilHolder {
@@ -41,12 +45,11 @@ public class PropertiesUtil {
             }
         }
         try {
-            InputStream inputStream = null;
-            if (BuildConfig.LOG_DEBUG) {
-                inputStream = mContext.getAssets().open("dev.properties");
-            } else {
-                inputStream = mContext.getAssets().open("prod.properties");
+            String configFile = mContext.getResources().getString(R.string.app_config_file);
+            if (TextUtils.isEmpty(configFile)) {
+                return this;
             }
+            InputStream inputStream = mContext.getAssets().open(configFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             properties.load(bufferedReader);
         } catch (IOException e) {
@@ -138,7 +141,7 @@ public class PropertiesUtil {
      * @param defaultValue 默认值
      * @return String
      */
-        public String getPropertyValue(String key, String defaultValue) {
+    public String getPropertyValue(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
