@@ -1,6 +1,7 @@
 package com.casic.titan.mqttcomponent;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,12 @@ import java.util.Properties;
  * describe:
  **/
 public class PropertiesUtil {
-    private volatile Properties properties = new Properties();
+    private final static String TAG = PropertiesUtil.class.getSimpleName();
+    private volatile Properties properties = null;
+
+    private PropertiesUtil() {
+    }
+
     private static final class PropertiesUtilHolder {
         static final PropertiesUtil PROPERTIES_UTIL = new PropertiesUtil();
     }
@@ -38,12 +44,11 @@ public class PropertiesUtil {
             }
         }
         try {
-            InputStream inputStream = null;
-            if (BuildConfig.DEBUG) {
-                inputStream = mContext.getAssets().open("dev.properties");
-            } else {
-                inputStream = mContext.getAssets().open("prod.properties");
+            String configFile = mContext.getResources().getString(R.string.app_config_file);
+            if (TextUtils.isEmpty(configFile)) {
+                return this;
             }
+            InputStream inputStream = mContext.getAssets().open(configFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             properties.load(bufferedReader);
         } catch (IOException e) {
@@ -125,17 +130,18 @@ public class PropertiesUtil {
      * @return 默认1.0.0
      */
     public String getProtocolVersion() {
-        return properties.getProperty("PROTOCOL_VERSION","1.0.0");
+        return properties.getProperty("PROTOCOL_VERSION", "1.0.0");
     }
 
     /**
      * 获取自定义getProperty
-     * @param key key值
+     *
+     * @param key          key值
      * @param defaultValue 默认值
      * @return String
      */
-    public String getPropertyValue(String key ,String defaultValue) {
-        return properties.getProperty(key,defaultValue);
+    public String getPropertyValue(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 
 }

@@ -22,12 +22,6 @@ public class ToastUtils {
         }
     }
 
-    public static void showShort(String str) {
-        new Handler(Looper.getMainLooper()).post(()->{
-            Toast.makeText(BaseApplication.getInstance(), str, Toast.LENGTH_SHORT).show();
-        });
-    }
-
     public static void showLong(Context context, String str) {
         try {
             Toast.makeText(context, str, Toast.LENGTH_LONG).show();

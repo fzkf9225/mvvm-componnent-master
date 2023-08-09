@@ -16,12 +16,14 @@ android {
 
     buildTypes {
         release {
+            resValue "string", "app_config_file", "prod.properties"
             buildConfigField "boolean", "DEBUG", "false"// 不显示log
             minifyEnabled true// 混淆
             zipAlignEnabled true// Zipalign优化
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            resValue "string", "app_config_file", "dev.properties"
             buildConfigField "boolean", "DEBUG", "true"// 显示log
             minifyEnabled false// 混淆
             zipAlignEnabled false// Zipalign优化

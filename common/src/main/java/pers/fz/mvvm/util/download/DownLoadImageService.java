@@ -72,7 +72,7 @@ public class DownLoadImageService implements Runnable{
 
     public void saveImageToGallery(Context context, Bitmap bmp) {
         // 首先保存图片
-        File appDir = new File(BaseApplication.getInstance().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+File.separator,filePath);
+        File appDir = new File(context.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+File.separator,filePath);
         if (!appDir.exists()) {
             boolean isCreated =appDir.mkdirs();
         }

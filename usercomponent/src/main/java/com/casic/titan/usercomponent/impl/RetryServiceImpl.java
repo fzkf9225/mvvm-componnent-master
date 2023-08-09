@@ -60,9 +60,7 @@ public class RetryServiceImpl implements RetryService {
                     if (throwable instanceof BaseException) {
                         BaseException baseException = (BaseException) throwable;
                         LogUtil.show(TAG, "baseException:" + baseException.toString());
-                        boolean isLoginPastOrNoPermission = UserAccountHelper.isLoginPast(baseException.getErrorCode()) ||
-                                BaseException.WEBSOCKET_NO_PERMISSION_ERROR.equals(baseException.getErrorCode()) ||
-                                BaseException.WEBSOCKET_SUBSCRIBE_ERROR.equals(baseException.getErrorCode());
+                        boolean isLoginPastOrNoPermission = true;//这里的true改成自己的逻辑
                         if (++retryCount <= maxRetries && isLoginPastOrNoPermission) {
                             return refresh(userApiService);
                         }

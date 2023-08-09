@@ -27,14 +27,6 @@ import pers.fz.mvvm.util.update.core.RetrofitFactory;
  */
 public class RxNet {
     private static final String TAG = RxNet.class.getSimpleName();
-
-    private static String packageName = BaseApplication.getInstance().getPackageName();
-    public static final String ACTION_START = packageName + "ACTION_START";
-    public static final String ACTION_UPDATE = packageName + "ACTION_UPDATE";
-    public static final String ACTION_FINISHED = packageName + "ACTION_FINISHED";
-    public static final String ACTION_CANCEL = packageName + "ACTION_CANCEL";
-    public static final String ACTION_ERROR = packageName + "ACTION_ERROR";
-    public static final String ACTION_REDIRECT_ERROR = packageName + "ACTION_REDIRECT_ERROR";
     /**
      * 文件的保存路径
      */

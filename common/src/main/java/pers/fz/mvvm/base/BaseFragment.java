@@ -35,7 +35,6 @@ import javax.inject.Inject;
  * BaseFragment封装
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView {
-    protected Activity mActivity;
     protected String TAG = this.getClass().getSimpleName();
 
     /**
@@ -48,17 +47,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Inject
     protected ErrorService errorService;
     protected ActivityResultLauncher<Intent> loginLauncher = null;
-
-    /**
-     * 获得全局的，防止使用getActivity()为空
-     *
-     * @param context 视图
-     */
-    @Override
-    public void onAttach(@NotNull Context context) {
-        super.onAttach(context);
-        this.mActivity = (Activity) context;
-    }
 
     public void requestPermission(String[] permissions) {
         permissionLauncher.launch(permissions);

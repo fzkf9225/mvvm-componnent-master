@@ -20,7 +20,10 @@ import pers.fz.mvvm.util.log.LogUtil;
  **/
 public class PropertiesUtil {
     private final static String TAG = PropertiesUtil.class.getSimpleName();
-    private volatile Properties properties = new Properties();
+    private volatile Properties properties = null;
+
+    private PropertiesUtil() {
+    }
 
     private static final class PropertiesUtilHolder {
         static final PropertiesUtil PROPERTIES_UTIL = new PropertiesUtil();

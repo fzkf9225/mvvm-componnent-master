@@ -131,8 +131,8 @@ public class UpdateManger implements UpdateMessageDialog.OnUpdateListener {
                 ConstantsHelper.isDownLoadApk = false;
                 new Handler(Looper.getMainLooper()).post(() -> {
                     downloadNotificationUtil.cancelNotification(apkUrl.hashCode());
-                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    installApk(BaseApplication.getInstance(), file);
+                    Toast.makeText(mContext.getApplicationContext(), "文件已保存至" + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    installApk(mContext.getApplicationContext(), file);
                 });
             }
 
@@ -141,7 +141,7 @@ public class UpdateManger implements UpdateMessageDialog.OnUpdateListener {
                 ConstantsHelper.isDownLoadApk = false;
                 new Handler(Looper.getMainLooper()).post(() -> {
                     downloadNotificationUtil.cancelNotification(apkUrl.hashCode());
-                    Toast.makeText(BaseApplication.getInstance(), "文件下载错误，" + msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext.getApplicationContext(), "文件下载错误，" + msg, Toast.LENGTH_SHORT).show();
                 });
             }
         });

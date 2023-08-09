@@ -41,7 +41,7 @@ public class ApiRetrofit {
 
     private final Builder builder;
 
-    public ApiRetrofit(Builder builder) {
+    private ApiRetrofit(Builder builder) {
         this.builder = builder;
     }
 
@@ -185,7 +185,7 @@ public class ApiRetrofit {
         }
 
         public Builder addDefaultHeader() {
-            String timeStamp = DateUtil.getTimestamp();
+//            String timeStamp = DateUtil.getTimestamp();
 //            addHeader("x-timestamp", timeStamp);
 //            addHeader("x-appid", appId);
 //            addHeader("x-uuid", UUID.randomUUID().toString());
@@ -268,6 +268,13 @@ public class ApiRetrofit {
         return getBuilder().retrofit.create(service);
     }
 
+    /**
+     * 这里推荐rsa非堆成加密，破解难度大一点
+     * @param appSecret appSecret
+     * @param postJson 请求体
+     * @param timeStamp 时间戳
+     * @return 加密后的sign
+     */
     private static String encodeSign(String appSecret, String postJson, String timeStamp) {
         try {
             String signOld = ("x-appsecret" + appSecret + postJson + "x-timestamp" + timeStamp).toUpperCase();

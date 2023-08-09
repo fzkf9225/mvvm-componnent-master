@@ -18,8 +18,6 @@ public abstract class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         applicationHelper = this;
-        AutoSize.initCompatMultiProcess(this);
-        CrashHandler.getInstance().init(this);
     }
 
     public static BaseApplication getInstance() {

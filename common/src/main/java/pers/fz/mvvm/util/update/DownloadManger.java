@@ -59,7 +59,7 @@ public class DownloadManger {
                     0x01);
         } else {
             if (StringUtil.isEmpty(fileUrl)) {
-                ToastUtils.showShort(mContext, "文件地址错误！");
+                ToastUtils.showShort(mContext.getApplicationContext(), "文件地址错误！");
                 return;
             }
             if (downloadNotificationUtil == null) {
@@ -81,7 +81,7 @@ public class DownloadManger {
                 public void onFinish(File file) {
                     new Handler(Looper.getMainLooper()).post(()->{
                         downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
-                        Toast.makeText(BaseApplication.getInstance(),"文件已保存至"+file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(),"文件已保存至"+file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -89,7 +89,7 @@ public class DownloadManger {
                 public void onError(String msg) {
                     new Handler(Looper.getMainLooper()).post(()->{
                         downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
-                        Toast.makeText(BaseApplication.getInstance(),"文件下载错误，"+msg,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext.getApplicationContext(),"文件下载错误，"+msg,Toast.LENGTH_SHORT).show();
                     });
                 }
             });

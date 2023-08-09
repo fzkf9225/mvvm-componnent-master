@@ -46,8 +46,7 @@ import pers.fz.mvvm.wight.dialog.LoginDialog;
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener {
     protected String TAG = this.getClass().getSimpleName();
-    Toolbar mToolbar;
-    public VM mViewModel;
+    protected VM mViewModel;
     protected VDB binding;
     protected BaseActivityBinding toolbarBind;
     // 权限检测器
@@ -127,15 +126,14 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (hasToolBar()) {
             super.setContentView(R.layout.base_activity);
             FrameLayout container = findViewById(R.id.container);
-            mToolbar = findViewById(R.id.main_bar);
             binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
-            mToolbar.setNavigationOnClickListener(v -> finish());
+            ((Toolbar)findViewById(R.id.main_bar)).setNavigationOnClickListener(v -> finish());
             binding.setLifecycleOwner(this);
         }
     }
 
     public Toolbar getToolbar() {
-        return mToolbar;
+        return toolbarBind.mainBar;
     }
 
     /**
@@ -361,6 +359,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         });
     }
 
+    /**
+     * 注意判断空，根据自己需求更改
+     * @param model 错误吗实体
+     */
     @Override
     public void onErrorCode(BaseModelEntity model) {
         if (errorService == null || model == null) {
