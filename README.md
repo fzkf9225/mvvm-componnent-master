@@ -15,6 +15,29 @@
 三：https://blog.csdn.net/fzkf9225/article/details/132182449
 
 ## 接入指引：
+### hilt框架依赖
+在项目根目录下build.gradle添加
+```
+plugins {
+    id 'com.android.application' version '8.0.0' apply false
+    id 'com.android.library' version '8.0.0' apply false
+    id 'com.google.dagger.hilt.android' version '2.46.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
+}
+```
+在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
+```
+plugins {
+    id 'com.android.application'
+    id 'com.google.dagger.hilt.android'
+}
+```
+在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
+
+```
+    implementation 'com.google.dagger:hilt-android:2.46.1'
+    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.46.1'
+```
 ### 新建assets目录
 下面新建dev.properties和release.properties，里面有一些基础配置，在common模块里已经配置了，参数key具体参考demo中的的properties配置文件，也可以自定义一些配置
 
