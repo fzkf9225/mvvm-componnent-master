@@ -7,7 +7,10 @@
 为module的公共api模块，提供给别的module接入，建议此模块编写一些interface接口和实体类等等，其他的主要逻辑代码不要放在这里
 ### usercomponent
 组件化代码示例，为单独一个组件，配合api模块一起使用，别的module不要接入此模块，不然组件化就失去了本身的意义
-
+## 封装思路博文，注意观看顺序哈
+一：https://blog.csdn.net/fzkf9225/article/details/105197996
+二：https://blog.csdn.net/fzkf9225/article/details/105200803
+三：https://blog.csdn.net/fzkf9225/article/details/132182449
 ## 接入指引：
 ### 新建assets目录
 下面新建dev.properties和release.properties，里面有一些基础配置，在common模块里已经配置了，参数key具体参考demo中的的properties配置文件，也可以自定义一些配置
