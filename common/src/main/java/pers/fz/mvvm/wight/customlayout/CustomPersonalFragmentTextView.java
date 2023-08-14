@@ -41,7 +41,7 @@ public class CustomPersonalFragmentTextView extends FrameLayout {
     public CustomPersonalFragmentTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);
-        mHeight = a.getDimension(R.styleable.auto3d_textSize, DensityUtil.px2sp(context, 24));
+        mHeight = a.getDimension(R.styleable.auto3d_auto_text_size, DensityUtil.px2sp(context, 24));
         a.recycle();
         mContext = context;
         init();

@@ -1,5 +1,7 @@
-<resources>
-    <string name="app_name">mvvm-component-master</string>
+<resources translatable="false">
+    <string name="app_name" >mvvm-component-master</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="scaling_str">这是一段ScalingTextView的折叠测试文字，测试多行显示的时候是否可以”查看全文“、”收起全文“这个功能是否正常呢，但是这个问题必须要超过两行才行，因此我现在每打的一个字都是在凑字数，你懂了吧！！！</string>
+
 </resources>

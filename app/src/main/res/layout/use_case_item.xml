@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="useCase"
+            type="com.casic.titan.demo.bean.UseCase" />
+    </data>
+
+    <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:corner_backColor="@color/white"
+        app:corner_radius="@dimen/radius_m"
+        android:layout_marginStart="@dimen/horizontal_margin_l"
+        android:layout_marginEnd="@dimen/horizontal_margin_l"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingTop="@dimen/padding_m"
+        android:paddingEnd="@dimen/padding_l"
+        android:paddingBottom="@dimen/padding_m">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{useCase.name}"
+            android:textColor="@color/black"
+            tools:text="这是标题"
+            app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="@dimen/font_size_xl" />
+        <TextView
+            android:id="@+id/tv_describe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{useCase.describe}"
+            android:layout_marginTop="@dimen/vertical_margin_s"
+            tools:text="这是内容哦！！！！"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            android:textColor="@color/dark_light"
+            android:textSize="@dimen/font_size_m" />
+    </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
+</layout>

@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import pers.fz.mvvm.R;
 
@@ -20,7 +20,7 @@ import pers.fz.mvvm.R;
  * Created by CherishTang on 2019/5/31.
  * describe：自定义圆角矩形
  */
-public class CornerTextView extends AppCompatTextView {
+public class CornerButton extends AppCompatButton {
     private Paint circlePaint;
     private Paint backPaint;
     private Paint textPaint;
@@ -28,8 +28,7 @@ public class CornerTextView extends AppCompatTextView {
     private int circleBackColor = Color.WHITE;
     private float storkWidth, raduis;
 
-
-    public CornerTextView(Context context, AttributeSet attrs) {
+    public CornerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setGravity(Gravity.CENTER);
@@ -47,7 +46,7 @@ public class CornerTextView extends AppCompatTextView {
             raduis = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
 
             typedArray.recycle();
-            GradientDrawable gd = new GradientDrawable();//创建drawable
+            GradientDrawable gd = new GradientDrawable();
             gd.setColor(circleBackColor);
             gd.setCornerRadius(raduis);
             if (storkWidth > 0) {
@@ -66,7 +65,7 @@ public class CornerTextView extends AppCompatTextView {
         textPaint.setTextSize(getTextSize());
     }
 
-    public CornerTextView(Context context) {
+    public CornerButton(Context context) {
         this(context, null);
 
     }

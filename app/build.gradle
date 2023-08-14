@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
 }
 
@@ -53,6 +54,13 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.3'
+    }
 }
 
 dependencies {
@@ -65,6 +73,8 @@ dependencies {
         }
     }
     api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
     testImplementation "junit:junit:4.13.2"
@@ -85,4 +95,6 @@ dependencies {
     implementation "com.tencent:mmkv:$mmkvVersion"
     implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
 }

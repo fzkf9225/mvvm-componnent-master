@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                                 intent.putExtra(Settings.EXTRA_APP_PACKAGE, this.getPackageName());
                                 intent.putExtra(Settings.EXTRA_CHANNEL_ID, this.getApplicationInfo().uid);
                             } else {
-                                intent.setAction("android.intent.action.MAIN");
+                                intent.setAction(Intent.ACTION_MAIN);
                                 intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
                                 intent.setData(Uri.fromParts("package", this.getPackageName(), null));
                             }

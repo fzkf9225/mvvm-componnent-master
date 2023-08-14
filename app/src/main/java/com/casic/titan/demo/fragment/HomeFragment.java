@@ -1,54 +1,32 @@
 package com.casic.titan.demo.fragment;
 
-import android.Manifest;
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.core.app.ComponentActivity;
 
 import com.casic.titan.demo.R;
+import com.casic.titan.demo.adapter.UseCaseAdapter;
 import com.casic.titan.demo.databinding.FragmentHomeBinding;
+import com.casic.titan.demo.enumbean.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
-import com.casic.titan.userapi.UserService;
-import com.casic.titan.userapi.router.UserRouterService;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
+import com.google.gson.Gson;
 
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.inter.RetryService;
+import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2023/4/28
  * describe：
  */
 @AndroidEntryPoint
-public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> {
-
-    private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
-            Manifest.permission.VIBRATE,
-            Manifest.permission.ACCESS_WIFI_STATE,
-            Manifest.permission.WAKE_LOCK,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.RECORD_AUDIO
-    };
-    @Inject
-    UserService userService;
-    @Inject
-    UserRouterService userRouterService;
-    @Inject
-    RetryService retryService;
-
-    private Disposable disposable;
-
+public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> implements BaseRecyclerViewAdapter.OnItemClickListener{
+    private UseCaseAdapter useCaseAdapter;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
@@ -63,15 +41,24 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     protected void initData(Bundle bundle) {
         binding.setIsLogin(UserAccountHelper.isLogin());
         binding.setToken(UserAccountHelper.isLogin() ? "已登录" : "暂未登录");
-    }
-
-    private void init() {
-
+        useCaseAdapter = new UseCaseAdapter(requireContext(), UseCaseEnum.toUseCaseList());
+        useCaseAdapter.setOnItemClickListener(this);
+        binding.mRecyclerViewUseCase.setAdapter(useCaseAdapter);
     }
 
     @Override
     protected void onLoginSuccessCallback(Bundle bundle) {
         super.onLoginSuccessCallback(bundle);
-        init();
+
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if(Activity.class.isAssignableFrom(useCaseAdapter.getList().get(position).getClx())){
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("args",useCaseAdapter.getList().get(position));
+            startActivity(useCaseAdapter.getList().get(position).getClx(),bundle);
+            return;
+        }
     }
 }

@@ -5,8 +5,9 @@
         <attr name="border_color" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="my_text_view">
-        <attr name="contentText" format="string"></attr>
+    <declare-styleable name="scaling_text_view">
+        <attr name="content_text" format="string"></attr>
+        <attr name="content_text_color" format="color"></attr>
     </declare-styleable>
     <declare-styleable name="RatingBar">
         <!--星星间距-->
@@ -33,8 +34,9 @@
     </declare-styleable>
 
     <declare-styleable name="auto3d">
-        <attr name="textSize" format="dimension" />
-        <attr name="textColor" format="color" />
+        <attr name="auto_text_size" format="dimension" />
+        <attr name="auto_text_color" format="color" />
+        <attr name="auto_text" format="string" />
         <attr name="bg_selected" format="boolean" />
     </declare-styleable>
 

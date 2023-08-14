@@ -5,8 +5,10 @@ import android.content.res.TypedArray;
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 
 
 /**
@@ -27,8 +31,10 @@ import pers.fz.mvvm.R;
 public class AutoTextView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
 
-    private float mHeight;
+    private float mHeight = (int) TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
     private int mColor;
+    private String textStr;
     private Context mContext;
     //mInUp,mOutUp分别构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
@@ -37,7 +43,6 @@ public class AutoTextView extends TextSwitcher implements
     //mInDown,mOutDown分别构成向下翻页的进出动画
     private Rotate3dAnimation mInDown;
     private Rotate3dAnimation mOutDown;
-    private Paint mPaint;
 
     public AutoTextView(Context context) {
         this(context, null);
@@ -46,14 +51,18 @@ public class AutoTextView extends TextSwitcher implements
 
     public AutoTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
-        mPaint = new Paint();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);
-        mHeight = a.getDimension(R.styleable.auto3d_textSize, 14);
-        mColor = a.getColor(R.styleable.auto3d_textColor, 0X333333);
-        mPaint.setColor(mColor);
-        mPaint.setTextSize(mHeight);
-        a.recycle();
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.auto3d, 0, 0);
+        for (int i = 0; i < ta.getIndexCount(); i++) {
+            int attr = ta.getIndex(i);
+            if (attr == R.styleable.auto3d_auto_text_size) {
+                mHeight = ta.getDimensionPixelSize(attr, 14);
+            } else if (attr == R.styleable.auto3d_auto_text_color) {
+                mColor = ta.getColor(attr, 0X333333);
+            } else if (attr == R.styleable.auto3d_auto_text) {
+                textStr = ta.getString(attr);
+            }
+        }
+        ta.recycle();
         mContext = context;
         init();
     }
@@ -84,14 +93,14 @@ public class AutoTextView extends TextSwitcher implements
     //gravity是没用的,如果想要
     @Override
     public View makeView() {
-        // TODO Auto-generated method stub
         TextView t = new TextView(mContext);
         t.setEllipsize(TextUtils.TruncateAt.END);
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
+        t.setText(textStr);
         t.setLayoutParams(lp);
-        t.setTextSize(mHeight);
-//        t.setTextColor(mColor);
+        t.setTextSize(DensityUtil.px2dp(getContext(),mHeight));
+        t.setTextColor(mColor);
         t.setMaxLines(1);
         return t;
     }

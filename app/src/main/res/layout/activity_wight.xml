@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingTop="@dimen/padding_m"
+        android:paddingEnd="@dimen/padding_l"
+        tools:context=".activity.WightActivity">
+
+        <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+            android:id="@+id/cornerConstraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xxl"
+            app:corner_backColor="@color/themeColor"
+            app:corner_radius="@dimen/radius_m"
+            app:layout_constraintEnd_toStartOf="@+id/cornerTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="CornerConstraintLayout"
+                android:textColor="@color/white" />
+        </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
+
+        <pers.fz.mvvm.wight.customlayout.CornerTextView
+            android:id="@+id/cornerTextView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xxl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:text="CornerTextView"
+            android:textColor="@color/white"
+            app:corner_backColor="@color/themeColor"
+            app:corner_radius="@dimen/radius_m"
+            app:corner_storkColor="@color/theme_red"
+            app:corner_storkWidth="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <pers.fz.mvvm.wight.customlayout.CornerButton
+            android:id="@+id/cornerButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:text="CornerButton"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:corner_backColor="@color/themeColor"
+            app:corner_radius="@dimen/radius_xxl"
+            app:corner_storkColor="@color/theme_red"
+            app:corner_storkWidth="2dp"
+            app:layout_constraintEnd_toStartOf="@+id/cornerLabelView"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout" />
+
+        <FrameLayout
+            android:id="@+id/cornerLabelView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xxl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:background="@color/themeColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/cornerButton"
+            app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="CornerLabelView"
+                android:textColor="@color/white" />
+
+            <pers.fz.mvvm.wight.customlayout.CornerLabelView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                app:position="right_top"
+                app:side_length="25dp"
+                app:text="这是标签"
+                app:text_color="@color/white"
+                app:text_size="@dimen/font_size_m" />
+        </FrameLayout>
+
+        <pers.fz.mvvm.wight.customlayout.AutoTextView
+            android:id="@+id/autoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:auto_text="这是AutoTextView测试文字"
+            app:auto_text_color="@color/themeColor"
+            app:auto_text_size="@dimen/font_size_l"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cornerButton" />
+
+        <pers.fz.mvvm.wight.customlayout.ScalingTextView
+            android:id="@+id/scalingTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:content_text="@string/scaling_str"
+            app:content_text_color="@color/themeColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/autoTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

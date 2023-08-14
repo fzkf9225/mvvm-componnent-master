@@ -35,7 +35,7 @@ public class CustomTextView extends FrameLayout {
     public CustomTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.auto3d);
-        mHeight = a.getDimension(R.styleable.auto3d_textSize, 12);
+        mHeight = a.getDimension(R.styleable.auto3d_auto_text_size, 12);
         a.recycle();
         mContext = context;
         init();
