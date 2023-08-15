@@ -96,7 +96,7 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
-    public void initView() {
+    private void initView() {
         View inflate = LayoutInflater.from(context).inflate(R.layout.sure_cancel_dialog, null);
         TextView dialogTextView = inflate.findViewById(R.id.dialog_textView);
         TextView dialogSure = inflate.findViewById(R.id.dialog_sure);

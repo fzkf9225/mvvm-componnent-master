@@ -2,6 +2,9 @@ package com.casic.titan.demo.enumbean;
 
 import android.os.Bundle;
 
+import com.casic.titan.demo.activity.DialogActivity;
+import com.casic.titan.demo.activity.DownloadActivity;
+import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.WightActivity;
 import com.casic.titan.demo.bean.UseCase;
 
@@ -16,7 +19,10 @@ public enum UseCaseEnum {
     /**
      * 自定义组件
      */
-    WIGHT(WightActivity.class,"自定义组件","自定义实现的一些View、ViewGroup",null)
+    WIGHT(WightActivity.class,"自定义组件","自定义实现的一些View、ViewGroup",null),
+    DIALOG(DialogActivity.class,"自定义dialog","自定义实现的一些Vdialog",null),
+    MEDIA(MediaActivity.class,"媒体访问","自定义媒体dialog可以实现选择图片、视频等",null),
+    DOWNLOAD(DownloadActivity.class,"文件下载","自定义断点续传下载功能",null),
 
     ;
 

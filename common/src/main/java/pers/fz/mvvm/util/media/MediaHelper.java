@@ -88,7 +88,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private ActivityResultLauncher<String[]> permissionLauncher = null;
     private ActivityResultLauncher<Object> cameraLauncher = null;
     private ActivityResultLauncher<String> videoLauncher = null;
-    private ActivityResultLauncher<Uri> shootLauncher = null;
+    private ActivityResultLauncher<Object> shootLauncher = null;
 
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
@@ -100,7 +100,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
             cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(), cameraCallback);
             videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
-            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.TakeVideo(), shootCallback);
+            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(), shootCallback);
         } else {
             //注册图片选择框监听
             imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
@@ -109,7 +109,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
             cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(), cameraCallback);
             videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
-            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.TakeVideo(), shootCallback);
+            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(), shootCallback);
         }
     }
 
@@ -152,7 +152,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 拍照回调
      */
     ActivityResultCallback<Uri> cameraCallback = result -> {
+        LogUtil.show(TAG, "拍照回调：" + result);
         if (result == null) {
+            return;
+        }
+        if (!new File(result.getPath()).exists()) {
             return;
         }
         mutableLiveData.postValue(new MediaBean(new ArrayList<>(List.of(result)), MediaTypeEnum.IMAGE.getMediaType()));
@@ -161,18 +165,25 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 选择视频回调
      */
     ActivityResultCallback<Uri> videoCallback = result -> {
-        LogUtil.show(TAG, "uri：" + result);
+        LogUtil.show(TAG, "选择视频回调：" + result);
         if (result == null) {
+            return;
+        }
+        if (!new File(result.getPath()).exists()) {
             return;
         }
         mutableLiveData.postValue(new MediaBean(new ArrayList<>(Collections.singletonList(result)), MediaTypeEnum.VIDEO.getMediaType()));
     };
 
-    ActivityResultCallback<Bitmap> shootCallback = result -> {
+    ActivityResultCallback<Uri> shootCallback = result -> {
+        LogUtil.show(TAG, "选择视频回调：" + result);
         if (result == null) {
             return;
         }
-        mutableLiveData.postValue(new MediaBean(new ArrayList<>(Collections.singletonList(videoUri)), MediaTypeEnum.VIDEO.getMediaType()));
+        if (!new File(result.getPath()).exists()) {
+            return;
+        }
+        mutableLiveData.postValue(new MediaBean(new ArrayList<>(Collections.singletonList(result)), MediaTypeEnum.VIDEO.getMediaType()));
     };
 
     public MutableLiveData<MediaBean> getMutableLiveData() {
@@ -498,21 +509,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 打开拍摄
      */
     public void shoot() {
-        File dirFile = new File(mediaBuilder.getVideoOutPutPath());
-        if (!dirFile.exists()) {
-            boolean isCreate = dirFile.mkdirs();
-        }
-        //设置视频路径
-        String fileName = FileUtils.getNoRepeatFileName(mediaBuilder.getVideoOutPutPath(), "VIDEO_", ".mp4");
-        File videoDir = new File(dirFile, fileName + ".mp4");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            // 从文件中创建uri
-            videoUri = Uri.fromFile(videoDir);
-        } else { //兼容android7.0 使用共享文件的形式
-            videoUri = FileProvider.getUriForFile(mediaBuilder.getActivity().getApplicationContext(),
-                    mediaBuilder.getActivity().getPackageName() + ".FileProvider", videoDir);
-        }
-        shootLauncher.launch(videoUri);
+        shootLauncher.launch(null);
     }
 
     /**

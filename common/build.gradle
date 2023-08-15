@@ -55,6 +55,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    dataBinding{
+        enabled = true
+    }
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.3'
     }

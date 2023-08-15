@@ -38,6 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ellipsize="end"
+                android:inputType="text"
                 android:gravity="center_vertical"
                 android:hint="请输入"
                 android:lines="1"

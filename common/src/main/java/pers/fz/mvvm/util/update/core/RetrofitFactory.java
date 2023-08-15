@@ -1,6 +1,9 @@
 package pers.fz.mvvm.util.update.core;
 
-import pers.fz.mvvm.api.ApiRetrofit;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.api.BaseApiService;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.util.apiUtil.PropertiesUtil;
@@ -8,10 +11,6 @@ import pers.fz.mvvm.util.update.callback.DownloadListener;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

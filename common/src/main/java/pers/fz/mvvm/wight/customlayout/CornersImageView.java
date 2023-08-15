@@ -105,11 +105,10 @@ public class CornersImageView extends AppCompatImageView {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 canvas.clipPath(path);
             } else {
-                canvas.clipPath(path, Region.Op.XOR);// REPLACE、UNION 等
+                canvas.clipPath(path, Region.Op.XOR);
             }
             canvas.drawPath(path,mPaint);
         }
-
         super.onDraw(canvas);
     }
 }

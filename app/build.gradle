@@ -96,5 +96,4 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
-
 }

@@ -70,10 +70,12 @@
         <activity
             android:name=".zxing.DecodeActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".activity.TechnicalSupportActivity"
-            android:exported="true" />
+            android:exported="false" />
+        <activity android:name=".activity.WebViewActivity"
+            android:exported="false"/>
         <activity
             android:name=".wight.multi_image_selector.MultiImageSelectorActivity"
             android:exported="true" />

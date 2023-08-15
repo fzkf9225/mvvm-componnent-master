@@ -1,6 +1,7 @@
 package pers.fz.mvvm.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -20,7 +21,7 @@ import pers.fz.mvvm.util.log.ToastUtils;
  * Created by fz on 2021/4/2
  * 添加视频
  */
-public class VideoAddAdapter extends BaseRecyclerViewAdapter<String, ImgAddItemBinding> {
+public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBinding> {
     private final String TAG = this.getClass().getSimpleName();
 
     public VideoClearListener videoClearListener;
@@ -62,16 +63,16 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<String, ImgAddItemB
                 }
             });
             holder.getBinding().ivAdd.setOnClickListener(v -> {
-                try {
-                    Bundle bundleVideo = new Bundle();
-                    bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos)));
-                    bundleVideo.putString("videoPath", mList.get(pos));
-                    VideoPlayerActivity.show(mContext, bundleVideo);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    LogUtil.show(TAG,"视频播放失败:" + e);
-                    ToastUtils.showShort(mContext, "视频播放失败");
-                }
+//                try {
+//                    Bundle bundleVideo = new Bundle();
+//                    bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos)));
+//                    bundleVideo.putString("videoPath", mList.get(pos));
+//                    VideoPlayerActivity.show(mContext, bundleVideo);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    LogUtil.show(TAG,"视频播放失败:" + e);
+//                    ToastUtils.showShort(mContext, "视频播放失败");
+//                }
             });
             Glide.with(mContext)
                     .load(mList.get(pos))

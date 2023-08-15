@@ -14,7 +14,6 @@ import android.widget.TextView;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.wight.pickertime.PickValueView;
-import pers.fz.mvvm.util.log.LogUtil;
 
 import java.util.List;
 
@@ -47,9 +46,9 @@ public class PickStringDialog<T extends PopupWindowBean> implements View.OnClick
         customDialog = new Dialog(context, R.style.ActionSheetDialogStyle);
         pickerView = LayoutInflater.from(context).inflate(
                 R.layout.numberpicker, null);
-        pvLayout = (LinearLayout) pickerView.findViewById(R.id.Main_pvLayout);
-        tvSelected = (TextView) pickerView.findViewById(R.id.Main_tvSelected);
-        pickString = (PickValueView) pickerView.findViewById(R.id.pickString);
+        pvLayout = pickerView.findViewById(R.id.Main_pvLayout);
+        tvSelected = pickerView.findViewById(R.id.Main_tvSelected);
+        pickString = pickerView.findViewById(R.id.pickString);
         pickString.setVisibility(View.VISIBLE);
 
         if (defaultString == null || defaultString.equals("")) {
@@ -60,13 +59,13 @@ public class PickStringDialog<T extends PopupWindowBean> implements View.OnClick
 
         pickString.setOnSelectedChangeListener(this);
 
-        submitBtn = (TextView) pickerView.findViewById(R.id.submitBtn);
+        submitBtn = pickerView.findViewById(R.id.submitBtn);
         submitBtn.setOnClickListener(this);
         initPickData();
-        customDialog.setContentView(pickerView); // 将布局设置给Dialog
+        customDialog.setContentView(pickerView);
         Window dialogWindow = customDialog.getWindow();
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);// 设置dialog宽度
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.BOTTOM);
         return customDialog;
     }
@@ -98,15 +97,9 @@ public class PickStringDialog<T extends PopupWindowBean> implements View.OnClick
             }
             if (onPickSelectedListener != null) {
                 if (TextUtils.isEmpty(tvSelected.getText().toString())) {
-                    for (int i = 0; i < details.size(); i++) {
-                        if (details.get(i).getName().equals(pickString.getLeftDefaultString())) {
-                            onPickSelectedListener.pickSelected(this,
-                                    i, pickString.getLeftDefaultString());
-                        }
-                    }
+                    onPickSelectedListener.pickSelected(this, pickString.getLeftDefaultString());
                 } else {
-                    onPickSelectedListener.pickSelected(this,
-                            (Integer) tvSelected.getTag(), tvSelected.getText().toString());
+                    onPickSelectedListener.pickSelected(this, tvSelected.getText().toString());
                 }
             }
         }
@@ -116,15 +109,10 @@ public class PickStringDialog<T extends PopupWindowBean> implements View.OnClick
     public void onSelected(PickValueView view, Object leftValue, Object middleValue, Object rightValue) {
         if (view == pickString && leftValue != null) {
             tvSelected.setText(leftValue.toString());
-            for (T contents : details) {
-                if (contents.getName().equals(leftValue.toString())) {
-                    tvSelected.setTag(contents.getId());
-                }
-            }
         }
     }
 
     public interface OnPickSelectedListener {
-        void pickSelected(PickStringDialog mCurrentPick, Integer position, String showText);
+        void pickSelected(PickStringDialog mCurrentPick, String showText);
     }
 }

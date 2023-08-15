@@ -8,6 +8,7 @@
     <declare-styleable name="scaling_text_view">
         <attr name="content_text" format="string"></attr>
         <attr name="content_text_color" format="color"></attr>
+        <attr name="default_collapsed" format="boolean"></attr>
     </declare-styleable>
     <declare-styleable name="RatingBar">
         <!--星星间距-->
@@ -84,19 +85,17 @@
         <attr name="trimLines" />
     </declare-styleable>
 
-    <declare-styleable name="Topbar">
-        <attr name="ttitle" format="string"/>//标题
-        <attr name="isBrowse" format="boolean"/>//是否可以点击浏览大图
-        <attr name="isAutoBanner" format="boolean"/>//是否自动轮播
-        <attr name="isDownLoadLocal" format="boolean"/>//是否缓存本地
-        <attr name="titleTextSize" format="dimension" />//标题大小
-        <attr name="titleTextColor" format="color" />//标题颜色
-        <attr name="leftTextColor" format="color" />//左边文字大小
-        <attr name="leftBackground" format="reference|color" />//左边背景
-        <attr name="leftText" format="string" /> //左边文字
-        <attr name="rightTextColor" format="color" /> //右边文字颜色
-        <attr name="rightBackground" format="reference|color" />//右边背景
-        <attr name="rightText" format="string" /> //右边文字
+    <declare-styleable name="banner">
+        <attr name="can_browse" format="boolean"/>//是否可以点击浏览大图
+        <attr name="auto_banner" format="boolean"/>//是否自动轮播
+        <attr name="can_download" format="boolean"/>//是否可以下载本地
+        <attr name="dot_position">//指针位置，是在banner内部底下还是外部底下，暂未实现这个功能，out属性用处不大感觉就没写了
+            <enum name="inner" value="0" />
+            <enum name="out" value="1" />
+        </attr>
+        <attr name="banner_radius" format="dimension" />
+        <attr name="icon_selected" format="reference"/>
+        <attr name="icon_unselected" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="CornerTextView">
@@ -137,6 +136,8 @@
             <enum name="right" value="3" />
             <enum name="bottom" value="4" />
         </attr>
+        <attr name="searchIcon" format="reference"/>
+        <attr name="clearIcon" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="MaterialRipple">

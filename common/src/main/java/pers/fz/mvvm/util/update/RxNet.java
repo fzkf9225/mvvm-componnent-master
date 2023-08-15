@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.util.apiUtil.CommonUtils;

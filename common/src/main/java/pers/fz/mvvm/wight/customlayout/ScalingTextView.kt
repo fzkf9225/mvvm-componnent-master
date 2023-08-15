@@ -35,6 +35,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
     init {
         val typedValue = context.obtainStyledAttributes(attrs, R.styleable.scaling_text_view)
         mOriginText = typedValue.getString(R.styleable.scaling_text_view_content_text).toString()
+        isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_default_collapsed,false)
         mOriginTextColor = typedValue.getColor(R.styleable.scaling_text_view_content_text_color,ContextCompat.getColor(context,R.color.themeColor)).toInt()
         text = mOriginText
     }

@@ -11,41 +11,27 @@ import androidx.annotation.DrawableRes;
 public class BannerBean {
 
     private long modifyTime;
-    private String path;//图片地址
+    private Object path;//图片地址
     private String imgDiscribe;//图片描述
     private String labelImage;//图片文字地址
     private String linkPath;//点击图片跳转的页面地址
-    private @DrawableRes
-    int localPath;
 
-    public BannerBean(String path) {
+    public BannerBean(Object path) {
         this.path = path;
     }
 
-    public BannerBean(String path, String linkPath) {
+    public BannerBean(Object path, String linkPath) {
         this.path = path;
         this.linkPath = linkPath;
     }
 
-    public BannerBean(String path, String labelImage, String linkPath) {
+    public BannerBean(Object path, String labelImage, String linkPath) {
         this.path = path;
         this.labelImage = labelImage;
         this.linkPath = linkPath;
     }
 
     public BannerBean() {
-    }
-
-    public BannerBean(int localPath) {
-        this.localPath = localPath;
-    }
-
-    public int getLocalPath() {
-        return localPath;
-    }
-
-    public void setLocalPath(int localPath) {
-        this.localPath = localPath;
     }
 
     public String getLinkPath() {
@@ -72,11 +58,11 @@ public class BannerBean {
         this.modifyTime = modifyTime;
     }
 
-    public String getPath() {
+    public Object getPath() {
         return path;
     }
 
-    public void setPath(String path) {
+    public void setPath(Object path) {
         this.path = path;
     }
 

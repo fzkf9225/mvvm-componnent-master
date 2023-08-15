@@ -11,8 +11,8 @@ import java.io.File;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import io.reactivex.disposables.Disposable;
-import pers.fz.mvvm.api.BaseApplication;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.apiUtil.StringUtil;
 import pers.fz.mvvm.util.log.ToastUtils;

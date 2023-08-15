@@ -234,6 +234,8 @@ public class BannerViewPager extends ViewPager {
                     }
                 }
                 break;
+            default:
+                break;
         }
         return super.onTouchEvent(event);
     }
@@ -243,21 +245,18 @@ public class BannerViewPager extends ViewPager {
      */
     public void initLoop() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(3000);
-                        if (!stopLoopTag) {
-                            Message message = Message.obtain();
-                            message.what = 10;
-                            message.arg1 = getCurrentItem() + 1;
-                            mHandler.sendMessage(message);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(3000);
+                    if (!stopLoopTag) {
+                        Message message = Message.obtain();
+                        message.what = 10;
+                        message.arg1 = getCurrentItem() + 1;
+                        mHandler.sendMessage(message);
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

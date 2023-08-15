@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        tools:context=".activity.DownloadActivity">
+        <pers.fz.mvvm.wight.customlayout.CornerEditText
+            android:id="@+id/edit_url"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/font_size_l"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:textColorHint="@color/nv_bg_color"
+            android:hint="请输入下载目标地址"
+            android:gravity="top"
+            android:padding="@dimen/padding_m"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            app:corner_backColor="@color/white"
+            app:corner_radius="@dimen/radius_m"
+            app:corner_storkColor="@color/h_line_color"
+            app:corner_storkWidth="2dp"
+            android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
+            android:layout_height="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="下载"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintTop_toBottomOf="@+id/edit_url"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

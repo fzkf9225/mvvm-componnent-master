@@ -39,9 +39,9 @@ public class FloorsPickDialog implements View.OnClickListener, PickValueView.onS
         customDialog = new Dialog(context, R.style.ActionSheetDialogStyle);
         pickerView = LayoutInflater.from(context).inflate(
                 R.layout.numberpicker, null);
-        pvLayout = (LinearLayout) pickerView.findViewById(R.id.Main_pvLayout);
-        tvSelected = (TextView) pickerView.findViewById(R.id.Main_tvSelected);
-        pickValue = (PickValueView) pickerView.findViewById(R.id.pickValue2);
+        pvLayout = pickerView.findViewById(R.id.Main_pvLayout);
+        tvSelected = pickerView.findViewById(R.id.Main_tvSelected);
+        pickValue = pickerView.findViewById(R.id.pickValue2);
         pickValue.setVisibility(View.VISIBLE);
         if (defaultString == null || defaultString.equals("")) {
             tvSelected.setHint("请选择数量");
@@ -79,10 +79,14 @@ public class FloorsPickDialog implements View.OnClickListener, PickValueView.onS
         if (v.getId() == R.id.submitBtn) {
             if (tvSelected.getText().toString() == null || tvSelected.getText().equals("")) {
                 singleTextView.setText("10");
-//                    if(onPickSelectedListener!=null) onPickSelectedListener.pickSelected("1");
+                if (onPickSelectedListener != null) {
+                    onPickSelectedListener.pickSelected("1");
+                }
             } else {
                 singleTextView.setText(tvSelected.getText().toString());
-//                    if(onPickSelectedListener!=null) onPickSelectedListener.pickSelected(tvSelected.getText().toString());
+                if (onPickSelectedListener != null) {
+                    onPickSelectedListener.pickSelected(tvSelected.getText().toString());
+                }
             }
             if (customDialog != null && customDialog.isShowing()) {
                 customDialog.dismiss();
@@ -97,8 +101,9 @@ public class FloorsPickDialog implements View.OnClickListener, PickValueView.onS
         }
     }
 
-    public void setOnPickSelectedListener(OnPickSelectedListener onPickSelectedListener) {
+    public FloorsPickDialog setOnPickSelectedListener(OnPickSelectedListener onPickSelectedListener) {
         this.onPickSelectedListener = onPickSelectedListener;
+        return this;
     }
 
     public interface OnPickSelectedListener {

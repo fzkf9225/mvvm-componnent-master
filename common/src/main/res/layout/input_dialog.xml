@@ -25,7 +25,7 @@
         android:hint="请输入"
         android:maxLines="1"
         android:inputType="text"
-        android:layout_marginTop="@dimen/vertical_margin_xxl"
+        android:layout_marginTop="@dimen/vertical_margin_xl"
         android:layout_marginLeft="@dimen/horizontal_margin_xl"
         android:layout_marginRight="@dimen/horizontal_margin_xl"
         android:paddingLeft="@dimen/padding_l"
@@ -33,13 +33,8 @@
         android:background="@drawable/round_white_bg_border"
         android:textSize="@dimen/font_size_xl" />
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
         android:layout_marginTop="@dimen/vertical_margin_xxl"
-        android:layout_marginLeft="@dimen/horizontal_margin_xl"
-        android:layout_marginRight="@dimen/horizontal_margin_xl"
-        android:background="@color/themeColor" />
-
+        style="@style/h_line" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_xxl"
@@ -52,14 +47,12 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="取消"
-            android:textColor="@color/themeColor"
-            android:textSize="@dimen/font_size_xxl" />
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl" />
 
         <View
-            android:layout_width="1dp"
-            android:layout_height="@dimen/height_l"
-            android:layout_gravity="center_vertical"
-            android:background="@color/themeColor" />
+            android:id="@+id/s_line"
+            style="@style/s_line"/>
 
         <TextView
             android:id="@+id/dialog_sure"
@@ -69,6 +62,6 @@
             android:gravity="center"
             android:text="确定"
             android:textColor="@color/themeColor"
-            android:textSize="@dimen/font_size_xxl" />
+            android:textSize="@dimen/font_size_xl" />
     </LinearLayout>
 </LinearLayout>

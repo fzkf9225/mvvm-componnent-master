@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
@@ -31,7 +32,10 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
     private Drawable drawableSearch = null;
     private Drawable drawableClear = null;
     private Context mContext;
-    private int drawablePosition = 1;//1-左，2-上，3-右，4-下
+    /**
+     * 1-左，2-上，3-右，4-下
+     */
+    private int drawablePosition = 1;
 
     public CustomEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,34 +49,42 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
         init(attrs);
     }
 
-    private void init( AttributeSet attrs) {
+    private void init(AttributeSet attrs) {
         try {
             TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.CustomEditText, 0, 0);
             for (int i = 0; i < ta.getIndexCount(); i++) {
                 int attr = ta.getIndex(i);
                 if (attr == R.styleable.CustomEditText_drawable_position) {
                     drawablePosition = ta.getInt(attr, 3);
+                } else if (attr == R.styleable.CustomEditText_searchIcon) {
+                    drawableSearch = ta.getDrawable(attr);
+                } else if (attr == R.styleable.CustomEditText_clearIcon) {
+                    drawableClear = ta.getDrawable(attr);
                 }
             }
             ta.recycle();
-            setBackground(null);
             setSingleLine();
             setLines(1);
+            setPadding(DensityUtil.dp2px(getContext(),8),0,DensityUtil.dp2px(getContext(),8),0);
             setImeOptions(EditorInfo.IME_ACTION_SEARCH);
             setTextSize(12);
             setTextColor(ContextCompat.getColor(mContext, R.color.search_view_background));
-            drawableSearch = ContextCompat.getDrawable(mContext,R.mipmap.ic_search_app_left);
-            drawableClear = ContextCompat.getDrawable(mContext,R.mipmap.icon_clear);
-            if(drawablePosition==1){
+            if (drawableSearch == null) {
+                drawableSearch = ContextCompat.getDrawable(mContext, R.mipmap.ic_search_app_left);
+            }
+            if (drawableClear == null) {
+                drawableClear = ContextCompat.getDrawable(mContext, R.mipmap.icon_clear);
+            }
+            if (drawablePosition == 1) {
                 setCompoundDrawablesWithIntrinsicBounds(drawableSearch,
                         null, null, null);
-            }else if(drawablePosition==2){
+            } else if (drawablePosition == 2) {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         drawableSearch, null, null);
-            }else if(drawablePosition==4){
+            } else if (drawablePosition == 4) {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         null, null, drawableSearch);
-            }else{
+            } else {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         null, drawableSearch, null);
             }
@@ -81,7 +93,7 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
             addTextChangedListener(this);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG,"init:"+e);
+            LogUtil.show(TAG, "init:" + e);
         }
     }
 
@@ -93,24 +105,24 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         try {
-            if(drawablePosition==1){
+            if (drawablePosition == 1) {
                 setCompoundDrawablesWithIntrinsicBounds(drawableSearch,
                         null, (s == null || StringUtil.isEmpty(s.toString())) ? null : drawableClear, null);
 
-            }else if(drawablePosition==2){
+            } else if (drawablePosition == 2) {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         drawableSearch, (s == null || StringUtil.isEmpty(s.toString())) ? null : drawableClear, null);
 
-            }else if(drawablePosition==4){
+            } else if (drawablePosition == 4) {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         null, (s == null || StringUtil.isEmpty(s.toString())) ? null : drawableClear, drawableSearch);
-            }else{
+            } else {
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         null, (s == null || StringUtil.isEmpty(s.toString())) ? drawableSearch : drawableClear, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG,"onTextChanged:"+e);
+            LogUtil.show(TAG, "onTextChanged:" + e);
         }
     }
 
@@ -122,7 +134,7 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         try {
-            if(!"".equals(getText().toString())){
+            if (!"".equals(getText().toString())) {
                 int xDown = (int) event.getX();
                 if (event.getAction() == MotionEvent.ACTION_DOWN && xDown >= (getWidth() - getCompoundPaddingRight() * 2) && xDown < getWidth()) {
                     // 清除按钮的点击范围 按钮自身大小 +-padding
@@ -135,7 +147,7 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG,"onTouchEvent:"+e);
+            LogUtil.show(TAG, "onTouchEvent:" + e);
         }
         super.onTouchEvent(event);
         return true;
@@ -160,7 +172,7 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG,"onEditorAction:"+e);
+            LogUtil.show(TAG, "onEditorAction:" + e);
         }
         return false;
     }

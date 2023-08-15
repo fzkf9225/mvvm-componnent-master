@@ -41,8 +41,9 @@ public class PickTimeViewDialog extends Dialog implements View.OnClickListener, 
     }
 
     public PickTimeViewDialog setSimpleDateFormat(String format) {
-        if (StringUtil.isEmpty(format))
+        if (StringUtil.isEmpty(format)) {
             sdfDate = DateUtil.DEFAULT_FORMAT_DATE;
+        }
         this.sdfDate = format;
         return this;
     }
@@ -90,7 +91,7 @@ public class PickTimeViewDialog extends Dialog implements View.OnClickListener, 
     }
 
     public PickTimeViewDialog build() {
-        create();
+        initView();
         return this;
     }
 
@@ -99,16 +100,17 @@ public class PickTimeViewDialog extends Dialog implements View.OnClickListener, 
         return this;
     }
 
-    public void create() {
+    private void initView() {
         View pickerView = LayoutInflater.from(context).inflate(R.layout.picktime_view, null);
-        PickTimeView pickDate = pickerView.findViewById(R.id.pickDate);//tvSelected
+        PickTimeView pickDate = pickerView.findViewById(R.id.pickDate);
         TextView submitBtn = pickerView.findViewById(R.id.submitBtn);
         TextView tvSelected = pickerView.findViewById(R.id.Main_tvSelected);
         TextView tvUnlimited = pickerView.findViewById(R.id.tv_unlimited);
         tvUnlimited.setVisibility(isShowUnLimitedButton ? View.VISIBLE : View.GONE);
         tvUnlimited.setOnClickListener(v -> {
-            if (onDialogInterfaceClickListener != null)
+            if (onDialogInterfaceClickListener != null) {
                 onDialogInterfaceClickListener.onDialogClick(this);
+            }
         });
         submitBtn.setOnClickListener(this);
         pickDate.setOnSelectedChangeListener(this);

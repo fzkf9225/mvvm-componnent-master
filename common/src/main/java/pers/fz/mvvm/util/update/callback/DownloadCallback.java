@@ -2,7 +2,8 @@ package pers.fz.mvvm.util.update.callback;
 
 import java.io.File;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+
 
 /**
  * Created by fz on 2020/6/19.

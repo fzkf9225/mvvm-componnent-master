@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,9 +17,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import pers.fz.mvvm.api.BaseApplication;
+import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
@@ -28,7 +26,6 @@ import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 import java.io.File;
 
-import io.reactivex.disposables.Disposable;
 
 
 /**

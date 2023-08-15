@@ -1,11 +1,11 @@
 package pers.fz.mvvm.util.update.core;
 
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import pers.fz.mvvm.util.update.callback.DownloadListener;
 
 import java.io.IOException;
 
-import io.reactivex.annotations.NonNull;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import okio.Buffer;

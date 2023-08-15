@@ -10,11 +10,19 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
 import com.casic.titan.demo.viewmodel.WightViewModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.wight.customlayout.StarBar;
+import pers.fz.mvvm.wight.picDialog.PicShowDialog;
+import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
 
 public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBinding> {
     private UseCase useCase;
+    private String imageUrl = "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800";
 
     @Override
     protected int getLayoutId() {
@@ -28,16 +36,16 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        binding.setImageUrl(imageUrl);
         binding.autoTextView.setText("这是AutoTextView测试文字");
-        //有bug，需要优化
-//        int viewWidth = getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(this, 60f);
-//        binding.scalingTextView.initWidth(viewWidth);
-//        binding.scalingTextView.setMaxLines(3);
-//        binding.scalingTextView.setHasAnimation(true);
-//        binding.scalingTextView.setCloseInNewLine(true);
-//        binding.scalingTextView.setOpenSuffixColor(getResources().getColor(pers.fz.mvvm.R.color.themeColor));
-//        binding.scalingTextView.setCloseSuffixColor(getResources().getColor(pers.fz.mvvm.R.color.themeColor));
-//        binding.scalingTextView.setOriginalText(getResources().getString(R.string.scaling_str));
+        binding.starBar.setOnStarChangeListener(mark -> binding.tvStarBar.setText(String.valueOf(mark)));
+        binding.customBannerPicture.initView(Arrays.asList(
+                new BannerBean("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"),
+                new BannerBean("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg"),
+                new BannerBean("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42")));
+        binding.cornersImageView.setOnClickListener(v -> new PicShowDialog(this, Arrays.asList(
+                new ImageInfo(imageUrl, 1920, 1080)
+        ), 0).show());
     }
 
     @Override
