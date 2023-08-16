@@ -1,6 +1,7 @@
 package com.casic.titan.demo.activity;
 
 import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +28,13 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
     private final String[] PERMISSIONS = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    private final String[] PERMISSIONS_TIRAMISU = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION
     };
@@ -66,9 +74,16 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
     public void initData(Bundle bundle) {
         splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
             showToast("SplaseScreen动画播放结束");
-            if (lacksPermissions(PERMISSIONS)) {
-                requestPermission(PERMISSIONS);
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (lacksPermissions(PERMISSIONS_TIRAMISU)) {
+                    requestPermission(PERMISSIONS_TIRAMISU);
+                    return;
+                }
+            } else {
+                if (lacksPermissions(PERMISSIONS)) {
+                    requestPermission(PERMISSIONS);
+                    return;
+                }
             }
             startCountDown();
         });
@@ -77,6 +92,12 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
 
     @Override
     protected void onPermissionGranted() {
+        startCountDown();
+    }
+
+    @Override
+    protected void onPermissionRefused() {
+        super.onPermissionRefused();
         startCountDown();
     }
 

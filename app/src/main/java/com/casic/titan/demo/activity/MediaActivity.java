@@ -1,5 +1,6 @@
 package com.casic.titan.demo.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -41,8 +42,9 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     @Override
     public void initView(Bundle savedInstanceState) {
         //初始化一些媒体配置
+        //新api不支持最大可选张数，因此没有实现，当然你可以变通很多方式去实现它，后期可能会新增吧
         mediaHelper = new MediaBuilder(this, this)
-                .setImageMaxSelectedCount(9)//新api不支持此功能，因此没有实现，当然你可以变通很多方式去实现它，后期可能会新增吧
+                .setImageMaxSelectedCount(9)
                 .setImageQualityCompress(200)
                 .builder();
         //图片、视频选择结果回调通知
@@ -91,6 +93,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void imgClear(View view, int position) {
         imageAddAdapter.getList().remove(position);
@@ -100,13 +103,10 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void imgAdd(View view) {
-        new OpenImageDialog(view.getContext())
-                .setMediaType(OpenImageDialog.CAMERA_ALBUM)
-                .setOnOpenImageClickListener(mediaHelper)
-                .builder()
-                .show();
+        mediaHelper.openImageDialog(view,OpenImageDialog.CAMERA_ALBUM);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void videoClear(View view, int position) {
         videoAddAdapter.getList().remove(position);
@@ -116,10 +116,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void videoAdd(View view) {
-        new OpenShootDialog(view.getContext())
-                .setMediaType(OpenShootDialog.CAMERA_ALBUM)
-                .setOnOpenVideoClickListener(mediaHelper)
-                .builder()
-                .show();
+        mediaHelper.openShootDialog(view,OpenShootDialog.CAMERA_ALBUM);
     }
 }

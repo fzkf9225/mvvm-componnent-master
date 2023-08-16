@@ -61,8 +61,9 @@ public class MediaBuilder {
      * 图片自定义输出路径
      * @param imageOutPutPath 自定义输出路径，默认是/android/data/包名/image/下
      */
-    public void setImageOutPutPath(String imageOutPutPath) {
+    public MediaBuilder setImageOutPutPath(String imageOutPutPath) {
         this.imageOutPutPath = imageOutPutPath;
+        return this;
     }
 
     public String getVideoOutPutPath() {
@@ -73,8 +74,9 @@ public class MediaBuilder {
      * 视频自定义输出路径
      * @param videoOutPutPath 自定义输出路径，默认是/android/data/包名/video/下
      */
-    public void setVideoOutPutPath(String videoOutPutPath) {
+    public MediaBuilder setVideoOutPutPath(String videoOutPutPath) {
         this.videoOutPutPath = videoOutPutPath;
+        return this;
     }
 
     public MediaBuilder setBaseView(BaseView baseView) {

@@ -45,7 +45,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:divider="@drawable/shape_divider_linear"
-                android:dividerHeight="1dp"
+                android:dividerHeight="12dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/mRecyclerViewUseCase"

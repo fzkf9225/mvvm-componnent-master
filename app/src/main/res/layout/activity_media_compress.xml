@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="sourceImagePath"
+            type="android.net.Uri" />
+
+        <variable
+            name="compressImagePath"
+            type="android.net.Uri" />
+
+        <variable
+            name="sourceVideoPath"
+            type="android.net.Uri" />
+
+        <variable
+            name="compressVideoPath"
+            type="android.net.Uri" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingTop="@dimen/padding_m"
+        android:paddingEnd="@dimen/padding_l"
+        android:paddingBottom="@dimen/padding_m"
+        tools:context=".activity.MediaCompressActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <pers.fz.mvvm.wight.customlayout.CornersImageView
+                android:id="@+id/image"
+                imageUri="@{sourceImagePath}"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:scaleType="centerCrop"
+                app:image_view_radius="@dimen/radius_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <pers.fz.mvvm.wight.customlayout.CornersImageView
+                android:id="@+id/image_compress"
+                imageUri="@{compressImagePath}"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:scaleType="centerCrop"
+                app:image_view_radius="@dimen/radius_l"
+                app:layout_constraintStart_toEndOf="@+id/image"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="@{`左侧源图片路径：`+ sourceImagePath}"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image" />
+
+            <TextView
+                android:id="@+id/tv_image_compress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="@{`右侧压缩后路径：`+ compressImagePath}"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_image" />
+
+            <Button
+                android:id="@+id/button_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="选择图片"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_image_compress" />
+
+
+            <pers.fz.mvvm.wight.customlayout.CornersImageView
+                android:id="@+id/video"
+                imageUri="@{sourceVideoPath}"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:scaleType="centerCrop"
+                app:image_view_radius="@dimen/radius_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_image" />
+
+            <pers.fz.mvvm.wight.customlayout.CornersImageView
+                android:id="@+id/video_compress"
+                imageUri="@{compressVideoPath}"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:scaleType="centerCrop"
+                app:image_view_radius="@dimen/radius_l"
+                app:layout_constraintStart_toEndOf="@+id/video"
+                app:layout_constraintTop_toBottomOf="@+id/button_image" />
+
+            <TextView
+                android:id="@+id/tv_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="@{`左侧源视频路径：`+ sourceVideoPath}"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/video" />
+
+            <TextView
+                android:id="@+id/tv_video_compress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="@{`右侧压缩后路径：`+ compressVideoPath}"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_video" />
+
+            <Button
+                android:id="@+id/button_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="选择视频"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_video_compress" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

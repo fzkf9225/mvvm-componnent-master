@@ -13,34 +13,37 @@
         <Button
             android:id="@+id/button_shoot"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xl"
+            android:layout_height="@dimen/height_xxl"
             android:background="@null"
             android:gravity="center"
             android:text="拍摄视频"
-            android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xxl"/>
-        <View style="@style/h_line"
-            android:id="@+id/v_line" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size_xxl" />
+
+        <View
+            android:id="@+id/v_line"
+            style="@style/h_line" />
+
         <Button
             android:id="@+id/choosePhoto"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xl"
+            android:layout_height="@dimen/height_xxl"
             android:background="@null"
             android:gravity="center"
             android:text="从多媒体文件中选择"
-            android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xxl"/>
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size_xxl" />
     </LinearLayout>
 
     <Button
         android:id="@+id/she_cancel"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_xl"
+        android:layout_height="@dimen/height_xxl"
         android:layout_marginTop="@dimen/horizontal_margin_m"
         android:background="@drawable/rounded_white"
         android:gravity="center"
         android:text="取消"
-        android:textColor="@color/autoColor"
+        android:textColor="@color/dark_light"
         android:textSize="@dimen/font_size_xxl" />
 
 </LinearLayout>

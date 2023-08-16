@@ -24,10 +24,19 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
      * 拍照返回的uri
      */
     private Uri uri;
+    private String savePath;
+
+    public TakeCameraUri(String savePath) {
+        this.savePath = savePath;
+    }
 
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, Object input) {
+        File saveFilePath = new File(savePath);
+        if (!saveFilePath.exists()) {
+            boolean isCreated = saveFilePath.mkdirs();
+        }
 
         String mimeType = "image/jpeg";
         String fileName = "IMAGE_"+System.currentTimeMillis() + ".jpg";
@@ -41,7 +50,7 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
             //应用认证表示
             String authorities = context.getPackageName() + ".FileProvider";
             uri = FileProvider.getUriForFile(context, authorities,
-                    new File(context.getExternalCacheDir().getAbsolutePath(), fileName));
+                    new File(savePath, fileName));
         }
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }

@@ -3,6 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="preferExternal">
 
+    <!--  一般来说，允许用户自定义头像的app都需要这个权限  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"
+        android:minSdkVersion = "33"/>
+    <!--  如果你想开发音乐播放器之类需要获取音频的app，加上这个权限  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"
+        android:minSdkVersion = "33"/>
+    <!--  如果你想开发视频编辑器之类需要获取视频的app，加上这个权限  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"
+        android:minSdkVersion = "33"/>
+    <!--  向前兼容  -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission
         android:name="android.permission.MANAGE_DOCUMENTS"
         tools:ignore="ProtectedPermissions" />
@@ -11,12 +23,12 @@
         android:name="android.permission.LOCAL_MAC_ADDRESS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
