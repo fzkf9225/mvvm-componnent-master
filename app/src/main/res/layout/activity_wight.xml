@@ -113,7 +113,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cornerButton" />
-
+            <ImageView
+                android:id="@+id/image_code"
+                app:layout_constraintTop_toBottomOf="@+id/autoTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="0dp"
+                app:layout_constraintDimensionRatio="h,9:16"
+                android:layout_height="@dimen/height_xxl"/>
             <pers.fz.mvvm.wight.customlayout.ScalingTextView
                 android:id="@+id/scalingTextView"
                 android:layout_width="match_parent"
@@ -124,7 +131,7 @@
                 app:default_collapsed="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/autoTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/image_code" />
 
             <pers.fz.mvvm.wight.customlayout.StarBar
                 android:id="@+id/starBar"
@@ -224,6 +231,7 @@
                 android:hint="这是一个自定义输入框CustomEditText"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/cornersImageView" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

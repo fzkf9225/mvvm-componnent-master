@@ -9,6 +9,7 @@ import com.casic.titan.usercomponent.activity.PersonalCenterActivity;
 import com.casic.titan.usercomponent.activity.SettingActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.casic.titan.usercomponent.databinding.MeFragmentBinding;
+import com.gyf.immersionbar.ImmersionBar;
 
 import javax.inject.Inject;
 
@@ -34,6 +35,10 @@ public class MeFragment extends BaseFragment<BaseViewModel, MeFragmentBinding> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        ImmersionBar.with(this)
+                .autoStatusBarDarkModeEnable(true,0.2f)
+                .statusBarColor(pers.fz.mvvm.R.color.themeColor)
+                .init();
         mediaHelper = new MediaBuilder(this, this)
                 .setImageMaxSelectedCount(1)
                 .builder();

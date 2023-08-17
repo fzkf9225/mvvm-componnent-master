@@ -99,6 +99,7 @@ dependencies {
     implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
     implementation "io.github.scwang90:refresh-header-classics:$refresh_layout_version"
     implementation "io.github.scwang90:refresh-footer-classics:$refresh_layout_version"
+    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     //放着没有及时回收造成RxJava内存泄漏
@@ -117,7 +118,7 @@ dependencies {
     //MinIO只有Java版本不兼容Android，因此使用这两个包代替
     implementation "com.amazonaws:aws-android-sdk-s3:2.22.5"
     implementation "com.amazonaws:aws-android-sdk-mobile-client:2.22.5"
-    implementation "io.github.jeremyliao:live-event-bus-x:1.8.0"
+    implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
 
     implementation "androidx.navigation:navigation-fragment:$navigationVersion"
     implementation "androidx.navigation:navigation-ui:$navigationVersion"

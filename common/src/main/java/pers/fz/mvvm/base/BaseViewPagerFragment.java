@@ -9,6 +9,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +18,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.apiUtil.DensityUtil;
 
 /**
  * Create by CherishTang on 2019/8/1
@@ -42,11 +44,7 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
         adapter = new BaseViewPagerAdapter(getChildFragmentManager(), this.getLifecycle(),getPagers());
         mBaseViewPager.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, mBaseViewPager,
-                (tab, position) -> {
-                    TextView tv = (TextView) LayoutInflater.from(requireActivity()).inflate(R.layout.tab_text_view, null);
-                    tv.setText(tab.getText());
-                    tab.setCustomView(tv);
-                }
+                (tab, position) -> tab.setText(adapter.getPagerInfo()[position].title)
         ).attach();
         mBaseViewPager.setCurrentItem(0, true);
     }
@@ -75,33 +73,19 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
          * 页面page路由
          */
         private final Fragment toClx;
-        /**
-         * 页面传递的参数
-         */
-        private final Bundle args;
 
-        public PagerInfo(String title, Fragment toClx, Bundle args) {
+        public PagerInfo(String title, Fragment toClx) {
             this.title = title;
             this.toClx = toClx;
-            this.args = args;
         }
     }
 
     public static class BaseViewPagerAdapter extends FragmentStateAdapter {
-        private PagerInfo[] mInfoList;
-        private Fragment mCurFragment;
+        private final PagerInfo[] mInfoList;
 
         public BaseViewPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, PagerInfo[] mInfoList) {
             super(fragmentManager, lifecycle);
             this.mInfoList = mInfoList;
-        }
-
-        public void setPagerInfo(PagerInfo[] mInfoList) {
-            this.mInfoList = mInfoList;
-        }
-
-        public Fragment getCurFragment() {
-            return mCurFragment;
         }
 
         public PagerInfo[] getPagerInfo() {

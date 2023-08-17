@@ -23,7 +23,8 @@ import pers.fz.mvvm.wight.dialog.MessageDialog;
  * describe:视频播放，仿腾讯视频,Oppo R11上播放会偶尔闪退返回，几率时间，原因未知
  */
 public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, TextureViewPlayerActivityBinding> {
-
+    public final static String VIDEO_PATH = "videoPath";
+    public final static String VIDEO_TITLE = "videoTitle";
     @Override
     protected int getLayoutId() {
         return R.layout.texture_view_player_activity;
@@ -46,7 +47,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
 
     @Override
     public void initData(Bundle bundle) {
-        String videoPath = bundle.getString("videoPath");
+        String videoPath = bundle.getString(VIDEO_PATH);
         if (StringUtil.isEmpty(videoPath)) {
             new MessageDialog(this)
                     .setCanOutSide(false)
@@ -61,7 +62,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
             return;
         }
 
-        binding.videoPlayer.setUp(videoPath, true, bundle.getString("videoName"));
+        binding.videoPlayer.setUp(videoPath, true, bundle.getString(VIDEO_TITLE));
 
         //增加封面
         ImageView imageView = new ImageView(this);
@@ -123,8 +124,8 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     public static void show(Context context, String title, String url) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("videoName", title);
-        bundle.putString("videoPath", url);
+        bundle.putString(VIDEO_TITLE, title);
+        bundle.putString(VIDEO_PATH, url);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

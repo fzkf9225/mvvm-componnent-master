@@ -15,6 +15,7 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityMainBinding;
 import com.casic.titan.demo.view.MainView;
 import com.casic.titan.demo.viewmodel.MainViewModel;
+import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
@@ -43,6 +44,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
     @Override
     public void initView(Bundle savedInstanceState) {
+        ImmersionBar.with(this)
+                .autoStatusBarDarkModeEnable(true,0.2f)
+                .statusBarColor(pers.fz.mvvm.R.color.default_background)
+                .init();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }

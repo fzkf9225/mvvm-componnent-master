@@ -9,6 +9,7 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
 import com.casic.titan.demo.viewmodel.WightViewModel;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.wight.Code;
 import pers.fz.mvvm.wight.customlayout.StarBar;
 import pers.fz.mvvm.wight.picDialog.PicShowDialog;
 import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
@@ -46,6 +48,10 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         binding.cornersImageView.setOnClickListener(v -> new PicShowDialog(this, Arrays.asList(
                 new ImageInfo(imageUrl, 1920, 1080)
         ), 0).show());
+        binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
+        binding.imageCode.setOnClickListener(v->{
+            binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
+        });
     }
 
     @Override

@@ -20,7 +20,7 @@
         android:background="@drawable/rounded_white"
         android:gravity="center"
         android:text="取消"
-        android:textColor="@color/autoColor"
+        android:textColor="@color/dark_light"
         android:textSize="@dimen/font_16" />
 
 </LinearLayout>

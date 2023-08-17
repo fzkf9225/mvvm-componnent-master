@@ -30,7 +30,7 @@
                 android:id="@+id/tv_login_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:layout_marginTop="48dp"
                 android:gravity="center_horizontal"
                 android:text="@={token}"
                 android:textColor="@color/autoColor"

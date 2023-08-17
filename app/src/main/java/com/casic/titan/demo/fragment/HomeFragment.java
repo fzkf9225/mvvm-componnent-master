@@ -13,6 +13,7 @@ import com.casic.titan.demo.enumbean.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.google.gson.Gson;
+import com.gyf.immersionbar.ImmersionBar;
 
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -35,6 +36,10 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     @Override
     protected void initView(Bundle savedInstanceState) {
         registerPermissionLauncher();
+        ImmersionBar.with(this)
+                .autoStatusBarDarkModeEnable(true,0.2f)
+                .statusBarColor(pers.fz.mvvm.R.color.default_background)
+                .init();
     }
 
     @Override

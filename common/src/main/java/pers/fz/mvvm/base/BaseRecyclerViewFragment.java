@@ -42,7 +42,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     protected SmartRefreshLayout refreshLayout;
     private boolean isCanRefresh = true;
     private boolean isCanLoadMore = true;
-    protected int mCurrentPage = 1;
+    protected int mCurrentPage = 0;
     public BaseRecyclerViewAdapter<T, ?> adapter;
 
     protected final Observer<PageBean<T>> observer = (Observer<PageBean<T>>) responseBean -> {
@@ -285,7 +285,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        mCurrentPage = 1;
+        mCurrentPage = 0;
         requestData();
     }
 

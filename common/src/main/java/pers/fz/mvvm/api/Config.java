@@ -3,6 +3,7 @@ package pers.fz.mvvm.api;
 
 import android.app.Application;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.concurrent.atomic.AtomicBoolean;

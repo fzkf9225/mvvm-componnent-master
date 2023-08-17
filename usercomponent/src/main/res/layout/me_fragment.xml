@@ -28,7 +28,6 @@
                 android:layout_height="wrap_content"
                 android:background="@color/themeColor"
                 android:paddingStart="@dimen/horizontal_margin_xl"
-                android:paddingTop="@dimen/vertical_margin_xxxl"
                 android:paddingEnd="@dimen/horizontal_margin_xl"
                 android:paddingBottom="@dimen/y158">
 
@@ -36,6 +35,7 @@
                     android:id="@+id/headImg"
                     android:layout_width="@dimen/x120"
                     android:layout_height="@dimen/y120"
+                    android:layout_marginTop="48dp"
                     app:headerUrl="@{user.avatar}"
                     android:src="@mipmap/icon_head_default" />
 
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/vertical_margin_xl"
-                    android:layout_marginTop="@dimen/vertical_margin_m"
+                    android:layout_marginTop="56dp"
                     android:layout_toEndOf="@+id/headImg"
                     android:includeFontPadding="false"
                     android:text='@{StringUtil.isEmpty(user.user_name)?"点击登录":user.user_name}'
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_xl"
-                android:layout_marginTop="@dimen/y250"
+                android:layout_marginTop="@dimen/y280"
                 android:layout_marginEnd="@dimen/horizontal_margin_xl"
                 android:background="@drawable/rounded_white_16"
                 android:orientation="vertical">

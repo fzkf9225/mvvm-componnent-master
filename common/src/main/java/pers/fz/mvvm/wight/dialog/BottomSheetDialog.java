@@ -30,7 +30,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
     private boolean outSide = true;
     private List<T> menuData;
     private OptionBottomMenuListAdapter<T> optionBottomMenuListAdapter;
-
+    private boolean showCancelButton = true;
     public BottomSheetDialog(@NonNull Context context) {
         super(context);
         this.context = context;
@@ -48,6 +48,11 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
 
     public BottomSheetDialog<T> setCanOutSide(boolean outSide) {
         this.outSide = outSide;
+        return this;
+    }
+
+    public BottomSheetDialog<T> setShowCancelButton(boolean showCancelButton) {
+        this.showCancelButton = showCancelButton;
         return this;
     }
 
@@ -84,20 +89,12 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
                 optionBottomMenuClickListener.onOptionBottomMenuClick(this, optionBottomMenuListAdapter.getList(), position);
             }
         });
+        buttonCancel.setVisibility(showCancelButton?View.VISIBLE:View.GONE);
         mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
         mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(inflate);
-        Window dialogWindow = getWindow();
-        DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
     }
 
 }

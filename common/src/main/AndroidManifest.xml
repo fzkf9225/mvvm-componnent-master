@@ -78,7 +78,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.1" /> <!-- 此处适配android 7.0 -->
+            android:value="2.4" /> <!-- 此处适配android 7.0 -->
         <activity
             android:name=".zxing.DecodeActivity"
             android:configChanges="keyboardHidden|orientation"

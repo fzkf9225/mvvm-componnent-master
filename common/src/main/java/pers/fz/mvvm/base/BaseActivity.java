@@ -26,6 +26,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.gyf.immersionbar.ImmersionBar;
+
 import javax.inject.Inject;
 
 import pers.fz.mvvm.R;
@@ -79,8 +81,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);
         }
+        initImmersionBar();
         createViewModel();
-        ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, R.color.white));
         initView(savedInstanceState);
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
     }
@@ -127,7 +129,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             super.setContentView(R.layout.base_activity);
             FrameLayout container = findViewById(R.id.container);
             binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
-            ((Toolbar)findViewById(R.id.main_bar)).setNavigationOnClickListener(v -> finish());
+            ((Toolbar) findViewById(R.id.main_bar)).setNavigationOnClickListener(v -> finish());
             binding.setLifecycleOwner(this);
         }
     }
@@ -142,7 +144,21 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * @return toolbar配置
      */
     public ToolbarConfig setToolbarStyle() {
-        return new ToolbarConfig.Builder(this).setTitle(setTitleBar()).build();
+        return new ToolbarConfig.Builder(this).setTitle(setTitleBar()).setBgColor(R.color.white).build();
+    }
+
+    /**
+     * 初始化沉浸式
+     * Init immersion bar.
+     */
+    protected void initImmersionBar() {
+        //设置共同沉浸式样式
+        if (toolbarBind == null) {
+            ImmersionBar.with(this).init();
+        } else {
+            ImmersionBar.with(this).titleBar(toolbarBind.appBar).init();
+        }
+
     }
 
     /**
@@ -195,7 +211,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      */
     public void setThemeBarAndToolBarColor(@ColorRes int color) {
         try {
-            ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, color));
             if (toolbarBind == null) {
                 return;
             }
@@ -361,6 +376,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 注意判断空，根据自己需求更改
+     *
      * @param model 错误吗实体
      */
     @Override

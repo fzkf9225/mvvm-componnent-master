@@ -10,6 +10,7 @@ import androidx.core.splashscreen.SplashScreen;
 
 import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
+import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
@@ -60,7 +61,6 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
     protected boolean hasToolBar() {
         return false;
     }
-
 
     @Override
     public void initView(Bundle savedInstanceState) {

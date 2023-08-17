@@ -8,6 +8,8 @@ import androidx.annotation.StyleRes;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 
+import com.gyf.immersionbar.ImmersionBar;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 
@@ -115,7 +117,10 @@ public class ToolbarConfig extends BaseObservable {
 
         public Builder setBgColor(@ColorRes int colorRes) {
             toolbarConfig.setBgColor(colorRes);
-            ThemeUtils.setStatusBarLightMode(activity, ContextCompat.getColor(activity, colorRes));
+            ImmersionBar.with(activity)
+                    .statusBarColor(colorRes)
+                    .autoStatusBarDarkModeEnable(true,0.2f)
+                    .init();
             return this;
         }
 

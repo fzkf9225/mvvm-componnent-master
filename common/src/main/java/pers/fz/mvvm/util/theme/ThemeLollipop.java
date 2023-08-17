@@ -19,9 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class ThemeLollipop {
-
     static void setStatusBarColor(Activity activity, int statusColor) {
         Window window = activity.getWindow();
         //取消状态栏透明
