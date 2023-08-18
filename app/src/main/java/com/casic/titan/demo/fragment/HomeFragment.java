@@ -2,6 +2,7 @@ package com.casic.titan.demo.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 
 import androidx.core.app.ComponentActivity;
@@ -16,9 +17,12 @@ import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 
 
+import java.io.File;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**

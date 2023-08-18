@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
@@ -102,7 +104,9 @@ public class DownloadManger {
     }
 
     public void download(Activity mContext, String fileUrl) {
-        download(mContext, fileUrl, RxNet.PATH);
+        download(mContext, fileUrl,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator);
     }
 
 }

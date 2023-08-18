@@ -645,6 +645,58 @@ public final class FileUtils {
         return (filePosi >= extenPosi) ? "" : filePath.substring(extenPosi + 1);
     }
 
+    public static String getLastPath(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
+        String[] pathArr = path.split(File.separator);
+        if (pathArr == null) {
+            return null;
+        }
+        if (pathArr.length == 0) {
+            return null;
+        }
+        if (pathArr.length == 1) {
+            return pathArr[0];
+        }
+        if (File.separator.equals(pathArr[pathArr.length - 1])) {
+            return pathArr[pathArr.length - 2];
+        }
+        return pathArr[pathArr.length - 1];
+    }
+
+    public static String getLastPath(String path, String defaultPath) {
+        if (TextUtils.isEmpty(path)) {
+            return defaultPath;
+        }
+        String[] pathArr = path.split(File.separator);
+        if (pathArr == null) {
+            return defaultPath;
+        }
+        if (pathArr.length == 0) {
+            return defaultPath;
+        }
+        if (pathArr.length == 1) {
+            return pathArr[0];
+        }
+        if (File.separator.equals(pathArr[pathArr.length - 1])) {
+            return TextUtils.isEmpty(pathArr[pathArr.length - 2]) ? defaultPath : pathArr[pathArr.length - 2];
+        }
+        return TextUtils.isEmpty(pathArr[pathArr.length - 1]) ? defaultPath : pathArr[pathArr.length - 1];
+    }
+
+    public static String getDefaultBasePath(Context mContext){
+        String packageName = mContext.getPackageName();
+        String[] packageArr = packageName.split("\\.");
+        if(packageArr.length==0){
+            return "";
+        }
+        if(packageArr.length==1){
+            return packageArr[0];
+        }
+        return packageArr[1];
+    }
+
     /**
      * 创建文件
      *
@@ -935,6 +987,7 @@ public final class FileUtils {
 
     /**
      * 将字节数据转为带单位的字符串
+     *
      * @param fileSize 文件字节大小
      * @return 带单位的字符串
      */

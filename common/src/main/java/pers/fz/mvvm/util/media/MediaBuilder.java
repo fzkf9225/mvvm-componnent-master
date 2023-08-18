@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 
+import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
+import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 
@@ -49,8 +51,11 @@ public class MediaBuilder {
     public MediaBuilder(@NotNull ComponentActivity mActivity,BaseView baseView) {
         this.mActivity = mActivity;
         this.baseView = baseView;
-        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath();
-        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        String basePath = FileUtils.getDefaultBasePath(mActivity);
+        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
+                File.separator+ basePath;
+        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
+                File.separator+basePath;
         LogUtil.show(MediaHelper.TAG,"imageOutPutPath："+imageOutPutPath);
         LogUtil.show(MediaHelper.TAG,"videoOutPutPath："+videoOutPutPath);
     }
@@ -58,8 +63,11 @@ public class MediaBuilder {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
         this.baseView = baseView;
-        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath();
-        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        String basePath = FileUtils.getDefaultBasePath(fragment.requireContext());
+        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
+                File.separator+basePath;
+        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
+                File.separator+ basePath;
     }
 
     public Fragment getFragment() {
@@ -70,8 +78,8 @@ public class MediaBuilder {
         return imageOutPutPath;
     }
     /**
-     * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录
-     * @param imageOutPutPath 自定义输出路径，默认是/android/data/包名/image/下
+     * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录，媒体文件目录，Android 10+在Picture下，10之前可以自定义
+     * @param imageOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/image/下
      */
     public MediaBuilder setImageOutPutPath(String imageOutPutPath) {
         this.imageOutPutPath = imageOutPutPath;
@@ -88,8 +96,8 @@ public class MediaBuilder {
     }
 
     /**
-     * 视频自定义输出路径，暂不支持，仅支持内部存储目录即私有目录
-     * @param videoOutPutPath 自定义输出路径，默认是/android/data/包名/video/下
+     * 视频自定义输出路径，暂不支持，仅支持内部存储目录即私有目录,媒体文件目录，Android 10+在Picture下，10之前可以自定义
+     * @param videoOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/video/下
      */
     public MediaBuilder setVideoOutPutPath(String videoOutPutPath) {
         this.videoOutPutPath = videoOutPutPath;

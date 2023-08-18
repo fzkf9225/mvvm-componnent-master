@@ -87,7 +87,7 @@ public class CoordinatorActivity extends BaseActivity<BaseViewModel, ActivityCoo
     }
 
     public void startCamera() {
-        File imageFile = new File(getFilesDir(), "temp_image.jpg");
+        File imageFile = new File(getExternalFilesDir("image"), "temp_image.jpg");
         Uri imageUri = FileProvider.getUriForFile(this, this.getPackageName()+".FileProvider", imageFile);
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);

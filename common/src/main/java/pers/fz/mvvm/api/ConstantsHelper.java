@@ -15,8 +15,7 @@ public class ConstantsHelper {
      */
     public static final int RETRY_WHEN_MAX_COUNT = 3;
 
-    public static final String TAG = "MVVMDemoLog";
-
+    public static final String TAG = "casic";
     public volatile static boolean isDownLoadApk = false;//apk是否正在下载
     public static boolean isSuccessRequestUpdate = false;//更新请求是否成功了
     public static final String APK_NAME = DateUtil.getTimestamp() + ".apk";

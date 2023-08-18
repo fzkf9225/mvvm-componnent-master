@@ -15,6 +15,8 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
+import pers.fz.mvvm.api.ConstantsHelper;
+import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -31,37 +33,35 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
      * 录制时长
      */
     private int durationLimit = 30;
-    public TakeVideoUri(String savePath) {
+    private  Context context;
+    public TakeVideoUri( Context context,String savePath) {
+        this.context = context;
         this.savePath = savePath;
     }
-    public TakeVideoUri(String savePath,int durationLimit) {
+
+    public TakeVideoUri( Context context,String savePath, int durationLimit) {
+        this.context = context;
         this.savePath = savePath;
         this.durationLimit = durationLimit;
     }
+
     @NonNull
     @Override
     public Intent createIntent(@NonNull Context context, Object input) {
-
-        File saveFilePath = new File(savePath);
-        if (!saveFilePath.exists()) {
-            boolean isCreated = saveFilePath.mkdirs();
-        }
         String mimeType = "video/mp4";
         String fileName = "VIDEO_" + System.currentTimeMillis() + ".mp4";
-        if(!new File(savePath, fileName).exists()){
-            new File(savePath, fileName).mkdir();
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentValues values = new ContentValues();
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
             values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator +
+                    FileUtils.getLastPath(savePath, FileUtils.getDefaultBasePath(context)) + File.separator + "video");
             uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
         } else {
             //应用认证表示
             String authorities = context.getPackageName() + ".FileProvider";
             uri = FileProvider.getUriForFile(context, authorities,
-                    new File(savePath, fileName));
+                    new File(savePath + File.separator + "image", fileName));
         }
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
                 .putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit)

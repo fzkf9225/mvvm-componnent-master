@@ -116,11 +116,11 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
                 .subscribe(aLong -> {
                     LogUtil.show(TAG, "欢迎页面倒计时：" + aLong);
                     if (aLong == 0) {
-                        if (UserAccountHelper.isLogin()) {
+//                        if (UserAccountHelper.isLogin()) {
                             startActivity(MainActivity.class);
-                        } else {
-                            startActivity(LoginActivity.class);
-                        }
+//                        } else {
+//                            startActivity(LoginActivity.class);
+//                        }
                         finish();
                     }
                 }, throwable -> {

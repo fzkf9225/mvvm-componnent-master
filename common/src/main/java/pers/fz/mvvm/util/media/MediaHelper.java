@@ -141,34 +141,47 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         DefaultLifecycleObserver.super.onCreate(owner);
         if (mediaBuilder.getFragment() == null) {
             //新选择器，兼容性不是很好
-            pickMuLtiImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
-            pickImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
-            pickMuLtiVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
-            pickVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            if (mediaBuilder.getImageMaxSelectedCount() > 1) {
+                pickMuLtiImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
+            } else {
+                pickImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
+            }
+            if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
+                pickMuLtiVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
+            } else {
+                pickVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            }
             //传统选择器
             imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
             imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
             //权限监听
             permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
+            cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder.getActivity(),mediaBuilder.getImageOutPutPath()), cameraCallback);
             videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
             videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), videoMultiCallback);
-            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getActivity(), mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
         } else {
             //新选择器，兼容性不是很好
-            pickMuLtiImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
-            pickImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
-            pickMuLtiVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
-            pickVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            //新选择器，兼容性不是很好
+            if (mediaBuilder.getImageMaxSelectedCount() > 1) {
+                pickMuLtiImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
+            } else {
+                pickImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
+            }
+            if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
+                pickMuLtiVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
+            } else {
+                pickVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            }
             //注册图片选择框监听
             imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
             imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
             //权限监听
             permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
+            cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getFragment().requireContext(),mediaBuilder.getImageOutPutPath()), cameraCallback);
             videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), videoMultiCallback);
             videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
-            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getFragment().requireContext(),mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
         }
     }
 
