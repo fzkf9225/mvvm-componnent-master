@@ -23,7 +23,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     private final String TAG = this.getClass().getSimpleName();
     public ImageViewClearListener imageViewClearListener;
     public ImageViewAddListener imageViewAddListener;
-    private int defaultMaxCount = 9;//最大上传数量
+    private int defaultMaxCount = -1;//最大上传数量
 
     public ImageAddAdapter(Context context) {
         super(context);
@@ -42,7 +42,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     @Override
     public void onBindHolder(BaseViewHolder<ImgAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility(mList.size() == defaultMaxCount ? View.GONE : View.VISIBLE);
-        if (pos == mList.size() && mList.size() < defaultMaxCount) {
+        if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
             holder.getBinding().ivAdd.setOnClickListener(v -> {
                 if (imageViewAddListener != null) {
                     imageViewAddListener.imgAdd(v);
@@ -78,7 +78,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
 
     @Override
     public int getItemCount() {
-        return super.getItemCount() == defaultMaxCount ? super.getItemCount() : super.getItemCount() + 1;
+        return (super.getItemCount() == defaultMaxCount && defaultMaxCount != -1) ? super.getItemCount() : super.getItemCount() + 1;
     }
 
     public void setImageViewClearListener(ImageViewClearListener imageViewClearListener) {

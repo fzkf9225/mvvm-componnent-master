@@ -1,5 +1,6 @@
 package com.casic.titan.demo.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,7 +19,10 @@ import com.casic.titan.demo.viewmodel.MainViewModel;
 import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.mvvm.api.AppSettingHelper;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**
@@ -42,10 +46,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     protected boolean hasToolBar() {
         return false;
     }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true,0.2f)
+                .autoStatusBarDarkModeEnable(true, 0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.default_background)
                 .init();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -61,11 +66,20 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
      * 通知权限检测
      */
     private void checkNotificationPermission() {
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+        //是否不在提醒
+        if (AppSettingHelper.getPermissionNotTipEnable(this)) {
+            return;
+        }
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            return;
+        }
+        try {
             new ConfirmDialog(this)
                     .setMessage("通知权限已关闭，是否前往设置中心开启此功能？")
                     .setCanOutSide(false)
                     .setSureText("前往开启")
+                    .setCancelText("不在提醒")
+                    .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,true, System.currentTimeMillis()))
                     .setOnSureClickListener(dialog -> {
                         try {
                             Intent intent = new Intent();// 进入设置系统应用权限界面
@@ -85,7 +99,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                     })
                     .builder()
                     .show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 }

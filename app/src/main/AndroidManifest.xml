@@ -68,6 +68,10 @@
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
+    <!--13的通知权限-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!--12及以下的通知权限-->
+    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY"/>
 
     <application
         android:name=".api.ApplicationHelper"

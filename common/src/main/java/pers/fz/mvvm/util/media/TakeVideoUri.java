@@ -48,6 +48,9 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
         }
         String mimeType = "video/mp4";
         String fileName = "VIDEO_" + System.currentTimeMillis() + ".mp4";
+        if(!new File(savePath, fileName).exists()){
+            new File(savePath, fileName).mkdir();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentValues values = new ContentValues();
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);

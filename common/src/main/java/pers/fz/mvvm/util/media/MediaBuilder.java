@@ -5,7 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import androidx.activity.ComponentActivity;
 import androidx.fragment.app.Fragment;
 
+import java.io.File;
+
 import pers.fz.mvvm.base.BaseView;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 
 /**
@@ -24,7 +27,11 @@ public class MediaBuilder {
     /**
      * 最大相册选择数量
      */
-    public int imageMaxSelectedCount = MediaHelper.ALBUM_MAX_COUNT;
+    public int imageMaxSelectedCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    /**
+     * 最大视频选择数量
+     */
+    public int videoMaxSelectedCount = MediaHelper.DEFAULT_VIDEO_MAX_COUNT;
     /**
      * 图片压缩大小限制，默认200
      */
@@ -36,11 +43,16 @@ public class MediaBuilder {
     private String imageOutPutPath;
     private String videoOutPutPath;
     private Fragment fragment;
+
+    private MediaListener mediaListener;
+    private int chooseType = MediaHelper.DEFAULT_TYPE;
     public MediaBuilder(@NotNull ComponentActivity mActivity,BaseView baseView) {
         this.mActivity = mActivity;
         this.baseView = baseView;
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath();
         videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        LogUtil.show(MediaHelper.TAG,"imageOutPutPath："+imageOutPutPath);
+        LogUtil.show(MediaHelper.TAG,"videoOutPutPath："+videoOutPutPath);
     }
     public MediaBuilder(@NotNull Fragment fragment,BaseView baseView) {
         this.mActivity = fragment.getActivity();
@@ -58,7 +70,7 @@ public class MediaBuilder {
         return imageOutPutPath;
     }
     /**
-     * 图片自定义输出路径
+     * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录
      * @param imageOutPutPath 自定义输出路径，默认是/android/data/包名/image/下
      */
     public MediaBuilder setImageOutPutPath(String imageOutPutPath) {
@@ -70,8 +82,13 @@ public class MediaBuilder {
         return videoOutPutPath;
     }
 
+    public MediaBuilder setMediaListener(MediaListener mediaListener) {
+        this.mediaListener = mediaListener;
+        return this;
+    }
+
     /**
-     * 视频自定义输出路径
+     * 视频自定义输出路径，暂不支持，仅支持内部存储目录即私有目录
      * @param videoOutPutPath 自定义输出路径，默认是/android/data/包名/video/下
      */
     public MediaBuilder setVideoOutPutPath(String videoOutPutPath) {
@@ -81,6 +98,12 @@ public class MediaBuilder {
 
     public MediaBuilder setBaseView(BaseView baseView) {
         this.baseView = baseView;
+        return this;
+    }
+
+
+    public MediaBuilder setChooseType(int chooseType) {
+        this.chooseType = chooseType;
         return this;
     }
 
@@ -112,6 +135,15 @@ public class MediaBuilder {
         this.imageMaxSelectedCount = imageMaxSelectedCount;
         return this;
     }
+    /**
+     * 相册最大选择数量
+     * @param videoMaxSelectedCount 最大选择的图片数量，最多9张
+     * @return this
+     */
+    public MediaBuilder setVideoMaxSelectedCount(int videoMaxSelectedCount) {
+        this.videoMaxSelectedCount = videoMaxSelectedCount;
+        return this;
+    }
 
     public MediaBuilder setMaxVideoTime(int maxVideoTime) {
         this.maxVideoTime = maxVideoTime;
@@ -137,6 +169,18 @@ public class MediaBuilder {
 
     public int getImageQualityCompress() {
         return imageQualityCompress;
+    }
+
+    public MediaListener getMediaListener() {
+        return mediaListener;
+    }
+
+    public int getChooseType() {
+        return chooseType;
+    }
+
+    public int getVideoMaxSelectedCount() {
+        return videoMaxSelectedCount;
     }
 
     public BaseView getBaseView() {

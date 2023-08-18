@@ -78,6 +78,12 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         });
     }
 
+    protected void unregisterPermission() {
+        if (permissionLauncher != null) {
+            permissionLauncher.unregister();
+        }
+    }
+
     /**
      * 权限同意
      */
@@ -186,6 +192,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     protected void onLoginFailCallback(int resultCode, Bundle bundle) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (loginLauncher != null) {
+            loginLauncher.unregister();
+        }
     }
 
     public long lastClick = 0;

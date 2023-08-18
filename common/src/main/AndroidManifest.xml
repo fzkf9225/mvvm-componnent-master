@@ -66,7 +66,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 适配android 8.0 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
+    <!--13的通知权限-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!--12及以下的通知权限-->
+    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY"/>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />

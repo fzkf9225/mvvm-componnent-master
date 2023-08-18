@@ -30,7 +30,7 @@ public class RxNet {
     /**
      * 文件的保存路径
      */
-    public static final String PATH = BaseApplication.getInstance().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator;
+    public static final String PATH = BaseApplication.getInstance().getFilesDir().getAbsolutePath() + File.separator + "Download" + File.separator;
 
     public static void download(final String url, final String filePath, final DownloadCallback callback) {
         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(filePath)) {

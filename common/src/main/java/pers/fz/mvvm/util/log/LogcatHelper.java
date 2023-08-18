@@ -31,7 +31,7 @@ public class LogcatHelper {
      * 初始化目录
      */
     public void init(Context context) {
-        PATH_LOGCAT = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+File.separator + "log";
+        PATH_LOGCAT = context.getExternalCacheDir().getAbsolutePath()+File.separator + "log";
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
             file.mkdirs();

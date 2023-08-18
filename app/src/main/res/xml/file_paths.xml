@@ -9,6 +9,6 @@
         path="." />
     <external-path
         name="external_path"
-        path="app/" />
+        path="." />
 
 </paths>

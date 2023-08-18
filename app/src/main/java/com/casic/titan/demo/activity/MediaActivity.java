@@ -15,6 +15,7 @@ import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.media.MediaBuilder;
 import pers.fz.mvvm.util.media.MediaHelper;
+import pers.fz.mvvm.util.media.MediaListener;
 import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
@@ -44,7 +45,20 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         //初始化一些媒体配置
         //新api不支持最大可选张数，因此没有实现，当然你可以变通很多方式去实现它，后期可能会新增吧
         mediaHelper = new MediaBuilder(this, this)
-                .setImageMaxSelectedCount(9)
+                .setImageMaxSelectedCount(2)
+                .setVideoMaxSelectedCount(2)
+                .setChooseType(MediaHelper.PICK_TYPE)
+                .setMediaListener(new MediaListener() {
+                    @Override
+                    public int onSelectedImageCount() {
+                        return imageAddAdapter.getList().size();
+                    }
+
+                    @Override
+                    public int onSelectedVideoCount() {
+                        return videoAddAdapter.getList().size();
+                    }
+                })
                 .setImageQualityCompress(200)
                 .builder();
         //图片、视频选择结果回调通知
@@ -59,7 +73,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 mediaHelper.setCurrentImageCount(videoAddAdapter.getList().size());
             }
         });
-        imageAddAdapter = new ImageAddAdapter(this);
+        imageAddAdapter = new ImageAddAdapter(this, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -103,7 +117,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void imgAdd(View view) {
-        mediaHelper.openImageDialog(view,OpenImageDialog.CAMERA_ALBUM);
+        mediaHelper.openImageDialog(view, OpenImageDialog.CAMERA_ALBUM);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -116,6 +130,14 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void videoAdd(View view) {
-        mediaHelper.openShootDialog(view,OpenShootDialog.CAMERA_ALBUM);
+        mediaHelper.openShootDialog(view, OpenShootDialog.CAMERA_ALBUM);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaHelper != null) {
+            mediaHelper.unregister(this);
+        }
     }
 }

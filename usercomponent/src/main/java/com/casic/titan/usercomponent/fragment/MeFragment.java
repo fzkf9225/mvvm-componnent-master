@@ -91,4 +91,12 @@ public class MeFragment extends BaseFragment<BaseViewModel, MeFragmentBinding> {
     private void checkUserInfo() {
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaHelper != null) {
+            mediaHelper.unregister(this);
+        }
+    }
 }

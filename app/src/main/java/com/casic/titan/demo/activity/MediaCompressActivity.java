@@ -75,4 +75,12 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaHelper != null) {
+            mediaHelper.unregister(this);
+        }
+    }
 }

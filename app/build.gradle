@@ -88,6 +88,7 @@ dependencies {
     implementation project(':mqttcomponent')
     implementation project(':wscomponent')
     implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"

@@ -2,6 +2,7 @@ package pers.fz.mvvm.util.media;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,23 +11,22 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.view.View;
 
+import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
-
-import com.google.gson.Gson;
 
 import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.imgCompressor.ImgCompressor;
@@ -36,6 +36,7 @@ import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -51,17 +52,20 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public final static String TAG = MediaHelper.class.getSimpleName();
     private final MutableLiveData<MediaBean> mutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<MediaBean> mutableLiveDataCompress = new MutableLiveData<>();
-    private Uri imageUri;
-    private Uri videoUri;
-    static String[] PERMISSIONS_CAMERA = new String[]{
+    private final String[] PERMISSIONS_CAMERA = new String[]{
             Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    static String[] PERMISSIONS_READ = new String[]{
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private final String[] PERMISSIONS_CAMERA_R = new String[]{
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+    };
 
+    private final String[] PERMISSIONS_READ = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
+
     private final String[] PERMISSIONS_READ_TIRAMISU = new String[]{
             Manifest.permission.READ_MEDIA_IMAGES,
             Manifest.permission.READ_MEDIA_AUDIO,
@@ -87,8 +91,20 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     /**
      * 最大可选的图片数量，默认9张
      */
-    public final static int ALBUM_MAX_COUNT = 9;
+    public final static int DEFAULT_ALBUM_MAX_COUNT = 9;
+    /**
+     * 最大可选的视频数量，默认1张
+     */
+    public final static int DEFAULT_VIDEO_MAX_COUNT = 1;
 
+    /**
+     * 新版Pick选择框
+     */
+    public final static int PICK_TYPE = 1;
+    /**
+     * 默认的选择
+     */
+    public final static int DEFAULT_TYPE = 0;
     /**
      * 当前已选择的图片数量
      */
@@ -101,37 +117,116 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private ActivityResultLauncher<String[]> permissionLauncher = null;
     private ActivityResultLauncher<Object> cameraLauncher = null;
     private ActivityResultLauncher<String> videoLauncher = null;
+    private ActivityResultLauncher<String> videoMultiLauncher = null;
     private ActivityResultLauncher<Object> shootLauncher = null;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiImageSelectorLauncher = null;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickImageSelectorLauncher = null;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiVideoSelectorLauncher = null;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickVideoSelectorLauncher = null;
 
+    // 注册图片选择框监听,new ActivityResultContracts.PickMultipleVisualMedia(9)也可以选择图片而且还有选择框提供，
+    // 但是这个api只能再registerForActivityResult中创建
+    // 而registerForActivityResult只能再onCreate中注册，这就导致无法利用它限制图片上传数量，因为它每次都是限制9张，并且不能修改,试过重写这个类也不行
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
         if (mediaBuilder.getFragment() == null) {
-            // 注册图片选择框监听,new ActivityResultContracts.PickMultipleVisualMedia(9)也可以选择图片而且还有选择框提供，
-            // 但是这个api只能再registerForActivityResult中创建
-            // 而registerForActivityResult只能再onCreate中注册，这就导致无法利用它限制图片上传数量，因为它每次都是限制9张，并且不能修改
-            imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
-            imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
-            //权限监听
-            permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
-            videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
-            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+            mediaBuilder.getActivity().getLifecycle().addObserver(this);
         } else {
-            //注册图片选择框监听
-            imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
-            imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
-            //权限监听
-            permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
-            videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
-            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+            mediaBuilder.getFragment().getLifecycle().addObserver(this);
         }
     }
 
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onCreate(owner);
+        if (mediaBuilder.getFragment() == null) {
+            //新选择器，兼容性不是很好
+            pickMuLtiImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
+            pickImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
+            pickMuLtiVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
+            pickVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            //传统选择器
+            imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
+            imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
+            //权限监听
+            permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
+            cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
+            videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
+            videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), videoMultiCallback);
+            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+        } else {
+            //新选择器，兼容性不是很好
+            pickMuLtiImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()), imageMultiSelectorCallback);
+            pickImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), imageSingleSelectorCallback);
+            pickMuLtiVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()), videoMultiCallback);
+            pickVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), videoCallback);
+            //注册图片选择框监听
+            imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), imageMultiSelectorCallback);
+            imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), imageSingleSelectorCallback);
+            //权限监听
+            permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
+            cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getVideoOutPutPath()), cameraCallback);
+            videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), videoMultiCallback);
+            videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(), videoCallback);
+            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()), shootCallback);
+        }
+    }
 
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onDestroy(owner);
+        //取消pick监听
+        if (pickMuLtiImageSelectorLauncher != null) {
+            pickMuLtiImageSelectorLauncher.unregister();
+        }
+        if (pickImageSelectorLauncher != null) {
+            pickImageSelectorLauncher.unregister();
+        }
+        if (pickMuLtiVideoSelectorLauncher != null) {
+            pickMuLtiVideoSelectorLauncher.unregister();
+        }
+        if (pickVideoSelectorLauncher != null) {
+            pickVideoSelectorLauncher.unregister();
+        }
+        //取消默认选择监听
+        if (imageMuLtiSelectorLauncher != null) {
+            imageMuLtiSelectorLauncher.unregister();
+        }
+        if (imageSingleSelectorLauncher != null) {
+            imageSingleSelectorLauncher.unregister();
+        }
+        if (videoMultiLauncher != null) {
+            videoMultiLauncher.unregister();
+        }
+        if (videoLauncher != null) {
+            videoLauncher.unregister();
+        }
+        //拍照录像、权限
+        if (cameraLauncher != null) {
+            cameraLauncher.unregister();
+        }
+        if (shootLauncher != null) {
+            shootLauncher.unregister();
+        }
+        if (permissionLauncher != null) {
+            permissionLauncher.unregister();
+        }
+    }
+
+    public void unregister(Fragment fragment) {
+        fragment.getLifecycle().addObserver(this);
+    }
+
+    public void unregister(ComponentActivity activity) {
+        activity.getLifecycle().addObserver(this);
+    }
+
+    public void unregister() {
+        if (mediaBuilder.getFragment() == null) {
+            mediaBuilder.getActivity().getLifecycle().removeObserver(this);
+        } else {
+            mediaBuilder.getFragment().getLifecycle().removeObserver(this);
+        }
     }
 
     /**
@@ -150,6 +245,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         if (result == null) {
             return;
         }
+        if (mediaBuilder.getMediaListener() != null) {
+            if (result.size() > mediaBuilder.getImageMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedImageCount()) {
+                mediaBuilder.getBaseView().showToast("已超过最大可选数量，最大可选数量为" + mediaBuilder.getImageMaxSelectedCount());
+                return;
+            }
+        }
         mutableLiveData.postValue(new MediaBean(result, MediaTypeEnum.IMAGE.getMediaType()));
     };
     /**
@@ -157,6 +258,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     ActivityResultCallback<Map<String, Boolean>> permissionCallback = result -> {
         for (Map.Entry<String, Boolean> entry : result.entrySet()) {
+            LogUtil.show(TAG, entry.getKey() + ":" + entry.getValue());
             if (Boolean.FALSE.equals(entry.getValue())) {
                 mediaBuilder.getBaseView().showToast("您拒绝了当前权限，可能导致无法使用该功能");
                 return;
@@ -175,6 +277,21 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         mutableLiveData.postValue(new MediaBean(new ArrayList<>(List.of(result)), MediaTypeEnum.IMAGE.getMediaType()));
+    };
+    /**
+     * 视频选择器回调
+     */
+    ActivityResultCallback<List<Uri>> videoMultiCallback = result -> {
+        if (result == null) {
+            return;
+        }
+        if (mediaBuilder.getMediaListener() != null) {
+            if (result.size() > mediaBuilder.getImageMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedVideoCount()) {
+                mediaBuilder.getBaseView().showToast("已超过最大可选数量，最大可选数量为" + mediaBuilder.getImageMaxSelectedCount());
+                return;
+            }
+        }
+        mutableLiveData.postValue(new MediaBean(result, MediaTypeEnum.VIDEO.getMediaType()));
     };
     /**
      * 选择视频回调
@@ -208,19 +325,32 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * @return
      */
     public boolean isFileUriExists(Uri uri) {
+        ContentResolver contentResolver = mediaBuilder.getActivity().getContentResolver();
+        ParcelFileDescriptor fileDescriptor = null;
         try {
-            InputStream inputStream = mediaBuilder.getActivity().getContentResolver().openInputStream(uri);
-            if (inputStream == null) {
-                LogUtil.show(TAG, uri + "：文件不存在");
-                return false;
+            fileDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            if (fileDescriptor != null) {
+                fileDescriptor.close();
+                LogUtil.show(TAG, uri + "：文件存在");
+                return true;
             }
-            inputStream.close();
-            LogUtil.show(TAG, uri + "：文件存在");
-            return true;
-        } catch (IOException | NullPointerException e) {
+        } catch (FileNotFoundException e) {
+            // 文件不存在
+            LogUtil.show(TAG, uri + "，判断文件是否存在出现异常：" + e);
+            return false;
+        } catch (IOException e) {
             e.printStackTrace();
             LogUtil.show(TAG, uri + "，判断文件是否存在出现异常：" + e);
+        } finally {
+            try {
+                if (fileDescriptor != null) {
+                    fileDescriptor.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        LogUtil.show(TAG, uri + "：文件不存在");
         return false;
     }
 
@@ -255,10 +385,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 .setOnOpenVideoClickListener(this)
                 .builder()
                 .show();
-    }
-
-    public Uri getImageUri() {
-        return imageUri;
     }
 
     /**
@@ -411,8 +537,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     }
 
-    ;
-
     /**
      * 打开相册选择页面
      */
@@ -426,11 +550,18 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 //            selector.multi();
 //        }
 //        selector.start(mediaBuilder.getActivity(), imageSelectorLauncher);
-        if (mediaBuilder.getImageMaxSelectedCount() == 1) {
-            imageSingleSelectorLauncher.launch("image/*");
+        if (mediaBuilder.getChooseType() == PICK_TYPE) {
+            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
+                PickUtil.Companion.startImagePick(pickImageSelectorLauncher);
+            } else {
+                PickUtil.Companion.startImagePick(pickMuLtiImageSelectorLauncher);
+            }
         } else {
-            imageMuLtiSelectorLauncher.launch("image/*");
-//            new GetImagesMultipleContents().start(imageMuLtiSelectorLauncher);
+            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
+                imageSingleSelectorLauncher.launch("image/*");
+            } else {
+                imageMuLtiSelectorLauncher.launch("image/*");
+            }
         }
     }
 
@@ -557,9 +688,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
             openShoot();
         } else if (OpenShootDialog.CAMERA == mediaType) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
-                checkPermission(PERMISSIONS_CAMERA);
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA_R)) {
+                    checkPermission(PERMISSIONS_CAMERA_R);
+                    return;
+                }
+            } else {
+                if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
+                    checkPermission(PERMISSIONS_CAMERA);
+                    return;
+                }
             }
             shoot();
         }
@@ -577,7 +715,19 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     @SuppressLint("IntentReset")
     private void openShoot() {
-        videoLauncher.launch("video/*");
+        if (mediaBuilder.getChooseType() == PICK_TYPE) {
+            if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
+                PickUtil.Companion.startVideoPick(pickVideoSelectorLauncher);
+            } else {
+                PickUtil.Companion.startVideoPick(pickMuLtiVideoSelectorLauncher);
+            }
+        } else {
+            if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
+                videoLauncher.launch("video/*");
+            } else {
+                videoMultiLauncher.launch("video/*");
+            }
+        }
     }
 
     @Override
@@ -596,9 +746,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
             openImg(mCurrentImageCount);
         } else if (OpenImageDialog.CAMERA == mediaType) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
-                checkPermission(PERMISSIONS_CAMERA);
-                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA_R)) {
+                    checkPermission(PERMISSIONS_CAMERA_R);
+                    return;
+                }
+            } else {
+                if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
+                    checkPermission(PERMISSIONS_CAMERA);
+                    return;
+                }
             }
             camera();
         }

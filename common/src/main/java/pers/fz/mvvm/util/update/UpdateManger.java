@@ -98,14 +98,16 @@ public class UpdateManger implements UpdateMessageDialog.OnUpdateListener {
             ToastUtils.showShort(mContext, "已存在下载任务，请勿重复下载");
             return;
         }
-
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            //申请WRITE_EXTERNAL_STORAGE权限
-            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    0x02);
-            return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //申请WRITE_EXTERNAL_STORAGE权限
+                ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        0x02);
+                return;
+            }
         }
+
         if (downloadNotificationUtil == null) {
             downloadNotificationUtil = new DownloadNotificationUtil(v.getContext().getApplicationContext());
         }

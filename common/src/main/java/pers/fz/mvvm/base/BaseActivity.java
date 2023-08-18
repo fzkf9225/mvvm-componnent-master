@@ -260,12 +260,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
             for (Map.Entry<String, Boolean> stringBooleanEntry : result.entrySet()) {
                 if (Boolean.FALSE.equals(stringBooleanEntry.getValue())) {
-                    onPermissionRefused();
+                    onPermissionRefused(result);
                     return;
                 }
             }
-            onPermissionGranted();
+            onPermissionGranted(result);
         });
+    }
+
+    protected void unregisterPermission() {
+        if (permissionLauncher != null) {
+            permissionLauncher.unregister();
+        }
     }
 
     protected void onLoginSuccessCallback(Bundle bundle) {
@@ -279,14 +285,14 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     /**
      * 权限同意
      */
-    protected void onPermissionGranted() {
+    protected void onPermissionGranted(Map<String, Boolean> permissions) {
 
     }
 
     /**
      * 权限拒绝
      */
-    protected void onPermissionRefused() {
+    protected void onPermissionRefused(Map<String, Boolean> permissions) {
         showToast("拒绝权限可能会导致应用软件运行异常!");
     }
 
@@ -325,6 +331,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().finishActivity(this);
+        if (loginLauncher != null) {
+            loginLauncher.unregister();
+        }
     }
 
     @Override

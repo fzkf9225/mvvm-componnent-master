@@ -85,7 +85,7 @@ public class SettingViewModel extends BaseViewModel<BaseView> {
         String size = null;
         try {
             long cacheSize = GlideCacheUtil.getInstance().getFolderSize(
-                    new File(getApplication().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + File.separator));
+                    new File(getApplication().getExternalCacheDir().getAbsolutePath() + File.separator));
             cacheSize += GlideCacheUtil.getInstance().getFolderSize(
                     new File(getApplication().getCacheDir() + File.separator +
                             InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR));
@@ -105,7 +105,7 @@ public class SettingViewModel extends BaseViewModel<BaseView> {
      */
     public void clearCache() {
         GlideCacheUtil.getInstance().clearImageAllCache(getApplication());
-        GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + File.separator, false);
+        GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getExternalCacheDir().getAbsolutePath() + File.separator, false);
         GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getCacheDir().getAbsolutePath(), false);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getExternalCacheDir().getAbsolutePath(), false);

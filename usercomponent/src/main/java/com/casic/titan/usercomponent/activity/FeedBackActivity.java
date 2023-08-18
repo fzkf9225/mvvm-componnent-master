@@ -86,4 +86,11 @@ public class FeedBackActivity extends BaseActivity<BaseViewModel, FeedbackBindin
                 .show();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaHelper != null) {
+            mediaHelper.unregister(this);
+        }
+    }
 }

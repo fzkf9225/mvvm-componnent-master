@@ -73,4 +73,6 @@ dependencies {
     implementation project(":mqttcomponent")
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
+
 }

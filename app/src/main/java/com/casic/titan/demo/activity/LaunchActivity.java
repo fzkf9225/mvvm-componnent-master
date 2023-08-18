@@ -12,11 +12,20 @@ import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.gyf.immersionbar.ImmersionBar;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.databinding.LaunchLayoutBinding;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/5/15.
@@ -24,7 +33,7 @@ import pers.fz.mvvm.databinding.LaunchLayoutBinding;
  */
 @AndroidEntryPoint
 public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBinding> {
-    private final Handler handler = new Handler(Looper.myLooper());
+    private Disposable disposable;
     private int countDown = 3;
     private final String[] PERMISSIONS = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -33,11 +42,9 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
             Manifest.permission.ACCESS_FINE_LOCATION
     };
     private final String[] PERMISSIONS_TIRAMISU = new String[]{
-            Manifest.permission.READ_MEDIA_IMAGES,
-            Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.READ_MEDIA_VIDEO,
             Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS
     };
     private SplashScreen splashScreen;
 
@@ -73,7 +80,7 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
     @Override
     public void initData(Bundle bundle) {
         splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
-            showToast("SplaseScreen动画播放结束");
+            showToast("SplashScreen动画播放结束");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (lacksPermissions(PERMISSIONS_TIRAMISU)) {
                     requestPermission(PERMISSIONS_TIRAMISU);
@@ -87,40 +94,46 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
             }
             startCountDown();
         });
-
     }
 
     @Override
-    protected void onPermissionGranted() {
+    protected void onPermissionGranted(Map<String, Boolean> permissions) {
         startCountDown();
     }
 
     @Override
-    protected void onPermissionRefused() {
-        super.onPermissionRefused();
+    protected void onPermissionRefused(Map<String, Boolean> permissions) {
+        super.onPermissionRefused(permissions);
         startCountDown();
     }
 
     private void startCountDown() {
-        handler.postDelayed(runnable, 1000);
+        disposable = Observable.interval(1, TimeUnit.SECONDS)
+                .map(aLong -> countDown - aLong)
+                .take(countDown + 1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    LogUtil.show(TAG, "欢迎页面倒计时：" + aLong);
+                    if (aLong == 0) {
+                        if (UserAccountHelper.isLogin()) {
+                            startActivity(MainActivity.class);
+                        } else {
+                            startActivity(LoginActivity.class);
+                        }
+                        finish();
+                    }
+                }, throwable -> {
+
+                });
     }
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            countDown--;
-            handler.postDelayed(this, 1000);
-            if (countDown == 0) {
-                //千万不要再startActivity后直接finish，一定要在回调事件里finish
-                if (UserAccountHelper.isLogin()) {
-                    startActivity(MainActivity.class);
-                } else {
-                    startActivity(LoginActivity.class);
-                }
-                finish();
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
-    };
-
+    }
 }
 
