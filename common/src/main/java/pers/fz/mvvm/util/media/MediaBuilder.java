@@ -48,26 +48,28 @@ public class MediaBuilder {
 
     private MediaListener mediaListener;
     private int chooseType = MediaHelper.DEFAULT_TYPE;
-    public MediaBuilder(@NotNull ComponentActivity mActivity,BaseView baseView) {
+
+    public MediaBuilder(@NotNull ComponentActivity mActivity, BaseView baseView) {
         this.mActivity = mActivity;
         this.baseView = baseView;
         String basePath = FileUtils.getDefaultBasePath(mActivity);
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
-                File.separator+ basePath;
+                File.separator + basePath;
         videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
-                File.separator+basePath;
-        LogUtil.show(MediaHelper.TAG,"imageOutPutPath："+imageOutPutPath);
-        LogUtil.show(MediaHelper.TAG,"videoOutPutPath："+videoOutPutPath);
+                File.separator + basePath;
+        LogUtil.show(MediaHelper.TAG, "imageOutPutPath：" + imageOutPutPath);
+        LogUtil.show(MediaHelper.TAG, "videoOutPutPath：" + videoOutPutPath);
     }
-    public MediaBuilder(@NotNull Fragment fragment,BaseView baseView) {
+
+    public MediaBuilder(@NotNull Fragment fragment, BaseView baseView) {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
         this.baseView = baseView;
         String basePath = FileUtils.getDefaultBasePath(fragment.requireContext());
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
-                File.separator+basePath;
+                File.separator + basePath;
         videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
-                File.separator+ basePath;
+                File.separator + basePath;
     }
 
     public Fragment getFragment() {
@@ -77,8 +79,10 @@ public class MediaBuilder {
     public String getImageOutPutPath() {
         return imageOutPutPath;
     }
+
     /**
      * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录，媒体文件目录，Android 10+在Picture下，10之前可以自定义
+     *
      * @param imageOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/image/下
      */
     public MediaBuilder setImageOutPutPath(String imageOutPutPath) {
@@ -97,6 +101,7 @@ public class MediaBuilder {
 
     /**
      * 视频自定义输出路径，暂不支持，仅支持内部存储目录即私有目录,媒体文件目录，Android 10+在Picture下，10之前可以自定义
+     *
      * @param videoOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/video/下
      */
     public MediaBuilder setVideoOutPutPath(String videoOutPutPath) {
@@ -115,7 +120,7 @@ public class MediaBuilder {
         return this;
     }
 
-    public MediaBuilder setWaterMark(){
+    public MediaBuilder setWaterMark() {
         this.waterMark = waterMark;
         return this;
     }
@@ -126,6 +131,7 @@ public class MediaBuilder {
 
     /**
      * 图片压缩质量
+     *
      * @param imageQualityCompress 单位大小kb,默认200kb
      * @return this
      */
@@ -136,6 +142,7 @@ public class MediaBuilder {
 
     /**
      * 相册最大选择数量
+     *
      * @param imageMaxSelectedCount 最大选择的图片数量，最多9张
      * @return this
      */
@@ -143,8 +150,10 @@ public class MediaBuilder {
         this.imageMaxSelectedCount = imageMaxSelectedCount;
         return this;
     }
+
     /**
      * 相册最大选择数量
+     *
      * @param videoMaxSelectedCount 最大选择的图片数量，最多9张
      * @return this
      */

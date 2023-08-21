@@ -63,7 +63,6 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         }
 
         binding.videoPlayer.setUp(videoPath, true, bundle.getString(VIDEO_TITLE));
-
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

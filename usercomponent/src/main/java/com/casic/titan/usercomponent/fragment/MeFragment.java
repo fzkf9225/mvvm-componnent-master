@@ -13,6 +13,7 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.util.media.MediaBuilder;
@@ -23,6 +24,7 @@ import pers.fz.mvvm.wight.dialog.OpenImageDialog;
  * Created by fz on 2020/03/26.
  * describe：我的页面
  */
+@AndroidEntryPoint
 public class MeFragment extends BaseFragment<BaseViewModel, MeFragmentBinding> {
     private final String TAG = this.getClass().getSimpleName();
     private MediaHelper mediaHelper;

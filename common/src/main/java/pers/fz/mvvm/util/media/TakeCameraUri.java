@@ -1,5 +1,6 @@
 package pers.fz.mvvm.util.media;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import java.io.File;
 
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/4/25 17:23
@@ -28,10 +30,8 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
      */
     private Uri uri;
     private String savePath;
-    private Context context;
 
-    public TakeCameraUri(Context context,String savePath) {
-        this.context = context;
+    public TakeCameraUri(String savePath) {
         this.savePath = savePath;
     }
 
@@ -49,15 +49,21 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
             uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         } else {
             //应用认证表示
-            String authorities = context.getPackageName() + ".FileProvider";
-            uri = FileProvider.getUriForFile(context, authorities,
-                    new File(savePath + File.separator + "image", fileName));
+            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",
+                    new File(savePath + File.separator + "image" + File.separator+ fileName));
         }
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }
 
+    /**
+     * 下面注释代码是正常的，但是由于视频录像的时候返回的resultCode有问题，这里虽然没有问题，但是担心兼容性不好，索性就不判断了
+     */
     @Override
     public Uri parseResult(int resultCode, @Nullable Intent intent) {
+        LogUtil.show(MediaHelper.TAG, "拍照回调resultCode：" + resultCode);
+//        if (resultCode == Activity.RESULT_OK) {
+//            return uri;
+//        }
         return uri;
     }
 }

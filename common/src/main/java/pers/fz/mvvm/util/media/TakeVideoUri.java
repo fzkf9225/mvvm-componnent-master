@@ -1,5 +1,6 @@
 package pers.fz.mvvm.util.media;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -33,14 +34,12 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
      * 录制时长
      */
     private int durationLimit = 30;
-    private  Context context;
-    public TakeVideoUri( Context context,String savePath) {
-        this.context = context;
+
+    public TakeVideoUri(String savePath) {
         this.savePath = savePath;
     }
 
-    public TakeVideoUri( Context context,String savePath, int durationLimit) {
-        this.context = context;
+    public TakeVideoUri(String savePath, int durationLimit) {
         this.savePath = savePath;
         this.durationLimit = durationLimit;
     }
@@ -59,17 +58,20 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
             uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
         } else {
             //应用认证表示
-            String authorities = context.getPackageName() + ".FileProvider";
-            uri = FileProvider.getUriForFile(context, authorities,
-                    new File(savePath + File.separator + "image", fileName));
+            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",
+                    new File(savePath + File.separator + "video" + File.separator + fileName));
         }
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
                 .putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit)
                 .putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }
 
+    /**
+     * 系统这里有bug。ACTION_VIDEO_CAPTURE返回的resultCode永远都为0，及Activity.RESULT_CANCELED,所以这个没办法判断resultCode这里属于系统bug
+     */
     @Override
     public Uri parseResult(int resultCode, @Nullable Intent intent) {
+        LogUtil.show(MediaHelper.TAG, "录像回调resultCode：" + resultCode);
         return uri;
     }
 }

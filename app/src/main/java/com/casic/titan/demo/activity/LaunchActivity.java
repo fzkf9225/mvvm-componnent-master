@@ -14,6 +14,7 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -47,6 +48,10 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
             Manifest.permission.POST_NOTIFICATIONS
     };
     private SplashScreen splashScreen;
+    /**
+     * 控制是否保持启动页面的变量,值为false时继续往下走
+     */
+    private AtomicBoolean keepOnScreenCondition = new AtomicBoolean(false);
 
     @Override
     public String setTitleBar() {
@@ -72,42 +77,49 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
     @Override
     public void initView(Bundle savedInstanceState) {
         registerPermissionLauncher();
-//        Glide.with(this)
-//                .load(R.mipmap.launcher_image)
-//                .into(binding.img);
     }
 
     @Override
     public void initData(Bundle bundle) {
-        splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
-            showToast("SplashScreen动画播放结束");
+        splashScreen.setKeepOnScreenCondition(() -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (lacksPermissions(PERMISSIONS_TIRAMISU)) {
                     requestPermission(PERMISSIONS_TIRAMISU);
-                    return;
+                } else {
+                    startCountDown();
                 }
             } else {
                 if (lacksPermissions(PERMISSIONS)) {
                     requestPermission(PERMISSIONS);
-                    return;
+                } else {
+                    startCountDown();
                 }
             }
-            startCountDown();
+            return keepOnScreenCondition.get();
+        });
+        splashScreen.setOnExitAnimationListener(splashScreenViewProvider -> {
+            LogUtil.show(TAG, "---------------setOnExitAnimationListener--------------");
+            showToast("SplashScreen动画播放结束");
         });
     }
 
     @Override
     protected void onPermissionGranted(Map<String, Boolean> permissions) {
+        keepOnScreenCondition.compareAndSet(false, true);
         startCountDown();
     }
 
     @Override
     protected void onPermissionRefused(Map<String, Boolean> permissions) {
         super.onPermissionRefused(permissions);
+        keepOnScreenCondition.compareAndSet(false, true);
         startCountDown();
     }
 
     private void startCountDown() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
         disposable = Observable.interval(1, TimeUnit.SECONDS)
                 .map(aLong -> countDown - aLong)
                 .take(countDown + 1)
@@ -116,11 +128,11 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
                 .subscribe(aLong -> {
                     LogUtil.show(TAG, "欢迎页面倒计时：" + aLong);
                     if (aLong == 0) {
-//                        if (UserAccountHelper.isLogin()) {
+                        if (UserAccountHelper.isLogin()) {
                             startActivity(MainActivity.class);
-//                        } else {
-//                            startActivity(LoginActivity.class);
-//                        }
+                        } else {
+                            startActivity(LoginActivity.class);
+                        }
                         finish();
                     }
                 }, throwable -> {
