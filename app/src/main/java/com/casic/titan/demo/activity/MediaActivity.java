@@ -45,7 +45,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         //初始化一些媒体配置
         //新api不支持最大可选张数，因此没有实现，当然你可以变通很多方式去实现它，后期可能会新增吧
         mediaHelper = new MediaBuilder(this, this)
-                .setImageMaxSelectedCount(2)
+                .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setMediaListener(new MediaListener() {
@@ -66,11 +66,9 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
-                mediaHelper.setCurrentImageCount(imageAddAdapter.getList().size());
             } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
-                mediaHelper.setCurrentImageCount(videoAddAdapter.getList().size());
             }
         });
         imageAddAdapter = new ImageAddAdapter(this, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
@@ -112,7 +110,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     public void imgClear(View view, int position) {
         imageAddAdapter.getList().remove(position);
         imageAddAdapter.notifyDataSetChanged();
-        mediaHelper.setCurrentImageCount(imageAddAdapter.getList().size());
     }
 
     @Override
@@ -125,7 +122,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     public void videoClear(View view, int position) {
         videoAddAdapter.getList().remove(position);
         videoAddAdapter.notifyDataSetChanged();
-        mediaHelper.setCurrentImageCount(videoAddAdapter.getList().size());
     }
 
     @Override

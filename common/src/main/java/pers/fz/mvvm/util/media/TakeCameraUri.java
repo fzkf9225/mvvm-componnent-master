@@ -48,9 +48,13 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
                     FileUtils.getLastPath(savePath, FileUtils.getDefaultBasePath(context)) + File.separator + "image");
             uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         } else {
+            File file = new File(savePath + File.separator + "image" + File.separator+ fileName);
+            if(!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
             //应用认证表示
             uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",
-                    new File(savePath + File.separator + "image" + File.separator+ fileName));
+                    file);
         }
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }

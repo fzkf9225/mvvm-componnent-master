@@ -105,6 +105,9 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
 
     @Override
     protected void onPermissionGranted(Map<String, Boolean> permissions) {
+        if (permissions == null || permissions.size() == 0) {
+            return;
+        }
         keepOnScreenCondition.compareAndSet(false, true);
         startCountDown();
     }
@@ -135,9 +138,7 @@ public class LaunchActivity extends BaseActivity<BaseViewModel, LaunchLayoutBind
                         }
                         finish();
                     }
-                }, throwable -> {
-
-                });
+                }, throwable -> LogUtil.show(TAG, "倒计时异常：" + throwable));
     }
 
     @Override

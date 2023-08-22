@@ -105,10 +105,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 默认的选择
      */
     public final static int DEFAULT_TYPE = 0;
-    /**
-     * 当前已选择的图片数量
-     */
-    private int mCurrentImageCount;
 
     private MediaBuilder mediaBuilder;
     private ActivityResultLauncher<String> imageMuLtiSelectorLauncher = null;
@@ -298,7 +294,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         if (mediaBuilder.getMediaListener() != null) {
-            if (result.size() > mediaBuilder.getImageMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedVideoCount()) {
+            if (result.size() > mediaBuilder.getVideoMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedVideoCount()) {
                 mediaBuilder.getBaseView().showToast("已超过最大可选数量，最大可选数量为" + mediaBuilder.getImageMaxSelectedCount());
                 return;
             }
@@ -372,15 +368,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     public MutableLiveData<MediaBean> getMutableLiveDataCompress() {
         return mutableLiveDataCompress;
-    }
-
-    /**
-     * 当前已经选择的图片数量，记得必须实时更新
-     *
-     * @param mCurrentImageCount 已选择图片数量
-     */
-    public void setCurrentImageCount(int mCurrentImageCount) {
-        this.mCurrentImageCount = mCurrentImageCount;
     }
 
     public void openImageDialog(View v, int mediaType) {
@@ -549,6 +536,26 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     }
 
+    private boolean isMoreThanMaxImage() {
+        if (mediaBuilder.getMediaListener() != null) {
+            if (mediaBuilder.getImageMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedImageCount()) {
+                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getImageMaxSelectedCount() + "张图片");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isMoreThanMaxVideo() {
+        if (mediaBuilder.getMediaListener() != null) {
+            if (mediaBuilder.getVideoMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedVideoCount()) {
+                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getVideoMaxSelectedCount() + "条视频");
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 打开相册选择页面
      */
@@ -677,6 +684,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     @Override
     public void shootClick(int mediaType) {
+        if (isMoreThanMaxVideo()) {
+            return;
+        }
         if (OpenShootDialog.ALBUM == mediaType) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
@@ -735,6 +745,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     @Override
     public void mediaClick(int mediaType) {
+        if (isMoreThanMaxImage()) {
+            return;
+        }
         if (OpenImageDialog.ALBUM == mediaType) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {

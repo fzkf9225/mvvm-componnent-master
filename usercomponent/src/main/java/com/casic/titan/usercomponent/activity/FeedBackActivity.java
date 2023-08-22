@@ -46,7 +46,6 @@ public class FeedBackActivity extends BaseActivity<BaseViewModel, FeedbackBindin
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
-                mediaHelper.setCurrentImageCount(imageAddAdapter.getList().size());
             }
         });
         imageAddAdapter = new ImageAddAdapter(this);
@@ -74,7 +73,6 @@ public class FeedBackActivity extends BaseActivity<BaseViewModel, FeedbackBindin
     public void imgClear(View view, int position) {
         imageAddAdapter.getList().remove(position);
         imageAddAdapter.notifyDataSetChanged();
-        mediaHelper.setCurrentImageCount(imageAddAdapter.getList().size());
     }
 
     @Override

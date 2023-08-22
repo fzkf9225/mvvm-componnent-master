@@ -128,3 +128,32 @@ dependencies {
 
     implementation "org.osgeo:proj4j:0.1.0"
 }
+apply plugin: 'maven-publish'
+afterEvaluate {
+    publishing {
+        publications {
+            plugin(MavenPublication) {
+                artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
+                groupId = 'pers.fz.mvvm'
+                artifactId = 'common'
+                version = '1.1.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+        }
+    }
+}

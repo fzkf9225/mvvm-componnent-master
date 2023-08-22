@@ -16,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 
 import pers.fz.mvvm.base.BaseActivity;
@@ -29,6 +30,7 @@ import pers.fz.mvvm.util.apiUtil.StringUtil;
  * Created by fz on 2020/2/18
  * describe：基础的webView控件封装
  */
+@AndroidEntryPoint
 public class WebViewActivity extends BaseActivity<BaseViewModel, WebViewBinding> {
 
     public final static String TITLE = "title_text";
@@ -79,18 +81,13 @@ public class WebViewActivity extends BaseActivity<BaseViewModel, WebViewBinding>
 
     @Override
     public void initData(Bundle bundle) {
+        toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
         url = bundle.getString(LOAD_URL);
         if(StringUtil.isEmpty(url)){
             showToast("目标地址为空！");
             return;
         }
         binding.webView.loadUrl(url);
-    }
-
-    @Override
-    public ToolbarConfig setToolbarStyle() {
-        Bundle bundle = (getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras();
-        return new ToolbarConfig.Builder(this).setTitle(bundle.getString(TITLE)).build();
     }
 
     /**

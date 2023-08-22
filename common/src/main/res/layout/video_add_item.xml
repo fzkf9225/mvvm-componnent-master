@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
-            android:id="@+id/iv_add"
+            android:id="@+id/video_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/vertical_margin_l"
@@ -56,7 +56,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@mipmap/ic_tweet_add"
+                android:src="@mipmap/ic_tweet_add_video"
                 app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
@@ -64,7 +64,7 @@
         </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
 
         <pers.fz.mvvm.wight.customlayout.CornersImageView
-            android:id="@+id/iv_image_show"
+            android:id="@+id/iv_video_show"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/vertical_margin_l"
@@ -76,6 +76,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_play"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_video_show"
+            app:layout_constraintEnd_toEndOf="@+id/iv_video_show"
+            app:layout_constraintStart_toStartOf="@+id/iv_video_show"
+            app:layout_constraintTop_toTopOf="@+id/iv_video_show" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_clear_img"

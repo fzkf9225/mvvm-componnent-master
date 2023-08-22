@@ -25,6 +25,8 @@ import pers.fz.mvvm.wight.dialog.MessageDialog;
 public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, TextureViewPlayerActivityBinding> {
     public final static String VIDEO_PATH = "videoPath";
     public final static String VIDEO_TITLE = "videoTitle";
+    public final static String CACHE_ENABLE = "cacheEnable";
+    private boolean cacheEnable = true;
     @Override
     protected int getLayoutId() {
         return R.layout.texture_view_player_activity;
@@ -48,6 +50,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     @Override
     public void initData(Bundle bundle) {
         String videoPath = bundle.getString(VIDEO_PATH);
+        cacheEnable = bundle.getBoolean(CACHE_ENABLE,cacheEnable);
         if (StringUtil.isEmpty(videoPath)) {
             new MessageDialog(this)
                     .setCanOutSide(false)
@@ -62,7 +65,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
             return;
         }
 
-        binding.videoPlayer.setUp(videoPath, true, bundle.getString(VIDEO_TITLE));
+        binding.videoPlayer.setUp(videoPath, cacheEnable, bundle.getString(VIDEO_TITLE));
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -125,6 +128,17 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         Bundle bundle = new Bundle();
         bundle.putString(VIDEO_TITLE, title);
         bundle.putString(VIDEO_PATH, url);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
+
+    public static void show(Context context, String title, String url,boolean cacheEnable) {
+        Intent intent = new Intent(context, VideoPlayerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(VIDEO_TITLE, title);
+        bundle.putString(VIDEO_PATH, url);
+        bundle.putBoolean(CACHE_ENABLE, cacheEnable);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

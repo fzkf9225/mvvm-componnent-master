@@ -13,6 +13,8 @@ import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
+import pers.fz.mvvm.databinding.VideoAddItemBinding;
+import pers.fz.mvvm.databinding.VideoShowItemBinding;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
@@ -21,7 +23,7 @@ import pers.fz.mvvm.util.log.ToastUtils;
  * Created by fz on 2021/4/2
  * 添加视频
  */
-public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBinding> {
+public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBinding> {
     private final String TAG = this.getClass().getSimpleName();
 
     public VideoClearListener videoClearListener;
@@ -40,45 +42,48 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
 
     @Override
     public int getLayoutId() {
-        return R.layout.img_add_item;
+        return R.layout.video_add_item;
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder<ImgAddItemBinding> holder, int pos) {
+    public void onBindHolder(BaseViewHolder<VideoAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility((mList.size() == defaultMaxCount) ? View.GONE : View.VISIBLE);
+        holder.getBinding().ivClearImg.setOnClickListener(v -> {
+            if (videoClearListener != null) {
+                videoClearListener.videoClear(v, pos);
+            }
+        });
+        holder.getBinding().ivVideoShow.setOnClickListener(v -> {
+            try {
+                Bundle bundleVideo = new Bundle();
+                bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos).toString()));
+                bundleVideo.putString("videoPath", mList.get(pos).toString());
+                VideoPlayerActivity.show(mContext, bundleVideo);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.show(TAG,"视频播放失败:" + e);
+                ToastUtils.showShort(mContext, "视频播放失败");
+            }
+        });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
-            holder.getBinding().ivAdd.setOnClickListener(v -> {
+            holder.getBinding().videoAdd.setOnClickListener(v -> {
                 if (videoAddListener != null) {
                     videoAddListener.videoAdd(v);
                 }
             });
             holder.getBinding().ivPlayer.setVisibility(View.GONE);
-            Glide.with(mContext).load(R.mipmap.ic_tweet_add).into(holder.getBinding().ivAdd);
+            holder.getBinding().videoAdd.setVisibility(View.VISIBLE);
+            holder.getBinding().ivVideoShow.setVisibility(View.GONE);
             holder.getBinding().ivClearImg.setVisibility(View.GONE);
         } else {
             holder.getBinding().ivPlayer.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
-            holder.getBinding().ivClearImg.setOnClickListener(v -> {
-                if (videoClearListener != null) {
-                    videoClearListener.videoClear(v, pos);
-                }
-            });
-            holder.getBinding().ivAdd.setOnClickListener(v -> {
-//                try {
-//                    Bundle bundleVideo = new Bundle();
-//                    bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos)));
-//                    bundleVideo.putString("videoPath", mList.get(pos));
-//                    VideoPlayerActivity.show(mContext, bundleVideo);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    LogUtil.show(TAG,"视频播放失败:" + e);
-//                    ToastUtils.showShort(mContext, "视频播放失败");
-//                }
-            });
+            holder.getBinding().videoAdd.setVisibility(View.GONE);
+            holder.getBinding().ivVideoShow.setVisibility(View.VISIBLE);
             Glide.with(mContext)
                     .load(mList.get(pos))
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
-                    .into(holder.getBinding().ivAdd);
+                    .into(holder.getBinding().ivVideoShow);
         }
     }
 

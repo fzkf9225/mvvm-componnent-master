@@ -32,7 +32,7 @@ public enum UseCaseEnum {
     COMPRESS(MediaCompressActivity.class,"文件压缩","展示文件压缩能力",null),
     RECYCLER_VIEW(RecyclerViewSampleActivity.class,"列表示例","自定义封装列表",null),
     VIEW_PAGER(ViewPagerSampleActivity.class,"ViewPagerFragment","侧滑标签页面",null),
-    VIDEO_PLAYER(ViewPagerSampleActivity.class,"视频播放器","在线视频播放器，集成自GSYVideoPlayer",getVideoBundle()),
+    VIDEO_PLAYER(VideoPlayerActivity.class,"视频播放器","在线视频播放器，集成自GSYVideoPlayer",getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class,"CoordinatorLayout沉浸式","侧滑标签页面",null),
 
     ;
@@ -40,8 +40,9 @@ public enum UseCaseEnum {
     private static Bundle getVideoBundle(){
         Bundle bundle = new Bundle();
         bundle.putString(VideoPlayerActivity.VIDEO_TITLE,"测试标题");
-        //自己加地址试试吧
-        bundle.putString(VideoPlayerActivity.VIDEO_PATH,"");
+        bundle.putBoolean(VideoPlayerActivity.CACHE_ENABLE,false);
+        //自己加地址试试吧,这个地址不行，因为他不是视频链接
+        bundle.putString(VideoPlayerActivity.VIDEO_PATH,"https://www.bilibili.com/video/BV1sX4y1L7BV?t=15.2");
         return bundle;
     }
     UseCaseEnum(Class<?> clx, String name, String describe, Bundle args) {

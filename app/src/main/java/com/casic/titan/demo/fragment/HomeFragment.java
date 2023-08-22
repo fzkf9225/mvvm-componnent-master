@@ -30,8 +30,9 @@ import pers.fz.mvvm.util.log.LogUtil;
  * describe：
  */
 @AndroidEntryPoint
-public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> implements BaseRecyclerViewAdapter.OnItemClickListener{
+public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> implements BaseRecyclerViewAdapter.OnItemClickListener {
     private UseCaseAdapter useCaseAdapter;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
@@ -41,7 +42,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     protected void initView(Bundle savedInstanceState) {
         registerPermissionLauncher();
         ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true,0.2f)
+                .autoStatusBarDarkModeEnable(true, 0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.default_background)
                 .init();
     }
@@ -63,10 +64,13 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
 
     @Override
     public void onItemClick(View view, int position) {
-        if(Activity.class.isAssignableFrom(useCaseAdapter.getList().get(position).getClx())){
+        if (Activity.class.isAssignableFrom(useCaseAdapter.getList().get(position).getClx())) {
             Bundle bundle = new Bundle();
-            bundle.putParcelable("args",useCaseAdapter.getList().get(position));
-            startActivity(useCaseAdapter.getList().get(position).getClx(),bundle);
+            bundle.putParcelable("args", useCaseAdapter.getList().get(position));
+            if (useCaseAdapter.getList().get(position).getArgs() != null) {
+                bundle.putAll(useCaseAdapter.getList().get(position).getArgs());
+            }
+            startActivity(useCaseAdapter.getList().get(position).getClx(), bundle);
             return;
         }
     }

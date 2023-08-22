@@ -308,7 +308,7 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 canvas.clipPath(path);
             } else {
-                canvas.clipPath(path, Region.Op.XOR);
+                canvas.clipPath(path, Region.Op.INTERSECT);
             }
         }
 

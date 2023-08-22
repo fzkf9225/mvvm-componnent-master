@@ -23,7 +23,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     private final String TAG = this.getClass().getSimpleName();
     public ImageViewClearListener imageViewClearListener;
     public ImageViewAddListener imageViewAddListener;
-    private int defaultMaxCount = -1;//最大上传数量
+    //最大上传数量
+    private int defaultMaxCount = -1;
 
     public ImageAddAdapter(Context context) {
         super(context);
@@ -42,33 +43,36 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     @Override
     public void onBindHolder(BaseViewHolder<ImgAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility(mList.size() == defaultMaxCount ? View.GONE : View.VISIBLE);
+        holder.getBinding().ivClearImg.setOnClickListener(v -> {
+            if (imageViewClearListener != null) {
+                imageViewClearListener.imgClear(v, pos);
+            }
+        });
+        holder.getBinding().ivImageShow.setOnClickListener(v -> {
+            try {
+                new PicShowDialog(mContext, PicShowDialog.createUriImageInfo(mList), pos).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.showShort(mContext, "图片打开失败");
+            }
+        });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
             holder.getBinding().ivAdd.setOnClickListener(v -> {
                 if (imageViewAddListener != null) {
                     imageViewAddListener.imgAdd(v);
                 }
             });
-            Glide.with(mContext).load(R.mipmap.ic_tweet_add).into(holder.getBinding().ivAdd);
+            holder.getBinding().ivAdd.setVisibility(View.VISIBLE);
+            holder.getBinding().ivImageShow.setVisibility(View.GONE);
             holder.getBinding().ivClearImg.setVisibility(View.GONE);
         } else {
+            holder.getBinding().ivAdd.setVisibility(View.GONE);
+            holder.getBinding().ivImageShow.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
-            holder.getBinding().ivClearImg.setOnClickListener(v -> {
-                if (imageViewClearListener != null) {
-                    imageViewClearListener.imgClear(v, pos);
-                }
-            });
-            holder.getBinding().ivAdd.setOnClickListener(v -> {
-                try {
-                    new PicShowDialog(mContext, PicShowDialog.createUriImageInfo(mList), pos).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ToastUtils.showShort(mContext, "图片打开失败");
-                }
-            });
             Glide.with(mContext)
                     .load(mList.get(pos))
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
-                    .into(holder.getBinding().ivAdd);
+                    .into(holder.getBinding().ivImageShow);
         }
     }
 
