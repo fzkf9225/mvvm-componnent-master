@@ -132,6 +132,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     }
 
+    public MediaBuilder getMediaBuilder() {
+        return mediaBuilder;
+    }
+
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onCreate(owner);
@@ -255,7 +259,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
         if (mediaBuilder.getMediaListener() != null) {
             if (result.size() > mediaBuilder.getImageMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedImageCount()) {
-                mediaBuilder.getBaseView().showToast("已超过最大可选数量，最大可选数量为" + mediaBuilder.getImageMaxSelectedCount());
+                mediaBuilder.getBaseView().showToast("您最多还可选" + (mediaBuilder.getImageMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedImageCount())
+                        + "张图片");
                 return;
             }
         }
@@ -295,7 +300,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
         if (mediaBuilder.getMediaListener() != null) {
             if (result.size() > mediaBuilder.getVideoMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedVideoCount()) {
-                mediaBuilder.getBaseView().showToast("已超过最大可选数量，最大可选数量为" + mediaBuilder.getImageMaxSelectedCount());
+                mediaBuilder.getBaseView().showToast("您最多还可再选" + (mediaBuilder.getVideoMaxSelectedCount() - mediaBuilder.getMediaListener().onSelectedVideoCount()
+                ) + "条视频");
                 return;
             }
         }
@@ -487,7 +493,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             Bitmap bitmapOld = (Bitmap) msg.obj;
             mediaBuilder.getBaseView().hideLoading();
             Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark());
-            String outputPath = FileUtils.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "MAKER_", ".jpg");
+            String outputPath = FileUtils.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
             File outputFile = new File(outputPath);
             MediaUtil.saveBitmap(bitmapNew, outputPath);
 

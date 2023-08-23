@@ -16,7 +16,7 @@
             android:layout_height="@dimen/height_xxl"
             android:background="@null"
             android:gravity="center"
-            android:text="拍摄视频"
+            android:text="拍摄"
             android:textColor="@color/black"
             android:textSize="@dimen/font_size_xxl" />
 

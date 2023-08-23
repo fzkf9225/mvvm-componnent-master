@@ -120,7 +120,7 @@ public class MediaBuilder {
         return this;
     }
 
-    public MediaBuilder setWaterMark() {
+    public MediaBuilder setWaterMark(String waterMark) {
         this.waterMark = waterMark;
         return this;
     }
