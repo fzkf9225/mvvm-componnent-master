@@ -14,6 +14,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.apiUtil.DensityUtil;
@@ -22,6 +23,8 @@ import pers.fz.mvvm.wight.customlayout.StarBar;
 import pers.fz.mvvm.wight.picDialog.PicShowDialog;
 import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
 
+
+@AndroidEntryPoint
 public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBinding> {
     private UseCase useCase;
     private String imageUrl = "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800";

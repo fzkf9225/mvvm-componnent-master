@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.casic.titan.demo.adapter.RecyclerViewSampleAdapter;
 import com.casic.titan.demo.viewmodel.RecyclerViewSampleViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseRecyclerViewFragment;
 import pers.fz.mvvm.bean.PopupWindowBean;
@@ -16,7 +17,7 @@ import pers.fz.mvvm.databinding.OptionTextViewBinding;
 import pers.fz.mvvm.databinding.SmartrecyclerviewBinding;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
-
+@AndroidEntryPoint
 public class RecyclerViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewSampleViewModel, SmartrecyclerviewBinding,PopupWindowBean> {
     private RecyclerViewSampleAdapter recyclerViewSampleAdapter;
     @Override

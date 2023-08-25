@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -125,6 +126,7 @@ dependencies {
     //每个用到的模块都要加这两个，不能使用api
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
     implementation "org.osgeo:proj4j:0.1.0"
 }

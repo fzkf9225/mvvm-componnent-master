@@ -11,6 +11,7 @@ import com.casic.titan.demo.databinding.ActivityMediaCompressBinding;
 import com.casic.titan.demo.viewmodel.MediaCompressViewModel;
 import com.google.gson.Gson;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.media.MediaBuilder;
@@ -18,7 +19,7 @@ import pers.fz.mvvm.util.media.MediaHelper;
 import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
-
+@AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> {
     private UseCase useCase;
     private MediaHelper mediaHelper;

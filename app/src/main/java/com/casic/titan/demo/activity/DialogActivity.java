@@ -9,8 +9,9 @@ import com.casic.titan.demo.databinding.ActivityDialogBinding;
 import com.casic.titan.demo.viewmodel.DialogViewModel;
 
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-
+@AndroidEntryPoint
 public class DialogActivity extends BaseActivity<DialogViewModel, ActivityDialogBinding> {
     private UseCase useCase;
     @Override

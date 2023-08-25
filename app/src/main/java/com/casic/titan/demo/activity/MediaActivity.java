@@ -11,6 +11,7 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityMediaBinding;
 import com.casic.titan.demo.viewmodel.MediaViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
@@ -21,7 +22,7 @@ import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
-
+@AndroidEntryPoint
 public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener, VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
 

@@ -22,6 +22,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import java.io.File;
 import java.util.Random;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.util.log.LogUtil;
@@ -30,6 +31,7 @@ import pers.fz.mvvm.util.log.LogUtil;
  * Created by fz on 2023/8/17 16:12
  * describe :
  */
+@AndroidEntryPoint
 public class CoordinatorActivity extends BaseActivity<BaseViewModel, ActivityCoordinatorBinding> {
     @Override
     protected int getLayoutId() {

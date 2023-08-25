@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -45,8 +46,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     dataBinding {
         //noinspection DataBindingWithoutKapt
@@ -57,7 +58,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.3'
@@ -92,6 +93,8 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
     implementation "androidx.core:core-splashscreen:$splashscreenVersion"
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "androidx.navigation:navigation-fragment:$navigationVersion"
@@ -101,5 +104,10 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
+
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
+    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
  * popupWindow
  */
 
-public class PopupWindowBean<T extends PopupWindowBean> extends BaseObservable {
+public class PopupWindowBean<T> extends BaseObservable {
     private String id;
     private String name;
 

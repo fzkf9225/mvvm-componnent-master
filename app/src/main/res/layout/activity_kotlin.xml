@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.KotlinActivity">
+
+        <Button
+            android:id="@+id/button_kotlin_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kotlin请求接口"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_kotlin_recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kotlin列表"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_kotlin_request"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/kotlin_fragment_view"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/default_background"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_kotlin_recyclerView"
+            app:layout_constraintVertical_weight="1"
+            app:navGraph="@navigation/kotlin_navigation"
+            tools:context=".activity.RecyclerViewSampleActivity" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

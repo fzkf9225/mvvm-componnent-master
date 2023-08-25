@@ -67,4 +67,13 @@ public class MqttBean implements Parcelable {
         dest.writeString(mqtt_password);
         dest.writeString(mqtt_username);
     }
+
+    @Override
+    public String toString() {
+        return "MqttBean{" +
+                "mqtt_addr='" + mqtt_addr + '\'' +
+                ", mqtt_password='" + mqtt_password + '\'' +
+                ", mqtt_username='" + mqtt_username + '\'' +
+                '}';
+    }
 }

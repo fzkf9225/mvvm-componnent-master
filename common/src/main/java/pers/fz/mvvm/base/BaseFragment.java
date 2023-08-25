@@ -70,11 +70,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
             for (Map.Entry<String, Boolean> stringBooleanEntry : result.entrySet()) {
                 if (Boolean.FALSE.equals(stringBooleanEntry.getValue())) {
-                    onPermissionRefused();
+                    onPermissionRefused(result);
                     return;
                 }
             }
-            onPermissionGranted();
+            onPermissionGranted(result);
         });
     }
 
@@ -87,14 +87,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     /**
      * 权限同意
      */
-    protected void onPermissionGranted() {
+    protected void onPermissionGranted(Map<String, Boolean> permissions) {
 
     }
 
     /**
      * 权限拒绝
      */
-    protected void onPermissionRefused() {
+    protected void onPermissionRefused(Map<String, Boolean> permissions) {
         showToast("拒绝权限可能会导致应用软件运行异常!");
     }
 

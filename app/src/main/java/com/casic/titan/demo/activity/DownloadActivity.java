@@ -9,9 +9,10 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityDownloadBinding;
 import com.casic.titan.demo.viewmodel.DownloadViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.update.DownloadManger;
-
+@AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {
     private UseCase useCase;
 

@@ -8,9 +8,10 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityQrCodeBinding;
 import com.casic.titan.demo.viewmodel.QrCodeViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.zxing.encode.QRCodeUtil;
-
+@AndroidEntryPoint
 public class QrCodeActivity extends BaseActivity<QrCodeViewModel, ActivityQrCodeBinding> {
     private UseCase useCase;
 

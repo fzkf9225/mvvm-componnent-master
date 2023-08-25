@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'com.google.dagger.hilt.android'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 android {
     compileSdk project.COMPILE_SDK_VERSION
@@ -32,8 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     resourcePrefix "user_"
     sourceSets {
@@ -44,6 +46,12 @@ android {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
         }
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.3'
     }
     namespace 'com.casic.titan.usercomponent'
 }
@@ -73,6 +81,8 @@ dependencies {
     implementation project(":mqttcomponent")
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
     implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
 
 }

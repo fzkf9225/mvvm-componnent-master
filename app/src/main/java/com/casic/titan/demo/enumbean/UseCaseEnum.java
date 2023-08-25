@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.casic.titan.demo.activity.CoordinatorActivity;
 import com.casic.titan.demo.activity.DialogActivity;
 import com.casic.titan.demo.activity.DownloadActivity;
+import com.casic.titan.demo.activity.KotlinActivity;
 import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.MediaCompressActivity;
 import com.casic.titan.demo.activity.RecyclerViewSampleActivity;
@@ -34,6 +35,7 @@ public enum UseCaseEnum {
     VIEW_PAGER(ViewPagerSampleActivity.class,"ViewPagerFragment","侧滑标签页面",null),
     VIDEO_PLAYER(VideoPlayerActivity.class,"视频播放器","在线视频播放器，集成自GSYVideoPlayer",getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class,"CoordinatorLayout沉浸式","侧滑标签页面",null),
+    KOTLIN(KotlinActivity.class,"kotlin父类测试","测试kotlin父类代码",null),
 
     ;
 
