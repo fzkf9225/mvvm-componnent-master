@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.apiUtil.ThreadExecutorIO;
 import pers.fz.mvvm.util.download.DownLoadImageService;
 import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
 import pers.fz.mvvm.util.log.ToastUtils;
@@ -68,6 +70,7 @@ public class PicShowDialog extends Dialog {
         super(context, themeResId);
         this.context = context;
     }
+
     public PicShowDialog(Context context, boolean canSaveImage) {
         super(context, R.style.Pic_Dialog);
         this.context = context;
@@ -75,7 +78,7 @@ public class PicShowDialog extends Dialog {
     }
 
     public PicShowDialog(Context context, List<ImageInfo> imageInfos, int position) {
-        this(context,R.style.Pic_Dialog);
+        this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
         this.position = position;
     }
@@ -87,7 +90,7 @@ public class PicShowDialog extends Dialog {
         this.position = position;
     }
 
-    public PicShowDialog setImages(List<ImageInfo> imageInfoList){
+    public PicShowDialog setImages(List<ImageInfo> imageInfoList) {
 
         return this;
     }
@@ -103,6 +106,7 @@ public class PicShowDialog extends Dialog {
         imageInfos.add(new ImageInfo(imageRes, 600, 800));
         return imageInfos;
     }
+
     public static List<ImageInfo> createImageInfo(Bitmap bitmap) {
         List<ImageInfo> imageInfos = new ArrayList<>();
         imageInfos.add(new ImageInfo(bitmap, 600, 800));
@@ -119,6 +123,7 @@ public class PicShowDialog extends Dialog {
         }
         return imageInfos;
     }
+
     public static List<ImageInfo> createUriImageInfo(Uri... uri) {
         if (uri == null) {
             return null;
@@ -140,6 +145,7 @@ public class PicShowDialog extends Dialog {
         }
         return imageInfos;
     }
+
     public static List<ImageInfo> createUriImageInfo(List<Uri> images) {
         if (images == null) {
             return null;
@@ -269,7 +275,7 @@ public class PicShowDialog extends Dialog {
                             .setOnImageSaveListener(dialog -> {
                                 dialog.dismiss();
                                 if (imageInfos.get(position).getUrl() instanceof String ||
-                                        imageInfos.get(position).getUrl() instanceof Integer||
+                                        imageInfos.get(position).getUrl() instanceof Integer ||
                                         imageInfos.get(position).getUrl() instanceof Uri) {
                                     downloadImage(imageInfos.get(position).getUrl());
                                 } else {
@@ -309,8 +315,8 @@ public class PicShowDialog extends Dialog {
     }
 
     private void downloadImage(Object path) {
-        DownLoadImageService service = new DownLoadImageService(context, path,
-                "image" + File.separator, new ImageDownLoadCallBack() {
+        ThreadExecutorIO.getInstance().execute(new DownLoadImageService(context, path,
+                "image", new ImageDownLoadCallBack() {
             @Override
             public void onDownLoadSuccess(File file) {
                 Message message = new Message();
@@ -319,21 +325,15 @@ public class PicShowDialog extends Dialog {
             }
 
             @Override
-            public void onDownLoadSuccess(Bitmap bitmap) {
-            }
-
-            @Override
-            public void onDownLoadFailed() {
+            public void onDownLoadFailed(String errorMsg) {
                 Message message = new Message();
-                message.obj = "图片保存失败";
+                message.obj = TextUtils.isEmpty(errorMsg) ? "图片保存失败" : errorMsg;
                 handler.sendMessage(message);
             }
-        });
-        //千万别忘了启动线程服务
-        new Thread(service).start();
+        }));
     }
 
-    private final Handler handler = new Handler(Looper.myLooper(),new Handler.Callback() {
+    private final Handler handler = new Handler(Looper.myLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             ToastUtils.showShort(context, message.obj == null ? "图片保存失败" : message.obj.toString());

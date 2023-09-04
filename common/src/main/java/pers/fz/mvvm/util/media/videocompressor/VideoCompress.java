@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.videocompressor;
+package pers.fz.mvvm.util.media.videocompressor;
 
 import android.content.Context;
 import android.net.Uri;

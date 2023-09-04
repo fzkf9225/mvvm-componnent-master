@@ -1,5 +1,6 @@
 package pers.fz.mvvm.api;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -125,12 +126,38 @@ public class AppManager {
      *
      * @return true在栈顶false不在栈顶
      */
-    public static boolean isActivityTop(Class cls, Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(cls.getName());
+    public boolean isActivityOnTop(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfo(activity);
+            return runningTaskInfo != null && runningTaskInfo.topActivity.equals(activity.getComponentName());
+        } else {
+            ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfoCompat(activity);
+            return runningTaskInfo != null && runningTaskInfo.topActivity.getClassName().equals(activity.getComponentName().getClassName());
+        }
     }
 
+    private ActivityManager.RunningTaskInfo getRunningTaskInfo(Activity activity) {
+        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
+            if (runningTasks != null && !runningTasks.isEmpty()) {
+                return runningTasks.get(0);
+            }
+        }
+        return null;
+    }
+
+    @SuppressLint("NewApi")
+    private ActivityManager.RunningTaskInfo getRunningTaskInfoCompat(Activity activity) {
+        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
+            if (runningTasks != null && !runningTasks.isEmpty()) {
+                return runningTasks.get(0);
+            }
+        }
+        return null;
+    }
     /**
      * 检查手机上是否安装了指定的软件
      *
@@ -182,13 +209,27 @@ public class AppManager {
      * @param context context
      * @return true：应用显示在前台
      */
-    public static boolean isForeground(Context context) {
-        if (context != null) {
-            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            assert am != null;
-            ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-            String currentPackageName = cn.getPackageName();
-            return !TextUtils.isEmpty(currentPackageName) && currentPackageName.equals(context.getPackageName());
+    public boolean isAppInForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+                if (appProcesses != null) {
+                    for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+                        if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(context.getPackageName())) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+                if (tasks != null && !tasks.isEmpty()) {
+                    ComponentName topActivity = tasks.get(0).topActivity;
+                    if (topActivity != null && topActivity.getPackageName().equals(context.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

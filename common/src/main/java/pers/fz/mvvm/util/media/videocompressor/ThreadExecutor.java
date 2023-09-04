@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.videocompressor;
+package pers.fz.mvvm.util.media.videocompressor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;

@@ -2,7 +2,6 @@ package pers.fz.mvvm.util.media;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.view.View;
 
@@ -29,9 +27,9 @@ import androidx.lifecycle.MutableLiveData;
 
 
 import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.imgCompressor.ImgCompressor;
+import pers.fz.mvvm.util.media.imgCompressor.ImgCompressor;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.videocompressor.VideoCompress;
+import pers.fz.mvvm.util.media.videocompressor.VideoCompress;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 

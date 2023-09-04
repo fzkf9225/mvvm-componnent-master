@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.videocompressor;
+package pers.fz.mvvm.util.media.videocompressor;
 
 import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;

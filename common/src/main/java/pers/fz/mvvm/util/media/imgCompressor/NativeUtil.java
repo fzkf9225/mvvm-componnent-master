@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.imgCompressor;
+package pers.fz.mvvm.util.media.imgCompressor;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

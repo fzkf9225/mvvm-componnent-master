@@ -2,6 +2,7 @@ package pers.fz.mvvm.wight.customlayout;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.log.LogUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
  *
  */
 public class BannerViewPager extends ViewPager {
+    private final String TAG = CustomBannerPicture.class.getSimpleName();
 
     /**
      * 图片和小圆点
@@ -93,7 +96,7 @@ public class BannerViewPager extends ViewPager {
     /**
      * 处理轮播的Handler
      */
-    private Handler mHandler = new Handler(new Handler.Callback() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper(),new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == 10 && !stopLoopTag) {
@@ -105,7 +108,7 @@ public class BannerViewPager extends ViewPager {
         }
     });
 
-    private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
+    private final OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -153,7 +156,6 @@ public class BannerViewPager extends ViewPager {
             if (onImageItemClickListener != null) {
                 onImageItemClickListener.getPosition(lastPointIndex);
             }
-
         }
 
         @Override
@@ -272,7 +274,7 @@ public class BannerViewPager extends ViewPager {
         @Override
         public void run() {
             while (timeTag) {
-                long currentTime = new Date().getTime();
+                long currentTime = System.currentTimeMillis();
                 if (currentTime - touchTime >= 2000) {
                     openLoop();
                     timeTag = false;

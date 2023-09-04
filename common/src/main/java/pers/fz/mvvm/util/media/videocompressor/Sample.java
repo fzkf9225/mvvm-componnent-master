@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.videocompressor;
+package pers.fz.mvvm.util.media.videocompressor;
 
 public class Sample {
     private long offset = 0;

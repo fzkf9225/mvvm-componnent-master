@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.imgCompressor;
+package pers.fz.mvvm.util.media.imgCompressor;
 
 /**
  * Created by guizhigang on 16/5/28.

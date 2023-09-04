@@ -1,8 +1,5 @@
 package pers.fz.mvvm.bean;
 
-
-import androidx.annotation.DrawableRes;
-
 /**
  * Created by fz on 2017/6/14.
  * 首页banner图

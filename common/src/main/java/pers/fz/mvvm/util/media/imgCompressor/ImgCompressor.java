@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.imgCompressor;
+package pers.fz.mvvm.util.media.imgCompressor;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,8 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
@@ -31,11 +28,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pers.fz.mvvm.util.apiUtil.DateUtil;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.videocompressor.VideoCompress;
-import pers.fz.mvvm.util.videocompressor.VideoController;
 
 /**
  * Created by guizhigang on 16/5/25.

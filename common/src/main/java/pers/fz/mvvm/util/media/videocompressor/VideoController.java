@@ -1,10 +1,8 @@
-package pers.fz.mvvm.util.videocompressor;
+package pers.fz.mvvm.util.media.videocompressor;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;

@@ -1,13 +1,13 @@
-package pers.fz.mvvm.util.crash;
+package pers.fz.mvvm.util.log;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,28 +19,22 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Environment;
 import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 
-import javax.inject.Inject;
-
-import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.util.apiUtil.DateUtil;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * <h3>全局捕获异常</h3>
  * <br>
  * 当程序发生Uncaught异常的时候,有该类来接管程序,并记录错误日志
  */
-@SuppressLint("SimpleDateFormat")
 public class CrashHandler implements UncaughtExceptionHandler {
 
-    public static String TAG = ConstantsHelper.TAG;
+    public final static String TAG = CrashHandler.class.getSimpleName();
     /**
      * 系统默认的UncaughtException处理类
      */
@@ -49,8 +43,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
     @SuppressLint("StaticFieldLeak")
     public static final CrashHandler INSTANCE = new CrashHandler();
     private Context mContext;
-    @Inject
-    ErrorService errorService;
     // 用来存储设备信息和异常信息
     private final Map<String, String> infos = new HashMap<>();
 
@@ -143,7 +135,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 infos.put("versionCode", versionCode);
             }
         } catch (NameNotFoundException e) {
-           LogUtil.e(e);
+            LogUtil.e(e);
         }
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -165,9 +157,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private void saveCrashInfoFile(Throwable ex) throws Exception {
         StringBuilder sb = new StringBuilder();
         try {
-            SimpleDateFormat sDateFormat = new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss");
-            String date = sDateFormat.format(new java.util.Date());
+            String date = DateUtil.getDateTimeFromMillis(System.currentTimeMillis());
             sb.append("\r\n").append(date).append("\n");
             for (Map.Entry<String, String> entry : infos.entrySet()) {
                 String key = entry.getKey();
@@ -189,10 +179,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
             sb.append(result);
 
             String fileName = writeFile(sb.toString());
-            if (errorService == null) {
+            if (Config.getInstance().getErrorService() == null) {
                 return;
             }
-            errorService.uploadErrorInfo(sb.toString());
+            Config.getInstance().getErrorService().uploadErrorInfo(sb.toString());
         } catch (Exception e) {
             sb.append("an error occured while writing file...\r\n");
             writeFile(sb.toString());
@@ -201,23 +191,26 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
     private String writeFile(String sb) throws Exception {
         String fileName = "crash-" + DateUtil.getDateTimeFormat(new Date()) + ".log";
-        if (FileUtils.hasSdcard()) {
-            String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + File.separator + "crash" + File.separator;
-            File dir = new File(path);
-            if (!dir.exists()) {
-               boolean isCreated = dir.mkdirs();
-            }
-
-            FileOutputStream fos = new FileOutputStream(path + fileName, true);
+        File logFile = new File(mContext.getApplicationContext().getExternalFilesDir(null), "crash" + File.separator + fileName);
+        if (!logFile.getParentFile().exists()) {
+            boolean isCreated = logFile.getParentFile().mkdirs();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(logFile.getAbsolutePath(), true);
             fos.write(sb.getBytes());
             fos.flush();
             fos.close();
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return fileName;
-    }
-
-    public static void setTag(String tag) {
-        TAG = tag;
     }
 
     /**
@@ -226,12 +219,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param
      */
     public void autoClear(final int autoClearDay) {
-        FileUtils.delete(mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + File.separator + "crash" + File.separator, (file, filename) -> {
-            String s = FileUtils.getFileNameWithoutExtension(filename);
-            int day = autoClearDay < 0 ? autoClearDay : -1 * autoClearDay;
-            String date = "crash-" + DateUtil.getOtherDay(day);
-            return date.compareTo(s) >= 0;
-        });
+        FileUtils.delete(mContext.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + File.separator + "crash" + File.separator,
+                (file, filename) -> {
+                    String s = FileUtils.getFileNameWithoutExtension(filename);
+                    int day = autoClearDay < 0 ? autoClearDay : -1 * autoClearDay;
+                    String date = "crash-" + DateUtil.getOtherDay(day);
+                    return date.compareTo(s) >= 0;
+                });
 
     }
 

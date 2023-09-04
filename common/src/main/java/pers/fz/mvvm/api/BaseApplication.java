@@ -2,9 +2,6 @@ package pers.fz.mvvm.api;
 
 import android.app.Application;
 
-import pers.fz.mvvm.autosize.AutoSize;
-import pers.fz.mvvm.util.crash.CrashHandler;
-
 /**
  * Created by fz on 2017/6/20.
  * Application

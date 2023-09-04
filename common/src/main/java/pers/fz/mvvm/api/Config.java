@@ -3,13 +3,13 @@ package pers.fz.mvvm.api;
 
 import android.app.Application;
 
-import com.gyf.immersionbar.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import pers.fz.mvvm.autosize.AutoSize;
-import pers.fz.mvvm.util.crash.CrashHandler;
+import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.util.log.CrashHandler;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.LogcatHelper;
 
@@ -18,9 +18,22 @@ import pers.fz.mvvm.util.log.LogcatHelper;
  * describe :
  */
 public class Config {
-    private static Application application;
+    private Application application;
+    private ErrorService errorService;
 
-    public static Application getApplication() {
+    private Config() {
+    }
+
+    private static final class ConfigHolder {
+        private static final Config CONFIG = new Config();
+    }
+
+    public static Config getInstance(){
+        return ConfigHolder.CONFIG;
+    }
+
+
+    public Application getApplication() {
         return application;
     }
 
@@ -29,14 +42,22 @@ public class Config {
      */
     public static AtomicBoolean enableDebug = new AtomicBoolean(false);
 
-    public static void init(Application application) {
-        Config.application = application;
+    public void init(Application application) {
+        this.application = application;
         MMKV.initialize(application);
         AutoSize.initCompatMultiProcess(application);
         CrashHandler.getInstance().init(application);
     }
 
-    public static void enableDebug(boolean enable) {
+    public void setErrorService(ErrorService errorService) {
+        this.errorService = errorService;
+    }
+
+    public ErrorService getErrorService() {
+        return errorService;
+    }
+
+    public void enableDebug(boolean enable) {
         enableDebug.set(enable);
         if (enableDebug.get()) {
             LogcatHelper.getInstance(application).start();

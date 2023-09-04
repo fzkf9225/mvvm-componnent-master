@@ -32,6 +32,7 @@ import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.databinding.BannerCornerImageViewBinding;
 import pers.fz.mvvm.util.apiUtil.DensityUtil;
 import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.picDialog.PicShowDialog;
 import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
 
@@ -44,6 +45,7 @@ import java.util.List;
  */
 
 public class CustomBannerPicture extends RelativeLayout implements View.OnClickListener, BannerViewPager.OnImageItemClickListener {
+    private final String TAG = CustomBannerPicture.class.getSimpleName();
     private ViewGroup.LayoutParams matchParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private List<ImageView> images = new ArrayList<>();
     private BannerViewPager viewPager;
@@ -55,7 +57,7 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
     private List<BannerBean> imgPic;
     private float width, height;
     private float radius = 8;
-    private BannerViewPager.OnImageItemClickListener onImageItemClickListener;
+    private BannerViewPager.OnImageItemClickListener onImageItemClickListener = this;
     private @DrawableRes
     int drawableResCurrent = R.mipmap.icon_point2;
     private @DrawableRes
@@ -75,6 +77,7 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
         radius = ta.getDimension(R.styleable.banner_banner_radius, 0);
         drawableResCurrent = ta.getResourceId(R.styleable.banner_icon_selected,R.mipmap.icon_point2);
         drawableResNormal = ta.getResourceId(R.styleable.banner_icon_unselected,R.mipmap.icon_point1);
+        ta.recycle();
         setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, R.dimen.x392));
     }
 
@@ -265,7 +268,6 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
 
     @Override
     public void onItemClick(int itemPosition) {
-
 
     }
 

@@ -27,8 +27,8 @@ public class ApplicationHelper extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Config.init(this);
-        Config.enableDebug(true);
+        Config.getInstance().init(this);
+        Config.getInstance().enableDebug(true);
         new ApiRetrofit.Builder(this)
                 .addDefaultHeader()
                 .setErrorService(errorService)
