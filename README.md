@@ -15,6 +15,30 @@
 三：https://blog.csdn.net/fzkf9225/article/details/132182449
 
 ## 接入指引：
+### 导入公共依赖包
+由于集成的aar包有隔离效果因此需要在继承base类时导入他们的包，不然就会找不到引用的第三方库，但是如果你没有以aar引用而是直接module引用的话，可以直接将`implementation` 改成`api`即可
+```
+//沉浸式通知栏框架
+    implementation "com.geyifeng.immersionbar:immersionbar:3.2.2"
+//RxJava、RxAndroid和Retrofit网络框架
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "io.reactivex.rxjava3:rxandroid:3.0.2"
+    implementation "io.reactivex.rxjava3:rxjava:3.1.6"
+    //ConverterFactory的String依赖包
+    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
+    //ConverterFactory的Gson依赖包
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    //CallAdapterFactory的Rx依赖包
+    implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
+//腾讯的mmkv框架
+    implementation "com.tencent:mmkv:1.2.11"
+//刷新加载更多框架
+//下拉刷新
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation "io.github.scwang90:refresh-layout-kernel:2.0.6"
+    implementation "io.github.scwang90:refresh-header-classics:2.0.6"
+```
 ### hilt框架依赖
 在项目根目录下build.gradle添加
 ```
