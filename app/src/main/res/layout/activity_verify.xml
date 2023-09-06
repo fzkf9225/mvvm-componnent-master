@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.casic.titan.demo.bean.Person" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingEnd="@dimen/padding_l"
+        tools:context=".activity.VerifyActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--姓名-->
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="姓名"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_name"
+                app:layout_constraintEnd_toStartOf="@+id/edit_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_name" />
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:hint="请输入姓名，最多10个字"
+                android:inputType="text"
+                android:lines="1"
+                android:imeOptions="actionNext"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.name}"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_name"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--手机号码-->
+            <TextView
+                android:id="@+id/tv_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="手机"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_mobile"
+                app:layout_constraintEnd_toStartOf="@+id/edit_mobile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_mobile" />
+
+            <EditText
+                android:id="@+id/edit_mobile"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：15212345678"
+                android:inputType="number"
+                android:lines="1"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.mobile}"
+                android:imeOptions="actionNext"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_mobile"
+                app:layout_constraintTop_toBottomOf="@+id/edit_name" />
+            <!--座机-->
+            <TextView
+                android:id="@+id/tv_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="座机"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_tel"
+                app:layout_constraintEnd_toStartOf="@+id/edit_tel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_tel" />
+
+            <EditText
+                android:id="@+id/edit_tel"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：055162260000"
+                android:inputType="number"
+                android:lines="1"
+                android:imeOptions="actionNext"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.tel}"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_tel"
+                app:layout_constraintTop_toBottomOf="@+id/edit_mobile" />
+            <!--年龄-->
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="年龄"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_age"
+                app:layout_constraintEnd_toStartOf="@+id/edit_age"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_age" />
+
+            <EditText
+                android:id="@+id/edit_age"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：18"
+                android:inputType="number"
+                android:lines="1"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.age}"
+                android:imeOptions="actionNext"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_age"
+                app:layout_constraintTop_toBottomOf="@+id/edit_tel" />
+
+            <!--体重-->
+            <TextView
+                android:id="@+id/tv_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="体重"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_weight"
+                app:layout_constraintEnd_toStartOf="@+id/edit_weight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_weight" />
+
+            <EditText
+                android:id="@+id/edit_weight"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：50.00（单位：kg）"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                android:imeOptions="actionNext"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.weight}"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_weight"
+                app:layout_constraintTop_toBottomOf="@+id/edit_age" />
+
+            <!--身高-->
+            <TextView
+                android:id="@+id/tv_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="身高"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_height"
+                app:layout_constraintEnd_toStartOf="@+id/edit_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_height" />
+
+            <EditText
+                android:id="@+id/edit_height"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：170（单位：厘米）"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                android:imeOptions="actionNext"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.height}"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_height"
+                app:layout_constraintTop_toBottomOf="@+id/edit_weight" />
+
+            <!--邮箱-->
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:text="邮箱"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintBottom_toBottomOf="@id/edit_email"
+                app:layout_constraintEnd_toStartOf="@+id/edit_email"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_email" />
+
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:hint="示例：tencent@qq.com"
+                android:inputType="text"
+                android:lines="1"
+                android:imeOptions="actionNext"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingEnd="@dimen/padding_m"
+                android:text="@={data.email}"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_email"
+                app:layout_constraintTop_toBottomOf="@+id/edit_height" />
+
+            <!--爱好-->
+            <TextView
+                android:id="@+id/tv_hobby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:lines="1"
+                android:text="爱好"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toStartOf="@+id/edit_hobby"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit_hobby" />
+
+            <EditText
+                android:id="@+id/edit_hobby"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/y300"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:background="@drawable/bg_edittext"
+                android:gravity="top"
+                android:hint="请输入爱好,多个爱好以“、”隔开"
+                android:inputType="text"
+                android:lines="1"
+                android:imeOptions="actionDone"
+                android:padding="@dimen/padding_m"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/tv_hobby"
+                app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+
+            <Button
+                android:id="@+id/verify_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xxxl"
+                android:layout_marginStart="@dimen/horizontal_margin_xxxxl"
+                android:layout_marginTop="@dimen/vertical_margin_xxxxl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
+                android:background="@drawable/round_login_button_48"
+                android:text="校验"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_xxl"
+                app:layout_constraintTop_toBottomOf="@+id/edit_hobby" />
+
+            <TextView
+                android:id="@+id/tv_verify_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_l"
+                android:paddingBottom="@dimen/padding_l"
+                android:textColor="@color/theme_red"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintTop_toBottomOf="@+id/verify_submit" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
