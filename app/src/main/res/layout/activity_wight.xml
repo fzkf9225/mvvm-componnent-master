@@ -15,6 +15,7 @@
         android:background="@color/default_background"
         android:paddingStart="@dimen/padding_l"
         android:paddingTop="@dimen/padding_m"
+        android:paddingBottom="@dimen/padding_xl"
         android:paddingEnd="@dimen/padding_l"
         tools:context=".activity.WightActivity">
 
@@ -220,7 +221,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image" />
-            <pers.fz.mvvm.wight.customlayout.CustomEditText
+            <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
                 android:id="@+id/customEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
@@ -228,10 +229,48 @@
                 android:background="@drawable/round_phone_code"
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/font_size_l"
-                android:hint="这是一个自定义输入框CustomEditText"
+                android:hint="这是一个自定义输入框CustomSearchEditText"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/cornersImageView" />
-
+            <pers.fz.mvvm.wight.customlayout.CornerEditText
+                android:id="@+id/edit_area"
+                android:layout_width="match_parent"
+                android:textSize="@dimen/font_size_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:textColorHint="@color/nv_bg_color"
+                android:hint="请输入..."
+                android:gravity="top"
+                android:padding="@dimen/padding_m"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                app:corner_backColor="@color/white"
+                app:corner_radius="@dimen/radius_l"
+                app:corner_storkColor="@color/h_line_color"
+                app:corner_storkWidth="1dp"
+                android:layout_height="120dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customEditText"/>
+            <EditText
+                android:id="@+id/numberFormatEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xl"
+                android:hint="请输入数字，自动格式化金额，并保留两位有效数字"
+                android:textSize="@dimen/font_size_l"
+                android:textColorHint="@color/nv_bg_color"
+                android:textColor="@color/autoColor"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                app:layout_constraintTop_toBottomOf="@+id/edit_area"/>
+            <pers.fz.mvvm.wight.customlayout.VerificationCodeInputView
+                android:id="@+id/verificationCodeInputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_xl"
+                app:code_stroke_radius="@dimen/radius_m"
+                android:textColorHint="@color/nv_bg_color"
+                android:textColor="@color/themeColor"
+                app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

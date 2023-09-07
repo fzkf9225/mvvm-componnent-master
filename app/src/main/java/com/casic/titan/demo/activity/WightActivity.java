@@ -23,6 +23,7 @@ import pers.fz.mvvm.util.apiUtil.DensityUtil;
 import pers.fz.mvvm.util.apiUtil.RxView;
 import pers.fz.mvvm.wight.Code;
 import pers.fz.mvvm.wight.customlayout.StarBar;
+import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picDialog.PicShowDialog;
 import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
 
@@ -61,6 +62,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         RxView.setOnClickListener(binding.cornerButton,3000,view->{
            showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis()));
         });
+        binding.numberFormatEditText.addTextChangedListener(new NumberTextWatcher(binding.numberFormatEditText,false));
     }
 
     @Override

@@ -128,7 +128,42 @@
             <enum name="left_top" value="3" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="verification_code">
+        <!--验证码框大小-->
+        <attr name="code_stroke_width" format="dimension"/>
+        <attr name="code_stroke_height" format="dimension"/>
+        <!--验证码两个框之间边距-->
+        <attr name="code_stroke_padding" format="dimension"/>
+        <!--验证码框圆角-->
+        <attr name="code_stroke_radius" format="dimension"/>
+        <!--验证码边框粗细-->
+        <attr name="code_stroke_border_width" format="dimension"/>
+        <!--验证码框有焦点时边框颜色-->
+        <attr name="code_stroke_color_state_focused_true" format="color" />
+        <!--验证码框无焦点时边框颜色-->
+        <attr name="code_stroke_color_state_focused_false" format="color" />
+        <!--验证码框有焦点时背景色-->
+        <attr name="code_bg_color_state_focused_true" format="color" />
+        <!--验证码框无焦点时背景色-->
+        <attr name="code_bg_color_state_focused_false" format="color" />
+        <!--光标粗细-->
+        <attr name="cursor_width" format="dimension"/>
+        <!--光标高度-->
+        <attr name="cursor_height" format="dimension"/>
+        <!--有焦点时光标颜色-->
+        <attr name="cursor_bg_color_state_focused_true" format="color" />
+        <!--无焦点时光标颜色-->
+        <attr name="cursor_bg_color_state_focused_false" format="color" />
+        <!--验证码最大支持长度-->
+        <attr name="code_max_length" format="integer"/>
+        <!--验证码输入类型，纯数字、纯字母、数字+字母-->
+        <attr name="code_type">
+            <enum name="number" value="0" />
+            <enum name="character" value="1" />
+            <enum name="all" value="2" />
+        </attr>
 
+    </declare-styleable>
     <declare-styleable name="CustomEditText">
         <attr name="drawable_position">
             <enum name="left" value="1" />

@@ -16,7 +16,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * describe :
  */
 public class RxView {
-    // 默认点击间隔时间，单位：毫秒
+    /**
+     * 默认点击间隔时间，单位：毫秒
+     */
     private static final long DEFAULT_CLICK_INTERVAL = 500;
 
     public static Disposable setOnClickListener(View view, Consumer<View> onClickListener) {

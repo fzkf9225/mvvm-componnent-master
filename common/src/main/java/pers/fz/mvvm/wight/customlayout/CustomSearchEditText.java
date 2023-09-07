@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
@@ -26,7 +25,7 @@ import pers.fz.mvvm.util.log.LogUtil;
  * Create by CherishTang on 2019/12/25 0025
  * describe:自定义输入框
  */
-public class CustomEditText extends AppCompatEditText implements AppCompatEditText.OnEditorActionListener, TextWatcher {
+public class CustomSearchEditText extends AppCompatEditText implements AppCompatEditText.OnEditorActionListener, TextWatcher {
     private final String TAG = this.getClass().getSimpleName();
 
     private Drawable drawableSearch = null;
@@ -37,13 +36,13 @@ public class CustomEditText extends AppCompatEditText implements AppCompatEditTe
      */
     private int drawablePosition = 1;
 
-    public CustomEditText(Context context, AttributeSet attrs) {
+    public CustomSearchEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
         init(attrs);
     }
 
-    public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomSearchEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
         init(attrs);

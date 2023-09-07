@@ -9,11 +9,11 @@ import android.widget.TextView;
 import androidx.lifecycle.MutableLiveData;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.BaseSearchTitleActivityBinding;
-import pers.fz.mvvm.wight.customlayout.CustomEditText;
+import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
 
 
 public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchTitleActivityBinding> implements View.OnClickListener,
-        CustomEditText.OnInputSubmitListener{
+        CustomSearchEditText.OnInputSubmitListener{
     public MutableLiveData<String> keywordsLiveData = new MutableLiveData<>();
 
     public MutableLiveData<String> getKeywordsLiveData() {
