@@ -36,6 +36,7 @@ android {
             zipAlignEnabled true// Zipalign优化
             shrinkResources true // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepProguard = file('multidex-config.pro')
         }
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
@@ -43,6 +44,7 @@ android {
             zipAlignEnabled false// Zipalign优化
             shrinkResources false // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepProguard = file('multidex-config.pro')
         }
     }
     compileOptions {
@@ -74,7 +76,7 @@ dependencies {
             because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
         }
     }
-    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
@@ -109,5 +111,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
+    implementation "androidx.startup:startup-runtime:1.0.0"
 
 }

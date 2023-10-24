@@ -76,9 +76,7 @@
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
-    <application
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round">
+    <application>
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 此处适配android 7.0 -->

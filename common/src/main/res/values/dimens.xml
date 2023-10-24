@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="horizontal_margin_xxxxl">32dp</dimen>
     <dimen name="vertical_margin_xxxxl">32dp</dimen>
@@ -57,5 +57,8 @@
     <dimen name="audio_course_item_seek_bar_radius">2dp</dimen>
     <dimen name="audio_seek_bar_thumb_size">20dp</dimen>
     <dimen name="audio_seek_bar_thumb_ring_width">4dp</dimen>
-
+    <!--Fab大小设置-->
+    <dimen name="design_fab_size_normal">80dp</dimen>
+    <!--Fab中间Icon大小设置-->
+    <dimen name="design_fab_image_size">60dp</dimen>
 </resources>
