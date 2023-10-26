@@ -35,6 +35,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
     init {
         val typedValue = context.obtainStyledAttributes(attrs, R.styleable.scaling_text_view)
         mOriginText = typedValue.getString(R.styleable.scaling_text_view_content_text).toString()
+        maxLinesCollapsed = typedValue.getInt(R.styleable.scaling_text_view_default_line,2).toInt()
         isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_default_collapsed,false)
         mOriginTextColor = typedValue.getColor(R.styleable.scaling_text_view_content_text_color,ContextCompat.getColor(context,R.color.themeColor)).toInt()
         text = mOriginText
@@ -53,6 +54,10 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
             // 如果不希望点击文字有下划线，可以注释下面这行代码
             ds.isUnderlineText = true
         }
+    }
+    fun setOriginText(mOriginText:String ){
+        this.mOriginText = mOriginText;
+        requestLayout();
     }
 
     fun toggleText() {

@@ -71,7 +71,7 @@ public class CustomProgressDialog extends Dialog {
     }
 
     private void createLoadingDialog() {
-        loadingDialogBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.loading_dialog, null, false);
+        loadingDialogBinding = LoadingDialogBinding.inflate(getLayoutInflater(),null, false);
         loadingDialogBinding.setMessage(message);
         setCanceledOnTouchOutside(false);
         setCancelable(isCanCancel);

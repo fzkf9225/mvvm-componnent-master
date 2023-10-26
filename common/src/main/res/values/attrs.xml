@@ -7,6 +7,7 @@
 
     <declare-styleable name="scaling_text_view">
         <attr name="content_text" format="string"></attr>
+        <attr name="default_line" format="integer"></attr>
         <attr name="content_text_color" format="color"></attr>
         <attr name="default_collapsed" format="boolean"></attr>
     </declare-styleable>

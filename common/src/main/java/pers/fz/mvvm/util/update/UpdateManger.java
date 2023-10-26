@@ -66,8 +66,31 @@ public class UpdateManger implements UpdateMessageDialog.OnUpdateListener {
         this.mContext = mContext;
         new UpdateMessageDialog(mContext)
                 .setOnUpdateListener(this)
-                .builder(mCurrentVersionName, TextUtils.isEmpty(updateMsg) ? "检查到有新版本" : updateMsg)
+                .setUpdateMsgString(updateMsg)
+                .setVersionName(mCurrentVersionName)
+                .builder()
                 .show();
+    }
+
+    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg,
+                                String mCurrentVersionName,boolean cancelEnable) {
+        this.apkUrl = apkUrl;
+        this.mContext = mContext;
+        new UpdateMessageDialog(mContext)
+                .setOnUpdateListener(this)
+                .setCanCancel(cancelEnable)
+                .setUpdateMsgString(updateMsg)
+                .setVersionName(mCurrentVersionName)
+                .builder()
+                .show();
+    }
+
+    public void setApkUrl(String apkUrl) {
+        this.apkUrl = apkUrl;
+    }
+
+    public void setContext(Activity mContext) {
+        this.mContext = mContext;
     }
 
     public static void installApk(Context mContext, File apkFile) {

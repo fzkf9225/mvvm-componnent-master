@@ -138,7 +138,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.1.1'
+                version = '1.1.2'
             }
         }
         repositories {

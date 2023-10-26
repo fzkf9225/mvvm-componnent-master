@@ -2,6 +2,13 @@ package pers.fz.mvvm.wight.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,9 +19,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.databinding.UpdateDialogBinding;
 import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
 
 
@@ -26,6 +36,11 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
     private Context mContext;
     private String updateMsgString, versionName;
     private OnUpdateListener onUpdateListener;
+    private boolean canCancel = false;
+    private final String DEFAULT_BUTTON_TEXT = "更新";
+    private String buttonText = DEFAULT_BUTTON_TEXT;
+    private Drawable drawable;
+
     public UpdateMessageDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
         this.mContext = context;
@@ -35,36 +50,75 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
         super(context, themeResId);
     }
 
-    public UpdateMessageDialog builder(String versionName, String updateMsgString) {
-        this.versionName = versionName;
+    public UpdateMessageDialog setCanCancel(boolean canCancel) {
+        this.canCancel = canCancel;
+        return this;
+    }
+
+    public UpdateMessageDialog setButtonText(String buttonText) {
+        this.buttonText = buttonText;
+        return this;
+    }
+
+    public UpdateMessageDialog setDrawable(Drawable drawable) {
+        this.drawable = drawable;
+        return this;
+    }
+
+    public UpdateMessageDialog setUpdateMsgString(String updateMsgString) {
         this.updateMsgString = updateMsgString;
+        return this;
+    }
+
+    public UpdateMessageDialog setVersionName(String versionName) {
+        this.versionName = versionName;
+        return this;
+    }
+
+    public UpdateMessageDialog builder() {
         initView();
         return this;
     }
 
     private void initView() {
-        View view = LayoutInflater.from(mContext).inflate(
-                R.layout.update_dialog, null);
-        Button updateBtn = view.findViewById(R.id.updateBtn);
-        TextView updateTitle = view.findViewById(R.id.updateTitle);
-        TextView updateMsg = view.findViewById(R.id.updateMsg);
-        updateMsg.setText(updateMsgString);
-        updateTitle.setText("检测到新版本" + versionName);
-        updateBtn.setOnClickListener(this);
-        setContentView(view);
-        setCancelable(false);
+        UpdateDialogBinding binding = UpdateDialogBinding.inflate(getLayoutInflater(), null, false);
+
+        SpannableString spannableString = new SpannableString(TextUtils.isEmpty(updateMsgString) ? "暂无更新内容" : updateMsgString);
+
+        // 使用Linkify类将文本中的链接转换为可点击的链接
+        Linkify.addLinks(spannableString, Linkify.WEB_URLS);
+
+        binding.updateMsg.setText(spannableString);
+        // 设置TextView可点击
+        binding.updateMsg.setMovementMethod(LinkMovementMethod.getInstance());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("检测到新版");
+        if (!TextUtils.isEmpty(versionName)) {
+            if (!versionName.contains("v") && !versionName.contains("V")) {
+                stringBuilder.append("V");
+            }
+            stringBuilder.append(versionName);
+        }
+        binding.updateTitle.setText(stringBuilder.toString());
+        binding.updateBtn.setText(TextUtils.isEmpty(buttonText) ? DEFAULT_BUTTON_TEXT : buttonText);
+        if (drawable != null) {
+            binding.updateBtn.setBackground(drawable);
+        }
+
+        binding.updateBtn.setOnClickListener(this);
+        setContentView(binding.getRoot());
+        setCancelable(canCancel);
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;
         }
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics appDisplayMetrics = mContext.getApplicationContext().getResources().getDisplayMetrics();
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5, ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
         dialogWindow.setGravity(Gravity.CENTER);
     }
@@ -75,14 +129,11 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
     }
 
     private void showMessageDialog(String message, final View v) {
-        new ConfirmDialog(mContext)
-                .setMessage(message)
-                .setOnSureClickListener(dialog -> {
-                    if (onUpdateListener != null)
-                        onUpdateListener.onUpdate(v);
-                })
-                .builder()
-                .show();
+        new ConfirmDialog(mContext).setMessage(message).setOnSureClickListener(dialog -> {
+            if (onUpdateListener != null) {
+                onUpdateListener.onUpdate(v);
+            }
+        }).builder().show();
     }
 
     @Override

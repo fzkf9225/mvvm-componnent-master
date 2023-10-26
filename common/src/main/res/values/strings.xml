@@ -1,106 +1,96 @@
 <resources>
 
-    <string name="nv_index" translatable="false">首页</string>
-    <string name="nv_chengyu" translatable="false">成语</string>
-    <string name="nv_info" translatable="false">消息</string>
-    <string name="nv_me" translatable="false">我的</string>
-    <string name="nv_setting" translatable="false">设置</string>
-    <string name="loginClick" translatable="false">点击登录</string>
-    <string name="cancel" translatable="false">取消</string>
-    <string name="album" translatable="false">从相册选择</string>
-    <string name="camera" translatable="false">拍照</string>
+    <string name="nv_index" >Index</string>
+    <string name="nv_chengyu" >idiom</string>
+    <string name="nv_info" >Message</string>
+    <string name="nv_me" >Mine</string>
+    <string name="nv_setting" >Setting</string>
+    <string name="loginClick" >login</string>
+    <string name="cancel" >cancel</string>
+    <string name="album" >album</string>
+    <string name="camera" >camera</string>
     <string name="app_config_file" translatable="false">app_config_file</string>
-    <string name="login_project_code_hint" translatable="false">项目编号</string>
-    <string name="login_user_hint" translatable="false">请输入用户名</string>
-    <string name="login_tel_hint" translatable="false">请输入手机号码</string>
-    <string name="login_pwd_hint" translatable="false">请输入密码</string>
-    <string name="login_old_pwd_hint" translatable="false">请输入原密码</string>
-    <string name="login_new_pwd_hint" translatable="false">请输入新密码</string>
-    <string name="login_code_hint" translatable="false">请输入验证码</string>
-    <string name="login_new_pwd_hint_again" translatable="false">请再次输入新密码</string>
-    <string name="user_name_hint" translatable="false">请输入姓名</string>
-    <string name="user_id_card_hint" translatable="false">请输入身份证号</string>
-    <string name="login_way_code" translatable="false">验证码登录</string>
-    <string name="login_way_password" translatable="false">账号密码登录</string>
-    <string name="forget_password" translatable="false">忘记密码</string>
+    <string name="login_project_code_hint" >project code</string>
+    <string name="login_user_hint" >please input username</string>
+    <string name="login_tel_hint" >please input tel</string>
+    <string name="login_pwd_hint" >please input password</string>
+    <string name="login_old_pwd_hint" >please input old password</string>
+    <string name="login_new_pwd_hint" >please input new password</string>
+    <string name="login_code_hint" >please input verification code</string>
+    <string name="login_new_pwd_hint_again" >please input new password again</string>
+    <string name="user_name_hint" >please input real name</string>
+    <string name="user_id_card_hint" >please input id number</string>
+    <string name="login_way_code" >verification code login</string>
+    <string name="login_way_password" >account password login</string>
+    <string name="forget_password" >forgot password</string>
 
-    <string name="version_unknown" translatable="false">请求异常</string>
-    <string name="noData" translatable="false">暂无数据</string>
+    <string name="version_unknown" >request error</string>
+    <string name="noData" >no data</string>
 
-    <string name="state_network_error" translatable="false">网络错误</string>
-    <string name="state_loading" translatable="false">正在加载…</string>
-    <string name="state_not_more" translatable="false">没有更多数据</string>
-    <string name="state_load_error" translatable="false">加载失败</string>
-    <string name="state_refreshing" translatable="false">正在刷新</string>
-    <string name="state_loading_error" translatable="false">数据加载中&#8230;</string>
-    <string name="state_submit" translatable="false">正在提交中&#8230;</string>
-    <string name="state_loading_again" translatable="false">点击图标,重新加载</string>
+    <string name="state_network_error" >network error</string>
+    <string name="state_loading" >loading…</string>
+    <string name="state_not_more" >no more data</string>
+    <string name="state_load_error" >load error</string>
+    <string name="state_refreshing" >refreshing</string>
+    <string name="state_loading_error" >data loading&#8230;</string>
+    <string name="state_submit" >being submitted&#8230;</string>
+    <string name="state_loading_again" >click the icon to reload</string>
 
-    <string name="index_viewpager" translatable="false">侧滑示例</string>
-    <string name="index_search" translatable="false">搜索示例</string>
-    <string name="index_browser" translatable="false">浏览器示例</string>
-    <string name="index_download" translatable="false">下载示例</string>
-    <string name="index_media" translatable="false">多媒体示例</string>
-    <string name="index_hilt" translatable="false">依赖注入</string>
-    <string name="index_live_data" translatable="false">LiveData</string>
-    <string name="index_baidu_map" translatable="false">百度地图</string>
-    <string name="index_sweep" translatable="false">扫一扫示例</string>
-    <string name="index_coordinator" translatable="false">协调布局</string>
-    <string name="index_tool_bar_coordinator" translatable="false">吸顶效果</string>
-    <string name="index_tool_bar_motion_layout" translatable="false">动画</string>
-    <string name="index_tool_bar_video" translatable="false">视频播放</string>
+    <string name="index_viewpager" >sideslip demo</string>
+    <string name="index_search" >search demo</string>
+    <string name="index_browser" >browser demo</string>
+    <string name="index_download" >download demo</string>
+    <string name="index_media" >media demo</string>
+    <string name="index_hilt" >hilt demo</string>
+    <string name="index_live_data" >LiveData demo</string>
+    <string name="index_baidu_map" >baidu map demo</string>
+    <string name="index_sweep" >sweep demo</string>
+    <string name="index_coordinator" >coordinator demo</string>
+    <string name="index_tool_bar_coordinator" >ceiling demo</string>
+    <string name="index_tool_bar_motion_layout" >animation</string>
+    <string name="index_tool_bar_video" >video demo</string>
 
-    <string name="setting_update" translatable="false">检查更新</string>
-    <string name="setting_qrcode" translatable="false">扫描二维码</string>
-    <string name="setting_about" translatable="false">关于我们</string>
-    <string name="setting_ITSupport" translatable="false">技术支持</string>
-    <string name="setting_customes" translatable="false">智能管家</string>
-    <string name="setting_feedBack" translatable="false">问题反馈</string>
-
-
-    <string name="setting_exit" translatable="false">退出账号</string>
-    <string name="manageapplications_settings_title" translatable="false">应用中心</string>
-    <string name="manageapplications_settings_summary" translatable="false">应用中心</string>
-    <string name="settings" translatable="false">设置</string>
-    <string name="string_help_text" translatable="false">缺少权限，请检查设置</string>
-
-    <string name="lockViewTips" translatable="false">该密码用于应用解锁和锁屏后再次使用时的安全验证</string>
-    <string name="set_lockView" translatable="false">请设置手势密码</string>
-
-    <string name="permission_get_accounts_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_GET_ACCOUNTS</string>
-    <string name="permission_read_phone_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_READ_PHONE_STATE</string>
-    <string name="permission_call_phone_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_CALL_PHONE</string>
-    <string name="permission_camera_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_CAMERA</string>
-    <string name="permission_access_fine_location_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_ACCESS_FINE_LOCATION</string>
-    <string name="permission_access_coarse_location_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_ACCESS_COARSE_LOCATION</string>
-    <string name="permission_read_external_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_READ_EXTERNAL_STORAGE</string>
-    <string name="permission_white_external_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_WRITE_EXTERNAL_STORAGE</string>
-    <string name="permission_recode_audio_hint" translatable="false">没有此权限，无法开启这个功能，请开启权限。PERMISSION_RECORD_AUDIO</string>
-    <string name="last_news" translatable="false">最新资讯</string>
-
-    <string name="order" translatable="false">我的订单</string>
-    <string name="houseResource" translatable="false">房源管理</string>
-    <string name="collect" translatable="false">我的关注</string>
-    <string name="certificationManager" translatable="false">认证管理</string>
-    <string name="contract" translatable="false">我的合同</string>
-    <string name="bankCard" translatable="false">银行卡</string>
-    <string name="evaluate" translatable="false">我的评价</string>
-    <string name="record" translatable="false">浏览记录</string>
-    <string name="pay" translatable="false">房租支付</string>
-
-    <string name="searchview_query_hint" translatable="false">请输入关键字、标签</string>
+    <string name="setting_update" >check upgrade</string>
+    <string name="setting_qrcode" >sweep qr code</string>
+    <string name="setting_about" >about us</string>
+    <string name="setting_ITSupport" >technical support</string>
+    <string name="setting_customes" >ai manager</string>
+    <string name="setting_feedBack" >feedback</string>
 
 
-    <string name="pullToRefresh" translatable="false">下拉刷新</string>
-    <string name="loosenToRefresh" translatable="false">松开刷新</string>
-    <string name="refreshing" translatable="false">正在刷新</string>
+    <string name="setting_exit" >exit</string>
+    <string name="manageapplications_settings_title" >application marketplace</string>
+    <string name="manageapplications_settings_summary" >application marketplace</string>
+    <string name="settings" >settiong</string>
+    <string name="string_help_text" >Permissions are missing, please check the Settings</string>
+
+    <string name="lockViewTips" >This password is used for security verification when the app is unlocked and used again after the screen is locked</string>
+    <string name="set_lockView" >Please set a gesture password</string>
+
+    <string name="permission_get_accounts_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_GET_ACCOUNTS</string>
+    <string name="permission_read_phone_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_READ_PHONE_STATE</string>
+    <string name="permission_call_phone_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_CALL_PHONE</string>
+    <string name="permission_camera_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_CAMERA</string>
+    <string name="permission_access_fine_location_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_ACCESS_FINE_LOCATION</string>
+    <string name="permission_access_coarse_location_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_ACCESS_COARSE_LOCATION</string>
+    <string name="permission_read_external_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_READ_EXTERNAL_STORAGE</string>
+    <string name="permission_white_external_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_WRITE_EXTERNAL_STORAGE</string>
+    <string name="permission_recode_audio_hint" >Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_RECORD_AUDIO</string>
+    <string name="last_news" >news</string>
+
+    <string name="searchview_query_hint" >please input keywords</string>
+
+
+    <string name="pullToRefresh" >pull down refresh</string>
+    <string name="loosenToRefresh" >loosen to refresh</string>
+    <string name="refreshing" >refreshing</string>
 
     <string name="mis_folder_all">All Images</string>
     <string name="mis_preview">Preview</string>
     <string name="mis_msg_no_camera">No system camera found</string>
     <string name="mis_msg_amount_limit">Select images amount is limit</string>
     <string name="mis_action_done">Done</string>
-    <string name="mis_action_button_string" translatable="false">%1$s(%2$d/%3$d)</string>
+    <string name="mis_action_button_string" >%1$s(%2$d/%3$d)</string>
     <string name="mis_photo_unit">Shot</string>
     <string name="mis_tip_take_photo">Take photo</string>
     <string name="mis_error_image_not_exist">Image error</string>
@@ -110,6 +100,7 @@
     <string name="mis_permission_dialog_cancel">CANCEL</string>
     <string name="mis_permission_rationale">Storage read permission is needed to pick files.</string>
     <string name="mis_permission_rationale_write_storage">Storage write permission is needed to save the image.</string>
+    <string name="upgrade">upgrade</string>
 
 
 </resources>

@@ -111,6 +111,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         });
         createViewModel();
         initView(savedInstanceState);
+        initData(getArguments() == null ? new Bundle() : getArguments());
         return binding.getRoot();
     }
 
@@ -148,11 +149,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return 640;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        initData(getArguments() == null ? new Bundle() : getArguments());
-    }
 
     public void createViewModel() {
         if (mViewModel == null) {

@@ -126,7 +126,10 @@ public class DialogViewModel extends BaseViewModel<BaseView> {
         } else if (R.id.updateMessageDialog == view.getId()) {
             new UpdateMessageDialog(view.getContext())
                     .setOnUpdateListener(v -> baseView.showToast("点击这个按钮可以开始下载操作了"))
-                    .builder("1.0.1", "检查到有新版本")
+                    .setButtonText("下载")
+                    .setUpdateMsgString("修复已知问题，更多更新内容请查看 \nhttps://www.baidu.com")
+                    .setVersionName("1.0.1")
+                    .builder()
                     .show();
         } else if (R.id.tickViewMessageDialog == view.getId()) {
             new TickViewMessageDialog(view.getContext())
