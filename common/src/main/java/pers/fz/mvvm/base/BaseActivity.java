@@ -35,6 +35,7 @@ import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.theme.ThemeUtils;

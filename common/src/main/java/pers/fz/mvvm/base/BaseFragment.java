@@ -1,7 +1,6 @@
 package pers.fz.mvvm.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;

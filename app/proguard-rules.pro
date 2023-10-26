@@ -111,10 +111,16 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
-
+-keepattributes Signature
+-keep class * extends androidx.appcompat.app.AppCompatActivity {
+    *;
+}
+-keep class * extends androidx.fragment.app.Fragment {
+    *;
+}
 -keep public class * extends androidx.appcompat.app.AppCompatActivity
 -keep public class * extends androidx.fragment.app.Fragment
-
+-keep public class * extends android.app.Activity
 -keep public class * extends android.app.Appliction
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
@@ -122,6 +128,11 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
+-keep public class * extends androidx.lifecycle.AndroidViewModel
+-keep public class * extends androidx.lifecycle.ViewModel
+-keep class androidx.lifecycle.ViewModel {
+    <init>(...);
+}
 #-keep public class com.android.vending.licensing.ILicensingService
 #androidx包使用混淆
 -keep class com.google.android.material.** {*;}
@@ -134,7 +145,6 @@
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
--keepattributes Signature
 
 # For using GSON @Expose annotation
 -keepattributes *Annotation*
@@ -206,3 +216,51 @@
     # Keep the public no-argument constructor while allowing other methods to be optimized.
     <init>();
 }
+-keep class androidx.hilt.lifecycle.ViewModelFactoryModule {
+    <init>();
+}
+
+-keep class * implements androidx.lifecycle.ViewModel {
+    <init>();
+}
+
+-keepclassmembers class * {
+    @javax.inject.Inject <init>(...);
+}
+
+-keepclassmembers class * {
+    @dagger.Provides @javax.inject.Singleton * *(...);
+}
+
+-keep class dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories {
+    public static void resetDefaultViewModelFactory(...);
+}
+
+# Hilt
+-keep class androidx.hilt.** { *; }
+-keep class dagger.hilt.** { *; }
+-keep class dagger.hilt.android.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+# Hilt-Compiler
+-keep class dagger.hilt.processor.** { *; }
+-keepattributes *Annotation*
+-keepclasseswithmembers class * {
+    @dagger.hilt.* <fields>;
+}
+
+# Hilt-ViewModel
+-keep class androidx.hilt.** { *; }
+-keep class dagger.hilt.android.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+
+# Hilt-AndroidX
+-keep class dagger.hilt.android.** { *; }
+-keep class androidx.hilt.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+

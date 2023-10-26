@@ -1,6 +1,5 @@
 package com.casic.titan.demo.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,11 +17,10 @@ import com.casic.titan.demo.view.MainView;
 import com.casic.titan.demo.viewmodel.MainViewModel;
 import com.gyf.immersionbar.ImmersionBar;
 
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppSettingHelper;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**
@@ -56,12 +54,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
-
     @Override
     public void initData(Bundle bundle) {
         checkNotificationPermission();
     }
-
     /**
      * 通知权限检测
      */

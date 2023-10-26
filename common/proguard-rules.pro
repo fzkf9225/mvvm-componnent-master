@@ -111,10 +111,14 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
-
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+-keepattributes Signature
+-keep public class * extends pers.fz.mvvm.base.BaseActivity
 -keep public class * extends androidx.appcompat.app.AppCompatActivity
 -keep public class * extends androidx.fragment.app.Fragment
-
+-keep public class * extends android.app.Activity
 -keep public class * extends android.app.Appliction
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
@@ -122,6 +126,11 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
+-keep public class * extends androidx.lifecycle.AndroidViewModel
+-keep public class * extends androidx.lifecycle.ViewModel
+-keep class androidx.lifecycle.ViewModel {
+    <init>(...);
+}
 #-keep public class com.android.vending.licensing.ILicensingService
 #androidx包使用混淆
 -keep class com.google.android.material.** {*;}
@@ -245,19 +254,6 @@ public protected private *;
 #
 #############################################
 
-# 保留我们使用的四大组件，自定义的Application等等这些类不被混淆
-# 因为这些子类都有可能被外部调用
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Appliction
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
--keep public class * extends android.view.View
--keep public class com.android.vending.licensing.ILicensingService
-
-
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}
 
@@ -374,3 +370,58 @@ public protected private *;
 -keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-keep class androidx.hilt.lifecycle.ViewModelFactoryModule {
+    <init>();
+}
+
+-keep class * implements androidx.lifecycle.ViewModel {
+    <init>();
+}
+
+-keepclassmembers class * {
+    @javax.inject.Inject <init>(...);
+}
+
+-keepclassmembers class * {
+    @dagger.Provides @javax.inject.Singleton * *(...);
+}
+
+-keep class dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories {
+    public static void resetDefaultViewModelFactory(...);
+}
+-keep class * extends androidx.appcompat.app.AppCompatActivity {
+    *;
+}
+-keep class * extends androidx.fragment.app.Fragment {
+    *;
+}
+# Hilt
+-keep class androidx.hilt.** { *; }
+-keep class dagger.hilt.** { *; }
+-keep class dagger.hilt.android.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+
+# Hilt-Compiler
+-keep class dagger.hilt.processor.** { *; }
+-keepattributes *Annotation*
+-keepclasseswithmembers class * {
+    @dagger.hilt.* <fields>;
+}
+
+# Hilt-ViewModel
+-keep class androidx.hilt.** { *; }
+-keep class dagger.hilt.android.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+
+# Hilt-AndroidX
+-keep class dagger.hilt.android.** { *; }
+-keep class androidx.hilt.** { *; }
+-keepclassmembers class * {
+    @dagger.hilt.* <methods>;
+}
+

@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -37,7 +37,6 @@ android {
             zipAlignEnabled true// Zipalign优化
             shrinkResources true // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            multiDexKeepProguard = file('multidex-config.pro')
         }
         debug {
             resValue "string", "app_config_file", "dev.properties"
@@ -46,7 +45,6 @@ android {
             zipAlignEnabled false// Zipalign优化
             shrinkResources false // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            multiDexKeepProguard = file('multidex-config.pro')
         }
     }
     compileOptions {
@@ -117,6 +115,5 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
-    implementation "androidx.startup:startup-runtime:1.0.0"
 
 }
