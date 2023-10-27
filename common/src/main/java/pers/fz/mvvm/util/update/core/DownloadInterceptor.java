@@ -1,13 +1,12 @@
 package pers.fz.mvvm.util.update.core;
 
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import pers.fz.mvvm.util.update.callback.DownloadListener;
-
 import java.io.IOException;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import okhttp3.Interceptor;
 import okhttp3.Response;
+import pers.fz.mvvm.util.update.callback.DownloadListener;
 
 /**
  * Created by fz on 2020/6/19.

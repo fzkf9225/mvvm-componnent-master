@@ -16,9 +16,7 @@ public class ConstantsHelper {
     public static final int RETRY_WHEN_MAX_COUNT = 3;
 
     public static final String TAG = "casic";
-    public volatile static boolean isDownLoadApk = false;//apk是否正在下载
     public static boolean isSuccessRequestUpdate = false;//更新请求是否成功了
-    public static final String APK_NAME = DateUtil.getTimestamp() + ".apk";
 
     public static boolean hasNewAppVersion = false;//是否有新版本
     public static final String DOWNLOAD_CHANNEL_ID = BaseApplication.getInstance().getPackageName() + "._app_download";
@@ -26,6 +24,5 @@ public class ConstantsHelper {
 
     public static final String NOTICE_CHANNEL_ID = BaseApplication.getInstance().getPackageName() + "._app_info_notice";
     public static final String NOTICE_CHANNEL_NAME = "消息通知";
-    public static final int INSTALL_NOTIFICATION_ID = 4001;
 
 }

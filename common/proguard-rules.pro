@@ -103,6 +103,8 @@
 
 #不混淆Serializable接口的子类中指定的某些成员变量和方法
 -keepnames class * implements java.io.Serializable
+-keepnames class * implements android.os.Parcelable
+
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
@@ -111,14 +113,37 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
--keep class * implements android.os.Parcelable {
-  public static final android.os.Parcelable$Creator *;
+
+-keepclassmembers class pers.fz.mvvm.bean.** {
+    private <fields>;
 }
--keepattributes Signature
--keep public class * extends pers.fz.mvvm.base.BaseActivity
+-keepclassmembers class pers.fz.mvvm.base.BaseModelEntity {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.BannerBean {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.FeedBackBean {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.PopupWindowBean {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.Code.ResponseCode {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.Code.VersionMessage {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.base.ToolbarConfig {
+    private <fields>;
+}
+-keepclassmembers class pers.fz.mvvm.bean.base.PageBean {
+    private <fields>;
+}
 -keep public class * extends androidx.appcompat.app.AppCompatActivity
 -keep public class * extends androidx.fragment.app.Fragment
--keep public class * extends android.app.Activity
+
 -keep public class * extends android.app.Appliction
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
@@ -126,11 +151,6 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
--keep public class * extends androidx.lifecycle.AndroidViewModel
--keep public class * extends androidx.lifecycle.ViewModel
--keep class androidx.lifecycle.ViewModel {
-    <init>(...);
-}
 #-keep public class com.android.vending.licensing.ILicensingService
 #androidx包使用混淆
 -keep class com.google.android.material.** {*;}
@@ -253,6 +273,19 @@ public protected private *;
 # Android开发中一些需要保留的公共部分
 #
 #############################################
+
+# 保留我们使用的四大组件，自定义的Application等等这些类不被混淆
+# 因为这些子类都有可能被外部调用
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Appliction
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.view.View
+-keep public class com.android.vending.licensing.ILicensingService
+
 
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}
@@ -424,4 +457,32 @@ public protected private *;
 -keepclassmembers class * {
     @dagger.hilt.* <methods>;
 }
+
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-dontwarn sun.misc.**
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { <fields>; }
+
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Prevent R8 from leaving Data object members always null
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+
+##---------------End: proguard configuration for Gson  ----------
 

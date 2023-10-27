@@ -1,5 +1,13 @@
 package pers.fz.mvvm.util.apiUtil;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -15,20 +23,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.util.log.LogUtil;
@@ -284,6 +285,44 @@ public final class FileUtils {
             file = new File(baseFile, fileName + "_" + index + extension);
         }
         return fileName;
+    }
+
+    /**
+     * 获取basePath下不重复的文件名
+     *
+     * @return 如果存储路径中有重复的则自动+1，如果没有则返回文件名
+     */
+    public static String autoRenameFileName(String baseSavePath, String oldName) {
+        try {
+            // 检查文件是否有后缀名
+            if (!oldName.contains(".")) {
+                oldName += "." + oldName.split("\\.")[oldName.split("\\.").length - 1];
+            }
+
+            // 拼接完整的文件路径
+            String filePath = baseSavePath + File.separator + oldName;
+
+            // 判断文件是否存在
+            File file = new File(filePath);
+            if (!file.exists()) {
+                return oldName;
+            }
+
+            // 文件已存在，查找可用的文件名
+            int count = 1;
+            while (true) {
+                String newFileName = oldName.split("\\.")[0] + count + "." + oldName.split("\\.")[oldName.split("\\.").length - 1];
+                String newFilePath = baseSavePath + File.separator + newFileName;
+                File newFile = new File(newFilePath);
+                if (!newFile.exists()) {
+                    return newFileName;
+                }
+                count++;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return oldName;
     }
 
     /**
@@ -685,13 +724,13 @@ public final class FileUtils {
         return TextUtils.isEmpty(pathArr[pathArr.length - 1]) ? defaultPath : pathArr[pathArr.length - 1];
     }
 
-    public static String getDefaultBasePath(Context mContext){
+    public static String getDefaultBasePath(Context mContext) {
         String packageName = mContext.getPackageName();
         String[] packageArr = packageName.split("\\.");
-        if(packageArr.length==0){
+        if (packageArr.length == 0) {
             return "";
         }
-        if(packageArr.length==1){
+        if (packageArr.length == 1) {
             return packageArr[0];
         }
         return packageArr[1];
@@ -805,6 +844,33 @@ public final class FileUtils {
         }
         int filePosi = filePath.lastIndexOf(File.separator);
         return (filePosi == -1) ? filePath : filePath.substring(filePosi + 1);
+    }
+
+    public static String getFileNameByUrl(String url) {
+        // 获取文件路径部分
+        URL fileUrl = null;
+        try {
+            if (TextUtils.isEmpty(url)) {
+                return url;
+            }
+            fileUrl = new URL(url);
+            String filePath = fileUrl.getPath();
+            // 找到最后一个斜杠的位置
+            int lastIndex = filePath.lastIndexOf("/");
+
+            // 截取文件名部分
+            String fileName = filePath.substring(lastIndex + 1);
+
+            // 去除参数部分
+            int questionMarkIndex = fileName.indexOf("?");
+            if (questionMarkIndex != -1) {
+                fileName = fileName.substring(0, questionMarkIndex);
+            }
+            return fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return System.currentTimeMillis() + ".apk";
     }
 
     /**

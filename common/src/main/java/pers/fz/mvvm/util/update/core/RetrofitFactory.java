@@ -1,20 +1,19 @@
 package pers.fz.mvvm.util.update.core;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pers.fz.mvvm.api.BaseApiService;
-import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.util.apiUtil.PropertiesUtil;
-import pers.fz.mvvm.util.update.callback.DownloadListener;
-
-import java.util.concurrent.TimeUnit;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.api.BaseApiService;
+import pers.fz.mvvm.api.BaseApplication;
+import pers.fz.mvvm.util.apiUtil.PropertiesUtil;
+import pers.fz.mvvm.util.update.callback.DownloadListener;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -29,6 +29,7 @@ public class BaseModelEntity<T> implements Serializable {
      */
     @SerializedName(value = "message", alternate = {"msg","error_description"})
     private String message;
+    @SerializedName("data")
     private T data;
 
     public String getCode() {

@@ -11,17 +11,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 
-import androidx.annotation.DrawableRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
-import org.jetbrains.annotations.NotNull;
+import java.io.File;
 
-import pers.fz.mvvm.R;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.util.apiUtil.GetVersion;
-
-import java.io.File;
 
 /**
  * Created by fz on 2017/10/13.
@@ -29,7 +25,7 @@ import java.io.File;
  */
 public class DownloadNotificationUtil extends ContextWrapper {
 
-    private static NotificationManager mManager;
+    private final NotificationManager mManager;
     private NotificationCompat.Builder mBuilder;
 
     public DownloadNotificationUtil(Context context) {
@@ -104,7 +100,7 @@ public class DownloadNotificationUtil extends ContextWrapper {
         }
     }
 
-    public void sendNotificationFullScreen(String title, String content, File apkFile) {
+    public void sendNotificationFullScreen(int notifyId,String title, String content, File apkFile) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(ConstantsHelper.DOWNLOAD_CHANNEL_ID,
                     ConstantsHelper.DOWNLOAD_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -133,7 +129,7 @@ public class DownloadNotificationUtil extends ContextWrapper {
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setCategory(Notification.CATEGORY_CALL)
                     .setFullScreenIntent(fullScreenPendingIntent, true);
-            mManager.notify(ConstantsHelper.INSTALL_NOTIFICATION_ID, notificationBuilder.build());
+            mManager.notify(notifyId, notificationBuilder.build());
         }
     }
 

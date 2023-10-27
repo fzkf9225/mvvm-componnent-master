@@ -1,62 +1,59 @@
-package pers.fz.mvvm.util.update;
+package pers.fz.mvvm.util.update.listener;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.update.RxNet;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
-
+import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 /**
- * Created by fz on 2020/08/07.
- * describe：文件下载
+ * Created by fz on 2023/10/27 9:20
+ * describe :
  */
-public class DownloadManger {
-    /**
-     * 进度条与通知UI刷新的handler和msg常量
-     */
-    private static volatile DownloadManger updateManger;
-    private final List<String> downloadMap = new ArrayList<>();
+public class FileUpdateListener implements UpdateMessageDialog.OnUpdateListener {
+    private final String fileUrl;
+    private final Activity mContext;
+    private final String saveBasePath;
+    private DownloadCallback downloadCallback;
+    private final List<String> downloadMap;
+    private String fileName;
 
-    protected DownloadManger() {
-
+    public FileUpdateListener(Activity mContext, String fileUrl, String saveBasePath, List<String> downloadMap) {
+        this.mContext = mContext;
+        this.saveBasePath = saveBasePath;
+        this.fileUrl = fileUrl;
+        this.downloadMap = downloadMap;
+        fileName = FileUtils.autoRenameFileName(this.saveBasePath, FileUtils.getFileNameByUrl(fileUrl));
     }
 
-    public static DownloadManger getInstance() {
-        if (updateManger == null) {
-            synchronized (DownloadManger.class) {
-                if (updateManger == null) {
-                    updateManger = new DownloadManger();
-                }
-            }
-        }
-        return updateManger;
+    public FileUpdateListener(Activity mContext, String fileUrl, String saveBasePath, List<String> downloadMap, DownloadCallback downloadCallback) {
+        this.mContext = mContext;
+        this.fileUrl = fileUrl;
+        this.saveBasePath = saveBasePath;
+        this.downloadMap = downloadMap;
+        this.downloadCallback = downloadCallback;
+        fileName = FileUtils.autoRenameFileName(this.saveBasePath, FileUtils.getFileNameByUrl(fileName));
     }
 
-    /**
-     * 下载文件
-     *
-     * @param mContext     当前视图
-     * @param fileUrl      下载文件路径
-     * @param saveBasePath 保存文件路径默认文件路径为RxNet.PATH,
-     */
-    public void download(Activity mContext, String fileUrl, String saveBasePath, DownloadCallback downloadCallback) {
+    @Override
+    public void onUpdate(View v) {
         if (TextUtils.isEmpty(fileUrl)) {
             if (downloadCallback != null) {
                 downloadCallback.onError("下载地址错误");
@@ -73,7 +70,6 @@ public class DownloadManger {
                 return;
             }
         }
-        String fileName = FileUtils.autoRenameFileName(saveBasePath, FileUtils.getFileNameByUrl(fileUrl));
         if (downloadMap.contains(fileUrl)) {
             if (downloadCallback != null) {
                 downloadCallback.onError("当前文件正在下载中，请勿重复下载！");
@@ -82,7 +78,7 @@ public class DownloadManger {
             return;
         }
         downloadMap.add(fileUrl);
-        DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(mContext.getApplicationContext());
+        DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(v.getContext().getApplicationContext());
         RxNet.download(fileUrl, saveBasePath + fileName, new DownloadCallback() {
             @Override
             public void onStart(Disposable d) {
@@ -129,20 +125,5 @@ public class DownloadManger {
                 });
             }
         });
-    }
-
-    public void download(Activity mContext, String fileUrl) {
-        download(mContext, fileUrl,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,null);
-    }
-    public void download(Activity mContext, String fileUrl,String saveBasePath) {
-        download(mContext, fileUrl, saveBasePath,null);
-    }
-
-    public void download(Activity mContext, String fileUrl,DownloadCallback downloadCallback) {
-        download(mContext, fileUrl,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,downloadCallback);
     }
 }

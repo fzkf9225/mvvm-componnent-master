@@ -1,63 +1,57 @@
-package pers.fz.mvvm.util.update;
+package pers.fz.mvvm.util.update.listener;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.update.RxNet;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
-
+import pers.fz.mvvm.util.update.util.DownloadUtil;
+import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 /**
- * Created by fz on 2020/08/07.
- * describe：文件下载
+ * Created by fz on 2023/10/27 9:20
+ * describe :
  */
-public class DownloadManger {
-    /**
-     * 进度条与通知UI刷新的handler和msg常量
-     */
-    private static volatile DownloadManger updateManger;
-    private final List<String> downloadMap = new ArrayList<>();
-
-    protected DownloadManger() {
-
+public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
+    private final String apkUrl;
+    private final Activity mContext;
+    private DownloadCallback downloadCallback;
+    private List<String> downloadMap;
+    private String apkName;
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap) {
+        this.mContext = mContext;
+        this.apkUrl = apkUrl;
+        this.downloadMap = downloadMap;
+        apkName = FileUtils.autoRenameFileName(RxNet.PATH,FileUtils.getFileNameByUrl(apkUrl));
     }
 
-    public static DownloadManger getInstance() {
-        if (updateManger == null) {
-            synchronized (DownloadManger.class) {
-                if (updateManger == null) {
-                    updateManger = new DownloadManger();
-                }
-            }
-        }
-        return updateManger;
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, DownloadCallback downloadCallback) {
+        this.mContext = mContext;
+        this.apkUrl = apkUrl;
+        this.downloadMap = downloadMap;
+        this.downloadCallback = downloadCallback;
+        apkName = FileUtils.autoRenameFileName(RxNet.PATH,FileUtils.getFileNameByUrl(apkUrl));
     }
 
-    /**
-     * 下载文件
-     *
-     * @param mContext     当前视图
-     * @param fileUrl      下载文件路径
-     * @param saveBasePath 保存文件路径默认文件路径为RxNet.PATH,
-     */
-    public void download(Activity mContext, String fileUrl, String saveBasePath, DownloadCallback downloadCallback) {
-        if (TextUtils.isEmpty(fileUrl)) {
+    @Override
+    public void onUpdate(View v) {
+        if (TextUtils.isEmpty(apkUrl)) {
             if (downloadCallback != null) {
                 downloadCallback.onError("下载地址错误");
             }
@@ -73,24 +67,23 @@ public class DownloadManger {
                 return;
             }
         }
-        String fileName = FileUtils.autoRenameFileName(saveBasePath, FileUtils.getFileNameByUrl(fileUrl));
-        if (downloadMap.contains(fileUrl)) {
+        if (downloadMap.contains(apkUrl)) {
             if (downloadCallback != null) {
                 downloadCallback.onError("当前文件正在下载中，请勿重复下载！");
             }
             Toast.makeText(mContext, "当前文件正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
-        downloadMap.add(fileUrl);
-        DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(mContext.getApplicationContext());
-        RxNet.download(fileUrl, saveBasePath + fileName, new DownloadCallback() {
+        downloadMap.add(apkUrl);
+        DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(v.getContext().getApplicationContext());
+        RxNet.download(apkUrl, RxNet.PATH + apkName, new DownloadCallback() {
             @Override
             public void onStart(Disposable d) {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     if (downloadCallback != null) {
                         downloadCallback.onStart(d);
                     }
-                    downloadNotificationUtil.showNotification(fileUrl.hashCode());
+                    downloadNotificationUtil.showNotification(apkUrl.hashCode());
                 });
             }
 
@@ -100,49 +93,35 @@ public class DownloadManger {
                     if (downloadCallback != null) {
                         downloadCallback.onProgress(totalByte, currentByte, progress);
                     }
-                    downloadNotificationUtil.updateNotification(fileUrl.hashCode(),
-                            progress, FileUtils.getFileName(fileUrl));
+                    downloadNotificationUtil.updateNotification(apkUrl.hashCode(),
+                            progress, "正在下载新版本");
                 });
             }
 
             @Override
             public void onFinish(File file) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    downloadMap.remove(fileUrl);
+                    downloadMap.remove(apkUrl);
                     if (downloadCallback != null) {
                         downloadCallback.onFinish(file);
                     }
-                    downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+                    downloadNotificationUtil.cancelNotification(apkUrl.hashCode());
                     Toast.makeText(mContext.getApplicationContext(), "文件已保存至" + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    DownloadUtil.installApk(mContext.getApplicationContext(), file);
                 });
             }
 
             @Override
             public void onError(String msg) {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    downloadMap.remove(fileUrl);
+                    downloadMap.remove(apkUrl);
                     if (downloadCallback != null) {
                         downloadCallback.onError(msg);
                     }
-                    downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+                    downloadNotificationUtil.cancelNotification(apkUrl.hashCode());
                     Toast.makeText(mContext.getApplicationContext(), "文件下载错误，" + msg, Toast.LENGTH_SHORT).show();
                 });
             }
         });
-    }
-
-    public void download(Activity mContext, String fileUrl) {
-        download(mContext, fileUrl,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,null);
-    }
-    public void download(Activity mContext, String fileUrl,String saveBasePath) {
-        download(mContext, fileUrl, saveBasePath,null);
-    }
-
-    public void download(Activity mContext, String fileUrl,DownloadCallback downloadCallback) {
-        download(mContext, fileUrl,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,downloadCallback);
     }
 }

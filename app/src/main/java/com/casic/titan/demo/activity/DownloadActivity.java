@@ -12,6 +12,8 @@ import com.casic.titan.demo.viewmodel.DownloadViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.update.DownloadManger;
+import pers.fz.mvvm.util.update.UpdateManger;
+
 @AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {
     private UseCase useCase;
@@ -33,6 +35,12 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
                 return;
             }
             DownloadManger.getInstance().download(this,binding.editUrl.getText().toString().trim());
+        });
+        binding.buttonUpdate.setOnClickListener(v->{
+            if(TextUtils.isEmpty(binding.editApk.getText().toString().trim())){
+                return;
+            }
+            UpdateManger.getInstance().checkUpdateInfo(this,binding.editUrl.getText().toString().trim(),"v1.0.1","修复已知问题",true);
         });
     }
 
