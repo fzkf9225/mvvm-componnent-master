@@ -8,15 +8,15 @@ android {
     defaultConfig {
         minSdk project.MIN_SDK_VERSION
         targetSdk project.TARGET_SDK_VERSION
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
     compileOptions {

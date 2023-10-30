@@ -37,6 +37,8 @@ android {
             zipAlignEnabled true// Zipalign优化
             shrinkResources true // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //app模块不需要添加这个
+            consumerProguardFiles 'proguard-rules.pro'
         }
         debug {
             resValue "string", "app_config_file", "dev.properties"
