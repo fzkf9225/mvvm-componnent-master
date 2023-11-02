@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="progress"
+            type="java.lang.Float" />
+
+        <variable
+            name="setting"
+            type="pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white_16">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_message_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:includeFontPadding="false"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xxl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:text="提示" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginBottom="@dimen/horizontal_margin_xl"
+            android:gravity="center"
+            android:textColor="@color/dark_light"
+            android:textSize="@dimen/font_14"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
+            tools:ignore="MissingConstraints"
+            tools:text="需要先验证实名制身份信息" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_textView">
+
+            <pers.fz.mvvm.wight.customlayout.CircleProgressBar
+                android:id="@+id/circle_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:bgColor="@color/themeColor"
+                app:fontColor="@color/black"
+                app:fontPercent="2"
+                app:fontSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:maxProgress="100"
+                app:progress="0"
+                app:progressColor="@color/theme_green"
+                app:showText="true"
+                app:strokeWidth="10dp"
+                tools:visibility="gone" />
+
+            <pers.fz.mvvm.wight.customlayout.HorizontalProgressBar
+                android:id="@+id/horizontal_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_xxl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xxl"
+                android:visibility="gone"
+                app:bgColor="@color/themeColor"
+                app:bgRadius="10dp"
+                app:fontColor="@color/white"
+                app:fontPercent="2"
+                app:fontSize="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:maxProgress="100"
+                app:progress="0"
+                app:progressColor="@color/theme_green"
+                app:showText="true"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/line"
+            style="@style/h_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintTop_toBottomOf="@+id/cl_progress" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_option"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_xxl"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_xxl"
+            app:layout_constraintTop_toBottomOf="@+id/line"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

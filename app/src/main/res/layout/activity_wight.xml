@@ -271,6 +271,37 @@
                 android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
                 app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"/>
+            <pers.fz.mvvm.wight.customlayout.CircleProgressBar
+                android:id="@+id/circle_progress_bar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/font_size_xl"
+                app:bgColor="@color/themeColor"
+                app:fontColor="@color/themeColor"
+                app:progressColor="@color/theme_green"
+                app:strokeWidth="10dp"
+                app:fontPercent="0"
+                app:showText="true"
+                app:fontSize="16sp"
+                android:textColorHint="@color/nv_bg_color"
+                android:textColor="@color/themeColor"
+                app:layout_constraintTop_toBottomOf="@+id/verificationCodeInputView"/>
+            <pers.fz.mvvm.wight.customlayout.HorizontalProgressBar
+                android:id="@+id/horizontal_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                app:bgColor="@color/themeColor"
+                app:fontColor="@color/white"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                app:progressColor="@color/theme_green"
+                app:bgRadius="@dimen/radius_l"
+                app:fontPercent="2"
+                app:showText="true"
+                app:fontSize="12sp"
+                android:textColorHint="@color/nv_bg_color"
+                app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

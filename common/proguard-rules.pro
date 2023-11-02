@@ -300,6 +300,13 @@
     *** get*() ;
 }
 
+-keep class pers.fz.mvvm.wight.dialog.bean.** { *; }
+-dontwarn pers.fz.mvvm.wight.dialog.bean.**
+-keepclassmembers class pers.fz.mvvm.wight.dialog.bean.** {
+    void set*( *** ) ;
+    *** get*() ;
+}
+
 -keep class pers.fz.mvvm.base.BaseModelEntity { *; }
 -dontwarn pers.fz.mvvm.base.BaseModelEntity
 -keepclassmembers class pers.fz.mvvm.base.BaseModelEntity{

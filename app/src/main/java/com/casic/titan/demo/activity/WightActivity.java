@@ -2,6 +2,8 @@ package com.casic.titan.demo.activity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
 
@@ -56,14 +58,14 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 new ImageInfo(imageUrl, 1920, 1080)
         ), 0).show());
         binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
-        binding.imageCode.setOnClickListener(v->{
-            binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
-        });
-        RxView.setOnClickListener(binding.cornerButton,3000,view->{
-           showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis()));
-        });
-        binding.numberFormatEditText.addTextChangedListener(new NumberTextWatcher(binding.numberFormatEditText,false));
+        binding.imageCode.setOnClickListener(v -> binding.imageCode.setImageBitmap(Code.getInstance().createBitmap()));
+        RxView.setOnClickListener(binding.cornerButton, 3000, view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
+        binding.numberFormatEditText.addTextChangedListener(new NumberTextWatcher(binding.numberFormatEditText, false));
+
+        binding.circleProgressBar.setProgress(80);
+        binding.horizontalProgressBar.setProgress(80);
     }
+
 
     @Override
     public void initData(Bundle bundle) {
@@ -73,7 +75,6 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             useCase = bundle.getParcelable("args");
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
-
     }
 
 

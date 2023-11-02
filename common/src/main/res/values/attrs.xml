@@ -72,6 +72,19 @@
         <attr name="storkWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="Custom_Progress_Bar">
+        <attr name="bgColor" format="reference|color" />
+        <attr name="fontColor" format="reference|color" />
+        <attr name="progressColor" format="reference|color" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="showText" format="boolean" />
+        <attr name="fontSize" format="dimension" />
+        <attr name="fontPercent" int="integer" />
+        <attr name="bgRadius" format="dimension" />
+        <attr name="maxProgress" format="float" />
+        <attr name="progress" format="float" />
+    </declare-styleable>
+
     <declare-styleable name="MoreTextView">
         <attr name="expandedText" />
         <attr name="collapsedText" />
@@ -87,16 +100,16 @@
     </declare-styleable>
 
     <declare-styleable name="banner">
-        <attr name="can_browse" format="boolean"/>//是否可以点击浏览大图
-        <attr name="auto_banner" format="boolean"/>//是否自动轮播
-        <attr name="can_download" format="boolean"/>//是否可以下载本地
+        <attr name="can_browse" format="boolean" />//是否可以点击浏览大图
+        <attr name="auto_banner" format="boolean" />//是否自动轮播
+        <attr name="can_download" format="boolean" />//是否可以下载本地
         <attr name="dot_position">//指针位置，是在banner内部底下还是外部底下，暂未实现这个功能，out属性用处不大感觉就没写了
             <enum name="inner" value="0" />
             <enum name="out" value="1" />
         </attr>
         <attr name="banner_radius" format="dimension" />
-        <attr name="icon_selected" format="reference"/>
-        <attr name="icon_unselected" format="reference"/>
+        <attr name="icon_selected" format="reference" />
+        <attr name="icon_unselected" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CornerTextView">
@@ -131,14 +144,14 @@
     </declare-styleable>
     <declare-styleable name="verification_code">
         <!--验证码框大小-->
-        <attr name="code_stroke_width" format="dimension"/>
-        <attr name="code_stroke_height" format="dimension"/>
+        <attr name="code_stroke_width" format="dimension" />
+        <attr name="code_stroke_height" format="dimension" />
         <!--验证码两个框之间边距-->
-        <attr name="code_stroke_padding" format="dimension"/>
+        <attr name="code_stroke_padding" format="dimension" />
         <!--验证码框圆角-->
-        <attr name="code_stroke_radius" format="dimension"/>
+        <attr name="code_stroke_radius" format="dimension" />
         <!--验证码边框粗细-->
-        <attr name="code_stroke_border_width" format="dimension"/>
+        <attr name="code_stroke_border_width" format="dimension" />
         <!--验证码框有焦点时边框颜色-->
         <attr name="code_stroke_color_state_focused_true" format="color" />
         <!--验证码框无焦点时边框颜色-->
@@ -148,15 +161,15 @@
         <!--验证码框无焦点时背景色-->
         <attr name="code_bg_color_state_focused_false" format="color" />
         <!--光标粗细-->
-        <attr name="cursor_width" format="dimension"/>
+        <attr name="cursor_width" format="dimension" />
         <!--光标高度-->
-        <attr name="cursor_height" format="dimension"/>
+        <attr name="cursor_height" format="dimension" />
         <!--有焦点时光标颜色-->
         <attr name="cursor_bg_color_state_focused_true" format="color" />
         <!--无焦点时光标颜色-->
         <attr name="cursor_bg_color_state_focused_false" format="color" />
         <!--验证码最大支持长度-->
-        <attr name="code_max_length" format="integer"/>
+        <attr name="code_max_length" format="integer" />
         <!--验证码输入类型，纯数字、纯字母、数字+字母-->
         <attr name="code_type">
             <enum name="number" value="0" />
@@ -172,8 +185,8 @@
             <enum name="right" value="3" />
             <enum name="bottom" value="4" />
         </attr>
-        <attr name="searchIcon" format="reference"/>
-        <attr name="clearIcon" format="reference"/>
+        <attr name="searchIcon" format="reference" />
+        <attr name="clearIcon" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="MaterialRipple">

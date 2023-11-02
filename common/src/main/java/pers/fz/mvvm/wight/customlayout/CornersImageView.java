@@ -27,6 +27,8 @@ public class CornersImageView extends AppCompatImageView {
     private int leftBottomRadius;
     private int imageBg;
     private Paint mPaint;
+    private final Path mPath = new Path();
+
     public CornersImageView(Context context) {
         this(context, null);
         init(context, null);
@@ -87,27 +89,27 @@ public class CornersImageView extends AppCompatImageView {
         int maxBottom = Math.max(leftBottomRadius, rightBottomRadius);
         int minHeight = maxTop + maxBottom;
         if (width >= minWidth && height > minHeight) {
-            Path path = new Path();
+            mPath.reset();
             //四个角：右上，右下，左下，左上
-            path.moveTo(leftTopRadius, 0);
-            path.lineTo(width - rightTopRadius, 0);
-            path.quadTo(width, 0, width, rightTopRadius);
+            mPath.moveTo(leftTopRadius, 0);
+            mPath.lineTo(width - rightTopRadius, 0);
+            mPath.quadTo(width, 0, width, rightTopRadius);
 
-            path.lineTo(width, height - rightBottomRadius);
-            path.quadTo(width, height, width - rightBottomRadius, height);
+            mPath.lineTo(width, height - rightBottomRadius);
+            mPath.quadTo(width, height, width - rightBottomRadius, height);
 
-            path.lineTo(leftBottomRadius, height);
-            path.quadTo(0, height, 0, height - leftBottomRadius);
+            mPath.lineTo(leftBottomRadius, height);
+            mPath.quadTo(0, height, 0, height - leftBottomRadius);
 
-            path.lineTo(0, leftTopRadius);
-            path.quadTo(0, 0, leftTopRadius, 0);
+            mPath.lineTo(0, leftTopRadius);
+            mPath.quadTo(0, 0, leftTopRadius, 0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                canvas.clipPath(path);
+                canvas.clipPath(mPath);
             } else {
-                canvas.clipPath(path, Region.Op.INTERSECT);
+                canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
-            canvas.drawPath(path,mPaint);
+            canvas.drawPath(mPath,mPaint);
         }
         super.onDraw(canvas);
     }
