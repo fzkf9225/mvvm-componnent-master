@@ -89,6 +89,8 @@ public class CircleProgressBar extends View {
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, 2);
             maxProgress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_maxProgress, 100f);
+            float progress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_progress, 0);
+            angle = progress / maxProgress * 360;
             typedArray.recycle();
         }
     }
