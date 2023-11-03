@@ -228,6 +228,10 @@ public class ProgressBarDialog extends Dialog {
         }
         if (TextUtils.isEmpty(buttonText) || !isShowButton) {
             processBarDialogBinding.dialogOption.setVisibility(View.GONE);
+            processBarDialogBinding.line.setVisibility(View.GONE);
+        } else {
+            processBarDialogBinding.dialogOption.setVisibility(View.VISIBLE);
+            processBarDialogBinding.line.setVisibility(View.VISIBLE);
         }
         if (!TextUtils.isEmpty(buttonText)) {
             processBarDialogBinding.dialogOption.setText(buttonText);
