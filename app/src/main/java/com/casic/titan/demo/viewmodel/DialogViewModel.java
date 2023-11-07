@@ -216,7 +216,12 @@ public class DialogViewModel extends BaseViewModel<BaseView> {
                         .setProgressBarSetting(progressBarSetting)
                         .setMessageType("提示")
                         .setContent("正在下载中...")
-                        .setOnProgressEndListener(()-> LogUtil.show(TAG,"---------------加载结束----------------"))
+                        .setOnButtonClickListener(v -> {
+                            circleProgressBarDialog.dismiss();
+                            circleProgressBarDialog = null;
+                            circleHandler.removeCallbacks(this);
+                        })
+                        .setOnProgressEndListener(() -> LogUtil.show(TAG, "---------------加载结束----------------"))
                         .setCanCancel(true)
                         .builder();
                 circleProgressBarDialog.show();
@@ -254,7 +259,12 @@ public class DialogViewModel extends BaseViewModel<BaseView> {
                         .setProgressBarSetting(progressBarSetting)
                         .setMessageType("提示")
                         .setContent("正在下载中...")
-                        .setOnProgressEndListener(()-> LogUtil.show(TAG,"---------------加载结束----------------"))
+                        .setOnButtonClickListener(v -> {
+                            horizontalProgressBarDialog.dismiss();
+                            horizontalProgressBarDialog = null;
+                            horizontalHandler.removeCallbacks(this);
+                        })
+                        .setOnProgressEndListener(() -> LogUtil.show(TAG, "---------------加载结束----------------"))
                         .setCanCancel(true)
                         .builder();
                 horizontalProgressBarDialog.show();
