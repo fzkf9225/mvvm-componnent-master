@@ -2,18 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="preferExternal">
-
-    <!--  一般来说，允许用户自定义头像的app都需要这个权限  -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"
-        android:minSdkVersion = "33"/>
-    <!--  如果你想开发音乐播放器之类需要获取音频的app，加上这个权限  -->
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"
-        android:minSdkVersion = "33"/>
-    <!--  如果你想开发视频编辑器之类需要获取视频的app，加上这个权限  -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"
-        android:minSdkVersion = "33"/>
-    <!--  向前兼容  -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <!-- 一般来说，允许用户自定义头像的app都需要这个权限 -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        android:minSdkVersion="33" /> <!-- 如果你想开发音乐播放器之类需要获取音频的app，加上这个权限 -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_AUDIO"
+        android:minSdkVersion="33" /> <!-- 如果你想开发视频编辑器之类需要获取视频的app，加上这个权限 -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        android:minSdkVersion="33" /> <!-- 向前兼容 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission
         android:name="android.permission.MANAGE_DOCUMENTS"
@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
@@ -43,13 +43,9 @@
     <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 极光推送权限end -->
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-
-    <!-- 百度地图strat -->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 打电话的权限 -->
+        tools:ignore="ScopedStorage" /> <!-- 百度地图strat -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 打电话的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
@@ -65,43 +61,46 @@
         tools:ignore="ReservedSystemPermission" /> <!-- 用于扫描二维码 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 适配android 8.0 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!--13的通知权限-->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <!--12及以下的通知权限-->
-    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 13的通知权限 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 12及以下的通知权限 -->
+    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
+
     <application>
+        <activity
+            android:name=".activity.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ScanQrCodeActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 此处适配android 7.0 -->
         <activity
-            android:name=".zxing.DecodeActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false" />
-        <activity
             android:name=".activity.TechnicalSupportActivity"
             android:exported="false" />
-        <activity android:name=".activity.WebViewActivity"
-            android:exported="false"/>
         <activity
-            android:name=".wight.multi_image_selector.MultiImageSelectorActivity"
-            android:exported="true" />
+            android:name=".activity.WebViewActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.VideoPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <provider
             android:name=".autosize.InitProvider"
             android:authorities="${applicationId}.autosize-init-provider"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>

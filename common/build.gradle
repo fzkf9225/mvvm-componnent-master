@@ -129,7 +129,9 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
-
+    implementation "com.google.zxing:core:$zxingCoreVersion"
+    //noinspection GradleDependency
+    implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
     implementation "org.osgeo:proj4j:0.1.0"
 }
 apply plugin: 'maven-publish'

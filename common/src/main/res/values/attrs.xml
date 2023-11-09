@@ -249,5 +249,10 @@
         <!--        <attr name="fang_zheng_regular_font" format="boolean" />-->
         <!--        <attr name="fang_zheng_bold_font" format="boolean" />-->
     </declare-styleable>
-
+    <declare-styleable name="CustomViewfinderView">
+        <attr name="lineColor" format="color" /><!--扫描线的颜色-->
+        <attr name="cornerColor" format="color" /><!--四边角的颜色-->
+        <attr name="scanFrameWidth" format="dimension" /><!--扫描框的宽度-->
+        <attr name="scanFrameHeight" format="dimension" /><!--扫描框的高度-->
+    </declare-styleable>
 </resources>

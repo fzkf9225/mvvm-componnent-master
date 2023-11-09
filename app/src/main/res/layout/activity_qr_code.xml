@@ -11,14 +11,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.QrCodeActivity">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_scan_info"
+            android:layout_width="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/font_size_l"
+            android:textColor="@color/autoColor"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            android:layout_height="wrap_content"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_scan_info"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/vertical_margin_m"
             android:text="扫码"
             android:textSize="@dimen/font_size_xl"
             android:id="@+id/button_scan"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/button_scan"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="生成二维码"
+            android:textSize="@dimen/font_size_xl"
+            android:id="@+id/create_qr_code"/>
+        <ImageView
+            android:id="@+id/image_qr_code"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintTop_toBottomOf="@+id/create_qr_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

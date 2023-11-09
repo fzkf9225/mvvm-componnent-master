@@ -9,6 +9,7 @@ import com.casic.titan.demo.activity.KotlinActivity;
 import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.MediaCompressActivity;
 import com.casic.titan.demo.activity.RecyclerViewSampleActivity;
+import com.casic.titan.demo.activity.ScanQrCodeActivity;
 import com.casic.titan.demo.activity.VerifyActivity;
 import com.casic.titan.demo.activity.ViewPagerSampleActivity;
 import com.casic.titan.demo.activity.WightActivity;
@@ -38,6 +39,7 @@ public enum UseCaseEnum {
     COORDINATOR(CoordinatorActivity.class,"CoordinatorLayout沉浸式","侧滑标签页面",null),
     KOTLIN(KotlinActivity.class,"kotlin父类测试","测试kotlin父类代码",null),
     ANNOTATION(VerifyActivity.class,"自定义注解测试","通过自定义注解验证实体类参数问题",null),
+    SCAN_QR_CODE(ScanQrCodeActivity.class,"二维码能力","基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片",null),
 
     ;
 
