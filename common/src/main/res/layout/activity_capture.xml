@@ -16,10 +16,15 @@
             android:layout_height="match_parent"
             app:zxing_scanner_layout="@layout/custom_barcode_scanner"/>
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <pers.fz.mvvm.wight.customlayout.CirclePaddingImageView
             android:id="@+id/scan_flash_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:border_width="3dp"
+            app:border_color="#b4b4b4"
+            app:border_focus_color="@color/white"
+            app:enable_selected="true"
+            android:padding="@dimen/padding_l"
             android:src="@drawable/scan_flashlight"
             android:layout_marginStart="@dimen/horizontal_margin_xxxl"
             app:layout_constraintHorizontal_weight="1"
@@ -44,11 +49,15 @@
             android:layout_marginBottom="56dp"
             android:textSize="13sp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <pers.fz.mvvm.wight.customlayout.CirclePaddingImageView
             android:id="@+id/scan_photo"
             android:layout_width="wrap_content"
             app:layout_constraintHorizontal_weight="1"
-            android:padding="@dimen/padding_s"
+            app:border_width="3dp"
+            app:border_color="#b4b4b4"
+            app:border_focus_color="@color/white"
+            app:enable_pressed="true"
+            android:padding="@dimen/padding_l"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/horizontal_margin_xxxl"
             app:layout_constraintTop_toTopOf="@+id/capture_hint"

@@ -3,6 +3,9 @@
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
+        <attr name="border_focus_color" format="color" />
+        <attr name="enable_selected" format="boolean" />
+        <attr name="enable_pressed" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="scaling_text_view">
