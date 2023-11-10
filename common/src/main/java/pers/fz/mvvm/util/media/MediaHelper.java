@@ -492,8 +492,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             mediaBuilder.getBaseView().hideLoading();
             Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark());
             String outputPath = FileUtils.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
-            File outputFile = new File(outputPath);
-            MediaUtil.saveBitmap(bitmapNew, outputPath);
+            File outputFile = new File(mediaBuilder.getImageOutPutPath(),outputPath);
+            MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 // 从文件中创建uri

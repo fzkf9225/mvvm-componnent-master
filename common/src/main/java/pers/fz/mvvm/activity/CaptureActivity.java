@@ -1,12 +1,10 @@
 package pers.fz.mvvm.activity;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
@@ -35,7 +33,6 @@ import pers.fz.mvvm.databinding.ActivityCaptureBinding;
 import pers.fz.mvvm.util.apiUtil.QRCodeUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.util.zxing.CustomViewfinderView;
 
 /**
  * created by fz on 2023/11/8 11:10

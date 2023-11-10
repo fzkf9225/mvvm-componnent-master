@@ -7,49 +7,142 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.QrCodeActivity">
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_scan_info"
-            android:layout_width="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textSize="@dimen/font_size_l"
-            android:textColor="@color/autoColor"
-            android:layout_marginTop="@dimen/vertical_margin_xl"
-            android:layout_marginStart="@dimen/horizontal_margin_l"
-            android:layout_marginEnd="@dimen/horizontal_margin_l"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/tv_scan_info"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/vertical_margin_m"
-            android:text="扫码"
-            android:textSize="@dimen/font_size_xl"
-            android:id="@+id/button_scan"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/button_scan"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="@dimen/vertical_margin_m"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="生成二维码"
-            android:textSize="@dimen/font_size_xl"
-            android:id="@+id/create_qr_code"/>
-        <ImageView
-            android:id="@+id/image_qr_code"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/vertical_margin_m"
-            app:layout_constraintTop_toBottomOf="@+id/create_qr_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_scan_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="扫码"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_scan_info" />
+
+            <EditText
+                android:id="@+id/edit_create_qrcode"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="https://www.baidu.com"
+                app:layout_constraintTop_toBottomOf="@+id/button_scan" />
+
+            <Button
+                android:id="@+id/create_qr_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="生成二维码"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_create_qrcode" />
+
+            <ImageView
+                android:id="@+id/image_qr_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/create_qr_code" />
+
+            <Button
+                android:id="@+id/button_uri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="识别本地Uri图片"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_qr_code" />
+
+            <Button
+                android:id="@+id/button_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="识别本地String图片"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_uri" />
+
+            <pers.fz.mvvm.wight.customlayout.CornerEditText
+                android:id="@+id/edit_base64"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:gravity="top"
+                android:hint="请输入base64字符串..."
+                android:padding="@dimen/padding_m"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
+                app:corner_backColor="@color/white"
+                app:corner_radius="@dimen/radius_l"
+                app:corner_storkColor="@color/h_line_color"
+                app:corner_storkWidth="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_string" />
+
+            <Button
+                android:id="@+id/button_base64"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="识别base64"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_base64" />
+
+            <EditText
+                android:id="@+id/edit_url"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="https://preview.qiantucdn.com/58pic/35/86/34/75Z58PICYCezkFBN88FiZ_PIC2018.png%21w1024_new_0"
+                app:layout_constraintTop_toBottomOf="@+id/button_base64" />
+
+            <Button
+                android:id="@+id/button_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="识别在线图片"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_url" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
