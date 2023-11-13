@@ -126,6 +126,7 @@ public class CaptureActivity extends AppCompatActivity {
                 return;
             }
             Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor());
+            parcelFileDescriptor.close();
             if (bitmap == null) {
                 Toast.makeText(this, "未找到二维码", Toast.LENGTH_SHORT).show();
                 return;
