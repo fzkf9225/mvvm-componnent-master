@@ -64,7 +64,7 @@ public class MMKVHelper {
         }
     }
 
-    public <T> Boolean setArray( String name,List<T> list) {
+    public <T> void setArray( String name,List<T> list) {
         if (list == null || list.size() == 0) { //清空
             mmkv.putInt(name + "size", 0);
             int size = mmkv.getInt(name + "size", 0);
@@ -84,7 +84,7 @@ public class MMKVHelper {
                 mmkv.putString(name + i, new Gson().toJson(list.get(i)));
             }
         }
-        return mmkv.commit();
+        mmkv.sync();
     }
 
     public <T> List<T> getArray(String name, Class<T> clx) {
