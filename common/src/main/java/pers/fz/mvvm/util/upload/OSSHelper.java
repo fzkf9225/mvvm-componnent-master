@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.base.BaseException;
+import pers.fz.mvvm.util.apiUtil.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -105,6 +106,11 @@ public class OSSHelper {
                     }
                 }, Region.getRegion(Regions.CN_NORTH_1), new ClientConfiguration());
                 ObjectMetadata metadata = s3.getObjectMetadata(bucketName, objectName);
+                // 从对象键中提取文件名
+                String objectKey = objectName;
+                String fileName = FileUtils.autoRenameFileName(savePath, FileUtils.getFileNameByUrl(objectKey));
+                String targetFilePath = savePath + fileName;
+                LogUtil.d(TAG, "文件名：" + fileName);
                 LogUtil.d(TAG, "object length = " + metadata.getContentLength() + " type = " + metadata.getContentType());
                 S3Object object = s3.getObject(bucketName, objectName);
                 InputStream stream = object.getObjectContent();
@@ -115,12 +121,12 @@ public class OSSHelper {
                 long currentBytes = 0;
                 int prevProcess = 0;
                 long totalBytes = metadata.getContentLength();
-                FileOutputStream fileOutputStream = new FileOutputStream(savePath);
+                FileOutputStream fileOutputStream = new FileOutputStream(targetFilePath);
                 while ((bytesRead = stream.read(buf, 0, buf.length)) >= 0) {
                     currentBytes += bytesRead;
                     int process = (int) (currentBytes * 100 / totalBytes);
                     if (callback != null && process != prevProcess) {
-                        callback.progress(null, null, process);
+                        callback.progress(null, targetFilePath, process);
                         prevProcess = process;
                     }
                     fileOutputStream.write(buf, 0, bytesRead);
