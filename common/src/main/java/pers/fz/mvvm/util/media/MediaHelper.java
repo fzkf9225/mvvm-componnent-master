@@ -506,6 +506,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     });
 
+    public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
+        return mutableLiveDataWaterMark;
+    }
+
     private class ImageCompressListener implements ImgCompressor.CompressListener {
         private int index = 0;
 
