@@ -134,6 +134,11 @@ dependencies {
     implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
     implementation "org.osgeo:proj4j:0.1.0"
 }
+//执行以下命令完成制品推送
+//推送命令
+//gradle publish
+//# 如果你的项目使用了gralde wrapper组件的话请使用以下命令
+//# ./gradlew publish
 apply plugin: 'maven-publish'
 afterEvaluate {
     publishing {
@@ -142,7 +147,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.2.1'
+                version = '1.2.2'
             }
         }
         repositories {
