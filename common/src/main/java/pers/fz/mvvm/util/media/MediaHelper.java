@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.OpenableColumns;
@@ -117,12 +118,15 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiVideoSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickVideoSelectorLauncher = null;
-
+    private static final String THREAD_NAME = "mediaHelperThread";
+    private HandlerThread handlerThread;
     // 注册图片选择框监听,new ActivityResultContracts.PickMultipleVisualMedia(9)也可以选择图片而且还有选择框提供，
     // 但是这个api只能再registerForActivityResult中创建
     // 而registerForActivityResult只能再onCreate中注册，这就导致无法利用它限制图片上传数量，因为它每次都是限制9张，并且不能修改,试过重写这个类也不行
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
+        handlerThread = new HandlerThread(THREAD_NAME, 10);
+        handlerThread.start();
         if (mediaBuilder.getFragment() == null) {
             mediaBuilder.getActivity().getLifecycle().addObserver(this);
         } else {
@@ -405,7 +409,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public void startCompressImage(List<Uri> images) {
         Message message = new Message();
         message.what = 0;
-        imageCompressHandler = new ImageCompressHandler(Looper.myLooper(), images);
+        imageCompressHandler = new ImageCompressHandler(handlerThread.getLooper(), images);
         imageCompressHandler.sendMessage(message);
     }
 
@@ -480,7 +484,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         mediaBuilder.getBaseView().showLoading("正在为图片添加水印...");
     }
 
-    public Handler handlerWaterMark = new Handler(Looper.myLooper(), new Handler.Callback() {
+    public Handler handlerWaterMark = new Handler(handlerThread.getLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             if (msg.obj == null) {
@@ -599,7 +603,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         Message message = new Message();
         message.obj = videos;
         message.what = 0;
-        videoCompressHandler = new VideoCompressHandler(Looper.myLooper(), videos);
+        videoCompressHandler = new VideoCompressHandler(handlerThread.getLooper(), videos);
         videoCompressHandler.sendMessage(message);
     }
 
