@@ -6,10 +6,12 @@ package pers.fz.mvvm.util.media;
  */
 public enum MediaTypeEnum {
     /**
-     * 首页菜单
+     * 选择文件
      */
-    IMAGE(0),
-    VIDEO(1);
+    IMAGE(1),
+    VIDEO(2),
+    AUDIO(3),
+    FILE(0);
     private final int mediaType;
 
     MediaTypeEnum(int mediaType) {

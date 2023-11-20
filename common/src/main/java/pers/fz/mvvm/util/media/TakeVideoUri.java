@@ -66,6 +66,9 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
                     file);
         }
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                // 视频质量。0 低质量；1 高质量
+                .putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
+                // 时长限制，单位秒
                 .putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit)
                 .putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }

@@ -217,7 +217,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * 关闭弹框
      */
     private void closeLoadingDialog() {
-        CustomProgressDialog.getInstance(getContext()).hide();
+        CustomProgressDialog.getInstance(getContext()).dismiss();
     }
 
     /**

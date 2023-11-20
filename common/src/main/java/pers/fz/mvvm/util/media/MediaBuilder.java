@@ -35,6 +35,14 @@ public class MediaBuilder {
      */
     public int videoMaxSelectedCount = MediaHelper.DEFAULT_VIDEO_MAX_COUNT;
     /**
+     * 最大音频选择数量
+     */
+    public int audioMaxSelectedCount = MediaHelper.DEFAULT_AUDIO_MAX_COUNT;
+    /**
+     * 最大文件选择数量
+     */
+    public int fileMaxSelectedCount = MediaHelper.DEFAULT_FILE_MAX_COUNT;
+    /**
      * 图片压缩大小限制，默认200
      */
     public int imageQualityCompress = 200;
@@ -48,7 +56,7 @@ public class MediaBuilder {
 
     private MediaListener mediaListener;
     private int chooseType = MediaHelper.DEFAULT_TYPE;
-
+    private boolean isShowLoading = true;
     public MediaBuilder(@NotNull ComponentActivity mActivity, BaseView baseView) {
         this.mActivity = mActivity;
         this.baseView = baseView;
@@ -78,6 +86,33 @@ public class MediaBuilder {
 
     public String getImageOutPutPath() {
         return imageOutPutPath;
+    }
+
+    public int getAudioMaxSelectedCount() {
+        return audioMaxSelectedCount;
+    }
+
+    public MediaBuilder setAudioMaxSelectedCount(int audioMaxSelectedCount) {
+        this.audioMaxSelectedCount = audioMaxSelectedCount;
+        return this;
+    }
+
+    public int getFileMaxSelectedCount() {
+        return fileMaxSelectedCount;
+    }
+
+    public MediaBuilder setFileMaxSelectedCount(int fileMaxSelectedCount) {
+        this.fileMaxSelectedCount = fileMaxSelectedCount;
+        return this;
+    }
+
+    public boolean isShowLoading() {
+        return isShowLoading;
+    }
+
+    public MediaBuilder setShowLoading(boolean showLoading) {
+        isShowLoading = showLoading;
+        return this;
     }
 
     /**

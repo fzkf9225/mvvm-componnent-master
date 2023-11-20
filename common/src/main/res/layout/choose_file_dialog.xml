@@ -1,0 +1,36 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/choose_file"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_xxl"
+            android:background="@drawable/rounded_white"
+            android:gravity="center"
+            android:text="@string/file"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size_xxl" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/choose_file_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:background="@drawable/rounded_white"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/dark_light"
+            android:textSize="@dimen/font_size_xxl" />
+
+    </LinearLayout>
+</layout>

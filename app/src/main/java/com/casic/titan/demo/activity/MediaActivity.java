@@ -1,27 +1,45 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.lifecycle.Observer;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityMediaBinding;
 import com.casic.titan.demo.viewmodel.MediaViewModel;
+import com.google.gson.Gson;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.media.MediaBean;
 import pers.fz.mvvm.util.media.MediaBuilder;
 import pers.fz.mvvm.util.media.MediaHelper;
 import pers.fz.mvvm.util.media.MediaListener;
 import pers.fz.mvvm.util.media.MediaTypeEnum;
+import pers.fz.mvvm.wight.dialog.OpenFileDialog;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
+
 @AndroidEntryPoint
 public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener, VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
@@ -31,6 +49,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     private VideoAddAdapter videoAddAdapter;
 
     private MediaHelper mediaHelper;
+    private final List<String> audioList = new ArrayList<>();
+    private final List<String> fileList = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -51,7 +71,18 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
                 .setChooseType(MediaHelper.PICK_TYPE)
+                .setWaterMark("仅测试使用")
                 .setMediaListener(new MediaListener() {
+                    @Override
+                    public int onSelectedFileCount() {
+                        return audioList.size();
+                    }
+
+                    @Override
+                    public int onSelectedAudioCount() {
+                        return fileList.size();
+                    }
+
                     @Override
                     public int onSelectedImageCount() {
                         return imageAddAdapter.getList().size();
@@ -64,8 +95,10 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 })
                 .setImageQualityCompress(200)
                 .builder();
+        binding.buttonImage.setOnClickListener(v -> mediaHelper.openImageDialog(v, OpenImageDialog.CAMERA_ALBUM));
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
+            LogUtil.show(MediaHelper.TAG, "回调：" + new Gson().toJson(mediaBean));
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
@@ -74,8 +107,17 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
                 binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.AUDIO.getMediaType()) {
+                audioList.clear();
+                audioList.addAll(coverUriToString(mediaBean.getMediaList()));
+                binding.chooseAudioResult.setText("音频选择结果：" + new Gson().toJson(audioList));
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.FILE.getMediaType()) {
+                fileList.clear();
+                fileList.addAll(coverUriToString(mediaBean.getMediaList()));
+                binding.chooseFileResult.setText("文件选择结果：" + new Gson().toJson(fileList));
             }
         });
+        mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
         imageAddAdapter = new ImageAddAdapter(this, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
@@ -99,6 +141,31 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         binding.videoRecyclerView.setAdapter(videoAddAdapter);
         binding.tvImage.setText("图片选择（" + imageAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getImageMaxSelectedCount() + "）");
         binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
+        binding.chooseAudio.setOnClickListener(v -> mediaHelper.openFileDialog(v, null, OpenFileDialog.AUDIO));
+        binding.chooseFile.setOnClickListener(v -> mediaHelper.openFileDialog(v, null, OpenFileDialog.FILE));
+    }
+
+    @Override
+    public void showLoading(String dialogMessage) {
+        super.showLoading(dialogMessage);
+        LogUtil.show(MediaHelper.TAG, "showLoading：" + dialogMessage);
+    }
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
+        LogUtil.show(MediaHelper.TAG, "hideLoading");
+    }
+
+    private List<String> coverUriToString(List<Uri> uriList) {
+        if (uriList == null) {
+            return null;
+        }
+        List<String> resultList = new ArrayList<>();
+        for (Uri uri : uriList) {
+            resultList.add(uri.toString());
+        }
+        return resultList;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -37,59 +38,60 @@ public class MediaUtil {
             String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
 
-            LogUtil.show("MediaUtil","纬度：" + latitude);
-            LogUtil.show("MediaUtil","经度：" + longitude);
+            LogUtil.show("MediaUtil", "纬度：" + latitude);
+            LogUtil.show("MediaUtil", "经度：" + longitude);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show("MediaUtil","获取图片经纬度异常:" + e);
+            LogUtil.show("MediaUtil", "获取图片经纬度异常:" + e);
         }
     }
 
     /**
      * 添加图片水印
      *
-     * @param bitmap 图片
-     * @param mark   水印文字，默认添加时间水印，在mark内容的上一行
+     * @param originalBitmap 图片
+     * @param watermarkText  水印文字，默认添加时间水印，在mark内容的上一行
      * @return 添加水印后的图片
      */
-    public static Bitmap createWatermark(Bitmap bitmap, String mark) {
-        if (mark == null) {
-            return bitmap;
+    public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText) {
+        if (watermarkText == null) {
+            return originalBitmap;
         }
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-        TextPaint textPaint = new TextPaint();
+        int width = originalBitmap.getWidth();
+        int height = originalBitmap.getHeight();
+        Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(resultBitmap);
+        Paint p = new Paint();
         // 水印颜色
-        textPaint.setColor(Color.parseColor("#acacac"));
+        p.setColor(Color.argb(100, 169, 169, 169));  // 使用淡灰色，透明度为100
         // 水印字体大小
-        textPaint.setTextSize(32);
-        //抗锯齿
-        textPaint.setAntiAlias(true);
-        //绘制图像
-        canvas.drawBitmap(bitmap, 0, 0, textPaint);
-        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        //绘制文字
-        StaticLayout myStaticLayout;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            myStaticLayout = StaticLayout.Builder.obtain(mark, 0, mark.length(), textPaint, canvas.getWidth())
-                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                    .setLineSpacing(0.0f, 0.8f)
-                    .setIncludePad(false)
-                    .build();
-        } else {
-            myStaticLayout = new StaticLayout(mark, textPaint, canvas.getWidth(), Layout.Alignment.ALIGN_NORMAL,
-                    1.0f, 0.0f, false);
-        }
-        canvas.drawText(DateUtil.getDateTimeFromMillis(Calendar.getInstance().getTimeInMillis()), 0,
-                h - (fontMetrics.descent - fontMetrics.ascent) * myStaticLayout.getLineCount(), textPaint);
-        canvas.translate(0, h - (fontMetrics.descent - fontMetrics.ascent) * myStaticLayout.getLineCount());
-        myStaticLayout.draw(canvas);
+        p.setTextSize(32);
+        // 抗锯齿
+        p.setAntiAlias(true);
+        // 设置文字透明度
+        p.setAlpha(255); // 设置为不透明
 
+        // 绘制图像
+        canvas.drawBitmap(originalBitmap, 0, 0, p);
+
+        // 绘制文字
         canvas.save();
+        canvas.rotate(-30);
+        float textWidth = p.measureText(watermarkText);
+        int index = 0;
+        for (int positionY = height / 10; positionY <= height; positionY += height / 10 + 80) {
+            float fromX = -width + (index++ % 2) * textWidth;
+            for (float positionX = fromX; positionX < width; positionX += textWidth * 2) {
+                int spacing = 0; // 间距
+                // 保存文字透明度
+                int alpha = p.getAlpha();
+                canvas.drawText(watermarkText, positionX, positionY + spacing, p);
+                // 恢复文字透明度
+                p.setAlpha(alpha);
+            }
+        }
         canvas.restore();
-        return bmp;
+        return resultBitmap;
     }
 
     /**
@@ -100,7 +102,6 @@ public class MediaUtil {
     public static Bitmap orientation(String absolutePath) {
         Bitmap bitmapOr = BitmapFactory.decodeFile(absolutePath);
         try {
-
             ExifInterface exif = new ExifInterface(absolutePath);
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
             Matrix matrix = new Matrix();

@@ -345,7 +345,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     private void closeLoadingDialog() {
-        CustomProgressDialog.getInstance(this).hide();
+        CustomProgressDialog.getInstance(this).dismiss();
     }
 
     private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {

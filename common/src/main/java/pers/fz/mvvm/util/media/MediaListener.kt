@@ -7,5 +7,6 @@ package pers.fz.mvvm.util.media
 interface MediaListener {
     fun onSelectedImageCount(): Int = 0
     fun onSelectedVideoCount(): Int = 0
-
+    fun onSelectedAudioCount(): Int = 0
+    fun onSelectedFileCount(): Int = 0
 }
