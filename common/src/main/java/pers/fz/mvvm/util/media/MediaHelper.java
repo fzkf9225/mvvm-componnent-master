@@ -831,8 +831,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     /**
      * 打开视频资源选择库
      */
-    @SuppressLint("IntentReset")
-    private void openShoot() {
+    public void openShoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
                 checkPermission(PERMISSIONS_READ_TIRAMISU);
