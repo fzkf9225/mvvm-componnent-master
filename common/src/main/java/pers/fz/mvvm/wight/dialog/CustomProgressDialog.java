@@ -17,7 +17,7 @@ import pers.fz.mvvm.databinding.LoadingDialogBinding;
  */
 
 public class CustomProgressDialog extends Dialog {
-    private static CustomProgressDialog customProgressDialog;
+    private volatile static CustomProgressDialog customProgressDialog;
     private LoadingDialogBinding loadingDialogBinding;
     private boolean isCanCancel = false;
     private OnCancelListener onCancelListener;
@@ -86,4 +86,9 @@ public class CustomProgressDialog extends Dialog {
         return this;
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        customProgressDialog = null;
+    }
 }
