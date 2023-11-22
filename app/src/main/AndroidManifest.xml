@@ -114,9 +114,6 @@
             android:name=".activity.MediaCompressActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.QrCodeActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.DownloadActivity"
             android:exported="false" />
         <activity
@@ -150,10 +147,6 @@
             android:name="design_height_in_dp"
             android:value="640" />
 
-        <service
-            android:name="com.casic.titan.wscomponent.WebSocketService"
-            android:exported="false" />
-
         <activity
             android:name=".activity.LaunchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -170,10 +163,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask" />
-
-        <service
-            android:name="com.casic.titan.mqttcomponent.MQTTService"
-            android:exported="false" />
     </application>
 
 </manifest>

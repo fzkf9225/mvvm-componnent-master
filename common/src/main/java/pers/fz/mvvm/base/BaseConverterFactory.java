@@ -1,6 +1,7 @@
 package pers.fz.mvvm.base;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 
@@ -23,7 +24,7 @@ import retrofit2.Retrofit;
 public final class BaseConverterFactory extends Converter.Factory {
 
     public static BaseConverterFactory create() {
-        return create(new Gson());
+        return create(new GsonBuilder().disableHtmlEscaping().create());
     }
 
     public static BaseConverterFactory create(Gson gson) {
@@ -43,7 +44,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new BaseResponseBodyConverter<>(adapter);
+        return new BaseResponseBodyConverter<>(gson,adapter);
     }
 
     @Override

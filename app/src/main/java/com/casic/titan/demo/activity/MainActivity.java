@@ -8,7 +8,7 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.casic.titan.demo.R;
@@ -51,7 +51,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 .autoStatusBarDarkModeEnable(true, 0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.default_background)
                 .init();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        //如果xml中是androidx.fragment.app.FragmentContainerView，则使用这种方式获取navController
+        NavHostFragment navHostFragment = binding.navHostFragmentActivityMain.getFragment();
+        NavController navController = navHostFragment.getNavController();
+        //如果xml是fragment则使用这种方式获取navController
+//      NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
     @Override

@@ -1,16 +1,12 @@
 package com.casic.titan.demo.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.activity.result.ActivityResultLauncher;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.casic.titan.demo.R;
-import com.casic.titan.demo.api.PortalSdkConstant;
 import com.casic.titan.demo.databinding.ActivityCoordinatorBinding;
 import com.casic.titan.portal.PortalSdk;
 import com.casic.titan.portal.ShareDataListener;

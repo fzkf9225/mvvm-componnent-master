@@ -1,22 +1,10 @@
 package com.casic.titan.mqttcomponent;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-
 
 import com.jeremyliao.liveeventbus.LiveEventBus;
 
@@ -34,12 +22,13 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * created by fz on 2023/4/18 9:35
+ * created by fz on 2023/11/22 13:30
  * describe:mqtt服务
  */
-public class MQTTService extends Service implements org.eclipse.paho.mqttv5.client.MqttCallback {
-    public static final String TAG = MQTTService.class.getSimpleName();
+public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
+    public static final String TAG = MQTTServer.class.getSimpleName();
     public String clientId = "mqtt_android" + new Random().nextLong();
+    private volatile static MQTTServer instance = null;
     /**
      * 订阅的主题
      */
@@ -52,8 +41,19 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
 
     private final List<Observer<ServerMessage>> observers = new ArrayList<>();
 
-    public MQTTService() {
+    private MQTTServer(Context context) {
+        clientId = HelperUtil.createMqttClientId(context);
+    }
 
+    public static MQTTServer getInstance(Context context) {
+        if (instance == null) {
+            synchronized (MQTTServer.class) {
+                if (instance == null) {
+                    instance = new MQTTServer(context);
+                }
+            }
+        }
+        return instance;
     }
 
     public void addObserver(Observer<ServerMessage> observer) {
@@ -72,8 +72,6 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
             observer.onChanged(serverMessage);
         }
     }
-
-    private final IBinder iBinder = new MQTTServiceBinder();
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
@@ -100,7 +98,7 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
         //观察者模式
         notifyObservers(new ServerMessage(topic, msg));
         //LiveEventBus直接推送消息
-        LiveEventBus.get(MQTTService.class.getSimpleName()).post(new ServerMessage(topic, msg));
+        LiveEventBus.get(MQTTServer.class.getSimpleName()).post(new ServerMessage(topic, msg));
     }
 
     @Override
@@ -133,55 +131,14 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
         Log.i(TAG, "authPacketArrived:" + properties);
     }
 
-    public class MQTTServiceBinder extends Binder {
-        public MQTTService getService() {
-            return MQTTService.this;
-        }
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return iBinder;
-    }
-
     public MqttCallback mqttCallback;
 
     public MqttCallback getPushCallback() {
         return mqttCallback;
     }
 
-
     public MqttClient getMqttClient() {
         return mqttClient;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        clientId = HelperUtil.createMqttClientId(getApplicationContext());
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        String channelId = PropertiesUtil.getInstance().getProperties(getApplicationContext()).getPropertyValue(Constants.MQTT_CHANNEL_ID, Constants.CHANNEL_ID);
-        String channelName = PropertiesUtil.getInstance().getProperties(getApplicationContext()).getPropertyValue(Constants.MQTT_CHANNEL_NAME, Constants.CHANNEL_NAME);
-        String notifyId = PropertiesUtil.getInstance().getProperties(getApplicationContext()).getPropertyValue(Constants.MQTT_NOTIFY_ID, String.valueOf(Constants.NOTIFY_ID));
-        //设置service为前台服务，提高优先级
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //Android8.0以上app启动后通知栏会出现一条"正在运行"的通知
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-                Notification notification = new Notification.Builder(getApplicationContext(), channelId).build();
-                startForeground(Integer.parseInt(notifyId), notification);
-            }
-        }
-
-        return START_STICKY;
     }
 
     /**
@@ -200,6 +157,10 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
     public void connect(String[] topic, MqttCallback mqttCallback) {
         try {
             this.mqttCallback = mqttCallback;
+            if (isConnected()) {
+                this.mqttCallback.onConnectedSuccess(false);
+                return;
+            }
             this.topic = topic;
             //第三个参数代表持久化客户端，如果为null，则不持久化
             mqttClient = new MqttClient(CloudDataHelper.getAddress(), clientId, new MemoryPersistence());
@@ -235,6 +196,45 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
 
     public MutableLiveData<MQTTException> getMqttExceptionMutableLiveData() {
         return mqttExceptionMutableLiveData;
+    }
+
+    /**
+     * mqtt服务是否连接
+     *
+     * @return true:连接
+     */
+    public boolean isConnected() {
+        if (instance == null) {
+            return false;
+        }
+        if (getMqttClient() == null) {
+            return false;
+        }
+        return getMqttClient().isConnected();
+    }
+
+    /**
+     * 发布信息
+     *
+     * @param topic 主题
+     * @param msg   消息内容
+     * @return 是否成功
+     */
+    public boolean publish(String topic, String msg) {
+        if (!isConnected()) {
+            return false;
+        }
+        MqttMessage message = new MqttMessage();
+        message.setRetained(true);
+        message.setPayload(msg.getBytes());
+        try {
+            getMqttClient().publish(topic, message);
+            return true;
+        } catch (MqttException e) {
+            Log.i(TAG, "发送消息异常:" + e);
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean publish(MqttMessage message) {
@@ -275,21 +275,16 @@ public class MQTTService extends Service implements org.eclipse.paho.mqttv5.clie
         return false;
     }
 
-    @Override
-    public void onDestroy() {
+    public void onStop() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                stopForeground(STOP_FOREGROUND_DETACH);
-                stopSelf();
+            if (getMqttClient() != null) {
+                if (topic != null) {
+                    getMqttClient().unsubscribe(topic);
+                }
+                getMqttClient().disconnect();
+                getMqttClient().close();
             }
-            if (mqttClient == null) {
-                return;
-            }
-            mqttClient.disconnect();
-            if (topic == null) {
-                return;
-            }
-            mqttClient.unsubscribe(topic);
+            instance = null;
         } catch (MqttException e) {
             e.printStackTrace();
         }

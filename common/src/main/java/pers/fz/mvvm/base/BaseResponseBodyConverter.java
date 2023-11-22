@@ -21,9 +21,11 @@ import retrofit2.Converter;
  */
 public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private final TypeAdapter<T> adapter;
+    private final Gson gson;
 
-    BaseResponseBodyConverter(TypeAdapter<T> adapter) {
+    BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
         this.adapter = adapter;
+        this.gson = gson;
     }
 
     @Override
@@ -39,19 +41,15 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
             throw new RuntimeException(ex);
         }
         if (jsonObject.has("code") || jsonObject.has("error")) {
-            BaseModelEntity<T> baseModel = new GsonBuilder().disableHtmlEscaping().create().fromJson(jsonString,
+            BaseModelEntity<T> baseModel = gson.fromJson(jsonString,
                     new TypeToken<BaseModelEntity<T>>() {
                     }.getType());
             if (!ResponseCode.OK.equals(baseModel.getCode())) {
                 throw new BaseException(baseModel.getMessage(), baseModel.getCode());
             }
-            return adapter.fromJson(new Gson().toJson(baseModel.getData()));
+            return adapter.fromJson(gson.toJson(baseModel.getData()));
         }
-
-        T baseModel = new GsonBuilder().disableHtmlEscaping().create().fromJson(jsonString,
-                new TypeToken<T>() {
-                }.getType());
-        return adapter.fromJson(new Gson().toJson(baseModel));
+        return adapter.fromJson(jsonString);
 
     }
 }
