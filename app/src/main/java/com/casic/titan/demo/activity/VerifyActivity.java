@@ -16,11 +16,9 @@ import java.util.Arrays;
 
 import pers.fz.mvvm.annotations.EntityValidator;
 import pers.fz.mvvm.annotations.VerifyResult;
-import pers.fz.mvvm.api.RegexUtils;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 
 public class VerifyActivity extends BaseActivity<BaseViewModel, ActivityVerifyBinding> {
     private UseCase useCase;

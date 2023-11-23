@@ -6,20 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.os.Build;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 
-import pers.fz.mvvm.util.apiUtil.DateUtil;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**

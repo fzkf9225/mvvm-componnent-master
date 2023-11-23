@@ -9,7 +9,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.databinding.TechnicalSupportActivityBinding;
-import pers.fz.mvvm.wight.picDialog.PicShowDialog;
+import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 
 /**

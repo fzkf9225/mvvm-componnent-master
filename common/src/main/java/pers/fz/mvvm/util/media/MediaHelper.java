@@ -27,8 +27,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
 
-import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.media.imgCompressor.ImgCompressor;
+import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.media.imgcompressor.ImgCompressor;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.media.videocompressor.VideoCompress;
 import pers.fz.mvvm.wight.dialog.OpenFileDialog;

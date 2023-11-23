@@ -2,32 +2,24 @@ package com.casic.titan.demo.activity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-
-import androidx.core.content.ContextCompat;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
 import com.casic.titan.demo.viewmodel.WightViewModel;
-import com.gyf.immersionbar.ImmersionBar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
-import pers.fz.mvvm.util.apiUtil.DateUtil;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
-import pers.fz.mvvm.util.apiUtil.RxView;
+import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.util.common.RxView;
 import pers.fz.mvvm.wight.Code;
-import pers.fz.mvvm.wight.customlayout.StarBar;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
-import pers.fz.mvvm.wight.picDialog.PicShowDialog;
-import pers.fz.mvvm.wight.picDialog.bean.ImageInfo;
+import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
 
 @AndroidEntryPoint

@@ -3,14 +3,14 @@ package pers.fz.mvvm.util.jiami;
 import java.io.ByteArrayOutputStream;
 
 public class Base64Util {
-    private static final char[] base64EncodeChars = new char[]{'A', 'B', 'C',
+    private static final char[] BASE64_ENCODE_CHARS = new char[]{'A', 'B', 'C',
             'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c',
             'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
             'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2',
             '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
-    private static byte[] base64DecodeChars = new byte[]{-1, -1, -1, -1, -1,
+    private static final byte[] BASE64_DECODE_CHARS = new byte[]{-1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59,
@@ -37,27 +37,27 @@ public class Base64Util {
         while (i < len) {
             b1 = data[i++] & 0xff;
             if (i == len) {
-                sb.append(base64EncodeChars[b1 >>> 2]);
-                sb.append(base64EncodeChars[(b1 & 0x3) << 4]);
+                sb.append(BASE64_ENCODE_CHARS[b1 >>> 2]);
+                sb.append(BASE64_ENCODE_CHARS[(b1 & 0x3) << 4]);
                 sb.append("==");
                 break;
             }
             b2 = data[i++] & 0xff;
             if (i == len) {
-                sb.append(base64EncodeChars[b1 >>> 2]);
-                sb.append(base64EncodeChars[((b1 & 0x03) << 4)
+                sb.append(BASE64_ENCODE_CHARS[b1 >>> 2]);
+                sb.append(BASE64_ENCODE_CHARS[((b1 & 0x03) << 4)
                         | ((b2 & 0xf0) >>> 4)]);
-                sb.append(base64EncodeChars[(b2 & 0x0f) << 2]);
+                sb.append(BASE64_ENCODE_CHARS[(b2 & 0x0f) << 2]);
                 sb.append("=");
                 break;
             }
             b3 = data[i++] & 0xff;
-            sb.append(base64EncodeChars[b1 >>> 2]);
-            sb.append(base64EncodeChars[((b1 & 0x03) << 4)
+            sb.append(BASE64_ENCODE_CHARS[b1 >>> 2]);
+            sb.append(BASE64_ENCODE_CHARS[((b1 & 0x03) << 4)
                     | ((b2 & 0xf0) >>> 4)]);
-            sb.append(base64EncodeChars[((b2 & 0x0f) << 2)
+            sb.append(BASE64_ENCODE_CHARS[((b2 & 0x0f) << 2)
                     | ((b3 & 0xc0) >>> 6)]);
-            sb.append(base64EncodeChars[b3 & 0x3f]);
+            sb.append(BASE64_ENCODE_CHARS[b3 & 0x3f]);
         }
         return sb.toString();
     }
@@ -78,7 +78,7 @@ public class Base64Util {
 
 			/* b1 */
             do {
-                b1 = base64DecodeChars[data[i++]];
+                b1 = BASE64_DECODE_CHARS[data[i++]];
             } while (i < len && b1 == -1);
             if (b1 == -1) {
                 break;
@@ -86,7 +86,7 @@ public class Base64Util {
 
 			/* b2 */
             do {
-                b2 = base64DecodeChars[data[i++]];
+                b2 = BASE64_DECODE_CHARS[data[i++]];
             } while (i < len && b2 == -1);
             if (b2 == -1) {
                 break;
@@ -99,7 +99,7 @@ public class Base64Util {
                 if (b3 == 61) {
                     return buf.toByteArray();
                 }
-                b3 = base64DecodeChars[b3];
+                b3 = BASE64_DECODE_CHARS[b3];
             } while (i < len && b3 == -1);
             if (b3 == -1) {
                 break;
@@ -112,7 +112,7 @@ public class Base64Util {
                 if (b4 == 61) {
                     return buf.toByteArray();
                 }
-                b4 = base64DecodeChars[b4];
+                b4 = BASE64_DECODE_CHARS[b4];
             } while (i < len && b4 == -1);
             if (b4 == -1) {
                 break;

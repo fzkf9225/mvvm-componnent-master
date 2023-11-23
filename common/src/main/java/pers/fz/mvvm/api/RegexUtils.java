@@ -341,7 +341,9 @@ public class RegexUtils {
      * @return boolean
      */
     public static boolean isIdCard(String str) {
-        if (StrisNull(str)) return false;
+        if (StrisNull(str)) {
+            return false;
+        }
         if (str.trim().length() == 15 || str.trim().length() == 18) {
             return Regular(str, IDCARD);
         } else {
@@ -433,8 +435,9 @@ public class RegexUtils {
      * @return boolean
      */
     private static boolean Regular(String str, String pattern) {
-        if (null == str || str.trim().length() <= 0)
+        if (null == str || str.trim().length() <= 0) {
             return false;
+        }
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(str);
         return m.matches();

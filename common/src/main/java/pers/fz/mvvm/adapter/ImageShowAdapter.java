@@ -10,7 +10,7 @@ import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImageShowItemBinding;
 import pers.fz.mvvm.util.log.ToastUtils;
-import pers.fz.mvvm.wight.picDialog.PicShowDialog;
+import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**
  * Created by fz on 2017/10/20.

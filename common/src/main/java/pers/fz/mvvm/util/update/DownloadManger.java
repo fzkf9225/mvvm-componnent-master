@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.Disposable;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
 

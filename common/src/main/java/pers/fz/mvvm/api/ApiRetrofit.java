@@ -8,8 +8,8 @@ import okhttp3.Headers;
 import okhttp3.Interceptor;
 import pers.fz.mvvm.base.BaseConverterFactory;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.apiUtil.DateUtil;
-import pers.fz.mvvm.util.apiUtil.PropertiesUtil;
+import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.util.common.PropertiesUtil;
 import pers.fz.mvvm.util.jiami.MD5Util;
 import pers.fz.mvvm.util.log.LogUtil;
 

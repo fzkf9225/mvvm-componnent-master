@@ -13,7 +13,7 @@ import pers.fz.mvvm.activity.WebViewActivity;
 import pers.fz.mvvm.api.RegexUtils;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 
 /**
  * Create by CherishTang on 2020/3/19 0019

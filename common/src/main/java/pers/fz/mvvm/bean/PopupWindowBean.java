@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Created by CherishTang on 2018/7/11.
- * popupWindow
+ * popupwindow
  */
 
 public class PopupWindowBean<T> extends BaseObservable {

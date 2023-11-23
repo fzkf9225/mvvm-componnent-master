@@ -5,21 +5,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -27,8 +21,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Created by fz on 2023/9/7 10:25

@@ -1,15 +1,12 @@
 package pers.fz.mvvm.annotations;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import pers.fz.mvvm.api.RegexUtils;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**

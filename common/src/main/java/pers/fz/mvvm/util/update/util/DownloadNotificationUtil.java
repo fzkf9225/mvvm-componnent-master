@@ -17,7 +17,7 @@ import androidx.core.content.FileProvider;
 import java.io.File;
 
 import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.apiUtil.GetVersion;
+import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/10/13.

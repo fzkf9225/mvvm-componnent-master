@@ -12,10 +12,8 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.databinding.ImgAddItemBinding;
 import pers.fz.mvvm.databinding.VideoAddItemBinding;
-import pers.fz.mvvm.databinding.VideoShowItemBinding;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 

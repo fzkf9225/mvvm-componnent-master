@@ -2,16 +2,12 @@ package pers.fz.mvvm.wight.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.LinearLayout;
 
 import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,7 +16,6 @@ import androidx.core.content.ContextCompat;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.ProcessBarDialogBinding;
 import pers.fz.mvvm.listener.OnProgressEndListener;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
 import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
 
 /**

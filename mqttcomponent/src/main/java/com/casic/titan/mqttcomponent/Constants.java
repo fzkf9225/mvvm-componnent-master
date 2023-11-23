@@ -9,7 +9,7 @@ public class Constants {
     public static final String CHANNEL_ID = "10001";
     public static final String CHANNEL_NAME = "服务端消息推送";
     public static final int NOTIFY_ID = 5001;
-    public final static String Client_ID = "client_id";
+    public final static String CLIENT_ID = "client_id";
     /**
      * mqtt版本，我们自定义的版本用于适配，并非官方mqtt版本
      */

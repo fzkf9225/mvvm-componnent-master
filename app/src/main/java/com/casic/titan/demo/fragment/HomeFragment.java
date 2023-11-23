@@ -2,10 +2,7 @@ package com.casic.titan.demo.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
-
-import androidx.core.app.ComponentActivity;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.adapter.UseCaseAdapter;
@@ -13,17 +10,12 @@ import com.casic.titan.demo.databinding.FragmentHomeBinding;
 import com.casic.titan.demo.enumbean.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
-import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 
-
-import java.io.File;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2023/4/28

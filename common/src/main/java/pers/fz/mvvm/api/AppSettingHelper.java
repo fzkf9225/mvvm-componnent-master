@@ -3,8 +3,7 @@ package pers.fz.mvvm.api;
 
 import android.content.Context;
 
-import pers.fz.mvvm.util.apiUtil.GetVersion;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/11/21.

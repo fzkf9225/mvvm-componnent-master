@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Create by CherishTang on 2019/9/3 0003

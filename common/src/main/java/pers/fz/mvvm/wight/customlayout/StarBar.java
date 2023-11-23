@@ -157,22 +157,21 @@ public class StarBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!isClickAble) return false;
+        if (!isClickAble) {
+            return false;
+        }
         int x = (int) event.getX();
-        if (x < 0) x = 0;
-        if (x > getMeasuredWidth()) x = getMeasuredWidth();
+        if (x < 0) {
+            x = 0;
+        }
+        if (x > getMeasuredWidth()) {
+            x = getMeasuredWidth();
+        }
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
-                break;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
-                break;
-            }
-            case MotionEvent.ACTION_UP: {
-                break;
-            }
+            case MotionEvent.ACTION_DOWN -> setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
+            case MotionEvent.ACTION_MOVE -> setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
+            case MotionEvent.ACTION_UP -> {}
+            default -> {}
         }
         invalidate();
         return super.onTouchEvent(event);

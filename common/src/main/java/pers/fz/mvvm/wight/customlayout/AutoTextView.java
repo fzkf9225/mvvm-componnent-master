@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Camera;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -20,8 +18,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**

@@ -19514,31 +19514,31 @@ pers.fz.mvvm.livedata.SingleLiveEvent$1
 pers.fz.mvvm.livedata.SingleLiveEvent
 pers.fz.mvvm.util.IDCardUtil
 pers.fz.mvvm.util.NavigationMap
-pers.fz.mvvm.util.apiUtil.DateUtil:
+common.DateUtil:
     public static final java.lang.String DATE_TIME_FORMAT
     public static final java.lang.String DATE_TIME_NO_MS_FORMAT
     public static final java.lang.String DEFAULT_DATE_TIME_FORMAT
     public static final java.lang.String DEFAULT_FORMAT_DATE
     public static final java.lang.String DEFAULT_FORMAT_TIME
     public static final java.lang.String DEFAULT_HOUR_FORMAT_TIME
-pers.fz.mvvm.util.apiUtil.FileUtils:
+common.FileUtils:
     public static final java.lang.String B
     public static final java.lang.String FILE_EXTENSION_SEPARATOR
     public static final java.lang.String G
     public static final java.lang.String K
     public static final java.lang.String M
     private static final java.lang.String TAG
-pers.fz.mvvm.util.apiUtil.NumberUtils
-pers.fz.mvvm.util.apiUtil.RxView:
+common.NumberUtils
+common.RxView:
     private static final long DEFAULT_CLICK_INTERVAL
-pers.fz.mvvm.util.apiUtil.ScreenUtils
-pers.fz.mvvm.util.apiUtil.SoftKeyBoardListener$1
-pers.fz.mvvm.util.apiUtil.SoftKeyBoardListener$OnSoftKeyBoardChangeListener
-pers.fz.mvvm.util.apiUtil.SoftKeyBoardListener
-pers.fz.mvvm.util.apiUtil.StorageUtil
-pers.fz.mvvm.util.apiUtil.ThreadExecutor$1
-pers.fz.mvvm.util.apiUtil.ThreadExecutor
-pers.fz.mvvm.util.apiUtil.ThreadExecutorIO:
+common.ScreenUtils
+common.SoftKeyBoardListener$1
+common.SoftKeyBoardListener$OnSoftKeyBoardChangeListener
+common.SoftKeyBoardListener
+common.StorageUtil
+common.ThreadExecutor$1
+common.ThreadExecutor
+common.ThreadExecutorIO:
     private static final int CORE_POOL_SIZE
     private static final int KEEP_ALIVE_TIME
 pers.fz.mvvm.util.jiami.Base64Util
@@ -19665,38 +19665,38 @@ pers.fz.mvvm.wight.empty.EmptyLayout:
     public static final int NETWORK_LOADING_RERESH
     public static final int NODATA
     public static final int NODATA_ENABLE_CLICK
-pers.fz.mvvm.wight.picDialog.Compat:
+picdialog.Compat:
     private static final int SIXTY_FPS_INTERVAL
-pers.fz.mvvm.wight.picDialog.DepthPageTransformer
-pers.fz.mvvm.wight.picDialog.IPhotoView:
+picdialog.DepthPageTransformer
+picdialog.IPhotoView:
     public static final float DEFAULT_MAX_SCALE
     public static final float DEFAULT_MID_SCALE
     public static final float DEFAULT_MIN_SCALE
     public static final int DEFAULT_ZOOM_DURATION
-pers.fz.mvvm.wight.picDialog.PhotoViewAttacher:
+picdialog.PhotoViewAttacher:
     static final int EDGE_BOTH
     static final int EDGE_LEFT
     static final int EDGE_NONE
     static final int EDGE_RIGHT
     private static final java.lang.String LOG_TAG
-pers.fz.mvvm.wight.picDialog.PicShowDialog:
+picdialog.PicShowDialog:
     private android.view.animation.LayoutAnimationController lac
     private android.view.View view
-pers.fz.mvvm.wight.picDialog.bean.AlbumBean
-pers.fz.mvvm.wight.picDialog.bean.ImageBean
-pers.fz.mvvm.wight.picDialog.gestures.CupcakeGestureDetector:
+picdialog.bean.AlbumBean
+picdialog.bean.ImageBean
+picdialog.gestures.CupcakeGestureDetector:
     private static final java.lang.String LOG_TAG
-pers.fz.mvvm.wight.picDialog.gestures.EclairGestureDetector:
+picdialog.gestures.EclairGestureDetector:
     private static final int INVALID_POINTER_ID
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow$1
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow$2
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow$OnHeadViewClickListener
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow$SelectCategory
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow$ViewHold
-pers.fz.mvvm.wight.popupWindow.LinearRecyclerViewPopupWindow
-pers.fz.mvvm.wight.popupWindow.adapter.ChildAdapter
-pers.fz.mvvm.wight.popupWindow.adapter.MenuAdapter
-pers.fz.mvvm.wight.popupWindow.adapter.ParentAdapter
+popupwindow.LinearRecyclerViewPopupWindow$1
+popupwindow.LinearRecyclerViewPopupWindow$2
+popupwindow.LinearRecyclerViewPopupWindow$OnHeadViewClickListener
+popupwindow.LinearRecyclerViewPopupWindow$SelectCategory
+popupwindow.LinearRecyclerViewPopupWindow$ViewHold
+popupwindow.LinearRecyclerViewPopupWindow
+popupwindow.adapter.ChildAdapter
+popupwindow.adapter.MenuAdapter
+popupwindow.adapter.ParentAdapter
 pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration
 pers.fz.mvvm.wight.recyclerview.OnStartDragListener
 pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback
@@ -20954,18 +20954,18 @@ pers.fz.mvvm.wight.customlayout.VerificationCodeInputView:
     private pers.fz.mvvm.wight.customlayout.VerificationCodeInputView$OnTextFinishListener mOnInputFinishListener
 pers.fz.mvvm.wight.customlayout.round.ShapeBuilder:
     private boolean isOperate
-pers.fz.mvvm.wight.picDialog.MyImageView$OnMeasureListener:
+picdialog.MyImageView$OnMeasureListener:
     public abstract void onMeasureSize(int,int)
-pers.fz.mvvm.wight.picDialog.MyImageView:
-    private pers.fz.mvvm.wight.picDialog.MyImageView$OnMeasureListener onMeasureListener
-pers.fz.mvvm.wight.picDialog.PhotoViewAttacher$OnMatrixChangedListener:
+picdialog.MyImageView:
+    private picdialog.MyImageView$OnMeasureListener onMeasureListener
+picdialog.PhotoViewAttacher$OnMatrixChangedListener:
     public abstract void onMatrixChanged(android.graphics.RectF)
-pers.fz.mvvm.wight.picDialog.PhotoViewAttacher$OnViewTapListener:
+picdialog.PhotoViewAttacher$OnViewTapListener:
     public abstract void onViewTap(android.view.View,float,float)
-pers.fz.mvvm.wight.picDialog.PhotoViewAttacher:
-    private pers.fz.mvvm.wight.picDialog.PhotoViewAttacher$OnMatrixChangedListener mMatrixChangeListener
-    private pers.fz.mvvm.wight.picDialog.PhotoViewAttacher$OnViewTapListener mViewTapListener
-pers.fz.mvvm.wight.picDialog.scrollerproxy.PreGingerScroller
+picdialog.PhotoViewAttacher:
+    private picdialog.PhotoViewAttacher$OnMatrixChangedListener mMatrixChangeListener
+    private picdialog.PhotoViewAttacher$OnViewTapListener mViewTapListener
+picdialog.scrollerproxy.PreGingerScroller
 pers.fz.mvvm.wight.tickview.TickAnimatorListener:
     public abstract void onAnimationEnd(pers.fz.mvvm.wight.tickview.TickView)
     public abstract void onAnimationStart(pers.fz.mvvm.wight.tickview.TickView)

@@ -30,7 +30,7 @@ import java.util.Map;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.ActivityCaptureBinding;
-import pers.fz.mvvm.util.apiUtil.QRCodeUtil;
+import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 
@@ -205,7 +205,7 @@ public class CaptureActivity extends AppCompatActivity {
 
     @SuppressLint("MissingSuperCall")
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         capture.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

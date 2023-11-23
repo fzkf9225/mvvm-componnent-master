@@ -108,19 +108,16 @@ public class VideoController {
         }
 
         public static void runConversion(Context context,final Uri videoPath, final String destPath) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        VideoConvertRunnable wrapper = new VideoConvertRunnable(context,videoPath, destPath);
-                        Thread th = new Thread(wrapper, "VideoConvertRunnable");
-                        th.start();
-                        th.join();
-                    } catch (Exception e) {
-                        Log.e("tmessages", e.getMessage());
-                    }
-                }
-            }).start();
+           ThreadExecutor.getInstance().execute(()->{
+               try {
+                   VideoConvertRunnable wrapper = new VideoConvertRunnable(context,videoPath, destPath);
+                   Thread th = new Thread(wrapper, "VideoConvertRunnable");
+                   th.start();
+                   th.join();
+               } catch (Exception e) {
+                   Log.e("tmessages", e.getMessage());
+               }
+           });
         }
 
         @Override

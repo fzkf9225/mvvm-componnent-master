@@ -17,7 +17,7 @@ import java.util.List;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;

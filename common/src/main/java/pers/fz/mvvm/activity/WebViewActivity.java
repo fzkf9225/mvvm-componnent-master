@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,10 +20,9 @@ import pers.fz.mvvm.R;
 
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.bean.base.ToolbarConfig;
 
 import pers.fz.mvvm.databinding.WebViewBinding;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 
 /**
  * Created by fz on 2020/2/18

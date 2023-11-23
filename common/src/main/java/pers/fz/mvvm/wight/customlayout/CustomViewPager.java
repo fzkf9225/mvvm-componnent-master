@@ -35,7 +35,7 @@ public class CustomViewPager extends RelativeLayout{
     int[] imgs = new int[]{};
 
     public void init(@DrawableRes int[] imgs, Context context){
-        this.imgs = imgs;
+        CustomViewPager.imgs = imgs;
         this.context = context;
         initImgs();
     }
@@ -180,10 +180,7 @@ public class CustomViewPager extends RelativeLayout{
              * MeasureSpec.UNSPECIFIED是未指定尺寸，这种情况不多，一般都是父控件是AdapterView，
              * 通过measure方法传入的模式。
              */
-            case MeasureSpec.AT_MOST:
-            case MeasureSpec.EXACTLY:
-                result = widthSize;
-                break;
+            case MeasureSpec.AT_MOST, MeasureSpec.EXACTLY -> result = widthSize;
         }
         return result;
     }

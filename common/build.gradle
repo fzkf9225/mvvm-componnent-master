@@ -35,7 +35,6 @@ android {
             resValue "string", "app_config_file", "prod.properties"
             buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示log
             minifyEnabled true// 混淆
-            zipAlignEnabled true// Zipalign优化
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
             consumerProguardFiles 'proguard-rules.pro'
@@ -44,7 +43,6 @@ android {
             resValue "string", "app_config_file", "dev.properties"
             buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
             minifyEnabled false// 混淆
-            zipAlignEnabled false// Zipalign优化
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,8 +81,6 @@ dependencies {
     androidTestImplementation "junit:junit:4.13.2"
     implementation "com.orhanobut:logger:2.2.0"
     implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
-    implementation "com.google.zxing:core:3.5.1"
-    implementation "com.google.zxing:android-core:3.3.0"
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.squareup.picasso:picasso:2.71828"
@@ -112,11 +108,10 @@ dependencies {
     //根据你的需求ijk模式的so
     implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:$gsy_version"
     implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:$gsy_version"
-    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv5:$gsy_version"
     implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:$gsy_version"
     implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:$gsy_version"
     implementation "com.tencent:mmkv:$mmkvVersion"
-    implementation "org.aspectj:aspectjrt:1.7.3"
+    implementation "org.aspectj:aspectjrt:1.9.6"
     implementation "com.googlecode.mp4parser:isoparser:1.0.6"
     //MinIO只有Java版本不兼容Android，因此使用这两个包代替
     implementation "com.amazonaws:aws-android-sdk-s3:2.22.5"
@@ -147,7 +142,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.2.4'
+                version = '1.2.5'
             }
         }
         repositories {

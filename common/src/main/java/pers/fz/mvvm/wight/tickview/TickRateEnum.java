@@ -6,7 +6,9 @@ package pers.fz.mvvm.wight.tickview;
  * describe:
  */
 enum TickRateEnum {
-
+    /**
+     * 速度
+     */
     SLOW(800, 480, 720),
     NORMAL(500, 300, 450),
     FAST(300, 180, 270);

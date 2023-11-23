@@ -169,7 +169,7 @@ public class TickViewConfig implements Serializable {
     }
 
     public TickViewConfig setConfig(@NonNull TickViewConfig config) {
-        if (config == null) return this;
+
         return setClickable(config.isClickable())
                 .setUnCheckBaseColor(config.getUnCheckBaseColor())
                 .setCheckBaseColor(config.getCheckBaseColor())

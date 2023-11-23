@@ -19,7 +19,7 @@ public class CustomScrollView extends ScrollView {
     private View inner;
     private float y;
     private Rect normal = new Rect();
-    private static final int size = 3;
+    private static final int SIZE = 3;
 
     public CustomScrollView(Context context) {
         super(context);
@@ -57,18 +57,16 @@ public class CustomScrollView extends ScrollView {
     public void commOnTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
         switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                y = ev.getY();
-                break;
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_DOWN -> y = ev.getY();
+            case MotionEvent.ACTION_UP -> {
                 if (isNeedAnimation()) {
                     animation();
                 }
-                break;
-            case MotionEvent.ACTION_MOVE:
+            }
+            case MotionEvent.ACTION_MOVE -> {
                 final float preY = y;
                 float nowY = ev.getY();
-                int deltaY = (int) (preY - nowY) / size;
+                int deltaY = (int) (preY - nowY) / SIZE;
                 y = nowY;
                 // 当滚动到最上或者最下时就不会再滚动，这时移动布局
                 if (isNeedMove()) {
@@ -82,7 +80,8 @@ public class CustomScrollView extends ScrollView {
                     inner.layout(inner.getLeft(), inner.getTop() - deltaY, inner.getRight(),
                             inner.getBottom() - deltaY);
                 }
-                break;
+            }
+            default -> {}
         }
     }
 

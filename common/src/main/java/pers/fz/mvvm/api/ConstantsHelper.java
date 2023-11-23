@@ -1,9 +1,5 @@
 package pers.fz.mvvm.api;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import pers.fz.mvvm.util.apiUtil.DateUtil;
-
 /**
  * Created by fz on 2018/1/10.
  * 静态变量类

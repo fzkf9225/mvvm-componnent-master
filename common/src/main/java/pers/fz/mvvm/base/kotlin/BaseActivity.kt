@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorRes
@@ -27,7 +26,7 @@ import pers.fz.mvvm.base.BaseView
 import pers.fz.mvvm.bean.base.ToolbarConfig
 import pers.fz.mvvm.databinding.BaseActivityBinding
 import pers.fz.mvvm.inter.ErrorService
-import pers.fz.mvvm.util.apiUtil.StringUtil
+import pers.fz.mvvm.util.common.StringUtil
 import pers.fz.mvvm.util.log.ToastUtils
 import pers.fz.mvvm.util.permission.PermissionsChecker
 import pers.fz.mvvm.util.theme.ThemeUtils

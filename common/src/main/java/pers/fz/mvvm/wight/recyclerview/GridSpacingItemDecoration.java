@@ -101,8 +101,8 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
                 }
             } else {
                 childCount = childCount - childCount % spanCount;
-                if (pos >= childCount)// 如果是最后一列，则不需要绘制右边
-                    return true;
+                // 如果是最后一列，则不需要绘制右边
+                return pos >= childCount;
             }
         }
         return false;
@@ -121,8 +121,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
             if (orientation == StaggeredGridLayoutManager.VERTICAL) {
                 childCount = childCount - childCount % spanCount;
                 // 如果是最后一行，则不需要绘制底部
-                if (pos >= childCount)
-                    return true;
+                return pos >= childCount;
             } else {
                 // 如果是最后一行，则不需要绘制底部
                 if ((pos + 1) % spanCount == 0) {
@@ -149,8 +148,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
             if (orientation == StaggeredGridLayoutManager.VERTICAL) {
                 childCount = childCount - childCount % spanCount;
                 // 如果是最后一行，则不需要绘制底部
-                if (pos >= childCount)
-                    return true;
+                return pos >= childCount;
             } else {
                 // 如果是最后一行，则不需要绘制底部
                 if ((pos + 1) % spanCount == 0) {

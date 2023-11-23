@@ -15,11 +15,11 @@ public class CloudDataHelper {
     }
 
     public static void saveClientId(String clientId) {
-        MMKVHelper.getInstance().put(Constants.Client_ID, clientId);
+        MMKVHelper.getInstance().put(Constants.CLIENT_ID, clientId);
     }
 
     public static String getClientId() {
-        return  MMKVHelper.getInstance().getString(Constants.Client_ID);
+        return  MMKVHelper.getInstance().getString(Constants.CLIENT_ID);
     }
 
     public static String getAddress() {

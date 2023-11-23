@@ -216,12 +216,12 @@ public class BannerViewPager extends ViewPager {
                      * 记录按下时间
                      * */
                     if (timeThread == null) {
-                        touchTime = new Date().getTime();
+                        touchTime = System.currentTimeMillis();
                         timeTag = true;
                         timeThread = new TimeThread();
                         timeThread.start();
                     } else {
-                        touchTime = new Date().getTime();
+                        touchTime = System.currentTimeMillis();
                     }
                 }
                 /*

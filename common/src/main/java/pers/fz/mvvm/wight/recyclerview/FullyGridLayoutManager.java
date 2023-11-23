@@ -61,6 +61,9 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                 width = widthSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                break;
+            default:
+
         }
 
         switch (heightMode) {
@@ -68,6 +71,8 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                 height = heightSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                break;
+            default:
         }
 
         setMeasuredDimension(width, height);

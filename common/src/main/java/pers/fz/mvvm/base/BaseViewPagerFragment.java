@@ -1,15 +1,12 @@
 package pers.fz.mvvm.base;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,7 +15,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
 
 /**
  * Create by CherishTang on 2019/8/1

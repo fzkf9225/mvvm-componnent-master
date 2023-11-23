@@ -1,6 +1,5 @@
 package pers.fz.mvvm.util.media;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +15,7 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
-import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**

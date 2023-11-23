@@ -103,9 +103,15 @@ public class TickView extends View {
         typedArray.recycle();
         applyConfig(mConfig);
         setUpEvent();
-        if (mTickPath == null) mTickPath = new Path();
-        if (mTickPathMeasureDst == null) mTickPathMeasureDst = new Path();
-        if (mPathMeasure == null) mPathMeasure = new PathMeasure();
+        if (mTickPath == null) {
+            mTickPath = new Path();
+        }
+        if (mTickPathMeasureDst == null) {
+            mTickPathMeasureDst = new Path();
+        }
+        if (mPathMeasure == null) {
+            mPathMeasure = new PathMeasure();
+        }
     }
 
     private void applyConfig(TickViewConfig config) {
@@ -122,16 +128,22 @@ public class TickView extends View {
      * 初始化画笔
      */
     private void initPaint() {
-        if (mPaintRing == null) mPaintRing = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (mPaintRing == null) {
+            mPaintRing = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
         mPaintRing.setStyle(Paint.Style.STROKE);
         mPaintRing.setColor(isChecked ? mConfig.getCheckBaseColor() : mConfig.getUnCheckBaseColor());
         mPaintRing.setStrokeCap(Paint.Cap.ROUND);
         mPaintRing.setStrokeWidth(dp2px(2.5f));
 
-        if (mPaintCircle == null) mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (mPaintCircle == null) {
+            mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
         mPaintCircle.setColor(mConfig.getCheckBaseColor());
 
-        if (mPaintTick == null) mPaintTick = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (mPaintTick == null) {
+            mPaintTick = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
         mPaintTick.setColor(isChecked ? mConfig.getCheckTickColor() : mConfig.getUnCheckBaseColor());
         mPaintTick.setStyle(Paint.Style.STROKE);
         mPaintTick.setStrokeCap(Paint.Cap.ROUND);
@@ -415,7 +427,9 @@ public class TickView extends View {
     }
 
     public void setConfig(TickViewConfig tickViewConfig) {
-        if (tickViewConfig == null) return;
+        if (tickViewConfig == null) {
+            return;
+        }
         applyConfig(tickViewConfig);
     }
 

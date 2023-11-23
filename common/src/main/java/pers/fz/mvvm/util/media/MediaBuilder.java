@@ -7,9 +7,8 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 
-import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 

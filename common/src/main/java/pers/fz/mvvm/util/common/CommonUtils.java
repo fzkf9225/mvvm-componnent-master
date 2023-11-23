@@ -1,0 +1,101 @@
+package pers.fz.mvvm.util.common;
+
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.List;
+
+import pers.fz.mvvm.activity.WebViewActivity;
+
+/**
+ * Created by fz on 2018/3/16.
+ * 一些工具类
+ */
+
+public class CommonUtils {
+    /**
+     * 调用手机浏览器打开连接
+     *
+     * @param linkUrl         打开地址
+     * @param isInsideBrowser 是否调用app内部webView还是自带浏览器
+     */
+    public static void goToBrowser(Context context, String linkUrl, boolean isInsideBrowser) {
+        if (linkUrl == null) {
+            return;
+        }
+        if (isInsideBrowser) {
+            WebViewActivity.show(context, linkUrl, "详情");
+        } else {
+            Uri uri = Uri.parse(linkUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+        }
+    }
+
+    public static File getTempFile(String url, String filePath) {
+        File parentFile = new File(filePath).getParentFile();
+        String md5 = FileUtils.getFileNameWithoutExtension(url);
+        return new File(parentFile.getAbsolutePath(), md5 + ".temp.download");
+    }
+
+    public synchronized static byte[] drawableToByte(Drawable drawable) {
+        if (drawable != null) {
+            Bitmap bitmap = Bitmap
+                    .createBitmap(
+                            drawable.getIntrinsicWidth(),
+                            drawable.getIntrinsicHeight(),
+                            drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                                    : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+            int size = bitmap.getWidth() * bitmap.getHeight() * 4;
+            // 创建一个字节数组输出流,流的大小为size
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
+            // 设置位图的压缩格式，质量为100%，并放入字节数组输出流中
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            // 将字节数组输出流转化为字节数组byte[]
+            return baos.toByteArray();
+        }
+        return null;
+    }
+
+    public static synchronized Bitmap byteToDrawable(byte[] img) {
+        if (img != null) {
+            return BitmapFactory.decodeByteArray(img, 0, img.length);
+        }
+        return null;
+
+    }
+
+    public static boolean isServiceRunning(Context mContext, Class<?> clx) {
+        if (clx == null) {
+            return false;
+        }
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningServiceInfo serviceInfo : runningServices) {
+            ComponentName componentName = serviceInfo.service;
+            if (componentName.getClassName().equals(clx.getName()) && componentName.getPackageName().equals(mContext.getPackageName())) {
+                // Service已经注册和启动
+                return true;
+            }
+        }
+        // 执行相应的操作
+        return false;
+    }
+
+}

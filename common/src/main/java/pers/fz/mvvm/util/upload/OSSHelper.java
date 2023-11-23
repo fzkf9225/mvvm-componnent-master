@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**

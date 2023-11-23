@@ -7,11 +7,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <pers.fz.mvvm.wight.picDialog.MyViewPager
+        <pers.fz.mvvm.wight.picdialog.MyViewPager
             android:id="@+id/vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </pers.fz.mvvm.wight.picDialog.MyViewPager>
+        </pers.fz.mvvm.wight.picdialog.MyViewPager>
         <LinearLayout
             android:id="@+id/ll_point"
             android:layout_alignParentBottom="true"

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,7 +18,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
 
 

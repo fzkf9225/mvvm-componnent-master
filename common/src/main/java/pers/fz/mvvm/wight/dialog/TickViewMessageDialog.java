@@ -3,6 +3,7 @@ package pers.fz.mvvm.wight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -92,10 +93,11 @@ public class TickViewMessageDialog extends Dialog {
     @Override
     public void show() {
         super.show();
-        new Handler().postDelayed(() -> {//回到主线程中去调用回调方法
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {//回到主线程中去调用回调方法
             dismiss();
-            if (onTickViewHideListener != null)
+            if (onTickViewHideListener != null) {
                 onTickViewHideListener.onTickViewHide();
+            }
         }, countDown);
     }
 

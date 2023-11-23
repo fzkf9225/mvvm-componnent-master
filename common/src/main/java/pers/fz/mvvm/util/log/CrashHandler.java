@@ -24,8 +24,8 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.util.apiUtil.DateUtil;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
+import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.util.common.FileUtils;
 
 /**
  * <h3>全局捕获异常</h3>

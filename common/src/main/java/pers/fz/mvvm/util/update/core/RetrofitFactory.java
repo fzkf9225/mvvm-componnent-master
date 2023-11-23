@@ -12,7 +12,7 @@ import okhttp3.Request;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.api.BaseApiService;
 import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.util.apiUtil.PropertiesUtil;
+import pers.fz.mvvm.util.common.PropertiesUtil;
 import pers.fz.mvvm.util.update.callback.DownloadListener;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;

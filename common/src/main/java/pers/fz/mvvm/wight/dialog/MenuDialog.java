@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.ColorInt;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.MenuListAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 

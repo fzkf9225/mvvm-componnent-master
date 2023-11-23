@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import pers.fz.mvvm.activity.TechnicalSupportActivity;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.util.apiUtil.GetVersion;
+import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/5/24.

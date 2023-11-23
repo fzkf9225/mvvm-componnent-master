@@ -25,7 +25,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import pers.fz.mvvm.autosize.utils.AutoSizeUtils;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**

@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**

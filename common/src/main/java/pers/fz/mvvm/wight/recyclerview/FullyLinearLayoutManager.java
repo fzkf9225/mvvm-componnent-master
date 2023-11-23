@@ -58,6 +58,8 @@ public class FullyLinearLayoutManager extends LinearLayoutManager {
                 width = widthSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                break;
+            default:
         }
 
         switch (heightMode) {
@@ -65,6 +67,8 @@ public class FullyLinearLayoutManager extends LinearLayoutManager {
                 height = heightSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                break;
+            default:
         }
 
         setMeasuredDimension(width, height);

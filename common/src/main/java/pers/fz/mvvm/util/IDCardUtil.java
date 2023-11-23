@@ -36,7 +36,9 @@ public class IDCardUtil {
      */
     public static String parseGender(String cid) {
         String gender = null;
-        if(cid==null||cid.toCharArray().length<2||(cid.toCharArray().length!=15&&cid.toCharArray().length!=18))return "未知";
+        if(cid==null||cid.toCharArray().length<2||(cid.toCharArray().length!=15&&cid.toCharArray().length!=18)) {
+            return "未知";
+        }
         char c = cid.charAt(cid.length()-2);
         int sex = Integer.parseInt(String.valueOf(c));
         if(sex%2==0){
@@ -70,7 +72,7 @@ public class IDCardUtil {
         int len = cid.length();
         int kx = 0;
         //身份证号第一位到第十七位的系数装入到一个整型数组
-        int Weight[]={7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2};
+        int[] Weight={7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2};
         //需要进行运算的是身份证前17位
         for(int i=0;i<len-1;i++) {
             //把身份证的数字分拆成一个个数字

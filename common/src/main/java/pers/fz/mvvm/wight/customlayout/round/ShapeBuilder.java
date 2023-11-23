@@ -149,33 +149,17 @@ public class ShapeBuilder {
      */
     public ShapeBuilder Gradient(int angle, int startColor, int centerColor, int endColor) {
         angle = angle % 360;
-        GradientDrawable.Orientation orientation = null;
-        switch (angle) {
-            case 0:
-                orientation = GradientDrawable.Orientation.LEFT_RIGHT;
-                break;
-            case 45:
-                orientation = GradientDrawable.Orientation.BL_TR;
-                break;
-            case 90:
-                orientation = GradientDrawable.Orientation.BOTTOM_TOP;
-                break;
-            case 135:
-                orientation = GradientDrawable.Orientation.BR_TL;
-                break;
-            case 180:
-                orientation = GradientDrawable.Orientation.RIGHT_LEFT;
-                break;
-            case 225:
-                orientation = GradientDrawable.Orientation.TR_BL;
-                break;
-            case 270:
-                orientation = GradientDrawable.Orientation.TOP_BOTTOM;
-                break;
-            case 315:
-                orientation = GradientDrawable.Orientation.TL_BR;
-                break;
-        }
+        GradientDrawable.Orientation orientation = switch (angle) {
+            case 0 -> GradientDrawable.Orientation.LEFT_RIGHT;
+            case 45 -> GradientDrawable.Orientation.BL_TR;
+            case 90 -> GradientDrawable.Orientation.BOTTOM_TOP;
+            case 135 -> GradientDrawable.Orientation.BR_TL;
+            case 180 -> GradientDrawable.Orientation.RIGHT_LEFT;
+            case 225 -> GradientDrawable.Orientation.TR_BL;
+            case 270 -> GradientDrawable.Orientation.TOP_BOTTOM;
+            case 315 -> GradientDrawable.Orientation.TL_BR;
+            default -> null;
+        };
         return Gradient(orientation, startColor, centerColor, endColor);
     }
 

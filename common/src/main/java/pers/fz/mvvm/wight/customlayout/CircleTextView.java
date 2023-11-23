@@ -80,8 +80,9 @@ public class CircleTextView extends AppCompatTextView {
         }
         storkRadius= (int) (radius/2-storkWidth);
         radius= storkRadius-1;
-        if (storkWidth != 0)
+        if (storkWidth != 0) {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, storkRadius, circlePaint);
+        }
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, backPaint);
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         canvas.drawText(getText().toString(), getWidth() / 2 - textPaint.measureText(getText().toString()) / 2, getHeight() / 2 - fontMetrics.descent + (fontMetrics.bottom - fontMetrics.top) / 2, textPaint);

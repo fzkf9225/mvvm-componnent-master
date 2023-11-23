@@ -1,7 +1,6 @@
 package com.casic.titan.demo.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.core.content.ContextCompat;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -24,27 +23,18 @@ import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.apiUtil.FileUtils;
-import pers.fz.mvvm.util.apiUtil.QRCodeUtil;
-import pers.fz.mvvm.util.apiUtil.ThreadExecutorIO;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.media.MediaBuilder;
 import pers.fz.mvvm.util.media.MediaHelper;
-import pers.fz.mvvm.util.media.MediaListener;
 import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.util.update.DownloadManger;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;

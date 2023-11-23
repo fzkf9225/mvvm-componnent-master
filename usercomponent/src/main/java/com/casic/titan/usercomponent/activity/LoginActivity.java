@@ -17,8 +17,7 @@ import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseActivity;
 
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.apiUtil.KeyBoardUtils;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.KeyBoardUtils;
 
 /**
  * Created by fz on 2019/8/23.

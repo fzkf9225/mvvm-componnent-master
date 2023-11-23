@@ -44,8 +44,9 @@ public class ImageSaveDialog extends Dialog {
         Button buttonCancel = dialogView.findViewById(R.id.button_cancel);
         buttonCancel.setOnClickListener(v -> dismiss());
         saveLocal.setOnClickListener(v ->{
-            if (onImageSaveListener != null)
+            if (onImageSaveListener != null) {
                 onImageSaveListener.saveSuccess(this);
+            }
         });
         setContentView(dialogView);
         Window dialogWindow = getWindow();

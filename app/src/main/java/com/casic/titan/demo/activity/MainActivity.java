@@ -58,10 +58,12 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 //      NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
+
     @Override
     public void initData(Bundle bundle) {
         checkNotificationPermission();
     }
+
     /**
      * 通知权限检测
      */
@@ -73,35 +75,31 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             return;
         }
-        try {
-            new ConfirmDialog(this)
-                    .setMessage("通知权限已关闭，是否前往设置中心开启此功能？")
-                    .setCanOutSide(false)
-                    .setSureText("前往开启")
-                    .setCancelText("不在提醒")
-                    .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,true, System.currentTimeMillis()))
-                    .setOnSureClickListener(dialog -> {
-                        try {
-                            Intent intent = new Intent();// 进入设置系统应用权限界面
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-                                intent.putExtra(Settings.EXTRA_APP_PACKAGE, this.getPackageName());
-                                intent.putExtra(Settings.EXTRA_CHANNEL_ID, this.getApplicationInfo().uid);
-                            } else {
-                                intent.setAction("android.intent.action.MAIN");
-                                intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
-                                intent.setData(Uri.fromParts("package", this.getPackageName(), null));
-                            }
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+        new ConfirmDialog(this)
+                .setMessage("通知权限已关闭，是否前往设置中心开启此功能？")
+                .setCanOutSide(false)
+                .setSureText("前往开启")
+                .setCancelText("不在提醒")
+                .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this, true, System.currentTimeMillis()))
+                .setOnSureClickListener(dialog -> {
+                    try {
+                        Intent intent = new Intent();// 进入设置系统应用权限界面
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, this.getPackageName());
+                            intent.putExtra(Settings.EXTRA_CHANNEL_ID, this.getApplicationInfo().uid);
+                        } else {
+                            intent.setAction("android.intent.action.MAIN");
+                            intent.setClassName("com.android.settings", "com.android.settings.ManageApplications");
+                            intent.setData(Uri.fromParts("package", this.getPackageName(), null));
                         }
-                    })
-                    .builder()
-                    .show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .builder()
+                .show();
 
     }
 

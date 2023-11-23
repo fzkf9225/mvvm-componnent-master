@@ -87,21 +87,14 @@ public class ScreenUtils {
         int heightPixels = metrics.heightPixels;
 
         // includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 17)
-            try {
-                widthPixels = (Integer) Display.class.getMethod("getRawWidth").invoke(d);
-                heightPixels = (Integer) Display.class.getMethod("getRawHeight").invoke(d);
-            } catch (Exception ignored) {
-            }
         // includes window decorations (statusbar bar/menu bar)
-        if (Build.VERSION.SDK_INT >= 17)
-            try {
-                Point realSize = new Point();
-                Display.class.getMethod("getRealSize", Point.class).invoke(d, realSize);
-                widthPixels = realSize.x;
-                heightPixels = realSize.y;
-            } catch (Exception ignored) {
-            }
+        try {
+            Point realSize = new Point();
+            Display.class.getMethod("getRealSize", Point.class).invoke(d, realSize);
+            widthPixels = realSize.x;
+            heightPixels = realSize.y;
+        } catch (Exception ignored) {
+        }
         size[0] = widthPixels;
         size[1] = heightPixels;
         return size;
@@ -109,10 +102,8 @@ public class ScreenUtils {
 
     public static int getHeightOfNavigationBar(Context context) {
         //如果小米手机开启了全面屏手势隐藏了导航栏则返回 0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) != 0) {
-                return 0;
-            }
+        if (Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) != 0) {
+            return 0;
         }
 
         int realHeight = getRawScreenSize(context)[1];

@@ -21,9 +21,8 @@ import com.casic.titan.usercomponent.bean.UserInfo;
 
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.jiami.MD5Util;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 
 import com.casic.titan.usercomponent.bean.RequestLoginBean;

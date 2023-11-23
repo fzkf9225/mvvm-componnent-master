@@ -15,9 +15,9 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.apiUtil.DensityUtil;
-import pers.fz.mvvm.util.apiUtil.KeyBoardUtils;
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.KeyBoardUtils;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 

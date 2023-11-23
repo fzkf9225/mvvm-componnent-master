@@ -690,25 +690,22 @@ public final class AutoSizeConfig {
      * @param context {@link Context}
      */
     private void getMetaData(final Context context) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PackageManager packageManager = context.getPackageManager();
-                ApplicationInfo applicationInfo;
-                try {
-                    applicationInfo = packageManager.getApplicationInfo(context
-                            .getPackageName(), PackageManager.GET_META_DATA);
-                    if (applicationInfo != null && applicationInfo.metaData != null) {
-                        if (applicationInfo.metaData.containsKey(KEY_DESIGN_WIDTH_IN_DP)) {
-                            mDesignWidthInDp = (int) applicationInfo.metaData.get(KEY_DESIGN_WIDTH_IN_DP);
-                        }
-                        if (applicationInfo.metaData.containsKey(KEY_DESIGN_HEIGHT_IN_DP)) {
-                            mDesignHeightInDp = (int) applicationInfo.metaData.get(KEY_DESIGN_HEIGHT_IN_DP);
-                        }
+        new Thread(() -> {
+            PackageManager packageManager = context.getPackageManager();
+            ApplicationInfo applicationInfo;
+            try {
+                applicationInfo = packageManager.getApplicationInfo(context
+                        .getPackageName(), PackageManager.GET_META_DATA);
+                if (applicationInfo != null && applicationInfo.metaData != null) {
+                    if (applicationInfo.metaData.containsKey(KEY_DESIGN_WIDTH_IN_DP)) {
+                        mDesignWidthInDp = (int) applicationInfo.metaData.get(KEY_DESIGN_WIDTH_IN_DP);
                     }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    if (applicationInfo.metaData.containsKey(KEY_DESIGN_HEIGHT_IN_DP)) {
+                        mDesignHeightInDp = (int) applicationInfo.metaData.get(KEY_DESIGN_HEIGHT_IN_DP);
+                    }
                 }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
         }).start();
     }

@@ -2,13 +2,8 @@ package pers.fz.mvvm.api;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -29,14 +24,13 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import pers.fz.mvvm.util.apiUtil.GetVersion;
+import pers.fz.mvvm.util.common.GetVersion;
 import pers.fz.mvvm.util.jiami.Base64Util;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
 
 import static android.content.Context.TELEPHONY_SERVICE;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 /**

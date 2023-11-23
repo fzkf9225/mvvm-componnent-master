@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import pers.fz.mvvm.util.apiUtil.StringUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 
 
 /**
