@@ -115,41 +115,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return binding.getRoot();
     }
 
-    /**
-     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-     *
-     * @return 默认360dp
-     */
-    private float getDefaultWidth() {
-        try {
-            ApplicationInfo info = requireActivity().getPackageManager()
-                    .getApplicationInfo(requireActivity().getPackageName(),
-                            PackageManager.GET_META_DATA);
-            return info.metaData.getInt("design_width_in_dp", 360);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 360;
-    }
-
-    /**
-     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-     *
-     * @return 默认360dp
-     */
-    private float getDefaultHeight() {
-        try {
-            ApplicationInfo info = requireActivity().getPackageManager()
-                    .getApplicationInfo(requireActivity().getPackageName(),
-                            PackageManager.GET_META_DATA);
-            return info.metaData.getInt("design_height_in_dp", 640);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 640;
-    }
-
-
     public void createViewModel() {
         if (mViewModel == null) {
             Class modelClass;
@@ -198,28 +163,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
-    public long lastClick = 0;
-
-    /**
-     * [防止快速点击]
-     *
-     * @return true-快速点击
-     */
-    public boolean fastClick(long intervalTime) {
-        if (System.currentTimeMillis() - lastClick <= intervalTime) {
-            return true;
-        }
-        lastClick = System.currentTimeMillis();
-        return false;
-    }
-
-    /**
-     * 关闭弹框
-     */
-    private void closeLoadingDialog() {
-        CustomProgressDialog.getInstance(getContext()).dismiss();
-    }
-
     /**
      * 显示加载弹框
      *
@@ -235,22 +178,25 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage) {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            getActivity().runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
+        requireActivity();
+        if (!requireActivity().isFinishing()) {
+            requireActivity().runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
         }
     }
 
     @Override
     public void hideLoading() {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            getActivity().runOnUiThread(this::closeLoadingDialog);
+        requireActivity();
+        if (!requireActivity().isFinishing()) {
+            requireActivity().runOnUiThread(()-> CustomProgressDialog.getInstance(getContext()).dismiss());
         }
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            getActivity().runOnUiThread(() -> {
+        requireActivity();
+        if (!requireActivity().isFinishing()) {
+            requireActivity().runOnUiThread(() -> {
                 CustomProgressDialog.getInstance(requireActivity())
                         .refreshMessage(dialogMessage);
             });
@@ -259,7 +205,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showToast(String msg) {
-        requireActivity().runOnUiThread(() -> ToastUtils.showShort(getActivity(), msg));
+        requireActivity().runOnUiThread(() -> ToastUtils.showShort(requireActivity(), msg));
     }
 
     @Override

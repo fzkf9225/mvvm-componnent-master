@@ -19,7 +19,7 @@ public class KeyBoardUtils {
      * @param mContext
      *            上下文
      */
-    public static void openKeybord(EditText mEditText, Context mContext)
+    public static void openKeyboard(EditText mEditText, Context mContext)
     {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -36,7 +36,7 @@ public class KeyBoardUtils {
      * @param mContext
      *            上下文
      */
-    public static void closeKeybord(EditText mEditText, Context mContext)
+    public static void closeKeyboard(EditText mEditText, Context mContext)
     {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);

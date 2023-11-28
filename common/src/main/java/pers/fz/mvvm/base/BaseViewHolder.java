@@ -27,6 +27,10 @@ public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.Vi
         this.headerBinding = headerBinding;
     }
 
+    public boolean isHeaderViewHolder() {
+        return isHeaderViewHolder;
+    }
+
     public VDB getBinding() {
         return binding;
     }

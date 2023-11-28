@@ -116,51 +116,8 @@ abstract class BaseFragment<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
             }
         createViewModel()
         initView(savedInstanceState)
-        return binding!!.root
-    }
-
-    private val defaultWidth: Float
-        /**
-         * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-         *
-         * @return 默认360dp
-         */
-        private get() {
-            try {
-                val info = requireActivity().packageManager
-                    .getApplicationInfo(
-                        requireActivity().packageName,
-                        PackageManager.GET_META_DATA
-                    )
-                return info.metaData.getInt("design_width_in_dp", 360).toFloat()
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return 360F
-        }
-    private val defaultHeight: Float
-        /**
-         * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-         *
-         * @return 默认360dp
-         */
-        private get() {
-            try {
-                val info = requireActivity().packageManager
-                    .getApplicationInfo(
-                        requireActivity().packageName,
-                        PackageManager.GET_META_DATA
-                    )
-                return info.metaData.getInt("design_height_in_dp", 640).toFloat()
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return 640F
-        }
-
-    override fun onStart() {
-        super.onStart()
         initData(if (arguments == null) Bundle() else arguments)
+        return binding!!.root
     }
 
     fun createViewModel() {
@@ -198,28 +155,6 @@ abstract class BaseFragment<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
         }
     }
 
-    var lastClick: Long = 0
-
-    /**
-     * [防止快速点击]
-     *
-     * @return true-快速点击
-     */
-    fun fastClick(intervalTime: Long): Boolean {
-        if (System.currentTimeMillis() - lastClick <= intervalTime) {
-            return true
-        }
-        lastClick = System.currentTimeMillis()
-        return false
-    }
-
-    /**
-     * 关闭弹框
-     */
-    private fun closeLoadingDialog() {
-        CustomProgressDialog.getInstance(context).hide()
-    }
-
     /**
      * 显示加载弹框
      *
@@ -234,15 +169,15 @@ abstract class BaseFragment<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
     }
 
     override fun showLoading(dialogMessage: String) {
-        Handler(Looper.getMainLooper()).post { showLoadingDialog(dialogMessage, false) }
+        requireActivity().runOnUiThread { showLoadingDialog(dialogMessage, false) }
     }
 
     override fun hideLoading() {
-        Handler(Looper.getMainLooper()).post { closeLoadingDialog() }
+        requireActivity().runOnUiThread { CustomProgressDialog.getInstance(context).dismiss() }
     }
 
     override fun refreshLoading(dialogMessage: String) {
-        Handler(Looper.getMainLooper()).post {
+        requireActivity().runOnUiThread  {
             CustomProgressDialog.getInstance(requireActivity())
                 .refreshMessage(dialogMessage)
         }
@@ -253,15 +188,15 @@ abstract class BaseFragment<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
     }
 
     override fun onErrorCode(model: BaseModelEntity<*>?) {
-        if (errorService == null || model == null) {
+        if (model == null) {
             return
         }
-        if (!errorService!!.isLogin(model.code)) {
-            errorService!!.toLogin(requireContext(), loginLauncher)
+        if (!errorService.isLogin(model.code)) {
+            errorService.toLogin(requireContext(), loginLauncher)
             return
         }
-        if (!errorService!!.hasPermission(model.code)) {
-            errorService!!.toNoPermission(requireContext())
+        if (!errorService.hasPermission(model.code)) {
+            errorService.toNoPermission(requireContext())
         }
     }
 

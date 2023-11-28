@@ -19,7 +19,6 @@ public class GetVersion {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return context.getString(R.string.version_unknown);
         }
@@ -35,7 +34,6 @@ public class GetVersion {
                 return pi.versionCode;
             }
         } catch (PackageManager.NameNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return 0;
         }
@@ -47,7 +45,6 @@ public class GetVersion {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.applicationInfo.icon;
         } catch (PackageManager.NameNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return 0;
         }

@@ -82,8 +82,8 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
     @Override
     public void hideKeyboard() {
         try {
-            KeyBoardUtils.closeKeybord(binding.userEdit, this);
-            KeyBoardUtils.closeKeybord(binding.passwordEdit, this);
+            KeyBoardUtils.closeKeyboard(binding.userEdit, this);
+            KeyBoardUtils.closeKeyboard(binding.passwordEdit, this);
         } catch (Exception e) {
             e.printStackTrace();
         }

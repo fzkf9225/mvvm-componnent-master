@@ -141,6 +141,7 @@ public class BaseViewModel<V extends BaseView> extends AndroidViewModel {
     protected <T> Disposable observe(Observable<T> observable, boolean isShowDialog, boolean isShowToast, String toastMsg, Object requestParams,
                                      final MutableLiveData<T> liveData, Consumer<T> consumer) {
         return observable.subscribeOn(Schedulers.io())
+                .retryWhen(getRetryWhen())
                 .doOnSubscribe(disposable -> {
                     addDisposable(disposable);
                     if (baseView != null && isShowDialog) {
@@ -152,7 +153,6 @@ public class BaseViewModel<V extends BaseView> extends AndroidViewModel {
                         baseView.hideLoading();
                     }
                 })
-                .retryWhen(getRetryWhen())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer == null ? (liveData::setValue) : consumer, e -> {
                     LogUtil.show(ApiRetrofit.TAG, "BaseViewModel|系统异常: " + e);

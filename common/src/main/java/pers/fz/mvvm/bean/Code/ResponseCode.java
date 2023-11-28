@@ -12,7 +12,7 @@ public class ResponseCode {
     /**
      * 未登录
      */
-    public static final String UNLOGIN = "20002";
+    public static final String UN_LOGIN = "20002";
     /**
      * 成功
      */
@@ -36,7 +36,7 @@ public class ResponseCode {
     /**
      * 请求未授权
      */
-    public static final String NOPERMISSION = "401";
+    public static final String NO_PERMISSION = "401";
     /**
      * 接口异常
      */
@@ -76,5 +76,5 @@ public class ResponseCode {
     /**
      * 未知异常
      */
-    public static final String UNKOWN_ERROR = "11000";
+    public static final String UNKNOWN_ERROR = "11000";
 }

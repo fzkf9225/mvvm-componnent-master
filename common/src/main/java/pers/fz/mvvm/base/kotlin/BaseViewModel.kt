@@ -190,6 +190,7 @@ abstract class BaseViewModel<V : BaseView?>(application: Application) : AndroidV
         consumer: Consumer<T>?
     ): Disposable {
         return observable.subscribeOn(Schedulers.io())
+            .retryWhen(retryWhen)
             .doOnSubscribe { disposable: Disposable ->
                 addDisposable(disposable)
                 if (baseView != null && isShowDialog) {
@@ -201,7 +202,6 @@ abstract class BaseViewModel<V : BaseView?>(application: Application) : AndroidV
                     baseView!!.hideLoading()
                 }
             }
-            .retryWhen(retryWhen)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 consumer ?: Consumer { value: T -> liveData!!.setValue(value) }) { e: Throwable? ->
@@ -209,7 +209,7 @@ abstract class BaseViewModel<V : BaseView?>(application: Application) : AndroidV
                 if (baseView != null && isShowDialog) {
                     baseView!!.hideLoading()
                 }
-                var be: BaseException? = null
+                var be: BaseException?
                 if (e != null) {
                     if (e is BaseException) {
                         be = e

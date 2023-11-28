@@ -23,7 +23,7 @@ import pers.fz.mvvm.activity.WebViewActivity;
  * 一些工具类
  */
 
-public class CommonUtils {
+public class CommonUtil {
     /**
      * 调用手机浏览器打开连接
      *

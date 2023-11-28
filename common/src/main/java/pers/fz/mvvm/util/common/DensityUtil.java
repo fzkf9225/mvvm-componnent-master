@@ -3,6 +3,8 @@ package pers.fz.mvvm.util.common;
 import android.app.Activity;
 import android.content.ComponentCallbacks;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 
@@ -90,7 +92,39 @@ public class DensityUtil {
         }
         return false;
     }
+    /**
+     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
+     *
+     * @return 默认360dp
+     */
+    private float getDefaultWidth(Context context) {
+        try {
+            ApplicationInfo info = context.getPackageManager()
+                    .getApplicationInfo(context.getPackageName(),
+                            PackageManager.GET_META_DATA);
+            return info.metaData.getInt("design_width_in_dp", 360);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 360;
+    }
 
+    /**
+     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
+     *
+     * @return 默认360dp
+     */
+    private float getDefaultHeight(Context context) {
+        try {
+            ApplicationInfo info = context.getPackageManager()
+                    .getApplicationInfo(context.getPackageName(),
+                            PackageManager.GET_META_DATA);
+            return info.metaData.getInt("design_height_in_dp", 640);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 640;
+    }
     /**
      * convert px to its equivalent dp
      * <p>

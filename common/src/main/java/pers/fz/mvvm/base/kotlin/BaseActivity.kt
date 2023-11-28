@@ -85,49 +85,9 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
         initData(if (intent == null || intent.extras == null) Bundle() else intent.extras)
     }
 
-    private val defaultWidth: Float
-        /**
-         * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-         *
-         * @return 默认360dp
-         */
-        private get() {
-            try {
-                val info = packageManager
-                    .getApplicationInfo(
-                        packageName,
-                        PackageManager.GET_META_DATA
-                    )
-                return info.metaData.getInt("design_width_in_dp", 360).toFloat()
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return 360f
-        }
-    private val defaultHeight: Float
-        /**
-         * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-         *
-         * @return 默认360dp
-         */
-        private get() {
-            try {
-                val info = packageManager
-                    .getApplicationInfo(
-                        packageName,
-                        PackageManager.GET_META_DATA
-                    )
-                return info.metaData.getInt("design_height_in_dp", 640).toFloat()
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
-            return 640f
-        }
-
     override fun setContentView(layoutResId: Int) {
         super.setContentView(layoutResId)
         if (hasToolBar()) {
-            super.setContentView(R.layout.base_activity)
             val container = findViewById<FrameLayout>(R.id.container)
             binding = DataBindingUtil.inflate(LayoutInflater.from(this), layoutId, container, true)
             (findViewById<View>(R.id.main_bar) as Toolbar).setNavigationOnClickListener { v: View? -> finish() }
@@ -151,7 +111,7 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
      * 初始化沉浸式
      * Init immersion bar.
      */
-    protected fun initImmersionBar() {
+    private fun initImmersionBar() {
         //设置共同沉浸式样式
         if (toolbarBind == null) {
             ImmersionBar.with(this).init()
@@ -293,21 +253,6 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
         showToast("拒绝权限可能会导致应用软件运行异常!")
     }
 
-    var lastClick: Long = 0
-
-    /**
-     * [防止快速点击]
-     *
-     * @return false --> 快读点击
-     */
-    fun fastClick(intervalTime: Long): Boolean {
-        if (System.currentTimeMillis() - lastClick <= intervalTime) {
-            return true
-        }
-        lastClick = System.currentTimeMillis()
-        return false
-    }
-
     protected fun hasToolBar(): Boolean {
         return true
     }
@@ -332,14 +277,7 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
     }
 
     override fun onLoginClick(v: View, code: Int) {
-        if (errorService == null) {
-            return
-        }
-        errorService!!.toLogin(this, loginLauncher)
-    }
-
-    private fun closeLoadingDialog() {
-        CustomProgressDialog.getInstance(this).hide()
+        errorService.toLogin(this, loginLauncher)
     }
 
     private fun showLoadingDialog(dialogMessage: String, isCanCancel: Boolean) {
@@ -362,7 +300,7 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
     }
 
     override fun hideLoading() {
-        runOnUiThread { closeLoadingDialog() }
+        runOnUiThread { CustomProgressDialog.getInstance(this).dismiss() }
     }
 
     override fun showToast(msg: String) {
@@ -380,15 +318,15 @@ abstract class BaseActivity<VM : BaseViewModel<V>?, VDB : ViewDataBinding?, V : 
      * @param model 错误吗实体
      */
     override fun onErrorCode(model: BaseModelEntity<*>?) {
-        if (errorService == null || model == null) {
+        if (model == null) {
             return
         }
-        if (!errorService!!.isLogin(model.code)) {
-            errorService!!.toLogin(this, loginLauncher)
+        if (!errorService.isLogin(model.code)) {
+            errorService.toLogin(this, loginLauncher)
             return
         }
-        if (!errorService!!.hasPermission(model.code)) {
-            errorService!!.toNoPermission(this)
+        if (!errorService.hasPermission(model.code)) {
+            errorService.toNoPermission(this)
         }
     }
 

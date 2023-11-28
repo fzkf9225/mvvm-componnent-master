@@ -24,12 +24,9 @@ import java.util.List;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.base.PageBean;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
-import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
-import pers.fz.mvvm.wight.recyclerview.TxSlideRecyclerView;
 
 /**
  * Created by fz on 2017/11/17.
@@ -45,7 +42,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     protected int mCurrentPage = 0;
     public BaseRecyclerViewAdapter<T, ?> adapter;
 
-    protected final Observer<PageBean<T>> observer = (Observer<PageBean<T>>) responseBean -> {
+    protected final Observer<PageBean<T>> observer = responseBean -> {
         if (responseBean == null) {
             setListData(new ArrayList<>());
         } else {
@@ -72,7 +69,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         getRecyclerView().setAdapter(adapter);
         getRecyclerView().setLayoutManager(initLayoutManager());
         if (!hideRecycleViewDivider()) {
-            getRecyclerView().addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL, 1,
+            getRecyclerView().addItemDecoration(new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
                     ContextCompat.getColor(requireActivity(), R.color.h_line_color)));
         }
         adapter.setOnItemClickListener(this);
@@ -82,7 +79,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
 
-        if (NetworkStateUtil.isConnected(getActivity())) {
+        if (NetworkStateUtil.isConnected(requireContext())) {
             setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
         } else {
             setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
@@ -124,7 +121,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             LogUtil.show(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
             e.printStackTrace();
             setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
-            ToastUtils.showShort(getActivity(), BaseException.PARSE_ERROR_MSG);
+            showToast(BaseException.PARSE_ERROR_MSG);
         }
     }
 
@@ -139,19 +136,14 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     protected RecyclerView.LayoutManager initLayoutManager() {
-        return new FullyLinearLayoutManager(getActivity());
+        return new LinearLayoutManager(getActivity());
     }
 
     protected boolean hideRecycleViewDivider() {
         return false;
     }
 
-    public void setCusTomDecoration(RecycleViewDivider recycleViewDivider) {
-        getRecyclerView().addItemDecoration(recycleViewDivider);
-    }
-
     protected abstract BaseRecyclerViewAdapter<T, ?> getRecyclerAdapter();
-
 
     @Override
     protected void onLoginSuccessCallback(Bundle bundle) {
@@ -222,34 +214,33 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         }
         emptyLayout.setErrorType(emptyType);
         switch (emptyType) {
-            case EmptyLayout.LOADING_ERROR:
+            case EmptyLayout.LOADING_ERROR -> {
                 getRecyclerView().setVisibility(View.GONE);
                 onRefreshFinish(false);
                 onLoadFinish(false);
-                break;
-            case EmptyLayout.NETWORK_LOADING:
+            }
+            case EmptyLayout.NETWORK_LOADING -> {
                 emptyLayout.setVisibility(View.VISIBLE);
                 getRecyclerView().setVisibility(View.GONE);
-                break;
+            }
             //刷新,加载
-            case EmptyLayout.NETWORK_LOADING_RERESH:
-            case EmptyLayout.NETWORK_LOADING_LOADMORE:
+            case EmptyLayout.NETWORK_LOADING_RERESH, EmptyLayout.NETWORK_LOADING_LOADMORE -> {
                 emptyLayout.setVisibility(View.GONE);
                 getRecyclerView().setVisibility(View.VISIBLE);
-                break;
-            case EmptyLayout.NODATA:
+            }
+            case EmptyLayout.NODATA -> {
                 onRefreshFinish(true);
                 onLoadFinish(true);
                 getRecyclerView().setVisibility(View.GONE);
-                break;
-            case EmptyLayout.HIDE_LAYOUT:
+            }
+            case EmptyLayout.HIDE_LAYOUT -> {
                 onRefreshFinish(true);
                 onLoadFinish(true);
                 emptyLayout.setVisibility(View.GONE);
                 getRecyclerView().setVisibility(View.VISIBLE);
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 

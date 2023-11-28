@@ -163,7 +163,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
         try {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String keyword = v.getText().toString().trim();
-                KeyBoardUtils.closeKeybord(this, mContext);
+                KeyBoardUtils.closeKeyboard(this, mContext);
                 if (onInputSubmitListener != null) {
                     onInputSubmitListener.onInputSubmit(keyword);
                 }

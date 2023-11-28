@@ -40,6 +40,10 @@ public class MediaUtil {
         }
     }
 
+    public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText) {
+        return createWatermark(originalBitmap, watermarkText, 100);
+    }
+
     /**
      * 添加图片水印
      *
@@ -47,24 +51,26 @@ public class MediaUtil {
      * @param watermarkText  水印文字，默认添加时间水印，在mark内容的上一行
      * @return 添加水印后的图片
      */
-    public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText) {
+    public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText, int alpha) {
         if (watermarkText == null) {
             return originalBitmap;
+        }
+        if (alpha < 0) {
+            alpha = 0;
+        } else if (alpha > 255) {
+            alpha = 255;
         }
         int width = originalBitmap.getWidth();
         int height = originalBitmap.getHeight();
         Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(resultBitmap);
         Paint p = new Paint();
-        // 水印颜色
-        p.setColor(Color.argb(100, 169, 169, 169));  // 使用淡灰色，透明度为100
+        // 水印颜色,先不透明
+        p.setColor(Color.argb(255, 169, 169, 169));
         // 水印字体大小
         p.setTextSize(32);
         // 抗锯齿
         p.setAntiAlias(true);
-        // 设置文字透明度
-        p.setAlpha(255); // 设置为不透明
-
         // 绘制图像
         canvas.drawBitmap(originalBitmap, 0, 0, p);
 
@@ -76,12 +82,11 @@ public class MediaUtil {
         for (int positionY = height / 10; positionY <= height; positionY += height / 10 + 80) {
             float fromX = -width + (index++ % 2) * textWidth;
             for (float positionX = fromX; positionX < width; positionX += textWidth * 2) {
-                int spacing = 0; // 间距
-                // 保存文字透明度
-                int alpha = p.getAlpha();
+                int spacing = 0;
+                // 保存文字透明度// 间距
+                p.setAlpha(alpha);
                 canvas.drawText(watermarkText, positionX, positionY + spacing, p);
                 // 恢复文字透明度
-                p.setAlpha(alpha);
             }
         }
         canvas.restore();

@@ -86,46 +86,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
     }
 
-    /**
-     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-     *
-     * @return 默认360dp
-     */
-    private float getDefaultWidth() {
-        try {
-            ApplicationInfo info = getPackageManager()
-                    .getApplicationInfo(getPackageName(),
-                            PackageManager.GET_META_DATA);
-            return info.metaData.getInt("design_width_in_dp", 360);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 360;
-    }
-
-    /**
-     * 屏幕适配尺寸，很多人把基准写在AndroidManifest中，但是我选择直接写BaseActivity中，是为了更好的支持各个Activity自愈更改
-     *
-     * @return 默认360dp
-     */
-    private float getDefaultHeight() {
-        try {
-            ApplicationInfo info = getPackageManager()
-                    .getApplicationInfo(getPackageName(),
-                            PackageManager.GET_META_DATA);
-            return info.metaData.getInt("design_height_in_dp", 640);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 640;
-    }
-
-
     @Override
     public void setContentView(int layoutResId) {
         super.setContentView(layoutResId);
         if (hasToolBar()) {
-            super.setContentView(R.layout.base_activity);
             FrameLayout container = findViewById(R.id.container);
             binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
             ((Toolbar) findViewById(R.id.main_bar)).setNavigationOnClickListener(v -> finish());
@@ -295,21 +259,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         showToast("拒绝权限可能会导致应用软件运行异常!");
     }
 
-    public long lastClick = 0;
-
-    /**
-     * [防止快速点击]
-     *
-     * @return false --> 快读点击
-     */
-    public boolean fastClick(long intervalTime) {
-        if (System.currentTimeMillis() - lastClick <= intervalTime) {
-            return true;
-        }
-        lastClick = System.currentTimeMillis();
-        return false;
-    }
-
     protected boolean hasToolBar() {
         return true;
     }
@@ -343,10 +292,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         errorService.toLogin(this, loginLauncher);
     }
 
-    private void closeLoadingDialog() {
-        CustomProgressDialog.getInstance(this).dismiss();
-    }
-
     private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
         CustomProgressDialog.getInstance(this)
                 .setCanCancel(isCanCancel)
@@ -369,7 +314,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
-        runOnUiThread(this::closeLoadingDialog);
+        runOnUiThread(()-> CustomProgressDialog.getInstance(this).dismiss());
     }
 
     @Override

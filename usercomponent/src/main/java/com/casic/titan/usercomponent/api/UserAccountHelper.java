@@ -267,7 +267,7 @@ public class UserAccountHelper {
     }
 
     public static boolean isNoPermission(String code) {
-        return ResponseCode.NOPERMISSION.equals(code);
+        return ResponseCode.NO_PERMISSION.equals(code);
     }
 
 

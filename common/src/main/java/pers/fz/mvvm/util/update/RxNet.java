@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.util.common.CommonUtils;
+import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
@@ -48,7 +48,7 @@ public class RxNet {
         }
 
         DownloadListener listener = responseBody -> saveFile(responseBody, url, filePath, callback);
-        RetrofitFactory.downloadFile(url, CommonUtils.getTempFile(url, filePath).length(), listener, new Observer<ResponseBody>() {
+        RetrofitFactory.downloadFile(url, CommonUtil.getTempFile(url, filePath).length(), listener, new Observer<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable d) {
                 if (null != callback) {
@@ -79,7 +79,7 @@ public class RxNet {
 
     private static void saveFile(final ResponseBody responseBody, String url, final String filePath, final DownloadCallback callback) {
         boolean downloadSuccss = true;
-        final File tempFile = CommonUtils.getTempFile(url, filePath);
+        final File tempFile = CommonUtil.getTempFile(url, filePath);
         try {
             writeFileToDisk(responseBody, tempFile.getAbsolutePath(), callback);
         } catch (Exception e) {

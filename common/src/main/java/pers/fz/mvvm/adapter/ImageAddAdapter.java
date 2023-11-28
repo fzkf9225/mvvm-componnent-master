@@ -19,7 +19,6 @@ import pers.fz.mvvm.wight.picdialog.PicShowDialog;
  * 添加圖片
  */
 public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBinding> {
-    private final String TAG = this.getClass().getSimpleName();
     public ImageViewClearListener imageViewClearListener;
     public ImageViewAddListener imageViewAddListener;
     //最大上传数量

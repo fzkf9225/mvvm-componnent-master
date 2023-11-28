@@ -521,12 +521,27 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
         Message message = new Message();
         message.obj = bitmap;
+        message.arg1 = 100;
         handlerWaterMark.sendMessage(message);
         if (mediaBuilder.isShowLoading()) {
             mediaBuilder.getBaseView().showLoading("正在为图片添加水印...");
         }
     }
-
+    /**
+     * 开始添加水印
+     */
+    public void startWaterMark(Bitmap bitmap,int alpha) {
+        if (bitmap == null) {
+            return;
+        }
+        Message message = new Message();
+        message.obj = bitmap;
+        message.arg1 = alpha;
+        handlerWaterMark.sendMessage(message);
+        if (mediaBuilder.isShowLoading()) {
+            mediaBuilder.getBaseView().showLoading("正在为图片添加水印...");
+        }
+    }
     public Handler handlerWaterMark = new Handler(handlerLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
@@ -538,7 +553,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 return true;
             }
             Bitmap bitmapOld = (Bitmap) msg.obj;
-            Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark());
+            int alpha = msg.arg1;
+            Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark(),alpha);
             String outputPath = FileUtils.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
             File outputFile = new File(mediaBuilder.getImageOutPutPath(), outputPath + ".jpg");
             MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
@@ -551,6 +567,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             } else { //兼容android7.0 使用共享文件的形式
                 mutableLiveDataWaterMark.postValue(new MediaBean(List.of(FileProvider.getUriForFile(mediaBuilder.getActivity(),
                         mediaBuilder.getActivity().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
+            }
+            if (bitmapNew.isRecycled()) {
+                bitmapNew.recycle();
+            }
+            if (bitmapOld.isRecycled()) {
+                bitmapOld.recycle();
             }
             return false;
         }

@@ -13,8 +13,8 @@ android {
         applicationId "com.casic.titan.demo"
         minSdk project.MIN_SDK_VERSION
         targetSdk project.TARGET_SDK_VERSION
-        versionCode 1
-        versionName "1.0"
+        versionCode project.VERSION_CODE
+        versionName project.VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -88,7 +88,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
     testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation project(':common')

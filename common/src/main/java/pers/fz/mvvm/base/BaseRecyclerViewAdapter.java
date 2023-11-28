@@ -44,7 +44,6 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     public BaseRecyclerViewAdapter(Context context) {
         mContext = context;
-        mList = (mList == null) ? new ArrayList<>() : mList;
         setList(mList);
     }
 
@@ -128,7 +127,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
     public int getItemCount() {
         int count = (mList == null ? 0 : mList.size());
         if (headerView != null) {
-            count++;
+            return count + 1;
         }
         return count;
     }
@@ -161,8 +160,9 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      * @return BaseViewHolder
      */
     protected <HVDB extends ViewDataBinding> BaseViewHolder<HVDB> createHeaderViewHold(HVDB binding) {
-        return new BaseViewHolder<>(binding,true);
+        return new BaseViewHolder<>(binding, true);
     }
+
     /**
      * 获取自定义viewHolder对象，如果不自定义借直接返回baseViewHolder
      *
@@ -175,6 +175,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     /**
      * itemView的资源布局
+     *
      * @return 布局资源Id
      */
     protected abstract int getLayoutId();

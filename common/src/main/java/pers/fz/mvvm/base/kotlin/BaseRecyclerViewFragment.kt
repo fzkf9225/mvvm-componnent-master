@@ -166,7 +166,7 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
             }
             onRefreshFinish(false)
             onLoadFinish(false)
-            if (errorService == null || model == null) {
+            if (model == null) {
                 return
             }
             if (!errorService.isLogin(model.code)) {
