@@ -1,10 +1,8 @@
 package com.casic.titan.demo.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pers.fz.mvvm.base.BaseView
 import pers.fz.mvvm.base.kotlin.BaseRecyclerViewModel
@@ -30,8 +28,8 @@ class RecyclerViewKotlinViewModel(application: Application) :
                 )
             )
         }
-        pageBean.setList(dataList)
+        pageBean.list = dataList
         pageBean.responseCount = dataList.size
-        GlobalScope.launch(Dispatchers.Main) { pageMutableStateFlow.value = pageBean}
+        viewModelScope.launch(Dispatchers.Main) { pageMutableStateFlow.value = pageBean}
     }
 }
