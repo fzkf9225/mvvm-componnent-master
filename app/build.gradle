@@ -119,5 +119,12 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
     implementation "com.google.zxing:core:$zxingCoreVersion"
     implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
+    //paging3
+    implementation "androidx.paging:paging-runtime:3.2.0-alpha04"
+    // 用于测试
+    testImplementation "androidx.paging:paging-common:3.2.0-alpha04"
+// [可选] RxJava 支持
+    implementation "androidx.paging:paging-rxjava3:3.2.0-alpha04"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
 }

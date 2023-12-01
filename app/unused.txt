@@ -7818,7 +7818,7 @@ com.casic.titan.usercomponent.api.UserAccountHelper:
     private static final java.lang.String WORK_SPACE_ID
     static void clearWebSocketSubscribe()
 com.casic.titan.usercomponent.bean.ForgetPasswordBean
-com.casic.titan.usercomponent.bean.LoginResultBean
+com.casic.titan.usercomponent.bean.TokenBean
 com.casic.titan.usercomponent.bean.ModifyPasswordBean
 com.casic.titan.usercomponent.bean.PerfectUserInfoBean
 com.casic.titan.usercomponent.impl.RetryServiceImpl_Factory$InstanceHolder

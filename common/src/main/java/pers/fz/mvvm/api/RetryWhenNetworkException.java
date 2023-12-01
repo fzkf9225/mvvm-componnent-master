@@ -70,7 +70,7 @@ public class RetryWhenNetworkException implements Function<Observable<? extends 
                 } else {
                     // 若重试次数已 > 设置重试次数，则不重试
                     // 通过发送error来停止重试（可在观察者的onError（）中获取信息）
-                    return Observable.error(new Throwable("重试次数已超过设置次数 = " + currentRetryCount + "，即 不再重试;" + throwable));
+                    return Observable.error(throwable);
                 }
             }
         });

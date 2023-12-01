@@ -106,7 +106,7 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
     protected fun setListData(listData: List<T>?) {
         try {
             val isRefresh =
-                refreshLayout!!.state == RefreshState.Refreshing || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING && mCurrentPage == 1 || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING_RERESH
+                refreshLayout!!.state == RefreshState.Refreshing || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING && mCurrentPage == 1 || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING_REFRESH
             if (isRefresh) {
                 onRefreshFinish(true)
                 adapter!!.setList(listData)
@@ -120,7 +120,7 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
             }
             adapter!!.notifyDataSetChanged()
             if (adapter == null || adapter!!.list == null || adapter!!.list.isEmpty()) {
-                setRecyclerViewVisibility(EmptyLayout.NODATA)
+                setRecyclerViewVisibility(EmptyLayout.NO_DATA)
             } else {
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT)
             }
@@ -161,7 +161,7 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
     override fun onItemLongClick(view: View, position: Int) {}
     override fun onErrorCode(model: BaseModelEntity<*>?) {
         try {
-            if (refreshLayout!!.state == RefreshState.Refreshing || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING_RERESH || refreshLayout!!.state == RefreshState.Loading) {
+            if (refreshLayout!!.state == RefreshState.Refreshing || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING || emptyLayout!!.errorState == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout!!.state == RefreshState.Loading) {
                 setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR)
             }
             onRefreshFinish(false)
@@ -206,12 +206,12 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
                 recyclerView!!.visibility = View.GONE
             }
 
-            EmptyLayout.NETWORK_LOADING_RERESH, EmptyLayout.NETWORK_LOADING_LOADMORE -> {
+            EmptyLayout.NETWORK_LOADING_REFRESH, EmptyLayout.NETWORK_LOADING_LOAD_MORE -> {
                 emptyLayout!!.visibility = View.GONE
                 recyclerView!!.visibility = View.VISIBLE
             }
 
-            EmptyLayout.NODATA -> {
+            EmptyLayout.NO_DATA -> {
                 onRefreshFinish(true)
                 onLoadFinish(true)
                 recyclerView!!.visibility = View.GONE
@@ -247,7 +247,7 @@ abstract class BaseRecyclerViewFragment<BVM : BaseRecyclerViewModel<V, T>?, VDB 
     }
 
     override fun onEmptyLayoutClick(v: View) {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_RERESH)
+        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH)
         onRefresh()
     }
 

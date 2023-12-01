@@ -65,68 +65,7 @@ public class UserServiceImpl implements UserService {
         if (!UserAccountHelper.isLogin()) {
             return null;
         }
-        return UserAccountHelper.getUser().getUser_id();
-    }
-
-    @Override
-    public String getWorkSpaceId() {
-        if (!UserAccountHelper.isLogin()) {
-            return null;
-        }
-        if (UserAccountHelper.getWorkSpace() == null) {
-            return null;
-        }
-        return UserAccountHelper.getWorkSpace().getWorkspaceId();
-    }
-
-    @Override
-    public String getWorkSpaceName() {
-        if (!UserAccountHelper.isLogin()) {
-            return null;
-        }
-        if (UserAccountHelper.getWorkSpace() == null) {
-            return null;
-        }
-        return UserAccountHelper.getWorkSpace().getWorkspaceName();
-    }
-
-    @Override
-    public String getWorkerSpaceSn() {
-        List<WebSocketSubscribeBean> subscribeBeanList = UserAccountHelper.getWebSocketSubscribe();
-        if (subscribeBeanList == null || subscribeBeanList.isEmpty()) {
-            return null;
-        }
-        StringBuilder sb = null;
-        for (WebSocketSubscribeBean subscribeBean : subscribeBeanList) {
-            if (sb == null) {
-                sb = new StringBuilder();
-                sb.append(subscribeBean.getDeviceSn())
-                        .append(",")
-                        .append(subscribeBean.getChildSn());
-            } else {
-                sb.append(",").append(subscribeBean.getDeviceSn())
-                        .append(",")
-                        .append(subscribeBean.getChildSn());
-            }
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public boolean workSpaceContainSn(String sn) {
-        if (StringUtil.isEmpty(sn)) {
-            return false;
-        }
-        List<WebSocketSubscribeBean> subscribeBeanList = UserAccountHelper.getWebSocketSubscribe();
-        if (subscribeBeanList == null || subscribeBeanList.isEmpty()) {
-            return false;
-        }
-        for (WebSocketSubscribeBean subscribeBean : subscribeBeanList) {
-            if (sn.equalsIgnoreCase(subscribeBean.getDeviceSn())) {
-                return true;
-            }
-        }
-        return false;
+        return UserAccountHelper.getUser().getId();
     }
 
 

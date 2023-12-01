@@ -99,7 +99,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     protected void setListData(List<T> listData) {
         try {
             boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing || (emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING && mCurrentPage == 1) ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_RERESH;
+                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH;
             if (isRefresh) {
                 onRefreshFinish(true);
                 adapter.setList(listData);
@@ -113,7 +113,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             }
             adapter.notifyDataSetChanged();
             if (adapter == null || adapter.getList() == null || adapter.getList().isEmpty()) {
-                setRecyclerViewVisibility(EmptyLayout.NODATA);
+                setRecyclerViewVisibility(EmptyLayout.NO_DATA);
             } else {
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
             }
@@ -166,7 +166,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     public void onErrorCode(BaseModelEntity model) {
         try {
             if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_RERESH || refreshLayout.getState() == RefreshState.Loading) {
+                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
                 setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
             }
             onRefreshFinish(false);
@@ -224,11 +224,11 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
                 getRecyclerView().setVisibility(View.GONE);
             }
             //刷新,加载
-            case EmptyLayout.NETWORK_LOADING_RERESH, EmptyLayout.NETWORK_LOADING_LOADMORE -> {
+            case EmptyLayout.NETWORK_LOADING_REFRESH, EmptyLayout.NETWORK_LOADING_LOAD_MORE -> {
                 emptyLayout.setVisibility(View.GONE);
                 getRecyclerView().setVisibility(View.VISIBLE);
             }
-            case EmptyLayout.NODATA -> {
+            case EmptyLayout.NO_DATA -> {
                 onRefreshFinish(true);
                 onLoadFinish(true);
                 getRecyclerView().setVisibility(View.GONE);
@@ -264,7 +264,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_RERESH);
+        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
         onRefresh();
     }
 

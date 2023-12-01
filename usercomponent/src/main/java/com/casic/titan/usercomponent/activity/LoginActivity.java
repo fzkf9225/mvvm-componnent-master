@@ -25,7 +25,7 @@ import pers.fz.mvvm.util.common.KeyBoardUtils;
  */
 @AndroidEntryPoint
 public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> implements UserView {
-    private String password = "titan2401";
+    private String password = "admin";
     private Bundle bundle;
     @Inject
     ErrorService errorService;
@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
     @Override
     public void initData(Bundle bundle) {
         this.bundle = bundle;
-        mViewModel.getLiveData().observe(this, mqttBean -> mViewModel.loginSuccess(mqttBean, binding.userEdit.getText().toString()));
+        mViewModel.getLiveData().observe(this, userInfo -> mViewModel.loginSuccess(userInfo, binding.userEdit.getText().toString()));
     }
 
     @Override

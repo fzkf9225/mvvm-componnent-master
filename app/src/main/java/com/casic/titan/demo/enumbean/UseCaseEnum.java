@@ -3,6 +3,7 @@ package com.casic.titan.demo.enumbean;
 import android.os.Bundle;
 
 import com.casic.titan.demo.activity.CoordinatorActivity;
+import com.casic.titan.demo.activity.DemoPagingActivity;
 import com.casic.titan.demo.activity.DialogActivity;
 import com.casic.titan.demo.activity.DownloadActivity;
 import com.casic.titan.demo.activity.KotlinActivity;
@@ -34,6 +35,7 @@ public enum UseCaseEnum {
     DOWNLOAD(DownloadActivity.class,"文件下载","自定义断点续传下载功能",null),
     COMPRESS(MediaCompressActivity.class,"文件压缩","展示文件压缩能力",null),
     RECYCLER_VIEW(RecyclerViewSampleActivity.class,"列表示例","自定义封装列表",null),
+    PAGING(DemoPagingActivity.class,"Paging列表示例","Jetpack Paging3列表封装",null),
     VIEW_PAGER(ViewPagerSampleActivity.class,"ViewPagerFragment","侧滑标签页面",null),
     VIDEO_PLAYER(VideoPlayerActivity.class,"视频播放器","在线视频播放器，集成自GSYVideoPlayer",getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class,"CoordinatorLayout沉浸式","侧滑标签页面",null),

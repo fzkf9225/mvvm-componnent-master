@@ -13,17 +13,23 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.repository.RepositoryImpl;
 
 /**
  * Created by fz on 2023/4/27 14:58
  * describe :
  */
 @HiltViewModel
-public class MainViewModel extends BaseViewModel<MainView> implements DefaultLifecycleObserver {
+public class MainViewModel extends BaseViewModel<RepositoryImpl,MainView> implements DefaultLifecycleObserver {
 
     @Inject
     public MainViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected RepositoryImpl createRepository() {
+        return null;
     }
 
     @Override

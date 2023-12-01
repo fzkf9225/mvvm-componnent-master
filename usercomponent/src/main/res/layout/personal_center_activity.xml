@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/tv_name"
             style="@style/user_content"
-            android:text="@{userInfo.user_name}"
+            android:text="@{userInfo.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/tv_name_label"
@@ -57,6 +57,7 @@
         <TextView
             android:id="@+id/tv_tel"
             style="@style/user_content"
+            android:text="@{userInfo.phone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/tv_tel_label"
@@ -75,9 +76,9 @@
         <TextView
             android:id="@+id/tv_role"
             style="@style/user_content"
+            android:text="@={userInfo.roleName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            android:text="@={userInfo.role_name}"
             app:layout_constraintStart_toEndOf="@+id/tv_role_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_tel_label"
             tools:text="男" />
@@ -94,9 +95,9 @@
         <TextView
             android:id="@+id/tv_user_name"
             style="@style/user_content"
+            android:text="@={userInfo.realName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            android:text="@={userInfo.nick_name}"
             app:layout_constraintStart_toEndOf="@+id/tv_user_name_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_role_label"
             tools:text="男" />

@@ -15,13 +15,14 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.repository.RepositoryImpl;
 
 /**
  * Created by fz on 2023/4/27 14:58
  * describe :
  */
 @HiltViewModel
-public class HomeFragmentViewModel extends BaseViewModel<HomeFragmentView> implements DefaultLifecycleObserver {
+public class HomeFragmentViewModel extends BaseViewModel<RepositoryImpl,HomeFragmentView> implements DefaultLifecycleObserver {
     private ApiServiceHelper apiServiceHelper;
     private UserApiService userApiService;
     @Inject
@@ -29,6 +30,11 @@ public class HomeFragmentViewModel extends BaseViewModel<HomeFragmentView> imple
         super(application);
         apiServiceHelper = ApiRetrofit.getInstance().getApiService(ApiServiceHelper.class);
         userApiService = ApiRetrofit.getInstance().getApiService(UserApiService.class);
+    }
+
+    @Override
+    protected RepositoryImpl createRepository() {
+        return null;
     }
 
 }

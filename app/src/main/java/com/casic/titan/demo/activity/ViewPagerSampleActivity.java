@@ -1,6 +1,5 @@
 package com.casic.titan.demo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,9 +10,10 @@ import com.casic.titan.demo.databinding.ActivityViewPagerSampleBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.viewmodel.MainViewModel;
+
 @AndroidEntryPoint
-public class ViewPagerSampleActivity extends BaseActivity<BaseViewModel, ActivityViewPagerSampleBinding> {
+public class ViewPagerSampleActivity extends BaseActivity<MainViewModel, ActivityViewPagerSampleBinding> {
     private UseCase useCase;
     @Override
     protected int getLayoutId() {

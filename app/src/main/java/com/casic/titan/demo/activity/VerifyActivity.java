@@ -17,10 +17,10 @@ import java.util.Arrays;
 import pers.fz.mvvm.annotations.EntityValidator;
 import pers.fz.mvvm.annotations.VerifyResult;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.viewmodel.MainViewModel;
 
-public class VerifyActivity extends BaseActivity<BaseViewModel, ActivityVerifyBinding> {
+public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 
     @Override

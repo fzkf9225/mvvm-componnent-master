@@ -26,6 +26,7 @@ import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.cache.GlideCacheUtil;
 import pers.fz.mvvm.util.update.UpdateManger;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
@@ -35,11 +36,16 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe:
  */
 @HiltViewModel
-public class SettingViewModel extends BaseViewModel<BaseView> {
+public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
 
     @Inject
     public SettingViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected RepositoryImpl createRepository() {
+        return null;
     }
 
     public void onClick(View view) {

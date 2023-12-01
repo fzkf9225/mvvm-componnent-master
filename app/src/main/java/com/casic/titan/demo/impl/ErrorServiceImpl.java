@@ -84,6 +84,7 @@ public  class ErrorServiceImpl implements ErrorService {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Authorization", ConstantsHelper.AUTHORIZATION);
         headerMap.put("Tenant-Id", ConstantsHelper.TENANT_ID);
+        headerMap.put("Is-App", "APP");
         if (!TextUtils.isEmpty(UserAccountHelper.getToken())) {
             headerMap.put("Blade-Auth", UserAccountHelper.getToken());
         }

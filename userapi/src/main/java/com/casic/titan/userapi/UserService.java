@@ -54,21 +54,6 @@ public interface UserService{
      * @param token
      */
     void setToken(String token);
-
-    String getWorkSpaceId();
-    String getWorkSpaceName();
     String getUserId();
 
-    /**
-     * 获取WorkerSpace下所有sn
-     * @return
-     */
-    String getWorkerSpaceSn();
-
-    /**
-     * 判断缓存中的sn有没有当前这个
-     * @param sn 序列号
-     * @return true包含
-     */
-    boolean workSpaceContainSn(String sn);
 }

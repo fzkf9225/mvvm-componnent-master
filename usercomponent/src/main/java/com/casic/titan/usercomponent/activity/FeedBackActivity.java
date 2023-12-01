@@ -5,10 +5,10 @@ import android.view.View;
 
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.util.media.MediaBuilder;
 import pers.fz.mvvm.util.media.MediaHelper;
+import pers.fz.mvvm.viewmodel.MainViewModel;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
@@ -20,7 +20,7 @@ import com.casic.titan.usercomponent.databinding.FeedbackBinding;
  * Created by fz on 2018/1/22.
  * describe：问题反馈
  */
-public class FeedBackActivity extends BaseActivity<BaseViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,
+public class FeedBackActivity extends BaseActivity<MainViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener {
     private ImageAddAdapter imageAddAdapter;
     private MediaHelper mediaHelper;

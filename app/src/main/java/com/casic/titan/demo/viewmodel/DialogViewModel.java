@@ -17,6 +17,7 @@ import java.util.List;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
+import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
@@ -36,7 +37,7 @@ import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
  * Created by fz on 2023/8/14 10:56
  * describe :
  */
-public class DialogViewModel extends BaseViewModel<BaseView> {
+public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
     List<PopupWindowBean> dataList = Arrays.asList(
             new PopupWindowBean("1", "北京"),
             new PopupWindowBean("2", "上海"),
@@ -57,6 +58,11 @@ public class DialogViewModel extends BaseViewModel<BaseView> {
 
     public DialogViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected RepositoryImpl createRepository() {
+        return null;
     }
 
     public void onClick(View view) {

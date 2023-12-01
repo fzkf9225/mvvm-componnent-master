@@ -48,7 +48,7 @@
                     android:layout_marginTop="56dp"
                     android:layout_toEndOf="@+id/headImg"
                     android:includeFontPadding="false"
-                    android:text='@{StringUtil.isEmpty(user.user_name)?"点击登录":user.user_name}'
+                    android:text='@{StringUtil.isEmpty(user.name)?"点击登录":user.name}'
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_xxl" />
 
@@ -62,7 +62,7 @@
                     android:layout_toEndOf="@+id/headImg"
                     android:includeFontPadding="false"
                     tools:text="15210233333"
-                    android:text="@{user.real_name}"
+                    android:text="@{user.phone}"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_l" />
 

@@ -1,16 +1,10 @@
 package com.casic.titan.usercomponent.impl;
 
-import com.casic.titan.mqttcomponent.CloudDataHelper;
-import com.casic.titan.mqttcomponent.MqttBean;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.casic.titan.usercomponent.api.UserApiService;
+import com.casic.titan.usercomponent.bean.TokenBean;
 import com.casic.titan.usercomponent.bean.UserInfo;
-import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
-import com.casic.titan.usercomponent.bean.WorkSpaceBean;
 import com.casic.titan.usercomponent.enumEntity.GrantType;
-
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -76,27 +70,20 @@ public class RetryServiceImpl implements RetryService {
                 });
     }
 
-    private Observable<List<WebSocketSubscribeBean>> refresh(UserApiService userApiService) {
+    private Observable<UserInfo> refresh(UserApiService userApiService) {
         // 如果上面检测到token过期就会进入到这里
         // 然后下面的方法就是更新token
         UserAccountHelper.saveLoginPast(false);
-        return userApiService.refreshToken(GrantType.REFRESH_TOKEN.getValue(), "all"
-                        , UserAccountHelper.getRefreshToken())
-                .flatMap((Function<UserInfo, Observable<MqttBean>>) userInfo -> {
-                    UserAccountHelper.setToken(userInfo.getAccess_token());
-                    UserAccountHelper.setRefreshToken(userInfo.getRefresh_token());
-                    UserAccountHelper.saveLoginState(userInfo, false);
-                    return userApiService.getCloudConfig();
-                }).flatMap((Function<MqttBean, Observable<WorkSpaceBean>>) mqttBean -> {
-                    CloudDataHelper.saveMqttData(mqttBean);
-                    return userApiService.getWorkSpace();
-                }).flatMap((Function<WorkSpaceBean, Observable<List<WebSocketSubscribeBean>>>) workSpaceBean -> {
-                    UserAccountHelper.setWorkSpace(workSpaceBean);
-                    return userApiService.getWebSocketSubscribeInfo(workSpaceBean.getWorkspaceId());
+        return userApiService.refreshToken(UserAccountHelper.getRefreshToken(),"000000",
+                        GrantType.REFRESH_TOKEN.getValue(), "all"
+                        , "account")
+                .flatMap((Function<TokenBean, Observable<UserInfo>>) tokenBean -> {
+                    UserAccountHelper.setToken(tokenBean.getAccess_token());
+                    UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
+                    return userApiService.getUserInfo(tokenBean.getUser_id());
                 })
-                .doOnNext(subscribeBeanList -> {
-                    UserAccountHelper.setWebSocketSubscribe(subscribeBeanList);
-                    UserAccountHelper.saveLoginPast(true);
+                .doOnNext(userInfo -> {
+                    UserAccountHelper.saveLoginState(userInfo, true);
                 });
     }
 

@@ -1,6 +1,7 @@
 package com.casic.titan.usercomponent.api;
 
 import com.casic.titan.mqttcomponent.MqttBean;
+import com.casic.titan.usercomponent.bean.TokenBean;
 import com.casic.titan.usercomponent.bean.UserInfo;
 import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
 import com.casic.titan.usercomponent.bean.WorkSpaceBean;
@@ -12,6 +13,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -26,9 +28,9 @@ public interface UserApiService {
      */
     @POST("blade-auth/oauth/token")
     @FormUrlEncoded
-    Observable<UserInfo> getToken(@Field("username") String username, @Field("password") String password,
-                                  @Field("grant_type") String grantType, @Field("scope") String scope,
-                                  @Field("tenantId") String tenantId);
+    Observable<TokenBean> getToken(@Field("username") String username, @Field("password") String password,
+                                   @Field("grant_type") String grantType, @Field("scope") String scope,
+                                   @Field("tenantId") String tenantId,@Field("type") String type);
 
     /**
      * 获取token
@@ -37,15 +39,11 @@ public interface UserApiService {
      */
     @POST("blade-auth/oauth/token")
     @FormUrlEncoded
-    Observable<UserInfo> refreshToken(@Field("grant_type") String grantType, @Field("scope") String scope,
-                                    @Field("refresh_token") String refreshToken);
+    Observable<TokenBean> refreshToken(@Field("refresh_token") String refreshToken,@Field("tenantld") String tenantld,
+                                       @Field("grant_type") String grant_type, @Field("scope") String scope,
+                                       @Field("type") String type);
 
-    @GET("/cloud-drone/config/getCloudConfig")
-    Observable<MqttBean> getCloudConfig();
+    @GET("blade-system/user/info/{userId}")
+    Observable<UserInfo> getUserInfo(@Path("userId") String userId);
 
-    @GET("/cloud-drone/manage/api/v1/workspaces/current")
-    Observable<WorkSpaceBean> getWorkSpace();
-
-    @GET("/cloud-drone/manage/api/v1/devices/getDevicesByWorkspaceId")
-    Observable<List<WebSocketSubscribeBean>> getWebSocketSubscribeInfo(@Query("workspaceId") String workspaceId);
 }

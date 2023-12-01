@@ -8,7 +8,7 @@ public enum GrantType {
     /**
      * 登录
      */
-    LOGIN("password"),
+    LOGIN("captcha"),
     /**
      * 刷新token
      */

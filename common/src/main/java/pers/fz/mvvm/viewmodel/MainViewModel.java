@@ -13,13 +13,14 @@ import pers.fz.mvvm.activity.WebViewActivity;
 import pers.fz.mvvm.api.RegexUtils;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.common.StringUtil;
 
 /**
  * Create by CherishTang on 2020/3/19 0019
  * describe:
  */
-public class MainViewModel extends BaseViewModel<BaseView> {
+public class MainViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
 
     public final static String ARG_PAGE = "page";
 
@@ -27,6 +28,11 @@ public class MainViewModel extends BaseViewModel<BaseView> {
 
     public MainViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected RepositoryImpl createRepository() {
+        return null;
     }
 
     /**

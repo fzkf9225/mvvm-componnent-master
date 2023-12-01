@@ -126,6 +126,14 @@ dependencies {
     implementation "com.google.zxing:core:$zxingCoreVersion"
     //noinspection GradleDependency
     implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
+    //paging3
+    implementation "androidx.paging:paging-runtime:3.2.0-alpha04"
+    // 用于测试
+    testImplementation "androidx.paging:paging-common:3.2.0-alpha04"
+// [可选] RxJava 支持
+    implementation "androidx.paging:paging-rxjava3:3.2.0-alpha04"
+    //下拉刷新
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
 //执行以下命令完成制品推送
 //推送命令

@@ -29,6 +29,7 @@ import com.casic.titan.usercomponent.bean.RequestLoginBean;
 import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
 import com.casic.titan.usercomponent.bean.WorkSpaceBean;
 import com.casic.titan.usercomponent.enumEntity.GrantType;
+import com.casic.titan.usercomponent.repository.UserRepository;
 import com.casic.titan.usercomponent.view.UserView;
 
 import java.util.List;
@@ -40,21 +41,24 @@ import javax.inject.Inject;
  * describe:loginViewModel
  */
 @HiltViewModel
-public class UserViewModel extends BaseViewModel<UserView> {
-    private UserApiService userApiService;
-    private final MutableLiveData<List<WebSocketSubscribeBean>> liveData = new MutableLiveData<>();
+public class UserViewModel extends BaseViewModel<UserRepository, UserView> {
+    private final MutableLiveData<UserInfo> liveData = new MutableLiveData<>();
 
     @Inject
     public UserViewModel(@NonNull Application application) {
         super(application);
-        userApiService = ApiRetrofit.getInstance().getApiService(UserApiService.class);
+    }
+
+    @Override
+    protected UserRepository createRepository() {
+        return new UserRepository(retryService);
     }
 
     public void loginClick(View v, RequestLoginBean requestLoginBean) {
         loginClick(v, requestLoginBean, null);
     }
 
-    public MutableLiveData<List<WebSocketSubscribeBean>> getLiveData() {
+    public MutableLiveData<UserInfo> getLiveData() {
         return liveData;
     }
 
@@ -72,29 +76,15 @@ public class UserViewModel extends BaseViewModel<UserView> {
             try {
                 requestLoginBean.setPassword(MD5Util.md5Encode(password));
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
+                baseView.showToast("密码加密异常");
             }
-            observe(userApiService.getToken(requestLoginBean.getUsername(),
-                            requestLoginBean.getPassword(), GrantType.LOGIN.getValue(),
-                            "all", "000000")
-                    .flatMap((Function<UserInfo, Observable<MqttBean>>) userInfo -> {
-                        UserAccountHelper.setToken(userInfo.getAccess_token());
-                        UserAccountHelper.setRefreshToken(userInfo.getRefresh_token());
-                        UserAccountHelper.saveLoginState(userInfo, false);
-                        return userApiService.getCloudConfig();
-                    }).flatMap((Function<MqttBean, Observable<WorkSpaceBean>>) mqttBean -> {
-                        CloudDataHelper.saveMqttData(mqttBean);
-                        return userApiService.getWorkSpace();
-                    }).flatMap((Function<WorkSpaceBean, Observable<List<WebSocketSubscribeBean>>>) workSpaceBean -> {
-                        UserAccountHelper.setWorkSpace(workSpaceBean);
-                        return userApiService.getWebSocketSubscribeInfo(workSpaceBean.getWorkspaceId());
-                    }), liveData, "用户名或密码错误！");
+            iRepository.login(requestLoginBean, liveData);
         }
     }
 
-    public void loginSuccess(List<WebSocketSubscribeBean> subscribeBeanList, String userName) {
-        UserAccountHelper.setWebSocketSubscribe(subscribeBeanList);
-        UserAccountHelper.saveLoginPast(true);
+    public void loginSuccess(UserInfo userInfo, String userName) {
+        UserAccountHelper.saveLoginState(userInfo,true);
         if (TextUtils.isEmpty(userName) || !userName.equals(UserAccountHelper.getAccount()) ||
                 AppManager.getAppManager().getActivityStack().size() == 1) {
             UserAccountHelper.saveAccount(userName);

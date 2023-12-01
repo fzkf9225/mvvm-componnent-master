@@ -1,18 +1,8 @@
 package com.casic.titan.usercomponent.api;
 
-import android.text.TextUtils;
-
-import com.casic.titan.mqttcomponent.CloudDataHelper;
 import com.casic.titan.usercomponent.bean.UserInfo;
-import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
-import com.casic.titan.usercomponent.bean.WorkSpaceBean;
-
-import java.util.List;
-
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.MMKVHelper;
 import pers.fz.mvvm.bean.Code.ResponseCode;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/5/23.
@@ -41,21 +31,9 @@ public class UserAccountHelper {
      */
     private static final String USER_PASSWORD = "USER_PASSWORD";
     /**
-     * api基本参数
-     */
-    private static final String API_PARAMS = "api_params";
-    /**
      * baseUrl地址
      */
     private static final String BASE_URL = "base_url";
-    /**
-     * WORK_SPACE_ID
-     */
-    private static final String WORK_SPACE_ID = "WORK_SPACE_ID";
-    /**
-     * WebSocket订阅消息
-     */
-    private static final String WEBSOCKET_SUBSCRIBE = "WEBSOCKET_SUBSCRIBE";
 
     /**
      * 判断是否登录
@@ -73,18 +51,6 @@ public class UserAccountHelper {
             return false;
         }
         if (!getLoginState()) {
-            return false;
-        }
-        if (getWorkSpace() == null) {
-            return false;
-        }
-        if (getWebSocketSubscribe() == null) {
-            return false;
-        }
-        if (CloudDataHelper.getMqttData() == null) {
-            return false;
-        }
-        if (TextUtils.isEmpty(CloudDataHelper.getAddress())) {
             return false;
         }
         return true;
@@ -135,7 +101,6 @@ public class UserAccountHelper {
         MMKVHelper.getInstance().removeValueForKey(USER_INFO);
         MMKVHelper.getInstance().put(USER_STATE, false);
         clearToken();
-        clearWorkSpace();
     }
 
     /**
@@ -196,52 +161,6 @@ public class UserAccountHelper {
      */
     public static String getToken() {
         return MMKVHelper.getInstance().getString(TOKEN_DATA, null);
-    }
-
-    /**
-     * 本地保存workSpaceId值
-     *
-     * @param workSpaceBean workSpaceId值
-     */
-    public static void setWorkSpace(WorkSpaceBean workSpaceBean) {
-        MMKVHelper.getInstance().put(WORK_SPACE_ID, workSpaceBean);
-    }
-
-    /**
-     * 清理token值
-     */
-    static void clearWorkSpace() {
-        MMKVHelper.getInstance().removeValueForKey(WORK_SPACE_ID);
-    }
-
-    /**
-     * 获取token值
-     */
-    public static WorkSpaceBean getWorkSpace() {
-        return (WorkSpaceBean) MMKVHelper.getInstance().getParcelable(WORK_SPACE_ID, WorkSpaceBean.class);
-    }
-
-    /**
-     * WebSocket订阅信息保存
-     *
-     * @param subscribeBeanList 订阅信息
-     */
-    public static void setWebSocketSubscribe(List<WebSocketSubscribeBean> subscribeBeanList) {
-        MMKVHelper.getInstance().setArray(WEBSOCKET_SUBSCRIBE, subscribeBeanList);
-    }
-
-    /**
-     * 清理WebSocket订阅信息
-     */
-    static void clearWebSocketSubscribe() {
-        MMKVHelper.getInstance().removeValueForKey(WEBSOCKET_SUBSCRIBE);
-    }
-
-    /**
-     * 获取WebSocket订阅信息
-     */
-    public static List<WebSocketSubscribeBean> getWebSocketSubscribe() {
-        return MMKVHelper.getInstance().getArray(WEBSOCKET_SUBSCRIBE, WebSocketSubscribeBean.class);
     }
 
     /**

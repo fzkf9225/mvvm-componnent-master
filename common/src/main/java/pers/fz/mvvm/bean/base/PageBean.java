@@ -1,6 +1,8 @@
 package pers.fz.mvvm.bean.base;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * on 16-5-24.
  */
 public class PageBean<T> implements Serializable {
+    @SerializedName(value = "data", alternate = {"list","records"})
     private List<T> data;
     private String nextPageToken;
     private String prevPageToken;

@@ -20,7 +20,7 @@ public class ResponseCode {
     /**
      * 成功
      */
-    public static final String OK = "0";
+    public static final String OK = "200";
     /**
      * 用户令牌信息不一致，请重新登陆
      */
