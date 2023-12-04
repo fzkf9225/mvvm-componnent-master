@@ -32,6 +32,10 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class PagingViewModel extends BaseViewModel<PagingRepository, PagingView> {
     private PagingConfig pagingConfig;
     private int startPage = 0;
+    /**
+     * 当请求发生错误时是否用EmptyLayout占用显示错误页
+     */
+    private boolean errorPlaceholder = true;
     @Inject
     public PagingViewModel(@NonNull Application application) {
         super(application);
@@ -53,6 +57,14 @@ public class PagingViewModel extends BaseViewModel<PagingRepository, PagingView>
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         return PagingLiveData.cachedIn(PagingLiveData.getLiveData(new Pager<>(pagingConfig == null ? getPagingConfig() : pagingConfig,
                 () -> new PagingSource<T>(iRepository, startPage))), viewModelScope);
+    }
+
+    public void setErrorPlaceholder(boolean errorPlaceholder) {
+        this.errorPlaceholder = errorPlaceholder;
+    }
+
+    public boolean isErrorPlaceholder() {
+        return errorPlaceholder;
     }
 
     public void setStartPage(int startPage) {

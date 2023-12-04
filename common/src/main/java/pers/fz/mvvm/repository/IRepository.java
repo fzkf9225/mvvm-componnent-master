@@ -1,4 +1,4 @@
-package pers.fz.mvvm.base;
+package pers.fz.mvvm.repository;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 
 /**
@@ -17,8 +18,8 @@ public interface IRepository {
     <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer);
     <T> Observable<T> sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity);
 
-    void addDisposable(Disposable disposable);
 
+    void addDisposable(Disposable disposable);
     void removeDisposable();
     <BV extends BaseView> void setBaseView(BV baseView);
     Function<Observable<? extends Throwable>, Observable<?>> retryWhen();

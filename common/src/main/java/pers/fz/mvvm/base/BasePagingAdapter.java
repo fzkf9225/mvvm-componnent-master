@@ -1,4 +1,4 @@
-package pers.fz.mvvm.adapter;
+package pers.fz.mvvm.base;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,12 +21,14 @@ import java.util.Collections;
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseViewHolder;
+import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
  * Created by fz on 2023/12/1
  */
-public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>>{
+public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
+        SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
     protected final String TAG = this.getClass().getSimpleName();
     protected Context mContext;
     protected RecyclerView mRecyclerView;
@@ -41,8 +43,7 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      */
     public static final int TYPE_NORMAL = 0;
 
-    public OnItemClickListener mOnItemClickListener;
-    public OnItemLongClickListener mOnItemLongClickListener;
+    public PagingAdapterListener<T> onPagingAdapterListener;
 
     public BasePagingAdapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
         super(diffCallback);
@@ -79,14 +80,15 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
             onBindHeaderHolder(baseViewHolder, getRealPosition(baseViewHolder));
             return;
         }
+        int realPosition = getRealPosition(baseViewHolder);
         baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(baseViewHolder.getBinding().getRoot(), getRealPosition(baseViewHolder));
+            if (onPagingAdapterListener != null) {
+                onPagingAdapterListener.onItemClick(baseViewHolder.getBinding().getRoot(), getItem(realPosition), realPosition);
             }
         });
         baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
-            if (mOnItemLongClickListener != null) {
-                mOnItemLongClickListener.onItemLongClick(baseViewHolder.getBinding().getRoot(), getRealPosition(baseViewHolder));
+            if (onPagingAdapterListener != null) {
+                onPagingAdapterListener.onItemLongClick(baseViewHolder.getBinding().getRoot(), getItem(realPosition), realPosition);
                 return true;
             }
             return false;
@@ -187,7 +189,15 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         int position = holder.getLayoutPosition();
         return headerView == null ? position : position - 1;
     }
+    @Override
+    public void onItemDismiss(int position) {
+        notifyItemRemoved(position);
+    }
 
+    @Override
+    public void onItemMove(int from, int to) {
+        notifyItemMoved(from, to);
+    }
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
@@ -196,19 +206,8 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         mRecyclerView = recyclerView;
     }
 
-    public void setOnItemClickListener(OnItemClickListener l) {
-        mOnItemClickListener = l;
+    public void setOnAdapterListener(PagingAdapterListener<T> l) {
+        onPagingAdapterListener = l;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener l) {
-        mOnItemLongClickListener = l;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public interface OnItemLongClickListener {
-        void onItemLongClick(View view, int position);
-    }
 }

@@ -1,4 +1,4 @@
-package pers.fz.mvvm.base;
+package pers.fz.mvvm.api;
 
 import android.text.TextUtils;
 
@@ -13,6 +13,9 @@ import java.text.ParseException;
 
 import io.reactivex.rxjava3.functions.Consumer;
 import pers.fz.mvvm.api.ApiRetrofit;
+import pers.fz.mvvm.base.BaseException;
+import pers.fz.mvvm.base.BaseModelEntity;
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.HttpException;

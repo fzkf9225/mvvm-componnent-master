@@ -1,9 +1,6 @@
 package pers.fz.mvvm.repository;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
-import com.google.android.gms.common.api.Api;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -13,8 +10,7 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.base.ErrorConsumer;
-import pers.fz.mvvm.base.IRepository;
+import pers.fz.mvvm.api.ErrorConsumer;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.inter.RetryService;
 

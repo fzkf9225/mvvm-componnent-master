@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 
 import pers.fz.mvvm.inter.RetryService;
+import pers.fz.mvvm.repository.IRepository;
 
 import javax.inject.Inject;
 

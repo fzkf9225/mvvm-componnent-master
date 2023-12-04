@@ -3,21 +3,18 @@ package com.casic.titan.demo.fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.paging.PagingData;
-
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.bean.ForestBean;
 import com.casic.titan.demo.repository.DemoPagingRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
+import pers.fz.mvvm.base.BasePagingFragment;
+import pers.fz.mvvm.base.BaseSmartPagingFragment;
+import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.repository.PagingRepository;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
-import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**
@@ -25,7 +22,7 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, PagingRecyclerViewBinding, ForestBean> {
+public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewModel, BaseSmartPagingBinding, ForestBean> {
 
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {

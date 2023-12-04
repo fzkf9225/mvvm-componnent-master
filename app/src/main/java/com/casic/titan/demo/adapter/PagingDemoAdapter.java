@@ -10,7 +10,7 @@ import com.casic.titan.demo.databinding.PagingItemBinding;
 
 import java.util.Objects;
 
-import pers.fz.mvvm.adapter.BasePagingAdapter;
+import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 
 /**
