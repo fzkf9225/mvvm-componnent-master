@@ -3,14 +3,9 @@ package com.casic.titan.demo.fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.paging.PagingData;
-
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.bean.ForestBean;
 import com.casic.titan.demo.repository.DemoPagingRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
@@ -33,7 +28,7 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     }
 
     @Override
-    public PagingRepository createRepository() {
+    public PagingRepository<ForestBean> createRepository() {
         return new DemoPagingRepository(mViewModel.retryService);
     }
 

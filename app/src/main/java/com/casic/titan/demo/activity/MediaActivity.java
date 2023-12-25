@@ -1,20 +1,12 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.ParcelFileDescriptor;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
-
-import androidx.lifecycle.Observer;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
@@ -32,7 +24,6 @@ import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.media.MediaBean;
 import pers.fz.mvvm.util.media.MediaBuilder;
 import pers.fz.mvvm.util.media.MediaHelper;
 import pers.fz.mvvm.util.media.MediaListener;
@@ -69,27 +60,34 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     public void initView(Bundle savedInstanceState) {
         //初始化一些媒体配置
         //新api实现最大可选数量比较鸡肋因此我直接判断选择完的回调方法，当然应该也可以通过重新PickMultipleVisualMedia去实现，没试过看源码应该是可以实现的
-        mediaHelper = new MediaBuilder(this, this).setImageMaxSelectedCount(5).setVideoMaxSelectedCount(2).setChooseType(MediaHelper.PICK_TYPE).setWaterMark("仅测试使用").setMediaListener(new MediaListener() {
-            @Override
-            public int onSelectedFileCount() {
-                return audioList.size();
-            }
+        mediaHelper = new MediaBuilder(this, this)
+                .setImageMaxSelectedCount(5)
+                .setVideoMaxSelectedCount(2)
+                .setChooseType(MediaHelper.PICK_TYPE)
+                .setWaterMark("仅测试使用")
+                .setMediaListener(new MediaListener() {
+                    @Override
+                    public int onSelectedFileCount() {
+                        return audioList.size();
+                    }
 
-            @Override
-            public int onSelectedAudioCount() {
-                return fileList.size();
-            }
+                    @Override
+                    public int onSelectedAudioCount() {
+                        return fileList.size();
+                    }
 
-            @Override
-            public int onSelectedImageCount() {
-                return imageAddAdapter.getList().size();
-            }
+                    @Override
+                    public int onSelectedImageCount() {
+                        return imageAddAdapter.getList().size();
+                    }
 
-            @Override
-            public int onSelectedVideoCount() {
-                return videoAddAdapter.getList().size();
-            }
-        }).setImageQualityCompress(200).builder();
+                    @Override
+                    public int onSelectedVideoCount() {
+                        return videoAddAdapter.getList().size();
+                    }
+                })
+                .setImageQualityCompress(200)
+                .builder();
         binding.buttonImage.setOnClickListener(v -> {
             try {
                 if (binding.getSourceImagePath() == null) {
@@ -98,7 +96,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 }
                 InputStream inputStream = getContentResolver().openInputStream(binding.getSourceImagePath());
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                mediaHelper.startWaterMark(bitmap,66);
+                mediaHelper.startWaterMark(bitmap, 66);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 showToast(e.getMessage());
@@ -120,7 +118,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
             } else if (mediaBean.getMediaType() == MediaTypeEnum.AUDIO.getMediaType()) {
                 audioList.clear();
-
                 audioList.addAll(coverUriToString(mediaBean.getMediaList()));
                 binding.chooseAudioResult.setText("音频选择结果：" + new Gson().toJson(audioList));
             } else if (mediaBean.getMediaType() == MediaTypeEnum.FILE.getMediaType()) {
@@ -161,7 +158,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
             new PicShowDialog(MediaActivity.this, PicShowDialog.createUriImageInfo(binding.getWaterMarkImagePath()), 0)
                     .show();
-        });
+        }) ;
     }
 
     private List<String> coverUriToString(List<Uri> uriList) {

@@ -1,15 +1,11 @@
 package com.casic.titan.demo.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityCoordinatorBinding;
-import com.casic.titan.portal.PortalSdk;
-import com.casic.titan.portal.ShareDataListener;
 import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -22,7 +18,7 @@ import pers.fz.mvvm.viewmodel.MainViewModel;
  * describe :
  */
 @AndroidEntryPoint
-public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoordinatorBinding> implements ShareDataListener {
+public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoordinatorBinding> {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_coordinator;
@@ -55,14 +51,7 @@ public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoo
         binding.detailToolbar.setNavigationOnClickListener(v -> finish());
         binding.toolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsingToolbarTitleStyle);
         binding.toolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedToolbarTitleStyle);
-        PortalSdk.getInstance().init(2000);
-        new Handler(Looper.getMainLooper()).postDelayed(()->{
-            PortalSdk.getInstance().registerCallback(10086, this);
-        },3000);
-        binding.fab.setOnClickListener(v->{
-            String content= PortalSdk.getInstance().getShareData(10086);
-            LogUtil.show(TAG, " 获取Content:" + content);
-        });
+        binding.fab.setOnClickListener(v-> showToast("点击事件"));
     }
 
     @Override
@@ -70,10 +59,4 @@ public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoo
 
     }
 
-
-    @Override
-    public void notifyShareData(int id, String content) {
-        showToast("成功！！！！");
-        LogUtil.show(TAG, "ID:" + id + " Content:" + content);
-    }
 }

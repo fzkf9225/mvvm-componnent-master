@@ -9,10 +9,8 @@ import com.casic.titan.demo.repository.DemoPagingRepository;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
-import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
-import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.repository.PagingRepository;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
@@ -30,7 +28,7 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewM
     }
 
     @Override
-    public PagingRepository createRepository() {
+    public PagingRepository<ForestBean> createRepository() {
         return new DemoPagingRepository(mViewModel.retryService);
     }
 
@@ -44,6 +42,7 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewM
     public void onItemClick(View view, ForestBean item, int position) {
         super.onItemClick(view, item, position);
         showToast("点击的是第" + position + "行，内容是：" + item.getCertificate());
+
     }
 
     @Override
