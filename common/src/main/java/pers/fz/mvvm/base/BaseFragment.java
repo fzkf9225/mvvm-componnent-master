@@ -178,7 +178,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage) {
-        requireActivity();
         if (!requireActivity().isFinishing()) {
             requireActivity().runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
         }
@@ -186,17 +185,18 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
-        requireActivity();
         if (!requireActivity().isFinishing()) {
-            requireActivity().runOnUiThread(()-> CustomProgressDialog.getInstance(getContext()).dismiss());
+            requireActivity().runOnUiThread(() -> CustomProgressDialog.getInstance(getContext()).dismiss());
         }
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        requireActivity();
         if (!requireActivity().isFinishing()) {
             requireActivity().runOnUiThread(() -> {
+                if (CustomProgressDialog.getInstance(requireActivity()) == null || !CustomProgressDialog.getInstance(requireActivity()).isShowing()) {
+                    return;
+                }
                 CustomProgressDialog.getInstance(requireActivity())
                         .refreshMessage(dialogMessage);
             });
