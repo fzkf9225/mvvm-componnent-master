@@ -25,7 +25,7 @@ public class DownloadInterceptor implements Interceptor {
         Response originalResponse = chain.proceed(chain.request());
 
         return originalResponse.newBuilder()
-                .body(new DownloadResponseBody(originalResponse.body(), listener))
+                .body(new DownloadResponseBody(originalResponse.headers(),originalResponse.body(), listener))
                 .build();
     }
 }

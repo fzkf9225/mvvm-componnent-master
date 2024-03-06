@@ -73,5 +73,37 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_apk"
             app:layout_constraintStart_toStartOf="parent"/>
 
+        <pers.fz.mvvm.wight.customlayout.CornerEditText
+            android:id="@+id/edit_rxjava"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/font_size_l"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:textColorHint="@color/nv_bg_color"
+            android:hint="请输入下载目标地址"
+            android:gravity="top"
+            android:padding="@dimen/padding_m"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            app:corner_backColor="@color/white"
+            app:corner_radius="@dimen/radius_l"
+            app:corner_storkColor="@color/h_line_color"
+            app:corner_storkWidth="1dp"
+            android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
+            android:layout_height="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_update"/>
+
+        <Button
+            android:id="@+id/button_rxjava"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="RxJava下载"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintTop_toBottomOf="@+id/edit_rxjava"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

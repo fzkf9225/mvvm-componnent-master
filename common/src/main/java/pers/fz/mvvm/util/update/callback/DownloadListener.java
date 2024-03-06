@@ -1,5 +1,6 @@
 package pers.fz.mvvm.util.update.callback;
 
+import okhttp3.Headers;
 import okhttp3.ResponseBody;
 
 /**
@@ -7,5 +8,5 @@ import okhttp3.ResponseBody;
  * describe：下载监听
  */
 public interface DownloadListener {
-    void onStart(ResponseBody responseBody);
+    void onStart(Headers responseHeaders, ResponseBody responseBody);
 }

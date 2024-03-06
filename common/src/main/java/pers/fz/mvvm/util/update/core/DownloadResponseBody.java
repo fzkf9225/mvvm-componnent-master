@@ -4,6 +4,7 @@ package pers.fz.mvvm.util.update.core;
 import java.io.IOException;
 
 import io.reactivex.rxjava3.annotations.NonNull;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -21,10 +22,10 @@ public class DownloadResponseBody extends ResponseBody {
     private final ResponseBody responseBody;
     private BufferedSource bufferedSource;
 
-    public DownloadResponseBody(ResponseBody responseBody, DownloadListener listener) {
+    public DownloadResponseBody(Headers responseHeaders, ResponseBody responseBody, DownloadListener listener) {
         this.responseBody = responseBody;
         if (null != listener) {
-            listener.onStart(responseBody);
+            listener.onStart(responseHeaders, responseBody);
         }
     }
 

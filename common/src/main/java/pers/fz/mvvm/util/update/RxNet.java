@@ -1,6 +1,5 @@
 package pers.fz.mvvm.util.update;
 
-import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,10 +8,16 @@ import android.text.TextUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.FileUtils;
@@ -26,29 +31,29 @@ import pers.fz.mvvm.util.update.core.RetrofitFactory;
  * @date 2020/06/19
  */
 public class RxNet {
-    private static final String TAG = RxNet.class.getSimpleName();
+    public static final String TAG = RxNet.class.getSimpleName();
     /**
      * 文件的保存路径
      */
     public static final String PATH = BaseApplication.getInstance().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator;
 
-    public static void download(final String url, final String filePath, final DownloadCallback callback) {
-        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(filePath)) {
+    public static void download(final String url, final String saveBasePath, final DownloadCallback callback) {
+        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(saveBasePath)) {
             if (null != callback) {
                 callback.onError("url or path empty");
             }
             return;
         }
-        File oldFile = new File(filePath);
-        if (oldFile.exists()) {
-            if (null != callback) {
-                callback.onFinish(oldFile);
-            }
-            return;
-        }
-
-        DownloadListener listener = responseBody -> saveFile(responseBody, url, filePath, callback);
-        RetrofitFactory.downloadFile(url, CommonUtil.getTempFile(url, filePath).length(), listener, new Observer<ResponseBody>() {
+//        File oldFile = new File(filePath);
+//        if (oldFile.exists()) {
+//            if (null != callback) {
+//                callback.onFinish(oldFile);
+//            }
+//            return;
+//        }
+        File tempFile = CommonUtil.getTempFile(url, saveBasePath);
+        DownloadListener listener = (responseHeaders, responseBody) -> saveFile(responseHeaders, responseBody, url, tempFile, saveBasePath, callback);
+        RetrofitFactory.downloadFile(url, tempFile.length(), listener, new Observer<>() {
             @Override
             public void onSubscribe(Disposable d) {
                 if (null != callback) {
@@ -77,47 +82,50 @@ public class RxNet {
         });
     }
 
-    private static void saveFile(final ResponseBody responseBody, String url, final String filePath, final DownloadCallback callback) {
+    private static void saveFile(Headers responseHeaders, final ResponseBody responseBody, String url, final File tempFile, final String saveBasePath, final DownloadCallback callback) {
         boolean downloadSuccss = true;
-        final File tempFile = CommonUtil.getTempFile(url, filePath);
         try {
-            writeFileToDisk(responseBody, tempFile.getAbsolutePath(), callback);
+            writeFileToDisk(responseBody, tempFile, callback);
         } catch (Exception e) {
             e.printStackTrace();
             downloadSuccss = false;
-            LogUtil.e(TAG, "saveFile异常:" + e);
             if (null != callback) {
                 callback.onError("下载错误");
             }
         }
 
         if (downloadSuccss) {
-            String extension = FileUtils.getFileExtension(url);
-            boolean renameSuccess = true;
-            if (extension != null && !extension.contains("?")) {
-                renameSuccess = tempFile.renameTo(new File(filePath));
+            String fileName;
+            MediaType mediaType = responseBody.contentType();
+            String contentDisposition = findHeaderIgnoreCase(responseHeaders, "Content-Disposition");
+            //获取请求头中的Content-Disposition，有值的话说明指定了文件名和后缀名
+            if (mediaType != null && !TextUtils.isEmpty(contentDisposition)) {
+                fileName = FileUtils.autoRenameFileName(saveBasePath, getFileNameFromForceDownloadHeader(contentDisposition));
+            } else {
+                fileName = FileUtils.autoRenameFileName(saveBasePath, FileUtils.getFileNameByUrl(url));
             }
-            boolean finalRenameSuccess = renameSuccess;
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if (null != callback && finalRenameSuccess) {
-                    callback.onFinish(new File(filePath));
+            File newFile = new File(saveBasePath + fileName);
+            boolean renameSuccess = tempFile.renameTo(newFile);
+            if (null != callback) {
+                if (renameSuccess) {
+                    callback.onFinish(newFile);
+                } else {
+                    callback.onFinish(tempFile);
                 }
-            });
+            }
         }
     }
 
-    @SuppressLint("DefaultLocale")
-    private static void writeFileToDisk(ResponseBody responseBody, String filePath, final DownloadCallback callback) throws IOException {
+    private static void writeFileToDisk(ResponseBody responseBody, File tempFile, final DownloadCallback callback) throws IOException {
         long totalByte = responseBody.contentLength();
         long downloadByte = 0;
-        File file = new File(filePath);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+        if (!Objects.requireNonNull(tempFile.getParentFile()).exists()) {
+            boolean mkdir = tempFile.getParentFile().mkdirs();
         }
 
         byte[] buffer = new byte[1024 * 4];
-        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rwd");
-        long tempFileLen = file.length();
+        RandomAccessFile randomAccessFile = new RandomAccessFile(tempFile, "rwd");
+        long tempFileLen = tempFile.length();
         randomAccessFile.seek(tempFileLen);
         while (true) {
             int len = responseBody.byteStream().read(buffer);
@@ -132,11 +140,33 @@ public class RxNet {
     }
 
     private static void callbackProgress(final long totalByte, final long downloadByte, final DownloadCallback callback) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (null != callback) {
-                callback.onProgress(totalByte, downloadByte, (int) ((downloadByte * 100) / totalByte));
-            }
-        });
+        if (null != callback) {
+            callback.onProgress(totalByte, downloadByte, (int) ((downloadByte * 100) / totalByte));
+        }
     }
 
+    /**
+     * 忽略大小写查找请求头参数
+     */
+    private static String findHeaderIgnoreCase(Headers headers, String headerName) {
+        for (String name : headers.names()) {
+            if (name.equalsIgnoreCase(headerName)) {
+                return headers.get(name);
+            }
+        }
+        return null;
+    }
+
+    private static String getFileNameFromForceDownloadHeader(String contentDispositionHeader) {
+        if (TextUtils.isEmpty(contentDispositionHeader)) {
+            return "unknown";
+        }
+        // 匹配Content-Disposition中的filename属性
+        Pattern pattern = Pattern.compile(".*filename=\"?([^\\s;]+)\"?.*");
+        Matcher matcher = pattern.matcher(contentDispositionHeader.toLowerCase());
+        if (matcher.matches()) {
+            return matcher.group(1);
+        }
+        return "unknown";
+    }
 }

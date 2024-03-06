@@ -43,8 +43,8 @@ public class CommonUtil {
         }
     }
 
-    public static File getTempFile(String url, String filePath) {
-        File parentFile = new File(filePath).getParentFile();
+    public static File getTempFile(String url, String basePath) {
+        File parentFile = new File(basePath);
         String md5 = FileUtils.getFileNameWithoutExtension(url);
         return new File(parentFile.getAbsolutePath(), md5 + ".temp.download");
     }

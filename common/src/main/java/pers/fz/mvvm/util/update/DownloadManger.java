@@ -2,6 +2,7 @@ package pers.fz.mvvm.util.update;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
@@ -17,8 +18,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
 
@@ -73,7 +80,6 @@ public class DownloadManger {
                 return;
             }
         }
-        String fileName = FileUtils.autoRenameFileName(saveBasePath, FileUtils.getFileNameByUrl(fileUrl));
         if (downloadMap.contains(fileUrl)) {
             if (downloadCallback != null) {
                 downloadCallback.onError("当前文件正在下载中，请勿重复下载！");
@@ -83,7 +89,7 @@ public class DownloadManger {
         }
         downloadMap.add(fileUrl);
         DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(mContext.getApplicationContext());
-        RxNet.download(fileUrl, saveBasePath + fileName, new DownloadCallback() {
+        RxNet.download(fileUrl, saveBasePath, new DownloadCallback() {
             @Override
             public void onStart(Disposable d) {
                 new Handler(Looper.getMainLooper()).post(() -> {
@@ -134,15 +140,77 @@ public class DownloadManger {
     public void download(Activity mContext, String fileUrl) {
         download(mContext, fileUrl,
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,null);
-    }
-    public void download(Activity mContext, String fileUrl,String saveBasePath) {
-        download(mContext, fileUrl, saveBasePath,null);
+                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator, null);
     }
 
-    public void download(Activity mContext, String fileUrl,DownloadCallback downloadCallback) {
+    public void download(Activity mContext, String fileUrl, String saveBasePath) {
+        download(mContext, fileUrl, saveBasePath, null);
+    }
+
+    public void download(Activity mContext, String fileUrl, DownloadCallback downloadCallback) {
         download(mContext, fileUrl,
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator,downloadCallback);
+                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator, downloadCallback);
+    }
+    /**
+     * RxJava方式下载附件，需要自己判断权限
+     */
+    public Single<List<String>> rxjavaDownload(Context mContext, List<String> urlString) {
+        return Observable.fromIterable(urlString)
+                .concatMap((Function<String, ObservableSource<String>>) filePath -> rxjavaDownload(mContext, filePath))
+                .toList()
+                .observeOn(Schedulers.single());
+    }
+
+    /**
+     * RxJava方式下载附件，需要自己判断权限
+     */
+    public Observable<String> rxjavaDownload(Context mContext, String fileUrl) {
+        String saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator;
+        if (TextUtils.isEmpty(fileUrl)) {
+            return Observable.error(new RuntimeException("下载地址错误"));
+        }
+        if (downloadMap.contains(fileUrl)) {
+            return Observable.error(new RuntimeException("当前文件正在下载中，请勿重复下载！"));
+        }
+        downloadMap.add(fileUrl);
+        return Observable.create(emitter -> {
+            DownloadNotificationUtil downloadNotificationUtil = new DownloadNotificationUtil(mContext.getApplicationContext());
+            RxNet.download(fileUrl, saveBasePath, new DownloadCallback() {
+                @Override
+                public void onStart(Disposable d) {
+                    new Handler(Looper.getMainLooper()).post(() -> downloadNotificationUtil.showNotification(fileUrl.hashCode()));
+                }
+
+                @Override
+                public void onProgress(long totalByte, long currentByte, int progress) {
+                    new Handler(Looper.getMainLooper()).post(() -> downloadNotificationUtil.updateNotification(fileUrl.hashCode(),
+                            progress, FileUtils.getFileName(fileUrl)));
+                }
+
+                @Override
+                public void onFinish(File file) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        downloadMap.remove(fileUrl);
+                        emitter.onNext(file.getAbsolutePath());
+                        emitter.onComplete();
+                        downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+                        Toast.makeText(mContext.getApplicationContext(), "文件已保存至" + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+                @Override
+                public void onError(String msg) {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        downloadMap.remove(fileUrl);
+                        emitter.onError(new RuntimeException("文件下载错误，" + msg));
+                        emitter.onComplete();
+                        downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+                    });
+                }
+            });
+        });
+
     }
 }
