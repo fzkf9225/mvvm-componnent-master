@@ -112,19 +112,19 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     private MediaBuilder mediaBuilder;
     //旧版文件
-    private ActivityResultLauncher<String> imageMuLtiSelectorLauncher = null;
-    private ActivityResultLauncher<String> imageSingleSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> imageMuLtiSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> imageSingleSelectorLauncher = null;
 
-    private ActivityResultLauncher<String> audioMuLtiSelectorLauncher = null;
-    private ActivityResultLauncher<String> audioSingleSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> audioMuLtiSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> audioSingleSelectorLauncher = null;
 
-    private ActivityResultLauncher<String> fileMuLtiSelectorLauncher = null;
-    private ActivityResultLauncher<String> fileSingleSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> fileMuLtiSelectorLauncher = null;
+    private ActivityResultLauncher<String[]> fileSingleSelectorLauncher = null;
 
     private ActivityResultLauncher<String[]> permissionLauncher = null;
     private ActivityResultLauncher<Object> cameraLauncher = null;
-    private ActivityResultLauncher<String> videoLauncher = null;
-    private ActivityResultLauncher<String> videoMultiLauncher = null;
+    private ActivityResultLauncher<String[]> videoLauncher = null;
+    private ActivityResultLauncher<String[]> videoMultiLauncher = null;
     private ActivityResultLauncher<Object> shootLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiImageSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageSelectorLauncher = null;
@@ -169,28 +169,28 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             }
             //传统选择器
-            imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
             //传统选择器
-            audioMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            audioMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
-            audioSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            audioSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
             //传统选择器
-            fileMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            fileMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
-            fileSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            fileSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
 
             //权限监听
             permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
             cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder.getImageOutPutPath()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
-            videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
@@ -211,27 +211,27 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             }
             //注册图片选择框监听
-            imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
             //传统选择器
-            audioMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            audioMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
-            audioSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            audioSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
             //传统选择器
-            fileMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            fileMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
-            fileSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            fileSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
             //权限监听
             permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
             cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getImageOutPutPath()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetMultipleContents(),
+            videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
                     new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
-            videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.GetContent(),
+            videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
@@ -411,9 +411,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 //            }
 //        } else {
         if (mediaBuilder.getAudioMaxSelectedCount() == 1) {
-            audioMuLtiSelectorLauncher.launch("audio/*");
+            audioMuLtiSelectorLauncher.launch(new String[]{"audio/*"});
         } else {
-            audioMuLtiSelectorLauncher.launch("audio/*");
+            audioMuLtiSelectorLauncher.launch(new String[]{"audio/*"});
         }
 //        }
     }
@@ -437,9 +437,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
         }
         if (mediaBuilder.getFileMaxSelectedCount() == 1) {
-            fileSingleSelectorLauncher.launch("*/*");
+            fileSingleSelectorLauncher.launch(new String[]{"*/*"});
         } else {
-            fileMuLtiSelectorLauncher.launch("*/*");
+            fileMuLtiSelectorLauncher.launch(new String[]{"*/*"});
         }
     }
 
@@ -685,9 +685,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
         } else {
             if (mediaBuilder.getImageMaxSelectedCount() == 1) {
-                imageSingleSelectorLauncher.launch("image/*");
+                imageSingleSelectorLauncher.launch(new String[]{"image/*"});
             } else {
-                imageMuLtiSelectorLauncher.launch("image/*");
+                imageMuLtiSelectorLauncher.launch(new String[]{"image/*"});
             }
         }
     }
