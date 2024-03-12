@@ -873,9 +873,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
         } else {
             if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
-                videoLauncher.launch("video/*");
+                videoLauncher.launch(new String[]{"video/*"});
             } else {
-                videoMultiLauncher.launch("video/*");
+                videoMultiLauncher.launch(new String[]{"video/*"});
             }
         }
     }
