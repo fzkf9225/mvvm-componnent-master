@@ -93,6 +93,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation project(':common')
     implementation project(':userapi')
+    implementation project(':commonui')
     implementation project(':usercomponent')
     implementation project(':mqttcomponent')
     implementation project(':wscomponent')

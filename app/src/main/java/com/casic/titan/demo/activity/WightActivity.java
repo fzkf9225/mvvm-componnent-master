@@ -16,7 +16,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.RxView;
-import pers.fz.mvvm.wight.Code;
+import com.casic.titan.commonui.Code;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;

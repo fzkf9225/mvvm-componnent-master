@@ -32,3 +32,4 @@ include ':mqttcomponent'
 include ':app'
 rootProject.name = "mvvm-component-master"
 include ':wscomponent'
+include ':commonui'

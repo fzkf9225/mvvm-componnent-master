@@ -14,6 +14,10 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.activity.ComponentActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
@@ -22,6 +26,8 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseViewModel;
 
 import pers.fz.mvvm.databinding.WebViewBinding;
+import pers.fz.mvvm.util.CordovaDialogsHelper;
+import pers.fz.mvvm.util.SystemWebChromeClient;
 import pers.fz.mvvm.util.common.StringUtil;
 
 /**
@@ -57,7 +63,9 @@ public class WebViewActivity extends BaseActivity<BaseViewModel, WebViewBinding>
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         binding.webView.setWebViewClient(new MyWebViewClient());
-        binding.webView.setWebChromeClient(new MyWebChromeClient());
+        binding.webView.setWebChromeClient(
+                new SystemWebChromeClient(this,new CordovaDialogsHelper(this),binding.progressBar, toolbarBind.tvTitle)
+        );
         addMenu(R.menu.menu_browser, item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.toolbar_browser) {
@@ -109,18 +117,6 @@ public class WebViewActivity extends BaseActivity<BaseViewModel, WebViewBinding>
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             view.loadUrl(request.getUrl().toString());
             return true;
-        }
-    }
-
-    private class MyWebChromeClient extends WebChromeClient {
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            if (newProgress == 100) {
-                binding.progressBar.setVisibility(View.GONE);//加载完网页进度条消失
-            } else {
-                binding.progressBar.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
-                binding.progressBar.setProgress(newProgress);//设置进度值
-            }
         }
     }
 

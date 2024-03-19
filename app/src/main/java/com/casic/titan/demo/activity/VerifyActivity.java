@@ -1,5 +1,6 @@
 package com.casic.titan.demo.activity;
 
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,12 +14,16 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityVerifyBinding;
 
 import java.util.Arrays;
+import java.util.List;
 
 import pers.fz.mvvm.annotations.EntityValidator;
 import pers.fz.mvvm.annotations.VerifyResult;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.PopupWindowBean;
+import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
@@ -35,6 +40,7 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        getLifecycle().addObserver(binding.formImage);
         binding.editHobby.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,6 +73,12 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.FilterNull(verifyResult.getErrorMsg()));
             binding.tvVerifyResult.setText(String.format("%s,验证结果：%s", binding.getData().toString(), verifyResult.getErrorMsg()));
         });
+        binding.tvSex.setOnClickListener(v ->
+                new MenuDialog<>(this)
+                        .setData("男", "女", "未知")
+                        .setOnOptionBottomMenuClickListener((dialog, list, pos) -> binding.getData().setSex(list.get(pos).getName()))
+                        .builder()
+                        .show());
     }
 
     @Override
@@ -79,5 +91,11 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
         binding.setData(new Person("张三", "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getLifecycle().removeObserver(binding.formImage);
     }
 }

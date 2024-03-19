@@ -13,283 +13,191 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/padding_l"
-        android:paddingEnd="@dimen/padding_l"
         tools:context=".activity.VerifyActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!--姓名-->
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="姓名"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_name"
-                app:layout_constraintEnd_toStartOf="@+id/edit_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_name" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_name"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:layout_marginTop="@dimen/vertical_margin_l"
-                android:hint="请输入姓名，最多10个字"
-                android:inputType="text"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.name}"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请输入姓名"
+                app:label="姓名"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_name"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:required="true"
+                app:text="@={data.name}" />
+            <!--性别-->
+            <com.casic.titan.commonui.form.FormSelection
+                android:id="@+id/tv_sex"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="false"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请选择性别"
+                app:label="性别"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_name"
+                app:required="true"
+                app:text="@{data.sex}" />
             <!--手机号码-->
-            <TextView
-                android:id="@+id/tv_mobile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="手机"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_mobile"
-                app:layout_constraintEnd_toStartOf="@+id/edit_mobile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_mobile" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_mobile"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：15212345678"
-                android:inputType="number"
-                android:lines="1"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.mobile}"
-                android:imeOptions="actionNext"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="number"
+                app:hint="请输入手机号码"
+                app:label="手机号码"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_mobile"
-                app:layout_constraintTop_toBottomOf="@+id/edit_name" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+                app:required="true"
+                app:text="@={data.mobile}" />
             <!--座机-->
-            <TextView
-                android:id="@+id/tv_tel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="座机"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_tel"
-                app:layout_constraintEnd_toStartOf="@+id/edit_tel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_tel" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_tel"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：055162260000"
-                android:inputType="number"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.tel}"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="number"
+                app:hint="请输入座机号码"
+                app:label="座机号码"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_tel"
-                app:layout_constraintTop_toBottomOf="@+id/edit_mobile" />
-            <!--年龄-->
-            <TextView
-                android:id="@+id/tv_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="年龄"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_age"
-                app:layout_constraintEnd_toStartOf="@+id/edit_age"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_age" />
-
-            <EditText
+                app:layout_constraintTop_toBottomOf="@+id/edit_mobile"
+                app:required="true"
+                app:text="@={data.tel}" />
+            <!--年龄-->
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_age"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：18"
-                android:inputType="number"
-                android:lines="1"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.age}"
-                android:imeOptions="actionNext"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="number"
+                app:hint="请输入年龄"
+                app:label="年龄"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_age"
-                app:layout_constraintTop_toBottomOf="@+id/edit_tel" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_tel"
+                app:required="true"
+                app:text="@={data.age}" />
 
             <!--体重-->
-            <TextView
-                android:id="@+id/tv_weight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="体重"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_weight"
-                app:layout_constraintEnd_toStartOf="@+id/edit_weight"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_weight" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_weight"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：50.00（单位：kg）"
-                android:inputType="numberDecimal"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.weight}"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="numberDecimal"
+                app:hint="请输入体重，示例：50.00（单位：kg）"
+                app:label="体重"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_weight"
-                app:layout_constraintTop_toBottomOf="@+id/edit_age" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_age"
+                app:required="true"
+                app:text="@={data.weight}" />
 
             <!--身高-->
-            <TextView
-                android:id="@+id/tv_height"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="身高"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_height"
-                app:layout_constraintEnd_toStartOf="@+id/edit_height"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_height" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_height"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：170（单位：厘米）"
-                android:inputType="numberDecimal"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.height}"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="numberDecimal"
+                app:hint="请输入身高，示例：170（单位：厘米）"
+                app:label="身高"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_height"
-                app:layout_constraintTop_toBottomOf="@+id/edit_weight" />
-
-            <!--邮箱-->
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="邮箱"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintBottom_toBottomOf="@id/edit_email"
-                app:layout_constraintEnd_toStartOf="@+id/edit_email"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_email" />
-
-            <EditText
+                app:layout_constraintTop_toBottomOf="@+id/edit_weight"
+                app:required="true"
+                app:text="@={data.height}" />
+            <!--邮箱-->
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_email"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/height_xl"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:hint="示例：tencent@qq.com"
-                android:inputType="text"
-                android:lines="1"
-                android:imeOptions="actionNext"
-                android:paddingStart="@dimen/padding_m"
-                android:paddingEnd="@dimen/padding_m"
-                android:text="@={data.email}"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请输入邮箱，示例：tencent@qq.com"
+                app:label="邮箱"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_email"
-                app:layout_constraintTop_toBottomOf="@+id/edit_height" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_height"
+                app:required="true"
+                app:text="@={data.email}" />
 
             <!--爱好-->
-            <TextView
-                android:id="@+id/tv_hobby"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:lines="1"
-                android:text="爱好"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintEnd_toStartOf="@+id/edit_hobby"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit_hobby" />
-
-            <EditText
+            <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_hobby"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/y300"
-                android:layout_marginStart="@dimen/horizontal_margin_m"
-                android:background="@drawable/bg_edittext"
-                android:gravity="top"
-                android:hint="请输入爱好,多个爱好以“、”隔开"
-                android:inputType="text"
-                android:lines="1"
-                android:imeOptions="actionDone"
-                android:padding="@dimen/padding_m"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
-                android:textSize="@dimen/font_size_xl"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请输入爱好,多个爱好以“、”隔开"
+                app:label="爱好"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/tv_hobby"
-                app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_email"
+                app:required="true"/>
+            <!--本人照片-->
+            <com.casic.titan.commonui.form.FormImage
+                android:id="@+id/form_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:mediaType="camera_album"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:label="本人照片"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_hobby"
+                app:required="false" />
 
             <Button
                 android:id="@+id/verify_submit"
@@ -302,7 +210,7 @@
                 android:text="校验"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_xxl"
-                app:layout_constraintTop_toBottomOf="@+id/edit_hobby" />
+                app:layout_constraintTop_toBottomOf="@+id/form_image" />
 
             <TextView
                 android:id="@+id/tv_verify_result"

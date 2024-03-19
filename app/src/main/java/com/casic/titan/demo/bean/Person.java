@@ -1,7 +1,11 @@
 package com.casic.titan.demo.bean;
 
+import android.net.Uri;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+
+import com.casic.titan.demo.BR;
 
 import java.util.List;
 
@@ -26,20 +30,26 @@ public class Person extends BaseObservable {
     private String name;
 
     @VerifyField({
+            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "请选择性别！"),
+    })
+    @VerifyFieldSort(2)
+    private String sex;
+
+    @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
     })
-    @VerifyFieldSort(2)
+    @VerifyFieldSort(3)
     private String mobile;
 
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写固话号码！"),
             @VerifyParams(type = VerifyType.TEL_PHONE, errorMsg = "固话号码格式输入不正确！")
     })
-    @VerifyFieldSort(3)
+    @VerifyFieldSort(4)
     private String tel;
 
-    @VerifyFieldSort(4)
+    @VerifyFieldSort(5)
     @VerifyParams(type = VerifyType.NUMBER_RANGE, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     private String age;
 
@@ -49,7 +59,7 @@ public class Person extends BaseObservable {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, maxNumber = 200, errorMsg = "你该减肥了！！！"),
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
-    @VerifyFieldSort(5)
+    @VerifyFieldSort(6)
     private String weight;
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "身高为空"),
@@ -57,18 +67,22 @@ public class Person extends BaseObservable {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
-    @VerifyFieldSort(6)
+    @VerifyFieldSort(7)
     private String height;
     @VerifyField({
 //            @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "邮箱地址为空！"),
             @VerifyParams(type = VerifyType.EMAIL, notNull = false, errorMsg = "邮箱地址错误！")
     })
-    @VerifyFieldSort(7)
+    @VerifyFieldSort(8)
     private String email;
 
     @VerifyFieldSort(8)
     @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的爱好！")
     private List<String> hobby;
+
+    @VerifyFieldSort(9)
+    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
+    private List<Uri> imageList;
 
     public Person() {
     }
@@ -91,6 +105,7 @@ public class Person extends BaseObservable {
 
     public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(com.casic.titan.demo.BR.name);
     }
 
     @Bindable
@@ -100,6 +115,7 @@ public class Person extends BaseObservable {
 
     public void setAge(String age) {
         this.age = age;
+        notifyPropertyChanged(com.casic.titan.demo.BR.age);
     }
 
     @Bindable
@@ -109,6 +125,7 @@ public class Person extends BaseObservable {
 
     public void setWeight(String weight) {
         this.weight = weight;
+        notifyPropertyChanged(com.casic.titan.demo.BR.weight);
     }
 
     @Bindable
@@ -118,6 +135,7 @@ public class Person extends BaseObservable {
 
     public void setEmail(String email) {
         this.email = email;
+        notifyPropertyChanged(com.casic.titan.demo.BR.email);
     }
 
     public List<String> getHobby() {
@@ -135,6 +153,7 @@ public class Person extends BaseObservable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+        notifyPropertyChanged(com.casic.titan.demo.BR.mobile);
     }
 
     @Bindable
@@ -144,6 +163,7 @@ public class Person extends BaseObservable {
 
     public void setTel(String tel) {
         this.tel = tel;
+        notifyPropertyChanged(com.casic.titan.demo.BR.tel);
     }
 
     @Bindable
@@ -153,12 +173,32 @@ public class Person extends BaseObservable {
 
     public void setHeight(String height) {
         this.height = height;
+        notifyPropertyChanged(com.casic.titan.demo.BR.height);
+    }
+
+    @Bindable
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+        notifyPropertyChanged(com.casic.titan.demo.BR.sex);
+    }
+
+    public List<Uri> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<Uri> imageList) {
+        this.imageList = imageList;
     }
 
     @Override
     public String toString() {
         return "Person{" +
                 "name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", tel='" + tel + '\'' +
                 ", age='" + age + '\'' +
@@ -166,6 +206,7 @@ public class Person extends BaseObservable {
                 ", height='" + height + '\'' +
                 ", email='" + email + '\'' +
                 ", hobby=" + hobby +
+                ", imageList=" + imageList +
                 '}';
     }
 }

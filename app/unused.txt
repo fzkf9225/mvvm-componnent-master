@@ -19625,7 +19625,7 @@ pers.fz.mvvm.util.upload.OSSHelper
 pers.fz.mvvm.viewmodel.MainViewModel:
     public static final java.lang.String ARG_PAGE
 pers.fz.mvvm.viewmodel.VideoPlayerViewModel
-pers.fz.mvvm.wight.Code:
+com.casic.titan.commonui.Code:
     private static final int BASE_PADDING_LEFT
     private static final int BASE_PADDING_TOP
     private static final int DEFAULT_CODE_LENGTH
@@ -19702,12 +19702,12 @@ pers.fz.mvvm.wight.recyclerview.OnStartDragListener
 pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback
 pers.fz.mvvm.wight.recyclerview.TxSlideRecyclerView:
     private static final int MINIMUM_VELOCITY
-pers.fz.mvvm.wight.tickview.DisplayUtil:
+com.casic.titan.commonui.tickview.DisplayUtil:
     void <init>()
-pers.fz.mvvm.wight.tickview.TickAnimatorListener$TickAnimatorListenerAdapter
-pers.fz.mvvm.wight.tickview.TickView:
+com.casic.titan.commonui.tickview.TickAnimatorListener$TickAnimatorListenerAdapter
+com.casic.titan.commonui.tickview.TickView:
     private static final int SCALE_TIMES
-pers.fz.mvvm.wight.tickview.TickViewConfig$TickAnimType
+com.casic.titan.commonui.tickview.TickViewConfig$TickAnimType
 pers.fz.mvvm.zxing.AmbientLightManager:
     private static final float BRIGHT_ENOUGH_LUX
     private static final float TOO_DARK_LUX
@@ -20966,10 +20966,10 @@ picdialog.PhotoViewAttacher:
     private picdialog.PhotoViewAttacher$OnMatrixChangedListener mMatrixChangeListener
     private picdialog.PhotoViewAttacher$OnViewTapListener mViewTapListener
 picdialog.scrollerproxy.PreGingerScroller
-pers.fz.mvvm.wight.tickview.TickAnimatorListener:
-    public abstract void onAnimationEnd(pers.fz.mvvm.wight.tickview.TickView)
-    public abstract void onAnimationStart(pers.fz.mvvm.wight.tickview.TickView)
-pers.fz.mvvm.wight.tickview.TickView:
+com.casic.titan.commonui.tickview.TickAnimatorListener:
+    public abstract void onAnimationEnd(com.casic.titan.commonui.tickview.TickView)
+    public abstract void onAnimationStart(com.casic.titan.commonui.tickview.TickView)
+com.casic.titan.commonui.tickview.TickView:
     static final synthetic boolean $assertionsDisabled
 tv.danmaku.ijk.media.player.AbstractMediaPlayer:
     private tv.danmaku.ijk.media.player.IMediaPlayer$OnTimedTextListener mOnTimedTextListener

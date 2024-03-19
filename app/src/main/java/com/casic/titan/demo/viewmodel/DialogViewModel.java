@@ -29,7 +29,7 @@ import pers.fz.mvvm.wight.dialog.MessageDialog;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.dialog.ProgressBarDialog;
-import pers.fz.mvvm.wight.dialog.TickViewMessageDialog;
+import com.casic.titan.commonui.dialog.TickViewMessageDialog;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
 

@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import pers.fz.mvvm.activity.WebViewActivity;
+import pers.fz.mvvm.util.jiami.MD5Util;
 
 /**
  * Created by fz on 2018/3/16.
@@ -43,10 +44,15 @@ public class CommonUtil {
         }
     }
 
-    public static File getTempFile(String url, String basePath) {
-        File parentFile = new File(basePath);
-        String md5 = FileUtils.getFileNameWithoutExtension(url);
-        return new File(parentFile.getAbsolutePath(), md5 + ".temp.download");
+    public static File getTempFile(String url, String saveBasePath) {
+        String tempFileName = null;
+        try {
+            tempFileName = "TEMP" + MD5Util.md5Encode(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            tempFileName = FileUtils.getFileNameWithoutExtension(url);
+        }
+        return new File(saveBasePath, tempFileName + ".temp.download");
     }
 
     public synchronized static byte[] drawableToByte(Drawable drawable) {
