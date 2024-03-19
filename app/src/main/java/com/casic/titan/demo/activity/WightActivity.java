@@ -3,6 +3,7 @@ package com.casic.titan.demo.activity;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.casic.titan.commonui.code.Code;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
@@ -16,7 +17,6 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.RxView;
-import com.casic.titan.commonui.Code;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;

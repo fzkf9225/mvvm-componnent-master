@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.MediaListener;
+import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.media.MediaBuilder;
-import pers.fz.mvvm.util.media.MediaHelper;
-import pers.fz.mvvm.util.media.MediaListener;
-import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.OpenFileDialog;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;

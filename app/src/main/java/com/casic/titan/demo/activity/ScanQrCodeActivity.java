@@ -30,12 +30,12 @@ import java.io.InputStream;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.QRCodeUtil;
-import pers.fz.mvvm.util.media.MediaBuilder;
-import pers.fz.mvvm.util.media.MediaHelper;
-import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.util.update.DownloadManger;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;

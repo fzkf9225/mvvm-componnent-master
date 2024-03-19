@@ -14,9 +14,9 @@ import com.gyf.immersionbar.ImmersionBar;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.util.media.MediaBuilder;
-import pers.fz.mvvm.util.media.MediaHelper;
 import pers.fz.mvvm.viewmodel.MainViewModel;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 

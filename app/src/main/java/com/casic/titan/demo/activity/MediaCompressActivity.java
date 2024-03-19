@@ -1,7 +1,5 @@
 package com.casic.titan.demo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,14 +7,12 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityMediaCompressBinding;
 import com.casic.titan.demo.viewmodel.MediaCompressViewModel;
-import com.google.gson.Gson;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.media.MediaBuilder;
-import pers.fz.mvvm.util.media.MediaHelper;
-import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 @AndroidEntryPoint

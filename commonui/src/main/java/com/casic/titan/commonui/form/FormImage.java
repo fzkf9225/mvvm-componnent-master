@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +28,14 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.MediaListener;
+import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.media.MediaBuilder;
-import pers.fz.mvvm.util.media.MediaHelper;
-import pers.fz.mvvm.util.media.MediaListener;
-import pers.fz.mvvm.util.media.MediaTypeEnum;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;

@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.titan.commonui'
+    namespace 'pers.fz.media'
     compileSdk project.COMPILE_SDK_VERSION
 
     defaultConfig {
-        minSdk  project.MIN_SDK_VERSION
-        targetSdk  project.TARGET_SDK_VERSION
+        minSdk project.MIN_SDK_VERSION
+        targetSdk project.TARGET_SDK_VERSION
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -58,24 +58,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.viewpager2:viewpager2:1.1.0-beta01"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
-    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:4.1.12'
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.1.12'
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:CalendarPicker:4.1.12'
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelView:4.1.12'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "org.aspectj:aspectjrt:1.9.6"
+    implementation "com.googlecode.mp4parser:isoparser:1.0.6"
+    implementation "com.squareup.picasso:picasso:2.71828"
     implementation project(':common')
-    implementation project(':commonmedia')
 }
+
 
 //执行以下命令完成制品推送
 //推送命令
@@ -88,8 +80,8 @@ afterEvaluate {
         publications {
             plugin(MavenPublication) {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
-                groupId = 'com.casic.titan.commonui'
-                artifactId = 'commonui'
+                groupId = 'pers.fz.media'
+                artifactId = 'media'
                 version = '1.0.0'
             }
         }

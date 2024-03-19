@@ -81,6 +81,7 @@ dependencies {
     implementation project(":common")
     implementation project(":userapi")
     implementation project(":mqttcomponent")
+    implementation project(':commonmedia')
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
