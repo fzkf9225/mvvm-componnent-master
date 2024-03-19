@@ -337,4 +337,24 @@ public class NumberUtils {
         pattern = Pattern.compile(regx);
         return pattern.matcher(str).matches();
     }
+    public static boolean isNullOrZero(String number) {
+        if (null == number || "".equals(number) || number.isEmpty()) {
+            return true;
+        }
+        if ("0".equals(number) || "0.0".equals(number) || "0.00".equals(number)) {
+            return true;
+        }
+        if (!RegexUtils.isDouble(number)) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(number);
+            if (0.0 == d) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
