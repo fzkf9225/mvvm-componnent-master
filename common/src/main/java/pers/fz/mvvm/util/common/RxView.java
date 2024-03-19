@@ -29,6 +29,7 @@ public class RxView {
         return Observable.create((ObservableOnSubscribe<View>)
                         emitter -> view.setOnClickListener(emitter::onNext)
                 )
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .throttleFirst(interval, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
