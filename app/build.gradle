@@ -87,13 +87,14 @@ dependencies {
     implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation project(':common')
     implementation project(':userapi')
     implementation project(':commonui')
+    implementation project(':googlegps')
     implementation project(':commonmedia')
     implementation project(':usercomponent')
     implementation project(':mqttcomponent')
@@ -115,7 +116,7 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
 
-    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"

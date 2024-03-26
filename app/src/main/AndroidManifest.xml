@@ -131,7 +131,9 @@
         <activity
             android:name=".activity.WightActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".activity.GoogleGPSActivity"
+            android:exported="false" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

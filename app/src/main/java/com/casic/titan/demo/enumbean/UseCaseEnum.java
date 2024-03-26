@@ -7,6 +7,7 @@ import com.casic.titan.demo.activity.DemoPagingActivity;
 import com.casic.titan.demo.activity.DemoSmartPagingActivity;
 import com.casic.titan.demo.activity.DialogActivity;
 import com.casic.titan.demo.activity.DownloadActivity;
+import com.casic.titan.demo.activity.GoogleGPSActivity;
 import com.casic.titan.demo.activity.KotlinActivity;
 import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.MediaCompressActivity;
@@ -16,6 +17,7 @@ import com.casic.titan.demo.activity.VerifyActivity;
 import com.casic.titan.demo.activity.ViewPagerSampleActivity;
 import com.casic.titan.demo.activity.WightActivity;
 import com.casic.titan.demo.bean.UseCase;
+import com.casic.titan.googlegps.GpsLoggingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public enum UseCaseEnum {
     KOTLIN(KotlinActivity.class, "kotlin父类测试", "测试kotlin父类代码", null),
     ANNOTATION(VerifyActivity.class, "自定义注解测试", "通过自定义注解验证实体类参数问题", null),
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片", null),
+    GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
 
     ;
 

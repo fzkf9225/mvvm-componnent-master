@@ -1,5 +1,7 @@
 package com.casic.titan.demo.api;
 
+import com.casic.titan.googlegps.common.AppSettings;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.HiltAndroidApp;
@@ -22,6 +24,7 @@ public class ApplicationHelper extends BaseApplication {
         super.onCreate();
         Config.getInstance().init(this);
         Config.getInstance().enableDebug(true);
+        AppSettings.getInstance().onCreate(this);
         new ApiRetrofit.Builder(this)
                 .addDefaultHeader()
                 .setErrorService(errorService)

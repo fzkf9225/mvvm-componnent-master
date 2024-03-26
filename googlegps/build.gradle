@@ -1,0 +1,94 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'com.casic.titan.googlegps'
+    compileSdk project.COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdk project.MIN_SDK_VERSION
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
+    androidTestImplementation "androidx.test.espresso:$espressoCoreVersion"
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
+    implementation "androidx.preference:preference:$preferenceVersion"
+    //Debug Logging
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation('com.github.tony19:logback-android-classic:1.1.1-2'){
+        exclude group: 'com.google.android', module: 'android'
+    }
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    //OKHTTP client
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+
+    //OKHTTP interceptor, works with oauth signpost
+    implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
+    //CSV library
+    implementation("org.apache.commons:commons-csv:$apacheCommonCsvVersion")
+    //Android Priority Jobqueue
+    implementation ('com.birbit:android-priority-jobqueue:2.0.1'){
+        exclude group: 'com.google.android', module: 'android'
+    }
+    implementation "org.apache.jackrabbit:jackrabbit-webdav:$apacheJackrabbitWebdav"
+    //CSV library
+    implementation('org.apache.commons:commons-csv:1.9.0')
+    implementation "io.netty:netty-all:$nettyVersion"
+    implementation "org.apache.commons:commons-lang3:$apacheCommonLang3Version"
+}
+//执行以下命令完成制品推送
+//推送命令
+//gradle publish
+//# 如果你的项目使用了gralde wrapper组件的话请使用以下命令
+//# ./gradlew publish
+apply plugin: 'maven-publish'
+afterEvaluate {
+    publishing {
+        publications {
+            plugin(MavenPublication) {
+                artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
+                groupId = 'com.casic.titan.googlegps'
+                artifactId = 'googlegps'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+        }
+    }
+}
