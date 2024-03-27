@@ -42,7 +42,7 @@ public class RegexUtils {
     /**
      * Double正则表达式 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
      */
-    public static final String DOUBLE = "^-?([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*|0?\\.0+|0)$";
+    public static final String DOUBLE = "^[-+]?[0-9]+(\\.[0-9]+)?$";
     /**
      * 两位有效数字
      */
@@ -50,11 +50,11 @@ public class RegexUtils {
     /**
      * 正Double正则表达式 >=0 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
      */
-    public static final String DOUBLE_NEGATIVE = "^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*|0?\\.0+|0$";
+    public static final String DOUBLE_NEGATIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
     /**
      * 负Double正则表达式 <= 0 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
      */
-    public static final String DOUBLE_POSITIVE = "^(-([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*))|0?\\.0+|0$";
+    public static final String DOUBLE_POSITIVE = "^-[0-9]+(\\.[0-9]+)?$";
     /**
      * 年龄正则表达式 ^(?:[1-9][0-9]?|1[01][0-9]|120)$ 匹配0-120岁
      */
