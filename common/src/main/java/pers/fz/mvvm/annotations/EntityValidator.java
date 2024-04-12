@@ -71,13 +71,13 @@ public class EntityValidator {
                     //当不是NOTNULL但是又允许为空时，即判断某个条件时，有输入则判断，没有输入值则不判断
                     if (VerifyType.NOTNULL != verifyType && !params.notNull()) {
                         if (value == null) {
-                            return VerifyResult.ok();
+                            continue;
                         } else if (value instanceof Collection<?> collection && collection.size() == 0) {
-                            return VerifyResult.ok();
+                            continue;
                         } else if (value instanceof Map<?, ?> map && map.size() == 0) {
-                            return VerifyResult.ok();
+                            continue;
                         } else if (StringUtil.isEmpty(value)) {
-                            return VerifyResult.ok();
+                            continue;
                         }
                     }
                     //是否允许为空实现，空集合、空map等情况
