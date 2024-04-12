@@ -28,7 +28,7 @@ public @interface VerifyParams {
 
     int maxLength() default -1;
 
-    double minNumber() default -Double.MIN_VALUE;
+    double minNumber() default -Double.MAX_VALUE;
 
     double maxNumber() default Double.MAX_VALUE;
 
