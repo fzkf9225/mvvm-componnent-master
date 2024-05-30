@@ -7,8 +7,7 @@ import com.casic.titan.demo.databinding.ViewPagerSampleFragmentBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.base.BaseViewPagerFragment;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
  * Created by fz on 2023/8/17 10:57
@@ -16,7 +15,7 @@ import pers.fz.mvvm.base.BaseViewPagerFragment;
  */
 
 @AndroidEntryPoint
-public class ViewPagerSampleFragment extends BaseFragment<BaseViewModel, ViewPagerSampleFragmentBinding> {
+public class ViewPagerSampleFragment extends BaseFragment<EmptyViewModel, ViewPagerSampleFragmentBinding> {
     @Override
     protected int getLayoutId() {
         return R.layout.view_pager_sample_fragment;

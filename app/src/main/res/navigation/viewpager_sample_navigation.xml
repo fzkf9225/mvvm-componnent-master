@@ -8,5 +8,5 @@
         android:id="@+id/recyclerview_sample_layout_page"
         android:name="com.casic.titan.demo.fragment.ViewPagerTabSampleFragment"
         android:label="RecyclerViewSample示例"
-        tools:layout="@layout/smartrecyclerview" />
+        tools:layout="@layout/base_tablayout_viewpager" />
 </navigation>

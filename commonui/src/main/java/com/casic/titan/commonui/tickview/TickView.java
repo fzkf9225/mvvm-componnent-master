@@ -89,7 +89,7 @@ public class TickView extends View {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TickView);
         mConfig.setUnCheckBaseColor(typedArray.getColor(R.styleable.TickView_uncheck_base_color,0xfafafa))
                 .setCheckBaseColor(typedArray.getColor(R.styleable.TickView_check_base_color, 0x1c50b5))
-                .setCheckTickColor(typedArray.getColor(R.styleable.TickView_check_tick_color, getResources().getColor(R.color.white)))
+                .setCheckTickColor(typedArray.getColor(R.styleable.TickView_check_tick_color, 0xffffff))
                 .setRadius(typedArray.getDimensionPixelOffset(R.styleable.TickView_radius, dp2px(30)))
                 .setClickable(typedArray.getBoolean(R.styleable.TickView_clickable, true))
                 .setTickRadius(dp2px(12))

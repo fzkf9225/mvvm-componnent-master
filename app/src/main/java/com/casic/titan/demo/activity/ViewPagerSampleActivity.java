@@ -10,10 +10,10 @@ import com.casic.titan.demo.databinding.ActivityViewPagerSampleBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 @AndroidEntryPoint
-public class ViewPagerSampleActivity extends BaseActivity<MainViewModel, ActivityViewPagerSampleBinding> {
+public class ViewPagerSampleActivity extends BaseActivity<EmptyViewModel, ActivityViewPagerSampleBinding> {
     private UseCase useCase;
     @Override
     protected int getLayoutId() {

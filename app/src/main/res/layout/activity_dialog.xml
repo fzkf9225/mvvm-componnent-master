@@ -70,6 +70,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/customProgressDialog" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/editAreaDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="EditAreaDialog"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inputDialog" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/menuDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +91,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inputDialog" />
+                app:layout_constraintTop_toBottomOf="@+id/editAreaDialog" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/messageDialog"

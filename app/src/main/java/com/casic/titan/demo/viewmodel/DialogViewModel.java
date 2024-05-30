@@ -23,6 +23,7 @@ import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.EditAreaDialog;
 import pers.fz.mvvm.wight.dialog.InputDialog;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 import pers.fz.mvvm.wight.dialog.MessageDialog;
@@ -69,7 +70,10 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
         if (R.id.bottomSheetDialog == view.getId()) {
             new BottomSheetDialog<>(view.getContext())
                     .setData(dataList)
-                    .setOnOptionBottomMenuClickListener((dialog, list, pos) -> baseView.showToast(list.get(pos).getName()))
+                    .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
+                        dialog.dismiss();
+                        baseView.showToast(list.get(pos).getName());
+                    })
                     .builder()
                     .show();
         } else if (R.id.confirmDialog == view.getId()) {
@@ -97,6 +101,14 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
                     .show();
         } else if (R.id.inputDialog == view.getId()) {
             new InputDialog(view.getContext())
+                    .setDefaultStr("北京")
+                    .setHintStr("请填写城市名称")
+                    .setTipsStr("城市")
+                    .setOnSureClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
+                    .builder()
+                    .show();
+        } else if (R.id.editAreaDialog == view.getId()) {
+            new EditAreaDialog(view.getContext())
                     .setDefaultStr("北京")
                     .setHintStr("请填写城市名称")
                     .setTipsStr("城市")

@@ -1,8 +1,8 @@
 package com.casic.titan.demo.fragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.base.BaseViewPagerFragment;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.databinding.BaseTablayoutViewpagerBinding;
 
 /**
@@ -10,7 +10,7 @@ import pers.fz.mvvm.databinding.BaseTablayoutViewpagerBinding;
  * describe :
  */
 @AndroidEntryPoint
-public class ViewPagerTabSampleFragment extends BaseViewPagerFragment<BaseViewModel, BaseTablayoutViewpagerBinding> {
+public class ViewPagerTabSampleFragment extends BaseViewPagerFragment<EmptyViewModel, BaseTablayoutViewpagerBinding> {
     @Override
     protected PagerInfo[] getPagers() {
         return new PagerInfo[]{

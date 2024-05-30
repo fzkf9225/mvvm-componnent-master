@@ -15,5 +15,5 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/viewpager_sample_navigation"
         android:layout_height="match_parent"
-        tools:context=".activity.RecyclerViewSampleActivity"/>
+        tools:context=".activity.ViewPagerSampleActivity"/>
 </layout>
