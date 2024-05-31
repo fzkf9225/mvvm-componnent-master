@@ -86,6 +86,9 @@
         tools:replace="android:theme"
         tools:targetApi="31">
         <activity
+            android:name=".activity.HiltActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DemoSmartPagingActivity"
             android:exported="false" />
         <activity
@@ -134,6 +137,7 @@
         <activity
             android:name=".activity.GoogleGPSActivity"
             android:exported="false" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

@@ -314,7 +314,7 @@
     *** get*() ;
 }
 
--keepclassmembers class com.casic.titan.sxly.bean.** {
+-keepclassmembers class pers.fz.mvvm.bean.** {
     public protected private *;<fields>; <methods>;
 }
 -keep class sun.misc.Unsafe { *; }

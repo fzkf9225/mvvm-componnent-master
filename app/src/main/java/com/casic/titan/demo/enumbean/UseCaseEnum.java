@@ -8,6 +8,7 @@ import com.casic.titan.demo.activity.DemoSmartPagingActivity;
 import com.casic.titan.demo.activity.DialogActivity;
 import com.casic.titan.demo.activity.DownloadActivity;
 import com.casic.titan.demo.activity.GoogleGPSActivity;
+import com.casic.titan.demo.activity.HiltActivity;
 import com.casic.titan.demo.activity.KotlinActivity;
 import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.MediaCompressActivity;
@@ -47,6 +48,7 @@ public enum UseCaseEnum {
     ANNOTATION(VerifyActivity.class, "自定义注解测试", "通过自定义注解验证实体类参数问题", null),
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片", null),
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
+    HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
 
     ;
 
