@@ -7,9 +7,11 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StyleRes;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 import com.gyf.immersionbar.ImmersionBar;
 
+import pers.fz.mvvm.BR;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 
@@ -20,7 +22,6 @@ import pers.fz.mvvm.util.theme.ThemeUtils;
 public class ToolbarConfig extends BaseObservable {
     private String title;
     private String titleHint = "请输入";
-    private boolean isEditTitle = false;
     private @DrawableRes int backIconRes = R.mipmap.icon_fh_black;
     /**
      * toolbar的menu主题,默认主题为黑色
@@ -54,10 +55,9 @@ public class ToolbarConfig extends BaseObservable {
         this.bgColor = bgColor;
     }
 
-    public ToolbarConfig(String title, String titleHint, boolean isEditTitle, int backIconRes, boolean defaultTheme, int textColor, int bgColor, boolean isShowBackButton, int viewStubLayout) {
+    public ToolbarConfig(String title, String titleHint, int backIconRes, boolean defaultTheme, int textColor, int bgColor, boolean isShowBackButton, int viewStubLayout) {
         this.title = title;
         this.titleHint = titleHint;
-        this.isEditTitle = isEditTitle;
         this.backIconRes = backIconRes;
         this.defaultTheme = defaultTheme;
         this.textColor = textColor;
@@ -110,11 +110,6 @@ public class ToolbarConfig extends BaseObservable {
             return this;
         }
 
-        public Builder isShowEditTitle(boolean isEditTitle) {
-            toolbarConfig.setEditTitle(isEditTitle);
-            return this;
-        }
-
         public Builder setBgColor(@ColorRes int colorRes) {
             toolbarConfig.setBgColor(colorRes);
             ImmersionBar.with(activity)
@@ -143,68 +138,68 @@ public class ToolbarConfig extends BaseObservable {
     public void setStyleTheme(int styleTheme) {
         this.styleTheme = styleTheme;
     }
-
+@Bindable
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+        notifyPropertyChanged(BR.title);
     }
-
+    @Bindable
     public String getTitleHint() {
         return titleHint;
     }
 
     public void setTitleHint(String titleHint) {
         this.titleHint = titleHint;
+        notifyPropertyChanged(BR.titleHint);
     }
 
-    public boolean isEditTitle() {
-        return isEditTitle;
-    }
-
-    public void setEditTitle(boolean editTitle) {
-        isEditTitle = editTitle;
-    }
-
+    @Bindable
     public int getBackIconRes() {
         return backIconRes;
     }
 
     public void setBackIconRes(int backIconRes) {
         this.backIconRes = backIconRes;
+        notifyPropertyChanged(BR.backIconRes);
     }
-
+    @Bindable
     public boolean isDefaultTheme() {
         return defaultTheme;
     }
 
     public void setDefaultTheme(boolean defaultTheme) {
         this.defaultTheme = defaultTheme;
+        notifyPropertyChanged(BR.defaultTheme);
     }
-
+    @Bindable
     public int getTextColor() {
         return textColor;
     }
 
     public void setTextColor(int textColor) {
         this.textColor = textColor;
+        notifyPropertyChanged(BR.textColor);
     }
-
+    @Bindable
     public int getBgColor() {
         return bgColor;
     }
 
     public void setBgColor(int bgColor) {
         this.bgColor = bgColor;
+        notifyPropertyChanged(BR.bgColor);
     }
-
+    @Bindable
     public boolean isShowBackButton() {
         return isShowBackButton;
     }
 
     public void setShowBackButton(boolean showBackButton) {
         isShowBackButton = showBackButton;
+        notifyPropertyChanged(BR.showBackButton);
     }
 }

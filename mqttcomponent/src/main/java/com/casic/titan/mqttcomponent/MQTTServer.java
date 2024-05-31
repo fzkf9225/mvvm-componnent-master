@@ -75,7 +75,7 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     @Override
     public void disconnected(MqttDisconnectResponse disconnectResponse) {
-        Log.i(TAG, "MqttDisconnectResponse:" + disconnectResponse);
+        LogUtil.show(TAG, "MqttDisconnectResponse:" + disconnectResponse);
         stateMutableLiveData.postValue(false);
         if (mqttCallback != null) {
             mqttCallback.disConnection();
@@ -84,7 +84,7 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     @Override
     public void mqttErrorOccurred(MqttException exception) {
-        Log.i(TAG, "exception:" + exception);
+        LogUtil.show(TAG, "exception:" + exception);
         if (mqttCallback != null) {
             mqttCallback.mqttException(new MQTTException(exception.getMessage(), exception.getCause(), exception.getReasonCode()));
         }
@@ -93,8 +93,8 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String msg = new String(message.getPayload());
-        Log.i(TAG, "topic：" + topic);
-        Log.i(TAG, "messageArrived:" + msg);
+        LogUtil.show(TAG, "topic：" + topic);
+        LogUtil.show(TAG, "messageArrived:" + msg);
         //观察者模式
         notifyObservers(new ServerMessage(topic, msg));
         //LiveEventBus直接推送消息
@@ -103,13 +103,13 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     @Override
     public void deliveryComplete(IMqttToken token) {
-        Log.i(TAG, "消息成功发送");
+        LogUtil.show(TAG, "消息成功发送");
     }
 
     @Override
     public void connectComplete(boolean reconnect, String serverURI) {
-        Log.i(TAG, "连接完成:" + reconnect);
-        Log.i(TAG, "连接mqtt服务器成功");
+        LogUtil.show(TAG, "连接完成:" + reconnect);
+        LogUtil.show(TAG, "连接mqtt服务器成功");
         stateMutableLiveData.postValue(true);
         if (mqttCallback != null) {
             mqttCallback.onConnectedSuccess(reconnect);
@@ -128,7 +128,7 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     @Override
     public void authPacketArrived(int reasonCode, MqttProperties properties) {
-        Log.i(TAG, "authPacketArrived:" + properties);
+        LogUtil.show(TAG, "authPacketArrived:" + properties);
     }
 
     public MqttCallback mqttCallback;
@@ -173,15 +173,15 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
             mqttOptions.setConnectionTimeout(30);
             mqttOptions.setKeepAliveInterval(20);
             mqttClient.setCallback(this);
-            Log.i(TAG, "onStartCommand: before connect");
+            LogUtil.show(TAG, "onStartCommand: before connect");
             //客户端下线，其它客户端或者自己再次上线可以接收"遗嘱"消息
 //            MqttTopic topic1 = mqttClient.getTopic(TOPIC);
 //            mqttOptions.setWill(topic1, "close".getBytes(), 2, true);
             mqttClient.connect(mqttOptions);
-            Log.i(TAG, "onStartCommand: after connect");
+            LogUtil.show(TAG, "onStartCommand: after connect");
         } catch (MqttException e) {
             e.printStackTrace();
-            Log.i(TAG, "异常：" + e.getMessage());
+            LogUtil.show(TAG, "异常：" + e.getMessage());
             MQTTException mqttException = new MQTTException(e.getMessage(), e.getCause(), e.getReasonCode());
             mqttExceptionMutableLiveData.postValue(mqttException);
             if (mqttCallback != null) {
@@ -231,7 +231,7 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
             getMqttClient().publish(topic, message);
             return true;
         } catch (MqttException e) {
-            Log.i(TAG, "发送消息异常:" + e);
+            LogUtil.show(TAG, "发送消息异常:" + e);
             e.printStackTrace();
         }
         return false;
@@ -239,18 +239,18 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     public boolean publish(MqttMessage message) {
         if (mqttClient == null) {
-            Log.i(TAG, "发送消息时mqttClient为空:");
+            LogUtil.show(TAG, "发送消息时mqttClient为空:");
             return false;
         }
         if (!mqttClient.isConnected()) {
-            Log.i(TAG, "发送消息时mqttClient未连接:");
+            LogUtil.show(TAG, "发送消息时mqttClient未连接:");
             return false;
         }
         try {
             mqttClient.publish("location", message);
             return true;
         } catch (MqttException e) {
-            Log.i(TAG, "发送消息异常:" + e);
+            LogUtil.show(TAG, "发送消息异常:" + e);
             e.printStackTrace();
         }
         return false;
@@ -258,18 +258,18 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
 
     public boolean publish(String topic, MqttMessage message) {
         if (mqttClient == null) {
-            Log.i(TAG, "发送消息时mqttClient为空:");
+            LogUtil.show(TAG, "发送消息时mqttClient为空:");
             return false;
         }
         if (!mqttClient.isConnected()) {
-            Log.i(TAG, "发送消息时mqttClient未连接:");
+            LogUtil.show(TAG, "发送消息时mqttClient未连接:");
             return false;
         }
         try {
             mqttClient.publish(topic, message);
             return true;
         } catch (MqttException e) {
-            Log.i(TAG, "发送消息异常:" + e);
+            LogUtil.show(TAG, "发送消息异常:" + e);
             e.printStackTrace();
         }
         return false;

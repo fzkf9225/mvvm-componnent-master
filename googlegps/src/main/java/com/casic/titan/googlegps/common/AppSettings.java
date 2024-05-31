@@ -36,8 +36,6 @@ public class AppSettings {
         Logs.configure();
         LOG = Logs.of(this.getClass());
         LOG.debug("SLF4J logging configured");
-
-        LOG.debug("EventBus configured");
     }
 
 

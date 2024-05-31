@@ -18,15 +18,20 @@ public class MathUtil {
     public static final String DEFAULT_FORMAT_STR = "#.00";
 
     public static BigDecimal average(String... numbers) {
-        if (numbers == null || numbers.length == 0) {
-            return new BigDecimal("0.00");
+        try {
+            if (numbers == null || numbers.length == 0) {
+                return new BigDecimal("0.00");
+            }
+            BigDecimal sum = BigDecimal.ZERO;
+            for (String str : numbers) {
+                sum = sum.add(TextUtils.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
+            }
+            BigDecimal count = new BigDecimal(numbers.length);
+            return sum.divide(count, 2, BigDecimal.ROUND_HALF_UP);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        BigDecimal sum = BigDecimal.ZERO;
-        for (String str : numbers) {
-            sum = sum.add(TextUtils.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
-        }
-        BigDecimal count = new BigDecimal(numbers.length);
-        return sum.divide(count, 2, BigDecimal.ROUND_HALF_UP);
+        return BigDecimal.ZERO;
     }
 
     // 加法
@@ -86,14 +91,19 @@ public class MathUtil {
 
     // 乘法
     public static BigDecimal mul(String... numbers) {
-        if (numbers == null || numbers.length == 0) {
-            return new BigDecimal("0.00");
+        try {
+            if (numbers == null || numbers.length == 0) {
+                return new BigDecimal("0.00");
+            }
+            BigDecimal sum = BigDecimal.ONE;
+            for (String str : numbers) {
+                sum = sum.multiply(TextUtils.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
+            }
+            return sum;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        BigDecimal sum = BigDecimal.ONE;
-        for (String str : numbers) {
-            sum = sum.multiply(TextUtils.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
-        }
-        return sum;
+        return BigDecimal.ZERO;
     }
 
     // 除法,默认精度

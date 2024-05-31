@@ -4,17 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.ViewErrorLayoutBinding;
-import pers.fz.mvvm.util.log.LogUtil;
-
-import net.qiujuer.genius.ui.widget.Loading;
 
 public class EmptyLayout extends LinearLayout {
 

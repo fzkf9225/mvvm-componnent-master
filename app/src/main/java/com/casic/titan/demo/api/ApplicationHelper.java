@@ -1,5 +1,6 @@
 package com.casic.titan.demo.api;
 
+import com.casic.titan.demo.BuildConfig;
 import com.casic.titan.googlegps.common.AppSettings;
 
 import javax.inject.Inject;
@@ -23,7 +24,9 @@ public class ApplicationHelper extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         Config.getInstance().init(this);
-        Config.getInstance().enableDebug(true);
+        if (BuildConfig.LOG_DEBUG) {
+            Config.getInstance().enableDebug(true);
+        }
         AppSettings.getInstance().onCreate(this);
         new ApiRetrofit.Builder(this)
                 .addDefaultHeader()

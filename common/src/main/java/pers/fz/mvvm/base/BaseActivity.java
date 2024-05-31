@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 
 import java.lang.reflect.ParameterizedType;
@@ -121,7 +122,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         } else {
             ImmersionBar.with(this).titleBar(toolbarBind.appBar).init();
         }
-
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             if (StringUtil.isEmpty(msg)) {
                 return;
             }
-            ToastUtils.showShort(this, msg);
+            Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
         });
     }
 
