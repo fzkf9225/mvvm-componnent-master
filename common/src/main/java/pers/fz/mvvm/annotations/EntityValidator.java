@@ -43,9 +43,9 @@ public class EntityValidator {
                 field.setAccessible(true);
                 VerifyField validationField = field.getAnnotation(VerifyField.class);
                 VerifyParams validationParam = field.getAnnotation(VerifyParams.class);
-
+                //其实这里可以不用判断，因为上面判断过了，算是二次保险吧，但是基本没用
                 if (validationParam == null && validationField == null) {
-                    return VerifyResult.ok();
+                    continue;
                 }
                 VerifyParams[] verifyParamsList;
                 if (validationField == null) {
@@ -72,9 +72,9 @@ public class EntityValidator {
                     if (VerifyType.NOTNULL != verifyType && !params.notNull()) {
                         if (value == null) {
                             continue;
-                        } else if (value instanceof Collection<?> collection && collection.size() == 0) {
+                        } else if (value instanceof Collection<?> collection && collection.isEmpty()) {
                             continue;
-                        } else if (value instanceof Map<?, ?> map && map.size() == 0) {
+                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             continue;
                         } else if (StringUtil.isEmpty(value)) {
                             continue;
@@ -82,9 +82,9 @@ public class EntityValidator {
                     }
                     //是否允许为空实现，空集合、空map等情况
                     if (params.notEmpty()) {
-                        if (value instanceof Collection<?> collection && collection.size() == 0) {
+                        if (value instanceof Collection<?> collection && collection.isEmpty()) {
                             return VerifyResult.fail(params.errorMsg());
-                        } else if (value instanceof Map<?, ?> map && map.size() == 0) {
+                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             return VerifyResult.fail(params.errorMsg());
                         } else if (StringUtil.isEmpty(value)) {
                             return VerifyResult.fail(params.errorMsg());
