@@ -52,7 +52,10 @@ public class RepositoryImpl implements IRepository {
     @Override
     public void removeDisposable() {
         if (compositeDisposable != null && compositeDisposable.size() > 0) {
-            compositeDisposable.dispose();
+            //默认取消所有订阅，但不会导致正在进行的任务终止，而是等待它们完成，仅仅只是取消订阅关系而已
+            compositeDisposable.clear();
+            //默认取消所有订阅，并取消所有正在进行的任务
+//            compositeDisposable.dispose();
         }
     }
 
