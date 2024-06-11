@@ -3,6 +3,10 @@ package com.casic.titan.demo.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.navigation.Navigation;
+
+import com.casic.titan.demo.R;
+import com.casic.titan.demo.activity.PagingDetailActivity;
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.bean.ForestBean;
 import com.casic.titan.demo.repository.DemoPagingRepository;
@@ -42,6 +46,12 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     public void onItemClick(View view, ForestBean item, int position) {
         super.onItemClick(view, item, position);
         showToast("点击的是第" + position + "行，内容是：" + item.getCertificate());
+        Bundle bundle = new Bundle();
+        bundle.putString(PagingDetailActivity.ARGS, item.getCertificate());
+        bundle.putInt(PagingDetailActivity.LINE, position);
+        Navigation.findNavController(view).navigate(
+                R.id.navigate_to_paging_detail,
+                bundle);
     }
 
     @Override

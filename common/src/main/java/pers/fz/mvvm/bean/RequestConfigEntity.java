@@ -11,6 +11,9 @@ public class RequestConfigEntity {
     private Object requestParams;
     private String dialogMessage = "正在加载，请稍后...";
 
+    private RequestConfigEntity() {
+    }
+
     public boolean isShowDialog() {
         return isShowDialog;
     }

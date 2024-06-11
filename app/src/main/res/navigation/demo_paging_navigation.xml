@@ -8,5 +8,22 @@
         android:id="@+id/demo_paging_layout_page"
         android:name="com.casic.titan.demo.fragment.DemoPagingFragment"
         android:label="Paging列表实例"
-        tools:layout="@layout/paging_recycler_view" />
+        tools:layout="@layout/paging_recycler_view">
+        <action
+            android:id="@+id/navigate_to_paging_detail"
+            app:destination="@id/paging_details_activity" />
+    </fragment>
+    <activity
+        android:id="@+id/paging_details_activity"
+        android:name="com.casic.titan.demo.activity.PagingDetailActivity"
+        android:label="详情"
+        tools:layout="@layout/activity_paging_detail">
+
+        <argument
+            android:name="args"
+            app:argType="string" />
+        <argument
+            android:name="line"
+            app:argType="integer" />
+    </activity>
 </navigation>
