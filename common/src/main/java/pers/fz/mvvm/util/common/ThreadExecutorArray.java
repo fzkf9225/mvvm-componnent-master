@@ -1,9 +1,8 @@
 package pers.fz.mvvm.util.common;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by fz on 2023/5/31 9:19
  * describe :线程池
  */
-public class ThreadExecutorIO extends ThreadPoolExecutor {
+public class ThreadExecutorArray extends ThreadPoolExecutor {
     /**
      * 核心线程数量
      */
@@ -26,27 +25,33 @@ public class ThreadExecutorIO extends ThreadPoolExecutor {
      * 线程空闲等待销毁时间，单位秒，这里是空闲5秒后会自动销毁
      */
     private static final int KEEP_ALIVE_TIME = 5;
-    private static volatile ThreadExecutorIO executor;
+    private static volatile ThreadExecutorArray executor;
+
+    /**
+     * 等待队列大小
+     * */
+    private static int QUEUE_SIZE = 128;
 
     private static final ThreadFactory S_THREAD_FACTORY = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
+        @Override
         public Thread newThread(Runnable r) {
             return new Thread(r, "ThreadExecutor #" + mCount.getAndIncrement());
         }
     };
 
-    public ThreadExecutorIO(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
-                            ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+    public ThreadExecutorArray(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
+                               ThreadFactory threadFactory, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory,handler);
     }
 
-    //单例模式
-    public static ThreadExecutorIO getInstance() {
+    public static ThreadExecutorArray getInstance() {
         if (null == executor) {
-            synchronized (ThreadExecutorIO.class) {
+            synchronized (ThreadExecutorArray.class) {
                 if (null == executor) {
-                    executor = new ThreadExecutorIO(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new SynchronousQueue<>(),
+                    //SynchronousQueue+AbortPolicy更加高效，但是超过线程池大小会报错，LinkedBlockingDeque线程池大小越大也就越低效，但是超过线程池大小不会报错，他会排队执行
+                    executor = new ThreadExecutorArray(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new ArrayBlockingQueue<>(QUEUE_SIZE),
                             S_THREAD_FACTORY, new ThreadPoolExecutor.AbortPolicy());
                 }
             }

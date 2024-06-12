@@ -108,7 +108,7 @@ public class VideoController {
         }
 
         public static void runConversion(Context context,final Uri videoPath, final String destPath) {
-           ThreadExecutor.getInstance().execute(()->{
+           ThreadExecutorVideo.getInstance().execute(()->{
                try {
                    VideoConvertRunnable wrapper = new VideoConvertRunnable(context,videoPath, destPath);
                    Thread th = new Thread(wrapper, "VideoConvertRunnable");

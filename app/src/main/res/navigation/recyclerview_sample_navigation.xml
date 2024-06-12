@@ -6,7 +6,7 @@
     app:startDestination="@+id/recyclerview_sample_layout_page">
     <fragment
         android:id="@+id/recyclerview_sample_layout_page"
-        android:name="com.casic.titan.demo.fragment.RecyclerViewSampleFragment"
+        android:name="com.casic.titan.demo.fragment.OnViewSampleFragment"
         android:label="RecyclerViewSample示例"
         tools:layout="@layout/smartrecyclerview" />
 </navigation>

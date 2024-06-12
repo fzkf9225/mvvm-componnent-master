@@ -11,12 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by fz on 2023/4/26 15:47
  * describe :
  */
-public class ThreadExecutor extends ThreadPoolExecutor {
+public class ThreadExecutorVideo extends ThreadPoolExecutor {
     private static final int CORE_POOL_SIZE = 1;
     //以CPU总数*2作为线程池上限
     private static final int MAXI_MUM_POOL_SIZE = Runtime.getRuntime().availableProcessors() *2;
-    private static final int KEEP_ALIVE_TIME = 3;
-    private static ThreadExecutor executor;
+    private static final int KEEP_ALIVE_TIME = 10;
+    private static ThreadExecutorVideo executor;
 
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
@@ -26,16 +26,15 @@ public class ThreadExecutor extends ThreadPoolExecutor {
         }
     };
 
-    public ThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+    public ThreadExecutorVideo(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
     }
 
-    //单例模式
-    public static ThreadExecutor getInstance(){
+    public static ThreadExecutorVideo getInstance(){
         if(null == executor){
-            synchronized (ThreadExecutor.class){
+            synchronized (ThreadExecutorVideo.class){
                 if(null == executor){
-                    executor = new ThreadExecutor(CORE_POOL_SIZE , MAXI_MUM_POOL_SIZE , KEEP_ALIVE_TIME , TimeUnit.SECONDS , new SynchronousQueue<Runnable>() , sThreadFactory);;
+                    executor = new ThreadExecutorVideo(CORE_POOL_SIZE , MAXI_MUM_POOL_SIZE , KEEP_ALIVE_TIME , TimeUnit.SECONDS , new SynchronousQueue<Runnable>() , sThreadFactory);;
                 }
             }
         }

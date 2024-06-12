@@ -1,6 +1,9 @@
 package pers.fz.mvvm.base;
 
 
+import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,29 +16,19 @@ import org.jetbrains.annotations.NotNull;
 public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
     private VDB binding;
-    private ViewDataBinding headerBinding;
-    private boolean isHeaderViewHolder = false;
+
+    public BaseViewHolder(@NonNull View itemView) {
+        super(itemView);
+    }
 
     public BaseViewHolder(@NotNull VDB binding) {
         super(binding.getRoot());
         this.binding = binding;
     }
 
-    public BaseViewHolder(@NotNull ViewDataBinding headerBinding, boolean isHeaderViewHolder) {
-        super(headerBinding.getRoot());
-        this.isHeaderViewHolder = isHeaderViewHolder;
-        this.headerBinding = headerBinding;
-    }
-
-    public boolean isHeaderViewHolder() {
-        return isHeaderViewHolder;
-    }
 
     public VDB getBinding() {
         return binding;
     }
 
-    public ViewDataBinding getHeaderBinding() {
-        return headerBinding;
-    }
 }

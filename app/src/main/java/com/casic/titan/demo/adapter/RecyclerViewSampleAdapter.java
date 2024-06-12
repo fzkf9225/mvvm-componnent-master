@@ -2,8 +2,10 @@ package com.casic.titan.demo.adapter;
 
 import android.content.Context;
 
+import com.bumptech.glide.Glide;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
+import com.casic.titan.demo.databinding.RecyclerHeaderViewBinding;
 import com.casic.titan.demo.databinding.UseCaseItemBinding;
 
 import java.util.List;
@@ -34,5 +36,19 @@ public class RecyclerViewSampleAdapter extends BaseRecyclerViewAdapter<PopupWind
     @Override
     protected int getLayoutId() {
         return pers.fz.mvvm.R.layout.option_text_view;
+    }
+
+    @Override
+    public int getHeaderViewId() {
+        return R.layout.recycler_header_view;
+    }
+
+    @Override
+    public void onBindHeaderHolder(BaseViewHolder holder) {
+        super.onBindHeaderHolder(holder);
+        RecyclerHeaderViewBinding binding = (RecyclerHeaderViewBinding) holder.getBinding();
+        Glide.with(mContext)
+                .load("https://img2.baidu.com/it/u=1816408595,1545501487&fm=253&fmt=auto&app=120&f=JPEG?w=607&h=347")
+                .into(binding.image);
     }
 }

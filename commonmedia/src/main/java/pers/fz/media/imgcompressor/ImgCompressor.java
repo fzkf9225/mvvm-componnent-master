@@ -378,10 +378,10 @@ public class ImgCompressor {
      * @date 2023/4/26 16:23
      */
     public static class ThreadExecutor extends ThreadPoolExecutor {
-        private static final int CORE_POOL_SIZE = 1;
+        private static final int CORE_POOL_SIZE = 3;
         //以CPU总数*2作为线程池上限
         private static final int MAXI_MUM_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-        private static final int KEEP_ALIVE_TIME = 3;
+        private static final int KEEP_ALIVE_TIME = 10;
         private static volatile ThreadExecutor executor;
 
         private static final ThreadFactory sThreadFactory = new ThreadFactory() {

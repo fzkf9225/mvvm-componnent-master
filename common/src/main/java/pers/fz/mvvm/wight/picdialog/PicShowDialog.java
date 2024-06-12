@@ -23,7 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.ThreadExecutorIO;
+import pers.fz.mvvm.util.common.ThreadExecutorArray;
 import pers.fz.mvvm.util.download.DownLoadImageService;
 import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
 import pers.fz.mvvm.util.log.ToastUtils;
@@ -319,7 +319,7 @@ public class PicShowDialog extends Dialog {
     }
 
     private void downloadImage(Object path) {
-        ThreadExecutorIO.getInstance().execute(new DownLoadImageService(context, path,
+        ThreadExecutorArray.getInstance().execute(new DownLoadImageService(context, path,
                 "image", new ImageDownLoadCallBack() {
             @Override
             public void onDownLoadSuccess(File file) {

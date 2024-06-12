@@ -1,10 +1,7 @@
 package com.casic.titan.demo.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
-
-import androidx.fragment.app.Fragment;
 
 import com.casic.titan.demo.adapter.RecyclerViewSampleAdapter;
 import com.casic.titan.demo.viewmodel.RecyclerViewSampleViewModel;
@@ -15,14 +12,18 @@ import pers.fz.mvvm.base.BaseRecyclerViewFragment;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.OptionTextViewBinding;
 import pers.fz.mvvm.databinding.SmartrecyclerviewBinding;
-import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
+import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+
 @AndroidEntryPoint
-public class RecyclerViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewSampleViewModel, SmartrecyclerviewBinding,PopupWindowBean> {
+public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewSampleViewModel, SmartrecyclerviewBinding, PopupWindowBean> implements
+        OnHeaderViewClickListener {
     private RecyclerViewSampleAdapter recyclerViewSampleAdapter;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        recyclerViewSampleAdapter.setOnHeaderViewClickListener(this);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class RecyclerViewSampleFragment extends BaseRecyclerViewFragment<Recycle
     @Override
     public void onItemClick(View view, int position) {
         super.onItemClick(view, position);
-        showToast("点击内容是："+recyclerViewSampleAdapter.getList().get(position).getName());
+        showToast("点击内容是：" + recyclerViewSampleAdapter.getList().get(position).getName());
     }
 
     @Override
@@ -58,10 +59,20 @@ public class RecyclerViewSampleFragment extends BaseRecyclerViewFragment<Recycle
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnSureClickListener(dialog -> {
-                    recyclerViewSampleAdapter.getList().remove(position);
-                    recyclerViewSampleAdapter.notifyItemRemoved(position);
+                    recyclerViewSampleAdapter.getList().remove(position + 1);
+                    recyclerViewSampleAdapter.notifyItemRemoved(position + 1);
                 })
                 .builder()
                 .show();
+    }
+
+    @Override
+    public void onHeaderViewClick(View view) {
+        showToast("头布局点击事件！");
+    }
+
+    @Override
+    public void onHeaderViewLongClick(View view) {
+        showToast("头布局长按事件！");
     }
 }

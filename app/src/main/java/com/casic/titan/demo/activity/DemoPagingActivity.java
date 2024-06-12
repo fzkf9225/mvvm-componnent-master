@@ -9,6 +9,9 @@ import com.casic.titan.demo.databinding.ActivityDemoPagingBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.util.common.ThreadExecutor;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.MainViewModel;
 
 @AndroidEntryPoint
@@ -27,6 +30,15 @@ public class DemoPagingActivity extends BaseActivity<MainViewModel, ActivityDemo
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        for (int i = 0; i < 50; i++) {
+            int finalI = i;
+            ThreadExecutor.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    LogUtil.show(TAG, "输出：" + finalI + ",时间：" + DateUtil.getDateTimeFromMillis(System.currentTimeMillis()));
+                }
+            });
+        }
     }
 
     @Override

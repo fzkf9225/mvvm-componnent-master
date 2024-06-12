@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.wight.popupwindow.adapter.ChildAdapter;
+import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.popupwindow.adapter.ParentAdapter;
 import pers.fz.mvvm.wight.recyclerview.MyLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
@@ -27,6 +26,7 @@ import java.util.List;
 
 /**
  * PopupWindow 下拉框
+ *
  * @author fz
  */
 public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements ParentAdapter.OnItemClickListener {
@@ -36,7 +36,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     private RecyclerView lvParentCategory = null;
     private RecyclerView lvChildrenCategory = null;
     private ParentAdapter<T> parentAdapter = null;
-    private ChildAdapter<T> childAdapter = null;
+    private ParentAdapter<T> childAdapter = null;
     private PopupWindow popupWindow;
 
     private Integer parentPosition, childPosition;
@@ -80,8 +80,8 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         setFocusable(true);
         contentView.setFocusableInTouchMode(true);
         setBackgroundDrawable(ContextCompat.getDrawable(activity, R.drawable.pop_bg));
-        lvChildrenCategory =  contentView.findViewById(R.id.lv_children_category);
-        lvParentCategory =  contentView.findViewById(R.id.lv_parent_category);
+        lvChildrenCategory = contentView.findViewById(R.id.lv_children_category);
+        lvParentCategory = contentView.findViewById(R.id.lv_parent_category);
     }
 
     private void initParent() {
@@ -93,31 +93,27 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         lvParentCategory.addItemDecoration(
                 new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
                         ContextCompat.getColor(activity, R.color.h_line_color)));
-    }
-
-    public void setParentHeadView(String text) {
-        View headView = LayoutInflater.from(activity).inflate(R.layout.activity_parent_category_item, null);
-        ViewHold viewHold = new ViewHold();
-        viewHold.textView = headView.findViewById(R.id.tv_parent_category_name);
-        viewHold.textView.setText(StringUtil.isEmpty(text) ? "不限" : text);
-        headView.setTag(viewHold);
-        parentAdapter.setHeaderView(headView);
-        headView.setOnClickListener(new View.OnClickListener() {
+        parentAdapter.setHasHeader(true);
+        parentAdapter.setOnHeaderViewClickListener(new OnHeaderViewClickListener() {
             @Override
-            public void onClick(View v) {
-                ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
-                viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
+            public void onHeaderViewClick(View view) {
+                ((TextView) view.findViewById(R.id.tv_parent_category_name)).setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
                 parentAdapter.setSelectedPosition(-1);
                 dismiss();
                 if (onHeadViewClickListener != null) {
                     onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, true);
                 }
             }
+
+            @Override
+            public void onHeaderViewLongClick(View view) {
+
+            }
         });
     }
 
     private void initChild(List<T> childLists) {
-        childAdapter = new ChildAdapter<>(activity);
+        childAdapter = new ParentAdapter<>(activity);
         childAdapter.setOnItemClickListener(childOnItemClickListener);
         childAdapter.setList(childLists);
         lvChildrenCategory.setLayoutManager(new MyLayoutManager(activity));
@@ -126,19 +122,21 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
                 new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
                         ContextCompat.getColor(activity, R.color.h_line_color)));
 
-        View headView = LayoutInflater.from(activity).inflate(R.layout.activity_parent_category_item, null);
-        ViewHold viewHold = new ViewHold();
-        viewHold.textView = headView.findViewById(R.id.tv_parent_category_name);
-        viewHold.textView.setText("不限");
-        headView.setTag(viewHold);
-        childAdapter.setHeaderView(headView);
-        headView.setOnClickListener(v -> {
-            ViewHold viewHold1 = (ViewHold) childAdapter.getHeaderView().getTag();
-            viewHold1.textView.setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
-            childAdapter.setSelectedPosition(-1);
-            dismiss();
-            if (onHeadViewClickListener != null) {
-                onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, false);
+        childAdapter.setHasHeader(true);
+        childAdapter.setOnHeaderViewClickListener(new OnHeaderViewClickListener() {
+            @Override
+            public void onHeaderViewClick(View view) {
+                ((TextView) view.findViewById(R.id.tv_parent_category_name)).setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
+                parentAdapter.setSelectedPosition(-1);
+                dismiss();
+                if (onHeadViewClickListener != null) {
+                    onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, false);
+                }
+            }
+
+            @Override
+            public void onHeaderViewLongClick(View view) {
+
             }
         });
     }
@@ -178,7 +176,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         if ((parentPosition != null && parentPosition == position) || !hasRight) {
             dismiss();
             if (selectCategory != null) {
-                selectCategory.selectCategory(popupWindow,popupWindowBeanList, position, childPosition);
+                selectCategory.selectCategory(popupWindow, popupWindowBeanList, position, childPosition);
             }
         }
         parentPosition = position;
@@ -192,7 +190,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         }
     }
 
-    private BaseRecyclerViewAdapter.OnItemClickListener childOnItemClickListener = new ChildAdapter.OnItemClickListener() {
+    private BaseRecyclerViewAdapter.OnItemClickListener childOnItemClickListener = new BaseRecyclerViewAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
             if (popupWindowBeanList == null || popupWindowBeanList.size() <= parentPosition ||
@@ -205,7 +203,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
             childAdapter.setSelectedPosition(position);
             dismiss();
             if (selectCategory != null) {
-                selectCategory.selectCategory(popupWindow,popupWindowBeanList, parentPosition, childPosition);
+                selectCategory.selectCategory(popupWindow, popupWindowBeanList, parentPosition, childPosition);
             }
         }
     };
@@ -215,7 +213,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
      * 把选中的下标通过方法回调回来
      */
     public interface SelectCategory<T> {
-        void selectCategory(PopupWindow popupWindow,List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
+        void selectCategory(PopupWindow popupWindow, List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
     }
 
     public void setHeadViewClickListener(OnHeadViewClickListener onHeadViewClickListener) {

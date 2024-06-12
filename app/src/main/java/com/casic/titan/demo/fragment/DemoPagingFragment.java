@@ -14,6 +14,7 @@ import com.casic.titan.demo.repository.DemoPagingRepository;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
+import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.repository.PagingRepository;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.base.BasePagingFragment;
@@ -24,7 +25,7 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, PagingRecyclerViewBinding, ForestBean> {
+public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, PagingRecyclerViewBinding, ForestBean> implements OnHeaderViewClickListener {
 
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
@@ -34,6 +35,12 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     @Override
     public PagingRepository<ForestBean> createRepository() {
         return new DemoPagingRepository(mViewModel.retryService);
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
+        adapter.setOnHeaderViewClickListener(this);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
         new ConfirmDialog(requireContext())
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position))
+                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position + 1))
                 .builder()
                 .show();
     }
@@ -70,5 +77,15 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     protected void requestData() {
         super.requestData();
         mViewModel.requestPagingData(ForestBean.class).observe(this, observer);
+    }
+
+    @Override
+    public void onHeaderViewClick(View view) {
+        showToast("头布局点击事件！");
+    }
+
+    @Override
+    public void onHeaderViewLongClick(View view) {
+        showToast("头布局长按事件！");
     }
 }
