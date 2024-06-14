@@ -42,27 +42,18 @@ public class CordovaDialogsHelper {
         //Don't let alerts break the back button
         dlg.setCancelable(true);
         dlg.setPositiveButton(android.R.string.ok,
-                new AlertDialog.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.gotResult(true, null);
-                    }
-                });
+                (dialog, which) -> result.gotResult(true, null));
         dlg.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        result.gotResult(false, null);
-                    }
-                });
-        dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //DO NOTHING
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK)
-                {
-                    result.gotResult(true, null);
-                    return false;
-                }
-                else
-                    return true;
+                dialog -> result.gotResult(false, null));
+        //DO NOTHING
+        dlg.setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK)
+            {
+                result.gotResult(true, null);
+                return false;
+            }
+            else {
+                return true;
             }
         });
         lastHandledDialog = dlg.show();
@@ -74,17 +65,9 @@ public class CordovaDialogsHelper {
         dlg.setTitle("Confirm");
         dlg.setCancelable(true);
         dlg.setPositiveButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.gotResult(true, null);
-                    }
-                });
+                (dialog, which) -> result.gotResult(true, null));
         dlg.setNegativeButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.gotResult(false, null);
-                    }
-                });
+                (dialog, which) -> result.gotResult(false, null));
         dlg.setOnCancelListener(
                 new DialogInterface.OnCancelListener() {
                     public void onCancel(DialogInterface dialog) {
