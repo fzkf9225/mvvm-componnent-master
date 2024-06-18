@@ -13,19 +13,20 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
-import pers.fz.mvvm.repository.PagingRepository;
+import pers.fz.mvvm.base.BaseView;
+import pers.fz.mvvm.repository.PagingRepositoryImpl;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/8/7 9:17
  * describe :
  */
-public class PagingSource<T> extends RxPagingSource<Integer, T> {
+public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer, T> {
     private final String TAG = PagingSource.class.getSimpleName();
     private int startPage = 0;
-    private final PagingRepository<T> pagingRepository;
+    private final PagingRepositoryImpl<T,BV> pagingRepository;
 
-    public PagingSource(PagingRepository<T> pagingRepository, int startPage) {
+    public PagingSource(PagingRepositoryImpl<T,BV> pagingRepository, int startPage) {
         this.pagingRepository = pagingRepository;
         this.startPage = startPage;
     }

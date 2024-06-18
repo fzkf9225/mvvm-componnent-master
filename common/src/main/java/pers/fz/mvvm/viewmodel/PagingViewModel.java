@@ -18,14 +18,14 @@ import kotlinx.coroutines.CoroutineScope;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.datasource.PagingSource;
 import pers.fz.mvvm.inter.PagingView;
-import pers.fz.mvvm.repository.PagingRepository;
+import pers.fz.mvvm.repository.PagingRepositoryImpl;
 
 /**
  * Created by fz on 2023/12/1 14:17
  * describe :
  */
 @HiltViewModel
-public class PagingViewModel extends BaseViewModel<PagingRepository, PagingView> {
+public class PagingViewModel extends BaseViewModel<PagingRepositoryImpl, PagingView> {
     private PagingConfig pagingConfig;
     private int startPage = 0;
     /**
@@ -38,7 +38,7 @@ public class PagingViewModel extends BaseViewModel<PagingRepository, PagingView>
     }
 
     @Override
-    protected PagingRepository createRepository() {
+    protected PagingRepositoryImpl createRepository() {
         return baseView.createRepository();
     }
 
@@ -52,7 +52,7 @@ public class PagingViewModel extends BaseViewModel<PagingRepository, PagingView>
     public <T> LiveData<PagingData<T>> requestPagingData(Class<T> clx,PagingConfig pagingConfig) {
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         return PagingLiveData.cachedIn(PagingLiveData.getLiveData(new Pager<>(pagingConfig == null ? getPagingConfig() : pagingConfig,
-                () -> new PagingSource<T>(iRepository, startPage))), viewModelScope);
+                () -> new PagingSource<T,PagingView>(iRepository, startPage))), viewModelScope);
     }
 
     public void setErrorPlaceholder(boolean errorPlaceholder) {

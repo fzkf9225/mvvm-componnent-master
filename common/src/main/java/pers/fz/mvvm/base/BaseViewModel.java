@@ -34,16 +34,6 @@ public abstract class BaseViewModel<IR extends IRepository, V extends BaseView> 
     public void setBaseView(V baseView) {
         this.baseView = baseView;
         iRepository = createRepository();
-        if (iRepository != null) {
-            iRepository.setBaseView(baseView);
-        }
-    }
-
-    public void setRepository(IR iRepository) {
-        this.iRepository = iRepository;
-        if (iRepository != null) {
-            iRepository.setBaseView(baseView);
-        }
     }
 
     public V getBaseView() {

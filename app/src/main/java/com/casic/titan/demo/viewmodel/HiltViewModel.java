@@ -46,7 +46,7 @@ public class HiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
 
     @Override
     protected RepositoryImpl createRepository() {
-        return new RepositoryImpl(retryService);
+        return new RepositoryImpl(retryService,baseView);
     }
 
     public void onClick(View view) {

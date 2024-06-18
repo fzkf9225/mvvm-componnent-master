@@ -8,15 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.functions.Function;
-import pers.fz.mvvm.api.ApiRetrofit;
 
-import com.casic.titan.mqttcomponent.CloudDataHelper;
-import com.casic.titan.mqttcomponent.MqttBean;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
-import com.casic.titan.usercomponent.api.UserApiService;
 import com.casic.titan.usercomponent.bean.UserInfo;
 
 import pers.fz.mvvm.api.AppManager;
@@ -26,13 +20,8 @@ import pers.fz.mvvm.util.jiami.MD5Util;
 import pers.fz.mvvm.util.log.ToastUtils;
 
 import com.casic.titan.usercomponent.bean.RequestLoginBean;
-import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
-import com.casic.titan.usercomponent.bean.WorkSpaceBean;
-import com.casic.titan.usercomponent.enumEntity.GrantType;
-import com.casic.titan.usercomponent.repository.UserRepository;
+import com.casic.titan.usercomponent.repository.UserRepositoryImpl;
 import com.casic.titan.usercomponent.view.UserView;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,7 +30,7 @@ import javax.inject.Inject;
  * describe:loginViewModel
  */
 @HiltViewModel
-public class UserViewModel extends BaseViewModel<UserRepository, UserView> {
+public class UserViewModel extends BaseViewModel<UserRepositoryImpl, UserView> {
     private final MutableLiveData<UserInfo> liveData = new MutableLiveData<>();
 
     @Inject
@@ -50,8 +39,8 @@ public class UserViewModel extends BaseViewModel<UserRepository, UserView> {
     }
 
     @Override
-    protected UserRepository createRepository() {
-        return new UserRepository(retryService);
+    protected UserRepositoryImpl createRepository() {
+        return new UserRepositoryImpl(retryService,baseView);
     }
 
     public void loginClick(View v, RequestLoginBean requestLoginBean) {

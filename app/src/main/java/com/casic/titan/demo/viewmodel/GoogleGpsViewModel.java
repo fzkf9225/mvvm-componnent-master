@@ -7,16 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
-import com.casic.titan.demo.R;
 import com.casic.titan.googlegps.GpsLoggingService;
-import com.casic.titan.googlegps.common.Session;
-import com.casic.titan.googlegps.socket.GPSSocketServer;
 
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;

@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.api.ErrorConsumer;
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.inter.RetryService;
 
@@ -13,11 +14,11 @@ import pers.fz.mvvm.inter.RetryService;
  * Created by fz on 2023/12/1 11:14
  * describe :
  */
-public abstract class PagingRepository<T> extends RepositoryImpl {
+public abstract class PagingRepositoryImpl<T,BV extends BaseView> extends RepositoryImpl {
     private RequestConfigEntity requestConfigEntity;
 
-    public PagingRepository(RetryService retryService) {
-        super(retryService);
+    public PagingRepositoryImpl(RetryService retryService, BV baseView) {
+        super(retryService, baseView);
     }
 
     public abstract Observable<List<T>> requestPaging(int currentPage, int pageSize);

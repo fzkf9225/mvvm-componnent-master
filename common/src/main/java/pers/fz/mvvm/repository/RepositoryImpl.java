@@ -2,6 +2,8 @@ package pers.fz.mvvm.repository;
 
 import androidx.lifecycle.MutableLiveData;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -18,27 +20,23 @@ import pers.fz.mvvm.inter.RetryService;
  * Created by fz on 2023/12/1 10:19
  * describe :
  */
-public class RepositoryImpl implements IRepository {
+public class RepositoryImpl<BV extends BaseView> implements IRepository {
     /**
      * 离开页面，是否取消网络
      */
     private CompositeDisposable compositeDisposable;
 
-    protected BaseView baseView;
+    protected BV baseView;
 
     private RetryService retryService;
 
-    public RepositoryImpl(RetryService retryService) {
+    public RepositoryImpl(RetryService retryService, BV baseView) {
         this.retryService = retryService;
+        this.baseView = baseView;
     }
 
     public void setRetryService(RetryService retryService) {
         this.retryService = retryService;
-    }
-
-    @Override
-    public <BV extends BaseView> void setBaseView(BV baseView) {
-        this.baseView = baseView;
     }
 
     @Override
@@ -59,7 +57,6 @@ public class RepositoryImpl implements IRepository {
         }
     }
 
-    @Override
     public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
         if (retryWhen() != null) {
             return observable.subscribeOn(Schedulers.io())
@@ -97,7 +94,30 @@ public class RepositoryImpl implements IRepository {
         }
     }
 
-    @Override
+    public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, @NotNull MutableLiveData<T> liveData, Consumer<Throwable> throwableConsumer) {
+        return sendRequest(observable, requestConfigEntity, liveData, null, throwableConsumer);
+    }
+
+    public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, @NotNull Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
+        return sendRequest(observable, requestConfigEntity, null, consumer, throwableConsumer);
+    }
+
+    public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, @NotNull MutableLiveData<T> liveData) {
+        return sendRequest(observable, requestConfigEntity, liveData, null, new ErrorConsumer(baseView, requestConfigEntity));
+    }
+
+    public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, @NotNull Consumer<T> consumer) {
+        return sendRequest(observable, requestConfigEntity, null, consumer, new ErrorConsumer(baseView, requestConfigEntity));
+    }
+
+    public <T> Disposable sendRequest(Observable<T> observable, @NotNull MutableLiveData<T> liveData) {
+        return sendRequest(observable, RequestConfigEntity.getDefault(), liveData, null, new ErrorConsumer(baseView, RequestConfigEntity.getDefault()));
+    }
+
+    public <T> Disposable sendRequest(Observable<T> observable, @NotNull Consumer<T> consumer) {
+        return sendRequest(observable, RequestConfigEntity.getDefault(), null, consumer, new ErrorConsumer(baseView, RequestConfigEntity.getDefault()));
+    }
+
     public <T> Observable<T> sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity) {
         if (retryWhen() != null) {
             return observable.subscribeOn(Schedulers.io())
@@ -131,7 +151,6 @@ public class RepositoryImpl implements IRepository {
         }
     }
 
-    @Override
     public Function<Observable<? extends Throwable>, Observable<?>> retryWhen() {
         return retryService;
     }

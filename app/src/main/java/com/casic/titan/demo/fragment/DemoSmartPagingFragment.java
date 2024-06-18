@@ -5,13 +5,13 @@ import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.bean.ForestBean;
-import com.casic.titan.demo.repository.DemoPagingRepository;
+import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
-import pers.fz.mvvm.repository.PagingRepository;
+import pers.fz.mvvm.repository.PagingRepositoryImpl;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
@@ -28,8 +28,8 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewM
     }
 
     @Override
-    public PagingRepository<ForestBean> createRepository() {
-        return new DemoPagingRepository(mViewModel.retryService);
+    public PagingRepositoryImpl<ForestBean,?> createRepository() {
+        return new DemoPagingRepositoryImpl(mViewModel.retryService,this);
     }
 
     @Override

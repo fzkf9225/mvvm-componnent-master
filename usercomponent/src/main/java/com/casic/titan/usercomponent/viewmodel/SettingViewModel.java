@@ -8,13 +8,10 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.activity.FeedBackActivity;
 import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
-
-import java.io.File;
 
 import androidx.annotation.NonNull;
 
@@ -22,7 +19,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.activity.TechnicalSupportActivity;
-import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;

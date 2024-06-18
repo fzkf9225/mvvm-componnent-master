@@ -1,14 +1,31 @@
 package pers.fz.mvvm.bean;
 
+import java.util.Map;
+
 /**
  * Created by fz on 2023/12/1 8:54
  * describe :
  */
 public class RequestConfigEntity {
+    /**
+     * 是否展示加载框
+     */
     private boolean isShowDialog = true;
+    /**
+     * 是否展示吐司提示
+     */
     private boolean isShowToast = true;
+    /**
+     * 默认吐司提示，如果这个设置了值则就会提示这个不会提示返回的错误内容了
+     */
     private String toastMsg;
-    private Object requestParams;
+    /**
+     * 需要返回的数据
+     */
+    private Map<String,?> requestParams;
+    /**
+     * 默认加载提示内容
+     */
     private String dialogMessage = "正在加载，请稍后...";
 
     private RequestConfigEntity() {
@@ -38,11 +55,11 @@ public class RequestConfigEntity {
         this.toastMsg = toastMsg;
     }
 
-    public Object getRequestParams() {
+    public Map<String,?> getRequestParams() {
         return requestParams;
     }
 
-    public void setRequestParams(Object requestParams) {
+    public void setRequestParams(Map<String,?> requestParams) {
         this.requestParams = requestParams;
     }
 
@@ -82,7 +99,7 @@ public class RequestConfigEntity {
             return this;
         }
 
-        public Builder setRequestParams(Object requestParams) {
+        public Builder setRequestParams(Map<String,?> requestParams) {
             requestConfigEntity.setRequestParams(requestParams);
             return this;
         }
@@ -95,6 +112,14 @@ public class RequestConfigEntity {
         public RequestConfigEntity build() {
             return requestConfigEntity;
         }
+    }
+
+    public static RequestConfigEntity getDefault() {
+        return new Builder()
+                .setShowDialog(true)
+                .setDialogMessage("正在加载，请稍后...")
+                .setShowToast(true)
+                .build();
     }
 
     @Override

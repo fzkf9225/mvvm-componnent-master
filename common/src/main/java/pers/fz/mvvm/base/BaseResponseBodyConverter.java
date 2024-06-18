@@ -31,7 +31,7 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     @Override
     public T convert(ResponseBody value) throws IOException {
         String jsonString = value.string();
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         try (value) {
             jsonObject = new JSONObject(jsonString);
         } catch (Exception ex) {

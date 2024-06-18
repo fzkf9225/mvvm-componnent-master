@@ -9,13 +9,13 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.activity.PagingDetailActivity;
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.bean.ForestBean;
-import com.casic.titan.demo.repository.DemoPagingRepository;
+import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
-import pers.fz.mvvm.repository.PagingRepository;
+import pers.fz.mvvm.repository.PagingRepositoryImpl;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
@@ -33,8 +33,8 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     }
 
     @Override
-    public PagingRepository<ForestBean> createRepository() {
-        return new DemoPagingRepository(mViewModel.retryService);
+    public PagingRepositoryImpl createRepository() {
+        return new DemoPagingRepositoryImpl(mViewModel.retryService,this);
     }
 
     @Override
