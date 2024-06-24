@@ -125,11 +125,11 @@ dependencies {
     //noinspection GradleDependency
     implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
     //paging3
-    implementation "androidx.paging:paging-runtime:3.2.0-alpha04"
+    implementation "androidx.paging:paging-runtime:$pagingVersion"
     // 用于测试
-    testImplementation "androidx.paging:paging-common:3.2.0-alpha04"
+    testImplementation "androidx.paging:paging-common:$pagingVersion"
 // [可选] RxJava 支持
-    implementation "androidx.paging:paging-rxjava3:3.2.0-alpha04"
+    implementation "androidx.paging:paging-rxjava3:$pagingVersion"
     //下拉刷新
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
@@ -146,7 +146,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.2.7'
+                version = '1.3.0'
             }
         }
         repositories {

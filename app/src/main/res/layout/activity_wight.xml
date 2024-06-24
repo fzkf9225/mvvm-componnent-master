@@ -289,20 +289,34 @@
                 android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
                 app:layout_constraintTop_toBottomOf="@+id/verificationCodeInputView"/>
+
             <pers.fz.mvvm.wight.customlayout.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                app:bgColor="@color/themeColor"
-                app:fontColor="@color/white"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                app:progressColor="@color/theme_green"
-                app:bgRadius="@dimen/radius_l"
-                app:fontPercent="2"
-                app:showText="true"
-                app:fontSize="12sp"
                 android:textColorHint="@color/nv_bg_color"
-                app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"/>
+                app:bgColor="@color/themeColor"
+                app:bgRadius="@dimen/radius_l"
+                app:fontColor="@color/white"
+                app:fontPercent="2"
+                app:fontSize="12sp"
+                app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"
+                app:progressColor="@color/theme_green"
+                app:showText="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mRecyclerview_image"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontal_progress_bar"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mRecyclerview_video"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image"
+                android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

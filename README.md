@@ -14,6 +14,18 @@
 
 三：https://blog.csdn.net/fzkf9225/article/details/132182449
 
+## 查看网络请求等相关日志
+### 初始化和打开日志
+在app中的Application中调用初始化方法
+```
+        Config.getInstance().init(this);
+        if (BuildConfig.LOG_DEBUG) {
+            Config.getInstance().enableDebug(true);
+        }
+```
+### 过滤网络请求日志
+调用ApiRetrofit下的TAG
+TAG值为类名：`ApiRetrofit`
 ## 接入指引：
 ### 导入公共依赖包
 由于集成的aar包有隔离效果因此需要在继承base类时导入他们的包，不然就会找不到引用的第三方库，但是如果你没有以aar引用而是直接module引用的话，可以直接将`implementation` 改成`api`即可
@@ -147,7 +159,7 @@ plugins {
             
         });
 ```
-#### 断电续传下载
+#### 断点续传下载
 普通文件下载示例：
 ```
     DownloadManger.getInstance().download(mContext,"下载文件url");

@@ -50,7 +50,6 @@ public class CommonUtil {
             tempFileName = "TEMP" + MD5Util.md5Encode(url);
         } catch (Exception e) {
             e.printStackTrace();
-            tempFileName = FileUtils.getFileNameWithoutExtension(url);
         }
         return new File(saveBasePath, tempFileName + ".temp.download");
     }

@@ -49,7 +49,7 @@ public class PagingDemoAdapter extends BasePagingAdapter<ForestBean, PagingItemB
     }
 
     @Override
-    public int getHeaderViewId() {
+    public Integer getHeaderViewId() {
         return R.layout.recycler_header_view;
     }
 

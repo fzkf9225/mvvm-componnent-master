@@ -32,7 +32,7 @@ public class ErrorConsumer implements Consumer<Throwable> {
         this.baseView = baseView;
         this.requestConfigEntity = requestConfigEntity;
         if (this.requestConfigEntity == null) {
-            this.requestConfigEntity = new RequestConfigEntity.Builder().build();
+            this.requestConfigEntity = RequestConfigEntity.getDefault();
         }
     }
 

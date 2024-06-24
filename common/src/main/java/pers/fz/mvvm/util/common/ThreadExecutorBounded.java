@@ -10,9 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by fz on 2023/5/31 9:19
- * describe :线程池
+ * describe :线程池,核心线程为3，且边界跟更大
  */
-public class ThreadExecutorArray extends ThreadPoolExecutor {
+public class ThreadExecutorBounded extends ThreadPoolExecutor {
     /**
      * 核心线程数量
      */
@@ -25,7 +25,7 @@ public class ThreadExecutorArray extends ThreadPoolExecutor {
      * 线程空闲等待销毁时间，单位秒，这里是空闲5秒后会自动销毁
      */
     private static final int KEEP_ALIVE_TIME = 5;
-    private static volatile ThreadExecutorArray executor;
+    private static volatile ThreadExecutorBounded executor;
 
     /**
      * 等待队列大小
@@ -41,17 +41,17 @@ public class ThreadExecutorArray extends ThreadPoolExecutor {
         }
     };
 
-    public ThreadExecutorArray(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
-                               ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+    public ThreadExecutorBounded(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
+                                 ThreadFactory threadFactory, RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory,handler);
     }
 
-    public static ThreadExecutorArray getInstance() {
+    public static ThreadExecutorBounded getInstance() {
         if (null == executor) {
-            synchronized (ThreadExecutorArray.class) {
+            synchronized (ThreadExecutorBounded.class) {
                 if (null == executor) {
                     //SynchronousQueue+AbortPolicy更加高效，但是超过线程池大小会报错，LinkedBlockingDeque线程池大小越大也就越低效，但是超过线程池大小不会报错，他会排队执行
-                    executor = new ThreadExecutorArray(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new ArrayBlockingQueue<>(QUEUE_SIZE),
+                    executor = new ThreadExecutorBounded(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new ArrayBlockingQueue<>(QUEUE_SIZE),
                             S_THREAD_FACTORY, new ThreadPoolExecutor.AbortPolicy());
                 }
             }

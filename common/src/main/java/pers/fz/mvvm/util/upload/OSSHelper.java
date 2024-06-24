@@ -34,7 +34,7 @@ import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/5/29 15:54
- * describe :
+ * describe :对象存储
  */
 public class OSSHelper {
     public static final String TAG = OSSHelper.class.getSimpleName();

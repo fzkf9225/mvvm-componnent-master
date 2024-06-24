@@ -61,7 +61,7 @@ public class ParentAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAd
     }
 
     @Override
-    public int getHeaderViewId() {
+    public Integer getHeaderViewId() {
         return R.layout.activity_parent_category_item;
     }
 

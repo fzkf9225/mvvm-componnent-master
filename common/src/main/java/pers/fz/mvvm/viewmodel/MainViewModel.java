@@ -35,23 +35,6 @@ public class MainViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
         return null;
     }
 
-    /**
-     * 处理二维码扫码结果
-     *
-     * @param context 视图
-     * @param result 结果
-     */
-    public void decodeQRCodeResult(Context context, Object result) {
-        if (StringUtil.isEmpty(result)) {
-            return;
-        }
-        if (RegexUtils.isUrl(result.toString())) {
-            WebViewActivity.show(context, result.toString(), "");
-        } else {
-            baseView.showToast("扫码结果为：" + result);
-        }
-    }
-
     public void setFragment(FragmentManager mFragmentManager, Fragment fragment, @IdRes int id) {
         if (fragment == null) {
             return;

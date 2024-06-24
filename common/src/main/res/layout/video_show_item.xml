@@ -7,24 +7,32 @@
 
     </data>
 
-<FrameLayout android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:corner="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <pers.fz.mvvm.wight.customlayout.CornersImageView
-        android:id="@+id/image_video"
-        android:layout_width="@dimen/image_xxl"
-        android:layout_height="@dimen/image_xxl"
-        android:background="@color/white"
-        android:scaleType="centerCrop"
-        corner:image_view_radius="@dimen/radius_s"
-        android:src="@mipmap/ic_default_image" />
-    <ImageView
-        android:id="@+id/image_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@mipmap/icon_play" />
+        <pers.fz.mvvm.wight.customlayout.CornersImageView
+            android:id="@+id/imageVideo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:image_view_radius="@dimen/radius_s"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/image_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/icon_play"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

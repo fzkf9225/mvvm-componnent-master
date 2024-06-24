@@ -3,6 +3,7 @@ package pers.fz.mvvm.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -51,7 +52,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     public void initData(Bundle bundle) {
         String videoPath = bundle.getString(VIDEO_PATH);
         cacheEnable = bundle.getBoolean(CACHE_ENABLE,cacheEnable);
-        if (StringUtil.isEmpty(videoPath)) {
+        if (TextUtils.isEmpty(videoPath)) {
             new MessageDialog(this)
                     .setCanOutSide(false)
                     .setMessage("视频播放地址错误！")

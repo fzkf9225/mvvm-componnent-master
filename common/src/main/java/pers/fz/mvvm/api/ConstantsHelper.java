@@ -15,10 +15,10 @@ public class ConstantsHelper {
     public static boolean isSuccessRequestUpdate = false;//更新请求是否成功了
 
     public static boolean hasNewAppVersion = false;//是否有新版本
-    public static final String DOWNLOAD_CHANNEL_ID = BaseApplication.getInstance().getPackageName() + "._app_download";
+    public static final String DOWNLOAD_CHANNEL_ID = Config.getInstance().getApplication().getPackageName() + "._app_download";
     public static final String DOWNLOAD_CHANNEL_NAME = "文件下载";
 
-    public static final String NOTICE_CHANNEL_ID = BaseApplication.getInstance().getPackageName() + "._app_info_notice";
+    public static final String NOTICE_CHANNEL_ID = Config.getInstance().getApplication().getPackageName() + "._app_info_notice";
     public static final String NOTICE_CHANNEL_NAME = "消息通知";
 
 }

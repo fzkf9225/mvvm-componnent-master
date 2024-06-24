@@ -82,9 +82,7 @@ public class RetryServiceImpl implements RetryService {
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
                     return userApiService.getUserInfo(tokenBean.getUser_id());
                 })
-                .doOnNext(userInfo -> {
-                    UserAccountHelper.saveLoginState(userInfo, true);
-                });
+                .doOnNext(userInfo -> UserAccountHelper.saveLoginState(userInfo, true));
     }
 
 

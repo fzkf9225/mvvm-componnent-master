@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by fz on 2023/5/31 9:19
- * describe :线程池
+ * describe :线程池，核心线程为1，边界为CPU2倍，超过会报异常，一般用于不是同时执行多个任务，比如下载多个文件，或者同时播放多个音频
  */
 public class ThreadExecutor extends ThreadPoolExecutor {
     /**
      * 核心线程数量
      */
-    private static final int CORE_POOL_SIZE = 3;
+    private static final int CORE_POOL_SIZE = 1;
     /**
      * 以CPU总数*2作为线程池上限，比如系统为4核cpu，那么最大线程数为8，因为核心线程设置为3了，因此非核心线程数量为5，
      */
@@ -25,7 +25,7 @@ public class ThreadExecutor extends ThreadPoolExecutor {
     /**
      * 线程空闲等待销毁时间，单位秒，这里是空闲5秒后会自动销毁
      */
-    private static final int KEEP_ALIVE_TIME = 5;
+    private static final int KEEP_ALIVE_TIME = 10;
     private static volatile ThreadExecutor executor;
 
     private static final ThreadFactory S_THREAD_FACTORY = new ThreadFactory() {
