@@ -83,7 +83,7 @@ dependencies {
 //执行以下命令完成制品推送
 //推送命令
 //gradle publish
-//# 如果你的项目使用了gralde wrapper组件的话请使用以下命令
+//# 如果你的项目使用了gradle wrapper组件的话请使用以下命令
 //# ./gradlew publish
 apply plugin: 'maven-publish'
 afterEvaluate {

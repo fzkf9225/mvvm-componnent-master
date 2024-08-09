@@ -308,13 +308,14 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecyclerview_image"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/horizontal_progress_bar"
                 android:layout_height="wrap_content"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecyclerview_video"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image"
                 android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

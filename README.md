@@ -1,6 +1,8 @@
 # mvvm-componnent-master
 ## MVVM架构示例代码，重构版本
 ### 如果想用基础模块的话直接导入common就可以了
+#### 在线引用方式
+可以先直接打包成aar，然后执行gradle中的脚本即可，gradle中有注解，或者直接执行gradle得maven-publish，`ALIYUN_USER_NAME`、`ALIYUN_PASSWORD`是window的环境变量值为阿里云的用户名密码，大家可以自己添加，或者直接不用`System.getenv("ALIYUN_USER_NAME")`,直接用你的用户名密码
 ### mqttcomponent和websocketcomponent
 为mqtt和websocket简单封装，没太多复杂逻辑，有需要的可以自己接
 ### userapi
