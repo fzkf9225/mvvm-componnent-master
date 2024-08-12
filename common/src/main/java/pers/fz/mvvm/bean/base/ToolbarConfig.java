@@ -44,9 +44,11 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig() {
     }
-    public ToolbarConfig(Builder builder){
+
+    public ToolbarConfig(Builder builder) {
         this.builder = builder;
     }
+
     public ToolbarConfig(String title, int backIconRes, boolean defaultTheme, int textColor, int bgColor) {
         this.title = title;
         this.backIconRes = backIconRes;
@@ -114,7 +116,7 @@ public class ToolbarConfig extends BaseObservable {
             toolbarConfig.setBgColor(colorRes);
             ImmersionBar.with(activity)
                     .statusBarColor(colorRes)
-                    .autoStatusBarDarkModeEnable(true,0.2f)
+                    .autoStatusBarDarkModeEnable(true, 0.2f)
                     .init();
             return this;
         }
@@ -138,7 +140,8 @@ public class ToolbarConfig extends BaseObservable {
     public void setStyleTheme(int styleTheme) {
         this.styleTheme = styleTheme;
     }
-@Bindable
+
+    @Bindable
     public String getTitle() {
         return title;
     }
@@ -147,6 +150,7 @@ public class ToolbarConfig extends BaseObservable {
         this.title = title;
         notifyPropertyChanged(BR.title);
     }
+
     @Bindable
     public String getTitleHint() {
         return titleHint;
@@ -166,6 +170,7 @@ public class ToolbarConfig extends BaseObservable {
         this.backIconRes = backIconRes;
         notifyPropertyChanged(BR.backIconRes);
     }
+
     @Bindable
     public boolean isDefaultTheme() {
         return defaultTheme;
@@ -175,6 +180,7 @@ public class ToolbarConfig extends BaseObservable {
         this.defaultTheme = defaultTheme;
         notifyPropertyChanged(BR.defaultTheme);
     }
+
     @Bindable
     public int getTextColor() {
         return textColor;
@@ -184,6 +190,7 @@ public class ToolbarConfig extends BaseObservable {
         this.textColor = textColor;
         notifyPropertyChanged(BR.textColor);
     }
+
     @Bindable
     public int getBgColor() {
         return bgColor;
@@ -193,6 +200,7 @@ public class ToolbarConfig extends BaseObservable {
         this.bgColor = bgColor;
         notifyPropertyChanged(BR.bgColor);
     }
+
     @Bindable
     public boolean isShowBackButton() {
         return isShowBackButton;

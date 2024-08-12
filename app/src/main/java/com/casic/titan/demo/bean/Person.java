@@ -9,6 +9,7 @@ import com.casic.titan.demo.BR;
 
 import java.util.List;
 
+import pers.fz.mvvm.annotations.Valid;
 import pers.fz.mvvm.annotations.VerifyEntity;
 import pers.fz.mvvm.annotations.VerifyField;
 import pers.fz.mvvm.annotations.VerifyFieldSort;
@@ -83,6 +84,15 @@ public class Person extends BaseObservable {
     @VerifyFieldSort(9)
     @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
     private List<Uri> imageList;
+
+    @VerifyFieldSort(10)
+    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
+    public Family family;
+
+    @VerifyFieldSort(13)
+    @Valid(notNull = true, errorMsg = "请选择您的家庭集合信息！")
+    public List<Family> familyList;
+
 
     public Person() {
     }
@@ -194,6 +204,22 @@ public class Person extends BaseObservable {
         this.imageList = imageList;
     }
 
+    public Family getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    public List<Family> getFamilyList() {
+        return familyList;
+    }
+
+    public void setFamilyList(List<Family> familyList) {
+        this.familyList = familyList;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -207,6 +233,8 @@ public class Person extends BaseObservable {
                 ", email='" + email + '\'' +
                 ", hobby=" + hobby +
                 ", imageList=" + imageList +
+                ", family=" + family +
+                ", familyList=" + familyList +
                 '}';
     }
 }

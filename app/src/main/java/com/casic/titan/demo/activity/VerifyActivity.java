@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.demo.R;
+import com.casic.titan.demo.bean.Family;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityVerifyBinding;
@@ -63,6 +64,12 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
         });
         binding.verifySubmit.setOnClickListener(v -> {
             showLoading("验证中...");
+            binding.getData().setImageList(binding.formImage.getImages());
+//            Family family1 = new Family("我是妻子1", "我是丈夫1");
+//            Family family2 = new Family("我是妻子2", "我是丈夫2");
+//            binding.getData().setFamily(family1);
+//            binding.getData().setFamilyList(Arrays.asList(family1, family2));
+
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
             hideLoading();
             if (verifyResult.isOk()) {
@@ -76,7 +83,10 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
         binding.tvSex.setOnClickListener(v ->
                 new MenuDialog<>(this)
                         .setData("男", "女", "未知")
-                        .setOnOptionBottomMenuClickListener((dialog, list, pos) -> binding.getData().setSex(list.get(pos).getName()))
+                        .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
+                            binding.getData().setSex(list.get(pos).getName());
+                            dialog.dismiss();
+                        })
                         .builder()
                         .show());
     }

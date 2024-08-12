@@ -37,6 +37,11 @@ public class AppSettingHelper {
     public static boolean isFirstRun() {
         return MMKVHelper.getInstance().getBoolean(APP_IS_FIRST_RUN);
     }
+    public static void setPermissionNotTipEnable(Context context, long nowDate) {
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, GetVersion.getVersion(context));
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_TIME, nowDate);
+    }
 
     public static void setPermissionNotTipEnable(Context context, boolean enable, long nowDate) {
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
@@ -52,6 +57,15 @@ public class AppSettingHelper {
         return enable && GetVersion.getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= 7 * 24 * 60 * 60 * 1000;
     }
 
+    /**
+     * 不提醒的时间长度，默认为7天，这里单位为小时
+     */
+    public static boolean getPermissionNotTipEnable(Context context,long hours) {
+        boolean enable = MMKVHelper.getInstance().getBoolean(NOTIFY_REQUEST_TIME, false);
+        long lastDate = MMKVHelper.getInstance().getLong(NOTIFY_REQUEST_TIME, System.currentTimeMillis());
+        String versionName = MMKVHelper.getInstance().getString(NOTIFY_REQUEST_VERSION_NAME);
+        return enable && GetVersion.getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= hours * 60 * 60 * 1000;
+    }
 
     /**
      * 判断是否为第一次运行app

@@ -7,8 +7,6 @@ import java.io.IOException;
  * describe:自定义异常封装
  */
 public class BaseException extends IOException {
-    private static final long serialVersionUID = 602780230218501625L;
-
     /**
      * 解析数据失败
      */

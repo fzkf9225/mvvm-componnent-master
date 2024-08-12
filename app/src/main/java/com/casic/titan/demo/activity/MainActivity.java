@@ -68,11 +68,11 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
      * 通知权限检测
      */
     private void checkNotificationPermission() {
-        //是否不在提醒
-        if (AppSettingHelper.getPermissionNotTipEnable(this)) {
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             return;
         }
-        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+        //是否不在提醒
+        if (AppSettingHelper.getPermissionNotTipEnable(this)) {
             return;
         }
         new ConfirmDialog(this)
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 .setCanOutSide(false)
                 .setSureText("前往开启")
                 .setCancelText("不在提醒")
-                .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this, true, System.currentTimeMillis()))
+                .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,  System.currentTimeMillis()))
                 .setOnSureClickListener(dialog -> {
                     try {
                         Intent intent = new Intent();// 进入设置系统应用权限界面

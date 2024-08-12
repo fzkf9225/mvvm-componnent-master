@@ -11,6 +11,8 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import java.io.File;
 import java.math.BigDecimal;
 
+import pers.fz.mvvm.util.common.ThreadExecutor;
+
 /**
  *Created by fz on 2016/6/21.
  * Glide图片缓存工具类，获取缓存大小
@@ -19,13 +21,13 @@ import java.math.BigDecimal;
  */
 
 public class GlideCacheUtil {
-    private static GlideCacheUtil inst;
+
+    private static final class InstHolder {
+        private static final GlideCacheUtil INSTANCE = new GlideCacheUtil();
+    }
 
     public static GlideCacheUtil getInstance() {
-        if (inst == null) {
-            inst = new GlideCacheUtil();
-        }
-        return inst;
+        return InstHolder.INSTANCE;
     }
 
     /**
@@ -34,7 +36,7 @@ public class GlideCacheUtil {
     public void clearImageDiskCache(final Context context) {
         try {
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                new Thread(() -> Glide.get(context).clearDiskCache()).start();
+                ThreadExecutor.getInstance().execute(()->Glide.get(context).clearDiskCache());
             } else {
                 Glide.get(context).clearDiskCache();
             }

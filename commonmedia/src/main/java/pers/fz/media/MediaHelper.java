@@ -31,6 +31,7 @@ import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.media.imgcompressor.ImgCompressor;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.media.videocompressor.VideoCompress;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.wight.dialog.OpenFileDialog;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.dialog.OpenShootDialog;
@@ -393,12 +394,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ_TIRAMISU)) {
                 checkPermission(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ)) {
                 checkPermission(PERMISSIONS_READ);
                 return;
             }
@@ -426,12 +427,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ_TIRAMISU)) {
                 checkPermission(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ)) {
                 checkPermission(PERMISSIONS_READ);
                 return;
             }
@@ -667,12 +668,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void openImg() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ_TIRAMISU)) {
                 checkPermission(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ)) {
                 checkPermission(PERMISSIONS_READ);
                 return;
             }
@@ -697,12 +698,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void camera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA_R)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_CAMERA_R)) {
                 checkPermission(PERMISSIONS_CAMERA_R);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_CAMERA)) {
                 checkPermission(PERMISSIONS_CAMERA);
                 return;
             }
@@ -837,12 +838,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void shoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA_R)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_CAMERA_R)) {
                 checkPermission(PERMISSIONS_CAMERA_R);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_CAMERA)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_CAMERA)) {
                 checkPermission(PERMISSIONS_CAMERA);
                 return;
             }
@@ -855,12 +856,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void openShoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ_TIRAMISU)) {
                 checkPermission(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (mediaBuilder.getPermissionsChecker().lacksPermissions(PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(),PERMISSIONS_READ)) {
                 checkPermission(PERMISSIONS_READ);
                 return;
             }

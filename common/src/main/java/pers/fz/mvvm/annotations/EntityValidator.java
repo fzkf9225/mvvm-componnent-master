@@ -1,5 +1,7 @@
 package pers.fz.mvvm.annotations;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,16 +39,48 @@ public class EntityValidator {
                 sortField(fields);
             }
             for (Field field : fields) {
-                if (!field.isAnnotationPresent(VerifyParams.class) && !field.isAnnotationPresent(VerifyField.class)) {
+                if (!field.isAnnotationPresent(VerifyParams.class) && !field.isAnnotationPresent(VerifyField.class) && !field.isAnnotationPresent(Valid.class)) {
                     continue;
                 }
                 field.setAccessible(true);
+                //先判断是不是实体类或者集合
+                Valid valid = field.getAnnotation(Valid.class);
+                if (valid != null) {
+                    Object value = field.get(entity);
+                    if (valid.notNull() && field.get(entity) == null) {
+                        return VerifyResult.fail(valid.errorMsg());
+                    } else if (!valid.notNull() && field.get(entity) == null) {
+                        continue;
+                    }
+
+                    if (valid.notEmpty() && (value instanceof Collection<?> collection && collection.isEmpty())) {
+                        return VerifyResult.fail(valid.errorMsg());
+                    } else if (valid.notEmpty() && (value instanceof Map<?, ?> map && map.isEmpty())) {
+                        return VerifyResult.fail(valid.errorMsg());
+                    }
+                    if (value instanceof Collection<?>) {
+                        Collection<?> collection = (Collection<?>) value;
+                        for (Object obj : collection) {
+                            VerifyResult verifyResult = validate(obj);
+                            if (!verifyResult.isOk()) {
+                                return verifyResult;
+                            }
+                        }
+                    } else {
+                        VerifyResult verifyResult = validate(value);
+                        if (!verifyResult.isOk()) {
+                            return verifyResult;
+                        }
+                    }
+                    continue;
+                }
                 VerifyField validationField = field.getAnnotation(VerifyField.class);
                 VerifyParams validationParam = field.getAnnotation(VerifyParams.class);
                 //其实这里可以不用判断，因为上面判断过了，算是二次保险吧，但是基本没用
                 if (validationParam == null && validationField == null) {
                     continue;
                 }
+
                 VerifyParams[] verifyParamsList;
                 if (validationField == null) {
                     verifyParamsList = new VerifyParams[]{validationParam};

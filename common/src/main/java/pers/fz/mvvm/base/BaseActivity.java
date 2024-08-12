@@ -51,8 +51,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected VM mViewModel;
     protected VDB binding;
     protected BaseActivityBinding toolbarBind;
-    // 权限检测器
-    private PermissionsChecker mPermissionsChecker;
     private ActivityResultLauncher<String[]> permissionLauncher;
     protected ActivityResultLauncher<Intent> loginLauncher;
 
@@ -157,15 +155,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public boolean lacksPermissions(String... permission) {
-        return getPermissionsChecker().lacksPermissions(permission);
+        return PermissionsChecker.getInstance().lacksPermissions(this,permission);
     }
 
-    private PermissionsChecker getPermissionsChecker() {
-        if (mPermissionsChecker == null) {
-            mPermissionsChecker = new PermissionsChecker(this);
-        }
-        return mPermissionsChecker;
-    }
 
     /**
      * 设置toolbar背景色和状态栏的颜色，兼容华为小米手机

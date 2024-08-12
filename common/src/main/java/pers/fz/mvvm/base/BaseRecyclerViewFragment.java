@@ -136,7 +136,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     protected RecyclerView.LayoutManager initLayoutManager() {
-        return new LinearLayoutManager(getActivity());
+        return new LinearLayoutManager(requireContext());
     }
 
     protected boolean hideRecycleViewDivider() {

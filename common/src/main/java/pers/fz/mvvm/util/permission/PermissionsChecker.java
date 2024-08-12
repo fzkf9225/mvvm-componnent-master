@@ -2,6 +2,7 @@ package pers.fz.mvvm.util.permission;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+
 import androidx.core.content.ContextCompat;
 
 /**
@@ -10,24 +11,33 @@ import androidx.core.content.ContextCompat;
  */
 
 public class PermissionsChecker {
-    private final Context mContext;
-
-    public PermissionsChecker(Context context) {
-        mContext = context.getApplicationContext();
+    private PermissionsChecker() {
     }
 
-    // 判断权限集合
-    public boolean lacksPermissions(String... permissions) {
+    private static final class PermissionsCheckerHolder {
+        private static final PermissionsChecker INSTANCE = new PermissionsChecker();
+    }
+
+    public static PermissionsChecker getInstance() {
+        return PermissionsCheckerHolder.INSTANCE;
+    }
+
+    /**
+     * 判断权限集合
+     */
+    public boolean lacksPermissions(Context mContext, String... permissions) {
         for (String permission : permissions) {
-            if (lacksPermission(permission)) {
+            if (lacksPermission(mContext, permission)) {
                 return true;
             }
         }
         return false;
     }
 
-    // 判断是否缺少权限
-    private boolean lacksPermission(String permission) {
+    /**
+     * 判断是否缺少权限
+     */
+    private boolean lacksPermission(Context mContext, String permission) {
         return ContextCompat.checkSelfPermission(mContext, permission) ==
                 PackageManager.PERMISSION_DENIED;
     }

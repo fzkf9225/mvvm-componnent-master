@@ -31,7 +31,7 @@ public class CommonUtil {
      * @param linkUrl         打开地址
      * @param isInsideBrowser 是否调用app内部webView还是自带浏览器
      */
-    public static void goToBrowser(Context context, String linkUrl, boolean isInsideBrowser) {
+    public static void toBrowser(Context context, String linkUrl, boolean isInsideBrowser) {
         if (linkUrl == null) {
             return;
         }

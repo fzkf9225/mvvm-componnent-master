@@ -45,6 +45,7 @@ public class PagingViewModel extends BaseViewModel<PagingRepositoryImpl, PagingV
     public <T> LiveData<PagingData<T>> requestPagingData() {
         return requestPagingData(null, null);
     }
+
     public <T> LiveData<PagingData<T>> requestPagingData(Class<T> clx) {
         return requestPagingData(clx, null);
     }

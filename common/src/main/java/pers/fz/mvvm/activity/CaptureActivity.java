@@ -43,7 +43,6 @@ public class CaptureActivity extends AppCompatActivity {
     private CaptureManager capture;
     private ActivityCaptureBinding binding;
     private ActivityResultLauncher<String> openGalleryRequest;
-    private PermissionsChecker mPermissionsChecker;
     private ActivityResultLauncher<String[]> permissionLauncher = null;
 
     private final String[] PERMISSIONS_READ = new String[]{
@@ -91,21 +90,14 @@ public class CaptureActivity extends AppCompatActivity {
         handleImage(result);
     };
 
-    public PermissionsChecker getPermissionsChecker() {
-        if (mPermissionsChecker == null) {
-            mPermissionsChecker = new PermissionsChecker(this);
-        }
-        return mPermissionsChecker;
-    }
-
     private void openGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (getPermissionsChecker().lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(this,PERMISSIONS_READ_TIRAMISU)) {
                 permissionLauncher.launch(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (getPermissionsChecker().lacksPermissions(PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(this,PERMISSIONS_READ)) {
                 permissionLauncher.launch(PERMISSIONS_READ);
                 return;
             }

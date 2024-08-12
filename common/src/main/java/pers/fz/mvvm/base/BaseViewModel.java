@@ -31,7 +31,7 @@ public abstract class BaseViewModel<IR extends IRepository, V extends BaseView> 
         super(application);
     }
 
-    public void setBaseView(V baseView) {
+    public void setBaseView(@NonNull V baseView) {
         this.baseView = baseView;
         iRepository = createRepository();
     }

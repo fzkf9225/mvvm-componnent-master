@@ -97,12 +97,12 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
     }
 
     protected RecyclerView.LayoutManager createLayoutManager() {
-        return new LinearLayoutManager(getActivity());
+        return new LinearLayoutManager(requireContext());
     }
 
     protected RecyclerView.ItemDecoration createDivider() {
         return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
-                ContextCompat.getColor(requireActivity(), R.color.h_line_color));
+                ContextCompat.getColor(requireContext(), R.color.h_line_color));
     }
 
     protected boolean hideRecycleViewDivider() {

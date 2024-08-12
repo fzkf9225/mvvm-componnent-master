@@ -1,5 +1,7 @@
 package pers.fz.media;
 
+import android.content.Context;
+
 import org.jetbrains.annotations.NotNull;
 
 import androidx.activity.ComponentActivity;
@@ -10,7 +12,6 @@ import java.io.File;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
 
 /**
  * Created by fz on 2021/2/7 9:10
@@ -47,7 +48,8 @@ public class MediaBuilder {
     public int imageQualityCompress = 200;
     private BaseView baseView;
     private final ComponentActivity mActivity;
-    private PermissionsChecker mPermissionsChecker;
+
+    private Context mContext;
     private String waterMark;
     private String imageOutPutPath;
     private String videoOutPutPath;
@@ -58,6 +60,7 @@ public class MediaBuilder {
     private boolean isShowLoading = true;
     public MediaBuilder(@NotNull ComponentActivity mActivity, BaseView baseView) {
         this.mActivity = mActivity;
+        setContext(this.mActivity);
         this.baseView = baseView;
         String basePath = FileUtils.getDefaultBasePath(mActivity);
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
@@ -71,6 +74,7 @@ public class MediaBuilder {
     public MediaBuilder(@NotNull Fragment fragment, BaseView baseView) {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
+        setContext(this.fragment.getContext());
         this.baseView = baseView;
         String basePath = FileUtils.getDefaultBasePath(fragment.requireContext());
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
@@ -94,6 +98,14 @@ public class MediaBuilder {
     public MediaBuilder setAudioMaxSelectedCount(int audioMaxSelectedCount) {
         this.audioMaxSelectedCount = audioMaxSelectedCount;
         return this;
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     public int getFileMaxSelectedCount() {
@@ -246,14 +258,4 @@ public class MediaBuilder {
         return new MediaHelper(this);
     }
 
-    public PermissionsChecker getPermissionsChecker() {
-        if (mPermissionsChecker == null) {
-            mPermissionsChecker = new PermissionsChecker(mActivity);
-        }
-        return mPermissionsChecker;
-    }
-
-    public void setPermissionsChecker(PermissionsChecker mPermissionsChecker) {
-        this.mPermissionsChecker = mPermissionsChecker;
-    }
 }

@@ -218,6 +218,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/padding_l"
                 android:paddingBottom="@dimen/padding_l"
+                android:layout_marginStart="@dimen/horizontal_margin_xl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xl"
                 android:textColor="@color/theme_red"
                 android:textSize="@dimen/font_size_l"
                 app:layout_constraintTop_toBottomOf="@+id/verify_submit" />

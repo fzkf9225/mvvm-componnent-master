@@ -37,10 +37,6 @@ import javax.inject.Inject;
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView {
     protected String TAG = this.getClass().getSimpleName();
 
-    /**
-     * 权限检测器
-     */
-    private PermissionsChecker mPermissionsChecker;
     protected VM mViewModel;
     protected VDB binding;
     private ActivityResultLauncher<String[]> permissionLauncher;
@@ -52,15 +48,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         permissionLauncher.launch(permissions);
     }
 
-    private PermissionsChecker getPermissionsChecker() {
-        if (mPermissionsChecker == null) {
-            mPermissionsChecker = new PermissionsChecker(requireActivity());
-        }
-        return mPermissionsChecker;
-    }
 
     public boolean lacksPermissions(String[] permissions) {
-        return getPermissionsChecker().lacksPermissions(permissions);
+        return PermissionsChecker.getInstance().lacksPermissions(requireContext(),permissions);
     }
 
     /**
