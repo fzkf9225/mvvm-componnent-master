@@ -65,7 +65,7 @@ public class MMKVHelper {
     }
 
     public <T> void setArray( String name,List<T> list) {
-        if (list == null || list.size() == 0) { //清空
+        if (list == null || list.isEmpty()) {
             mmkv.putInt(name + "size", 0);
             int size = mmkv.getInt(name + "size", 0);
             for (int i = 0; i < size; i++) {

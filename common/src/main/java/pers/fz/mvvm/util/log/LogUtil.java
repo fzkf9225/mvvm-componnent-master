@@ -84,8 +84,11 @@ public class LogUtil {
     }
 
     public static void e(Throwable exception) {
+        if (exception == null) {
+            return;
+        }
         if (Config.enableDebug.get()) {
-            Logger.e(exception, "message");
+            Logger.e(exception, exception.getMessage());
         }
     }
 }

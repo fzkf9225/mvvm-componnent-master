@@ -3,16 +3,25 @@ package pers.fz.mvvm.api;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/6/15.
@@ -25,20 +34,22 @@ import java.util.Stack;
  * AppManager.getAppManager().finishActivity(this);
  */
 public class AppManager {
+    private final static String TAG = AppManager.class.getSimpleName();
+
     private static Stack<Activity> activityStack;
-    private static AppManager instance;
 
     private AppManager() {
+    }
+
+    private static final class InstanceHolder {
+        private static final AppManager INSTANCE = new AppManager();
     }
 
     /**
      * 单一实例
      */
     public static AppManager getAppManager() {
-        if (instance == null) {
-            instance = new AppManager();
-        }
-        return instance;
+        return InstanceHolder.INSTANCE;
     }
 
 
@@ -97,10 +108,12 @@ public class AppManager {
      * 结束所有Activity
      */
     public void finishAllActivity() {
-        for (int i = 0, size = activityStack.size(); i < size; i++) {
+        int i = 0, size = activityStack.size();
+        while (i < size) {
             if (null != activityStack.get(i)) {
                 activityStack.get(i).finish();
             }
+            i++;
         }
         activityStack.clear();
     }
@@ -127,11 +140,10 @@ public class AppManager {
      * @return true在栈顶false不在栈顶
      */
     public boolean isActivityOnTop(Activity activity) {
+        ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfo(activity);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfo(activity);
             return runningTaskInfo != null && runningTaskInfo.topActivity.equals(activity.getComponentName());
         } else {
-            ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfoCompat(activity);
             return runningTaskInfo != null && runningTaskInfo.topActivity.getClassName().equals(activity.getComponentName().getClassName());
         }
     }
@@ -147,17 +159,6 @@ public class AppManager {
         return null;
     }
 
-    @SuppressLint("NewApi")
-    private ActivityManager.RunningTaskInfo getRunningTaskInfoCompat(Activity activity) {
-        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        if (activityManager != null) {
-            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
-            if (runningTasks != null && !runningTasks.isEmpty()) {
-                return runningTasks.get(0);
-            }
-        }
-        return null;
-    }
     /**
      * 检查手机上是否安装了指定的软件
      *
@@ -206,6 +207,7 @@ public class AppManager {
 
     /**
      * 当前应用是否处于前台
+     *
      * @param context context
      * @return true：应用显示在前台
      */
@@ -225,9 +227,7 @@ public class AppManager {
                 List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
                 if (tasks != null && !tasks.isEmpty()) {
                     ComponentName topActivity = tasks.get(0).topActivity;
-                    if (topActivity != null && topActivity.getPackageName().equals(context.getPackageName())) {
-                        return true;
-                    }
+                    return topActivity != null && topActivity.getPackageName().equals(context.getPackageName());
                 }
             }
         }

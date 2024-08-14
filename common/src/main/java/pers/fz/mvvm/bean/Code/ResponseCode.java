@@ -77,4 +77,12 @@ public class ResponseCode {
      * 未知异常
      */
     public static final String UNKNOWN_ERROR = "11000";
+
+    public static boolean isOK(String code) {
+        return code.equals(OK);
+    }
+
+    public static boolean isSuccess(String code) {
+        return code.equals(SUCCESS);
+    }
 }

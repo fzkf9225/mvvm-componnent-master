@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ResourceName">
 
     <data>
-        <variable
-            name="feedBackBean"
-            type="pers.fz.mvvm.bean.FeedBackBean" />
     </data>
 
     <ScrollView
@@ -51,7 +50,6 @@
                 android:layout_margin="@dimen/vertical_margin_l"
                 android:background="@drawable/bg_edittext"
                 android:gravity="top"
-                android:text="@={feedBackBean.problemDescribe}"
                 android:hint="请输入遇到的问题或者功能意见..."
                 android:padding="@dimen/x10"
                 android:textColorHint="#AAAAAA"
@@ -87,7 +85,6 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="必填，姓名"
-                    android:text="@={feedBackBean.linkman}"
                     android:lines="1"
                     android:maxLength="20"
                     android:padding="@dimen/vertical_margin_l"
@@ -116,7 +113,6 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="必填，QQ、邮箱、电话号码等"
-                    android:text="@={feedBackBean.linkway}"
                     android:lines="1"
                     android:maxLength="50"
                     android:padding="@dimen/padding_l"

@@ -22,7 +22,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pers.fz.mvvm.util.common.GetVersion;
 import pers.fz.mvvm.util.jiami.Base64Util;
@@ -32,6 +34,8 @@ import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
 import static android.content.Context.TELEPHONY_SERVICE;
 
 import androidx.core.app.ActivityCompat;
+
+import com.google.gson.Gson;
 
 /**
  * Created by fz on 2017/8/18.
@@ -88,7 +92,7 @@ public class ApiAccountHelper {
 
     @SuppressLint({"MissingPermission", "HardwareIds"})
     public static String getPhoneInfo(Context context) {
-        StringBuilder sb = new StringBuilder();
+        Map<String,Object> hashMap = new HashMap<>();
         try {
             if (context == null) {
                 return "";
@@ -109,29 +113,18 @@ public class ApiAccountHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sb.append("imei:")
-                    .append(imei)
-                    .append(",imsi:")
-                    .append(imsi)
-                    .append(",phoneType:")
-                    .append(mtype)
-                    .append(",phoneNumber:")
-                    .append(numer)
-                    .append(",mac:")
-                    .append(getMacAddress(context))
-                    .append(",versionCode:")
-                    .append(GetVersion.getVersionCode(context))
-                    .append(",versionName:")
-                    .append(GetVersion.getVersion(context))
-                    .append(",ip:")
-                    .append(ApiAccountHelper.getIp(context))
-                    .append(",brand:")
-                    .append(Build.BRAND)
-                    .append(",product:")
-                    .append(Build.PRODUCT)
-                    .append(",systemVersion:")
-                    .append(Build.VERSION.RELEASE);
-            return Base64Util.encode(sb.toString().getBytes());
+            hashMap.put("imei",imei);
+            hashMap.put("imsi",imsi);
+            hashMap.put("phoneType",mtype);
+            hashMap.put("phoneNumber",numer);
+            hashMap.put("mac",getMacAddress(context));
+            hashMap.put("versionCode",GetVersion.getVersionCode(context));
+            hashMap.put("versionName",GetVersion.getVersion(context));
+            hashMap.put("ip",ApiAccountHelper.getIp(context));
+            hashMap.put("brand",Build.BRAND);
+            hashMap.put("product",Build.PRODUCT);
+            hashMap.put("systemVersion",Build.VERSION.RELEASE);
+            return Base64Util.encode(new Gson().toJson(hashMap).getBytes());
         } catch (Exception e) {
             e.printStackTrace();
             return "";

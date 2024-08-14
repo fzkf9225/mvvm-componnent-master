@@ -29,14 +29,6 @@ public class AppSettingHelper {
      */
     private static final String NOTIFY_REQUEST_TIME = "notify_request_time";
 
-    /**
-     * 判断是否为第一次运行app
-     *
-     * @return
-     */
-    public static boolean isFirstRun() {
-        return MMKVHelper.getInstance().getBoolean(APP_IS_FIRST_RUN);
-    }
     public static void setPermissionNotTipEnable(Context context, long nowDate) {
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, GetVersion.getVersion(context));
@@ -69,18 +61,24 @@ public class AppSettingHelper {
 
     /**
      * 判断是否为第一次运行app
-     *
-     * @return
      */
     public static boolean isFirstRun(String key) {
         return MMKVHelper.getInstance().getBoolean(key);
+    }
+
+    public static void setNotFirstRun(String key) {
+        MMKVHelper.getInstance().put(key, false);
+    }
+
+    /**
+     * 判断是否为第一次运行app
+     */
+    public static boolean isFirstRun() {
+        return MMKVHelper.getInstance().getBoolean(APP_IS_FIRST_RUN);
     }
 
     public static void setNotFirstRun() {
         MMKVHelper.getInstance().put(APP_IS_FIRST_RUN, false);
     }
 
-    public static void setNotFirstRun(String key) {
-        MMKVHelper.getInstance().put(key, false);
-    }
 }

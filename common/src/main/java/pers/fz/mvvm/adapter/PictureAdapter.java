@@ -24,7 +24,7 @@ public class PictureAdapter extends PagerAdapter {
      * initPosition -1为初始化的位置，后面是当前的图片索引位置
      * topPosition 记录上一次初始化的索引位，用于计算上次的position和本次position的偏移量
      * 
-     * */
+     */
     private int initPosition = -1;
     private int topPosition = -1;
 

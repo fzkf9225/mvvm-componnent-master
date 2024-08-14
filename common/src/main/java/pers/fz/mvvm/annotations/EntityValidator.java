@@ -47,19 +47,20 @@ public class EntityValidator {
                 Valid valid = field.getAnnotation(Valid.class);
                 if (valid != null) {
                     Object value = field.get(entity);
+                    //判断是否为空即只判断null，但是这里不判断空数据的情况，如果为空的话判断是否强制为空，强制不为空则报错，不限制为空则跳过
                     if (valid.notNull() && field.get(entity) == null) {
                         return VerifyResult.fail(valid.errorMsg());
                     } else if (!valid.notNull() && field.get(entity) == null) {
                         continue;
                     }
-
+                    //判断此对象是否为空对象，非null的空判断
                     if (valid.notEmpty() && (value instanceof Collection<?> collection && collection.isEmpty())) {
                         return VerifyResult.fail(valid.errorMsg());
                     } else if (valid.notEmpty() && (value instanceof Map<?, ?> map && map.isEmpty())) {
                         return VerifyResult.fail(valid.errorMsg());
                     }
-                    if (value instanceof Collection<?>) {
-                        Collection<?> collection = (Collection<?>) value;
+                    //如果是集合则遍历验证
+                    if (value instanceof Collection<?> collection) {
                         for (Object obj : collection) {
                             VerifyResult verifyResult = validate(obj);
                             if (!verifyResult.isOk()) {
@@ -74,6 +75,7 @@ public class EntityValidator {
                     }
                     continue;
                 }
+                //判断普通字段，也就是常用数据类型
                 VerifyField validationField = field.getAnnotation(VerifyField.class);
                 VerifyParams validationParam = field.getAnnotation(VerifyParams.class);
                 //其实这里可以不用判断，因为上面判断过了，算是二次保险吧，但是基本没用
