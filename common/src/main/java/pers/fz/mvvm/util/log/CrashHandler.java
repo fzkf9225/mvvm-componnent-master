@@ -192,7 +192,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private String writeFile(String sb) throws Exception {
         String fileName = "crash-" + DateUtil.getDateTimeFormat(new Date()) + ".log";
         File logFile = new File(mContext.getApplicationContext().getExternalFilesDir(null), "crash" + File.separator + fileName);
-        if (!logFile.getParentFile().exists()) {
+        if (!logFile.exists() || !logFile.getParentFile().exists()) {
             boolean isCreated = logFile.getParentFile().mkdirs();
         }
         FileOutputStream fos = null;

@@ -121,7 +121,7 @@ public class AppManager {
     /**
      * 退出应用程序
      */
-    public void AppExit(Context context) {
+    public void appExit(Context context) {
         try {
             finishAllActivity();
             ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -142,9 +142,9 @@ public class AppManager {
     public boolean isActivityOnTop(Activity activity) {
         ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfo(activity);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return runningTaskInfo != null && runningTaskInfo.topActivity.equals(activity.getComponentName());
+            return runningTaskInfo != null && runningTaskInfo.topActivity != null && runningTaskInfo.topActivity.equals(activity.getComponentName());
         } else {
-            return runningTaskInfo != null && runningTaskInfo.topActivity.getClassName().equals(activity.getComponentName().getClassName());
+            return runningTaskInfo != null && runningTaskInfo.topActivity != null && runningTaskInfo.topActivity.getClassName().equals(activity.getComponentName().getClassName());
         }
     }
 
@@ -167,7 +167,7 @@ public class AppManager {
      * @return
      */
     public static boolean isInstalled(Context context, String packageName) {
-        //获取packagemanager
+        //获取PackageManager
         final PackageManager packageManager = context.getPackageManager();
         //获取所有已安装程序的包信息
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);

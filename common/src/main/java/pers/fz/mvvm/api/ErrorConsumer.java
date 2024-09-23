@@ -63,7 +63,7 @@ public class ErrorConsumer implements Consumer<Throwable> {
             } else {
                 if (e instanceof HttpException) {
                     //   HTTP错误
-                    be = new BaseException(e.getMessage(), e, BaseException.BAD_NETWORK);
+                    be = new BaseException(BaseException.BAD_NETWORK_MSG, e, BaseException.BAD_NETWORK);
                 } else if (e instanceof ConnectException
                         || e instanceof UnknownHostException) {
                     //   连接错误

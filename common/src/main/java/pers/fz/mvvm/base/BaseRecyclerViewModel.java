@@ -23,7 +23,7 @@ public class BaseRecyclerViewModel<BV extends BaseView,T> extends BaseViewModel<
         return null;
     }
 
-    public MutableLiveData<PageBean<T>> listLiveData = new MutableLiveData<>();
+    public final MutableLiveData<PageBean<T>> listLiveData = new MutableLiveData<>();
 
     public MutableLiveData<PageBean<T>> getListLiveData() {
         return listLiveData;

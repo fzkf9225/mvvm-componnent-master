@@ -1,8 +1,6 @@
 package pers.fz.mvvm.base;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +34,6 @@ import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
