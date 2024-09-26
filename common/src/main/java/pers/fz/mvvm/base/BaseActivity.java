@@ -12,6 +12,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
@@ -29,11 +31,15 @@ import com.gyf.immersionbar.ImmersionBar;
 import javax.inject.Inject;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.annotations.NeedLogin;
 import pers.fz.mvvm.api.AppManager;
+import pers.fz.mvvm.api.ConstantsHelper;
+import pers.fz.mvvm.bean.Code.ResponseCode;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
@@ -52,7 +58,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected ActivityResultLauncher<Intent> loginLauncher;
 
     @Inject
-    ErrorService errorService;
+    public ErrorService errorService;
 
     protected abstract int getLayoutId();
 
@@ -152,7 +158,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public boolean lacksPermissions(String... permission) {
-        return PermissionsChecker.getInstance().lacksPermissions(this,permission);
+        return PermissionsChecker.getInstance().lacksPermissions(this, permission);
     }
 
 
@@ -303,7 +309,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
-        runOnUiThread(()-> CustomProgressDialog.getInstance(this).dismiss());
+        runOnUiThread(() -> CustomProgressDialog.getInstance(this).dismiss());
     }
 
     @Override
@@ -312,7 +318,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             if (StringUtil.isEmpty(msg)) {
                 return;
             }
-            Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -326,7 +332,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (errorService == null || model == null) {
             return;
         }
-        if (!errorService.isLogin(model.getCode())) {
+        if (!errorService.isLoginPast(model.getCode())) {
             errorService.toLogin(this, loginLauncher);
             return;
         }
@@ -362,4 +368,47 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Intent intent) {
         activityResultLauncher.launch(intent);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (errorService == null) {
+            return;
+        }
+        //不包含注解或者登录注解未开启
+        if (!isNeedLogin()) {
+            return;
+        }
+        //已登录，则跳转登录
+        if (!checkLogin()) {
+            return;
+        }
+        //如果未登录跳转登录并且把当前页的信息传递过去，以便于登录后回传
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            bundle = new Bundle();
+        }
+        bundle.putString(ConstantsHelper.TARGET_ACTIVITY, getClass().getName());
+        errorService.toLogin(this, bundle);
+        finish();
+    }
+
+    private boolean checkLogin() {
+        // 检查登录状态的逻辑
+        return !errorService.isLogin();
+    }
+
+    private boolean isNeedLogin() {
+        // 通过反射或注解处理器获取当前 Activity 是否需要登录
+        boolean isAnnotation = getClass().isAnnotationPresent(NeedLogin.class);
+        if (!isAnnotation) {
+            return false;
+        }
+        NeedLogin needLogin = getClass().getAnnotation(NeedLogin.class);
+        if (needLogin == null) {
+            return false;
+        }
+        return needLogin.enable();
+    }
+
 }

@@ -10,7 +10,10 @@ public class ConstantsHelper {
      * 请求是RetryWhen最大默认重试次数
      */
     public static final int RETRY_WHEN_MAX_COUNT = 3;
-
+    /**
+     * 跳转目标Activity页面，目前用于自动检测登录的作用
+     */
+    public static final String TARGET_ACTIVITY = "targetActivity";
     public static final String TAG = "casic";
     public static boolean isSuccessRequestUpdate = false;//更新请求是否成功了
 

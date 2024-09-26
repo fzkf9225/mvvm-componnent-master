@@ -9,9 +9,6 @@ import com.casic.titan.demo.databinding.ActivityDemoPagingBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.ThreadExecutor;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.MainViewModel;
 
 @AndroidEntryPoint

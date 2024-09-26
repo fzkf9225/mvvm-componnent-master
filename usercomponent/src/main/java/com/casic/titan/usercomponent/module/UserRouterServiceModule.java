@@ -5,9 +5,7 @@ import com.casic.titan.usercomponent.impl.UserRouterServiceImpl;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.components.ActivityComponent;
 import dagger.hilt.components.SingletonComponent;
 
 /**
@@ -16,9 +14,7 @@ import dagger.hilt.components.SingletonComponent;
  */
 @Module//必须配置的注解，表示这个对象是Module的配置规则
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
-public class UserRouterServiceModule {
-    @Provides
-    UserRouterService provideUserRouterService() {
-        return new UserRouterServiceImpl();
-    }
+public abstract class UserRouterServiceModule {
+    @Binds
+    abstract UserRouterService bindUserRouterService(UserRouterServiceImpl userRouterServiceImpl);
 }

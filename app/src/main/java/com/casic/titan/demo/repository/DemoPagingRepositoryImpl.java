@@ -5,6 +5,8 @@ import com.casic.titan.demo.bean.ForestBean;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Observable;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
@@ -17,13 +19,12 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
  * describe :
  */
 public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<ForestBean, PagingView> {
-    private final ApiServiceHelper apiServiceHelper;
+    private ApiServiceHelper apiServiceHelper;
 
-    public DemoPagingRepositoryImpl(RetryService retryService, PagingView baseView) {
+    public DemoPagingRepositoryImpl(ApiServiceHelper apiServiceHelper, RetryService retryService, PagingView baseView) {
         super(retryService, baseView);
-        apiServiceHelper = ApiRetrofit.getInstance().getApiService(ApiServiceHelper.class);
+        this.apiServiceHelper = apiServiceHelper;
     }
-
 
     @Override
     public Observable<List<ForestBean>> requestPaging(int currentPage, int pageSize) {

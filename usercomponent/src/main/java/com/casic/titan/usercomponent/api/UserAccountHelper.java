@@ -3,6 +3,7 @@ package com.casic.titan.usercomponent.api;
 import com.casic.titan.usercomponent.bean.UserInfo;
 import pers.fz.mvvm.api.MMKVHelper;
 import pers.fz.mvvm.bean.Code.ResponseCode;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/5/23.
@@ -50,10 +51,7 @@ public class UserAccountHelper {
         if (getUser() == null) {
             return false;
         }
-        if (!getLoginState()) {
-            return false;
-        }
-        return true;
+        return getLoginState();
     }
 
     /**

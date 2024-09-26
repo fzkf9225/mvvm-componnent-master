@@ -2,10 +2,9 @@ package com.casic.titan.usercomponent.module;
 
 import com.casic.titan.usercomponent.impl.RetryServiceImpl;
 
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.components.ViewModelComponent;
 import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.inter.RetryService;
 
@@ -15,9 +14,7 @@ import pers.fz.mvvm.inter.RetryService;
  */
 @Module//必须配置的注解，表示这个对象是Module的配置规则
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
-public class RetryModule {
-    @Provides
-    RetryService provideRetryService() {
-        return new RetryServiceImpl();
-    }
+public abstract class RetryModule {
+    @Binds
+    abstract RetryService bindRetryService(RetryServiceImpl retryServiceImpl);
 }

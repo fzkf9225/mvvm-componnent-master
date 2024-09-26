@@ -24,12 +24,10 @@ import pers.fz.mvvm.repository.RepositoryImpl;
 public class UserRepositoryImpl extends RepositoryImpl {
     private final UserApiService userApiService;
 
-    public UserRepositoryImpl(RetryService retryService, BaseView baseView) {
+    public UserRepositoryImpl(UserApiService userApiService,RetryService retryService, BaseView baseView) {
         super(retryService, baseView);
-        userApiService = ApiRetrofit.getInstance().getApiService(UserApiService.class);
-
+        this.userApiService = userApiService;
     }
-
 
     public void login(RequestLoginBean requestLoginBean, MutableLiveData<UserInfo> liveData) {
         sendRequest(userApiService.getToken(requestLoginBean.getUsername(),

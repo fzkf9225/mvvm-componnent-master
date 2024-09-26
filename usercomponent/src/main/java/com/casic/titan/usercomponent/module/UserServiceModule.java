@@ -3,8 +3,8 @@ package com.casic.titan.usercomponent.module;
 import com.casic.titan.userapi.UserService;
 import com.casic.titan.usercomponent.impl.UserServiceImpl;
 
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 
@@ -14,9 +14,7 @@ import dagger.hilt.components.SingletonComponent;
  */
 @Module//必须配置的注解，表示这个对象是Module的配置规则
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
-public class UserServiceModule {
-    @Provides
-    UserService provideUserService() {
-        return new UserServiceImpl();
-    }
+public abstract class UserServiceModule {
+    @Binds
+    abstract UserService bindUserService(UserServiceImpl userServiceImpl);
 }

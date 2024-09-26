@@ -17,8 +17,6 @@ import pers.fz.mvvm.inter.ErrorService;
  */
 @HiltAndroidApp
 public class ApplicationHelper extends BaseApplication {
-    @Inject
-    ErrorService errorService;
 
     @Override
     public void onCreate() {
@@ -28,10 +26,6 @@ public class ApplicationHelper extends BaseApplication {
             Config.getInstance().enableDebug(true);
         }
         AppSettings.getInstance().onCreate(this);
-        new ApiRetrofit.Builder(this)
-                .addDefaultHeader()
-                .setErrorService(errorService)
-                .builder();
     }
 
 }

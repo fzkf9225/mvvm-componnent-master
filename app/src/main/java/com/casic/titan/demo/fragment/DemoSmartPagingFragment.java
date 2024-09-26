@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
+import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.ForestBean;
 import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
@@ -21,7 +24,8 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  */
 @AndroidEntryPoint
 public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewModel, BaseSmartPagingBinding, ForestBean> {
-
+    @Inject
+    ApiServiceHelper apiServiceHelper;
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
         return new PagingDemoAdapter();
@@ -29,7 +33,7 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewM
 
     @Override
     public PagingRepositoryImpl<ForestBean,?> createRepository() {
-        return new DemoPagingRepositoryImpl(mViewModel.retryService,this);
+        return new DemoPagingRepositoryImpl(apiServiceHelper,mViewModel.retryService,this);
     }
 
     @Override

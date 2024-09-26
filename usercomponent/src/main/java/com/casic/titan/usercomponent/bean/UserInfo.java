@@ -17,6 +17,9 @@ public class UserInfo extends BaseObservable implements Parcelable {
 	private String roleName;
 	private int sex;
 
+	public UserInfo() {
+	}
+
 	protected UserInfo(Parcel in) {
 		id = in.readString();
 		name = in.readString();

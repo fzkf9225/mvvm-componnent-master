@@ -8,8 +8,11 @@ import androidx.navigation.Navigation;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.activity.PagingDetailActivity;
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
+import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.ForestBean;
 import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
@@ -26,6 +29,8 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  */
 @AndroidEntryPoint
 public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, PagingRecyclerViewBinding, ForestBean> implements OnHeaderViewClickListener {
+    @Inject
+    ApiServiceHelper apiServiceHelper;
 
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
@@ -34,7 +39,7 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
 
     @Override
     public PagingRepositoryImpl createRepository() {
-        return new DemoPagingRepositoryImpl(mViewModel.retryService,this);
+        return new DemoPagingRepositoryImpl(apiServiceHelper,mViewModel.retryService, this);
     }
 
     @Override

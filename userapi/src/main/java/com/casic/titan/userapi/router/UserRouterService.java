@@ -2,6 +2,7 @@ package com.casic.titan.userapi.router;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 
@@ -17,5 +18,10 @@ public interface UserRouterService {
      */
     void toLogin(Context mContext,ActivityResultLauncher<Intent> activityResultLauncher);
 
+    void toLogin(Context mContext, Bundle bundle, ActivityResultLauncher<Intent> activityResultLauncher);
+
     void toLogin(Context context);
+
+    void toLogin(Context context, Bundle bundle);
+
 }

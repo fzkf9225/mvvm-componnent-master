@@ -13,6 +13,7 @@ import com.casic.titan.demo.activity.MediaActivity;
 import com.casic.titan.demo.activity.MediaCompressActivity;
 import com.casic.titan.demo.activity.RecyclerViewSampleActivity;
 import com.casic.titan.demo.activity.ScanQrCodeActivity;
+import com.casic.titan.demo.activity.TargetActivity;
 import com.casic.titan.demo.activity.VerifyActivity;
 import com.casic.titan.demo.activity.ViewPagerSampleActivity;
 import com.casic.titan.demo.activity.WightActivity;
@@ -46,6 +47,7 @@ public enum UseCaseEnum {
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片", null),
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
+    LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
 
     ;
 
@@ -55,6 +57,12 @@ public enum UseCaseEnum {
         bundle.putBoolean(VideoPlayerActivity.CACHE_ENABLE, false);
         //自己加地址试试吧,这个地址不行，因为他不是视频链接
         bundle.putString(VideoPlayerActivity.VIDEO_PATH, "https://www.bilibili.com/video/BV1sX4y1L7BV?t=15.2");
+        return bundle;
+    }
+
+    private static Bundle createTargetBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putString(TargetActivity.ARGS, "测试拦截登录时传递的参数");
         return bundle;
     }
 

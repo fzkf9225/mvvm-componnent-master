@@ -86,6 +86,9 @@
         tools:replace="android:theme"
         tools:targetApi="31">
         <activity
+            android:name=".activity.TargetActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.PagingDetailActivity"
             android:exported="false" />
         <activity

@@ -47,7 +47,6 @@ android {
             zipAlignEnabled false// Zipalign优化
             shrinkResources false // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig debugSigningConfig
         }
     }
     compileOptions {
