@@ -131,7 +131,9 @@ dependencies {
 // [可选] RxJava 支持
     implementation "androidx.paging:paging-rxjava3:$pagingVersion"
     //下拉刷新
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayoutVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    kapt "org.projectlombok:lombok:$lombokVersion"
 }
 //执行以下命令完成制品推送
 //推送命令

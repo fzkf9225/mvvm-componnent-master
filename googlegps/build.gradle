@@ -30,8 +30,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
     testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
-    androidTestImplementation "androidx.test.espresso:$espressoCoreVersion"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
     implementation "androidx.preference:preference:$preferenceVersion"
