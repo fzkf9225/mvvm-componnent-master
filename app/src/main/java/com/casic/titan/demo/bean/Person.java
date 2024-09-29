@@ -5,16 +5,14 @@ import android.net.Uri;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.casic.titan.demo.BR;
-
 import java.util.List;
 
-import pers.fz.mvvm.annotations.Valid;
-import pers.fz.mvvm.annotations.VerifyEntity;
-import pers.fz.mvvm.annotations.VerifyField;
-import pers.fz.mvvm.annotations.VerifyFieldSort;
-import pers.fz.mvvm.annotations.VerifyParams;
-import pers.fz.mvvm.annotations.VerifyType;
+import pers.fz.annotation.verify.Valid;
+import pers.fz.annotation.verify.VerifyEntity;
+import pers.fz.annotation.verify.VerifyField;
+import pers.fz.annotation.verify.VerifyFieldSort;
+import pers.fz.annotation.verify.VerifyParams;
+import pers.fz.annotation.verify.VerifyType;
 
 /**
  * Created by fz on 2023/9/5 18:32

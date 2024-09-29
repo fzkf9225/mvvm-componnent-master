@@ -1,0 +1,45 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(include: ["*.jar"], dir: "libs")
+    annotationProcessor "com.google.auto.service:auto-service:$autoServiceVersion"
+    implementation "com.google.auto.service:auto-service-annotations:$autoServiceVersion"
+    implementation "com.squareup:javapoet:$javapoetVersion"
+    implementation "com.squareup:javawriter:$javawriterVersion"
+}
+sourceCompatibility = "17"
+targetCompatibility = "17"
+//执行以下命令完成制品推送
+//推送命令
+//gradle publish
+//# 如果你的项目使用了gradle wrapper组件的话请使用以下命令
+//# ./gradlew publish
+apply plugin: 'maven-publish'
+afterEvaluate {
+    publishing {
+        publications {
+            plugin(MavenPublication) {
+                artifact("$buildDir/libs/${artifactId}.jar")
+                groupId = 'pers.fz.annotation'
+                artifactId = 'annotation'
+                version = '1.0.1'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+        }
+    }
+}

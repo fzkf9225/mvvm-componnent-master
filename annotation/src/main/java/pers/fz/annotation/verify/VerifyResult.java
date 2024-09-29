@@ -1,4 +1,4 @@
-package pers.fz.mvvm.annotations;
+package pers.fz.annotation.verify;
 
 /**
  * Created by fz on 2023/9/5 16:59

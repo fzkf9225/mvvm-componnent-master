@@ -1,6 +1,5 @@
 package com.casic.titan.demo.activity;
 
-import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,23 +8,23 @@ import android.text.TextWatcher;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.demo.R;
-import com.casic.titan.demo.bean.Family;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityVerifyBinding;
 
 import java.util.Arrays;
-import java.util.List;
 
-import pers.fz.mvvm.annotations.EntityValidator;
-import pers.fz.mvvm.annotations.VerifyResult;
+import dagger.hilt.android.AndroidEntryPoint;
+
+import pers.fz.annotation.verify.EntityValidator;
+import pers.fz.annotation.verify.VerifyResult;
+
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.viewmodel.MainViewModel;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
+@AndroidEntryPoint
 public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 

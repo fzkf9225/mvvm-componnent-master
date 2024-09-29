@@ -12,8 +12,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
@@ -31,15 +29,13 @@ import com.gyf.immersionbar.ImmersionBar;
 import javax.inject.Inject;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.annotations.NeedLogin;
+import pers.fz.mvvm.annotations.interrupte.NeedLogin;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.bean.Code.ResponseCode;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;

@@ -1,4 +1,4 @@
-package pers.fz.mvvm.annotations;
+package pers.fz.annotation.verify;
 
 
 import java.lang.reflect.Field;
@@ -6,10 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import pers.fz.mvvm.api.RegexUtils;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
-
+import pers.fz.annotation.utils.RegexUtils;
 /**
  * Created by fz on 2023/9/5 16:25
  * describe :
@@ -111,7 +108,7 @@ public class EntityValidator {
                             continue;
                         } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             continue;
-                        } else if (StringUtil.isEmpty(value)) {
+                        } else if (isEmpty(value)) {
                             continue;
                         }
                     }
@@ -121,7 +118,7 @@ public class EntityValidator {
                             return VerifyResult.fail(params.errorMsg());
                         } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             return VerifyResult.fail(params.errorMsg());
-                        } else if (StringUtil.isEmpty(value)) {
+                        } else if (isEmpty(value)) {
                             return VerifyResult.fail(params.errorMsg());
                         }
                     }
@@ -133,7 +130,6 @@ public class EntityValidator {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(TAG, "验证异常：" + e);
             return VerifyResult.ok("验证结果发生异常，将自动跳过验证！！！");
         }
         return VerifyResult.ok();
@@ -177,7 +173,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isInteger(value.toString())) {
@@ -187,7 +183,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isDouble(value.toString())) {
@@ -197,7 +193,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isDoubleTwoDecimals(value.toString())) {
@@ -235,7 +231,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             double number = Double.parseDouble(value.toString());
@@ -246,7 +242,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             double number = Double.parseDouble(value.toString());
@@ -260,7 +256,7 @@ public class EntityValidator {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (validationParams.minLength() < 0 && value.toString().length() >= validationParams.maxLength()) {
@@ -279,7 +275,7 @@ public class EntityValidator {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (validationParams.minLength() < 0 && value.toString().length() > validationParams.maxLength()) {
@@ -295,7 +291,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (StringUtil.isEmpty(value)) {
+            if (isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             return RegexUtils.regular(value.toString(), validationParams.regex()) ?
@@ -303,5 +299,22 @@ public class EntityValidator {
         }
 
         return VerifyResult.ok();
+    }
+
+    private static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+        return FilterNull(obj.toString()).isEmpty();
+    }
+
+    /**
+     * 过滤空NULL
+     *
+     * @param o
+     * @return
+     */
+    private static String FilterNull(Object o) {
+        return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
     }
 }

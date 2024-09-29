@@ -7,7 +7,7 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityTargetBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.annotations.NeedLogin;
+import pers.fz.mvvm.annotations.interrupte.NeedLogin;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

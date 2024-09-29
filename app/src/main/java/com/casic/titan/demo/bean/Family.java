@@ -1,8 +1,8 @@
 package com.casic.titan.demo.bean;
 
-import pers.fz.mvvm.annotations.VerifyEntity;
-import pers.fz.mvvm.annotations.VerifyParams;
-import pers.fz.mvvm.annotations.VerifyType;
+import pers.fz.annotation.verify.VerifyEntity;
+import pers.fz.annotation.verify.VerifyParams;
+import pers.fz.annotation.verify.VerifyType;
 
 /**
  * created by fz on 2024/8/12 17:01

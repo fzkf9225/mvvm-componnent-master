@@ -449,7 +449,7 @@
 -keep @interface pers.pers.fz.mvvm.annotations.VerifyEntity
 -keep @interface pers.pers.fz.mvvm.annotations.VerifyField
 -keep @interface pers.pers.fz.mvvm.annotations.VerifyParams
--keep class pers.fz.mvvm.annotations.VerifyResult
+-keep class com.casic.titan.annotation.format.verify.VerifyResult
 
 -keep class com.shuyu.gsyvideoplayer.video.** { *; }
 -dontwarn com.shuyu.gsyvideoplayer.video.**
