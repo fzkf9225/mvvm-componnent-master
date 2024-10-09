@@ -20,27 +20,29 @@ public class StringUtil {
      * @param o
      * @return
      */
-    public static String FilterNull(Object o) {
+    public static String filterNull(Object o) {
         return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
     }
+
     /**
      * 过滤空NULL
      *
-     * @param agrs
+     * @param args
      * @return
      */
-    public static String FilterNull(String... agrs) {
-        if (agrs == null) {
+    public static String filterNull(String... args) {
+        if (args == null) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (String s : agrs) {
+        for (String s : args) {
             if (s != null) {
                 sb.append(s);
             }
         }
         return sb.toString();
     }
+
     /**
      * 是否为空
      *
@@ -51,11 +53,7 @@ public class StringUtil {
         if (o == null) {
             return true;
         }
-        if ("".equals(FilterNull(o.toString()))) {
-            return true;
-        } else {
-            return false;
-        }
+        return filterNull(o.toString()).isEmpty();
     }
 
     /**
@@ -68,11 +66,7 @@ public class StringUtil {
         if (o == null) {
             return false;
         }
-        if ("".equals(FilterNull(o.toString()))) {
-            return false;
-        } else {
-            return true;
-        }
+        return !filterNull(o.toString()).isEmpty();
     }
 
     /**
@@ -85,7 +79,7 @@ public class StringUtil {
         try {
             new BigDecimal(o.toString());
             return true;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -98,9 +92,12 @@ public class StringUtil {
      */
     public static boolean isLong(Object o) {
         try {
-            new Long(o.toString());
+            if (o == null) {
+                return false;
+            }
+            Long.valueOf(o.toString());
             return true;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -113,7 +110,7 @@ public class StringUtil {
      */
     public static Long toLong(Object o) {
         if (isLong(o)) {
-            return new Long(o.toString());
+            return Long.valueOf(o.toString());
         } else {
             return 0L;
         }
@@ -127,7 +124,7 @@ public class StringUtil {
      */
     public static int toInt(Object o) {
         if (isNum(o)) {
-            return new Integer(o.toString());
+            return Integer.parseInt(o.toString());
         } else {
             return 0;
         }
@@ -139,54 +136,52 @@ public class StringUtil {
      * @param o
      * @return
      */
-    public static String holdmaxlength(Object o) {
-        int maxlength = 50;
+    public static String holdMaxlength(Object o) {
+        int maxLength = 50;
         if (o == null) {
             return "";
         }
-        return subStringByByte(o, maxlength);
+        return subStringByByte(o, maxLength);
     }
 
     /**
-     * 从左截取固定长度字符串, 防止字符串超长, maxlength为0时默认50
+     * 从左截取固定长度字符串, 防止字符串超长, maxLength
      *
      * @param o
      * @return
      */
-    public static String holdmaxlength(Object o, int maxlength) {
-        maxlength = maxlength <= 0 ? 50 : maxlength;
+    public static String holdMaxLength(Object o, int maxLength) {
+        maxLength = maxLength <= 0 ? 50 : maxLength;
         if (o == null) {
             return "";
         }
-        return subStringByByte(o, maxlength);
+        return subStringByByte(o, maxLength);
     }
 
     /**
      * 按字节截取字符串
      *
-     * @param str
+     * @param o
      * @param len
      * @return
      */
     private static String subStringByByte(Object o, int len) {
         if (o == null) {
-            return "";
+            return null;
         }
         String str = o.toString();
         String result = null;
-        if (str != null) {
-            byte[] a = str.getBytes();
-            if (a.length <= len) {
-                result = str;
-            } else if (len > 0) {
-                result = new String(a, 0, len);
-                int length = result.length();
-                if (str.charAt(length - 1) != result.charAt(length - 1)) {
-                    if (length < 2) {
-                        result = null;
-                    } else {
-                        result = result.substring(0, length - 1);
-                    }
+        byte[] a = str.getBytes();
+        if (a.length <= len) {
+            result = str;
+        } else if (len > 0) {
+            result = new String(a, 0, len);
+            int length = result.length();
+            if (str.charAt(length - 1) != result.charAt(length - 1)) {
+                if (length < 2) {
+                    result = null;
+                } else {
+                    result = result.substring(0, length - 1);
                 }
             }
         }
@@ -196,29 +191,29 @@ public class StringUtil {
     /**
      * 逗号表达式_添加
      *
-     * @param commaexpress 原逗号表达式 如 A,B
-     * @param newelement   新增元素 C
+     * @param commaExpress 原逗号表达式 如 A,B
+     * @param newElement   新增元素 C
      * @return A, B, C
      */
-    public static String comma_add(String commaexpress, String newelement) {
-        return comma_rect(FilterNull(commaexpress) + "," + FilterNull(newelement));
+    public static String commaAdd(String commaExpress, String newElement) {
+        return commaRect(filterNull(commaExpress) + "," + filterNull(newElement));
     }
 
     /**
      * 逗号表达式_删除
      *
-     * @param commaexpress 原逗号表达式 如 A,B,C
-     * @param delelement   删除元素 C,A
+     * @param commaExpress 原逗号表达式 如 A,B,C
+     * @param delElement   删除元素 C,A
      * @return B
      */
-    public static String comma_del(String commaexpress, String delelement) {
-        if ((commaexpress == null) || (delelement == null) || (commaexpress.trim().equals(delelement.trim()))) {
+    public static String commaDel(String commaExpress, String delElement) {
+        if ((commaExpress == null) || (delElement == null) || (commaExpress.trim().equals(delElement.trim()))) {
             return "";
         }
-        String[] deletelist = delelement.split(",");
-        String result = commaexpress;
-        for (String delstr : deletelist) {
-            result = comma_delone(result, delstr);
+        String[] deleteList = delElement.split(",");
+        String result = commaExpress;
+        for (String delStr : deleteList) {
+            result = comma_delone(result, delStr);
         }
         return result;
     }
@@ -226,38 +221,38 @@ public class StringUtil {
     /**
      * 逗号表达式_单一删除
      *
-     * @param commaexpress 原逗号表达式 如 A,B,C
-     * @param delelement   删除元素 C
+     * @param commaExpress 原逗号表达式 如 A,B,C
+     * @param delElement   删除元素 C
      * @return A, B
      */
-    public static String comma_delone(String commaexpress, String delelement) {
-        if ((commaexpress == null) || (delelement == null) || (commaexpress.trim().equals(delelement.trim()))) {
+    public static String comma_delone(String commaExpress, String delElement) {
+        if ((commaExpress == null) || (delElement == null) || (commaExpress.trim().equals(delElement.trim()))) {
             return "";
         }
-        String[] strlist = commaexpress.split(",");
-        StringBuffer result = new StringBuffer();
-        for (String str : strlist) {
-            if ((!str.trim().equals(delelement.trim())) && (!"".equals(str.trim()))) {
-                result.append(str.trim() + ",");
+        String[] strList = commaExpress.split(",");
+        StringBuilder result = new StringBuilder();
+        for (String str : strList) {
+            if ((!str.trim().equals(delElement.trim())) && (!str.trim().isEmpty())) {
+                result.append(str.trim()).append(",");
             }
         }
-        return result.toString().substring(0, result.length() - 1 > 0 ? result.length() - 1 : 0);
+        return result.toString().substring(0, Math.max(result.length() - 1, 0));
     }
 
     /**
      * 逗号表达式_判断是否包含元素
      *
-     * @param commaexpress 逗号表达式 A,B,C
+     * @param commaExpress 逗号表达式 A,B,C
      * @param element      C
      * @return true
      */
-    public static boolean comma_contains(String commaexpress, String element) {
+    public static boolean comma_contains(String commaExpress, String element) {
         boolean flag = false;
-        commaexpress = FilterNull(commaexpress);
-        element = FilterNull(element);
-        if (!"".equals(commaexpress) && !"".equals(element)) {
-            String[] strlist = commaexpress.split(",");
-            for (String str : strlist) {
+        commaExpress = filterNull(commaExpress);
+        element = filterNull(element);
+        if (!commaExpress.isEmpty() && !element.isEmpty()) {
+            String[] strList = commaExpress.split(",");
+            for (String str : strList) {
                 if (str.trim().equals(element.trim())) {
                     flag = true;
                     break;
@@ -270,71 +265,70 @@ public class StringUtil {
     /**
      * 逗号表达式_取交集
      *
-     * @param commaexpressA 逗号表达式1  A,B,C
-     * @param commaexpressB 逗号表达式2  B,C,D
+     * @param commaExpressA 逗号表达式1  A,B,C
+     * @param commaExpressB 逗号表达式2  B,C,D
      * @return B, C
      */
-    public static String comma_intersect(String commaexpressA, String commaexpressB) {
-        commaexpressA = FilterNull(commaexpressA);
-        commaexpressB = FilterNull(commaexpressB);
-        StringBuffer result = new StringBuffer();
-        String[] strlistA = commaexpressA.split(",");
-        String[] strlistB = commaexpressB.split(",");
-        for (String boA : strlistA) {
-            for (String boB : strlistB) {
+    public static String comma_intersect(String commaExpressA, String commaExpressB) {
+        commaExpressA = filterNull(commaExpressA);
+        commaExpressB = filterNull(commaExpressB);
+        StringBuilder result = new StringBuilder();
+        String[] strListA = commaExpressA.split(",");
+        String[] strListB = commaExpressB.split(",");
+        for (String boA : strListA) {
+            for (String boB : strListB) {
                 if (boA.trim().equals(boB.trim())) {
-                    result.append(boA.trim() + ",");
+                    result.append(boA.trim()).append(",");
                 }
             }
         }
-        return comma_rect(result.toString());
+        return commaRect(result.toString());
     }
 
     /**
      * 逗号表达式_规范
      *
-     * @param commaexpress 逗号表达式  ,A,B,B,,C
+     * @param commaExpress 逗号表达式  ,A,B,B,,C
      * @return A, B, C
      */
-    public static String comma_rect(String commaexpress) {
-        commaexpress = FilterNull(commaexpress);
-        String[] strlist = commaexpress.split(",");
-        StringBuffer result = new StringBuffer();
-        for (String str : strlist) {
-            if (!("".equals(str.trim())) && !("," + result.toString() + ",").contains("," + str + ",") && !"null".equals(str)) {
-                result.append(str.trim() + ",");
+    public static String commaRect(String commaExpress) {
+        commaExpress = filterNull(commaExpress);
+        String[] strList = commaExpress.split(",");
+        StringBuilder result = new StringBuilder();
+        for (String str : strList) {
+            if (!(str.trim().isEmpty()) && !("," + result.toString() + ",").contains("," + str + ",") && !"null".equals(str)) {
+                result.append(str.trim()).append(",");
             }
         }
-        return result.toString().substring(0, (result.length() - 1 > 0) ? result.length() - 1 : 0);
+        return result.toString().substring(0, Math.max(result.length() - 1, 0));
     }
 
     /**
      * 逗号表达式_反转
      *
-     * @param commaexpress A,B,C
+     * @param commaExpress A,B,C
      * @return C, B, A
      */
-    public static String comma_reverse(String commaexpress) {
-        commaexpress = FilterNull(commaexpress);
-        String[] ids = commaexpress.split(",");
-        StringBuffer str = new StringBuffer();
+    public static String commaReverse(String commaExpress) {
+        commaExpress = filterNull(commaExpress);
+        String[] ids = commaExpress.split(",");
+        StringBuilder str = new StringBuilder();
         for (int i = ids.length - 1; i >= 0; i--) {
-            str.append(ids[i] + ",");
+            str.append(ids[i]).append(",");
         }
-        return comma_rect(str.toString());
+        return commaRect(str.toString());
     }
 
     /**
      * 逗号表达式_获取首对象
      *
-     * @param commaexpress A,B,C
+     * @param commaExpress A,B,C
      * @return A
      */
-    public static String comma_first(String commaexpress) {
-        commaexpress = FilterNull(commaexpress);
-        String[] ids = commaexpress.split(",");
-        System.out.println("length:" + ids.length);
-        if ((ids != null) && (ids.length > 0)) {
+    public static String commaFirst(String commaExpress) {
+        commaExpress = filterNull(commaExpress);
+        String[] ids = commaExpress.split(",");
+        if (ids.length > 0) {
             return ids[0];
         }
         return null;
@@ -343,13 +337,13 @@ public class StringUtil {
     /**
      * 逗号表达式_获取尾对象
      *
-     * @param commaexpress A,B,C
+     * @param commaExpress A,B,C
      * @return C
      */
-    public static String comma_last(String commaexpress) {
-        commaexpress = FilterNull(commaexpress);
-        String[] ids = commaexpress.split(",");
-        if ((ids != null) && (ids.length > 0)) {
+    public static String commaLast(String commaExpress) {
+        commaExpress = filterNull(commaExpress);
+        String[] ids = commaExpress.split(",");
+        if (ids.length > 0) {
             return ids[(ids.length - 1)];
         }
         return null;
@@ -387,7 +381,7 @@ public class StringUtil {
     /**
      * 把异常信息转换成字符串，以方便保存
      */
-    public static String getexceptionInfo(Exception e) {
+    public static String getExceptionInfo(Exception e) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             e.printStackTrace(new PrintStream(baos));
@@ -405,28 +399,28 @@ public class StringUtil {
      * 过滤特殊符号
      */
     public static String regex(String str) {
-        Pattern pattern = Pattern.compile("[0-9-:/ ]");// 中文汉字编码区间
+        // 中文汉字编码区间
+        Pattern pattern = Pattern.compile("[0-9-:/ ]");
         Matcher matcher;
         char[] array = str.toCharArray();
-        for (int i = 0; i < array.length; i++) {
-            matcher = pattern.matcher(String.valueOf(array[i]));
+        for (char c : array) {
+            matcher = pattern.matcher(String.valueOf(c));
             if (!matcher.matches()) {// 空格暂不替换
-                str = str.replace(String.valueOf(array[i]), "");// 特殊字符用空字符串替换
+                str = str.replace(String.valueOf(c), "");// 特殊字符用空字符串替换
             }
         }
 
         return str;
     }
 
-    public static String comma_insert(String commaexpress, String newelement, int index) {
-        int length = commaexpress.length();
+    public static String commaInsert(String commaExpress, String newElement, int index) {
+        int length = commaExpress.length();
         if (index > length) {
             index = length;
         } else if (index < 0) {
             index = 0;
         }
-        String result = commaexpress.substring(0, index) + newelement + commaexpress.substring(index, commaexpress.length());
-        return result;
+        return commaExpress.substring(0, index) + newElement + commaExpress.substring(index, commaExpress.length());
     }
 
     /**
@@ -490,8 +484,8 @@ public class StringUtil {
      * @param str
      * @return
      */
-    public static String commaToVerti(String str) {
-        if (str != null && !"".equals(str) && str.contains(",")) {
+    public static String commaToVert(String str) {
+        if (str != null && !str.isBlank() && str.contains(",")) {
             return str.replaceAll(",", "|");
         } else {
             return str;
@@ -504,7 +498,7 @@ public class StringUtil {
      * @param name
      */
     public static String extractBlank(String name) {
-        if (name != null && !"".equals(name)) {
+        if (name != null && !name.isEmpty()) {
             return name.replaceAll(" +", "");
         } else {
             return name;
@@ -517,7 +511,7 @@ public class StringUtil {
      * @param str
      * @return
      */
-    public static String ConvertStr(String str) {
+    public static String convertStr(String str) {
         return str != null && !"null".equals(str) ? str.trim() : "";
     }
 

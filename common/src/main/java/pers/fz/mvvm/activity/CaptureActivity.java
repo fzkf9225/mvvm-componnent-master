@@ -140,14 +140,6 @@ public class CaptureActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 检查设备是否支持闪光灯
-     *
-     * @return true:支持
-     */
-    private boolean isSupportFlashLight() {
-        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-    }
 
     @Override
     protected void onResume() {
@@ -175,6 +167,15 @@ public class CaptureActivity extends AppCompatActivity {
             binding.scanFlashLight.setSelected(true);
             binding.dbvCustom.setTorchOn();
         }
+    }
+
+    /**
+     * 检查设备是否支持闪光灯
+     *
+     * @return true:支持
+     */
+    private boolean isSupportFlashLight() {
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
     @Override

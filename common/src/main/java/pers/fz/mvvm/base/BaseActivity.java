@@ -36,6 +36,7 @@ import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
@@ -80,6 +81,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
         initImmersionBar();
         createViewModel();
+        //是否启用登录拦截器了，写在最前面，防止数据请求等重复检测登录的行为
+        if (onInterceptLoginAnnotation()) {
+            return;
+        }
         initView(savedInstanceState);
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
     }
@@ -365,28 +370,32 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         activityResultLauncher.launch(intent);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (errorService == null) {
-            return;
+    public boolean onInterceptLoginAnnotation() {
+        try {
+            if (errorService == null) {
+                return false;
+            }
+            //不包含注解或者登录注解未开启
+            if (!isNeedLogin()) {
+                return false;
+            }
+            //已登录，则跳转登录
+            if (!checkLogin()) {
+                return false;
+            }
+            //如果未登录跳转登录并且把当前页的信息传递过去，以便于登录后回传
+            Bundle bundle = getIntent().getExtras();
+            if (bundle == null) {
+                bundle = new Bundle();
+            }
+            bundle.putString(ConstantsHelper.TARGET_ACTIVITY, getClass().getName());
+            errorService.toLogin(this, bundle);
+            finish();
+            return true;
+        } catch (Exception e) {
+            LogUtil.e(TAG, "登录拦截器异常：" + e);
         }
-        //不包含注解或者登录注解未开启
-        if (!isNeedLogin()) {
-            return;
-        }
-        //已登录，则跳转登录
-        if (!checkLogin()) {
-            return;
-        }
-        //如果未登录跳转登录并且把当前页的信息传递过去，以便于登录后回传
-        Bundle bundle = getIntent().getExtras();
-        if (bundle == null) {
-            bundle = new Bundle();
-        }
-        bundle.putString(ConstantsHelper.TARGET_ACTIVITY, getClass().getName());
-        errorService.toLogin(this, bundle);
-        finish();
+        return false;
     }
 
     private boolean checkLogin() {

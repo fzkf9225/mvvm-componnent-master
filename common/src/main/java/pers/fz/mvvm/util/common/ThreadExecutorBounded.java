@@ -29,7 +29,7 @@ public class ThreadExecutorBounded extends ThreadPoolExecutor {
 
     /**
      * 等待队列大小
-     * */
+     */
     private static int QUEUE_SIZE = 128;
 
     private static final ThreadFactory S_THREAD_FACTORY = new ThreadFactory() {

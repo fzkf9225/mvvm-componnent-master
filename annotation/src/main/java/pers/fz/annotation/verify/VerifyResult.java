@@ -17,8 +17,19 @@ public class VerifyResult {
         this.errorMsg = errorMsg;
     }
 
+    /**
+     * 是否验证通过
+     * @return true验证通过
+     */
     public boolean isOk() {
         return this.isSuccess;
+    }
+    /**
+     * 是否验证未通过
+     * @return false都为不通过
+     */
+    public boolean isFail() {
+        return !this.isSuccess;
     }
 
     public static VerifyResult ok() {
