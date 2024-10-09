@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+#自定义注解混淆
+-keep @interface pers.fz.annotation.verify.VerifyEntity
+-keep @interface pers.fz.annotation.verify.VerifyField
+-keep @interface pers.fz.annotation.verify.VerifyParams
+-keep @interface pers.fz.annotation.verify.VerifyFieldSort
+-keep @interface pers.fz.annotation.verify.Valid
+-keep @interface pers.fz.annotation.format.FormatDecimal
+-keep class pers.fz.annotation.verify.VerifyResult
