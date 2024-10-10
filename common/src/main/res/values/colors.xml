@@ -36,7 +36,6 @@
 
     <color name="login_title_textColor">#777777</color>
     <color name="register_edit_color">#cccccc</color>
-    <color name="house_btn_color">#555555</color>
 
     <color name="btn_textcolor_unselected">#999999</color>
 
@@ -53,8 +52,6 @@
 
     <color name="me_custom_item_textcolor">#666666</color>
     <color name="order_button">#dddddd</color>
-    <color name="zhongjie">#62c17d</color>
-    <color name="qiye">#f3961b</color>
 
     <color name="price">#f73939</color>
 

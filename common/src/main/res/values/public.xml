@@ -1,4 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <public name="mis_asv" type="drawable" />
+    <public name="mis_asv" type="dimen" />
+    <!--dimen资源文件-->
+    <public name="horizontal_margin_xxxxl" type="dimen" />
+    <public name="vertical_margin_xxxxl" type="dimen" />
+    <public name="horizontal_margin_xxxl" type="dimen" />
+    <public name="vertical_margin_xxxl" type="dimen" />
+    <public name="horizontal_margin_xxl" type="dimen" />
+    <public name="vertical_margin_xxl" type="dimen" />
+    <public name="horizontal_margin_xl" type="dimen" />
+    <public name="vertical_margin_xl" type="dimen" />
+    <public name="horizontal_margin_l" type="dimen" />
+    <public name="vertical_margin_l" type="dimen" />
+    <public name="horizontal_margin_m" type="dimen" />
+    <public name="vertical_margin_m" type="dimen" />
+    <public name="horizontal_margin_s" type="dimen" />
+    <public name="vertical_margin_s" type="dimen" />
+    <public name="font_size_xxxl" type="dimen" />
+    <public name="font_size_xxl" type="dimen" />
+    <public name="font_size_xl" type="dimen" />
+    <public name="font_size_l" type="dimen" />
+    <public name="font_size_m" type="dimen" />
+    <public name="font_size_s" type="dimen" />
+    <public name="padding_s" type="dimen" />
+    <public name="padding_m" type="dimen" />
+    <public name="padding_l" type="dimen" />
+    <public name="padding_xl" type="dimen" />
+    <public name="padding_xxl" type="dimen" />
+    <public name="padding_xxxl" type="dimen" />
+    <public name="radius_s" type="dimen" />
+    <public name="radius_m" type="dimen" />
+    <public name="radius_l" type="dimen" />
+    <public name="radius_xl" type="dimen" />
+    <public name="radius_xxl" type="dimen" />
+    <public name="radius_xxxl" type="dimen" />
+    <public name="radius_xxxxl" type="dimen" />
+    <public name="toolbar_height" type="dimen" />
+    <public name="navigation_height" type="dimen" />
+    <public name="height_s" type="dimen" />
+    <public name="height_m" type="dimen" />
+    <public name="height_l" type="dimen" />
+    <public name="height_xl" type="dimen" />
+    <public name="height_xxl" type="dimen" />
+    <public name="height_xxxl" type="dimen" />
+    <public name="height_xxxxl" type="dimen" />
+    <public name="image_m" type="dimen" />
+    <public name="image_l" type="dimen" />
+    <public name="image_xl" type="dimen" />
+    <public name="image_xxl" type="dimen" />
+    <public name="audio_course_item_seek_bar_progress_height" type="dimen" />
+    <public name="audio_course_item_seek_bar_radius" type="dimen" />
+    <public name="audio_seek_bar_thumb_size" type="dimen" />
+    <public name="audio_seek_bar_thumb_ring_width" type="dimen" />
+    <!--Fab大小设置-->
+    <public name="design_fab_size_normal" type="dimen" />
+    <!--Fab中间Icon大小设置-->
+    <public name="design_fab_image_size" type="dimen" />
+
+    <!--Color资源-->
+    <public name="gray" type="color"/>
+    <public name="exit_button_background" type="color"/>
+    <public name="background" type="color"/>
+    <public name="themeColor" type="color"/>
+    <public name="theme_red" type="color"/>
+    <public name="theme_green" type="color"/>
+    <public name="theme_orange" type="color"/>
+    <public name="theme_yellow" type="color"/>
+    <public name="hint_text_color" type="color"/>
+    <public name="h_line_color" type="color"/>
+    <public name="login_button_color" type="color"/>
+    <public name="dark_light" type="color"/>
+    <public name="setting_exit" type="color"/>
+    <public name="setting_textColor" type="color"/>
+    <public name="transparent" type="color"/>
+    <public name="search_view_background" type="color"/>
+    <public name="autoColor" type="color"/>
+    <public name="autoBg" type="color"/>
+    <public name="nv_bg_color" type="color"/>
+    <public name="bg_color" type="color"/>
+    <public name="login_title_textColor" type="color"/>
+    <public name="register_edit_color" type="color"/>
+    <public name="btn_textcolor_unselected" type="color"/>
+    <public name="h_area" type="color"/>
+    <public name="default_background" type="color"/>
+    <public name="alpha_default_background" type="color"/>
+    <public name="me_custom_item_textcolor" type="color"/>
+    <public name="order_button" type="color"/>
+    <public name="price" type="color"/>
+    <public name="green" type="color"/>
+    <!--drawable-->
+    <public name="bg_edittext" type="drawable"/>
+    <public name="border" type="drawable"/>
+    <public name="dot_selector" type="drawable"/>
+    <public name="ib_clear_image_selector" type="drawable"/>
+    <public name="ic_red_dot" type="drawable"/>
+    <public name="main_index_selector" type="drawable"/>
+    <public name="main_me_selector" type="drawable"/>
+    <public name="main_setting_selector" type="drawable"/>
+    <public name="nv_layout" type="drawable"/>
+    <public name="pg" type="drawable"/>
+    <public name="pop_bg" type="drawable"/>
+    <public name="primarybar_txt" type="drawable"/>
+    <public name="round_login_button_48" type="drawable"/>
+    <public name="round_nv_color_48" type="drawable"/>
+    <public name="round_phone_code" type="drawable"/>
+    <public name="round_progress_dialog" type="drawable"/>
+    <public name="round_theme_color_48" type="drawable"/>
+    <public name="round_white_bg_48" type="drawable"/>
+    <public name="round_white_bg_border" type="drawable"/>
+    <public name="rounded_default_bg_rect" type="drawable"/>
+    <public name="rounded_theme_rect" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white_16" type="drawable"/>
+    <public name="seekbar_progress_drawable" type="drawable"/>
+    <public name="selector_button" type="drawable"/>
+    <public name="selector_image_media_play" type="drawable"/>
+    <public name="shape_divider_linear" type="drawable"/>
+    <public name="shape_thumb_round" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+    <public name="rounded_white" type="drawable"/>
+
+    <!--动画资源-->
+    <public name="actionsheet_dialog_in" type="anim"/>
+    <public name="actionsheet_dialog_out" type="anim"/>
+    <public name="load_animation" type="anim"/>
+    <public name="popup_select_image_hide" type="anim"/>
+    <public name="popup_select_image_show" type="anim"/>
+    <public name="scale_in" type="anim"/>
+    <public name="scale_out" type="anim"/>
+
+    <!--layout资源-->
+    <public name="base_activity" type="layout"/>
+    <public name="base_fragment_container" type="layout"/>
+    <public name="base_recycler_view_fragment" type="layout"/>
+    <public name="base_search_title_activity" type="layout"/>
+    <public name="base_search_view" type="layout"/>
+    <public name="base_smart_paging" type="layout"/>
+    <public name="base_tablayout_viewpager" type="layout"/>
+    <public name="custom_textview" type="layout"/>
+    <public name="empty_fragment" type="layout"/>
+    <public name="base_activity" type="layout"/>
+    <public name="option_item" type="layout"/>
+    <public name="option_text_view" type="layout"/>
+    <public name="paging_footer" type="layout"/>
+    <public name="paging_recycler_view" type="layout"/>
+    <public name="search_smartrecyclerview" type="layout"/>
+    <public name="smartrecyclerview" type="layout"/>
+    <public name="web_view" type="layout"/>
+    <public name="base_activity" type="layout"/>
+    <public name="base_activity" type="layout"/>
+
+    <!--navigation资源-->
+    <public name="nav_empty_layout" type="navigation"/>
+
+    <!--menu资源-->
+    <public name="menu_browser" type="menu"/>
+    <public name="menu_more" type="menu"/>
+
+    <!--图片资源-->
+    <public name="close" type="mipmap"/>
+    <public name="ic_arrow_right" type="mipmap"/>
+    <public name="ic_arrow_up" type="mipmap"/>
+    <public name="ic_default_image" type="mipmap"/>
+    <public name="ic_search_app_left" type="mipmap"/>
+    <public name="icon_clear" type="mipmap"/>
+    <public name="icon_fh_black" type="mipmap"/>
+    <public name="icon_fh_white" type="mipmap"/>
+    <public name="icon_pause" type="mipmap"/>
+    <public name="icon_play" type="mipmap"/>
+    <public name="icon_point1" type="mipmap"/>
+    <public name="icon_point2" type="mipmap"/>
+    <public name="icon_search_bg" type="mipmap"/>
+    <public name="icon_search_title_bg" type="mipmap"/>
+    <public name="icon_stop" type="mipmap"/>
+    <public name="page_icon_empty" type="mipmap"/>
+    <public name="star_empty" type="mipmap"/>
+    <public name="star_full" type="mipmap"/>
+    <public name="ic_arrow_bottom" type="mipmap"/>
+    <public name="ic_tweet_add" type="mipmap"/>
+    <public name="ic_tweet_add_video" type="mipmap"/>
+
+    <!--样式资源-->
+    <public name="h_line" type="style"/>
+    <public name="s_line" type="style"/>
+    <public name="h_area" type="style"/>
+    <public name="WarpLinearLayoutDefault" type="style"/>
+    <public name="setting_item" type="style"/>
+    <public name="login_edit" type="style"/>
+    <public name="user_label" type="style"/>
+    <public name="user_content" type="style"/>
+    <public name="modify_password_edit" type="style"/>
+    <public name="list_linear_layout_min_height" type="style"/>
+    <public name="list_text_left" type="style"/>
+    <public name="list_text_right_show_all" type="style"/>
+    <public name="AppBaseTheme" type="style"/>
+    <public name="loading_dialog" type="style"/>
+    <public name="AppTheme" type="style"/>
+    <public name="MyCustomTabLayout" type="style"/>
+    <public name="ActionSheetDialogStyle" type="style"/>
+    <public name="ActionSheetDialogAnimation" type="style"/>
+    <public name="Pic_Dialog" type="style"/>
+    <public name="ShowImageDialogAnimation" type="style"/>
+    <public name="dialog" type="style"/>
+    <public name="activityAppBaseTheme" type="style"/>
+    <public name="ToolBarStyle_black" type="style"/>
+    <public name="OverflowMenuStyle" type="style"/>
+    <public name="ToolBarStyle_white" type="style"/>
+    <public name="ActionSheetDialogStyle_No_Bg" type="style"/>
+    <public name="AppTheme.NoActionBar" type="style"/>
+    <public name="popup_anim_style_alpha" type="style"/>
+    <public name="App.Theme.Dialog.Alert" type="style"/>
+    <public name="Theme.AppCompat.Light.Dialog.Alert.Self" type="style"/>
+
+    <!--字符串资源-->
+    <public name="nv_index" type="string"/>
+    <public name="nv_info" type="string"/>
+    <public name="nv_me" type="string"/>
+    <public name="nv_setting" type="string"/>
+    <public name="loginClick" type="string"/>
+    <public name="cancel" type="string"/>
+    <public name="album" type="string"/>
+    <public name="camera" type="string"/>
+    <public name="file" type="string"/>
+    <public name="audio" type="string"/>
+    <public name="app_config_file" type="string"/>
+    <public name="login_project_code_hint" type="string"/>
+    <public name="login_user_hint" type="string"/>
+    <public name="login_tel_hint" type="string"/>
+    <public name="login_pwd_hint" type="string"/>
+    <public name="login_old_pwd_hint" type="string"/>
+    <public name="login_new_pwd_hint" type="string"/>
+    <public name="login_code_hint" type="string"/>
+    <public name="login_new_pwd_hint_again" type="string"/>
+    <public name="user_name_hint" type="string"/>
+    <public name="user_id_card_hint" type="string"/>
+    <public name="login_way_code" type="string"/>
+    <public name="login_way_password" type="string"/>
+    <public name="forget_password" type="string"/>
+    <public name="version_unknown" type="string"/>
+    <public name="noData" type="string"/>
+    <public name="state_network_error" type="string"/>
+    <public name="state_loading" type="string"/>
+    <public name="state_not_more" type="string"/>
+    <public name="state_load_error" type="string"/>
+    <public name="state_refreshing" type="string"/>
+    <public name="state_loading_error" type="string"/>
+    <public name="state_submit" type="string"/>
+    <public name="state_loading_again" type="string"/>
+    <public name="setting_update" type="string"/>
+    <public name="setting_qrcode" type="string"/>
+    <public name="setting_about" type="string"/>
+    <public name="setting_ITSupport" type="string"/>
+    <public name="setting_customes" type="string"/>
+    <public name="setting_feedBack" type="string"/>
+    <public name="setting_exit" type="string"/>
+    <public name="manageapplications_settings_title" type="string"/>
+    <public name="manageapplications_settings_summary" type="string"/>
+    <public name="settings" type="string"/>
+    <public name="string_help_text" type="string"/>
+    <public name="lockViewTips" type="string"/>
+    <public name="set_lockView" type="string"/>
+    <public name="last_news" type="string"/>
+    <public name="searchview_query_hint" type="string"/>
+    <public name="pullToRefresh" type="string"/>
+    <public name="loosenToRefresh" type="string"/>
+    <public name="refreshing" type="string"/>
+    <public name="upgrade" type="string"/>
+
 </resources>
