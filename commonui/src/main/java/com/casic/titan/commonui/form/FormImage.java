@@ -220,7 +220,6 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         mediaHelper = new MediaBuilder((ComponentActivity) getContext(), this)
                 .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
-                .setWaterMark("金光林务")
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {

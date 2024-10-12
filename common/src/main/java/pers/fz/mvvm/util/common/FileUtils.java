@@ -26,6 +26,7 @@ import java.io.RandomAccessFile;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,22 @@ public final class FileUtils {
      * 分隔符.
      */
     public final static String FILE_EXTENSION_SEPARATOR = ".";
+    public static String getUrlFileExtensionName(String url) {
+        if (url == null || url.isEmpty()) {
+            return "";
+        }
+
+        String[] tmp = url.split("/"); // 按照"/"分割
+        String pp = tmp[tmp.length - 1]; // 获取最后一部分，即文件名和参数
+        tmp = pp.split("\\?"); // 把参数和文件名分割开
+        if (tmp.length == 0) {
+            return "";
+        }
+
+        String[] nameTemp = tmp[0].split("\\."); // 按照"."分割
+        System.out.println("nameTemp: " + Arrays.toString(nameTemp));
+        return nameTemp.length >= 2 ? nameTemp[1] : "";
+    }
 
     public static byte[] getFileToByte(File file) {
         byte[] by = new byte[(int) file.length()];

@@ -24,7 +24,6 @@ import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
     protected final String TAG = this.getClass().getSimpleName();
-    protected Context mContext;
     protected RecyclerView mRecyclerView;
     /**
      * itemView的类型，头布局类型

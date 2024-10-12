@@ -79,6 +79,27 @@ public class CornersImageView extends AppCompatImageView {
         mPaint.setAntiAlias(true);
         mPaint.setColor( imageBg);
     }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public void setLeftTopRadius(int leftTopRadius) {
+        this.leftTopRadius = leftTopRadius;
+    }
+
+    public void setLeftBottomRadius(int leftBottomRadius) {
+        this.leftBottomRadius = leftBottomRadius;
+    }
+
+    public void setRightBottomRadius(int rightBottomRadius) {
+        this.rightBottomRadius = rightBottomRadius;
+    }
+
+    public void setRightTopRadius(int rightTopRadius) {
+        this.rightTopRadius = rightTopRadius;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         //这里做下判断，只有图片的宽高大于设置的圆角距离的时候才进行裁剪

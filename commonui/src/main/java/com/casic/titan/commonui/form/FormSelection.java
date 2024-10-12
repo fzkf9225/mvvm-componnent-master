@@ -75,6 +75,7 @@ public class FormSelection extends ConstraintLayout {
         setLayoutParams(new Constraints.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
         binding.setData(formDataSource);
+        binding.tvSelection.setSelected(true);
         binding.tvSelection.setHint(hintString);
         binding.tvSelection.setTextColor(rightTextColor);
         binding.tvLabel.setTextColor(labelTextColor);
