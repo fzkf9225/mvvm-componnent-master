@@ -32,7 +32,7 @@ public class FormSelection extends ConstraintLayout {
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected int rightTextColor = 0xFF333333;
-    protected int labelTextColor = 0xFF666666;
+    protected int labelTextColor = 0xFF999999;
     private int line = 1;
     public FormTextWatcher formTextWatcher;
     public final FormDataSource formDataSource = new FormDataSource();
