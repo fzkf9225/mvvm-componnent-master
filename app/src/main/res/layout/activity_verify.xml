@@ -192,6 +192,8 @@
                 android:paddingEnd="16dp"
                 app:mediaType="camera_album"
                 app:bottomBorder="true"
+                app:bgColor="@color/themeColor"
+                app:add_image_radius="@dimen/radius_m"
                 app:formImeOptions="actionNext"
                 app:label="本人照片"
                 app:layout_constraintEnd_toEndOf="parent"

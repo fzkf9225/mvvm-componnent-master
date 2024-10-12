@@ -1,8 +1,12 @@
 package pers.fz.mvvm.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -11,6 +15,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
@@ -23,6 +28,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     public ImageViewAddListener imageViewAddListener;
     //最大上传数量
     private int defaultMaxCount = -1;
+    private int bgColor = Color.WHITE;
+    private float radius = 5;
 
     public ImageAddAdapter(Context context) {
         super(context);
@@ -31,6 +38,14 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     public ImageAddAdapter(Context context, int maxCount) {
         super(context);
         this.defaultMaxCount = maxCount;
+    }
+
+    public void setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 
     @Override
@@ -46,6 +61,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
                 imageViewClearListener.imgClear(v, pos);
             }
         });
+        holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor,this.radius);
         holder.getBinding().ivImageShow.setOnClickListener(v -> {
             try {
                 new PicShowDialog(mContext, PicShowDialog.createUriImageInfo(mList), pos).show();

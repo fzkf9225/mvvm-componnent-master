@@ -28,6 +28,7 @@
         <attr name="required" />
         <attr name="bottomBorder" />
         <attr name="labelTextColor" />
+        <attr name="add_image_radius" format="dimension"/>
         <attr name="maxCount" format="integer"/>
         <attr name="field" format="string"/>
         <attr name="bgColor" format="color" />

@@ -3,62 +3,78 @@ package pers.fz.mvvm.wight.customlayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.activity.WebViewActivity;
 import pers.fz.mvvm.adapter.PictureAdapter;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.databinding.BannerCornerImageViewBinding;
+import pers.fz.mvvm.databinding.CustomBannerPictureBinding;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by fz on 2018/3/15.
  * 自定义banner轮播图
  */
 
-public class CustomBannerPicture extends RelativeLayout implements View.OnClickListener, BannerViewPager.OnImageItemClickListener {
-    private final String TAG = CustomBannerPicture.class.getSimpleName();
-    private ViewGroup.LayoutParams matchParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+public class CustomBannerPicture extends ConstraintLayout implements View.OnClickListener, BannerViewPager.OnImageItemClickListener {
     private List<ImageView> images = new ArrayList<>();
-    private BannerViewPager viewPager;
-    private LinearLayout dotsLayout;
+    private CustomBannerPictureBinding binding;
     private boolean canBrowse = false, autoBanner = true, canDownload = true;
     private int dotPosition = 0;
     private List<ImageInfo> imageInfosList = new ArrayList<>();
     private int mCurrentPosition = 0;
     private List<BannerBean> imgPic;
     private float width, height;
-    private float radius = 8;
+    private int bgColor = Color.WHITE;
+    private int leftTopRadius;
+    private int rightTopRadius;
+    private int rightBottomRadius;
+    private int leftBottomRadius;
     private BannerViewPager.OnImageItemClickListener onImageItemClickListener = this;
     private @DrawableRes
     int drawableResCurrent = R.mipmap.icon_point2;
     private @DrawableRes
     int drawableResNormal = R.mipmap.icon_point1;
+    private final Path mPath = new Path();
+    private Paint mPaint;
+
+    public CustomBannerPicture(@NonNull Context context) {
+        super(context);
+        init(context, null);
+    }
 
     public CustomBannerPicture(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,16 +82,46 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
     }
 
     private void init(Context context, AttributeSet attrs) {
+        binding = CustomBannerPictureBinding.inflate(LayoutInflater.from(context), this, true);
+        setLayoutParams(new Constraints.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+        ));
+        binding.bannerViewPager.setOpen(autoBanner);
+        binding.bannerViewPager.setDrawableResCurrent(drawableResCurrent);
+        binding.bannerViewPager.setDrawableResNormal(drawableResNormal);
+        binding.bannerViewPager.setOnImageItemClickListener(onImageItemClickListener);
+        mPaint = new Paint();
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setAntiAlias(true);
+        setBackgroundColor(bgColor);
+        if (attrs == null) {
+            canBrowse = false;
+            autoBanner = false;
+            canDownload = false;
+            dotPosition = 0;
+            leftTopRadius = 0;
+            leftBottomRadius = 0;
+            rightBottomRadius = 0;
+            rightTopRadius = 0;
+            drawableResCurrent = R.mipmap.icon_point2;
+            drawableResNormal = R.mipmap.icon_point1;
+            return;
+        }
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.banner);
+        bgColor = ta.getColor(R.styleable.banner_banner_bg_color, Color.WHITE);
         canBrowse = ta.getBoolean(R.styleable.banner_can_browse, false);
         autoBanner = ta.getBoolean(R.styleable.banner_auto_banner, false);
         canDownload = ta.getBoolean(R.styleable.banner_can_download, false);
         dotPosition = ta.getInt(R.styleable.banner_dot_position, 0);
-        radius = ta.getDimension(R.styleable.banner_banner_radius, 0);
-        drawableResCurrent = ta.getResourceId(R.styleable.banner_icon_selected,R.mipmap.icon_point2);
-        drawableResNormal = ta.getResourceId(R.styleable.banner_icon_unselected,R.mipmap.icon_point1);
+        leftTopRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_left_top_radius, 0);
+        rightTopRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_right_top_radius, 0);
+        rightBottomRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_right_bottom_radius, 0);
+        leftBottomRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_left_bottom_radius, 0);
+        drawableResCurrent = ta.getResourceId(R.styleable.banner_icon_selected, R.mipmap.icon_point2);
+        drawableResNormal = ta.getResourceId(R.styleable.banner_icon_unselected, R.mipmap.icon_point1);
         ta.recycle();
-        setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, R.dimen.x392));
+        setBackgroundColor(bgColor);
     }
 
     public void setOnImageItemClickListener(BannerViewPager.OnImageItemClickListener onImageItemClickListener) {
@@ -87,17 +133,8 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
         if (!imgPic.isEmpty()) {
             imgPic.size();
             if (imgPic.size() == 1) {
-                BannerCornerImageViewBinding binding = BannerCornerImageViewBinding.inflate(LayoutInflater.from(getContext()));
-                binding.cornerImage.setLayoutParams(matchParams);
-                binding.cornerImage.setOnClickListener(this);
-                Object imgPath = imgPic.get(0).getPath();
-                Glide.with(getContext())
-                        .load(imgPath)
-                        .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
-                        .into(binding.cornerImage);
-                imageInfosList.add(new ImageInfo(imgPath, 1920, 1080));
-                addView(binding.cornerImage);
-                binding.cornerImage.setOnClickListener(this);
+                getImages(imgPic.get(0).getPath());
+                imageInfosList.add(new ImageInfo(imgPic.get(0).getPath(), 1920, 1080));
             } else {
                 images.clear();
                 for (int k = 0; k < imgPic.size(); k++) {
@@ -105,8 +142,8 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
                     imageInfosList.add(new ImageInfo(imgPath, 1920, 1080));
                     getImages(imgPath);
                 }
-                addHeader();
             }
+            addHeader();
         }
     }
 
@@ -115,7 +152,7 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
      */
     private void getImages(Object oldPath) {
         BannerCornerImageViewBinding binding = BannerCornerImageViewBinding.inflate(LayoutInflater.from(getContext()));
-        binding.cornerImage.setLayoutParams(matchParams);
+        binding.cornerImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         binding.cornerImage.setOnClickListener(this);
         Glide.with(getContext())
                 .load(oldPath)
@@ -125,7 +162,7 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
     }
 
     public ViewPager getViewPager() {
-        return viewPager;
+        return binding.bannerViewPager;
     }
 
     public int getCurrentPosition() {
@@ -136,78 +173,12 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
      * 填充布局
      */
     private void addHeader() {
-        viewPager = new BannerViewPager(getContext(), autoBanner, drawableResCurrent, drawableResNormal);
-        viewPager.setId(View.generateViewId());
-        viewPager.setImages(images);
-        viewPager.setOnImageItemClickListener(onImageItemClickListener);
-        ConstraintLayout constraintLayout = new ConstraintLayout(getContext());
-        constraintLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-        ));
-
-        dotsLayout = new LinearLayout(getContext());
-        dotsLayout.setId(View.generateViewId());
-        dotsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        removeAllViews();
+        binding.bannerViewPager.setImages(images);
         initImageRounds();
-        viewPager.setAdapter(new PictureAdapter(images));
-        viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
-        constraintLayout.addView(viewPager);
-        constraintLayout.addView(dotsLayout);
-        // 创建约束规则
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        // 设置 ImageView 充满 ConstraintLayout
-        constraintSet.connect(
-                viewPager.getId(),
-                ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.TOP
-        );
-        constraintSet.connect(
-                viewPager.getId(),
-                ConstraintSet.START,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.START
-        );
-        constraintSet.connect(
-                viewPager.getId(),
-                ConstraintSet.END,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.END
-        );
-
-        constraintSet.connect(
-                viewPager.getId(),
-                ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.BOTTOM
-        );
-        constraintSet.connect(
-                dotsLayout.getId(),
-                ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.BOTTOM,
-                DensityUtil.dp2px(getContext(), 8)
-        );
-        constraintSet.connect(
-                dotsLayout.getId(),
-                ConstraintSet.START,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.START
-        );
-        constraintSet.connect(
-                dotsLayout.getId(),
-                ConstraintSet.END,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.END
-        );
-
-        // 应用约束规则
-        constraintSet.applyTo(constraintLayout);
-        addView(constraintLayout, matchParams);
+        binding.bannerViewPager.setAdapter(new PictureAdapter(images));
+        binding.bannerViewPager.setCurrentItem(Integer.MAX_VALUE / 2);
     }
+
     public void setRoundDots(@DrawableRes int drawableResCurrent, @DrawableRes int drawableResNormal) {
         this.drawableResCurrent = drawableResCurrent;
         this.drawableResNormal = drawableResNormal;
@@ -218,14 +189,14 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
      */
     private void initImageRounds() {
         List<ImageView> dots = new ArrayList<>();
-        dotsLayout.removeAllViews();
+        binding.llDots.removeAllViews();
         /*
          *当轮播图大于1张时小圆点显示
          */
         if (images.size() > 1) {
-            dotsLayout.setVisibility(View.VISIBLE);
+            binding.llDots.setVisibility(View.VISIBLE);
         } else {
-            dotsLayout.setVisibility(View.INVISIBLE);
+            binding.llDots.setVisibility(View.INVISIBLE);
         }
         for (int i = 0; i < images.size(); i++) {
             ImageView round = new ImageView(getContext());
@@ -240,9 +211,9 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
             dots.add(round);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
             params.leftMargin = 20;
-            dotsLayout.addView(round, params);
+            binding.llDots.addView(round, params);
         }
-        viewPager.setDots(dots);
+        binding.bannerViewPager.setDots(dots);
     }
 
     @Override
@@ -270,47 +241,49 @@ public class CustomBannerPicture extends RelativeLayout implements View.OnClickL
 
     @Override
     public void getPosition(int itemPosition) {
-        dotsLayout.requestLayout();
+        binding.llDots.requestLayout();
         mCurrentPosition = itemPosition;
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        width = widthMeasureSpec;
-        height = heightMeasureSpec;
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        width = getWidth();
+        height = getHeight();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         //这里做下判断，只有图片的宽高大于设置的圆角距离的时候才进行裁剪
-        float minWidth = radius;
-        float maxTop = radius;
-        float maxBottom = radius;
-        float minHeight = maxTop + maxBottom;
+        int maxLeft = Math.max(leftTopRadius, leftBottomRadius);
+        int maxRight = Math.max(rightTopRadius, rightBottomRadius);
+        int minWidth = maxLeft + maxRight;
+        int maxTop = Math.max(leftTopRadius, rightTopRadius);
+        int maxBottom = Math.max(leftBottomRadius, rightBottomRadius);
+        int minHeight = maxTop + maxBottom;
         if (width >= minWidth && height > minHeight) {
-            Path path = new Path();
+            mPath.reset();
             //四个角：右上，右下，左下，左上
-            path.moveTo(radius, 0);
-            path.lineTo(width - radius, 0);
-            path.quadTo(width, 0, width, radius);
+            mPath.moveTo(leftTopRadius, 0);
+            mPath.lineTo(width - rightTopRadius, 0);
+            mPath.quadTo(width, 0, width, rightTopRadius);
 
-            path.lineTo(width, height - radius);
-            path.quadTo(width, height, width - radius, height);
+            mPath.lineTo(width, height - rightBottomRadius);
+            mPath.quadTo(width, height, width - rightBottomRadius, height);
 
-            path.lineTo(radius, height);
-            path.quadTo(0, height, 0, height - radius);
+            mPath.lineTo(leftBottomRadius, height);
+            mPath.quadTo(0, height, 0, height - leftBottomRadius);
 
-            path.lineTo(0, radius);
-            path.quadTo(0, 0, radius, 0);
+            mPath.lineTo(0, leftTopRadius);
+            mPath.quadTo(0, 0, leftTopRadius, 0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                canvas.clipPath(path);
+                canvas.clipPath(mPath);
             } else {
-                canvas.clipPath(path, Region.Op.INTERSECT);
+                canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
+            canvas.drawPath(mPath,mPaint);
         }
-
         super.onDraw(canvas);
     }
 }

@@ -19,9 +19,8 @@ import pers.fz.mvvm.R;
  * describe :
  */
 public class CornerConstraintLayout extends ConstraintLayout {
-    private Paint backPaint;
     private int circleBackColor = Color.WHITE;
-    private float raduis;
+    private float radius;
 
     public CornerConstraintLayout(@NonNull Context context) {
         super(context);
@@ -38,33 +37,48 @@ public class CornerConstraintLayout extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs){
-        backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backPaint.setStyle(Paint.Style.FILL);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
             circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, circleBackColor);
-            raduis = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
-
+            radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 8f);
             typedArray.recycle();
             GradientDrawable gd = new GradientDrawable();
             gd.setColor(circleBackColor);
-            gd.setCornerRadius(raduis);
-
+            gd.setCornerRadius(radius);
             this.setBackground(gd);
-
         }
-        backPaint.setColor(circleBackColor);
-    }
-
-    public void setBackGroundColor(@ColorInt int color) {
-        GradientDrawable myGrad = (GradientDrawable) getBackground();
-        myGrad.setColor(color);
     }
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
-        backPaint.setColor(circleBackColor);
-        invalidate();
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(circleBackColor);
+        gd.setCornerRadius(radius);
+        this.setBackground(gd);
     }
 
+    public void setBgColor(int color) {
+        this.circleBackColor = color;
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(this.circleBackColor);
+        gd.setCornerRadius(this.radius);
+        this.setBackground(gd);
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(this.circleBackColor);
+        gd.setCornerRadius(this.radius);
+        this.setBackground(gd);
+    }
+
+    public void setBgColorAndRadius(int color,float radius) {
+        this.radius = radius;
+        this.circleBackColor = color;
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(this.circleBackColor);
+        gd.setCornerRadius(this.radius);
+        this.setBackground(gd);
+    }
 }

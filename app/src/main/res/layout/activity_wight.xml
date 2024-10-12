@@ -200,7 +200,8 @@
                 app:dot_position="inner"
                 app:icon_selected="@mipmap/icon_point1"
                 app:icon_unselected="@mipmap/icon_point2"
-                app:banner_radius="@dimen/radius_l"
+                app:banner_left_top_radius="@dimen/radius_l"
+                app:banner_right_top_radius="@dimen/radius_l"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/tv_banner" />

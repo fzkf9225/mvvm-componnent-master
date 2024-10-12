@@ -87,6 +87,7 @@
     </declare-styleable>
 
     <declare-styleable name="banner">
+        <attr name="banner_bg_color" format="reference|color" />//是否可以点击浏览大图
         <attr name="can_browse" format="boolean" />//是否可以点击浏览大图
         <attr name="auto_banner" format="boolean" />//是否自动轮播
         <attr name="can_download" format="boolean" />//是否可以下载本地
@@ -94,7 +95,10 @@
             <enum name="inner" value="0" />
             <enum name="out" value="1" />
         </attr>
-        <attr name="banner_radius" format="dimension" />
+        <attr name="banner_left_top_radius" format="dimension" />
+        <attr name="banner_right_top_radius" format="dimension" />
+        <attr name="banner_right_bottom_radius" format="dimension" />
+        <attr name="banner_left_bottom_radius" format="dimension" />
         <attr name="icon_selected" format="reference" />
         <attr name="icon_unselected" format="reference" />
     </declare-styleable>

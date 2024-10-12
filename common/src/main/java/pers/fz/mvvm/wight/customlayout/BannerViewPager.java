@@ -4,16 +4,17 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.log.LogUtil;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,6 +61,20 @@ public class BannerViewPager extends ViewPager {
     int drawableResCurrent = R.mipmap.icon_point2;
     private @DrawableRes int drawableResNormal = R.mipmap.icon_point1;
 
+    public BannerViewPager(@NonNull Context context) {
+        super(context);
+        initLoop();
+        stopLoop();
+        addOnPageChangeListener(onPageChangeListener);
+    }
+
+    public BannerViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        initLoop();
+        stopLoop();
+        addOnPageChangeListener(onPageChangeListener);
+    }
+
     public BannerViewPager(Context context, boolean isOpen) {
         super(context);
         initLoop();
@@ -69,6 +84,7 @@ public class BannerViewPager extends ViewPager {
         }
         addOnPageChangeListener(onPageChangeListener);
     }
+
     public BannerViewPager(Context context, boolean isOpen, @DrawableRes int drawableResCurrent, @DrawableRes int drawableResNormal) {
         super(context);
         this.drawableResCurrent = drawableResCurrent;
@@ -79,6 +95,18 @@ public class BannerViewPager extends ViewPager {
             stopLoop();
         }
         addOnPageChangeListener(onPageChangeListener);
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+    public void setDrawableResCurrent(int drawableResCurrent) {
+        this.drawableResCurrent = drawableResCurrent;
+    }
+
+    public void setDrawableResNormal(int drawableResNormal) {
+        this.drawableResNormal = drawableResNormal;
     }
 
     public List<ImageView> getImages() {

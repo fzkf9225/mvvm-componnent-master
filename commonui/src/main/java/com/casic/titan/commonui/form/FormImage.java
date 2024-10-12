@@ -60,7 +60,8 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     private ImageAddAdapter.ImageViewAddListener onImageAddListener;
     private ImageAddAdapter.ImageViewClearListener onImageClearListener;
     private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
-
+    //不用转换单位
+    private float radius = 5;
     protected int labelTextColor = 0xFF666666;
     public FormImage(Context context) {
         super(context);
@@ -86,6 +87,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
+            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 8f);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
@@ -109,6 +111,8 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
         imageAddAdapter = new ImageAddAdapter(getContext(), maxCount);
+        imageAddAdapter.setBgColor(bgColor);
+        imageAddAdapter.setRadius(radius);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {

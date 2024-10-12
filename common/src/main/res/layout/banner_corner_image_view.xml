@@ -6,9 +6,8 @@
 
     </data>
 
-    <pers.fz.mvvm.wight.customlayout.CornersImageView
+    <ImageView
         android:id="@+id/corner_image"
-        corner:image_view_radius="@dimen/radius_m"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
