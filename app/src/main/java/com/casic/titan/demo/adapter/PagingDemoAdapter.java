@@ -1,7 +1,6 @@
 package com.casic.titan.demo.adapter;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +14,7 @@ import java.util.Objects;
 
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
+import pers.fz.mvvm.base.DefaultDiffCallback;
 
 /**
  * Created by fz on 2023/12/1 16:50
@@ -22,7 +22,7 @@ import pers.fz.mvvm.base.BaseViewHolder;
  */
 public class PagingDemoAdapter extends BasePagingAdapter<ForestBean, PagingItemBinding> {
     public PagingDemoAdapter() {
-        super(COMPARATOR);
+        super(new DefaultDiffCallback<>());
     }
 
     private static final DiffUtil.ItemCallback<ForestBean> COMPARATOR = new DiffUtil.ItemCallback<>() {

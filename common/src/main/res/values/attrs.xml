@@ -87,14 +87,35 @@
     </declare-styleable>
 
     <declare-styleable name="banner">
-        <attr name="banner_bg_color" format="reference|color" />//是否可以点击浏览大图
-        <attr name="can_browse" format="boolean" />//是否可以点击浏览大图
-        <attr name="auto_banner" format="boolean" />//是否自动轮播
-        <attr name="can_download" format="boolean" />//是否可以下载本地
-        <attr name="dot_position">//指针位置，是在banner内部底下还是外部底下，暂未实现这个功能，out属性用处不大感觉就没写了
-            <enum name="inner" value="0" />
-            <enum name="out" value="1" />
+        <!--是否可以点击浏览大图-->
+        <attr name="banner_bg_color" format="reference|color" />
+        <!--是否可以点击浏览大图-->
+        <attr name="can_browse" format="boolean" />
+        <!--是否自动轮播-->
+        <attr name="auto_banner" format="boolean" />
+        <!--是否可以下载本地-->
+        <attr name="can_download" format="boolean" />
+        <!--针位置，是在banner内部底下还是外部底下，暂未实现这个功能，out属性用处不大感觉就没写了-->
+        <attr name="dot_position" format="enum">
+            <enum name="inner_bottom_center" value="0" />
+            <enum name="inner_bottom_left" value="1" />
+            <enum name="inner_bottom_right" value="2" />
+            <enum name="outer_bottom_center" value="3" />
+            <enum name="outer_bottom_left" value="4" />
+            <enum name="outer_bottom_right" value="5" />
         </attr>
+        <!--指针总高度，主要是是在dot_position为outer时使用-->
+        <attr name="dot_height" format="dimension"/>
+        <!--指针距离底部距离，并不是点之间的距离-->
+        <attr name="dot_bottom_margin" format="dimension"/>
+        <!--指针距离左边距离，并不是点之间的距离-->
+        <attr name="dot_left_margin" format="dimension"/>
+        <!--指针距离右边距离，并不是点之间的距离-->
+        <attr name="dot_right_margin" format="dimension"/>
+        <!--指针点之间的距离-->
+        <attr name="dot_padding" format="dimension"/>
+        <!--占位图-->
+        <attr name="banner_placeholder_image" format="reference"/>
         <attr name="banner_left_top_radius" format="dimension" />
         <attr name="banner_right_top_radius" format="dimension" />
         <attr name="banner_right_bottom_radius" format="dimension" />

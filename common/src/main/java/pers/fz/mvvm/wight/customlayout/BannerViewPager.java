@@ -13,17 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
+
 import pers.fz.mvvm.R;
 
 import java.util.List;
 
 /**
  * Created by fz on 2016/8/19.
- *
  */
 public class BannerViewPager extends ViewPager {
-    private final String TAG = CustomBannerPicture.class.getSimpleName();
-
     /**
      * 图片和小圆点
      */
@@ -49,7 +47,6 @@ public class BannerViewPager extends ViewPager {
      */
     private int xDown;
     private int yDown;
-
     /**
      * 用于处理手势事件
      */
@@ -124,7 +121,7 @@ public class BannerViewPager extends ViewPager {
     /**
      * 处理轮播的Handler
      */
-    private final Handler mHandler = new Handler(Looper.getMainLooper(),new Handler.Callback() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == 10 && !stopLoopTag) {
@@ -178,7 +175,7 @@ public class BannerViewPager extends ViewPager {
             }
 
             dots.get(lastPointIndex).setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
-            dots.get(currentPointIndex).setBackground(ContextCompat.getDrawable(getContext(),drawableResCurrent));
+            dots.get(currentPointIndex).setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
             lastPointPosition = position;
             lastPointIndex = currentPointIndex;
             if (onImageItemClickListener != null) {
@@ -239,7 +236,7 @@ public class BannerViewPager extends ViewPager {
                 break;
 
             case MotionEvent.ACTION_UP:
-                if (isOpen){
+                if (isOpen) {
                     /**
                      * 记录按下时间
                      * */
@@ -319,12 +316,12 @@ public class BannerViewPager extends ViewPager {
 
     public interface OnImageItemClickListener {
         void onItemClick(int itemPosition);
+
         void getPosition(int itemPosition);
     }
 
     public void setOnImageItemClickListener(OnImageItemClickListener onImageItemClickListener) {
         this.onImageItemClickListener = onImageItemClickListener;
     }
-
 
 }

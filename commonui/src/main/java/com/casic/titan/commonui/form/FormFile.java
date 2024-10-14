@@ -56,6 +56,7 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
     protected TextView tvSelection, tvEmpty;
+    protected int labelTextColor = 0xFF999999;
     protected ImageView imageAdd;
     protected RecyclerView mRecyclerViewFile;
     private FileAddAdapter fileAddAdapter;
@@ -88,6 +89,7 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             fieldName = typedArray.getString(R.styleable.FormImage_field);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
@@ -107,6 +109,7 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
         tvRequired = findViewById(R.id.tv_required);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
+        tvLabel.setTextColor(labelTextColor);
         if (bottomBorder) {
             constraintLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }

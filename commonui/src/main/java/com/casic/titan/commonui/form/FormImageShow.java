@@ -31,6 +31,7 @@ public class FormImageShow extends ConstraintLayout {
     protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
+    protected int labelTextColor = 0xFF999999;
     protected TextView tvLabel, tvRequired;
     protected TextView tvSelection;
     protected RecyclerView mRecyclerViewImage;
@@ -59,6 +60,7 @@ public class FormImageShow extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             typedArray.recycle();
@@ -71,6 +73,7 @@ public class FormImageShow extends ConstraintLayout {
         tvLabel = findViewById(R.id.tv_label);
         mRecyclerViewImage = findViewById(R.id.mRecyclerViewImage);
         tvRequired = findViewById(R.id.tv_required);
+        tvLabel.setTextColor(labelTextColor);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
         if (bottomBorder) {

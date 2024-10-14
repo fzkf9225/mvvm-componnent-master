@@ -2,23 +2,16 @@ package com.casic.titan.demo.bean;
 
 import androidx.databinding.BaseObservable;
 
+import pers.fz.mvvm.bean.base.BasePagingBean;
+
 /**
  * Created by fz on 2023/12/1 15:28
  * describe :
  */
-public class ForestBean extends BaseObservable {
-    private String id;
+public class ForestBean extends BasePagingBean {
     private String certificate;
     private String landHaveRight;
     private String registeDate;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCertificate() {
         return certificate;

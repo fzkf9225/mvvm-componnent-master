@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +31,18 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.activity.WebViewActivity;
 import pers.fz.mvvm.adapter.PictureAdapter;
 import pers.fz.mvvm.bean.BannerBean;
-import pers.fz.mvvm.databinding.BannerCornerImageViewBinding;
-import pers.fz.mvvm.databinding.CustomBannerPictureBinding;
+import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
@@ -50,13 +52,15 @@ import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
  */
 
 public class CustomBannerPicture extends ConstraintLayout implements View.OnClickListener, BannerViewPager.OnImageItemClickListener {
-    private List<ImageView> images = new ArrayList<>();
-    private CustomBannerPictureBinding binding;
+    private final List<ImageView> images = new ArrayList<>();
+    private BannerViewPager viewPager;
+    private LinearLayout dotsLayout;
     private boolean canBrowse = false, autoBanner = true, canDownload = true;
-    private int dotPosition = 0;
+    private int dotPosition = DotPosition.INNER_BOTTOM_CENTER;
+    private @DrawableRes int placeholderImage;
     private List<ImageInfo> imageInfosList = new ArrayList<>();
     private int mCurrentPosition = 0;
-    private List<BannerBean> imgPic;
+    private List<BannerBean> bannerList;
     private float width, height;
     private int bgColor = Color.WHITE;
     private int leftTopRadius;
@@ -70,6 +74,17 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
     int drawableResNormal = R.mipmap.icon_point1;
     private final Path mPath = new Path();
     private Paint mPaint;
+    private float dotHeight = 0, dotBottomMargin, dotLeftMargin, dotRightMargin, dotPadding;
+
+    public final static class DotPosition {
+        public final static int INNER_BOTTOM_CENTER = 0;
+        public final static int INNER_BOTTOM_LEFT = 1;
+        public final static int INNER_BOTTOM_RIGHT = 2;
+        public final static int OUTER_CENTER = 3;
+        public final static int OUTER_BOTTOM_LEFT = 4;
+        public final static int OUTER_BOTTOM_RIGHT = 5;
+
+    }
 
     public CustomBannerPicture(@NonNull Context context) {
         super(context);
@@ -82,45 +97,108 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
     }
 
     private void init(Context context, AttributeSet attrs) {
-        binding = CustomBannerPictureBinding.inflate(LayoutInflater.from(context), this, true);
-        setLayoutParams(new Constraints.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-        ));
-        binding.bannerViewPager.setOpen(autoBanner);
-        binding.bannerViewPager.setDrawableResCurrent(drawableResCurrent);
-        binding.bannerViewPager.setDrawableResNormal(drawableResNormal);
-        binding.bannerViewPager.setOnImageItemClickListener(onImageItemClickListener);
         mPaint = new Paint();
+        mPaint.setColor(bgColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
-        setBackgroundColor(bgColor);
         if (attrs == null) {
-            canBrowse = false;
-            autoBanner = false;
-            canDownload = false;
-            dotPosition = 0;
-            leftTopRadius = 0;
-            leftBottomRadius = 0;
-            rightBottomRadius = 0;
-            rightTopRadius = 0;
-            drawableResCurrent = R.mipmap.icon_point2;
-            drawableResNormal = R.mipmap.icon_point1;
+            dotHeight = DensityUtil.dp2px(context, 30f);
+            dotBottomMargin = DensityUtil.dp2px(context, 12f);
+            dotLeftMargin = DensityUtil.dp2px(context, 12f);
+            dotRightMargin = DensityUtil.dp2px(context, 12f);
+            dotPadding = DensityUtil.dp2px(context, 8f);
+            initLayout();
             return;
         }
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.banner);
         bgColor = ta.getColor(R.styleable.banner_banner_bg_color, Color.WHITE);
+        placeholderImage = ta.getResourceId(R.styleable.banner_banner_placeholder_image, R.mipmap.ic_default_image);
         canBrowse = ta.getBoolean(R.styleable.banner_can_browse, false);
         autoBanner = ta.getBoolean(R.styleable.banner_auto_banner, false);
         canDownload = ta.getBoolean(R.styleable.banner_can_download, false);
-        dotPosition = ta.getInt(R.styleable.banner_dot_position, 0);
+
+        dotPosition = ta.getInt(R.styleable.banner_dot_position, DotPosition.INNER_BOTTOM_CENTER);
+
         leftTopRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_left_top_radius, 0);
         rightTopRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_right_top_radius, 0);
         rightBottomRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_right_bottom_radius, 0);
         leftBottomRadius = ta.getDimensionPixelOffset(R.styleable.banner_banner_left_bottom_radius, 0);
+
+        dotHeight = ta.getDimensionPixelOffset(R.styleable.banner_dot_height, DensityUtil.dp2px(context, 30f));
+        dotBottomMargin = ta.getDimensionPixelOffset(R.styleable.banner_dot_bottom_margin, DensityUtil.dp2px(context, 12f));
+        dotLeftMargin = ta.getDimensionPixelOffset(R.styleable.banner_dot_left_margin, DensityUtil.dp2px(context, 12f));
+        dotRightMargin = ta.getDimensionPixelOffset(R.styleable.banner_dot_right_margin, DensityUtil.dp2px(context, 12f));
+        dotPadding = ta.getDimensionPixelOffset(R.styleable.banner_dot_padding, DensityUtil.dp2px(context, 8f));
+
         drawableResCurrent = ta.getResourceId(R.styleable.banner_icon_selected, R.mipmap.icon_point2);
         drawableResNormal = ta.getResourceId(R.styleable.banner_icon_unselected, R.mipmap.icon_point1);
+        mPaint.setColor(bgColor);
         ta.recycle();
+        initLayout();
+    }
+
+    private void initLayout() {
+        setLayoutParams(new Constraints.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+        ));
+        //初始化ViewPager
+        viewPager = new BannerViewPager(getContext(), autoBanner, drawableResCurrent, drawableResNormal);
+        viewPager.setId(View.generateViewId());
+        viewPager.setOnImageItemClickListener(onImageItemClickListener);
+        ConstraintLayout.LayoutParams viewPagerLayoutParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT);
+
+        //初始化指针
+        dotsLayout = new LinearLayout(getContext());
+        dotsLayout.setId(View.generateViewId());
+        dotsLayout.setVerticalGravity(Gravity.BOTTOM);
+        dotsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        ConstraintLayout.LayoutParams dotLayoutParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                (int) dotHeight
+        );
+        dotLayoutParams.leftMargin = (int) dotLeftMargin;
+        dotLayoutParams.rightMargin = (int) dotRightMargin;
+        dotLayoutParams.bottomMargin = (int) dotBottomMargin;
+
+        //viewPager的定位
+        viewPagerLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        viewPagerLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        viewPagerLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        if (dotIsInner()) {
+            viewPagerLayoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+            //dotsLayout定位
+            dotLayoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+            if (DotPosition.INNER_BOTTOM_LEFT == dotPosition) {
+                dotLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            } else if (DotPosition.INNER_BOTTOM_RIGHT == dotPosition) {
+                dotLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+            } else {
+                dotLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                dotLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            }
+        } else {
+            viewPagerLayoutParams.height = 0;
+            viewPagerLayoutParams.verticalWeight = 1;
+            viewPagerLayoutParams.bottomToTop = dotsLayout.getId();
+            //dotsLayout定位
+            dotLayoutParams.topToBottom = viewPager.getId();
+            dotLayoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+            if (DotPosition.OUTER_BOTTOM_LEFT == dotPosition) {
+                dotLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            } else if (DotPosition.OUTER_BOTTOM_RIGHT == dotPosition) {
+                dotLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+            } else {
+                dotLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                dotLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            }
+        }
+        //设置指针和ViewPager定位
+        removeAllViews();
+        addView(viewPager, viewPagerLayoutParams);
+        addView(dotsLayout, dotLayoutParams);
         setBackgroundColor(bgColor);
     }
 
@@ -128,55 +206,52 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
         this.onImageItemClickListener = onImageItemClickListener;
     }
 
-    public void initView(List<BannerBean> imgPic) {
-        this.imgPic = imgPic;
-        if (!imgPic.isEmpty()) {
-            imgPic.size();
-            if (imgPic.size() == 1) {
-                getImages(imgPic.get(0).getPath());
-                imageInfosList.add(new ImageInfo(imgPic.get(0).getPath(), 1920, 1080));
-            } else {
-                images.clear();
-                for (int k = 0; k < imgPic.size(); k++) {
-                    Object imgPath = imgPic.get(k).getPath();
-                    imageInfosList.add(new ImageInfo(imgPath, 1920, 1080));
-                    getImages(imgPath);
-                }
-            }
-            addHeader();
-        }
+    private boolean dotIsInner() {
+        return DotPosition.INNER_BOTTOM_CENTER == dotPosition || DotPosition.INNER_BOTTOM_LEFT == dotPosition || DotPosition.INNER_BOTTOM_RIGHT == dotPosition;
     }
 
-    /**
-     * 创建ViewPager的子item项
-     */
-    private void getImages(Object oldPath) {
-        BannerCornerImageViewBinding binding = BannerCornerImageViewBinding.inflate(LayoutInflater.from(getContext()));
-        binding.cornerImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        binding.cornerImage.setOnClickListener(this);
-        Glide.with(getContext())
-                .load(oldPath)
-                .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
-                .into(binding.cornerImage);
-        images.add(binding.cornerImage);
+    public void initView(@NotNull List<BannerBean> bannerList) {
+        this.bannerList = bannerList;
+        images.clear();
+        for (BannerBean bannerBean : this.bannerList) {
+            Object imgPath = bannerBean.getPath();
+            if (dotIsInner()) {
+                ImageView imageView = new ImageView(getContext());
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                imageView.setOnClickListener(this);
+                Glide.with(getContext())
+                        .load(imgPath)
+                        .apply(new RequestOptions().placeholder(placeholderImage).error(placeholderImage))
+                        .into(imageView);
+                images.add(imageView);
+            } else {
+                CornersImageView imageView = new CornersImageView(getContext());
+                imageView.setLeftBottomRadius(leftBottomRadius);
+                imageView.setLeftTopRadius(leftTopRadius);
+                imageView.setRightTopRadius(rightTopRadius);
+                imageView.setRightBottomRadius(rightBottomRadius);
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                imageView.setOnClickListener(this);
+                Glide.with(getContext())
+                        .load(imgPath)
+                        .apply(new RequestOptions().placeholder(placeholderImage).error(placeholderImage))
+                        .into(imageView);
+                images.add(imageView);
+            }
+            imageInfosList.add(new ImageInfo(imgPath, 1920, 1080));
+        }
+        viewPager.setImages(images);
+        initImageRounds();
+        viewPager.setAdapter(new PictureAdapter(images));
+        viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
     }
 
     public ViewPager getViewPager() {
-        return binding.bannerViewPager;
+        return viewPager;
     }
 
     public int getCurrentPosition() {
         return mCurrentPosition;
-    }
-
-    /**
-     * 填充布局
-     */
-    private void addHeader() {
-        binding.bannerViewPager.setImages(images);
-        initImageRounds();
-        binding.bannerViewPager.setAdapter(new PictureAdapter(images));
-        binding.bannerViewPager.setCurrentItem(Integer.MAX_VALUE / 2);
     }
 
     public void setRoundDots(@DrawableRes int drawableResCurrent, @DrawableRes int drawableResNormal) {
@@ -189,20 +264,20 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
      */
     private void initImageRounds() {
         List<ImageView> dots = new ArrayList<>();
-        binding.llDots.removeAllViews();
+        dotsLayout.removeAllViews();
         /*
          *当轮播图大于1张时小圆点显示
          */
         if (images.size() > 1) {
-            binding.llDots.setVisibility(View.VISIBLE);
+            dotsLayout.setVisibility(View.VISIBLE);
         } else {
-            binding.llDots.setVisibility(View.INVISIBLE);
+            dotsLayout.setVisibility(View.INVISIBLE);
         }
-        for (int i = 0; i < images.size(); i++) {
+        /*
+         * 默认让第一张图片显示深颜色的圆点
+         */
+        IntStream.range(0, images.size()).forEach(i -> {
             ImageView round = new ImageView(getContext());
-            /*
-             * 默认让第一张图片显示深颜色的圆点
-             */
             if (i == 0) {
                 round.setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
             } else {
@@ -210,10 +285,10 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             }
             dots.add(round);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
-            params.leftMargin = 20;
-            binding.llDots.addView(round, params);
-        }
-        binding.bannerViewPager.setDots(dots);
+            params.leftMargin = (int) dotPadding;
+            dotsLayout.addView(round, params);
+        });
+        viewPager.setDots(dots);
     }
 
     @Override
@@ -221,12 +296,12 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
         if (imageInfosList == null || imageInfosList.isEmpty()) {
             return;
         }
-        if (!StringUtil.isEmpty(imgPic.get(mCurrentPosition).getLinkPath())) {
+        if (!StringUtil.isEmpty(bannerList.get(mCurrentPosition).getLinkPath())) {
             //排除默认的“#”号空链接
-            if ("#".equals(imgPic.get(mCurrentPosition).getLinkPath())) {
+            if ("#".equals(bannerList.get(mCurrentPosition).getLinkPath())) {
                 return;
             }
-            WebViewActivity.show(getContext(), imgPic.get(mCurrentPosition).getLinkPath(), null);
+            CommonUtil.toBrowser(getContext(), bannerList.get(mCurrentPosition).getLinkPath(), bannerList.get(mCurrentPosition).isLinkInside());
             return;
         }
         if (canBrowse) {
@@ -241,7 +316,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
 
     @Override
     public void getPosition(int itemPosition) {
-        binding.llDots.requestLayout();
+        dotsLayout.requestLayout();
         mCurrentPosition = itemPosition;
     }
 
@@ -254,6 +329,10 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (!dotIsInner()) {
+            super.onDraw(canvas);
+            return;
+        }
         //这里做下判断，只有图片的宽高大于设置的圆角距离的时候才进行裁剪
         int maxLeft = Math.max(leftTopRadius, leftBottomRadius);
         int maxRight = Math.max(rightTopRadius, rightBottomRadius);
@@ -267,7 +346,6 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             mPath.moveTo(leftTopRadius, 0);
             mPath.lineTo(width - rightTopRadius, 0);
             mPath.quadTo(width, 0, width, rightTopRadius);
-
             mPath.lineTo(width, height - rightBottomRadius);
             mPath.quadTo(width, height, width - rightBottomRadius, height);
 
@@ -282,7 +360,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             } else {
                 canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
-            canvas.drawPath(mPath,mPaint);
+            canvas.drawPath(mPath, mPaint);
         }
         super.onDraw(canvas);
     }

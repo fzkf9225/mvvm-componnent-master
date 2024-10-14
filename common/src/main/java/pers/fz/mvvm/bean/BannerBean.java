@@ -7,13 +7,27 @@ package pers.fz.mvvm.bean;
 
 public class BannerBean {
 
-    private long modifyTime;
-    private Object path;//图片地址
-    private String imgDiscribe;//图片描述
-    private String labelImage;//图片文字地址
-    private String linkPath;//点击图片跳转的页面地址
+    private String id;
+    /**
+     * 图片地址
+     */
+    private Object path;
+    /**
+     * 点击图片跳转的页面地址
+     */
+    private String linkPath;
+
+    /**
+     * 是否在app内部预览
+     */
+    private boolean linkInside = false;
 
     public BannerBean(Object path) {
+        this.path = path;
+    }
+
+    public BannerBean(String id, Object path) {
+        this.id = id;
         this.path = path;
     }
 
@@ -22,13 +36,28 @@ public class BannerBean {
         this.linkPath = linkPath;
     }
 
-    public BannerBean(Object path, String labelImage, String linkPath) {
+    public BannerBean(String id, Object path, String linkPath) {
+        this.id = id;
         this.path = path;
-        this.labelImage = labelImage;
         this.linkPath = linkPath;
     }
 
+    public BannerBean(Object path, String linkPath, boolean linkInside) {
+        this.path = path;
+        this.linkPath = linkPath;
+        this.linkInside = linkInside;
+    }
+
     public BannerBean() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLinkPath() {
@@ -39,21 +68,6 @@ public class BannerBean {
         this.linkPath = linkPath;
     }
 
-    public String getImgDiscribe() {
-        return imgDiscribe;
-    }
-
-    public void setImgDiscribe(String imgDiscribe) {
-        this.imgDiscribe = imgDiscribe;
-    }
-
-    public long getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(long modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 
     public Object getPath() {
         return path;
@@ -63,11 +77,11 @@ public class BannerBean {
         this.path = path;
     }
 
-    public String getLabelImage() {
-        return labelImage;
+    public boolean isLinkInside() {
+        return linkInside;
     }
 
-    public void setLabelImage(String labelImage) {
-        this.labelImage = labelImage;
+    public void setLinkInside(boolean linkInside) {
+        this.linkInside = linkInside;
     }
 }

@@ -26,7 +26,7 @@ public class CornersImageView extends AppCompatImageView {
     private int rightTopRadius;
     private int rightBottomRadius;
     private int leftBottomRadius;
-    private int imageBg;
+    private int imageBg = 0xe4e4e4;
     private Paint mPaint;
     private final Path mPath = new Path();
 
@@ -51,15 +51,19 @@ public class CornersImageView extends AppCompatImageView {
         width = getWidth();
         height = getHeight();
     }
+
     private void init(Context context, AttributeSet attrs) {
         int defaultRadius = DensityUtil.dp2px(context, 3);
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
-        radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_image_view_radius, defaultRadius);
-        leftTopRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_left_top_radius, defaultRadius);
-        imageBg = array.getColor(R.styleable.Custom_Round_Image_View_image_bg,0xe4e4e4);
-        rightTopRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_right_top_radius, defaultRadius);
-        rightBottomRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_right_bottom_radius, defaultRadius);
-        leftBottomRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_left_bottom_radius, defaultRadius);
+        if(attrs!=null){
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
+            radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_image_view_radius, defaultRadius);
+            leftTopRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_left_top_radius, defaultRadius);
+            imageBg = array.getColor(R.styleable.Custom_Round_Image_View_image_bg,0xe4e4e4);
+            rightTopRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_right_top_radius, defaultRadius);
+            rightBottomRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_right_bottom_radius, defaultRadius);
+            leftBottomRadius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_left_bottom_radius, defaultRadius);
+            array.recycle();
+        }
 
         //如果四个角的值没有设置，那么就使用通用的radius的值。
         if (defaultRadius == leftTopRadius) {
@@ -74,7 +78,6 @@ public class CornersImageView extends AppCompatImageView {
         if (defaultRadius == leftBottomRadius) {
             leftBottomRadius = radius;
         }
-        array.recycle();
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);

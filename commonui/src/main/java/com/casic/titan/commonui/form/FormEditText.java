@@ -33,6 +33,8 @@ public class FormEditText extends ConstraintLayout {
     private String hintString = "请输入";
     private boolean required = false;
     private boolean bottomBorder = true;
+    protected int rightTextColor = 0xFF333333;
+    protected int labelTextColor = 0xFF999999;
     private int inputType = InputType.TYPE_CLASS_TEXT;
     private int imeOptions = EditorInfo.IME_ACTION_NEXT;
     public final FormDataSource formDataSource = new FormDataSource();
@@ -64,6 +66,8 @@ public class FormEditText extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             labelString = typedArray.getString(R.styleable.FormEditText_label);
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
+            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, rightTextColor);
+            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
@@ -82,6 +86,8 @@ public class FormEditText extends ConstraintLayout {
         binding.editText.setHint(hintString);
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         binding.tvLabel.setText(labelString);
+        binding.editText.setTextColor(rightTextColor);
+        binding.tvLabel.setTextColor(labelTextColor);
         binding.editText.setImeOptions(imeOptions);
         binding.editText.setInputType(inputType);
         if (digits > 0) {

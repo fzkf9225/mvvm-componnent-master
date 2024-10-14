@@ -1,6 +1,5 @@
 package pers.fz.mvvm.base;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
+import pers.fz.mvvm.bean.base.BasePagingBean;
 import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;

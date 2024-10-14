@@ -62,7 +62,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
     //不用转换单位
     private float radius = 5;
-    protected int labelTextColor = 0xFF666666;
+    protected int labelTextColor = 0xFF999999;
     public FormImage(Context context) {
         super(context);
         initAttr(null);
@@ -86,12 +86,12 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 8f);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             typedArray.recycle();
         }
     }
