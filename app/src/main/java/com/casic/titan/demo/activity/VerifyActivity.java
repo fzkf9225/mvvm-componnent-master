@@ -41,6 +41,8 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
     @Override
     public void initView(Bundle savedInstanceState) {
         getLifecycle().addObserver(binding.formImage);
+        getLifecycle().addObserver(binding.formVideo);
+        getLifecycle().addObserver(binding.formFile);
         binding.editHobby.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,5 +108,7 @@ public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBi
     protected void onDestroy() {
         super.onDestroy();
         getLifecycle().removeObserver(binding.formImage);
+        getLifecycle().removeObserver(binding.formVideo);
+        getLifecycle().removeObserver(binding.formFile);
     }
 }

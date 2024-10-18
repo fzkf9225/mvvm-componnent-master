@@ -14,49 +14,43 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.adapter.FileShowAdapter;
-import com.casic.titan.commonui.bean.AttachmentBean;
 
 import java.util.List;
 
+import pers.fz.mvvm.adapter.ImageShowAdapter;
+import pers.fz.mvvm.adapter.VideoShowAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
+import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormFileShow extends FrameLayout {
+public class FormVideoShow extends FrameLayout {
     protected String labelString;
     protected int bgColor = 0xFFF1F3F2;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
     protected RecyclerView mRecyclerViewImage;
-    private FileShowAdapter fileShowAdapter;
+    private VideoShowAdapter videoShowAdapter;
     private float formLabelTextSize;
     private float formRequiredSize;
 
-    protected int rightTextColor = 0xFF333333;
-    protected int labelTextColor = 0xFF999999;
-
-    private float radius = 5;
-
-    public FormFileShow(Context context) {
+    public FormVideoShow(Context context) {
         super(context);
         initAttr(null);
         init();
     }
 
-    public FormFileShow(Context context, @Nullable AttributeSet attrs) {
+    public FormVideoShow(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initAttr(attrs);
         init();
     }
 
-    public FormFileShow(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormVideoShow(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttr(attrs);
         init();
@@ -67,16 +61,12 @@ public class FormFileShow extends FrameLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
-            rightTextColor = typedArray.getColor(R.styleable.FormImage_rightTextColor, rightTextColor);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius,  DensityUtil.dp2px(getContext(),4));
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             typedArray.recycle();
         } else {
-            radius =  DensityUtil.dp2px(getContext(),4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -90,23 +80,19 @@ public class FormFileShow extends FrameLayout {
         tvRequired = findViewById(R.id.tv_required);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
-        tvLabel.setTextColor(labelTextColor);
         tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             constraintLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        fileShowAdapter = new FileShowAdapter(getContext());
-        fileShowAdapter.setRadius(radius);
-        fileShowAdapter.setBgColor(bgColor);
-        fileShowAdapter.setTextColor(rightTextColor);
-        mRecyclerViewImage.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
+        videoShowAdapter = new VideoShowAdapter(getContext());
+        mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        mRecyclerViewImage.setAdapter(fileShowAdapter);
+        mRecyclerViewImage.setAdapter(videoShowAdapter);
     }
 
     public boolean isRequired() {
@@ -118,9 +104,9 @@ public class FormFileShow extends FrameLayout {
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
-    public void setImages(List<AttachmentBean> images) {
-        fileShowAdapter.setList(images);
-        fileShowAdapter.notifyDataSetChanged();
+    public void setImages(List<String> images){
+        videoShowAdapter.setList(images);
+        videoShowAdapter.notifyDataSetChanged();
     }
 
     public void setLabel(String text) {

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,6 +21,8 @@ import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.databinding.FormEditAreaBinding;
 import com.casic.titan.commonui.helper.FormDataSource;
 import com.casic.titan.commonui.inter.FormTextWatcher;
+
+import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**
@@ -38,6 +41,9 @@ public class FormEditArea extends ConstraintLayout {
     public FormTextWatcher formTextWatcher;
     public final FormDataSource formDataSource = new FormDataSource();
     public FormEditAreaBinding binding;
+    private float formLabelTextSize;
+    private float formTextSize;
+    private float formRequiredSize;
 
     public FormEditArea(Context context) {
         super(context);
@@ -68,7 +74,14 @@ public class FormEditArea extends ConstraintLayout {
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
             imeOptions = typedArray.getInt(R.styleable.FormEditText_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
+            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             typedArray.recycle();
+        } else {
+            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
+            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
+            formTextSize = DensityUtil.sp2px(getContext(), 14);
         }
     }
 
@@ -85,6 +98,10 @@ public class FormEditArea extends ConstraintLayout {
         binding.editArea.setImeOptions(imeOptions);
         binding.editArea.setInputType(inputType);
         binding.editArea.setMaxLines(Integer.MAX_VALUE);
+
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.editArea.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }

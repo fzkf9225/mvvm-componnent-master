@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.listener.OnProgressEndListener;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -98,20 +99,22 @@ public class HorizontalProgressBar extends View {
      *
      * @param attrs AttributeSet
      */
-    @SuppressLint("CustomViewStyleable")
     private void init(AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_Progress_Bar);
             bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
             progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
             fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, Color.BLACK);
-            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, 14);
+            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, DensityUtil.dp2px(getContext(), 14));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
-            fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, 2);
-            bgRadius = typedArray.getDimension(R.styleable.Custom_Progress_Bar_bgRadius, DEFAULT_RADIUS);
+            fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2f));
+            bgRadius = typedArray.getDimension(R.styleable.Custom_Progress_Bar_bgRadius, DensityUtil.dp2px(getContext(), DEFAULT_RADIUS));
             maxProgress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_maxProgress, DEFAULT_MAX_PROGRESS);
             progress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_progress, 0);
             typedArray.recycle();
+        } else {
+            fontSize = DensityUtil.sp2px(getContext(), 14);
+            bgRadius = DensityUtil.sp2px(getContext(), DEFAULT_RADIUS);
         }
     }
 

@@ -1,6 +1,7 @@
 package pers.fz.mvvm.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +29,8 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
     public VideoAddListener videoAddListener;
     //最大上传数量
     private int defaultMaxCount = -1;
-
+    private int bgColor = Color.WHITE;
+    private float radius = 5;
     public VideoAddAdapter(Context context) {
         super(context);
     }
@@ -43,6 +45,14 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
         return R.layout.video_add_item;
     }
 
+    public void setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
     @Override
     public void onBindHolder(BaseViewHolder<VideoAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility((mList.size() == defaultMaxCount) ? View.GONE : View.VISIBLE);
@@ -51,6 +61,7 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
                 videoClearListener.videoClear(v, pos);
             }
         });
+        holder.getBinding().videoAdd.setBgColorAndRadius(this.bgColor,this.radius);
         holder.getBinding().ivVideoShow.setOnClickListener(v -> {
             try {
                 Bundle bundleVideo = new Bundle();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -37,6 +38,9 @@ public class FormSelection extends ConstraintLayout {
     public FormTextWatcher formTextWatcher;
     public final FormDataSource formDataSource = new FormDataSource();
     public FormSelectionBinding binding;
+    private float formLabelTextSize;
+    private float formTextSize;
+    private float formRequiredSize;
 
     public FormSelection(Context context) {
         super(context);
@@ -61,12 +65,19 @@ public class FormSelection extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             labelString = typedArray.getString(R.styleable.FormEditText_label);
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
+            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, rightTextColor);
             labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormEditText_line, 1);
             typedArray.recycle();
+        } else {
+            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
+            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
+            formTextSize = DensityUtil.sp2px(getContext(), 14);
         }
     }
 
@@ -81,6 +92,9 @@ public class FormSelection extends ConstraintLayout {
         binding.tvLabel.setTextColor(labelTextColor);
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         binding.tvLabel.setText(labelString);
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.tvSelection.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }

@@ -22,13 +22,27 @@
     <attr name="required" format="boolean" />
     <attr name="bottomBorder" format="boolean" />
     <attr name="rightTextColor" format="reference|color" />
+    <attr name="emptyTextColor" format="reference|color" />
     <attr name="labelTextColor" format="reference|color" />
+    <attr name="formLabelTextSize" format="dimension" />
+    <attr name="formTextSize" format="dimension" />
+    <attr name="formRequiredSize" format="dimension" />
     <declare-styleable name="FormImage">
         <attr name="label" />
         <attr name="required" />
         <attr name="bottomBorder" />
         <attr name="labelTextColor" />
+        <attr name="emptyTextColor" />
+        <attr name="rightTextColor" />
+        <attr name="formLabelTextSize"/>
+        <attr name="formTextSize"/>
+        <attr name="file_add_src" format="reference"/>
+        <attr name="formRequiredSize"/>
         <attr name="add_image_radius" format="dimension"/>
+        <!--是否默认开启压缩-->
+        <attr name="compress" format="boolean"/>
+        <!--压缩图片大小，单位kb-->
+        <attr name="compressImageSize" format="integer" />
         <attr name="maxCount" format="integer"/>
         <attr name="field" format="string"/>
         <attr name="bgColor" format="color" />
@@ -37,11 +51,18 @@
             <enum name="camera" value="1" />
             <enum name="album" value="2" />
         </attr>
+        <attr name="compress_video" format="enum">
+            <enum name="high" value="1" />
+            <enum name="medium" value="2" />
+            <enum name="low" value="3" />
+        </attr>
     </declare-styleable>
-
     <declare-styleable name="FormEditText">
         <attr name="label" />
         <attr name="required" />
+        <attr name="formLabelTextSize"/>
+        <attr name="formTextSize"/>
+        <attr name="formRequiredSize"/>
         <attr name="bottomBorder" />
         <attr name="labelTextColor" />
         <attr name="rightTextColor" />

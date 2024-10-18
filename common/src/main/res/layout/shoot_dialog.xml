@@ -10,7 +10,7 @@
         android:background="@drawable/rounded_white"
         android:orientation="vertical">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_shoot"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxl"
@@ -24,7 +24,7 @@
             android:id="@+id/v_line"
             style="@style/h_line" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/choosePhoto"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxl"
@@ -35,7 +35,7 @@
             android:textSize="@dimen/font_size_xxl" />
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/she_cancel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_xxl"

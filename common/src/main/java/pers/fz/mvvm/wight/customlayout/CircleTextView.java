@@ -12,6 +12,7 @@ import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Created by CherishTang on 2019/5/30.
@@ -38,7 +39,7 @@ public class CircleTextView extends AppCompatTextView {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
             storkColor = typedArray.getColor(R.styleable.CircleTextView_storkColor, storkColor);
             circleBackColor = typedArray.getColor(R.styleable.CircleTextView_backColor, circleBackColor);
-            storkWidth = typedArray.getDimension(R.styleable.CircleTextView_storkWidth, storkWidth);
+            storkWidth = typedArray.getDimension(R.styleable.CircleTextView_storkWidth,storkWidth);
             typedArray.recycle();
         }
         if (storkWidth != 0) {

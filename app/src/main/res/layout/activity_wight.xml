@@ -321,6 +321,22 @@
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image"
                 android:layout_height="wrap_content"/>
+
+            <pers.fz.mvvm.wight.customlayout.IconDotTextView
+                android:id="@+id/iconDotTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:text_size="@dimen/font_size_xl"
+                app:text_color="@color/themeColor"
+                app:image_width="60dp"
+                app:image_height="60dp"
+                app:label="测试"
+                app:imageSrc="@drawable/ic_launcher_background"
+                android:textColorHint="@color/nv_bg_color"
+                android:textColor="@color/themeColor"
+                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

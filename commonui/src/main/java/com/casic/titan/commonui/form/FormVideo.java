@@ -23,7 +23,6 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.utils.AttachmentUtil;
 
@@ -33,52 +32,54 @@ import java.util.List;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaListener;
+import pers.fz.media.MediaTypeEnum;
+import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.media.MediaTypeEnum;
-import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.dialog.OpenImageDialog;
+import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, DefaultLifecycleObserver{
+public class FormVideo extends ConstraintLayout implements VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener, DefaultLifecycleObserver{
     protected String labelString;
     protected int bgColor = 0xFFF1F3F2;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected boolean compress = false;
-    protected int compressImageSize = 300;
+    protected int compressVideo = MediaHelper.VIDEO_MEDIUM;
     protected TextView tvLabel, tvRequired;
-    protected RecyclerView mRecyclerViewImage;
-    private ImageAddAdapter imageAddAdapter;
+    protected RecyclerView mRecyclerViewVideo;
+    private VideoAddAdapter videoAddAdapter;
     private MediaHelper mediaHelper;
-    private int mediaType = OpenImageDialog.CAMERA_ALBUM;
-    private ImageAddAdapter.ImageViewAddListener onImageAddListener;
-    private ImageAddAdapter.ImageViewClearListener onImageClearListener;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private int mediaType = OpenShootDialog.CAMERA_ALBUM;
+    private VideoAddAdapter.VideoAddListener videoAddListener;
+    private VideoAddAdapter.VideoClearListener videoClearListener;
     private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
     //不用转换单位
-    private float radius = 8;
+    private float radius = 4;
     protected int labelTextColor = 0xFF999999;
     private float formLabelTextSize;
     private float formRequiredSize;
 
-    public FormImage(Context context) {
+    public FormVideo(Context context) {
         super(context);
         initAttr(null);
         init();
     }
 
-    public FormImage(Context context, @Nullable AttributeSet attrs) {
+    public FormVideo(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initAttr(attrs);
         init();
     }
 
-    public FormImage(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormVideo(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttr(attrs);
         init();
@@ -90,18 +91,18 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
+            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 4);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius,  DensityUtil.dp2px(getContext(),8));
-            compressImageSize = typedArray.getInt(R.styleable.FormImage_compressImageSize, 300);
+            compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_MEDIUM);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             typedArray.recycle();
         } else {
-            radius =  DensityUtil.dp2px(getContext(),8);
+            radius =  DensityUtil.dp2px(getContext(),4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -121,7 +122,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         setPadding(0, DensityUtil.dp2px(getContext(),12),
                 0, DensityUtil.dp2px(getContext(),12));
         tvLabel = findViewById(R.id.tv_label);
-        mRecyclerViewImage = findViewById(R.id.mRecyclerViewImage);
+        mRecyclerViewVideo = findViewById(R.id.mRecyclerViewImage);
         tvRequired = findViewById(R.id.tv_required);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
@@ -131,26 +132,26 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        imageAddAdapter = new ImageAddAdapter(getContext(), maxCount);
-        imageAddAdapter.setBgColor(bgColor);
-        imageAddAdapter.setRadius(radius);
-        imageAddAdapter.setImageViewAddListener(this);
-        imageAddAdapter.setImageViewClearListener(this);
-        mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
+        videoAddAdapter = new VideoAddAdapter(getContext(), maxCount);
+        videoAddAdapter.setBgColor(bgColor);
+        videoAddAdapter.setRadius(radius);
+        videoAddAdapter.setVideoAddListener(this);
+        videoAddAdapter.setVideoClearListener(this);
+        mRecyclerViewVideo.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        mRecyclerViewImage.setAdapter(imageAddAdapter);
+        mRecyclerViewVideo.setAdapter(videoAddAdapter);
     }
 
-    public void setOnImageAddListener(ImageAddAdapter.ImageViewAddListener onImageAddListener) {
-        this.onImageAddListener = onImageAddListener;
+    public void setOnVideoAddListener(VideoAddAdapter.VideoAddListener videoAddListener) {
+        this.videoAddListener = videoAddListener;
     }
 
-    public void setOnImageClearListener(ImageAddAdapter.ImageViewClearListener onImageClearListener) {
-        this.onImageClearListener = onImageClearListener;
+    public void setOnVideoClearListener(VideoAddAdapter.VideoClearListener onVideoClearListener) {
+        this.videoClearListener = onVideoClearListener;
     }
 
     public int getMaxCount() {
@@ -167,15 +168,15 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     }
 
     public List<Uri> getImages() {
-        return imageAddAdapter.getList();
+        return videoAddAdapter.getList();
     }
 
     public List<String> getStringImages() {
-        if (imageAddAdapter.getList() == null) {
+        if (videoAddAdapter.getList() == null) {
             return null;
         }
         List<String> uriStringList = new ArrayList<>();
-        for (Uri uri : imageAddAdapter.getList()) {
+        for (Uri uri : videoAddAdapter.getList()) {
             uriStringList.add(uri.toString());
         }
         return uriStringList;
@@ -184,16 +185,16 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     @SuppressLint("NotifyDataSetChanged")
     public void setStringImages(List<String> images) {
         if (images == null) {
-            imageAddAdapter.setList(new ArrayList<>());
-            imageAddAdapter.notifyDataSetChanged();
+            videoAddAdapter.setList(new ArrayList<>());
+            videoAddAdapter.notifyDataSetChanged();
             return;
         }
         List<Uri> uriList = new ArrayList<>();
         for (String img : images) {
             uriList.add(Uri.parse(img));
         }
-        imageAddAdapter.setList(uriList);
-        imageAddAdapter.notifyDataSetChanged();
+        videoAddAdapter.setList(uriList);
+        videoAddAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -201,8 +202,8 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         if (images == null) {
             images = new ArrayList<>();
         }
-        imageAddAdapter.setList(images);
-        imageAddAdapter.notifyDataSetChanged();
+        videoAddAdapter.setList(images);
+        videoAddAdapter.notifyDataSetChanged();
     }
 
     public void setLabel(String text) {
@@ -210,12 +211,12 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     }
 
     @Override
-    public void imgAdd(View view) {
-        if (onImageAddListener != null) {
-            onImageAddListener.imgAdd(view);
+    public void videoAdd(View view) {
+        if (videoAddListener != null) {
+            videoAddListener.videoAdd(view);
             return;
         }
-        mediaHelper.openImageDialog(view, mediaType);
+        mediaHelper.openShootDialog(view, mediaType);
     }
 
     public MediaHelper getMediaHelper() {
@@ -227,20 +228,21 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     }
 
     @Override
-    public void imgClear(View view, int position) {
-        if (onImageClearListener != null) {
-            onImageClearListener.imgClear(view, position);
+    public void videoClear(View view, int position) {
+        if (videoClearListener != null) {
+            videoClearListener.videoClear(view, position);
             return;
         }
-        imageAddAdapter.getList().remove(position);
-        imageAddAdapter.notifyDataSetChanged();
+        videoAddAdapter.getList().remove(position);
+        videoAddAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void initFragment(Fragment fragment) {
         this.mediaHelper = new MediaBuilder(fragment, (BaseFragment)fragment)
-                .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
+                .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
+                .setVideoQuality(compressVideo)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -254,32 +256,31 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
                     @Override
                     public int onSelectedImageCount() {
-                        return imageAddAdapter.getList().size();
+                        return 0;
                     }
 
                     @Override
                     public int onSelectedVideoCount() {
-                        return 0;
+                        return videoAddAdapter.getList().size();
                     }
                 })
-                .setImageQualityCompress(compressImageSize)
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(fragment, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
                 if (compress) {
-                    mediaHelper.startCompressImage(mediaBean.getMediaList());
+                    mediaHelper.startCompressVideo(mediaBean.getMediaList());
                 } else {
-                    imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                    imageAddAdapter.notifyDataSetChanged();
+                    videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                    videoAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(fragment, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
-                imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                imageAddAdapter.notifyDataSetChanged();
+            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+                videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                videoAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
             }
         });
@@ -291,8 +292,9 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         DefaultLifecycleObserver.super.onCreate(owner);
         if (getContext() instanceof ComponentActivity) {
             mediaHelper = new MediaBuilder((ComponentActivity) getContext(), (BaseActivity)getContext())
-                    .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
+                    .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                     .setChooseType(MediaHelper.PICK_TYPE)
+                    .setVideoQuality(compressVideo)
                     .setMediaListener(new MediaListener() {
                         @Override
                         public int onSelectedFileCount() {
@@ -306,32 +308,31 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
                         @Override
                         public int onSelectedImageCount() {
-                            return imageAddAdapter.getList().size();
+                            return 0;
                         }
 
                         @Override
                         public int onSelectedVideoCount() {
-                            return 0;
+                            return videoAddAdapter.getList().size();
                         }
                     })
-                    .setImageQualityCompress(compressImageSize)
                     .builder();
             //图片、视频选择结果回调通知
             mediaHelper.getMutableLiveData().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+                if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
                     if (compress) {
-                        mediaHelper.startCompressImage(mediaBean.getMediaList());
+                        mediaHelper.startCompressVideo(mediaBean.getMediaList());
                     } else {
-                        imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                        imageAddAdapter.notifyDataSetChanged();
+                        videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                        videoAddAdapter.notifyDataSetChanged();
                         AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                     }
                 }
             });
             mediaHelper.getMutableLiveDataCompress().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
-                    imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                    imageAddAdapter.notifyDataSetChanged();
+                if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+                    videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                    videoAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }
             });
@@ -345,5 +346,6 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             mediaHelper.unregister();
         }
     }
+
 
 }

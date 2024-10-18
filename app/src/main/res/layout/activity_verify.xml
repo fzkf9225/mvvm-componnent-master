@@ -44,7 +44,7 @@
                 android:layout_marginStart="16dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="16dp"
-                app:bottomBorder="false"
+                app:bottomBorder="true"
                 app:formImeOptions="actionNext"
                 app:formInputType="text"
                 app:hint="请选择性别"
@@ -194,13 +194,54 @@
                 app:bottomBorder="true"
                 app:bgColor="@color/themeColor"
                 app:add_image_radius="@dimen/radius_m"
+                app:compress="true"
+                app:compressImageSize="300"
                 app:formImeOptions="actionNext"
                 app:label="本人照片"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_hobby"
                 app:required="false" />
-
+            <!--本人视频-->
+            <com.casic.titan.commonui.form.FormVideo
+                android:id="@+id/form_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:mediaType="camera_album"
+                app:bottomBorder="true"
+                app:compress="true"
+                app:compress_video="low"
+                app:bgColor="@color/themeColor"
+                app:add_image_radius="@dimen/radius_m"
+                app:formImeOptions="actionNext"
+                app:label="本人视频"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_image"
+                app:required="false" />
+            <!--荣誉证书-->
+            <com.casic.titan.commonui.form.FormFile
+                android:id="@+id/form_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:mediaType="camera_album"
+                app:bottomBorder="true"
+                app:compress="true"
+                app:compress_video="low"
+                app:bgColor="#eef3f2"
+                app:add_image_radius="@dimen/radius_m"
+                app:formImeOptions="actionNext"
+                app:label="荣誉证书"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_video"
+                app:required="false" />
             <Button
                 android:id="@+id/verify_submit"
                 android:layout_width="match_parent"
@@ -212,7 +253,7 @@
                 android:text="校验"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_xxl"
-                app:layout_constraintTop_toBottomOf="@+id/form_image" />
+                app:layout_constraintTop_toBottomOf="@+id/form_file" />
 
             <TextView
                 android:id="@+id/tv_verify_result"

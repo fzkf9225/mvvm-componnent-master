@@ -23,16 +23,13 @@ import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * 继承TextSwitcher控件，自定义控件，添加切换动画
- *
  */
 public class AutoTextView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
 
-    private float mHeight = (int) TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
-    private int mColor;
+    private float mHeight;
+    private int mColor = 0x333333;
     private String textStr;
-    private Context mContext;
     //mInUp,mOutUp分别构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
     private Rotate3dAnimation mOutUp;
@@ -43,7 +40,7 @@ public class AutoTextView extends TextSwitcher implements
 
     public AutoTextView(Context context) {
         this(context, null);
-        // TODO Auto-generated constructor stub
+        init();
     }
 
     public AutoTextView(Context context, AttributeSet attrs) {
@@ -60,12 +57,13 @@ public class AutoTextView extends TextSwitcher implements
             }
         }
         ta.recycle();
-        mContext = context;
         init();
     }
 
     private void init() {
-        // TODO Auto-generated method stub
+        if (mHeight == 0) {
+            mHeight = DensityUtil.sp2px(getContext(), 14);
+        }
         setFactory(this);
         mInUp = createAnim(-90, 0, true, true);
         mOutUp = createAnim(0, 90, false, true);
@@ -90,13 +88,13 @@ public class AutoTextView extends TextSwitcher implements
     //gravity是没用的,如果想要
     @Override
     public View makeView() {
-        TextView t = new TextView(mContext);
+        TextView t = new TextView(getContext());
         t.setEllipsize(TextUtils.TruncateAt.END);
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
         t.setText(textStr);
         t.setLayoutParams(lp);
-        t.setTextSize(DensityUtil.px2dp(getContext(),mHeight));
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, mHeight);
         t.setTextColor(mColor);
         t.setMaxLines(1);
         return t;

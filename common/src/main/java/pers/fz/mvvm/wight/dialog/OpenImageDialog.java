@@ -61,10 +61,10 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
         Button takePhoto = dialogView.findViewById(R.id.takePhoto);
         Button sheCancel = dialogView.findViewById(R.id.she_cancel);
         View vLine = dialogView.findViewById(R.id.v_line);
-        if(mediaType == CAMERA){
+        if (mediaType == CAMERA) {
             choosePhoto.setVisibility(View.GONE);
             vLine.setVisibility(View.GONE);
-        }else if(mediaType == ALBUM){
+        } else if (mediaType == ALBUM) {
             takePhoto.setVisibility(View.GONE);
             vLine.setVisibility(View.GONE);
         }
@@ -73,7 +73,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
         takePhoto.setOnClickListener(this);
         setContentView(dialogView);
         Window dialogWindow = getWindow();
-        if(dialogWindow==null){
+        if (dialogWindow == null) {
             return;
         }
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,

@@ -6,9 +6,13 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:paddingStart="12dp"
@@ -35,5 +39,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
 </layout>

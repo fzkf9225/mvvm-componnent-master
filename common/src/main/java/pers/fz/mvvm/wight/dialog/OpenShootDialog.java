@@ -81,6 +81,8 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
         if (dialogWindow == null) {
             return;
         }
+        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.BOTTOM);
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.y = 20;

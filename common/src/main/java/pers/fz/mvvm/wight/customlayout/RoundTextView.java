@@ -410,8 +410,8 @@ public class RoundTextView extends AppCompatTextView {
         mIconColor = array.getColorStateList(R.styleable.RectgleTextView_iconColor);
         mLeftColor = array.getColorStateList(R.styleable.RectgleTextView_textLeftColor);
         mRightColor = array.getColorStateList(R.styleable.RectgleTextView_textRightColor);
-        mLeftSize = array.getDimensionPixelSize(R.styleable.RectgleTextView_textLeftSize, 0);
-        mRightSize = array.getDimensionPixelSize(R.styleable.RectgleTextView_textRightSize, 0);
+        mLeftSize = array.getDimension(R.styleable.RectgleTextView_textLeftSize, 0);
+        mRightSize = array.getDimension(R.styleable.RectgleTextView_textRightSize, 0);
         mTextLeftStyle = array.getInt(R.styleable.RectgleTextView_textLeftStyle, Typeface.NORMAL);
         mTextRightStyle = array.getInt(R.styleable.RectgleTextView_textRightStyle, Typeface.NORMAL);
         mTextCenterStyle = array.getInt(R.styleable.RectgleTextView_textCenterStyle, Typeface.NORMAL);

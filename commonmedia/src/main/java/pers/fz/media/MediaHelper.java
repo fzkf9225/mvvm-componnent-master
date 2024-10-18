@@ -467,7 +467,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 if (msg.what > 0 && msg.obj != null) {
                     boolean isSuccess = imagesCompressList.add((Uri) msg.obj);
                 }
-                if (srcUriList == null || srcUriList.size() == 0 ||
+                if (srcUriList == null || srcUriList.isEmpty() ||
                         msg.what >= srcUriList.size()) {
                     mediaBuilder.getBaseView().showToast("图片压缩成功！");
                     if (mediaBuilder.isShowLoading()) {

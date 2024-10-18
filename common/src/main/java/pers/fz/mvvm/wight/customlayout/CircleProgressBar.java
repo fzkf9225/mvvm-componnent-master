@@ -18,6 +18,7 @@ import java.text.NumberFormat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.listener.OnProgressEndListener;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -85,13 +86,16 @@ public class CircleProgressBar extends View {
             progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
             strokeWidth = typedArray.getDimension(R.styleable.Custom_Progress_Bar_strokeWidth, DEFAULT_STROKE_WIDTH);
             fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, Color.BLACK);
-            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, 14);
+            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, DensityUtil.sp2px(getContext(),12));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
-            fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, 2);
+            fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(),2));
             maxProgress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_maxProgress, 100f);
             float progress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_progress, 0);
             angle = progress / maxProgress * 360;
             typedArray.recycle();
+        }else{
+            fontSize =  DensityUtil.sp2px(getContext(),14);
+            strokeWidth =  DensityUtil.dp2px(getContext(),DEFAULT_STROKE_WIDTH);
         }
     }
 

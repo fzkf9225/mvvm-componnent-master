@@ -6,6 +6,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,6 +23,8 @@ import com.casic.titan.commonui.databinding.FormEditTextBinding;
 import com.casic.titan.commonui.helper.FormDataSource;
 import com.casic.titan.commonui.impl.DecimalDigitsInputFilter;
 import com.casic.titan.commonui.inter.FormTextWatcher;
+
+import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**
@@ -42,6 +45,9 @@ public class FormEditText extends ConstraintLayout {
     public FormTextWatcher formTextWatcher;
     public FormEditTextBinding binding;
     private int digits = -1;
+    private float formLabelTextSize;
+    private float formTextSize;
+    private float formRequiredSize;
 
     public FormEditText(Context context) {
         super(context);
@@ -74,13 +80,20 @@ public class FormEditText extends ConstraintLayout {
             imeOptions = typedArray.getInt(R.styleable.FormEditText_formImeOptions, EditorInfo.IME_ACTION_NEXT);
             formatText = typedArray.getInt(R.styleable.FormEditText_formatText, 0);
             digits = typedArray.getInt(R.styleable.FormEditText_digits, -1);
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
+            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             typedArray.recycle();
+        } else {
+            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
+            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
+            formTextSize = DensityUtil.sp2px(getContext(), 14);
         }
     }
 
     private void init() {
         binding = FormEditTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        setLayoutParams(new Constraints.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+        setLayoutParams(new Constraints.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
         binding.setData(formDataSource);
         binding.editText.setHint(hintString);
@@ -90,6 +103,9 @@ public class FormEditText extends ConstraintLayout {
         binding.tvLabel.setTextColor(labelTextColor);
         binding.editText.setImeOptions(imeOptions);
         binding.editText.setInputType(inputType);
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (digits > 0) {
             binding.editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(digits)});
         }

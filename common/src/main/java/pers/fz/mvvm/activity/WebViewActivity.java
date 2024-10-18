@@ -29,13 +29,14 @@ import pers.fz.mvvm.databinding.WebViewBinding;
 import pers.fz.mvvm.util.CordovaDialogsHelper;
 import pers.fz.mvvm.util.SystemWebChromeClient;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
  * Created by fz on 2020/2/18
  * describe：基础的webView控件封装
  */
 @AndroidEntryPoint
-public class WebViewActivity extends BaseActivity<BaseViewModel, WebViewBinding> {
+public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding> {
 
     public final static String TITLE = "title_text";
     public final static String LOAD_URL = "load_url";
