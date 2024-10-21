@@ -56,7 +56,7 @@ public enum UseCaseEnum {
         bundle.putString(VideoPlayerActivity.VIDEO_TITLE, "测试标题");
         bundle.putBoolean(VideoPlayerActivity.CACHE_ENABLE, false);
         //自己加地址试试吧,这个地址不行，因为他不是视频链接
-        bundle.putString(VideoPlayerActivity.VIDEO_PATH, "https://www.bilibili.com/video/BV1sX4y1L7BV?t=15.2");
+        bundle.putString(VideoPlayerActivity.VIDEO_PATH, "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
         return bundle;
     }
 
