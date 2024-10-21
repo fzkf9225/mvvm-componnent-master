@@ -9,6 +9,13 @@ import androidx.databinding.BaseObservable;
 public class BasePagingBean extends BaseObservable {
     private String id;
 
+    public BasePagingBean(String id) {
+        this.id = id;
+    }
+
+    public BasePagingBean() {
+    }
+
     public String getId() {
         return id;
     }
