@@ -30,7 +30,6 @@ public class TechnicalSupportActivity extends BaseActivity<MainViewModel, Techni
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setThemeBarAndToolBarColor(R.color.default_background);
         binding.imageQrCode.setOnClickListener(v -> new PicShowDialog(this, PicShowDialog.createImageInfo(R.mipmap.icon_wechat), 0).show());
     }
 

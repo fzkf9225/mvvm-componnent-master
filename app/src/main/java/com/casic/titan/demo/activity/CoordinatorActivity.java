@@ -36,8 +36,10 @@ public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoo
 
     @Override
     protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.with(this).titleBar(binding.detailToolbar).init();
+        ImmersionBar.with(this)
+                .autoStatusBarDarkModeEnable(true, 0.2f)
+                .keyboardEnable(true)
+                .titleBar(binding.detailToolbar).init();
     }
 
     @Override

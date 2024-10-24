@@ -56,7 +56,6 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
     protected RecyclerView mRecyclerViewVideo;
     private VideoAddAdapter videoAddAdapter;
     private MediaHelper mediaHelper;
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private int mediaType = OpenShootDialog.CAMERA_ALBUM;
     private VideoAddAdapter.VideoAddListener videoAddListener;
     private VideoAddAdapter.VideoClearListener videoClearListener;

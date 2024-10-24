@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="toolbarConfig"
+            type="pers.fz.mvvm.bean.base.ToolbarConfig" />
+
+        <import type="android.view.View" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="context"
+            type="android.content.Context" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toTopOf="@+id/main_container"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
+            android:theme="@style/ToolBarStyle_black"
+            app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
+            app:popupTheme="@style/OverflowMenuStyle">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@{toolbarConfig.title}"
+                android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
+                android:textSize="@dimen/font_size_xxl" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/main_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintTop_toBottomOf="@+id/main_bar"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

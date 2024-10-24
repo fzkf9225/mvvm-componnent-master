@@ -29,7 +29,7 @@
         <item name="tabSelectedTextColor">@color/themeColor</item>
         <item name="android:background">@color/white</item>
         <item name="android:textSize">@dimen/font_size_xl</item>
-        <item name="android:textColor">@color/me_custom_item_textcolor</item>
+        <item name="android:textColor">@color/autoColor</item>
     </style>
     <!-- 弹框dialog -->
     <style name="ActionSheetDialogStyle" parent="@android:style/Theme.Dialog">
@@ -91,7 +91,7 @@
         <item name="colorAccent">@color/themeColor</item>
     </style>
 
-    <style name="MIS_NO_ACTIONBAR" parent="Theme.AppCompat.Light.NoActionBar"></style>
+    <style name="MIS_NO_ACTIONBAR" parent="Theme.AppCompat.Light.NoActionBar"/>
 
     <style name="StartAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>

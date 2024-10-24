@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 13的通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 一般来说，允许用户自定义头像的app都需要这个权限 -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -67,8 +68,7 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" /> <!-- 13的通知权限 -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 12及以下的通知权限 -->
+        android:required="false" /> <!-- 12及以下的通知权限 -->
     <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY" />
 
     <application
@@ -106,6 +106,7 @@
         <activity
             android:name=".activity.VerifyActivity"
             android:exported="false" />
+
         <meta-data
             android:name="android.notch_support"
             android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->

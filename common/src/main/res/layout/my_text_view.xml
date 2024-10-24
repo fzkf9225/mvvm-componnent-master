@@ -9,7 +9,7 @@
         android:id="@+id/contentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_desc_color" />
+        android:textColor="@color/gray" />
     <!-- 显示文本TextView结束 -->
     <!-- 全文（收起）TextView -->
     <TextView

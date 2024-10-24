@@ -17,6 +17,7 @@ import pers.fz.mvvm.adapter.ImageShowAdapter;
 import pers.fz.mvvm.adapter.VideoShowAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.BannerBean;
+import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.RxView;
@@ -93,6 +94,13 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             }
         });
         binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,8), 0x00000000));
+    }
+
+    public ToolbarConfig createdToolbarConfig() {
+        return new ToolbarConfig().setTitle(setTitleBar())
+                .setTextColor(R.color.white)
+                .setBackIconRes(pers.fz.mvvm.R.mipmap.icon_fh_white)
+                .setBgColor(pers.fz.mvvm.R.color.themeColor);
     }
 
 

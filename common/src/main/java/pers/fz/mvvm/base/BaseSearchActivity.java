@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-
 import androidx.lifecycle.MutableLiveData;
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.BaseSearchTitleActivityBinding;
+import pers.fz.mvvm.databinding.BaseSearchActivityBinding;
 import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
 
 
-public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchTitleActivityBinding> implements View.OnClickListener,
+public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchActivityBinding> implements View.OnClickListener,
         CustomSearchEditText.OnInputSubmitListener{
     public MutableLiveData<String> keywordsLiveData = new MutableLiveData<>();
 
@@ -22,7 +21,7 @@ public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseA
 
     @Override
     protected int getLayoutId() {
-        return R.layout.base_search_title_activity;
+        return R.layout.base_search_activity;
     }
 
     @Override

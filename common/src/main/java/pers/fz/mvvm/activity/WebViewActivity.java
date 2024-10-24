@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -67,23 +69,36 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         binding.webView.setWebChromeClient(
                 new SystemWebChromeClient(this,new CordovaDialogsHelper(this),binding.progressBar, toolbarBind.tvTitle)
         );
-        addMenu(R.menu.menu_browser, item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.toolbar_browser) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
-            } else if (itemId == R.id.toolbar_copy) {// 获取系统剪贴板
-                ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-                // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
-                ClipData clipData = ClipData.newPlainText("文件链接", url);
-                // 把数据集设置（复制）到剪贴板
-                clipboard.setPrimaryClip(clipData);
-                showToast("复制成功");
-            }
-            return false;
-        });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_browser, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(StringUtil.isEmpty(url)){
+            showToast("目标地址为空！");
+            return super.onOptionsItemSelected(item);
+        }
+        int itemId = item.getItemId();
+        if (itemId == R.id.toolbar_browser) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        } else if (itemId == R.id.toolbar_copy) {// 获取系统剪贴板
+            ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
+            // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
+            ClipData clipData = ClipData.newPlainText("文件链接", url);
+            // 把数据集设置（复制）到剪贴板
+            clipboard.setPrimaryClip(clipData);
+            showToast("复制成功");
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -59,7 +59,6 @@
 
     <!--Color资源-->
     <public name="gray" type="color"/>
-    <public name="exit_button_background" type="color"/>
     <public name="background" type="color"/>
     <public name="themeColor" type="color"/>
     <public name="theme_red" type="color"/>
@@ -68,25 +67,16 @@
     <public name="theme_yellow" type="color"/>
     <public name="hint_text_color" type="color"/>
     <public name="h_line_color" type="color"/>
-    <public name="login_button_color" type="color"/>
     <public name="dark_light" type="color"/>
-    <public name="setting_exit" type="color"/>
-    <public name="setting_textColor" type="color"/>
     <public name="transparent" type="color"/>
     <public name="search_view_background" type="color"/>
     <public name="autoColor" type="color"/>
     <public name="autoBg" type="color"/>
     <public name="nv_bg_color" type="color"/>
     <public name="bg_color" type="color"/>
-    <public name="login_title_textColor" type="color"/>
     <public name="register_edit_color" type="color"/>
-    <public name="btn_textcolor_unselected" type="color"/>
     <public name="h_area" type="color"/>
     <public name="default_background" type="color"/>
-    <public name="alpha_default_background" type="color"/>
-    <public name="me_custom_item_textcolor" type="color"/>
-    <public name="order_button" type="color"/>
-    <public name="price" type="color"/>
     <public name="green" type="color"/>
     <!--drawable-->
     <public name="bg_edittext" type="drawable"/>
@@ -117,19 +107,6 @@
     <public name="selector_image_media_play" type="drawable"/>
     <public name="shape_divider_linear" type="drawable"/>
     <public name="shape_thumb_round" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
-    <public name="rounded_white" type="drawable"/>
 
     <!--动画资源-->
     <public name="actionsheet_dialog_in" type="anim"/>
@@ -141,16 +118,17 @@
     <public name="scale_out" type="anim"/>
 
     <!--layout资源-->
-    <public name="base_activity" type="layout"/>
+    <public name="base_activity_constraint" type="layout"/>
+    <public name="base_activity_coordinator" type="layout"/>
+    <public name="base_activity_title_search" type="layout"/>
     <public name="base_fragment_container" type="layout"/>
     <public name="base_recycler_view_fragment" type="layout"/>
-    <public name="base_search_title_activity" type="layout"/>
+    <public name="base_search_activity" type="layout"/>
     <public name="base_search_view" type="layout"/>
     <public name="base_smart_paging" type="layout"/>
     <public name="base_tablayout_viewpager" type="layout"/>
     <public name="custom_textview" type="layout"/>
     <public name="empty_fragment" type="layout"/>
-    <public name="base_activity" type="layout"/>
     <public name="option_item" type="layout"/>
     <public name="option_text_view" type="layout"/>
     <public name="paging_footer" type="layout"/>
@@ -158,8 +136,6 @@
     <public name="search_smartrecyclerview" type="layout"/>
     <public name="smartrecyclerview" type="layout"/>
     <public name="web_view" type="layout"/>
-    <public name="base_activity" type="layout"/>
-    <public name="base_activity" type="layout"/>
 
     <!--navigation资源-->
     <public name="nav_empty_layout" type="navigation"/>

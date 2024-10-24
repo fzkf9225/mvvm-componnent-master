@@ -52,7 +52,6 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setThemeBarAndToolBarColor(pers.fz.mvvm.R.color.default_background);
         binding.setLoginViewModel(mViewModel);
         RequestLoginBean requestLoginBean = new RequestLoginBean();
         requestLoginBean.setUsername("admin");

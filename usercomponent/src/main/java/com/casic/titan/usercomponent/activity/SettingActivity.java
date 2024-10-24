@@ -28,7 +28,6 @@ public class SettingActivity extends BaseActivity<MainViewModel, BaseFragmentCon
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setThemeBarAndToolBarColor(R.color.default_background);
     }
 
     @Override

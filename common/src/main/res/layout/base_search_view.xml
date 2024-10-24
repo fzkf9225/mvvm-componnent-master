@@ -15,10 +15,10 @@
         android:focusableInTouchMode="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/vertical_margin_xl"
-        android:paddingEnd="@dimen/vertical_margin_xl">
+        android:paddingStart="@dimen/horizontal_margin_xl"
+        android:paddingEnd="@dimen/horizontal_margin_xl">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/height_l"
             android:layout_weight="1"
@@ -29,30 +29,38 @@
                 android:id="@+id/ll_menu_option"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/input_edit"
                 android:gravity="center"
                 android:orientation="horizontal" />
-
             <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
                 android:id="@+id/input_edit"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="33dp"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/ll_menu_option"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@null"
                 android:ellipsize="end"
-                android:inputType="text"
+                android:textColorHint="@color/nv_bg_color"
+                android:imeOptions="actionSearch"
                 android:gravity="center_vertical"
                 android:hint="请输入"
+                android:inputType="text"
                 android:lines="1"
-                android:paddingStart="@dimen/horizontal_margin_l"
+                android:paddingStart="@dimen/padding_m"
                 android:paddingTop="0dp"
-                android:paddingEnd="@dimen/horizontal_margin_l"
+                android:paddingEnd="@dimen/padding_m"
                 android:paddingBottom="0dp" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/button_search"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/y60"
-            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:layout_marginBottom="@dimen/vertical_margin_xl"
             android:background="@drawable/round_phone_code"

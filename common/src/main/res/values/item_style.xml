@@ -5,7 +5,7 @@
     <style name="customs_Button_text_white" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:borderlessButtonStyle">@null</item>
         <item name="android:layout_height">@dimen/height_xl</item>
-        <item name="android:layout_width">@dimen/x630</item>
+        <item name="android:layout_width">match_parent</item>
         <!--<item name="android:paddingLeft">@dimen/x45</item>-->
         <!--<item name="android:paddingRight">@dimen/x45</item>-->
         <item name="android:gravity">center</item>

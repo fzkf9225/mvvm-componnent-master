@@ -19,7 +19,7 @@
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/zu_choose_left_item_diveder"/>
+        android:background="@color/h_line_color"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lv_children_category"

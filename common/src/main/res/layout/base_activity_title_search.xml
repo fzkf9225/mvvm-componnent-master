@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="toolbarConfig"
+            type="pers.fz.mvvm.bean.base.ToolbarConfig" />
+
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="context"
+            type="android.content.Context" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/search_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:theme="@style/ToolBarStyle_black"
+            app:layout_constraintBottom_toTopOf="@+id/searcher_title_container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
+            app:popupTheme="@style/OverflowMenuStyle">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_work_search_title_option"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
+                    android:id="@+id/input_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="33dp"
+                    android:background="@drawable/rounded_white"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:hint="请输入"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:paddingStart="@dimen/padding_m"
+                    android:paddingTop="0dp"
+                    android:paddingEnd="@dimen/padding_m"
+                    android:paddingBottom="0dp"
+                    android:textColorHint="@color/nv_bg_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_search"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/padding_l"
+                    android:paddingEnd="@dimen/padding_l"
+                    android:text="搜索"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/input_edit" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <FrameLayout
+            android:id="@+id/searcher_title_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_tool_bar"
+            app:layout_constraintVertical_weight="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

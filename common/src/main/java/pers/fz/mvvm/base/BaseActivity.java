@@ -2,24 +2,20 @@ package pers.fz.mvvm.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.MenuRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,12 +29,11 @@ import pers.fz.mvvm.annotations.interrupte.NeedLogin;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
-import pers.fz.mvvm.databinding.BaseActivityBinding;
+import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
 import pers.fz.mvvm.wight.dialog.LoginDialog;
 
@@ -50,10 +45,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected String TAG = this.getClass().getSimpleName();
     protected VM mViewModel;
     protected VDB binding;
-    protected BaseActivityBinding toolbarBind;
+    protected BaseActivityConstraintBinding toolbarBind;
     private ActivityResultLauncher<String[]> permissionLauncher;
     protected ActivityResultLauncher<Intent> loginLauncher;
-
     @Inject
     public ErrorService errorService;
 
@@ -70,16 +64,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         });
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
-        if (hasToolBar()) {
-            toolbarBind = DataBindingUtil.setContentView(this, R.layout.base_activity);
-            toolbarBind.setContext(this);
-            toolbarBind.setToolbarConfig(setToolbarStyle());
-            toolbarBind.setLifecycleOwner(this);
-        } else {
-            binding = DataBindingUtil.setContentView(this, getLayoutId());
-            binding.setLifecycleOwner(this);
+        initToolbar();
+        if (enableImmersionBar()) {
+            initImmersionBar();
         }
-        initImmersionBar();
         createViewModel();
         //是否启用登录拦截器了，写在最前面，防止数据请求等重复检测登录的行为
         if (onInterceptLoginAnnotation()) {
@@ -89,13 +77,20 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
     }
 
-    @Override
-    public void setContentView(int layoutResId) {
-        super.setContentView(layoutResId);
+    protected void initToolbar() {
         if (hasToolBar()) {
-            FrameLayout container = findViewById(R.id.container);
-            binding = DataBindingUtil.inflate(LayoutInflater.from(this), getLayoutId(), container, true);
-            ((Toolbar) findViewById(R.id.main_bar)).setNavigationOnClickListener(v -> finish());
+            toolbarBind = DataBindingUtil.setContentView(this, R.layout.base_activity_constraint);
+            toolbarBind.setLifecycleOwner(this);
+            toolbarBind.setContext(this);
+            binding = DataBindingUtil.inflate(getLayoutInflater(), getLayoutId(), toolbarBind.mainContainer, true);
+            binding.setLifecycleOwner(this);
+            setSupportActionBar(toolbarBind.mainBar);
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            toolbarBind.setToolbarConfig(createdToolbarConfig());
+            toolbarBind.mainBar.setNavigationOnClickListener(v -> onBackPressed());
+        } else {
+            binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);
         }
     }
@@ -109,8 +104,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      *
      * @return toolbar配置
      */
-    public ToolbarConfig setToolbarStyle() {
-        return new ToolbarConfig.Builder(this).setTitle(setTitleBar()).setBgColor(R.color.white).build();
+    public ToolbarConfig createdToolbarConfig() {
+        return new ToolbarConfig().setTitle(setTitleBar()).setBgColor(R.color.white);
     }
 
     /**
@@ -120,9 +115,16 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected void initImmersionBar() {
         //设置共同沉浸式样式
         if (toolbarBind == null) {
-            ImmersionBar.with(this).init();
+            ImmersionBar.with(this)
+                    .keyboardEnable(true)
+                    .init();
         } else {
-            ImmersionBar.with(this).titleBar(toolbarBind.appBar).init();
+            ImmersionBar.with(this)
+                    .statusBarColor(toolbarBind.getToolbarConfig().getBgColor())
+                    .autoStatusBarDarkModeEnable(true, 0.2f)
+                    .keyboardEnable(true)
+                    .titleBar(toolbarBind.mainBar)
+                    .init();
         }
     }
 
@@ -144,62 +146,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
-    /**
-     * 给toolbar添加菜单
-     *
-     * @param menuRes
-     * @param listener
-     */
-    protected void addMenu(@MenuRes int menuRes, Toolbar.OnMenuItemClickListener listener) {
-        if (toolbarBind == null) {
-            return;
-        }
-        toolbarBind.mainBar.inflateMenu(menuRes);
-        toolbarBind.mainBar.setOnMenuItemClickListener(listener);
-    }
-
     public boolean lacksPermissions(String... permission) {
         return PermissionsChecker.getInstance().lacksPermissions(this, permission);
-    }
-
-
-    /**
-     * 设置toolbar背景色和状态栏的颜色，兼容华为小米手机
-     *
-     * @param color
-     */
-    public void setThemeBarAndToolBarColor(@ColorRes int color) {
-        try {
-            if (toolbarBind == null) {
-                return;
-            }
-            if (toolbarBind.getToolbarConfig() == null) {
-                return;
-            }
-            toolbarBind.getToolbarConfig().getBuilder().setBgColor(color);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 设置toolbar背景色和状态栏的颜色，兼容华为小米手机
-     *
-     * @param color
-     */
-    public void setThemeBarAndToolBarColor(@ColorRes int color, @DrawableRes int backRes) {
-        try {
-            ThemeUtils.setStatusBarLightMode(this, ContextCompat.getColor(this, color));
-            if (toolbarBind == null) {
-                return;
-            }
-            if (toolbarBind.getToolbarConfig() == null) {
-                return;
-            }
-            toolbarBind.getToolbarConfig().getBuilder().setBgColor(color).setBackIconRes(backRes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -256,6 +204,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     protected boolean hasToolBar() {
+        return true;
+    }
+
+    protected boolean enableImmersionBar() {
         return true;
     }
 

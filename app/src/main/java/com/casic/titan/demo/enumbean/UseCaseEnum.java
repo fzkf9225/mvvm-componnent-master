@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.mvvm.activity.VideoPlayerActivity;
+import pers.fz.mvvm.activity.WebViewActivity;
 
 /**
  * Created by fz on 2023/8/14 10:19
@@ -48,6 +49,7 @@ public enum UseCaseEnum {
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
     LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
+    WEB_VIEW(WebViewActivity.class, "WebView示例", "测试WebView基本功能和toolbar", createTargetBundle()),
 
     ;
 
@@ -57,6 +59,13 @@ public enum UseCaseEnum {
         bundle.putBoolean(VideoPlayerActivity.CACHE_ENABLE, false);
         //自己加地址试试吧,这个地址不行，因为他不是视频链接
         bundle.putString(VideoPlayerActivity.VIDEO_PATH, "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
+        return bundle;
+    }
+    private static Bundle getWebViewBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putString(WebViewActivity.TITLE, "测试标题");
+        //自己加地址试试吧,这个地址不行，因为他不是视频链接
+        bundle.putString(WebViewActivity.LOAD_URL, "https://www.baidu.com");
         return bundle;
     }
 

@@ -98,7 +98,7 @@
                             android:paddingStart="@dimen/horizontal_margin_l"
                             android:paddingEnd="@dimen/horizontal_margin_l"
                             android:text="获取验证码"
-                            android:textColor="@color/register_edit_color"
+                            android:textColor="@color/autoColor"
                             android:textSize="@dimen/font_size_l"
                             android:visibility="@{loginBean.loginWay==1?View.GONE:View.VISIBLE}" />
                     </LinearLayout>
