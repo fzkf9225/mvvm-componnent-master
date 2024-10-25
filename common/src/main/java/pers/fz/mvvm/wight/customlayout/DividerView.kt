@@ -65,14 +65,14 @@ class DividerView : View {
         )
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (orientation == ORIENTATION_HORIZONTAL) {
             val center = height * 0.5f;
-            mPaint?.let { canvas?.drawLine(0f, center, width.toFloat(), center, it) };
+            mPaint?.let { canvas.drawLine(0f, center, width.toFloat(), center, it) };
         } else {
             val center = width * 0.5f;
-            mPaint?.let { canvas?.drawLine(center, 0f, center, height.toFloat(), it) };
+            mPaint?.let { canvas.drawLine(center, 0f, center, height.toFloat(), it) };
         }
     }
 

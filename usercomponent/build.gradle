@@ -5,21 +5,19 @@ plugins {
     id 'kotlin-kapt'
 }
 android {
-    compileSdk project.COMPILE_SDK_VERSION
 
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         if (userComponentIsApplication.toBoolean()) {
             applicationId "com.casic.titan.usercomponent"
         }
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
-        versionCode 1
-        versionName "1.0"
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["foo" : "bar"]
+                arguments = ["foo": "bar"]
             }
         }
     }
@@ -60,32 +58,32 @@ android {
 
 dependencies {
 
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "com.squareup.picasso:picasso:2.71828"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    implementation libs.gson
+    implementation libs.github.glide
+    implementation libs.com.squareup.picasso.picasso
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
     //ConverterFactory的String依赖包
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    implementation libs.retrofit2.converter.scalars
     //ConverterFactory的Gson依赖包
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation libs.retrofit2.converter.gson
     //CallAdapterFactory的Rx依赖包
-    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
+    implementation libs.retrofit2.adapter.rxjava3
     implementation project(":common")
     implementation project(":userapi")
     implementation project(":mqttcomponent")
     implementation project(':commonmedia')
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation libs.google.hilt.android
+    annotationProcessor libs.google.hilt.android.compiler
+    kapt libs.google.hilt.android.compiler
 
-    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
+    implementation libs.geyifeng.immersionbar
 
 }

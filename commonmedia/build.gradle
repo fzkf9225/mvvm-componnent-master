@@ -6,11 +6,10 @@ plugins {
 
 android {
     namespace 'pers.fz.media'
-    compileSdk project.COMPILE_SDK_VERSION
-
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -61,13 +60,13 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:$coreKtxVersion"
-    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    implementation "org.aspectj:aspectjrt:1.9.6"
-    implementation "com.googlecode.mp4parser:isoparser:1.0.6"
-    implementation "com.squareup.picasso:picasso:2.71828"
+    implementation libs.androidx.core.ktx
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.lifecycle.lifecycle.extensions
+    implementation libs.org.aspectj.aspectjrt
+    implementation libs.googlecode.isoparser
+    implementation libs.com.squareup.picasso.picasso
     implementation project(':common')
 }
 
@@ -85,7 +84,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.media'
                 artifactId = 'media'
-                version = '1.0.7'
+                version = '1.0.8'
             }
         }
         repositories {

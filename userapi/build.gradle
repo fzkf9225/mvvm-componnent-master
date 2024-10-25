@@ -3,11 +3,10 @@ plugins {
 }
 
 android {
-    compileSdk project.COMPILE_SDK_VERSION
-
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,10 +27,10 @@ android {
 
 dependencies {
 
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
 
 }

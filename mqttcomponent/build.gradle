@@ -4,11 +4,10 @@ plugins {
 
 android {
     namespace 'com.casic.titan.mqttcomponent'
-    compileSdk project.COMPILE_SDK_VERSION
-
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -40,12 +39,12 @@ android {
 
 dependencies {
 
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-    implementation "org.eclipse.paho:org.eclipse.paho.mqttv5.client:$mqttv5ClientVersion"
-    implementation "com.tencent:mmkv:$mmkvVersion"
-    implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    implementation libs.paho.org.eclipse.paho.mqttv5.client
+    implementation libs.mmkv
+    implementation libs.github.live.event.bus.x
 }

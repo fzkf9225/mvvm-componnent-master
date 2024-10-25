@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdk project.COMPILE_SDK_VERSION
     namespace 'pers.fz.mvvm'
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         javaCompileOptions {
@@ -59,9 +59,6 @@ android {
     dataBinding{
         enabled = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
 }
 
 dependencies {
@@ -69,70 +66,72 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
-    implementation "androidx.activity:activity:$activityVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtxVersion"
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.viewpager2:viewpager2:￥viewpager2Version"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "net.qiujuer.genius:graphics:$geniusVersion"
-    implementation "net.qiujuer.genius:res:$geniusVersion"
-    implementation "net.qiujuer.genius:ui:$geniusVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
-    implementation "com.orhanobut:logger:$loggerVersion"
-    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
+    implementation libs.activity
+    implementation libs.androidx.core.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.viewpager2
+    implementation libs.material
+    implementation libs.graphics
+    implementation libs.net.res
+    implementation libs.net.ui
+    implementation libs.constraintlayout
+    implementation libs.logger
+    implementation libs.androidx.recyclerview
+    implementation libs.gson
+    implementation libs.github.glide
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
     //ConverterFactory的String依赖包
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    implementation libs.retrofit2.converter.scalars
     //ConverterFactory的Gson依赖包
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation libs.retrofit2.converter.gson
     //CallAdapterFactory的Rx依赖包
-    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
+    implementation libs.retrofit2.adapter.rxjava3
     //SmartRefreshLayout集成
-    implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
-    implementation "io.github.scwang90:refresh-header-classics:$refresh_layout_version"
-    implementation "io.github.scwang90:refresh-footer-classics:$refresh_layout_version"
-    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
+    implementation libs.scwang90.refresh.layout.kernel
+    implementation libs.refresh.header.classics
+    implementation libs.refresh.footer.classics
+    implementation libs.geyifeng.immersionbar
 
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation libs.androidx.lifecycle.lifecycle.extensions
     //放着没有及时回收造成RxJava内存泄漏
-    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
+    implementation libs.com.trello.rxlifecycle2.rxlifecycle.components
     //是否需要ExoPlayer模式
-    implementation "com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:$gsy_version"
+    implementation libs.gsyvideoplayer
     //根据你的需求ijk模式的so
-    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:$gsy_version"
-    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a:$gsy_version"
-    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:$gsy_version"
-    implementation "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64:$gsy_version"
-    implementation "com.tencent:mmkv:$mmkvVersion"
+    implementation libs.gsyvideoplayer.arm64
+    implementation libs.gsyvideoplayer.armv7a
+    implementation libs.github.gsyvideoplayer.x86
+    implementation libs.github.gsyvideoplayer.x64
+    implementation libs.mmkv
     //MinIO只有Java版本不兼容Android，因此使用这两个包代替
-    implementation "com.amazonaws:aws-android-sdk-s3:$awsAndroidSdkVersion"
-    implementation "com.amazonaws:aws-android-sdk-mobile-client:$awsAndroidSdkVersion"
-    implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
+    implementation libs.amazonaws.aws.android.sdk.s3
+    implementation libs.amazonaws.aws.android.sdk.mobile.client
+    implementation libs.github.live.event.bus.x
 
-    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui:$navigationVersion"
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
+    implementation libs.androidx.navigation.ui.ktx
     //每个用到的模块都要加这两个，不能使用api
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    implementation "com.google.zxing:core:$zxingCoreVersion"
+    implementation libs.google.hilt.android
+    annotationProcessor libs.google.hilt.android.compiler
+    kapt libs.google.hilt.android.compiler
+
+    implementation libs.core
     //noinspection GradleDependency
-    implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
+    implementation libs.zxing.android.embedded
     //paging3
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
+    implementation libs.androidx.paging.runtime
     // 用于测试
-    testImplementation "androidx.paging:paging-common:$pagingVersion"
+    testImplementation libs.androidx.paging.common
 // [可选] RxJava 支持
-    implementation "androidx.paging:paging-rxjava3:$pagingVersion"
+    implementation libs.paging.rxjava3
     //下拉刷新
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayoutVersion"
+    implementation libs.swiperefreshlayout
 }
 //执行以下命令完成制品推送
 //推送命令
@@ -147,7 +146,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.3.9'
+                version = '1.4.0'
             }
         }
         repositories {

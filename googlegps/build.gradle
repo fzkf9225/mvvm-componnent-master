@@ -4,10 +4,10 @@ plugins {
 
 android {
     namespace 'com.casic.titan.googlegps'
-    compileSdk project.COMPILE_SDK_VERSION
-
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        minSdk project.MIN_SDK_VERSION
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -27,34 +27,32 @@ android {
 
 dependencies {
 
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:$junitVersion"
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation "io.github.jeremyliao:live-event-bus-x:$liveEventBusVersion"
-    implementation "androidx.preference:preference:$preferenceVersion"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    implementation libs.play.services.location
+    implementation libs.github.live.event.bus.x
+    implementation libs.androidx.preference
     //Debug Logging
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation('com.github.tony19:logback-android-classic:1.1.1-2'){
+    implementation(libs.slf4j.slf4j.api)
+    implementation(libs.github.logback.android.classic){
         exclude group: 'com.google.android', module: 'android'
     }
-    implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation libs.gson
     //OKHTTP client
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation libs.okhttp
 
     //OKHTTP interceptor, works with oauth signpost
-    implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
-    //CSV library
-    implementation("org.apache.commons:commons-csv:$apacheCommonCsvVersion")
+    implementation libs.se.okhttp.signpost
     //Android Priority Jobqueue
-    implementation ('com.birbit:android-priority-jobqueue:2.0.1'){
+    implementation (libs.com.birbit.android.priority.jobqueue){
         exclude group: 'com.google.android', module: 'android'
     }
-    implementation "org.apache.jackrabbit:jackrabbit-webdav:$apacheJackrabbitWebdav"
+    implementation libs.org.apache.jackrabbit.jackrabbit.webdav
     //CSV library
-    implementation('org.apache.commons:commons-csv:1.9.0')
-    implementation "io.netty:netty-all:$nettyVersion"
-    implementation "org.apache.commons:commons-lang3:$apacheCommonLang3Version"
+    implementation(libs.org.apache.commons.commons.csv3)
+    implementation libs.netty.all
+    implementation libs.org.apache.commons.commons.lang3
 }
 //执行以下命令完成制品推送
 //推送命令

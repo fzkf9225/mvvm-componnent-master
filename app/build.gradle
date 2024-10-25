@@ -7,14 +7,15 @@ plugins {
 
 android {
     namespace 'com.casic.titan.demo'
-    compileSdk project.COMPILE_SDK_VERSION
+
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
         applicationId "com.casic.titan.demo"
-        minSdk project.MIN_SDK_VERSION
-        targetSdk project.TARGET_SDK_VERSION
-        versionCode project.VERSION_CODE
-        versionName project.VERSION_NAME
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        versionCode 1
+        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -64,9 +65,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
     buildFeatures {
         buildConfig true
         aidl true
@@ -74,7 +72,6 @@ android {
 }
 
 dependencies {
-    implementation "androidx.activity:activity:$activityVersion"
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
@@ -84,14 +81,16 @@ dependencies {
         }
     }
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-    implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation libs.activity
+    implementation libs.androidx.core.ktx
     implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    implementation libs.constraintlayout
+
     implementation project(':common')
     implementation project(':userapi')
     implementation project(':commonui')
@@ -104,34 +103,44 @@ dependencies {
     implementation project(':annotation')
     annotationProcessor project(':annotation')
 
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "com.geyifeng.immersionbar:immersionbar:$immersionbarVersion"
+    implementation libs.github.glide
+    implementation libs.geyifeng.immersionbar
 
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    annotationProcessor "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation libs.logger
 
-    implementation "androidx.core:core-splashscreen:$splashscreenVersion"
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui:$navigationVersion"
-    implementation "com.tencent:mmkv:$mmkvVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "io.github.scwang90:refresh-layout-kernel:$refresh_layout_version"
+    implementation libs.google.hilt.android
+    annotationProcessor libs.google.hilt.android.compiler
+    kapt libs.google.hilt.android.compiler
 
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxandroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rxjavaVersion"
-    implementation "com.google.zxing:core:$zxingCoreVersion"
-    implementation "com.journeyapps:zxing-android-embedded:$zxingAndroidVersion"
+    implementation libs.androidx.core.splashscreen
+    implementation libs.androidx.multidex
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.mmkv
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    implementation libs.gson
+    implementation libs.scwang90.refresh.layout.kernel
+    implementation libs.refresh.header.classics
+    implementation libs.refresh.footer.classics
+
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    implementation libs.core
+    implementation libs.zxing.android.embedded
     //paging3
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
+    implementation libs.androidx.paging.runtime
     // 用于测试
-    testImplementation "androidx.paging:paging-common:$pagingVersion"// [可选] RxJava 支持
-    implementation "androidx.paging:paging-rxjava3:$pagingVersion"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayoutVersion"
+    testImplementation libs.androidx.paging.common// [可选] RxJava 支持
+    implementation libs.paging.rxjava3
+    implementation libs.swiperefreshlayout
+
+    implementation libs.androidx.recyclerview
+    implementation libs.graphics
+    implementation libs.net.res
+    implementation libs.net.ui
 
 }

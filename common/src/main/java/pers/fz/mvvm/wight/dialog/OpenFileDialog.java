@@ -25,11 +25,11 @@ public class OpenFileDialog extends Dialog {
     private OnOpenFileClickListener openFileClickListener;
     private String buttonMessage;
     /**
-     * 只显示拍照
+     * 只显示文件
      */
     public final static int FILE = 1;
     /**
-     * 只显示相册
+     * 只显示音频
      */
     public final static int AUDIO = 2;
 

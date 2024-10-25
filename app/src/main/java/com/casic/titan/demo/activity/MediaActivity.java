@@ -68,12 +68,12 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
-                        return audioList.size();
+                        return fileList.size();
                     }
 
                     @Override
                     public int onSelectedAudioCount() {
-                        return fileList.size();
+                        return audioList.size();
                     }
 
                     @Override
@@ -104,7 +104,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            LogUtil.show(MediaHelper.TAG, "回调：" + new Gson().toJson(mediaBean));
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 if (mediaBean.getMediaList() != null && mediaBean.getMediaList().size() > 0) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));

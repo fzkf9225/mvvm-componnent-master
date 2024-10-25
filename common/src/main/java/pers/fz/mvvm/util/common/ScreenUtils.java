@@ -1,12 +1,17 @@
 package pers.fz.mvvm.util.common;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowInsets;
+
+import androidx.core.view.WindowInsetsCompat;
 
 /**
  * Created by fz on 2018/1/11.
@@ -14,10 +19,31 @@ import android.view.View;
  */
 
 public class ScreenUtils {
-    private ScreenUtils()
-    {
+    private ScreenUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
+    }
+
+    /**
+     * 获取状态栏高度
+     */
+    public static int getStatusBarHeight(Activity activity) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                WindowInsets windowInsets = activity.getWindow().getDecorView().getRootWindowInsets();
+                return windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            } else {
+                int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+                if (resourceId > 0) {
+                    return activity.getResources().getDimensionPixelSize(resourceId);
+                } else {
+                    return -1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     /**
@@ -26,8 +52,7 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getScreenWidth(Context context)
-    {
+    public static int getScreenWidth(Context context) {
         DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
         return appDisplayMetrics.widthPixels;
     }
@@ -38,8 +63,7 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getScreenHeight(Context context)
-    {
+    public static int getScreenHeight(Context context) {
         DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
         return appDisplayMetrics.heightPixels;
     }
@@ -50,19 +74,16 @@ public class ScreenUtils {
      * @param context
      * @return
      */
-    public static int getStatusHeight(Context context)
-    {
+    public static int getStatusHeight(Context context) {
 
         int statusHeight = -1;
-        try
-        {
+        try {
             Class<?> clazz = Class.forName("com.android.internal.R$dimen");
             Object object = clazz.newInstance();
             int height = Integer.parseInt(clazz.getField("status_bar_height")
                     .get(object).toString());
             statusHeight = context.getResources().getDimensionPixelSize(height);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return statusHeight;
@@ -74,8 +95,7 @@ public class ScreenUtils {
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -95,8 +115,7 @@ public class ScreenUtils {
      * @param activity
      * @return
      */
-    public static Bitmap snapShotWithoutStatusBar(Activity activity)
-    {
+    public static Bitmap snapShotWithoutStatusBar(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -114,8 +133,9 @@ public class ScreenUtils {
         return bp;
 
     }
+
     public int getStatusBarHeight(Application application) {
-        int statusBarHeight = DensityUtil.dp2px(application,25);
+        int statusBarHeight = DensityUtil.dp2px(application, 25);
 
         // 获取资源标识符的名称
         String statusBarHeightResName = "status_bar_height";

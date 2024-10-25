@@ -52,6 +52,10 @@ public class CaptureActivity extends AppCompatActivity {
     private final String[] PERMISSIONS_READ_TIRAMISU = new String[]{
             Manifest.permission.READ_MEDIA_IMAGES
     };
+    private final String[] PERMISSIONS_READ_UPSIDE_DOWN_CAKE = new String[]{
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +95,18 @@ public class CaptureActivity extends AppCompatActivity {
     };
 
     private void openGallery() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (PermissionsChecker.getInstance().lacksPermissions(this,PERMISSIONS_READ_TIRAMISU)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_UPSIDE_DOWN_CAKE)) {
+                permissionLauncher.launch(PERMISSIONS_READ_UPSIDE_DOWN_CAKE);
+                return;
+            }
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_TIRAMISU)) {
                 permissionLauncher.launch(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (PermissionsChecker.getInstance().lacksPermissions(this,PERMISSIONS_READ)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ)) {
                 permissionLauncher.launch(PERMISSIONS_READ);
                 return;
             }
