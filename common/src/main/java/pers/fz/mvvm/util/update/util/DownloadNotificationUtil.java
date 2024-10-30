@@ -16,8 +16,8 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
+import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/10/13.
@@ -48,7 +48,7 @@ public class DownloadNotificationUtil extends ContextWrapper {
         mBuilder.setContentTitle("开始下载");
         mBuilder.setProgress(100, 0, false);
         mBuilder.setContentText(0 + "%");
-        mBuilder.setSmallIcon(GetVersion.getAppIcon(this));
+        mBuilder.setSmallIcon(AppManager.getAppManager().getAppIcon(this));
 //        mBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher));
         mManager.notify(id, mBuilder.build());
     }
@@ -93,7 +93,7 @@ public class DownloadNotificationUtil extends ContextWrapper {
         }
         if (mBuilder != null) {
             mBuilder.setContentTitle(fileName);
-            mBuilder.setSmallIcon(GetVersion.getAppIcon(this));
+            mBuilder.setSmallIcon(AppManager.getAppManager().getAppIcon(this));
             mBuilder.setProgress(100, progress, false);
             mBuilder.setContentText(progress + "%");
             mManager.notify(id, mBuilder.build());
@@ -124,7 +124,7 @@ public class DownloadNotificationUtil extends ContextWrapper {
                             .setTicker(content)
                             .setContentText(content)
                             .setAutoCancel(true)
-                            .setSmallIcon(GetVersion.getAppIcon(this))
+                            .setSmallIcon(AppManager.getAppManager().getAppIcon(this))
                             .setDefaults(Notification.DEFAULT_ALL)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setCategory(Notification.CATEGORY_CALL)

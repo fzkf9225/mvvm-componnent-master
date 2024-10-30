@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
+import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -232,5 +233,54 @@ public class AppManager {
             }
         }
         return false;
+    }
+
+    public String getVersion(Context context)//获取版本号
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return context.getString(R.string.version_unknown);
+        }
+    }
+
+    public long getVersionCode(Context context)//获取版本号(内部识别号)
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return pi.getLongVersionCode();
+            } else {
+                return pi.versionCode;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int getAppIcon(Context context)//桌面图标
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.applicationInfo.icon;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    //获取app名称
+    public String getAppName(Context context)
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return context.getPackageManager().getApplicationLabel(pi.applicationInfo).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -9,8 +9,8 @@ import com.casic.titan.usercomponent.viewmodel.SettingViewModel;
 import androidx.fragment.app.Fragment;
 
 import pers.fz.mvvm.activity.TechnicalSupportActivity;
+import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/5/24.
@@ -25,7 +25,7 @@ public class SettingFragment extends BaseFragment<SettingViewModel, SettingBindi
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        binding.versionName.setText("v" + GetVersion.getVersion(requireActivity()));
+        binding.versionName.setText("v" + AppManager.getAppManager().getVersion(requireActivity()));
         binding.setSetViewModel(mViewModel);
         binding.tvSupport.setOnClickListener(v->startActivity(TechnicalSupportActivity.class));
     }

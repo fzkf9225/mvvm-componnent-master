@@ -84,7 +84,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.media'
                 artifactId = 'media'
-                version = '1.0.8'
+                version = '1.0.9'
             }
         }
         repositories {

@@ -12,8 +12,8 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.common.GetVersion;
 
 /**
  * Created by fz on 2017/10/13.
@@ -49,7 +49,7 @@ public class NoticeNotificationUtil extends ContextWrapper {
                 .setContentTitle(title)
                 .setTicker(content)
                 .setContentText(content)
-                .setSmallIcon(GetVersion.getAppIcon(this))
+                .setSmallIcon(AppManager.getAppManager().getAppIcon(this))
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_MAX)

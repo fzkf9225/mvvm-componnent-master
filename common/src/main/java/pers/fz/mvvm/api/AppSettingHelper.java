@@ -3,8 +3,6 @@ package pers.fz.mvvm.api;
 
 import android.content.Context;
 
-import pers.fz.mvvm.util.common.GetVersion;
-
 /**
  * Created by fz on 2017/11/21.
  * app相关设置
@@ -31,13 +29,13 @@ public class AppSettingHelper {
 
     public static void setPermissionNotTipEnable(Context context, long nowDate) {
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
-        MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, GetVersion.getVersion(context));
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, AppManager.getAppManager().getVersion(context));
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_TIME, nowDate);
     }
 
     public static void setPermissionNotTipEnable(Context context, boolean enable, long nowDate) {
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
-        MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, GetVersion.getVersion(context));
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, AppManager.getAppManager().getVersion(context));
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_TIME, nowDate);
     }
 
@@ -46,7 +44,7 @@ public class AppSettingHelper {
         long lastDate = MMKVHelper.getInstance().getLong(NOTIFY_REQUEST_TIME, System.currentTimeMillis());
         String versionName = MMKVHelper.getInstance().getString(NOTIFY_REQUEST_VERSION_NAME);
         //判断时间是否到一周了
-        return enable && GetVersion.getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= 7 * 24 * 60 * 60 * 1000;
+        return enable && AppManager.getAppManager().getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= 7 * 24 * 60 * 60 * 1000;
     }
 
     /**
@@ -56,7 +54,7 @@ public class AppSettingHelper {
         boolean enable = MMKVHelper.getInstance().getBoolean(NOTIFY_REQUEST_TIME, false);
         long lastDate = MMKVHelper.getInstance().getLong(NOTIFY_REQUEST_TIME, System.currentTimeMillis());
         String versionName = MMKVHelper.getInstance().getString(NOTIFY_REQUEST_VERSION_NAME);
-        return enable && GetVersion.getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= hours * 60 * 60 * 1000;
+        return enable && AppManager.getAppManager().getVersion(context).equals(versionName) && System.currentTimeMillis() - lastDate <= hours * 60 * 60 * 1000;
     }
 
     /**

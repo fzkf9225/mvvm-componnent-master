@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pers.fz.mvvm.util.common.GetVersion;
 import pers.fz.mvvm.util.jiami.Base64Util;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
@@ -118,8 +117,8 @@ public class ApiAccountHelper {
             hashMap.put("phoneType",mtype);
             hashMap.put("phoneNumber",numer);
             hashMap.put("mac",getMacAddress(context));
-            hashMap.put("versionCode",GetVersion.getVersionCode(context));
-            hashMap.put("versionName",GetVersion.getVersion(context));
+            hashMap.put("versionCode",AppManager.getAppManager().getVersionCode(context));
+            hashMap.put("versionName",AppManager.getAppManager().getVersion(context));
             hashMap.put("ip",ApiAccountHelper.getIp(context));
             hashMap.put("brand",Build.BRAND);
             hashMap.put("product",Build.PRODUCT);

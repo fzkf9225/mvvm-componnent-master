@@ -69,8 +69,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         getRecyclerView().setAdapter(adapter);
         getRecyclerView().setLayoutManager(initLayoutManager());
         if (!hideRecycleViewDivider()) {
-            getRecyclerView().addItemDecoration(new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
-                    ContextCompat.getColor(requireActivity(), R.color.h_line_color)));
+            getRecyclerView().addItemDecoration(createDivider());
         }
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
@@ -85,7 +84,10 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
         }
     }
-
+    protected RecyclerView.ItemDecoration createDivider() {
+        return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
+                ContextCompat.getColor(requireActivity(), R.color.h_line_color));
+    }
     protected void requestData() {
 
     }
