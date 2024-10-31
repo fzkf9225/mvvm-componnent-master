@@ -1,7 +1,5 @@
 package com.casic.titan.demo.bean;
 
-import androidx.databinding.BaseObservable;
-
 import pers.fz.mvvm.bean.base.BasePagingBean;
 
 /**
@@ -9,31 +7,67 @@ import pers.fz.mvvm.bean.base.BasePagingBean;
  * describe :
  */
 public class ForestBean extends BasePagingBean {
-    private String certificate;
-    private String landHaveRight;
-    private String registeDate;
+    private String chineseName;
+    private String createUser;
+    private String maintainClassName;
+    private String maintenanceTypeName;
+    private String caretaker;
+    private String createDate;
+    private String conservationMeasure;
 
-    public String getCertificate() {
-        return certificate;
+    public String getChineseName() {
+        return chineseName;
     }
 
-    public void setCertificate(String certificate) {
-        this.certificate = certificate;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
     }
 
-    public String getLandHaveRight() {
-        return landHaveRight;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public void setLandHaveRight(String landHaveRight) {
-        this.landHaveRight = landHaveRight;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 
-    public String getRegisteDate() {
-        return registeDate;
+    public String getMaintainClassName() {
+        return maintainClassName;
     }
 
-    public void setRegisteDate(String registeDate) {
-        this.registeDate = registeDate;
+    public void setMaintainClassName(String maintainClassName) {
+        this.maintainClassName = maintainClassName;
+    }
+
+    public String getMaintenanceTypeName() {
+        return maintenanceTypeName;
+    }
+
+    public void setMaintenanceTypeName(String maintenanceTypeName) {
+        this.maintenanceTypeName = maintenanceTypeName;
+    }
+
+    public String getCaretaker() {
+        return caretaker;
+    }
+
+    public void setCaretaker(String caretaker) {
+        this.caretaker = caretaker;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getConservationMeasure() {
+        return conservationMeasure;
+    }
+
+    public void setConservationMeasure(String conservationMeasure) {
+        this.conservationMeasure = conservationMeasure;
     }
 }

@@ -8,6 +8,15 @@ public class TokenBean {
     private String access_token;
     private String refresh_token;
     private String user_id;
+    private String tokenId;
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
 
     public String getAccess_token() {
         return access_token;

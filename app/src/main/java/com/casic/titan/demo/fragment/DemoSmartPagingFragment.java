@@ -4,18 +4,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
-import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.ForestBean;
-import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
-
-import javax.inject.Inject;
+import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
-import pers.fz.mvvm.repository.PagingRepositoryImpl;
-import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**
@@ -23,30 +18,23 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewModel, BaseSmartPagingBinding, ForestBean> {
-    @Inject
-    ApiServiceHelper apiServiceHelper;
+public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, ForestBean> {
+
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
         return new PagingDemoAdapter();
     }
 
     @Override
-    public PagingRepositoryImpl<ForestBean,?> createRepository() {
-        return new DemoPagingRepositoryImpl(apiServiceHelper,mViewModel.retryService,this);
-    }
-
-    @Override
     protected void initData(Bundle bundle) {
         super.initData(bundle);
-        requestData();
+        mViewModel.getItems().observe(this, responseBean -> adapter.submitData(getLifecycle(), responseBean));
     }
 
     @Override
     public void onItemClick(View view, ForestBean item, int position) {
         super.onItemClick(view, item, position);
-        showToast("点击的是第" + position + "行，内容是：" + item.getCertificate());
-
+        showToast("点击的是第" + position + "行，内容是：" + item.getCaretaker());
     }
 
     @Override
@@ -56,14 +44,9 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<PagingViewM
         new ConfirmDialog(requireContext())
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position))
+                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position+1))
                 .builder()
                 .show();
     }
 
-    @Override
-    protected void requestData() {
-        super.requestData();
-        mViewModel.requestPagingData(ForestBean.class).observe(this, observer);
-    }
 }

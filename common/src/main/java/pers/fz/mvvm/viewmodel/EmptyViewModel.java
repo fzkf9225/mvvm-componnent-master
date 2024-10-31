@@ -4,8 +4,11 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
+import javax.inject.Inject;
+
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.repository.RepositoryImpl;
 
 /**
@@ -13,12 +16,13 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 public class EmptyViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+
     public EmptyViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
     protected RepositoryImpl createRepository() {
-        return new RepositoryImpl(retryService,baseView);
+        return null;
     }
 }

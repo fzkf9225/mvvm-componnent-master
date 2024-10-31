@@ -8,11 +8,9 @@ import androidx.paging.rxjava3.RxPagingSource;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.functions.Function;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
 import pers.fz.mvvm.util.log.LogUtil;
@@ -39,15 +37,12 @@ public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer,
             if (nextPageNumber == null) {
                 nextPageNumber = startPage;
             }
-            Integer prevKey = nextPageNumber > startPage ? nextPageNumber - 1 : null;
+            Integer finalNextPageNumber = nextPageNumber;
             return Single.fromObservable(
                             pagingRepository.requestPaging(nextPageNumber, loadParams.getLoadSize())
-                                    .map((Function<List<T>, LoadResult<Integer, T>>) ts -> {
-                                        Integer nextKey = (ts == null || ts.isEmpty()) ? null : ((loadParams.getKey() == null ? 0 : loadParams.getKey()) + 1);
-                                        return new LoadResult.Page<>(ts == null ? new ArrayList<>() : ts, prevKey, nextKey);
-                                    }))
+                                    .map(mBeans -> toLoadResult(mBeans, finalNextPageNumber))
                     .doOnError(pagingRepository.catchException())
-                    .onErrorReturn(LoadResult.Error::new);
+                    .onErrorReturn(LoadResult.Error::new));
         } catch (Exception e) {
             LogUtil.show(TAG, "异常：" + e);
             e.printStackTrace();
@@ -55,7 +50,20 @@ public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer,
             return Single.just(new LoadResult.Error<>(e));
         }
     }
-
+    /**
+     * 功能描述 将获取的集合对象转化为需加载的结果对象
+     *
+     * @param mBeans 待加载的实体
+     * @param page  对应的页数
+     * @return: androidx.paging.PagingSource.LoadResult<java.lang.Integer, com.xxx.xxx.Bean>
+     * @since 1.0
+     */
+    private LoadResult<Integer, T> toLoadResult(@NonNull List<T> mBeans, Integer page) {
+        Integer prevKey = page == 1 ? null : page - 1;
+        Integer nextKey = mBeans.isEmpty() ? null : page + 1;
+        return new LoadResult.Page<>(mBeans, prevKey, nextKey, LoadResult.Page.COUNT_UNDEFINED,
+                LoadResult.Page.COUNT_UNDEFINED);
+    }
     @Nullable
     @Override
     public Integer getRefreshKey(@NotNull PagingState<Integer, T> state) {

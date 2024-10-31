@@ -1,5 +1,6 @@
 [versions]
 compileSdkVersion = "34"
+kotlinxCoroutinesCoreVersion = "1.8.0"
 minSdkVersion = "26"
 targetSdkVersion = "34"
 agp = "8.3.2"
@@ -76,6 +77,7 @@ amazonaws-aws-android-sdk-mobile-client = { module = "com.amazonaws:aws-android-
 amazonaws-aws-android-sdk-s3 = { module = "com.amazonaws:aws-android-sdk-s3", version.ref = "awsAndroidSdkVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleVersion" }
+androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationVersion" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationVersion" }
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "navigationVersion" }
@@ -83,6 +85,7 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreenVersion" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingVersion" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingVersion" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingVersion" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "preferenceVersion" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerVersion" }
 #arcgis-android = { module = "com.esri.arcgisruntime:arcgis-android", version.ref = "arcgisAndroidVersion" }
@@ -122,6 +125,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 logger = { module = "com.orhanobut:logger", version.ref = "loggerVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

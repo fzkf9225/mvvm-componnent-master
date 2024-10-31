@@ -12,17 +12,18 @@ import androidx.paging.LoadState;
 import androidx.paging.PagingData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.constant.RefreshState;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
-import pers.fz.mvvm.inter.PagingView;
 import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
@@ -33,8 +34,8 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * 列表式fragment的BaseRecyclerViewFragment封装
  */
 public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
-        implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener, PagingView {
-    private RecyclerView mRecyclerView;
+        implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener {
+    protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
     protected SmartRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
@@ -69,35 +70,42 @@ public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB ex
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
     }
 
-    Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
-        // 处理下拉刷新逻辑
-        if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
-            refreshLayout.finishRefresh(true);
+   protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
+        LoadState refresh = loadStates.getRefresh();
+        LoadState append = loadStates.getAppend();
+        if (refresh instanceof LoadState.Loading) {
+
+        } else if (refresh instanceof LoadState.NotLoading) {
+            refreshLayout.finishRefresh();
             if (adapter.getRealItemCount() == 0) {
                 setRecyclerViewVisibility(EmptyLayout.NO_DATA);
             } else {
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
             }
-        } else if (loadStates.getRefresh() instanceof LoadState.Loading) {
-
-        } else if (loadStates.getRefresh() instanceof LoadState.Error) {
-            LoadState.Error state = (LoadState.Error) loadStates.getRefresh();
+        } else if (refresh instanceof LoadState.Error) {
             refreshLayout.finishRefresh(false);
-            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+//            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
         }
+
+//        if (append instanceof LoadState.Loading) {
+//            // 加载更多时可以显示一个加载中的 UI
+//        } else if (append instanceof LoadState.NotLoading) {
+//            if (adapter.getRealItemCount() == 0) {
+//                setRecyclerViewVisibility(EmptyLayout.NO_DATA);
+//            } else {
+//                setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
+//            }
+//        } else if (append instanceof LoadState.Error) {
+//            refreshLayout.finishLoadMore(false);
+//        }
         return null;
     };
 
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
 
-    protected void requestData() {
-
-    }
-
     protected RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
-
 
     protected RecyclerView.LayoutManager createLayoutManager() {
         return new LinearLayoutManager(getActivity());
@@ -134,8 +142,9 @@ public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB ex
     @Override
     public void onErrorCode(BaseModelEntity model) {
         try {
-            if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
+            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
+                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading;
+            if (refreshError) {
                 setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
             }
             onRefreshFinish(false);

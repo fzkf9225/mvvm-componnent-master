@@ -80,7 +80,7 @@ public class RetryServiceImpl implements RetryService {
                 .flatMap((Function<TokenBean, Observable<UserInfo>>) tokenBean -> {
                     UserAccountHelper.setToken(tokenBean.getAccess_token());
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
-                    return userApiService.getUserInfo(tokenBean.getUser_id());
+                    return userApiService.getUserInfo();
                 })
                 .doOnNext(userInfo -> UserAccountHelper.saveLoginState(userInfo, true));
     }

@@ -26,11 +26,10 @@ public interface UserApiService {
      *
      * @return
      */
-    @POST("blade-auth/oauth/token")
+    @POST("http://192.168.0.23:19901/blade-auth/oauth/token")
     @FormUrlEncoded
-    Observable<TokenBean> getToken(@Field("username") String username, @Field("password") String password,
-                                   @Field("grant_type") String grantType, @Field("scope") String scope,
-                                   @Field("tenantId") String tenantId,@Field("type") String type);
+    Observable<TokenBean> getToken(@Field("userName") String username, @Field("password") String password,
+                                   @Field("code") String code, @Field("num") String num);
 
     /**
      * 获取token
@@ -43,7 +42,7 @@ public interface UserApiService {
                                        @Field("grant_type") String grant_type, @Field("scope") String scope,
                                        @Field("type") String type);
 
-    @GET("blade-system/user/info/{userId}")
-    Observable<UserInfo> getUserInfo(@Path("userId") String userId);
+    @GET("http://192.168.0.23:19901/pms/user/getLoginUserInfo")
+    Observable<UserInfo> getUserInfo();
 
 }

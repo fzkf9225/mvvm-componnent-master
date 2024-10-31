@@ -18,7 +18,6 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
-import pers.fz.mvvm.inter.PagingView;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
@@ -29,8 +28,8 @@ import pers.fz.mvvm.listener.PagingAdapterListener;
  * 列表式fragment的BaseRecyclerViewFragment封装
  */
 public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
-        implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, SwipeRefreshLayout.OnRefreshListener, PagingView {
-    private RecyclerView mRecyclerView;
+        implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, SwipeRefreshLayout.OnRefreshListener{
+    protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
     protected SwipeRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
@@ -66,7 +65,7 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
     }
 
-    Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
+    protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
         // 处理下拉刷新逻辑
         if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
             refreshLayout.setRefreshing(false);
@@ -76,21 +75,16 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
             }
         } else if (loadStates.getRefresh() instanceof LoadState.Loading) {
-            refreshLayout.setRefreshing(true);
+//            refreshLayout.setRefreshing(true);
         } else if (loadStates.getRefresh() instanceof LoadState.Error) {
             LoadState.Error state = (LoadState.Error) loadStates.getRefresh();
             refreshLayout.setRefreshing(false);
-            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+//            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
         }
         return null;
     };
 
-
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
-
-    protected void requestData() {
-
-    }
 
     protected RecyclerView getRecyclerView() {
         return mRecyclerView;

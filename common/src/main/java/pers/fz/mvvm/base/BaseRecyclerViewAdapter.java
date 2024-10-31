@@ -152,7 +152,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
     @Override
     public int getItemCount() {
         int count = (mList == null ? 0 : mList.size());
-        if (getHeaderViewId() != null) {
+        if (getHeaderViewId() != null || headerView != null) {
             return count + 1;
         }
         return count;

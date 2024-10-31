@@ -22,6 +22,7 @@ import com.casic.titan.usercomponent.bean.UserInfo;
 import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.jiami.MD5Util;
@@ -45,6 +46,8 @@ public class UserViewModel extends BaseViewModel<UserRepositoryImpl, UserView> {
     @Inject
     UserApiService userApiService;
 
+    @Inject
+    public RetryService retryService;
 
     @Inject
     public UserViewModel(@NonNull Application application) {

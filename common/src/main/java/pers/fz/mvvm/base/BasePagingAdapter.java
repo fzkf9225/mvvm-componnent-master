@@ -13,15 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
-import pers.fz.mvvm.bean.base.BasePagingBean;
 import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
- * Created by fz on 2023/12/1
+ * updated by fz on 2024/10/31
+ * describe：paging分页，添加头布局的时候有bug，暂时搞不定
  */
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
@@ -111,14 +109,13 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
             }
             return false;
         });
-        onBindHolder(baseViewHolder, realPosition);
+        onBindHolder(baseViewHolder, getItem(realPosition), realPosition);
     }
 
     /**
      * 设置数据
      *
      * @param holder
-     * @param pos
      */
     public void onBindHeaderHolder(final BaseViewHolder holder) {
 
@@ -130,18 +127,18 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      * @param holder
      * @param pos
      */
-    public abstract void onBindHolder(final BaseViewHolder<VDB> holder, final int pos);
+    public abstract void onBindHolder(final BaseViewHolder<VDB> holder, T item, final int pos);
 
     @Override
     public int getItemCount() {
-        if (getHeaderViewId() != null) {
+        if (hasHeaderView()) {
             return super.getItemCount() + 1;
         }
         return super.getItemCount();
     }
 
     public int getRealItemCount() {
-        if (getHeaderViewId() != null) {
+        if (hasHeaderView()) {
             return getItemCount() - 1;
         }
         return getItemCount();
@@ -149,13 +146,7 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
 
     @Override
     public int getItemViewType(int position) {
-        if (getHeaderViewId() == null && headerView == null) {
-            return TYPE_NORMAL;
-        }
-        if (getHeaderViewId() != null && position == 0) {
-            return TYPE_HEAD;
-        }
-        if (headerView != null && position == 0) {
+        if (hasHeaderView() && position == 0) {
             return TYPE_HEAD;
         }
         return TYPE_NORMAL;
@@ -208,10 +199,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      * @return 布局资源Id
      */
     protected abstract int getLayoutId();
-
-    public int getItemViewHeight() {
-        return 0;
-    }
 
     public T getAdapterItem(int pos) {
         return getItem(pos);

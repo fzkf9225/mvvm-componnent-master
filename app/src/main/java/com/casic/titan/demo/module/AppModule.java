@@ -21,10 +21,8 @@ import pers.fz.mvvm.inter.ErrorService;
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
 public class AppModule {
 
-    @Inject
-    ErrorService errorService;
     @Provides
-    public ApiServiceHelper provideApiServiceHelper()
+    public ApiServiceHelper provideApiServiceHelper(ErrorService errorService)
     {
         return new ApiRetrofit.Builder(Config.getInstance().getApplication())
                 .addDefaultHeader()

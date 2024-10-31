@@ -10,14 +10,16 @@ import androidx.paging.LoadState;
 import androidx.paging.LoadStateAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.PagingFooterBinding;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/30 10:47
  * describe :
  */
-public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder> {
+public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingFooterBinding>> {
     private final Runnable retry;
 
     public PagingFooterAdapter(Runnable retry) {
@@ -25,40 +27,42 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, LoadState loadState) {
-        PagingFooterBinding binding = (PagingFooterBinding) holder.getBinding();
-        binding.setMessage("正在加载...");
-        binding.progressBar.show();
+    public void onBindViewHolder(BaseViewHolder<PagingFooterBinding> holder, LoadState loadState) {
+        holder.getBinding().setMessage("正在加载...");
+        holder.getBinding().progressBar.show();
         if (loadState instanceof LoadState.Error) {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.progressBar.hide();
-            binding.retryButton.setVisibility(View.VISIBLE);
-            binding.setMessage("加载失败，点击重试");
-            binding.retryButton.setOnClickListener(v -> {
-                binding.progressBar.setVisibility(View.VISIBLE);
-                binding.retryButton.setVisibility(View.VISIBLE);
-                binding.progressBar.show();
-                binding.setMessage("正在加载...");
+            holder.getBinding().progressBar.setVisibility(View.GONE);
+            holder.getBinding().progressBar.hide();
+            holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+            holder.getBinding().setMessage("加载失败，点击重试");
+            holder.getBinding().retryButton.setOnClickListener(v -> {
+                holder.getBinding().progressBar.setVisibility(View.VISIBLE);
+                holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+                holder.getBinding().progressBar.show();
+                holder.getBinding().setMessage("正在加载...");
                 retry.run();
             });
         } else if (loadState instanceof LoadState.Loading) {
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.retryButton.setVisibility(View.VISIBLE);
-            binding.progressBar.show();
-            binding.setMessage("正在加载...");
+            holder.getBinding().progressBar.setVisibility(View.VISIBLE);
+            holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+            holder.getBinding().progressBar.show();
+            holder.getBinding().setMessage("正在加载...");
         } else if (loadState instanceof LoadState.NotLoading) {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.retryButton.setVisibility(View.GONE);
-            binding.progressBar.hide();
+            if (loadState.getEndOfPaginationReached()) {
+                holder.getBinding().progressBar.setVisibility(View.GONE);
+                holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+                holder.getBinding().setMessage("暂无更多数据");
+            } else {
+                holder.getBinding().progressBar.setVisibility(View.GONE);
+                holder.getBinding().retryButton.setVisibility(View.GONE);
+                holder.getBinding().progressBar.hide();
+            }
         }
     }
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, LoadState loadState) {
-        PagingFooterBinding binding = PagingFooterBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false
-        );
-        return new BaseViewHolder(binding);
+    public BaseViewHolder<PagingFooterBinding> onCreateViewHolder(ViewGroup parent, LoadState loadState) {
+        return new BaseViewHolder<>(PagingFooterBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 }

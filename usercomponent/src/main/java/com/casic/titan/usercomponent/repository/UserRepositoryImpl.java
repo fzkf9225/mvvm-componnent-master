@@ -31,12 +31,11 @@ public class UserRepositoryImpl extends RepositoryImpl {
 
     public void login(RequestLoginBean requestLoginBean, MutableLiveData<UserInfo> liveData) {
         sendRequest(userApiService.getToken(requestLoginBean.getUsername(),
-                        requestLoginBean.getPassword(), GrantType.LOGIN.getValue(),
-                        "all", "000000","account")
+                        requestLoginBean.getPassword(),requestLoginBean.getCode(),
+                        "125")
                 .flatMap((Function<TokenBean, Observable<UserInfo>>) tokenBean -> {
-                    UserAccountHelper.setToken(tokenBean.getAccess_token());
-                    UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
-                    return userApiService.getUserInfo(tokenBean.getUser_id());
+                    UserAccountHelper.setToken(tokenBean.getTokenId());
+                    return userApiService.getUserInfo();
                 }),
                 new RequestConfigEntity
                         .Builder()

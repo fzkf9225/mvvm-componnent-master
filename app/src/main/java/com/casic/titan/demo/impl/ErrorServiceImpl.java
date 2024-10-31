@@ -112,12 +112,7 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public Map<String, String> initHeaderMap() {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", ConstantsHelper.AUTHORIZATION);
-        headerMap.put("Tenant-Id", ConstantsHelper.TENANT_ID);
-        headerMap.put("Is-App", "APP");
-        if (!TextUtils.isEmpty(UserAccountHelper.getToken())) {
-            headerMap.put("Blade-Auth", UserAccountHelper.getToken());
-        }
+        headerMap.put("authorization", "697fb62b-272a-4580-abc1-7fac75a66c68");
         return headerMap;
     }
 

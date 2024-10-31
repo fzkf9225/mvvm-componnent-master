@@ -23,8 +23,7 @@ public abstract class BaseViewModel<IR extends IRepository, V extends BaseView> 
     protected final String TAG = this.getClass().getSimpleName();
 
     protected V baseView;
-    @Inject
-    public RetryService retryService;
+
     protected IR iRepository;
 
     public BaseViewModel(@NonNull Application application) {

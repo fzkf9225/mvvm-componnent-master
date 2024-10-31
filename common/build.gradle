@@ -130,6 +130,10 @@ dependencies {
     testImplementation libs.androidx.paging.common
 // [可选] RxJava 支持
     implementation libs.paging.rxjava3
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.androidx.paging.runtime.ktx
+    implementation libs.kotlinx.coroutines.core
+
     //下拉刷新
     implementation libs.swiperefreshlayout
 }
@@ -146,7 +150,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '1.4.1'
+                version = '2.0.0'
             }
         }
         repositories {

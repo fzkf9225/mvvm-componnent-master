@@ -8,9 +8,10 @@ import androidx.navigation.Navigation;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.activity.PagingDetailActivity;
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
+import com.casic.titan.demo.adapter.PagingHeaderDemoAdapter;
 import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.ForestBean;
-import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
+import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import javax.inject.Inject;
 
@@ -18,8 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
-import pers.fz.mvvm.repository.PagingRepositoryImpl;
-import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
@@ -28,18 +27,12 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, PagingRecyclerViewBinding, ForestBean> implements OnHeaderViewClickListener {
+public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, PagingRecyclerViewBinding, ForestBean> implements OnHeaderViewClickListener {
     @Inject
     ApiServiceHelper apiServiceHelper;
-
     @Override
     protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
-        return new PagingDemoAdapter();
-    }
-
-    @Override
-    public PagingRepositoryImpl createRepository() {
-        return new DemoPagingRepositoryImpl(apiServiceHelper,mViewModel.retryService, this);
+        return new PagingHeaderDemoAdapter();
     }
 
     @Override
@@ -51,15 +44,15 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     @Override
     protected void initData(Bundle bundle) {
         super.initData(bundle);
-        requestData();
+        mViewModel.getItems().observe(this, responseBean -> adapter.submitData(getLifecycle(), responseBean));
     }
 
     @Override
     public void onItemClick(View view, ForestBean item, int position) {
         super.onItemClick(view, item, position);
-        showToast("点击的是第" + position + "行，内容是：" + item.getCertificate());
+        showToast("点击的是第" + position + "行，内容是：" + item.getCaretaker());
         Bundle bundle = new Bundle();
-        bundle.putString(PagingDetailActivity.ARGS, item.getCertificate());
+        bundle.putString(PagingDetailActivity.ARGS, item.getChineseName());
         bundle.putInt(PagingDetailActivity.LINE, position);
         Navigation.findNavController(view).navigate(
                 R.id.navigate_to_paging_detail,
@@ -69,19 +62,12 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     @Override
     public void onItemLongClick(View view, ForestBean item, int position) {
         super.onItemLongClick(view, item, position);
-        //不能这么删除，这样删除会有bug
         new ConfirmDialog(requireContext())
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position + 1))
                 .builder()
                 .show();
-    }
-
-    @Override
-    protected void requestData() {
-        super.requestData();
-        mViewModel.requestPagingData(ForestBean.class).observe(this, observer);
     }
 
     @Override
@@ -93,4 +79,5 @@ public class DemoPagingFragment extends BasePagingFragment<PagingViewModel, Pagi
     public void onHeaderViewLongClick(View view) {
         showToast("头布局长按事件！");
     }
+
 }

@@ -1,13 +1,11 @@
 package com.casic.titan.demo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
-import com.casic.titan.demo.databinding.ActivityDemoPagingBinding;
 import com.casic.titan.demo.databinding.ActivityDemoSmartPagingBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
