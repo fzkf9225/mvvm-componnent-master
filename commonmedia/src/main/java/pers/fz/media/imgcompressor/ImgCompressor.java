@@ -28,7 +28,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.media.MediaUtil;
+
 
 /**
  * Created by guizhigang on 16/5/25.
@@ -198,7 +199,7 @@ public class ImgCompressor {
         actualOutBitmap.recycle();
         //将bitmap保存到指定路径
         FileOutputStream fos = null;
-        String fileName = FileUtils.getNoRepeatFileName(outputPath, "IMG_", ".jpg");
+        String fileName = MediaUtil.getNoRepeatFileName(outputPath, "IMG_", ".jpg");
         File outputFile = new File(outputPath, fileName + ".jpg");
         try {
             fos = new FileOutputStream(outputFile);

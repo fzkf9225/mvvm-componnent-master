@@ -9,9 +9,8 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 
-import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.util.common.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.media.listener.MediaListener;
+import pers.fz.media.listener.OnLoadingListener;
 
 /**
  * Created by fz on 2021/2/7 9:10
@@ -46,7 +45,7 @@ public class MediaBuilder {
      * 图片压缩大小限制，默认200
      */
     public int imageQualityCompress = 200;
-    private BaseView baseView;
+    private OnLoadingListener onLoadingListener;
     private final ComponentActivity mActivity;
 
     private Context mContext;
@@ -57,26 +56,21 @@ public class MediaBuilder {
 
     private MediaListener mediaListener;
     private int chooseType = MediaHelper.DEFAULT_TYPE;
-    private boolean isShowLoading = true;
-    public MediaBuilder(@NotNull ComponentActivity mActivity, BaseView baseView) {
+    public MediaBuilder(@NotNull ComponentActivity mActivity) {
         this.mActivity = mActivity;
         setContext(this.mActivity);
-        this.baseView = baseView;
-        String basePath = FileUtils.getDefaultBasePath(mActivity);
+        String basePath = MediaUtil.getDefaultBasePath(mActivity);
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
                 File.separator + basePath;
         videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
                 File.separator + basePath;
-        LogUtil.show(MediaHelper.TAG, "imageOutPutPath：" + imageOutPutPath);
-        LogUtil.show(MediaHelper.TAG, "videoOutPutPath：" + videoOutPutPath);
     }
 
-    public MediaBuilder(@NotNull Fragment fragment, BaseView baseView) {
+    public MediaBuilder(@NotNull Fragment fragment) {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
         setContext(this.fragment.getContext());
-        this.baseView = baseView;
-        String basePath = FileUtils.getDefaultBasePath(fragment.requireContext());
+        String basePath = MediaUtil.getDefaultBasePath(fragment.requireContext());
         imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
                 File.separator + basePath;
         videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
@@ -117,15 +111,6 @@ public class MediaBuilder {
         return this;
     }
 
-    public boolean isShowLoading() {
-        return isShowLoading;
-    }
-
-    public MediaBuilder setShowLoading(boolean showLoading) {
-        isShowLoading = showLoading;
-        return this;
-    }
-
     /**
      * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录，媒体文件目录，Android 10+在Picture下，10之前可以自定义
      *
@@ -155,11 +140,10 @@ public class MediaBuilder {
         return this;
     }
 
-    public MediaBuilder setBaseView(BaseView baseView) {
-        this.baseView = baseView;
+    public MediaBuilder setOnLoadingListener(OnLoadingListener onLoadingListener) {
+        this.onLoadingListener = onLoadingListener;
         return this;
     }
-
 
     public MediaBuilder setChooseType(int chooseType) {
         this.chooseType = chooseType;
@@ -246,8 +230,8 @@ public class MediaBuilder {
         return videoMaxSelectedCount;
     }
 
-    public BaseView getBaseView() {
-        return baseView;
+    public OnLoadingListener getOnLoadingListener() {
+        return onLoadingListener;
     }
 
     public ComponentActivity getActivity() {

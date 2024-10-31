@@ -3,9 +3,11 @@ package pers.fz.mvvm.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -192,7 +194,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showToast(String msg) {
-        requireActivity().runOnUiThread(() -> ToastUtils.showShort(requireActivity(), msg));
+        if(TextUtils.isEmpty(msg)){
+            return;
+        }
+        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show());
     }
 
     @Override

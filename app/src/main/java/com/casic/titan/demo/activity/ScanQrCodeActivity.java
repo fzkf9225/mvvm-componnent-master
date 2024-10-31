@@ -38,7 +38,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.update.DownloadManger;
 import pers.fz.mvvm.util.update.callback.DownloadCallback;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenImageDialog;
 
 
 @AndroidEntryPoint
@@ -59,7 +59,7 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        mediaHelper = new MediaBuilder(this, this)
+        mediaHelper = new MediaBuilder(this)
                 .setImageMaxSelectedCount(1)
                 .setChooseType(MediaHelper.DEFAULT_TYPE)
                 .builder();

@@ -1,7 +1,7 @@
 package pers.fz.media;
 
 /**
- * Created by fz on 2019/9/2.
+ * Created by fz on 2023/9/2.
  * describe：媒体类型
  */
 public enum MediaTypeEnum {

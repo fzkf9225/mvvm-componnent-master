@@ -22,15 +22,15 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaListener;
+import pers.fz.media.listener.MediaListener;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.dialog.OpenFileDialog;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
-import pers.fz.mvvm.wight.dialog.OpenShootDialog;
+import pers.fz.media.dialog.OpenFileDialog;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
@@ -60,11 +60,27 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     public void initView(Bundle savedInstanceState) {
         //初始化一些媒体配置
         //新api实现最大可选数量比较鸡肋因此我直接判断选择完的回调方法，当然应该也可以通过重新PickMultipleVisualMedia去实现，没试过看源码应该是可以实现的
-        mediaHelper = new MediaBuilder(this, this)
+        mediaHelper = new MediaBuilder(this)
                 .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setWaterMark("仅测试使用")
+                .setOnLoadingListener(new OnLoadingListener() {
+                    @Override
+                    public void showLoading(String dialogMessage) {
+                        MediaActivity.this.showLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void refreshLoading(String dialogMessage) {
+                        MediaActivity.this.refreshLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void hideLoading() {
+                        MediaActivity.this.hideLoading();
+                    }
+                })
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {

@@ -1,20 +1,17 @@
-package pers.fz.mvvm.wight.dialog;
+package pers.fz.media.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.ChooseFileDialogBinding;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.media.R;
+import pers.fz.media.databinding.ChooseFileDialogBinding;
 
 
 /**

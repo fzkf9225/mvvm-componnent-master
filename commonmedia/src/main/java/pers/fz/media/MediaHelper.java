@@ -1,10 +1,10 @@
 package pers.fz.media;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,13 +15,16 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -30,15 +33,12 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.media.dialog.OpenFileDialog;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.dialog.TipDialog;
 import pers.fz.media.imgcompressor.ImgCompressor;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.media.videocompressor.VideoCompress;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.wight.dialog.ConfirmDialog;
-import pers.fz.mvvm.wight.dialog.OpenFileDialog;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
-import pers.fz.mvvm.wight.dialog.OpenShootDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -144,33 +144,33 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             //新选择器，兼容性不是很好
             if (mediaBuilder.getImageMaxSelectedCount() > 1) {
                 pickMuLtiImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()),
-                        new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                        new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
             } else {
                 pickImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                        new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
             }
             if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
                 pickMuLtiVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()),
-                        new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                        new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
             } else {
                 pickVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                        new SingleSelectorCallBack(MediaTypeEnum.VIDEO, mutableLiveData));
             }
             //传统选择器
             imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
             imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
             //传统选择器
             audioMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.AUDIO, mutableLiveData));
             audioSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.AUDIO, mutableLiveData));
             //传统选择器
             fileMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.FILE, mutableLiveData));
             fileSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.FILE, mutableLiveData));
 
             //权限监听
             permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
@@ -179,46 +179,46 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
             shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
         } else {
             //新选择器，兼容性不是很好
             if (mediaBuilder.getImageMaxSelectedCount() > 1) {
                 pickMuLtiImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()),
-                        new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                        new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
             } else {
                 pickImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                        new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
             }
             if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
                 pickMuLtiVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()),
-                        new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                        new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
             } else {
                 pickVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                        new SingleSelectorCallBack(MediaTypeEnum.VIDEO, mutableLiveData));
             }
             //注册图片选择框监听
             imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
             imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
             //传统选择器
             audioMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.AUDIO, mutableLiveData));
             audioSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.AUDIO, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.AUDIO, mutableLiveData));
             //传统选择器
             fileMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.FILE, mutableLiveData));
             fileSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(mediaBuilder, MediaTypeEnum.FILE, mutableLiveData));
+                    new SingleSelectorCallBack(MediaTypeEnum.FILE, mutableLiveData));
             //权限监听
             permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
             cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder.getImageOutPutPath()),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
             videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+                    new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
             videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
                     new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
             shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder.getVideoOutPutPath(), mediaBuilder.getMaxVideoTime()),
@@ -304,12 +304,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         for (Map.Entry<String, Boolean> entry : result.entrySet()) {
             LogUtil.show(TAG, entry.getKey() + ":" + entry.getValue());
             if (Boolean.FALSE.equals(entry.getValue())) {
-                new ConfirmDialog(getMediaBuilder().getContext())
+                new TipDialog(getMediaBuilder().getContext())
                         .setMessage("您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改")
                         .setCancelText("取消")
                         .setSureText("前往设置")
-                        .setNegativeTextColor(ContextCompat.getColor(getMediaBuilder().getContext(), pers.fz.mvvm.R.color.nv_bg_color))
-                        .setPositiveTextColor(ContextCompat.getColor(getMediaBuilder().getContext(), pers.fz.mvvm.R.color.themeColor))
                         .setOnSureClickListener(dialog -> {
                             dialog.dismiss();
                             Intent intent = new Intent();
@@ -357,7 +355,25 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 .builder()
                 .show();
     }
+    /**
+     * 判断权限集合
+     */
+    public boolean lacksPermissions(Context mContext, String... permissions) {
+        for (String permission : permissions) {
+            if (lacksPermission(mContext, permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    /**
+     * 判断是否缺少权限
+     */
+    private boolean lacksPermission(Context mContext, String permission) {
+        return ContextCompat.checkSelfPermission(mContext, permission) ==
+                PackageManager.PERMISSION_DENIED;
+    }
     /**
      * 权限检测
      *
@@ -396,12 +412,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_AUDIT_READ_TIRAMISU)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_AUDIT_READ_TIRAMISU)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_AUDIT_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_READ);
                 return;
             }
@@ -421,7 +437,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             return;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_READ);
                 return;
             }
@@ -442,8 +458,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             super(looper);
             this.srcUriList = srcUriList;
             imagesCompressList = new ArrayList<>();
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().showLoading("正在处理图片...");
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().showLoading("正在处理图片...");
             }
         }
 
@@ -459,9 +475,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 }
                 if (srcUriList == null || srcUriList.isEmpty() ||
                         msg.what >= srcUriList.size()) {
-                    mediaBuilder.getBaseView().showToast("图片压缩成功！");
-                    if (mediaBuilder.isShowLoading()) {
-                        mediaBuilder.getBaseView().hideLoading();
+                    showToast("图片压缩成功！");
+                    if (mediaBuilder.getOnLoadingListener() != null) {
+                        mediaBuilder.getOnLoadingListener().hideLoading();
                     }
                     mutableLiveDataCompress.postValue(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE.getMediaType()));
                 } else {
@@ -486,11 +502,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     }
                 }
             } catch (Exception e) {
-                LogUtil.e(e);
+                LogUtil.show(TAG, "图片压缩出现错误:" + e);
                 e.printStackTrace();
-                mediaBuilder.getBaseView().showToast("图片压缩出现错误");
-                if (mediaBuilder.isShowLoading()) {
-                    mediaBuilder.getBaseView().hideLoading();
+                showToast("图片压缩出现错误");
+                if (mediaBuilder.getOnLoadingListener() != null) {
+                    mediaBuilder.getOnLoadingListener().hideLoading();
                 }
             }
         }
@@ -514,8 +530,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = 100;
         handlerWaterMark.sendMessage(message);
-        if (mediaBuilder.isShowLoading()) {
-            mediaBuilder.getBaseView().showLoading("正在为图片添加水印...");
+        if (mediaBuilder.getOnLoadingListener() != null) {
+            mediaBuilder.getOnLoadingListener().showLoading("正在为图片添加水印...");
         }
     }
 
@@ -530,8 +546,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = alpha;
         handlerWaterMark.sendMessage(message);
-        if (mediaBuilder.isShowLoading()) {
-            mediaBuilder.getBaseView().showLoading("正在为图片添加水印...");
+        if (mediaBuilder.getOnLoadingListener() != null) {
+            mediaBuilder.getOnLoadingListener().showLoading("正在为图片添加水印...");
         }
     }
 
@@ -539,8 +555,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             if (msg.obj == null) {
-                if (mediaBuilder.isShowLoading()) {
-                    mediaBuilder.getBaseView().hideLoading();
+                if (mediaBuilder.getOnLoadingListener() != null) {
+                    mediaBuilder.getOnLoadingListener().hideLoading();
                 }
                 mutableLiveDataWaterMark.postValue(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE.getMediaType()));
                 return true;
@@ -548,11 +564,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             Bitmap bitmapOld = (Bitmap) msg.obj;
             int alpha = msg.arg1;
             Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark(), alpha);
-            String outputPath = FileUtils.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
+            String outputPath = MediaUtil.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
             File outputFile = new File(mediaBuilder.getImageOutPutPath(), outputPath + ".jpg");
             MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().hideLoading();
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().hideLoading();
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 // 从文件中创建uri
@@ -584,18 +600,18 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
         @Override
         public void onCompressStart() {
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().refreshLoading("正在压缩第" + (index) + "张图片");
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().refreshLoading("正在压缩第" + (index) + "张图片");
             }
         }
 
         @Override
         public void onCompressEnd(ImgCompressor.CompressResult imageOutPath) {
             if (imageOutPath.getStatus() == ImgCompressor.CompressResult.RESULT_ERROR || imageOutPath.getOutPath() == null) {
-                if (mediaBuilder.isShowLoading()) {
-                    mediaBuilder.getBaseView().hideLoading();
+                if (mediaBuilder.getOnLoadingListener() != null) {
+                    mediaBuilder.getOnLoadingListener().hideLoading();
                 }
-                mediaBuilder.getBaseView().showToast("图片压缩错误");
+                showToast("图片压缩错误");
                 return;
             }
             Message message = new Message();
@@ -606,11 +622,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
         @Override
         public void onCompressFail(Exception exception) {
-            LogUtil.e(TAG, "图片压缩异常：" + exception);
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().hideLoading();
+            LogUtil.show(TAG, "图片压缩异常：" + exception);
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().hideLoading();
             }
-            mediaBuilder.getBaseView().showToast("图片压缩错误");
+            showToast("图片压缩错误");
         }
 
     }
@@ -618,7 +634,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxImage() {
         if (mediaBuilder.getMediaListener() != null) {
             if (mediaBuilder.getImageMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedImageCount()) {
-                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getImageMaxSelectedCount() + "张图片");
+                showToast("最多只可选" + mediaBuilder.getImageMaxSelectedCount() + "张图片");
                 return true;
             }
         }
@@ -628,7 +644,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxVideo() {
         if (mediaBuilder.getMediaListener() != null) {
             if (mediaBuilder.getVideoMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedVideoCount()) {
-                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getVideoMaxSelectedCount() + "条视频");
+                showToast("最多只可选" + mediaBuilder.getVideoMaxSelectedCount() + "条视频");
                 return true;
             }
         }
@@ -638,7 +654,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxAudio() {
         if (mediaBuilder.getMediaListener() != null) {
             if (mediaBuilder.getAudioMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedAudioCount()) {
-                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getAudioMaxSelectedCount() + "条音频");
+                showToast("最多只可选" + mediaBuilder.getAudioMaxSelectedCount() + "条音频");
                 return true;
             }
         }
@@ -648,7 +664,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxFile() {
         if (mediaBuilder.getMediaListener() != null) {
             if (mediaBuilder.getFileMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedFileCount()) {
-                mediaBuilder.getBaseView().showToast("最多只可选" + mediaBuilder.getFileMaxSelectedCount() + "个文件");
+                showToast("最多只可选" + mediaBuilder.getFileMaxSelectedCount() + "个文件");
                 return true;
             }
         }
@@ -671,17 +687,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE);
                     return;
                 }
             } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU);
                     return;
                 }
             } else {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_READ);
                     return;
                 }
@@ -699,12 +715,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void camera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
                 return;
             }
         } else {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
                 return;
             }
@@ -755,16 +771,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
         @Override
         public void onFail() {
-            mediaBuilder.getBaseView().showToast("视频压缩异常");
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().hideLoading();
+            showToast("视频压缩异常");
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().hideLoading();
             }
         }
 
         @Override
         public void onProgress(float percent) {
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().refreshLoading("正在压缩第" + (index + 1) + "个文件，压缩进度：" + (int) percent + "%");
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().refreshLoading("正在压缩第" + (index + 1) + "个文件，压缩进度：" + (int) percent + "%");
             }
         }
     }
@@ -777,8 +793,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             super(looper);
             this.uriList = videos;
             compressUriList = new ArrayList<>();
-            if (mediaBuilder.isShowLoading()) {
-                mediaBuilder.getBaseView().showLoading("正在处理视频...");
+            if (mediaBuilder.getOnLoadingListener() != null) {
+                mediaBuilder.getOnLoadingListener().showLoading("正在处理视频...");
             }
         }
 
@@ -792,13 +808,13 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     compressUriList.add((Uri) msg.obj);
                 }
                 if (uriList.size() == 0 || msg.what >= uriList.size()) {
-                    mediaBuilder.getBaseView().showToast("压缩成功！");
-                    if (mediaBuilder.isShowLoading()) {
-                        mediaBuilder.getBaseView().hideLoading();
+                    showToast("压缩成功！");
+                    if (mediaBuilder.getOnLoadingListener() != null) {
+                        mediaBuilder.getOnLoadingListener().hideLoading();
                     }
                     mutableLiveDataCompress.postValue(new MediaBean(compressUriList, MediaTypeEnum.VIDEO.getMediaType()));
                 } else {
-                    String fileName = FileUtils.getNoRepeatFileName(mediaBuilder.getVideoOutPutPath(), "VIDEO_", ".mp4");
+                    String fileName = MediaUtil.getNoRepeatFileName(mediaBuilder.getVideoOutPutPath(), "VIDEO_", ".mp4");
                     File outputFile = new File(mediaBuilder.getVideoOutPutPath(), fileName + ".mp4");
                     if (mediaBuilder.getVideoQuality() == VIDEO_HIGH) {
                         VideoCompress.compressVideoHigh(mediaBuilder.getActivity(),
@@ -812,11 +828,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     }
                 }
             } catch (Exception e) {
-                LogUtil.e(e);
+                LogUtil.show(TAG,"视频加载出现错误："+e);
                 e.printStackTrace();
-                mediaBuilder.getBaseView().showToast("视频加载出现错误");
-                if (mediaBuilder.isShowLoading()) {
-                    mediaBuilder.getBaseView().hideLoading();
+                showToast("视频加载出现错误");
+                if (mediaBuilder.getOnLoadingListener() != null) {
+                    mediaBuilder.getOnLoadingListener().hideLoading();
                 }
             }
         }
@@ -839,12 +855,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public void shoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
                 return;
             }
         } else {
-            if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
                 checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
                 return;
             }
@@ -868,17 +884,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE);
                     return;
                 }
             } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU);
                     return;
                 }
             } else {
-                if (PermissionsChecker.getInstance().lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
                     checkPermission(ConstantsHelper.PERMISSIONS_READ);
                     return;
                 }
@@ -903,4 +919,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     }
 
+    protected void showToast(String message) {
+        try {
+            if (TextUtils.isEmpty(message)) {
+                return;
+            }
+            mediaBuilder.getActivity().runOnUiThread(() -> {
+                Toast.makeText(mediaBuilder.getActivity(), message, Toast.LENGTH_SHORT).show();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,8 +1,7 @@
-package pers.fz.mvvm.wight.dialog;
+package pers.fz.media.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +9,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.log.ToastUtils;
+import pers.fz.media.R;
 
 
 /**
- * Created by fz on 2019/3/26.
- * 相册——拍摄dialog
+ * Created by fz on 2024/10/31.
+ * describe：相册——拍摄dialog
  */
 
 public class OpenShootDialog extends Dialog implements View.OnClickListener {
@@ -97,7 +96,7 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
         int id = v.getId();
         if (id == R.id.choosePhoto) {
             if (mediaType == CAMERA) {
-                ToastUtils.showShort(getContext(), "暂不支持拍摄视频！");
+                Toast.makeText(getContext(), "暂不支持拍摄视频！", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (onOpenVideoClickListener != null) {
@@ -105,7 +104,7 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
             }
         } else if (id == R.id.button_shoot) {
             if (mediaType == ALBUM) {
-                ToastUtils.showShort(getContext(), "暂不支持打开媒体文件！");
+                Toast.makeText(getContext(), "暂不支持打开媒体文件！", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (onOpenVideoClickListener != null) {

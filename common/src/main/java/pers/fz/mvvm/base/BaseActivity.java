@@ -2,6 +2,7 @@ package pers.fz.mvvm.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -267,10 +268,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showToast(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            return;
+        }
         runOnUiThread(() -> {
-            if (StringUtil.isEmpty(msg)) {
-                return;
-            }
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
     }

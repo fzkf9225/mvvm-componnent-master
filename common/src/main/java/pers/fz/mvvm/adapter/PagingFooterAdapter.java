@@ -27,7 +27,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder<PagingFooterBinding> holder, LoadState loadState) {
+    public void onBindViewHolder(BaseViewHolder<PagingFooterBinding> holder, @NonNull LoadState loadState) {
         holder.getBinding().setMessage("正在加载...");
         holder.getBinding().progressBar.show();
         if (loadState instanceof LoadState.Error) {
@@ -62,7 +62,16 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
 
     @NonNull
     @Override
-    public BaseViewHolder<PagingFooterBinding> onCreateViewHolder(ViewGroup parent, LoadState loadState) {
+    public BaseViewHolder<PagingFooterBinding> onCreateViewHolder(@NonNull ViewGroup parent, @NonNull LoadState loadState) {
         return new BaseViewHolder<>(PagingFooterBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
+
+
+    @Override
+    public boolean displayLoadStateAsItem(@NonNull LoadState loadState) {
+        return loadState instanceof LoadState.Loading ||
+                loadState instanceof LoadState.Error ||
+                (loadState instanceof LoadState.NotLoading && loadState.getEndOfPaginationReached());
+    }
+
 }

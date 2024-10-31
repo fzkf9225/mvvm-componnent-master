@@ -15,8 +15,6 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
-import pers.fz.mvvm.util.common.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/4/25 17:23
@@ -43,7 +41,7 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
             values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator +
-                    FileUtils.getLastPath(savePath, FileUtils.getDefaultBasePath(context)) + File.separator + "image");
+                    MediaUtil.getLastPath(savePath, MediaUtil.getDefaultBasePath(context)) + File.separator + "image");
             uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         } else {
             File file = new File(savePath + File.separator + "image" + File.separator+ fileName);
@@ -68,4 +66,5 @@ public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
 //        }
         return uri;
     }
+
 }

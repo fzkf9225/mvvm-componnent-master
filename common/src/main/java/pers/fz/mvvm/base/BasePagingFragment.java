@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.paging.CombinedLoadStates;
 import androidx.paging.LoadState;
 import androidx.paging.PagingData;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -57,12 +58,16 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
         }
         adapter.setOnAdapterListener(this);
         // 添加 footer
-        mRecyclerView.setAdapter(adapter.withLoadStateFooter(new PagingFooterAdapter(() -> adapter.retry())));
+        mRecyclerView.setAdapter(createdHeaderFootAdapter());
         emptyLayout.setOnEmptyLayoutClickListener(this);
         refreshLayout.setOnRefreshListener(this);
         // 监听加载状态
         adapter.addLoadStateListener(loadStateListener);
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+    }
+
+    protected ConcatAdapter createdHeaderFootAdapter(){
+        return adapter.withLoadStateFooter(new PagingFooterAdapter(() -> adapter.retry()));
     }
 
     protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
@@ -157,11 +162,13 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
     @Override
     public void onEmptyLayoutClick(View v) {
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
+        mViewModel.invalidatePagingSource();
         adapter.refresh();
     }
 
     @Override
     public void onRefresh() {
+        mViewModel.invalidatePagingSource();
         adapter.refresh();
     }
 

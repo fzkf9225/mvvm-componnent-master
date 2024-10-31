@@ -5,7 +5,7 @@ plugins {
     id 'kotlin-kapt'
 }
 android {
-
+    namespace 'com.casic.titan.usercomponent'
     compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         if (userComponentIsApplication.toBoolean()) {
@@ -50,10 +50,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
-    namespace 'com.casic.titan.usercomponent'
 }
 
 dependencies {

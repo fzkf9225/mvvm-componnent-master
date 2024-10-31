@@ -83,7 +83,7 @@ dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation libs.activity
     implementation libs.androidx.core.ktx
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
+    implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

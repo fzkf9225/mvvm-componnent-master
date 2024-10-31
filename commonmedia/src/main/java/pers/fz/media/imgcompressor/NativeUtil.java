@@ -110,7 +110,7 @@ public class NativeUtil {
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
         // 获取尺寸压缩倍数
-        newOpts.inSampleSize = NativeUtil.getRatioSize(w,h);
+        newOpts.inSampleSize = getRatioSize(w,h);
         newOpts.inJustDecodeBounds = false;//读取所有内容
         newOpts.inDither = false;
         newOpts.inPurgeable=true;

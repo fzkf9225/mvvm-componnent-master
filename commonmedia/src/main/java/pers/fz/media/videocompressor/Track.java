@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-@TargetApi(16)
 public class Track {
     private long trackId = 0;
     private ArrayList<Sample> samples = new ArrayList<Sample>();

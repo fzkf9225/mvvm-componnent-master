@@ -1,20 +1,23 @@
 package pers.fz.media;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2021/4/12 10:35
@@ -23,23 +26,46 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class MediaUtil {
     private final String TAG = this.getClass().getSimpleName();
 
-    public static void getPictureLocation(String filePath) {
-        if (StringUtil.isEmpty(filePath)) {
-            return;
+    public static String getPictureLongitude(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return null;
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            String latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            String longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-
-            LogUtil.show("MediaUtil", "纬度：" + latitude);
-            LogUtil.show("MediaUtil", "经度：" + longitude);
+            return exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show("MediaUtil", "获取图片经纬度异常:" + e);
         }
+        return null;
+    }
+    public static String getPictureLatitude(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return null;
+        }
+        try {
+            ExifInterface exif = new ExifInterface(filePath);
+            return exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    public static String[] getPictureLocation(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return null;
+        }
+        try {
+            String[] strings =  new String[2];
+            ExifInterface exif = new ExifInterface(filePath);
+            strings[0] = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            strings[1] = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            return strings;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText) {
         return createWatermark(originalBitmap, watermarkText, 100);
     }
@@ -142,4 +168,152 @@ public class MediaUtil {
             e.printStackTrace();
         }
     }
+
+
+    public static String getDefaultBasePath(Context mContext) {
+        String packageName = mContext.getPackageName();
+        String[] packageArr = packageName.split("\\.");
+        if (packageArr.length == 0) {
+            return "";
+        }
+        if (packageArr.length == 1) {
+            return packageArr[0];
+        }
+        return packageArr[1];
+    }
+
+    public static String getLastPath(String path, String defaultPath) {
+        if (TextUtils.isEmpty(path)) {
+            return defaultPath;
+        }
+        String[] pathArr = path.split(File.separator);
+        if (pathArr == null) {
+            return defaultPath;
+        }
+        if (pathArr.length == 0) {
+            return defaultPath;
+        }
+        if (pathArr.length == 1) {
+            return pathArr[0];
+        }
+        if (File.separator.equals(pathArr[pathArr.length - 1])) {
+            return TextUtils.isEmpty(pathArr[pathArr.length - 2]) ? defaultPath : pathArr[pathArr.length - 2];
+        }
+        return TextUtils.isEmpty(pathArr[pathArr.length - 1]) ? defaultPath : pathArr[pathArr.length - 1];
+    }
+
+
+    /**
+     * 获取basePath下不重复的文件名
+     *
+     * @param basePath  基础目录
+     * @param prefix    默认前缀
+     * @param extension 扩展名
+     * @return 文件名，不带后缀名的
+     */
+    public static String getNoRepeatFileName(String basePath, String prefix, String extension) {
+        File baseFile = new File(basePath);
+        if (!baseFile.exists()) {
+            boolean isCreated = baseFile.mkdirs();
+        }
+        String fileName = prefix + MediaUtil.dateFormat(new Date(), MediaUtil.DATE_TIME_FORMAT) + "_" + new Random().nextInt(1000);
+        File file = new File(baseFile, fileName + extension);
+        int index = 0;
+        //防止重名
+        while (file.exists()) {
+            index += 1;
+            file = new File(baseFile, fileName + "_" + index + extension);
+        }
+        return fileName;
+    }
+
+    /**
+     * 获取basePath下不重复的文件名
+     *
+     * @return 如果存储路径中有重复的则自动+1，如果没有则返回文件名
+     */
+    public static String autoRenameFileName(String baseSavePath, String oldName) {
+        try {
+            // 检查文件是否有后缀名
+            if (!oldName.contains(".")) {
+                oldName += "." + oldName.split("\\.")[oldName.split("\\.").length - 1];
+            }
+
+            // 拼接完整的文件路径
+            String filePath = baseSavePath + File.separator + oldName;
+
+            // 判断文件是否存在
+            File file = new File(filePath);
+            if (!file.exists()) {
+                return oldName;
+            }
+
+            // 文件已存在，查找可用的文件名
+            int count = 1;
+            while (true) {
+                String newFileName = oldName.split("\\.")[0] + count + "." + oldName.split("\\.")[oldName.split("\\.").length - 1];
+                String newFilePath = baseSavePath + File.separator + newFileName;
+                File newFile = new File(newFilePath);
+                if (!newFile.exists()) {
+                    return newFileName;
+                }
+                count++;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return oldName;
+    }
+
+    /**
+     * 格式化日期显示格式
+     *
+     * @param date   Date对象
+     * @param format 格式化后日期格式
+     * @return 格式化后的日期显示
+     */
+    public static String dateFormat(Date date, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return dateSimpleFormat(date, formatter);
+    }
+
+    /**
+     * 将date转成字符串
+     *
+     * @param date   Date
+     * @param format SimpleDateFormat
+     *               <br>
+     *               注： SimpleDateFormat为空时，采用默认的yyyy-MM-dd HH:mm:ss格式
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public static String dateSimpleFormat(Date date, SimpleDateFormat format) {
+        if (format == null) {
+            synchronized (MediaUtil.class) {
+                format = defaultDateTimeFormat.get();
+            }
+        }
+        return (date == null ? "" : format.format(date));
+    }
+
+
+    /**
+     * yyyy-MM-dd HH:mm:ss格式
+     */
+    public static final ThreadLocal<SimpleDateFormat> defaultDateTimeFormat = new ThreadLocal<>() {
+
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
+        }
+    };
+
+    /**
+     * yyyy-MM-dd HH:mm:ss字符串
+     */
+    public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * yyyyMMddHHmmss字符串
+     */
+    public static final String DATE_TIME_FORMAT = "yyyyMMddHHmmss";
 }

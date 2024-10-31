@@ -18,7 +18,7 @@ import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.viewmodel.MainViewModel;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenImageDialog;
 
 /**
  * Created by fz on 2020/03/26.
@@ -41,7 +41,7 @@ public class MeFragment extends BaseFragment<MainViewModel, MeFragmentBinding> {
                 .autoStatusBarDarkModeEnable(true,0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.themeColor)
                 .init();
-        mediaHelper = new MediaBuilder(this, this)
+        mediaHelper = new MediaBuilder(this)
                 .setImageMaxSelectedCount(1)
                 .builder();
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {

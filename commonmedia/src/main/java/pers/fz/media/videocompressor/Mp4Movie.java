@@ -1,6 +1,5 @@
 package pers.fz.media.videocompressor;
 
-import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 
@@ -9,7 +8,6 @@ import com.googlecode.mp4parser.util.Matrix;
 import java.io.File;
 import java.util.ArrayList;
 
-@TargetApi(16)
 public class Mp4Movie {
     private Matrix matrix = Matrix.ROTATE_0;
     private ArrayList<Track> tracks = new ArrayList<Track>();

@@ -5,21 +5,19 @@ minSdkVersion = "26"
 targetSdkVersion = "34"
 agp = "8.3.2"
 
-agoraRtmVersion = "2.2.1"
+
 apacheCommonCsvVersion = "1.9.0"
 apacheCommonsLang3 = "3.12.0"
 apacheJackrabbitWebdav = "2.12.2"
 aspectjAspectjrt = "1.9.6"
 awsAndroidSdkVersion = "2.22.5"
 birbitAndroidPriorityJobqueue = "2.0.1"
-common = "4.1.12"
 githubLogbackAndroidClassic = "1.1.1-2"
 googlecodeIsoparser = "1.0.6"
-guava = "23.6-jre"
+guava = "33.0.0-jre"
 lifecycleRuntimeKtxVersion = "2.7.0"
 lifecycleVersion = "2.2.0"
 liveEventBusVersion = "1.8.0"
-mpandroidchartVersion = "v3.1.0"
 nettyVersion = "4.1.9.Final"
 orgEclipsePahoMqttv5Client = "1.2.5"
 playServicesLocationVersion = "21.0.1"
@@ -29,12 +27,6 @@ seOkhttpSignpost = "1.1.0"
 slf4jApi = "1.7.32"
 squareupPicasso = "2.71828"
 activityVersion = "1.9.0"
-annotationVersion = "1.0.1"
-arcgisAndroidVersion = "100.15.0"
-arcgisMapsKotlinVersion = "200.5.0"
-commonuiVersion = "1.0.7"
-commonmedia = "1.0.7"
-commonVersion = "1.3.9"
 constraintlayoutVersion = "2.1.4"
 geniusVersion = "2.0.0"
 glideVersion = "4.15.1"
@@ -43,16 +35,16 @@ hiltVersion = "2.52"
 immersionbarVersion = "3.2.2"
 jtsCoreVersion = "1.18.1"
 kotlin = "2.0.0"
-coreKtx = "1.13.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-appcompat = "1.7.0-alpha02"
+appcompat = "1.7.0"
 loggerVersion = "2.2.0"
-material = "1.11.0"
+material = "1.12.0"
 mmkvVersion = "1.3.9"
 okhttpVersion = "5.0.0-alpha.14"
-recyclerVersion = "1.3.1"
+recyclerVersion = "1.3.2"
 refreshLayoutKernel = "2.1.0"
 retrofitVersion = "2.9.0"
 rxandroidVersion = "3.0.2"
@@ -67,12 +59,11 @@ wheelpicker = "4.1.12"
 zxingAndroidVersion = "4.3.0"
 zxingCoreVersion = "3.5.2"
 gsyVersion = "v9.0.0-release-jitpack"
-camerax = "1.3.4"
 
 
 [libraries]
 activity = { module = "androidx.activity:activity", version.ref = "activityVersion" }
-agora-rtm = { module = "io.agora:agora-rtm", version.ref = "agoraRtmVersion" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 amazonaws-aws-android-sdk-mobile-client = { module = "com.amazonaws:aws-android-sdk-mobile-client", version.ref = "awsAndroidSdkVersion" }
 amazonaws-aws-android-sdk-s3 = { module = "com.amazonaws:aws-android-sdk-s3", version.ref = "awsAndroidSdkVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -88,20 +79,13 @@ androidx-paging-common = { module = "androidx.paging:paging-common", version.ref
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingVersion" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "preferenceVersion" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerVersion" }
-#arcgis-android = { module = "com.esri.arcgisruntime:arcgis-android", version.ref = "arcgisAndroidVersion" }
-#arcgis-maps-kotlin-toolkit-bom = { group = "com.esri", name = "arcgis-maps-kotlin-toolkit-bom", version.ref = "arcgisMapsKotlinVersion"}
-#arcgis-maps-kotlin-toolkit-authentication = { group = "com.esri", name = "arcgis-maps-kotlin-toolkit-authentication" }
-#arcgis-maps-kotlin-toolkit-geoview-compose = { group = "com.esri", name = "arcgis-maps-kotlin-toolkit-geoview-compose" }
-#arcgis-maps-kotlin-toolkit-featureforms = { group = "com.esri", name = "arcgis-maps-kotlin-toolkit-featureforms" }
-arcgis-maps-kotlin = { group = "com.esri", name = "arcgis-maps-kotlin", version.ref = "arcgisMapsKotlinVersion"}
-calendarpicker = { module = "com.github.gzu-liyujiang.AndroidPicker:CalendarPicker", version.ref = "common" }
+calendarpicker = { module = "com.github.gzu-liyujiang.AndroidPicker:CalendarPicker", version.ref = "wheelpicker" }
+androidPicker-common = { module = "com.github.gzu-liyujiang.AndroidPicker:Common", version.ref = "wheelpicker" }
+github-wheelview = { module = "com.github.gzu-liyujiang.AndroidPicker:WheelView", version.ref = "wheelpicker" }
+androidpicker-wheelpicker = { module = "com.github.gzu-liyujiang.AndroidPicker:WheelPicker", version.ref = "wheelpicker" }
 com-birbit-android-priority-jobqueue = { module = "com.birbit:android-priority-jobqueue", version.ref = "birbitAndroidPriorityJobqueue" }
-com-github-gzu-liyujiang-androidpicker-wheelpicker = { module = "com.github.gzu-liyujiang.AndroidPicker:WheelPicker", version.ref = "wheelpicker" }
 com-squareup-picasso-picasso = { module = "com.squareup.picasso:picasso", version.ref = "squareupPicasso" }
 com-trello-rxlifecycle2-rxlifecycle-components = { module = "com.trello.rxlifecycle2:rxlifecycle-components", version.ref = "rxlifecycleVersion" }
-common = { module = "com.github.gzu-liyujiang.AndroidPicker:Common", version.ref = "common" }
-commonui = { module = "com.casic.titan.commonui:commonui", version.ref = "commonuiVersion" }
-annotation = { module = "pers.fz.annotation:annotation", version.ref = "annotationVersion" }
 core = { module = "com.google.zxing:core", version.ref = "zxingCoreVersion" }
 geyifeng-immersionbar = { module = "com.geyifeng.immersionbar:immersionbar", version.ref = "immersionbarVersion" }
 github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
@@ -110,7 +94,6 @@ github-gsyvideoplayer-x64 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVide
 github-gsyvideoplayer-x86 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86", version.ref = "gsyVersion" }
 github-live-event-bus-x = { module = "io.github.jeremyliao:live-event-bus-x", version.ref = "liveEventBusVersion" }
 github-logback-android-classic = { module = "com.github.tony19:logback-android-classic", version.ref = "githubLogbackAndroidClassic" }
-github-wheelview = { module = "com.github.gzu-liyujiang.AndroidPicker:WheelView", version.ref = "common" }
 google-guava = { module = "com.google.guava:guava", version.ref = "guava" }
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 google-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltVersion" }
@@ -130,8 +113,6 @@ lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", v
 logger = { module = "com.orhanobut:logger", version.ref = "loggerVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mmkv = { module = "com.tencent:mmkv", version.ref = "mmkvVersion" }
-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
-mvvm-common = { module = "pers.fz.mvvm:common", version.ref = "commonVersion" }
 net-ui = { module = "net.qiujuer.genius:ui", version.ref = "geniusVersion" }
 net-res = { module = "net.qiujuer.genius:res", version.ref = "geniusVersion" }
 netty-all = { module = "io.netty:netty-all", version.ref = "nettyVersion" }
@@ -142,7 +123,6 @@ org-apache-jackrabbit-jackrabbit-webdav = { module = "org.apache.jackrabbit:jack
 org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjAspectjrt" }
 paging-rxjava3 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingVersion" }
 paho-org-eclipse-paho-mqttv5-client = { module = "org.eclipse.paho:org.eclipse.paho.mqttv5.client", version.ref = "orgEclipsePahoMqttv5Client" }
-pers-media = { module = "pers.fz.media:media", version.ref = "commonmedia" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
 reactivex-rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroidVersion" }
 refresh-footer-classics = { module = "io.github.scwang90:refresh-footer-classics", version.ref = "refreshLayoutKernel" }
@@ -158,12 +138,7 @@ slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayoutVersion" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidVersion" }
-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
-camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

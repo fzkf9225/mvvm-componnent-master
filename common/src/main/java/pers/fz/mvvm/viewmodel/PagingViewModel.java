@@ -30,6 +30,7 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
 
     private LiveData<PagingData<T>> items;
 
+    protected PagingSource<T, V> pagingSource;
 
     public PagingViewModel(@NonNull Application application) {
         super(application);
@@ -41,10 +42,15 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
     }
 
     public LiveData<PagingData<T>> createPagingData() {
+        pagingSource = new PagingSource<T, V>(iRepository, startPage);
         return PagingLiveData.cachedIn(PagingLiveData.getLiveData(
-                        new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>(iRepository, startPage))),
+                        new Pager<>(getPagingConfig(), () -> pagingSource)),
                 getCoroutineScope()
         );
+    }
+
+    public void invalidatePagingSource(){
+        pagingSource.invalidate();
     }
 
     public CoroutineScope getCoroutineScope() {

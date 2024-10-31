@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -31,14 +29,15 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaListener;
+import pers.fz.media.listener.MediaListener;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
-import pers.fz.mvvm.wight.dialog.OpenShootDialog;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 /**
@@ -238,10 +237,26 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
 
     @SuppressLint("NotifyDataSetChanged")
     public void initFragment(Fragment fragment) {
-        this.mediaHelper = new MediaBuilder(fragment, (BaseFragment)fragment)
+        this.mediaHelper = new MediaBuilder(fragment)
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setVideoQuality(compressVideo)
+                .setOnLoadingListener(new OnLoadingListener() {
+                    @Override
+                    public void showLoading(String dialogMessage) {
+                        ((BaseFragment<?, ?>)fragment).showLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void refreshLoading(String dialogMessage) {
+                        ((BaseFragment<?, ?>)fragment).refreshLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void hideLoading() {
+                        ((BaseFragment<?, ?>)fragment).hideLoading();
+                    }
+                })
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -290,10 +305,26 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
     public void onCreate(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onCreate(owner);
         if (getContext() instanceof ComponentActivity) {
-            mediaHelper = new MediaBuilder((ComponentActivity) getContext(), (BaseActivity)getContext())
+            mediaHelper = new MediaBuilder((ComponentActivity) getContext())
                     .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                     .setChooseType(MediaHelper.PICK_TYPE)
                     .setVideoQuality(compressVideo)
+                    .setOnLoadingListener(new OnLoadingListener() {
+                        @Override
+                        public void showLoading(String dialogMessage) {
+                            ((BaseActivity<?, ?>)getContext()).showLoading(dialogMessage);
+                        }
+
+                        @Override
+                        public void refreshLoading(String dialogMessage) {
+                            ((BaseActivity<?, ?>)getContext()).refreshLoading(dialogMessage);
+                        }
+
+                        @Override
+                        public void hideLoading() {
+                            ((BaseActivity<?, ?>)getContext()).hideLoading();
+                        }
+                    })
                     .setMediaListener(new MediaListener() {
                         @Override
                         public int onSelectedFileCount() {

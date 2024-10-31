@@ -7,19 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/20 15:00
  * describe :
  */
 public class SingleSelectorCallBack implements ActivityResultCallback<Uri> {
-    private MediaBuilder mediaBuilder;
     private MediaTypeEnum mediaType;
     private MutableLiveData<MediaBean> mutableLiveData;
 
-    public SingleSelectorCallBack(MediaBuilder mediaBuilder, MediaTypeEnum mediaType, MutableLiveData<MediaBean> mutableLiveData) {
-        this.mediaBuilder = mediaBuilder;
+    public SingleSelectorCallBack(MediaTypeEnum mediaType, MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaType = mediaType;
         this.mutableLiveData = mutableLiveData;
     }

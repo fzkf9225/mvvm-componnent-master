@@ -12,9 +12,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
-import pers.fz.mvvm.wight.dialog.OpenShootDialog;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> {
     private UseCase useCase;
@@ -49,7 +50,23 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
 
-        mediaHelper = new MediaBuilder(this, this)
+        mediaHelper = new MediaBuilder(this)
+                .setOnLoadingListener(new OnLoadingListener() {
+                    @Override
+                    public void showLoading(String dialogMessage) {
+                       MediaCompressActivity.this.showLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void refreshLoading(String dialogMessage) {
+                        MediaCompressActivity.this.refreshLoading(dialogMessage);
+                    }
+
+                    @Override
+                    public void hideLoading() {
+                        MediaCompressActivity.this.hideLoading();
+                    }
+                })
                 .setImageMaxSelectedCount(1)
                 .setImageQualityCompress(200)
                 .setVideoQuality(MediaHelper.VIDEO_MEDIUM)

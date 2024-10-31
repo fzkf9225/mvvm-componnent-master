@@ -1,7 +1,6 @@
 package pers.fz.mvvm.base;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 import pers.fz.mvvm.listener.PagingAdapterListener;
-import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
@@ -25,100 +23,28 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
     protected final String TAG = this.getClass().getSimpleName();
     protected RecyclerView mRecyclerView;
-    /**
-     * itemView的类型，头布局类型
-     */
-    public static final int TYPE_HEAD = 1;
-    /**
-     * itemView的类型，正常类型
-     */
-    public static final int TYPE_NORMAL = 0;
 
     public PagingAdapterListener<T> onPagingAdapterListener;
-
-    public OnHeaderViewClickListener onHeaderViewClickListener;
-    /**
-     * 头布局，优先级没有直接getHeaderViewId高
-     */
-    private View headerView;
 
     public BasePagingAdapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
         super(diffCallback);
     }
 
-    public void setHeaderView(View headerView) {
-        this.headerView = headerView;
-        notifyItemInserted(0);
-    }
-
-    public View getHeaderView() {
-        return headerView;
-    }
-
-    public boolean hasHeaderView() {
-        return getHeaderViewId() != null || headerView != null;
-    }
-
-    public Integer getHeaderViewId() {
-        return null;
-    }
-
     @Override
     public void onBindViewHolder(final BaseViewHolder baseViewHolder, final int pos) {
-        if (getItemViewType(pos) == TYPE_HEAD) {
-            if (getHeaderViewId() != null) {
-                baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewClick(v);
-                    }
-                });
-                baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewLongClick(v);
-                        return true;
-                    }
-                    return false;
-                });
-            } else {
-                headerView.setOnClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewClick(v);
-                    }
-                });
-                headerView.setOnLongClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewLongClick(v);
-                        return true;
-                    }
-                    return false;
-                });
-            }
-            onBindHeaderHolder(baseViewHolder);
-            return;
-        }
-        int realPosition = getRealPosition(baseViewHolder);
         baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
             if (onPagingAdapterListener != null) {
-                onPagingAdapterListener.onItemClick(v, getItem(realPosition), realPosition);
+                onPagingAdapterListener.onItemClick(v, getItem(pos), pos);
             }
         });
         baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
             if (onPagingAdapterListener != null) {
-                onPagingAdapterListener.onItemLongClick(v, getItem(realPosition), realPosition);
+                onPagingAdapterListener.onItemLongClick(v, getItem(pos), pos);
                 return true;
             }
             return false;
         });
-        onBindHolder(baseViewHolder, getItem(realPosition), realPosition);
-    }
-
-    /**
-     * 设置数据
-     *
-     * @param holder
-     */
-    public void onBindHeaderHolder(final BaseViewHolder holder) {
-
+        onBindHolder(baseViewHolder, getItem(pos), pos);
     }
 
     /**
@@ -129,58 +55,11 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      */
     public abstract void onBindHolder(final BaseViewHolder<VDB> holder, T item, final int pos);
 
-    @Override
-    public int getItemCount() {
-        if (hasHeaderView()) {
-            return super.getItemCount() + 1;
-        }
-        return super.getItemCount();
-    }
-
-    public int getRealItemCount() {
-        if (hasHeaderView()) {
-            return getItemCount() - 1;
-        }
-        return getItemCount();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (hasHeaderView() && position == 0) {
-            return TYPE_HEAD;
-        }
-        return TYPE_NORMAL;
-    }
 
     @NotNull
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEAD && getHeaderViewId() != null) {
-            return createHeaderViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getHeaderViewId(), parent, false));
-        } else if (viewType == TYPE_HEAD && headerView != null) {
-            return createHeaderViewHold(headerView);
-        } else {
-            return createViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getLayoutId(), parent, false));
-        }
-    }
-
-    /**
-     * 获取自定义viewHolder对象，如果不自定义借直接返回baseViewHolder
-     *
-     * @param binding item布局
-     * @return BaseViewHolder
-     */
-    protected <HVDB extends ViewDataBinding> BaseViewHolder<HVDB> createHeaderViewHold(HVDB binding) {
-        return new BaseViewHolder<>(binding);
-    }
-
-    /**
-     * 获取自定义viewHolder对象，如果不自定义借直接返回baseViewHolder
-     *
-     * @return BaseViewHolder
-     */
-    protected BaseViewHolder createHeaderViewHold(View headerView) {
-        return new BaseViewHolder<>(headerView);
+        return createViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getLayoutId(), parent, false));
     }
 
     /**
@@ -202,11 +81,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
 
     public T getAdapterItem(int pos) {
         return getItem(pos);
-    }
-
-    public int getRealPosition(RecyclerView.ViewHolder holder) {
-        int position = holder.getLayoutPosition();
-        return (getHeaderViewId() == null && headerView == null) ? position : position - 1;
     }
 
     @Override
@@ -245,7 +119,4 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         onPagingAdapterListener = l;
     }
 
-    public void setOnHeaderViewClickListener(OnHeaderViewClickListener onHeaderViewClickListener) {
-        this.onHeaderViewClickListener = onHeaderViewClickListener;
-    }
 }

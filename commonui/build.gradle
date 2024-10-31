@@ -54,9 +54,6 @@ android {
     dataBinding{
         enabled = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
 }
 
 dependencies {
@@ -65,14 +62,14 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation libs.androidx.core.ktx
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
+    implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
     implementation libs.viewpager2
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.androidx.recyclerview
-    implementation libs.common
-    implementation libs.com.github.gzu.liyujiang.androidpicker.wheelpicker
+    implementation libs.androidPicker.common
+    implementation libs.androidpicker.wheelpicker
     implementation libs.calendarpicker
     implementation libs.github.wheelview
     implementation project(':common')

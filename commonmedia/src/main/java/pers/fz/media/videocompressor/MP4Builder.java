@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-@TargetApi(16)
 public class MP4Builder {
     private InterleaveChunkMdat mdat = null;
     private Mp4Movie currentMp4Movie = null;

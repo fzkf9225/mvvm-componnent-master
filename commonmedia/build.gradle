@@ -15,6 +15,7 @@ android {
         multiDexEnabled true
         ndk {
             //选择要添加的对应cpu类型的.so库。
+            //noinspection ChromeOsAbiSupport
             abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86'
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
@@ -54,20 +55,17 @@ android {
     dataBinding{
         enabled = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
-    }
 }
 
 dependencies {
     implementation libs.androidx.core.ktx
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
+    implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
+    implementation libs.activity
     implementation libs.androidx.lifecycle.lifecycle.extensions
     implementation libs.org.aspectj.aspectjrt
     implementation libs.googlecode.isoparser
     implementation libs.com.squareup.picasso.picasso
-    implementation project(':common')
 }
 
 

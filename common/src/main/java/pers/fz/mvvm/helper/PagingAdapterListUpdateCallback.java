@@ -26,26 +26,26 @@ public class PagingAdapterListUpdateCallback implements ListUpdateCallback {
     /** {@inheritDoc} */
     @Override
     public void onInserted(int position, int count) {
-        mAdapter.notifyItemRangeInserted(position, count);
+        mAdapter.notifyItemRangeInserted(position + 1, count);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRemoved(int position, int count) {
-        mAdapter.notifyItemRangeRemoved(position, count);
+        mAdapter.notifyItemRangeRemoved(position + 1, count);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onMoved(int fromPosition, int toPosition) {
-        mAdapter.notifyItemMoved(fromPosition, toPosition);
+        mAdapter.notifyItemMoved(fromPosition + 1, toPosition + 1);
     }
 
     /** {@inheritDoc} */
     @Override
     @SuppressLint("UnknownNullness") // b/240775049: Cannot annotate properly
     public void onChanged(int position, int count, Object payload) {
-        mAdapter.notifyItemRangeChanged(position, count, payload);
+        mAdapter.notifyItemRangeChanged(position + 1, count, payload);
     }
 }
 

@@ -1,4 +1,4 @@
-package pers.fz.mvvm.wight.dialog;
+package pers.fz.media.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,15 +9,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.log.ToastUtils;
-
+import pers.fz.media.R;
 
 /**
- * Created by fz on 2018/3/29.
+ * Created by fz on 2024/10/31.
  * describe:选择照片和拍照弹框
  */
 public class OpenImageDialog extends Dialog implements View.OnClickListener {
@@ -92,7 +91,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
         int id = v.getId();
         if (id == R.id.choosePhoto) {
             if (mediaType == CAMERA) {
-                ToastUtils.showShort(getContext(), "暂不支持拍照！");
+                Toast.makeText(getContext(), "暂不支持拍照！", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (onOpenImageClickListener != null) {
@@ -100,7 +99,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
             }
         } else if (id == R.id.takePhoto) {
             if (mediaType == ALBUM) {
-                ToastUtils.showShort(getContext(), "暂不支持打开相册！");
+                Toast.makeText(getContext(), "暂不支持打开相册！", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (onOpenImageClickListener != null) {

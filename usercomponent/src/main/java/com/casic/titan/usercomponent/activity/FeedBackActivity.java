@@ -9,7 +9,7 @@ import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.viewmodel.MainViewModel;
-import pers.fz.mvvm.wight.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 import com.casic.titan.usercomponent.R;
@@ -37,7 +37,7 @@ public class FeedBackActivity extends BaseActivity<MainViewModel, FeedbackBindin
     @Override
     public void initView(Bundle savedInstanceState) {
         //初始化一些媒体配置
-        mediaHelper = new MediaBuilder(this, this)
+        mediaHelper = new MediaBuilder(this)
                 .setImageMaxSelectedCount(9)
                 .setImageQualityCompress(200)
                 .builder();

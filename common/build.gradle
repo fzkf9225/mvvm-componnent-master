@@ -66,7 +66,7 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinBomVersion")
+    implementation platform(libs.kotlin.bom)
     implementation libs.activity
     implementation libs.androidx.core.ktx
     implementation libs.lifecycle.runtime.ktx
@@ -111,7 +111,6 @@ dependencies {
     //MinIO只有Java版本不兼容Android，因此使用这两个包代替
     implementation libs.amazonaws.aws.android.sdk.s3
     implementation libs.amazonaws.aws.android.sdk.mobile.client
-    implementation libs.github.live.event.bus.x
 
     implementation libs.androidx.navigation.fragment
     implementation libs.androidx.navigation.ui

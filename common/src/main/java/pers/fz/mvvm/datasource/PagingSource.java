@@ -21,8 +21,12 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer, T> {
     private final String TAG = PagingSource.class.getSimpleName();
-    private int startPage = 0;
+    private int startPage = 1;
     private final PagingRepositoryImpl<T,BV> pagingRepository;
+
+    public PagingSource(PagingRepositoryImpl<T,BV> pagingRepository) {
+        this.pagingRepository = pagingRepository;
+    }
 
     public PagingSource(PagingRepositoryImpl<T,BV> pagingRepository, int startPage) {
         this.pagingRepository = pagingRepository;
@@ -64,6 +68,7 @@ public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer,
         return new LoadResult.Page<>(mBeans, prevKey, nextKey, LoadResult.Page.COUNT_UNDEFINED,
                 LoadResult.Page.COUNT_UNDEFINED);
     }
+
     @Nullable
     @Override
     public Integer getRefreshKey(@NotNull PagingState<Integer, T> state) {

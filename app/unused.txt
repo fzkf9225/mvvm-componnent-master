@@ -19649,11 +19649,11 @@ pers.fz.mvvm.wight.customlayout.RoundImageView:
 pers.fz.mvvm.wight.customlayout.RoundTextView:
     private static final java.lang.String EMPTY_SPACE
 pers.fz.mvvm.wight.dialog.LoginDialog
-pers.fz.mvvm.wight.dialog.OpenImageDialog:
+pers.fz.media.dialog.OpenImageDialog:
     public static final int ALBUM
     public static final int CAMERA
     public static final int CAMERA_ALBUM
-pers.fz.mvvm.wight.dialog.OpenShootDialog:
+pers.fz.media.dialog.OpenShootDialog:
     public static final int ALBUM
     public static final int CAMERA
     public static final int CAMERA_ALBUM

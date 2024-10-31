@@ -7,10 +7,6 @@
     <string name="nv_setting">Setting</string>
     <string name="loginClick">login</string>
     <string name="cancel">cancel</string>
-    <string name="album">album</string>
-    <string name="camera">camera</string>
-    <string name="file">file manager</string>
-    <string name="audio">audio</string>
     <string name="app_config_file" translatable="false">app_config_file</string>
     <string name="login_project_code_hint">project code</string>
     <string name="login_user_hint">please input username</string>

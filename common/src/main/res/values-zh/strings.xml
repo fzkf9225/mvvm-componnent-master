@@ -7,10 +7,6 @@
     <string name="nv_setting">设置</string>
     <string name="loginClick">点击登录</string>
     <string name="cancel">取消</string>
-    <string name="album">从相册选择</string>
-    <string name="camera">拍照</string>
-    <string name="file">从文件管理器中选择</string>
-    <string name="audio">选择音频文件</string>
     <string name="login_project_code_hint">项目编号</string>
     <string name="login_user_hint">请输入用户名</string>
     <string name="login_tel_hint">请输入手机号码</string>
