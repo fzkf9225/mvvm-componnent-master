@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 }
@@ -15,7 +15,7 @@ android {
         multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["foo": "bar"]
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
         ndk {
@@ -117,7 +117,6 @@ dependencies {
     implementation libs.androidx.navigation.ui.ktx
     //每个用到的模块都要加这两个，不能使用api
     implementation libs.google.hilt.android
-    annotationProcessor libs.google.hilt.android.compiler
     kapt libs.google.hilt.android.compiler
 
     implementation libs.core
@@ -135,6 +134,15 @@ dependencies {
 
     //下拉刷新
     implementation libs.swiperefreshlayout
+
+    implementation libs.androidx.room.runtime
+    kapt libs.room.compiler
+    // optional - RxJava3 support for Room
+    implementation libs.room.rxjava3
+    // optional - Paging 3 Integration
+    implementation libs.room.paging
+
+
 }
 //执行以下命令完成制品推送
 //推送命令
@@ -149,7 +157,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '2.0.0'
+                version = '2.0.1'
             }
         }
         repositories {

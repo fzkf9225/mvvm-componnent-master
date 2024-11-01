@@ -9,10 +9,10 @@ import com.casic.titan.demo.databinding.ActivityRecyclerViewSampleBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 @AndroidEntryPoint
-public class RecyclerViewSampleActivity extends BaseActivity<MainViewModel,ActivityRecyclerViewSampleBinding> {
+public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel,ActivityRecyclerViewSampleBinding> {
     private UseCase useCase;
     @Override
     protected int getLayoutId() {

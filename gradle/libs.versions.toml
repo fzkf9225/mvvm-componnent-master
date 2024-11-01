@@ -1,11 +1,12 @@
 [versions]
 compileSdkVersion = "34"
-kotlinxCoroutinesCoreVersion = "1.8.0"
 minSdkVersion = "26"
 targetSdkVersion = "34"
 agp = "8.3.2"
+kotlin = "2.0.0"
 
-
+kotlinxCoroutinesCoreVersion = "1.8.0"
+roomVersion = "2.6.1"
 apacheCommonCsvVersion = "1.9.0"
 apacheCommonsLang3 = "3.12.0"
 apacheJackrabbitWebdav = "2.12.2"
@@ -13,7 +14,7 @@ aspectjAspectjrt = "1.9.6"
 awsAndroidSdkVersion = "2.22.5"
 birbitAndroidPriorityJobqueue = "2.0.1"
 githubLogbackAndroidClassic = "1.1.1-2"
-googlecodeIsoparser = "1.0.6"
+googlecodeIsoparser = "1.1.22"
 guava = "33.0.0-jre"
 lifecycleRuntimeKtxVersion = "2.7.0"
 lifecycleVersion = "2.2.0"
@@ -34,7 +35,6 @@ gsonVersion = "2.10.1"
 hiltVersion = "2.52"
 immersionbarVersion = "3.2.2"
 jtsCoreVersion = "1.18.1"
-kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -63,6 +63,10 @@ gsyVersion = "v9.0.0-release-jitpack"
 
 [libraries]
 activity = { module = "androidx.activity:activity", version.ref = "activityVersion" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
+room-paging = { module = "androidx.room:room-paging", version.ref = "roomVersion" }
+room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "roomVersion" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 amazonaws-aws-android-sdk-mobile-client = { module = "com.amazonaws:aws-android-sdk-mobile-client", version.ref = "awsAndroidSdkVersion" }
 amazonaws-aws-android-sdk-s3 = { module = "com.amazonaws:aws-android-sdk-s3", version.ref = "awsAndroidSdkVersion" }
@@ -131,6 +135,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit2-adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofitVersion" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion" }
 retrofit2-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofitVersion" }
+
 rxjava3-rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjavaVersion" }
 scwang90-refresh-layout-kernel = { module = "io.github.scwang90:refresh-layout-kernel", version.ref = "refreshLayoutKernel" }
 se-okhttp-signpost = { module = "se.akerfeldt:okhttp-signpost", version.ref = "seOkhttpSignpost" }

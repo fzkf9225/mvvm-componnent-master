@@ -34,6 +34,10 @@ public class GoogleGpsViewModel extends BaseViewModel<RepositoryImpl, BaseView> 
      */
     public final GPSServiceConnection gpsServiceConnection = new GPSServiceConnection();
 
+    public GoogleGpsViewModel(@NonNull Application application) {
+        super(application);
+    }
+
     public GpsLoggingService getGpsLoggingService() {
         return gpsLoggingService;
     }
@@ -42,12 +46,8 @@ public class GoogleGpsViewModel extends BaseViewModel<RepositoryImpl, BaseView> 
         this.gpsLoggingService = gpsLoggingService;
     }
 
-    public GoogleGpsViewModel(@NonNull Application application) {
-        super(application);
-    }
-
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 

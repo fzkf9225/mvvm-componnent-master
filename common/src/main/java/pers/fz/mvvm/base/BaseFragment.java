@@ -1,6 +1,7 @@
 package pers.fz.mvvm.base;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,11 +19,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -104,6 +106,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return binding.getRoot();
     }
 
+    /**
+     * 创建viewModel
+     */
     public void createViewModel() {
         if (mViewModel == null) {
             Class modelClass;
@@ -114,8 +119,8 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
                 //如果没有指定泛型参数，则默认使用BaseViewModel
                 modelClass = BaseViewModel.class;
             }
-            mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
-            mViewModel.setBaseView(this);
+            mViewModel = (VM)  new ViewModelProvider(this).get(modelClass);
+            mViewModel.createRepository(this);
         }
     }
 

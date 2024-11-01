@@ -12,13 +12,12 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * Created by fz on 2021/5/26 14:16
  * describe:
  */
-public class VideoPlayerViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
+public class VideoPlayerViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     public VideoPlayerViewModel(@NonNull Application application) {
         super(application);
     }
-
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 

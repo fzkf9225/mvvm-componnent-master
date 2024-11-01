@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import dagger.assisted.Assisted;
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.EntryPointAccessors;
@@ -55,7 +56,7 @@ public class UserViewModel extends BaseViewModel<UserRepositoryImpl, UserView> {
     }
 
     @Override
-    protected UserRepositoryImpl createRepository() {
+    protected UserRepositoryImpl repository() {
         return new UserRepositoryImpl(userApiService, retryService, baseView);
     }
 
@@ -71,11 +72,11 @@ public class UserViewModel extends BaseViewModel<UserRepositoryImpl, UserView> {
         int id = v.getId();
         if (id == R.id.login_submit) {
             if (StringUtil.isEmpty(requestLoginBean.getUsername())) {
-                baseView.showToast( "请填写用户名");
+                baseView.showToast("请填写用户名");
                 return;
             }
             if (StringUtil.isEmpty(password)) {
-                baseView.showToast(  "请填写密码");
+                baseView.showToast("请填写密码");
                 return;
             }
             try {

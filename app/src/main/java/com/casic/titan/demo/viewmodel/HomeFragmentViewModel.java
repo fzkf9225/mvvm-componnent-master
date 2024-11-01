@@ -13,6 +13,7 @@ import com.casic.titan.usercomponent.api.UserApiService;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
 
@@ -20,20 +21,14 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * Created by fz on 2023/4/27 14:58
  * describe :
  */
-@HiltViewModel
-public class HomeFragmentViewModel extends BaseViewModel<RepositoryImpl, HomeFragmentView> implements DefaultLifecycleObserver {
-    @Inject
-    ApiServiceHelper apiServiceHelper;
-    @Inject
-    UserApiService userApiService;
+public class HomeFragmentViewModel extends BaseViewModel<RepositoryImpl, BaseView> implements DefaultLifecycleObserver {
 
-    @Inject
     public HomeFragmentViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 

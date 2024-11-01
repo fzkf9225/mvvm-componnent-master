@@ -14,6 +14,7 @@ import com.casic.titan.demo.module.HiltUserServiceModule;
 import javax.inject.Inject;
 
 import dagger.hilt.android.EntryPointAccessors;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.inter.RetryService;
@@ -23,8 +24,8 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * Created by fz on 2024/5/31 11:31
  * describe :
  */
-@dagger.hilt.android.lifecycle.HiltViewModel
-public class HiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+@HiltViewModel
+public class TestHiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     @Inject
     @HiltUserServiceModule.HiltUser
     HiltUserService hiltUserService;
@@ -44,13 +45,13 @@ public class HiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     public RetryService retryService;
 
     @Inject
-    public HiltViewModel(@NonNull Application application) {
+    public TestHiltViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
-        return new RepositoryImpl(retryService,baseView);
+    protected RepositoryImpl repository() {
+        return new RepositoryImpl(retryService, baseView);
     }
 
     public void onClick(View view) {

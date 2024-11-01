@@ -82,7 +82,7 @@ public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB ex
 
         } else if (refresh instanceof LoadState.NotLoading) {
             refreshLayout.finishRefresh();
-            if (adapter.getRealItemCount() == 0) {
+            if (adapter.getItemCount() == 0) {
                 setRecyclerViewVisibility(EmptyLayout.NO_DATA);
             } else {
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);

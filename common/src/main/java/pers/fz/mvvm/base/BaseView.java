@@ -34,5 +34,4 @@ public interface BaseView {
      */
     void onErrorCode(BaseModelEntity model);
 
-
 }

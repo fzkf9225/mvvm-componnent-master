@@ -1,69 +1,75 @@
 package pers.fz.mvvm.datasource;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.paging.PagingSource;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Single;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.repository.PagingRepositoryImpl;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.repository.RoomRepositoryImpl;
 
 /**
- * Created by fz on 2023/8/7 9:17
- * describe :
+ * created by fz on 2024/11/1 17:36
+ * describe:
  */
-public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer, T> {
-    private int startPage = 1;
-    private final PagingRepositoryImpl<T,BV> pagingRepository;
+public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
 
-    public PagingSource(PagingRepositoryImpl<T,BV> pagingRepository) {
-        this.pagingRepository = pagingRepository;
+    private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
+    private final Map<String, Object> queryParams;
+    private int startPage = 1;
+
+    public RoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                            Map<String, Object> queryParams) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = queryParams;
     }
 
-    public PagingSource(PagingRepositoryImpl<T,BV> pagingRepository, int startPage) {
-        this.pagingRepository = pagingRepository;
+    public RoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                            Map<String, Object> queryParams,
+                            int startPage) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = queryParams;
         this.startPage = startPage;
     }
 
     @NonNull
     @Override
-    public Single<LoadResult<Integer, T>> loadSingle(@NonNull LoadParams<Integer> loadParams) {
+    public Single<LoadResult<Integer, T>> loadSingle(@NonNull PagingSource.LoadParams<Integer> loadParams) {
         try {
             Integer nextPageNumber = loadParams.getKey();
             if (nextPageNumber == null) {
                 nextPageNumber = startPage;
             }
+            int limit = loadParams.getLoadSize();
+            int offset = nextPageNumber * limit;
+
             Integer finalNextPageNumber = nextPageNumber;
-            return Single.fromObservable(
-                            pagingRepository.requestPaging(nextPageNumber, loadParams.getLoadSize())
-                                    .map(mBeans -> toLoadResult(mBeans, finalNextPageNumber))
-                    .doOnError(pagingRepository.catchException())
-                    .onErrorReturn(LoadResult.Error::new));
+            return roomRepositoryImpl.doQueryByOrderDesc(queryParams, limit, offset)
+                    .map(mBeans -> toLoadResult(mBeans, finalNextPageNumber))
+                    .onErrorReturn(LoadResult.Error::new)
+                    .singleOrError();
         } catch (Exception e) {
-            LogUtil.show(ApiRetrofit.TAG, "异常：" + e);
             e.printStackTrace();
-            pagingRepository.onError(e);
             return Single.just(new LoadResult.Error<>(e));
         }
     }
+
     /**
      * 功能描述 将获取的集合对象转化为需加载的结果对象
      *
      * @param mBeans 待加载的实体
-     * @param page  对应的页数
-     * @return: androidx.paging.PagingSource.LoadResult<java.lang.Integer, com.xxx.xxx.Bean>
+     * @param page   对应的页数
+     * @return: androidx.paging.PagingSource.LoadResult<java.lang.Integer, T>
      * @since 1.0
      */
     private LoadResult<Integer, T> toLoadResult(@NonNull List<T> mBeans, Integer page) {
-        Integer prevKey = page == 1 ? null : page - 1;
+        Integer prevKey = page == 0 ? null : page - 1;
         Integer nextKey = mBeans.isEmpty() ? null : page + 1;
         return new LoadResult.Page<>(mBeans, prevKey, nextKey, LoadResult.Page.COUNT_UNDEFINED,
                 LoadResult.Page.COUNT_UNDEFINED);
@@ -71,7 +77,7 @@ public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer,
 
     @Nullable
     @Override
-    public Integer getRefreshKey(@NotNull PagingState<Integer, T> state) {
+    public Integer getRefreshKey(@NonNull PagingState<Integer, T> state) {
         Integer anchorPosition = state.getAnchorPosition();
         if (anchorPosition == null) {
             return null;

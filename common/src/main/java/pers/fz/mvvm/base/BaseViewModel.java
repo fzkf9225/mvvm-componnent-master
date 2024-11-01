@@ -9,34 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 
-import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.repository.IRepository;
-
-import javax.inject.Inject;
-
-
 /**
  * Create by CherishTang on 2020/3/19 0019
  * describe:baseViewMode封装
  */
-public abstract class BaseViewModel<IR extends IRepository, V extends BaseView> extends AndroidViewModel {
+public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> extends AndroidViewModel {
     protected final String TAG = this.getClass().getSimpleName();
-
-    protected V baseView;
 
     protected IR iRepository;
 
+    protected BV baseView;
+
     public BaseViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    public void setBaseView(@NonNull V baseView) {
-        this.baseView = baseView;
-        iRepository = createRepository();
-    }
-
-    public V getBaseView() {
-        return baseView;
     }
 
     @Override
@@ -47,11 +33,20 @@ public abstract class BaseViewModel<IR extends IRepository, V extends BaseView> 
         }
     }
 
-    public IR getRepository() {
-        return iRepository;
+    public void setBaseView(BV baseView) {
+        this.baseView = baseView;
     }
 
-    protected abstract IR createRepository();
+    public BV getBaseView() {
+        return baseView;
+    }
+
+    protected abstract IR repository();
+
+    public void createRepository(BV baseView) {
+        this.baseView = baseView;
+        iRepository = repository();
+    }
 
     public void startActivity(Context context, Class<?> toClx, Bundle bundle) {
         Intent intent = new Intent(context, toClx);

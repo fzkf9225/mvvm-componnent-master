@@ -77,7 +77,6 @@ dependencies {
     implementation project(":mqttcomponent")
     implementation project(':commonmedia')
     implementation libs.google.hilt.android
-    annotationProcessor libs.google.hilt.android.compiler
     kapt libs.google.hilt.android.compiler
 
     implementation libs.geyifeng.immersionbar

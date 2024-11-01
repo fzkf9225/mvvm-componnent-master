@@ -74,7 +74,7 @@ public abstract class BasePagingFragment<VM extends PagingViewModel, VDB extends
         // 处理下拉刷新逻辑
         if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
             refreshLayout.setRefreshing(false);
-            if (adapter.getRealItemCount() == 0) {
+            if (adapter.getItemCount() == 0) {
                 setRecyclerViewVisibility(EmptyLayout.NO_DATA);
             } else {
                 setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);

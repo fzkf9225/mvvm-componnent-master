@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.media.dialog.OpenImageDialog;
 
 /**
@@ -25,7 +25,7 @@ import pers.fz.media.dialog.OpenImageDialog;
  * describe：我的页面
  */
 @AndroidEntryPoint
-public class MeFragment extends BaseFragment<MainViewModel, MeFragmentBinding> {
+public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> {
     private final String TAG = this.getClass().getSimpleName();
     private MediaHelper mediaHelper;
     @Inject

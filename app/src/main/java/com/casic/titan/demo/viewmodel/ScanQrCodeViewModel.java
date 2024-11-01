@@ -15,12 +15,13 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 public class ScanQrCodeViewModel extends BaseViewModel<RepositoryImpl,ScanQrCodeView> {
+
     public ScanQrCodeViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 }

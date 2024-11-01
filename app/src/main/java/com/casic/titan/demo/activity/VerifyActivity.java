@@ -21,11 +21,11 @@ import pers.fz.annotation.verify.VerifyResult;
 
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 @AndroidEntryPoint
-public class VerifyActivity extends BaseActivity<MainViewModel, ActivityVerifyBinding> {
+public class VerifyActivity extends BaseActivity<EmptyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 
     @Override

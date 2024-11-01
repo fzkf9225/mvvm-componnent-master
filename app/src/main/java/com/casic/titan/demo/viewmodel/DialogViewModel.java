@@ -62,7 +62,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 

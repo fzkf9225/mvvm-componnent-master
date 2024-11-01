@@ -13,12 +13,13 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 public class MediaViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
+
     public MediaViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 }

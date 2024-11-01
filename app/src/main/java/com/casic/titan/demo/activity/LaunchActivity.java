@@ -24,17 +24,16 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.databinding.LaunchLayoutBinding;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
  * Created by fz on 2017/5/15.
  * 启动页
  */
 @AndroidEntryPoint
-public class LaunchActivity extends BaseActivity<MainViewModel, LaunchLayoutBinding> {
+public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBinding> {
     private Disposable disposable;
     private int countDown = 3;
     private final String[] PERMISSIONS = new String[]{

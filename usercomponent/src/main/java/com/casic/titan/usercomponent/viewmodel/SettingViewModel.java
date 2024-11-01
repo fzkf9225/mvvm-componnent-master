@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
+import dagger.assisted.Assisted;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.activity.TechnicalSupportActivity;
 import pers.fz.mvvm.api.ConstantsHelper;
@@ -31,16 +32,14 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * Create by CherishTang on 2020/3/26 0026
  * describe:
  */
-@HiltViewModel
 public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
 
-    @Inject
     public SettingViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected RepositoryImpl repository() {
         return null;
     }
 

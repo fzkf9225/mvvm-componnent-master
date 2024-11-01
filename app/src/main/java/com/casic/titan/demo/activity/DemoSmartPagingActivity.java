@@ -10,10 +10,10 @@ import com.casic.titan.demo.databinding.ActivityDemoSmartPagingBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 @AndroidEntryPoint
-public class DemoSmartPagingActivity extends BaseActivity<MainViewModel, ActivityDemoSmartPagingBinding> {
+public class DemoSmartPagingActivity extends BaseActivity<EmptyViewModel, ActivityDemoSmartPagingBinding> {
 
     private UseCase useCase;
 

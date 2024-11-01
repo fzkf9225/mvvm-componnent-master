@@ -27,7 +27,7 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, PagingRecyclerViewBinding, ForestBean> implements OnHeaderViewClickListener {
+public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, PagingRecyclerViewBinding, ForestBean> {
     @Inject
     ApiServiceHelper apiServiceHelper;
     @Override
@@ -38,7 +38,6 @@ public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        adapter.setOnHeaderViewClickListener(this);
     }
 
     @Override
@@ -69,15 +68,4 @@ public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, 
                 .builder()
                 .show();
     }
-
-    @Override
-    public void onHeaderViewClick(View view) {
-        showToast("头布局点击事件！");
-    }
-
-    @Override
-    public void onHeaderViewLongClick(View view) {
-        showToast("头布局长按事件！");
-    }
-
 }

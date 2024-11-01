@@ -10,15 +10,14 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
  * Created by fz on 2023/8/17 16:12
  * describe :
  */
 @AndroidEntryPoint
-public class CoordinatorActivity extends BaseActivity<MainViewModel, ActivityCoordinatorBinding> {
+public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCoordinatorBinding> {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_coordinator;

@@ -1,13 +1,15 @@
 package pers.fz.mvvm.base;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -32,7 +34,6 @@ import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
@@ -143,9 +144,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
                 modelClass = BaseViewModel.class;
             }
             mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
-            mViewModel.setBaseView(this);
+            mViewModel.createRepository(this);
         }
     }
+
 
     public boolean lacksPermissions(String... permission) {
         return PermissionsChecker.getInstance().lacksPermissions(this, permission);

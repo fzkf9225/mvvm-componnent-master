@@ -5,14 +5,14 @@ import android.os.Bundle;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.databinding.EmptyFragmentBinding;
-import pers.fz.mvvm.viewmodel.MainViewModel;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 
 /**
  * Created by fz on 2023/7/13 9:35
  * describe :
  */
-public class EmptyFragment extends BaseFragment<MainViewModel, EmptyFragmentBinding> {
+public class EmptyFragment extends BaseFragment<EmptyViewModel, EmptyFragmentBinding> {
 
     @Override
     protected int getLayoutId() {

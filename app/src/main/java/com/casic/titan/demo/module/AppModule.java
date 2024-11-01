@@ -1,9 +1,6 @@
 package com.casic.titan.demo.module;
 
 import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.usercomponent.api.UserApiService;
-
-import javax.inject.Inject;
 
 import dagger.Module;
 import dagger.Provides;

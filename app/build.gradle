@@ -25,7 +25,7 @@ android {
         }
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["foo": "bar"]
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
@@ -109,7 +109,6 @@ dependencies {
     implementation libs.logger
 
     implementation libs.google.hilt.android
-    annotationProcessor libs.google.hilt.android.compiler
     kapt libs.google.hilt.android.compiler
 
     implementation libs.androidx.core.splashscreen

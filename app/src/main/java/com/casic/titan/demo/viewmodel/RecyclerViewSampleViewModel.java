@@ -20,6 +20,7 @@ import pers.fz.mvvm.bean.base.PageBean;
  * describe :
  */
 public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseView, PopupWindowBean> {
+
     public RecyclerViewSampleViewModel(@NonNull Application application) {
         super(application);
     }

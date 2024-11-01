@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityHiltBinding;
-import com.casic.titan.demo.viewmodel.HiltViewModel;
+import com.casic.titan.demo.viewmodel.TestHiltViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 
 @AndroidEntryPoint
-public class HiltActivity extends BaseActivity<HiltViewModel, ActivityHiltBinding> {
+public class HiltActivity extends BaseActivity<TestHiltViewModel, ActivityHiltBinding> {
 
     @Override
     protected int getLayoutId() {

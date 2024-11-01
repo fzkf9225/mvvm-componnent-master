@@ -23,6 +23,7 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
 public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V extends BaseView> extends BaseViewModel<IR, V> {
     private PagingConfig pagingConfig;
     private int startPage = 1;
+    private final static int DEFAULT_PAGE_SIZE = 20;
     /**
      * 当请求发生错误时是否用EmptyLayout占用显示错误页
      */
@@ -34,8 +35,8 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
 
     public PagingViewModel(@NonNull Application application) {
         super(application);
-        items = createPagingData();
     }
+
 
     public LiveData<PagingData<T>> getItems() {
         return items;
@@ -49,8 +50,14 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
         );
     }
 
+    @Override
+    public void createRepository(V baseView) {
+        super.createRepository(baseView);
+        items = createPagingData();
+    }
+
     public void invalidatePagingSource(){
-        pagingSource.invalidate();
+        items = createPagingData();
     }
 
     public CoroutineScope getCoroutineScope() {
@@ -75,7 +82,7 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
 
     public PagingConfig getPagingConfig() {
         if (pagingConfig == null) {
-            pagingConfig = new PagingConfig(3, 2, true);
+            pagingConfig = new PagingConfig(DEFAULT_PAGE_SIZE, 3, true,30);
         }
         return pagingConfig;
     }

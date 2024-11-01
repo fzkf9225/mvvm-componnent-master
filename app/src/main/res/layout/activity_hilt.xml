@@ -6,7 +6,7 @@
     <data>
         <variable
             name="hiltViewModel"
-            type="com.casic.titan.demo.viewmodel.HiltViewModel" />
+            type="com.casic.titan.demo.viewmodel.TestHiltViewModel" />
     </data>
 
     <ScrollView

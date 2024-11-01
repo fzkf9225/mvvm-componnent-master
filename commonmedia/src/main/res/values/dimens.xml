@@ -1,0 +1,64 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="horizontal_margin_xxxxl">32dp</dimen>
+    <dimen name="vertical_margin_xxxxl">32dp</dimen>
+    <dimen name="horizontal_margin_xxxl">28dp</dimen>
+    <dimen name="vertical_margin_xxxl">28dp</dimen>
+    <dimen name="horizontal_margin_xxl">24dp</dimen>
+    <dimen name="vertical_margin_xxl">24dp</dimen>
+    <dimen name="horizontal_margin_xl">16dp</dimen>
+    <dimen name="vertical_margin_xl">16dp</dimen>
+    <dimen name="horizontal_margin_l">12dp</dimen>
+    <dimen name="vertical_margin_l">12dp</dimen>
+    <dimen name="horizontal_margin_m">8dp</dimen>
+    <dimen name="vertical_margin_m">8dp</dimen>
+    <dimen name="horizontal_margin_s">4dp</dimen>
+    <dimen name="vertical_margin_s">4dp</dimen>
+    <dimen name="font_size_xxxl">24sp</dimen>
+    <dimen name="font_size_xxl">18sp</dimen>
+    <dimen name="font_size_xl">14sp</dimen>
+    <dimen name="font_size_l">12sp</dimen>
+    <dimen name="font_size_m">10sp</dimen>
+    <dimen name="font_size_s">8sp</dimen>
+
+    <dimen name="padding_s">4dp</dimen>
+    <dimen name="padding_m">8dp</dimen>
+    <dimen name="padding_l">12dp</dimen>
+    <dimen name="padding_xl">16dp</dimen>
+    <dimen name="padding_xxl">24dp</dimen>
+    <dimen name="padding_xxxl">28dp</dimen>
+
+    <dimen name="radius_s">4dp</dimen>
+    <dimen name="radius_m">8dp</dimen>
+    <dimen name="radius_l">12dp</dimen>
+    <dimen name="radius_xl">16dp</dimen>
+    <dimen name="radius_xxl">24dp</dimen>
+    <dimen name="radius_xxxl">28dp</dimen>
+    <dimen name="radius_xxxxl">32dp</dimen>
+
+    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="navigation_height">48dp</dimen>
+
+    <dimen name="height_s">15dp</dimen>
+    <dimen name="height_m">24dp</dimen>
+    <dimen name="height_l">30dp</dimen>
+    <dimen name="height_xl">40dp</dimen>
+    <dimen name="height_xxl">45dp</dimen>
+    <dimen name="height_xxxl">48dp</dimen>
+    <dimen name="height_xxxxl">56dp</dimen>
+
+    <dimen name="image_m">24dp</dimen>
+    <dimen name="image_l">32dp</dimen>
+    <dimen name="image_xl">45dp</dimen>
+    <dimen name="image_xxl">64dp</dimen>
+
+
+    <dimen name="audio_course_item_seek_bar_progress_height">6dp</dimen>
+    <dimen name="audio_course_item_seek_bar_radius">2dp</dimen>
+    <dimen name="audio_seek_bar_thumb_size">20dp</dimen>
+    <dimen name="audio_seek_bar_thumb_ring_width">4dp</dimen>
+    <!--Fab大小设置-->
+    <dimen name="design_fab_size_normal">80dp</dimen>
+    <!--Fab中间Icon大小设置-->
+    <dimen name="design_fab_image_size">60dp</dimen>
+</resources>
