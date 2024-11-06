@@ -7,7 +7,6 @@ import androidx.navigation.Navigation;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.activity.PagingDetailActivity;
-import com.casic.titan.demo.adapter.PagingDemoAdapter;
 import com.casic.titan.demo.adapter.PagingHeaderDemoAdapter;
 import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.ForestBean;
@@ -18,7 +17,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
-import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
@@ -64,7 +62,7 @@ public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, 
         new ConfirmDialog(requireContext())
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position + 1))
+                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position))
                 .builder()
                 .show();
     }

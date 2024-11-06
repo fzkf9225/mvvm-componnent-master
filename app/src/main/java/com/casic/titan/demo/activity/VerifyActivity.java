@@ -11,8 +11,11 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityVerifyBinding;
+import com.casic.titan.demo.viewmodel.VerifyViewModel;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -25,7 +28,7 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 @AndroidEntryPoint
-public class VerifyActivity extends BaseActivity<EmptyViewModel, ActivityVerifyBinding> {
+public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 
     @Override
@@ -63,23 +66,24 @@ public class VerifyActivity extends BaseActivity<EmptyViewModel, ActivityVerifyB
 
             }
         });
+        mViewModel.liveData.observe(this, aBoolean -> {
+            if (aBoolean) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         binding.verifySubmit.setOnClickListener(v -> {
             showLoading("验证中...");
             binding.getData().setImageList(binding.formImage.getImages());
-//            Family family1 = new Family("我是妻子1", "我是丈夫1");
-//            Family family2 = new Family("我是妻子2", "我是丈夫2");
-//            binding.getData().setFamily(family1);
-//            binding.getData().setFamilyList(Arrays.asList(family1, family2));
-
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
             hideLoading();
-            if (verifyResult.isOk()) {
-                binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
-            } else {
-                binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_red));
-            }
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
-            binding.tvVerifyResult.setText(String.format("%s,验证结果：%s", binding.getData().toString(), verifyResult.getErrorMsg()));
+            if (!verifyResult.isOk()) {
+                binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_red));
+                return;
+            }
+            binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
+            mViewModel.add(binding.getData());
         });
         binding.tvSex.setOnClickListener(v ->
                 new MenuDialog<>(this)
@@ -101,7 +105,6 @@ public class VerifyActivity extends BaseActivity<EmptyViewModel, ActivityVerifyB
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
         binding.setData(new Person("张三", "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
-
     }
 
     @Override

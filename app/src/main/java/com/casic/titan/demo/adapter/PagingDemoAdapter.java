@@ -23,7 +23,6 @@ public class PagingDemoAdapter extends BasePagingAdapter<ForestBean, PagingItemB
 
     @Override
     public void onBindHolder(BaseViewHolder<PagingItemBinding> holder,ForestBean item, int pos) {
-        LogUtil.show(ApiRetrofit.TAG,"第："+pos+"行，"+item.getCaretaker());
         holder.getBinding().setVariable(BR.item, item);
         holder.getBinding().executePendingBindings();
     }

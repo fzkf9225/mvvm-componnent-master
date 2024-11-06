@@ -142,4 +142,10 @@ dependencies {
     implementation libs.net.res
     implementation libs.net.ui
 
+    implementation libs.androidx.room.runtime
+    kapt libs.room.compiler
+    // optional - RxJava3 support for Room
+    implementation libs.room.rxjava3
+    // optional - Paging 3 Integration
+    implementation libs.room.paging
 }

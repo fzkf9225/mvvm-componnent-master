@@ -48,7 +48,6 @@ public class PagingSource<T,BV extends BaseView> extends RxPagingSource<Integer,
                     .doOnError(pagingRepository.catchException())
                     .onErrorReturn(LoadResult.Error::new));
         } catch (Exception e) {
-            LogUtil.show(ApiRetrofit.TAG, "异常：" + e);
             e.printStackTrace();
             pagingRepository.onError(e);
             return Single.just(new LoadResult.Error<>(e));

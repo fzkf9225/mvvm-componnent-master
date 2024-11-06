@@ -2,8 +2,12 @@ package com.casic.titan.demo.bean;
 
 import android.net.Uri;
 
-import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.List;
 
@@ -13,25 +17,31 @@ import pers.fz.annotation.verify.VerifyField;
 import pers.fz.annotation.verify.VerifyFieldSort;
 import pers.fz.annotation.verify.VerifyParams;
 import pers.fz.annotation.verify.VerifyType;
+import pers.fz.mvvm.bean.BaseDaoBean;
+import pers.fz.mvvm.database.RoomConverter;
 
 /**
  * Created by fz on 2023/9/5 18:32
  * describe :
  */
+
+@Entity
 @VerifyEntity(sort = true)
-public class Person extends BaseObservable {
+public class Person extends BaseDaoBean {
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "姓名为空！"),
             @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, minLength = 2, maxLength = 10, errorMsg = "姓名输入错误！"),
-            @VerifyParams(type = VerifyType.EQUALS, errorMsg = "您只能填张三！", equalStr = "张三")
+//            @VerifyParams(type = VerifyType.EQUALS, errorMsg = "您只能填张三！", equalStr = "张三")
     })
     @VerifyFieldSort(1)
+    @ColumnInfo
     private String name;
 
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "请选择性别！"),
     })
     @VerifyFieldSort(2)
+    @ColumnInfo
     private String sex;
 
     @VerifyField({
@@ -39,6 +49,7 @@ public class Person extends BaseObservable {
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
     })
     @VerifyFieldSort(3)
+    @ColumnInfo
     private String mobile;
 
     @VerifyField({
@@ -46,10 +57,12 @@ public class Person extends BaseObservable {
             @VerifyParams(type = VerifyType.TEL_PHONE, errorMsg = "固话号码格式输入不正确！")
     })
     @VerifyFieldSort(4)
+    @ColumnInfo
     private String tel;
 
     @VerifyFieldSort(5)
     @VerifyParams(type = VerifyType.NUMBER_RANGE, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
+    @ColumnInfo
     private String age;
 
     @VerifyField({
@@ -59,6 +72,7 @@ public class Person extends BaseObservable {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
     @VerifyFieldSort(6)
+    @ColumnInfo
     private String weight;
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "身高为空"),
@@ -67,34 +81,43 @@ public class Person extends BaseObservable {
 
     })
     @VerifyFieldSort(7)
+    @ColumnInfo
     private String height;
     @VerifyField({
 //            @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "邮箱地址为空！"),
             @VerifyParams(type = VerifyType.EMAIL, notNull = false, errorMsg = "邮箱地址错误！")
     })
     @VerifyFieldSort(8)
+    @ColumnInfo
     private String email;
 
     @VerifyFieldSort(8)
     @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的爱好！")
+    @ColumnInfo
+    @TypeConverters({RoomConverter.class})
     private List<String> hobby;
 
-    @VerifyFieldSort(9)
-    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
+//    @VerifyFieldSort(9)
+//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
+    @Ignore
     private List<Uri> imageList;
 
-    @VerifyFieldSort(10)
-    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
+//    @VerifyFieldSort(10)
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
+    @Ignore
     public Family family;
 
-    @VerifyFieldSort(13)
-    @Valid(notNull = true, errorMsg = "请选择您的家庭集合信息！")
+//    @VerifyFieldSort(13)
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭集合信息！")
+    @ColumnInfo
+    @Ignore
     public List<Family> familyList;
 
 
     public Person() {
     }
 
+    @Ignore
     public Person(String name, String mobile, String tel, String age, String weight, String height, String email, List<String> hobby) {
         this.name = name;
         this.mobile = mobile;
@@ -193,6 +216,7 @@ public class Person extends BaseObservable {
         this.sex = sex;
         notifyPropertyChanged(com.casic.titan.demo.BR.sex);
     }
+
 
     public List<Uri> getImageList() {
         return imageList;

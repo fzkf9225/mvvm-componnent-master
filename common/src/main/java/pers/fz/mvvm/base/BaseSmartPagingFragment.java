@@ -25,7 +25,10 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.listener.PagingAdapterListener;
+import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.viewmodel.BasePagingViewModel;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
@@ -34,7 +37,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * Created by fz on 2017/11/17.
  * 列表式fragment的BaseRecyclerViewFragment封装
  */
-public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
+public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener {
     protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
@@ -189,13 +192,13 @@ public abstract class BaseSmartPagingFragment<VM extends PagingViewModel, VDB ex
     @Override
     public void onEmptyLayoutClick(View v) {
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
-        mViewModel.invalidatePagingSource();
+        mViewModel.refreshData();
         adapter.refresh();
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        mViewModel.invalidatePagingSource();
+        mViewModel.refreshData();
         adapter.refresh();
     }
 

@@ -12,18 +12,22 @@ import androidx.paging.PagingLiveData;
 
 import kotlinx.coroutines.CoroutineScope;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.datasource.PagingSource;
+import pers.fz.mvvm.repository.IRepository;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
 
 /**
  * Created by fz on 2023/12/1 14:17
  * describe :
  */
-public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V extends BaseView> extends BaseViewModel<IR, V> {
+public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseView> extends BasePagingViewModel<IR, V> {
     private PagingConfig pagingConfig;
-    private int startPage = 1;
-    private final static int DEFAULT_PAGE_SIZE = 20;
+    protected final static int DEFAULT_START_PAGE = 1;
+    protected final static int DEFAULT_PAGE_SIZE = 20;
+    protected final static int DEFAULT_INIT_LOAD_SIZE = DEFAULT_PAGE_SIZE * 2;
+    protected final static int DEFAULT_PREFETCH_DISTANCE = 3;
+
+    private int startPage = DEFAULT_START_PAGE;
     /**
      * 当请求发生错误时是否用EmptyLayout占用显示错误页
      */
@@ -31,21 +35,18 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
 
     private LiveData<PagingData<T>> items;
 
-    protected PagingSource<T, V> pagingSource;
 
     public PagingViewModel(@NonNull Application application) {
         super(application);
     }
-
 
     public LiveData<PagingData<T>> getItems() {
         return items;
     }
 
     public LiveData<PagingData<T>> createPagingData() {
-        pagingSource = new PagingSource<T, V>(iRepository, startPage);
         return PagingLiveData.cachedIn(PagingLiveData.getLiveData(
-                        new Pager<>(getPagingConfig(), () -> pagingSource)),
+                        new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>((PagingRepositoryImpl<T, V>) iRepository, getStartPage()))),
                 getCoroutineScope()
         );
     }
@@ -56,7 +57,7 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
         items = createPagingData();
     }
 
-    public void invalidatePagingSource(){
+    public void refreshData() {
         items = createPagingData();
     }
 
@@ -76,13 +77,17 @@ public abstract class PagingViewModel<IR extends PagingRepositoryImpl, T, V exte
         this.startPage = startPage;
     }
 
+    public int getStartPage() {
+        return startPage;
+    }
+
     public void setPagingConfig(PagingConfig pagingConfig) {
         this.pagingConfig = pagingConfig;
     }
 
     public PagingConfig getPagingConfig() {
         if (pagingConfig == null) {
-            pagingConfig = new PagingConfig(DEFAULT_PAGE_SIZE, 3, true,30);
+            pagingConfig = new PagingConfig(DEFAULT_PAGE_SIZE, DEFAULT_PREFETCH_DISTANCE, true, DEFAULT_INIT_LOAD_SIZE);
         }
         return pagingConfig;
     }

@@ -88,6 +88,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
                 ContextCompat.getColor(requireActivity(), R.color.h_line_color));
     }
+
     protected void requestData() {
 
     }

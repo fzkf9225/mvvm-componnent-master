@@ -48,6 +48,10 @@ public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> 
         iRepository = repository();
     }
 
+    public IR getRepository() {
+        return iRepository;
+    }
+
     public void startActivity(Context context, Class<?> toClx, Bundle bundle) {
         Intent intent = new Intent(context, toClx);
         ContextCompat.startActivity(context, intent, bundle);

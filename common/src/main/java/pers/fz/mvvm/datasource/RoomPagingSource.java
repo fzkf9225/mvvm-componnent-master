@@ -9,7 +9,11 @@ import androidx.paging.rxjava3.RxPagingSource;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.database.BaseRoomDao;
 import pers.fz.mvvm.repository.RoomRepositoryImpl;
@@ -22,7 +26,7 @@ public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
 
     private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
     private final Map<String, Object> queryParams;
-    private int startPage = 1;
+    private int startPage = 0;
 
     public RoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                             Map<String, Object> queryParams) {
@@ -48,9 +52,12 @@ public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
             }
             int limit = loadParams.getLoadSize();
             int offset = nextPageNumber * limit;
-
             Integer finalNextPageNumber = nextPageNumber;
-            return roomRepositoryImpl.doQueryByOrderDesc(queryParams, limit, offset)
+            return Flowable.create((FlowableOnSubscribe<List<T>>) emitter -> {
+                        emitter.onNext(roomRepositoryImpl.findPageList(queryParams, "id", limit, offset));
+                        emitter.onComplete();
+                    }, BackpressureStrategy.LATEST)
+                    .subscribeOn(Schedulers.io())
                     .map(mBeans -> toLoadResult(mBeans, finalNextPageNumber))
                     .onErrorReturn(LoadResult.Error::new)
                     .singleOrError();
@@ -97,7 +104,6 @@ public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
         if (nextKey != null) {
             return nextKey - 1;
         }
-
         return null;
     }
 }

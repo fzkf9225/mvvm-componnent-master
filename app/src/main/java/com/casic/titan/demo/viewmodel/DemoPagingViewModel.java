@@ -37,11 +37,6 @@ public class DemoPagingViewModel extends PagingViewModel<DemoPagingRepositoryImp
     }
 
     @Override
-    public LiveData<PagingData<ForestBean>> createPagingData() {
-        return super.createPagingData();
-    }
-
-    @Override
     protected DemoPagingRepositoryImpl repository() {
         return new DemoPagingRepositoryImpl(apiServiceHelper, retryService, baseView);
     }
