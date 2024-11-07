@@ -17,26 +17,24 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.database.RxRoomDao;
-import pers.fz.mvvm.repository.RxRoomRepositoryImpl;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.repository.RoomRepositoryImpl;
 
 /**
  * created by fz on 2024/11/1 17:36
  * describe:
  */
-public class RxRoomPagingSource<T, DB extends RxRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
+public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
 
-    private final RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
+    private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
     private final Map<String, Object> queryParams;
     private int startPage = 0;
 
     private Set<String> keywordsKey;
     private String keywords;
 
-    public RxRoomPagingSource(RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                               Map<String, Object> queryParams,
                               Set<String> keywordsKey,
                               String keywords) {
@@ -46,7 +44,7 @@ public class RxRoomPagingSource<T, DB extends RxRoomDao<T>, BV extends BaseView>
         this.keywordsKey = keywordsKey;
     }
 
-    public RxRoomPagingSource(RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                               Map<String, Object> queryParams,
                               Set<String> keywordsKey,
                               String keywords,
@@ -69,8 +67,6 @@ public class RxRoomPagingSource<T, DB extends RxRoomDao<T>, BV extends BaseView>
             int limit = loadParams.getLoadSize();
             int offset = nextPageNumber * limit;
             Integer finalNextPageNumber = nextPageNumber;
-            LogUtil.show(ApiRetrofit.TAG,"搜索："+keywords);
-            LogUtil.show(ApiRetrofit.TAG,"搜索："+new Gson().toJson(keywordsKey));
             return Flowable.create((FlowableOnSubscribe<List<T>>) emitter -> {
                         emitter.onNext(roomRepositoryImpl.findPageList(queryParams, keywordsKey,keywords,"id", limit, offset));
                         emitter.onComplete();

@@ -10,6 +10,7 @@ import androidx.paging.PagingLiveData;
 
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.database.PersonDatabase;
+import com.casic.titan.demo.repository.RoomPagingRepositoryImpl;
 
 import org.reactivestreams.Publisher;
 
@@ -26,7 +27,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.functions.Function;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.datasource.RxRoomPagingSource;
-import pers.fz.mvvm.repository.RxRoomRepositoryImpl;
+import pers.fz.mvvm.repository.RoomRepositoryImpl;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 
 /**
@@ -34,7 +35,7 @@ import pers.fz.mvvm.viewmodel.PagingViewModel;
  * describe :
  */
 @HiltViewModel
-public class DemoRoomPagingViewModel extends PagingViewModel<RxRoomRepositoryImpl, Person, BaseView> {
+public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositoryImpl, Person, BaseView> {
 
     public final Map<String,Object> queryParams = new HashMap<>();
 
@@ -58,14 +59,8 @@ public class DemoRoomPagingViewModel extends PagingViewModel<RxRoomRepositoryImp
     }
 
     @Override
-    protected RxRoomRepositoryImpl repository() {
-        Flowable.just(new ArrayList<Person>()).flatMap(new Function<ArrayList<Person>, Publisher<ArrayList<Person>>>() {
-            @Override
-            public Publisher<ArrayList<Person>> apply(ArrayList<Person> people) throws Throwable {
-                return null;
-            }
-        });
-        return new RxRoomRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
+    protected RoomPagingRepositoryImpl repository() {
+        return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
     }
 
     @Override

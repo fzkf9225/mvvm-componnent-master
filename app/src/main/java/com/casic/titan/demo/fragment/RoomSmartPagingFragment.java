@@ -5,14 +5,17 @@ import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingRoomAdapter;
 import com.casic.titan.demo.bean.Person;
+import com.casic.titan.demo.database.PersonDatabase;
 import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.api.ApiRetrofit;
@@ -42,25 +45,14 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     @Override
     public void onItemClick(View view, Person item, int position) {
         super.onItemClick(view, item, position);
-        Disposable disposable = mViewModel.getRepository()
-                .doQueryByOrderDesc(new HashMap<>() {{
-                    put("id", 54878);
-                }}, "id", true, 20, 0)
+        Disposable disposable = mViewModel.getRepository().findInfoById(item.getId() ,true)
                 .subscribe((data) -> {
                     LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
                     showToast("查询成功！");
-                }, (Consumer<Throwable>) throwable -> {
+                }, throwable -> {
                     LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
                     showToast("查询失败，" + throwable.getMessage());
                 });
-//        Disposable disposable = mViewModel.getRepository().find(5878 ,true)
-//                .subscribe((data) -> {
-//                    LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
-//                    showToast("查询成功！");
-//                }, throwable -> {
-//                    LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
-//                    showToast("查询失败，" + throwable.getMessage());
-//                });
     }
 
     public void searcher(String keywords) {
@@ -79,7 +71,7 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setMessage("是否确认删除此行？")
                 .setOnSureClickListener(dialog -> {
                     Disposable disposable = mViewModel.getRepository().deleteByParams(new HashMap<>() {{
-                                put("id", 1231231);
+                                put("id", item.getId());
                             }}, true)
                             .subscribe((integer) -> {
                                 LogUtil.show(ApiRetrofit.TAG, "删除成功：" + integer);
