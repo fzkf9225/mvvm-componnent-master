@@ -142,6 +142,7 @@ dependencies {
     implementation libs.net.res
     implementation libs.net.ui
 
+    implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
     kapt libs.room.compiler
     // optional - RxJava3 support for Room

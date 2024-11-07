@@ -10,14 +10,14 @@ import com.casic.titan.demo.bean.Person;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
-import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.database.RxRoomDao;
 
 /**
  * created by fz on 2024/11/6 10:31
  * describe:
  */
 @Dao
-public abstract class PersonDao extends BaseRoomDao<Person> {
+public abstract class PersonDao extends RxRoomDao<Person> {
     @NonNull
     @Override
     public String getTableName() {

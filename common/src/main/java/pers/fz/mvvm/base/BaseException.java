@@ -81,6 +81,17 @@ public class BaseException extends IOException {
      * WebSocket未授权，即token过期
      */
     public static final String WEBSOCKET_NO_PERMISSION_ERROR = "1016";
+
+    /**
+     * 暂无数据
+     */
+    public static final String NOT_FOUND = "1017";
+    public static final String NOT_FOUND_MSG = "暂无数据";
+    /**
+     * 删除成功
+     */
+    public static final String DELETE_SUCCESS = "1018";
+    public static final String DELETE_SUCCESS_MSG = "删除成功";
     private String errorMsg;
     private String errorCode;
 

@@ -6,19 +6,17 @@ import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.List;
 
-import pers.fz.annotation.verify.Valid;
 import pers.fz.annotation.verify.VerifyEntity;
 import pers.fz.annotation.verify.VerifyField;
 import pers.fz.annotation.verify.VerifyFieldSort;
 import pers.fz.annotation.verify.VerifyParams;
 import pers.fz.annotation.verify.VerifyType;
 import pers.fz.mvvm.bean.BaseDaoBean;
-import pers.fz.mvvm.database.RoomConverter;
+import pers.fz.mvvm.database.RoomListStringConverter;
 
 /**
  * Created by fz on 2023/9/5 18:32
@@ -94,7 +92,7 @@ public class Person extends BaseDaoBean {
     @VerifyFieldSort(8)
     @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的爱好！")
     @ColumnInfo
-    @TypeConverters({RoomConverter.class})
+    @TypeConverters({RoomListStringConverter.class})
     private List<String> hobby;
 
 //    @VerifyFieldSort(9)

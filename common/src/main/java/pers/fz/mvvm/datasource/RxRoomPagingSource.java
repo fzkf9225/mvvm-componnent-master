@@ -6,39 +6,55 @@ import androidx.paging.PagingSource;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.database.BaseRoomDao;
-import pers.fz.mvvm.repository.RoomRepositoryImpl;
+import pers.fz.mvvm.database.RxRoomDao;
+import pers.fz.mvvm.repository.RxRoomRepositoryImpl;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2024/11/1 17:36
  * describe:
  */
-public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
+public class RxRoomPagingSource<T, DB extends RxRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
 
-    private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
+    private final RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
     private final Map<String, Object> queryParams;
     private int startPage = 0;
 
-    public RoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
-                            Map<String, Object> queryParams) {
+    private Set<String> keywordsKey;
+    private String keywords;
+
+    public RxRoomPagingSource(RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                              Map<String, Object> queryParams,
+                              Set<String> keywordsKey,
+                              String keywords) {
         this.roomRepositoryImpl = roomRepositoryImpl;
         this.queryParams = queryParams;
+        this.keywords = keywords;
+        this.keywordsKey = keywordsKey;
     }
 
-    public RoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
-                            Map<String, Object> queryParams,
-                            int startPage) {
+    public RxRoomPagingSource(RxRoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                              Map<String, Object> queryParams,
+                              Set<String> keywordsKey,
+                              String keywords,
+                              int startPage) {
         this.roomRepositoryImpl = roomRepositoryImpl;
         this.queryParams = queryParams;
+        this.keywords = keywords;
+        this.keywordsKey = keywordsKey;
         this.startPage = startPage;
     }
 
@@ -53,8 +69,10 @@ public class RoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
             int limit = loadParams.getLoadSize();
             int offset = nextPageNumber * limit;
             Integer finalNextPageNumber = nextPageNumber;
+            LogUtil.show(ApiRetrofit.TAG,"搜索："+keywords);
+            LogUtil.show(ApiRetrofit.TAG,"搜索："+new Gson().toJson(keywordsKey));
             return Flowable.create((FlowableOnSubscribe<List<T>>) emitter -> {
-                        emitter.onNext(roomRepositoryImpl.findPageList(queryParams, "id", limit, offset));
+                        emitter.onNext(roomRepositoryImpl.findPageList(queryParams, keywordsKey,keywords,"id", limit, offset));
                         emitter.onComplete();
                     }, BackpressureStrategy.LATEST)
                     .subscribeOn(Schedulers.io())

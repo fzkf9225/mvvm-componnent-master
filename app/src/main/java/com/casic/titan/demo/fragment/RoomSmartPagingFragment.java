@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BasePagingAdapter;
@@ -48,9 +49,9 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .subscribe((data) -> {
                     LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
                     showToast("查询成功！");
-                }, throwable -> {
+                }, (Consumer<Throwable>) throwable -> {
                     LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
-                    showToast(throwable.getMessage());
+                    showToast("查询失败，" + throwable.getMessage());
                 });
 //        Disposable disposable = mViewModel.getRepository().find(5878 ,true)
 //                .subscribe((data) -> {
@@ -61,12 +62,13 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
 //                    showToast("查询失败，" + throwable.getMessage());
 //                });
     }
-//
-//    @Override
-//    public void hideLoading() {
-//        super.hideLoading();
-//        LogUtil.show(ApiRetrofit.TAG,"hideLoading");
-//    }
+
+    public void searcher(String keywords) {
+        mViewModel.setKeywords(keywords);
+        mViewModel.keywordsKey.add("name");
+        mViewModel.refreshData();
+        adapter.refresh();
+    }
 
     @Override
     public void onItemLongClick(View view, Person item, int position) {
@@ -77,7 +79,7 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setMessage("是否确认删除此行？")
                 .setOnSureClickListener(dialog -> {
                     Disposable disposable = mViewModel.getRepository().deleteByParams(new HashMap<>() {{
-                                put("id", item.getId());
+                                put("id", 1231231);
                             }}, true)
                             .subscribe((integer) -> {
                                 LogUtil.show(ApiRetrofit.TAG, "删除成功：" + integer);
@@ -86,7 +88,6 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                                 adapter.refresh();
                             }, throwable -> {
                                 LogUtil.show(ApiRetrofit.TAG, "删除失败：" + throwable);
-                                showToast("删除失败，" + throwable.getMessage());
                             });
                 })
                 .builder()

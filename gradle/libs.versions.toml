@@ -63,6 +63,7 @@ gsyVersion = "v9.0.0-release-jitpack"
 
 [libraries]
 activity = { module = "androidx.activity:activity", version.ref = "activityVersion" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "roomVersion" }
 room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "roomVersion" }

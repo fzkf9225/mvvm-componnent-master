@@ -9,7 +9,7 @@ import java.util.List;
  * created by fz on 2024/11/6 10:52
  * describe:
  */
-public class RoomConverter{
+public class RoomListStringConverter {
     @TypeConverter
     public static List<String> fromString(String value) {
         if (value == null) {

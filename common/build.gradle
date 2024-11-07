@@ -135,6 +135,7 @@ dependencies {
     //下拉刷新
     implementation libs.swiperefreshlayout
 
+    implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
     kapt libs.room.compiler
     // optional - RxJava3 support for Room
