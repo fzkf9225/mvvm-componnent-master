@@ -4,28 +4,37 @@ package pers.fz.mvvm.util.update.core;
 import java.io.IOException;
 
 import io.reactivex.rxjava3.annotations.NonNull;
+import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Response;
-import pers.fz.mvvm.util.update.callback.DownloadListener;
+import okhttp3.ResponseBody;
 
 /**
- * Created by fz on 2020/6/19.
+ * updated by fz on 2024/11/7.
  * describe：下载拦截器
  */
 public class DownloadInterceptor implements Interceptor {
 
-    private DownloadListener listener;
+    private Headers headers;
+    private ResponseBody responseBody;
 
-    public DownloadInterceptor(DownloadListener listener) {
-        this.listener = listener;
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public ResponseBody getResponseBody() {
+        return responseBody;
+    }
+
+    public DownloadInterceptor() {
     }
 
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
-
+        headers = originalResponse.headers();
         return originalResponse.newBuilder()
-                .body(new DownloadResponseBody(originalResponse.headers(),originalResponse.body(), listener))
+                .body(responseBody = originalResponse.body())
                 .build();
     }
 }

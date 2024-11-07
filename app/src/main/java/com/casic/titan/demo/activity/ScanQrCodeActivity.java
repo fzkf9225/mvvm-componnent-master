@@ -35,9 +35,9 @@ import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.update.DownloadManger;
-import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.media.dialog.OpenImageDialog;
 
 
@@ -260,37 +260,26 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
                 callbackContext.error("识别失败");
                 return;
             }
-            DownloadManger.getInstance().download(ScanQrCodeActivity.this, image, new DownloadCallback() {
-                @Override
-                public void onStart(Disposable d) {
-
-                }
-
-                @Override
-                public void onProgress(long totalByte, long currentByte, int progress) {
-
-                }
-
-                @Override
-                public void onFinish(File file) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    if (bitmap == null) {
-                        callbackContext.error("未识别到二维码");
-                        return;
-                    }
-                    Result result = QRCodeUtil.getRawResult(bitmap);
-                    if (result == null) {
-                        Toast.makeText(ScanQrCodeActivity.this, "未识别到二维码", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    callbackContext.success(result.getText());
-                }
-
-                @Override
-                public void onError(String msg) {
-
-                }
-            });
+            Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
+                    .subscribe(file -> {
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                        if (bitmap == null) {
+                            callbackContext.error("未识别到二维码");
+                            return;
+                        }
+                        Result result = QRCodeUtil.getRawResult(bitmap);
+                        if (result == null) {
+                            Toast.makeText(ScanQrCodeActivity.this, "未识别到二维码", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        callbackContext.success(result.getText());
+                    }, throwable -> {
+                        if (throwable instanceof BaseException baseException) {
+                            callbackContext.error("识别失败," + baseException.getErrorMsg());
+                            return;
+                        }
+                        callbackContext.error("识别失败," + throwable.getMessage());
+                    });
         } catch (Exception e) {
             e.printStackTrace();
             callbackContext.error("识别失败," + e);

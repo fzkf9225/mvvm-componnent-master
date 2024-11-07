@@ -92,6 +92,25 @@ public class BaseException extends IOException {
      */
     public static final String DELETE_SUCCESS = "1018";
     public static final String DELETE_SUCCESS_MSG = "删除成功";
+
+    /**
+     * 下载地址错误
+     */
+    public static final String DOWNLOAD_URL_404 = "1019";
+    public static final String DOWNLOAD_URL_404_MSG = "下载地址错误";
+
+    /**
+     * 保存暂无权限
+     */
+    public static final String DOWNLOAD_NOT_PERMISSION = "1020";
+    public static final String DOWNLOAD_NOT_PERMISSION_MSG = "请先同意文件管理权限";
+
+    /**
+     * 当前url已存在下载任务
+     */
+    public static final String DOWNLOADING_ERROR = "1021";
+    public static final String DOWNLOADING_ERROR_MSG = "检测到当前文件已有下载任务正在进行中";
+
     private String errorMsg;
     private String errorCode;
 

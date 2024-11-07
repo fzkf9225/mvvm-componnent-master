@@ -13,7 +13,7 @@ import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
 
 public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchActivityBinding> implements View.OnClickListener,
         CustomSearchEditText.OnInputSubmitListener{
-    public MutableLiveData<String> keywordsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> keywordsLiveData = new MutableLiveData<>();
 
     public MutableLiveData<String> getKeywordsLiveData() {
         return keywordsLiveData;

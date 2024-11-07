@@ -74,12 +74,12 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <pers.fz.mvvm.wight.customlayout.CornerEditText
-            android:id="@+id/edit_rxjava"
+            android:id="@+id/edit_multi"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:textColorHint="@color/nv_bg_color"
-            android:hint="请输入下载目标地址"
+            android:hint="请输入下载目标地址,以分号分隔，英文分号"
             android:gravity="top"
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
@@ -95,13 +95,13 @@
             app:layout_constraintTop_toBottomOf="@+id/button_update"/>
 
         <Button
-            android:id="@+id/button_rxjava"
+            android:id="@+id/button_multi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="RxJava下载"
+            android:text="多文件下载"
             android:layout_marginTop="@dimen/vertical_margin_m"
-            app:layout_constraintTop_toBottomOf="@+id/edit_rxjava"
+            app:layout_constraintTop_toBottomOf="@+id/edit_multi"
             app:layout_constraintStart_toStartOf="parent"/>
 
 

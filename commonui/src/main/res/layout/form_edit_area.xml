@@ -52,7 +52,7 @@
             app:corner_backColor="#f9f9f9"
             app:corner_radius="8dp"
             app:corner_storkColor="@color/line"
-            app:corner_storkWidth="0.5dp"
+            app:corner_storkWidth="1dp"
             android:textColor="@color/auto_color"
             android:textColorHint="@color/hint_color"
             android:background="@drawable/bg_edittext"

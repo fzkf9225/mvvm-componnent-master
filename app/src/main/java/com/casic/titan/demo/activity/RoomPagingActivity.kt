@@ -27,9 +27,9 @@ class RoomPagingActivity : BaseSearchActivity<DemoRoomPagingViewModel>() {
 
     override fun initData(bundle: Bundle?) {
         useCase = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle!!.getParcelable<UseCase>("args", UseCase::class.java)
+            bundle?.getParcelable<UseCase>("args", UseCase::class.java)
         } else {
-            bundle!!.getParcelable<UseCase>("args")
+            bundle?.getParcelable<UseCase>("args")
         }
         toolbarBind.toolbarConfig?.setTitle(useCase?.name)
         keywordsLiveData.observe(this){

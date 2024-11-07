@@ -1,17 +1,13 @@
 package pers.fz.mvvm.util.update;
 
 import android.app.Activity;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import pers.fz.mvvm.util.update.callback.DownloadCallback;
 import pers.fz.mvvm.util.update.listener.ApkUpdateListener;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
-
 /**
- * Created by fz on 2016/11/23.
+ * updated by fz on 2024/11/7.
  * describe：软件版本更新
  */
 public class UpdateManger{
@@ -46,30 +42,17 @@ public class UpdateManger{
      * @param updateMsg           更新提示信息
      * @param mCurrentVersionName 当前版本名称
      */
-    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg,
-                                String mCurrentVersionName) {
-        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, null, false);
+    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName) {
+        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName,  false);
     }
 
-    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg,
-                                String mCurrentVersionName, DownloadCallback downloadCallback) {
-        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, downloadCallback, false);
-    }
-
-    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg,
-                                String mCurrentVersionName, boolean cancelEnable) {
-        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, null, cancelEnable);
-    }
-
-    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName, DownloadCallback downloadCallback,
-                                boolean cancelEnable) {
+    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName, boolean cancelEnable) {
         new UpdateMessageDialog(mContext)
-                .setOnUpdateListener(new ApkUpdateListener(mContext, apkUrl, downloadMap, downloadCallback))
+                .setOnUpdateListener(new ApkUpdateListener(mContext, apkUrl, downloadMap))
                 .setCanCancel(cancelEnable)
                 .setUpdateMsgString(updateMsg)
                 .setVersionName(mCurrentVersionName)
                 .builder()
                 .show();
     }
-
 }

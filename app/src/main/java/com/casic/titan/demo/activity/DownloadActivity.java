@@ -13,11 +13,18 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityDownloadBinding;
 import com.casic.titan.demo.viewmodel.DownloadViewModel;
+import com.google.gson.Gson;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.update.DownloadManger;
 import pers.fz.mvvm.util.update.UpdateManger;
@@ -42,7 +49,26 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
             if (TextUtils.isEmpty(binding.editUrl.getText().toString().trim())) {
                 return;
             }
-            DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim());
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    //申请WRITE_EXTERNAL_STORAGE权限
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            0x02);
+                    return;
+                }
+            }
+            Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
+                    .subscribe(file -> {
+                        LogUtil.show(ApiRetrofit.TAG,"下载成功："+file.getAbsolutePath());
+                        showToast("下载成功！");
+                    }, throwable -> {
+                        if (throwable instanceof BaseException baseException) {
+                            showToast(baseException.getErrorMsg());
+                            return;
+                        }
+                        showToast(throwable.getMessage());
+                    });
         });
         binding.buttonUpdate.setOnClickListener(v -> {
             if (TextUtils.isEmpty(binding.editApk.getText().toString().trim())) {
@@ -50,8 +76,8 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
             }
             UpdateManger.getInstance().checkUpdateInfo(this, binding.editUrl.getText().toString().trim(), "v1.0.1", "修复已知问题", true);
         });
-        binding.buttonRxjava.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(binding.editApk.getText().toString().trim())) {
+        binding.buttonMulti.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(binding.editMulti.getText().toString().trim())) {
                 return;
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
@@ -63,9 +89,17 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
                     return;
                 }
             }
-            Disposable disposable = DownloadManger.getInstance().rxjavaDownload(this, binding.editUrl.getText().toString().trim())
-                    .subscribe(s -> LogUtil.show(TAG, "下载结果：" + s),
-                            throwable -> showToast("下载异常：" + throwable.getMessage()));
+            List<String> urlList = Arrays.asList(binding.editMulti.getText().toString().split(";"));
+            Disposable disposable = DownloadManger.getInstance().download(this, urlList)
+                    .subscribe(file -> {
+                        showToast("下载成功！");
+                    }, throwable -> {
+                        if (throwable instanceof BaseException baseException) {
+                            showToast(baseException.getErrorMsg());
+                            return;
+                        }
+                        showToast(throwable.getMessage());
+                    });
         });
     }
 

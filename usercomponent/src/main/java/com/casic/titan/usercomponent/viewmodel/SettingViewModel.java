@@ -26,7 +26,9 @@ import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.cache.GlideCacheUtil;
 import pers.fz.mvvm.util.update.UpdateManger;
+import pers.fz.mvvm.util.update.listener.ApkUpdateListener;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 /**
  * Create by CherishTang on 2020/3/26 0026

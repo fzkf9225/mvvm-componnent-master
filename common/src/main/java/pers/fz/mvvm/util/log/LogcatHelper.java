@@ -1,11 +1,6 @@
 package pers.fz.mvvm.util.log;
 
 import android.content.Context;
-import android.os.Environment;
-
-import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.util.update.RxNet;
 
 import java.io.BufferedReader;
 import java.io.File;

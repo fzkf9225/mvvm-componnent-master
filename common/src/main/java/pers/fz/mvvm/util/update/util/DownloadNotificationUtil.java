@@ -100,24 +100,26 @@ public class DownloadNotificationUtil extends ContextWrapper {
         }
     }
 
-    public void sendNotificationFullScreen(int notifyId,String title, String content, File apkFile) {
+    public void sendNotificationFullScreen(int notifyId, String title, String content, File apkFile) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(ConstantsHelper.DOWNLOAD_CHANNEL_ID,
                     ConstantsHelper.DOWNLOAD_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             mManager.createNotificationChannel(channel);
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-            Uri apkFileUri = FileProvider.getUriForFile(getApplicationContext(),
-                    getPackageName() + ".FileProvider", apkFile);
-            i.setDataAndType(apkFileUri, "application/vnd.android.package-archive");
-            PendingIntent fullScreenPendingIntent = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                fullScreenPendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_IMMUTABLE);
-            } else {
-                fullScreenPendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            }
 
+            PendingIntent fullScreenPendingIntent = null;
+            if (apkFile != null) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                Uri apkFileUri = FileProvider.getUriForFile(getApplicationContext(),
+                        getPackageName() + ".FileProvider", apkFile);
+                i.setDataAndType(apkFileUri, "application/vnd.android.package-archive");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    fullScreenPendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_IMMUTABLE);
+                } else {
+                    fullScreenPendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                }
+            }
             NotificationCompat.Builder notificationBuilder =
                     new NotificationCompat.Builder(this, ConstantsHelper.DOWNLOAD_CHANNEL_ID)
                             .setContentTitle(title)
@@ -126,9 +128,9 @@ public class DownloadNotificationUtil extends ContextWrapper {
                             .setAutoCancel(true)
                             .setSmallIcon(AppManager.getAppManager().getAppIcon(this))
                             .setDefaults(Notification.DEFAULT_ALL)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(Notification.CATEGORY_CALL)
-                    .setFullScreenIntent(fullScreenPendingIntent, true);
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setCategory(Notification.CATEGORY_CALL)
+                            .setFullScreenIntent(fullScreenPendingIntent, true);
             mManager.notify(notifyId, notificationBuilder.build());
         }
     }

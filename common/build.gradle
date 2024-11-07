@@ -63,9 +63,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     implementation platform(libs.kotlin.bom)
     implementation libs.activity
     implementation libs.androidx.core.ktx
@@ -158,7 +155,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'
-                version = '2.0.1'
+                version = '2.1.0'
             }
         }
         repositories {

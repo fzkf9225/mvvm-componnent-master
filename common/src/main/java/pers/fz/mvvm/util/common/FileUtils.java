@@ -1,11 +1,14 @@
 package pers.fz.mvvm.util.common;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
 import java.io.BufferedOutputStream;
@@ -29,9 +32,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.util.log.LogUtil;
 
@@ -1120,5 +1128,98 @@ public final class FileUtils {
         return fileSizeStr;
     }
 
+    @SuppressLint("Range")
+    private Map<String, RequestBody> createFormDataRequestBody(Context mContext, Uri uri) {
+        Map<String, RequestBody> formDataMap = new HashMap<>(0);
+        ContentResolver contentResolver = mContext.getContentResolver();
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            formDataMap.put("name", RequestBody.create(MediaType.parse("multipart/form-data"), TextUtils.isEmpty(name) ? "unknown" : name));
+            cursor.close();
+        } else {
+            throw new RuntimeException("无附件操作权限");
+        }
+        return formDataMap;
+    }
+
+    @SuppressLint("Range")
+    private MultipartBody.Part createFilePart(Context mContext, Uri uri) {
+        try {
+            ContentResolver contentResolver = mContext.getContentResolver();
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            String fileName = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                cursor.close();
+            }
+            RequestBody requestFile = RequestBody.create(
+                    contentResolver.openFileDescriptor(uri, "r").getFileDescriptor(),
+                    MediaType.parse("multipart/form-data")
+            );
+            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("无附件操作权限");
+        }
+    }
+    @SuppressLint("Range")
+    private MultipartBody.Part createTempFilePart(Context mContext, Uri uri) {
+        try {
+            ContentResolver contentResolver = mContext.getContentResolver();
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            String fileName = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                cursor.close();
+            }
+            // 获取文件路径
+            String filePath = getFilePathFromUri(mContext, uri);
+            if (filePath == null) {
+                throw new RuntimeException("临时文件生成失败");
+            }
+            // 创建 RequestBody
+            File file = new File(filePath);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("无附件操作权限");
+        }
+    }
+
+    public static String getFilePathFromUri(Context context, Uri uri) {
+        String filePath = null;
+        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    String displayName = cursor.getString(displayNameIndex);
+
+                    // 创建临时文件
+                    File tempFile = new File(context.getCacheDir(), displayName);
+                    try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                         FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+                        if (inputStream == null) {
+                            return null;
+                        }
+                        byte[] buffer = new byte[4 * 1024]; // 4K buffer
+                        int read;
+                        while ((read = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, read);
+                        }
+                        outputStream.flush();
+                        filePath = tempFile.getAbsolutePath();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+            filePath = uri.getPath();
+        }
+        return filePath;
+    }
 }
 
