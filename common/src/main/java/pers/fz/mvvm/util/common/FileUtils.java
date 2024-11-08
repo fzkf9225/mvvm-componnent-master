@@ -55,6 +55,7 @@ public final class FileUtils {
      * 分隔符.
      */
     public final static String FILE_EXTENSION_SEPARATOR = ".";
+
     public static String getUrlFileExtensionName(String url) {
         if (url == null || url.isEmpty()) {
             return "";
@@ -1129,7 +1130,7 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    private Map<String, RequestBody> createFormDataRequestBody(Context mContext, Uri uri) {
+    public static Map<String, RequestBody> createFormDataRequestBody(Context mContext, Uri uri) {
         Map<String, RequestBody> formDataMap = new HashMap<>(0);
         ContentResolver contentResolver = mContext.getContentResolver();
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1144,7 +1145,7 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    private MultipartBody.Part createFilePart(Context mContext, Uri uri) {
+    public static MultipartBody.Part createFilePart(Context mContext, Uri uri) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1163,8 +1164,9 @@ public final class FileUtils {
             throw new RuntimeException("无附件操作权限");
         }
     }
+
     @SuppressLint("Range")
-    private MultipartBody.Part createTempFilePart(Context mContext, Uri uri) {
+    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
