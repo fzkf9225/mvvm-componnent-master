@@ -3,10 +3,12 @@ package pers.fz.mvvm.util.common;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -55,6 +58,7 @@ public final class FileUtils {
      * 分隔符.
      */
     public final static String FILE_EXTENSION_SEPARATOR = ".";
+
     public static String getUrlFileExtensionName(String url) {
         if (url == null || url.isEmpty()) {
             return "";
@@ -1153,16 +1157,61 @@ public final class FileUtils {
                 fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 cursor.close();
             }
+            ParcelFileDescriptor pdf = contentResolver.openFileDescriptor(uri, "r");
+            if (pdf == null) {
+                throw new RuntimeException("读取文件失败");
+            }
+
+            FileDescriptor fileDescriptor = pdf.getFileDescriptor();
             RequestBody requestFile = RequestBody.create(
-                    contentResolver.openFileDescriptor(uri, "r").getFileDescriptor(),
+                    fileDescriptor,
                     MediaType.parse("multipart/form-data")
             );
+            pdf.close();
             return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("无附件操作权限");
+        } catch (IOException e) {
+            throw new RuntimeException("读取文件失败");
         }
     }
+
+    @SuppressLint("Range")
+    private MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri) {
+        try {
+            ContentResolver contentResolver = mContext.getContentResolver();
+            Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            String fileName = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                cursor.close();
+            }
+            AssetFileDescriptor afd = contentResolver.openAssetFileDescriptor(uri, "r");
+            if (afd == null) {
+                throw new RuntimeException("读取文件失败");
+            }
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4 * 1024];
+            int bytesRead;
+            while ((bytesRead = afd.createInputStream().read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+            RequestBody requestFile = RequestBody.create(
+                    byteArrayOutputStream.toByteArray(),
+                    MediaType.parse("multipart/form-data")
+            );
+            afd.close();
+            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("无附件操作权限");
+        } catch (IOException e) {
+            throw new RuntimeException("读取文件失败");
+        }
+    }
+
     @SuppressLint("Range")
     private MultipartBody.Part createTempFilePart(Context mContext, Uri uri) {
         try {
@@ -1173,15 +1222,24 @@ public final class FileUtils {
                 fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 cursor.close();
             }
-            // 获取文件路径
-            String filePath = getFilePathFromUri(mContext, uri);
-            if (filePath == null) {
+            // 创建临时文件
+            File tempFile = new File(mContext.getCacheDir(), fileName);
+            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+            if (inputStream == null) {
+                return null;
+            }
+            byte[] buffer = new byte[4 * 1024]; // 4K buffer
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            outputStream.flush();
+            if (!tempFile.exists()) {
                 throw new RuntimeException("临时文件生成失败");
             }
-            // 创建 RequestBody
-            File file = new File(filePath);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
+            RequestBody requestFile = RequestBody.create(tempFile, MediaType.parse("multipart/form-data"));
+            inputStream.close();
             return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1189,37 +1247,31 @@ public final class FileUtils {
         }
     }
 
-    public static String getFilePathFromUri(Context context, Uri uri) {
-        String filePath = null;
-        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
-            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    String displayName = cursor.getString(displayNameIndex);
-
-                    // 创建临时文件
-                    File tempFile = new File(context.getCacheDir(), displayName);
-                    try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
-                         FileOutputStream outputStream = new FileOutputStream(tempFile)) {
-                        if (inputStream == null) {
-                            return null;
-                        }
-                        byte[] buffer = new byte[4 * 1024]; // 4K buffer
-                        int read;
-                        while ((read = inputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, read);
-                        }
-                        outputStream.flush();
-                        filePath = tempFile.getAbsolutePath();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-            filePath = uri.getPath();
+    @SuppressLint("Range")
+    public static File copyFileToCacheDir(Context context, Uri uri) throws IOException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        if (inputStream == null) {
+            throw new RuntimeException("读取文件失败");
         }
-        return filePath;
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        String fileName = "file";
+        if (cursor != null && cursor.moveToFirst()) {
+            fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            cursor.close();
+        }
+        File cacheDir = context.getCacheDir();
+        File file = new File(cacheDir, fileName);
+        OutputStream outputStream = new FileOutputStream(file);
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+        return file;
     }
+
 }
 
