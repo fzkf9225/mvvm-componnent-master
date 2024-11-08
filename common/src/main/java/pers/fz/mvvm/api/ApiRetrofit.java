@@ -45,20 +45,11 @@ public class ApiRetrofit {
         this.builder = builder;
     }
 
-    public static void init(Context mContext) {
-        new ApiRetrofit.Builder(mContext)
-                .builder();
-    }
-
     public Builder getBuilder() {
         return builder;
     }
 
-    public static ApiRetrofit getInstance() {
-        return apiRetrofit;
-    }
-
-    public void printLog(final Request request, final Response response) {
+    public static void printLog(final Request request, final Response response) {
         LogUtil.show(TAG, "--------------------Request Start--------------------");
 
         LogUtil.show(TAG, "Method：" + request.method());
@@ -91,7 +82,7 @@ public class ApiRetrofit {
     }
 
     public Retrofit getRetrofit() {
-        return apiRetrofit.getBuilder().retrofit;
+        return getBuilder().retrofit;
     }
 
     /**
@@ -111,6 +102,10 @@ public class ApiRetrofit {
         private long timeOut = 15;
         private boolean useDefaultSign = true;
         private ErrorService errorService = null;
+        /**
+         * 是否单例模式
+         */
+        private boolean singleInstance = true;
 
         public Builder setErrorService(ErrorService errorService) {
             this.errorService = errorService;
@@ -123,6 +118,11 @@ public class ApiRetrofit {
 
         public Builder setBaseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder setSingleInstance(boolean singleInstance) {
+            this.singleInstance = singleInstance;
             return this;
         }
 
@@ -197,18 +197,18 @@ public class ApiRetrofit {
 
         public ApiRetrofit builder() {
             if (TextUtils.isEmpty(baseUrl)) {
-                this.baseUrl = PropertiesUtil.getInstance().getProperties(mContext).getBaseUrl();
+                this.baseUrl = PropertiesUtil.getInstance().loadConfig(mContext).getBaseUrl();
             }
             if (TextUtils.isEmpty(appId)) {
-                this.appId = PropertiesUtil.getInstance().getProperties(mContext).getAppId();
+                this.appId = PropertiesUtil.getInstance().loadConfig(mContext).getAppId();
             }
 
             if (TextUtils.isEmpty(appSecret)) {
-                this.appSecret = PropertiesUtil.getInstance().getProperties(mContext).getAppSecret();
+                this.appSecret = PropertiesUtil.getInstance().loadConfig(mContext).getAppSecret();
             }
 
             if (TextUtils.isEmpty(protocolVersion)) {
-                this.protocolVersion = PropertiesUtil.getInstance().getProperties(mContext).getProtocolVersion();
+                this.protocolVersion = PropertiesUtil.getInstance().loadConfig(mContext).getProtocolVersion();
             }
             if (client == null) {
                 OkHttpClient.Builder build = new OkHttpClient.Builder()
@@ -228,7 +228,7 @@ public class ApiRetrofit {
                             Request request = requestBuilder.build();
                             Response response = chain.proceed(request);
                             if (Config.enableDebug.get()) {
-                                ApiRetrofit.getInstance().printLog(request, response);
+                                printLog(request, response);
                             }
                             return response;
                         })
@@ -253,14 +253,18 @@ public class ApiRetrofit {
                         .client(this.client)
                         .build();
             }
-            if (apiRetrofit == null) {
-                synchronized (ApiRetrofit.class) {
-                    if (apiRetrofit == null) {
-                        apiRetrofit = new ApiRetrofit(this);
+            if (singleInstance) {
+                if (apiRetrofit == null) {
+                    synchronized (ApiRetrofit.class) {
+                        if (apiRetrofit == null) {
+                            apiRetrofit = new ApiRetrofit(this);
+                        }
                     }
                 }
+                return apiRetrofit;
+            } else {
+                return new ApiRetrofit(this);
             }
-            return apiRetrofit;
         }
     }
 
@@ -270,8 +274,9 @@ public class ApiRetrofit {
 
     /**
      * 这里推荐rsa非堆成加密，破解难度大一点
+     *
      * @param appSecret appSecret
-     * @param postJson 请求体
+     * @param postJson  请求体
      * @param timeStamp 时间戳
      * @return 加密后的sign
      */

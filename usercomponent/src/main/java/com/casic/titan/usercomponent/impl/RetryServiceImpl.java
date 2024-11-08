@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.inter.RetryService;
@@ -35,6 +34,9 @@ public class RetryServiceImpl implements RetryService {
     private int retryCount = 0;
 
     @Inject
+    UserApiService userApiService;
+
+    @Inject
     public RetryServiceImpl() {
     }
 
@@ -47,7 +49,6 @@ public class RetryServiceImpl implements RetryService {
 
     @Override
     public Observable<?> apply(Observable<? extends Throwable> observable) throws Exception {
-        UserApiService userApiService = ApiRetrofit.getInstance().getApiService(UserApiService.class);
         LogUtil.show(TAG, "-----------------RetryService-------------");
         return observable
                 .flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {

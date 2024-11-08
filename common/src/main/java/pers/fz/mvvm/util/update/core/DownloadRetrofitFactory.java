@@ -44,7 +44,7 @@ public class DownloadRetrofitFactory {
                 .addInterceptor(downloadInterceptor);
         if (builder == null) {
             builder = new Retrofit.Builder()
-                    .baseUrl(PropertiesUtil.getInstance().getProperties(BaseApplication.getInstance()).getBaseUrl())
+                    .baseUrl(PropertiesUtil.getInstance().loadConfig(BaseApplication.getInstance()).getBaseUrl())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(mBuilder.build())

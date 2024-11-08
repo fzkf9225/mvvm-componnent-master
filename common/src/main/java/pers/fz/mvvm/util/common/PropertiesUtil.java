@@ -16,9 +16,8 @@ import pers.fz.mvvm.R;
  * created by fz on 2023/4/23 10:05
  * describe:
  **/
-public class PropertiesUtil {
+public class PropertiesUtil extends Properties{
     private final static String TAG = PropertiesUtil.class.getSimpleName();
-    private volatile Properties properties = null;
 
     private PropertiesUtil() {
     }
@@ -37,14 +36,7 @@ public class PropertiesUtil {
      * @param mContext 视图
      * @return
      */
-    public PropertiesUtil getProperties(Context mContext) {
-        if (properties == null) {
-            synchronized (PropertiesUtil.class) {
-                if (properties == null) {
-                    properties = new Properties();
-                }
-            }
-        }
+    public PropertiesUtil loadConfig(Context mContext) {
         try {
             String configFile = mContext.getResources().getString(R.string.app_config_file);
             if (TextUtils.isEmpty(configFile)) {
@@ -52,33 +44,28 @@ public class PropertiesUtil {
             }
             InputStream inputStream = mContext.getAssets().open(configFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            properties.load(bufferedReader);
+            load(bufferedReader);
+            inputStream.close();
+            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return this;
     }
-
-    /**
-     * 获取默认配置
-     *
-     * @param mContext 试图
-     * @return
-     */
-    public Properties getProperties(Context mContext, String fileName) {
-        if (properties == null) {
-            synchronized (PropertiesUtil.class) {
-                if (properties == null) {
-                    properties = new Properties();
-                }
-            }
-        }
+    public PropertiesUtil loadConfig(Context mContext, String configFile) {
         try {
-            properties.load(mContext.getAssets().open(fileName));
+            if (TextUtils.isEmpty(configFile)) {
+                return this;
+            }
+            InputStream inputStream = mContext.getAssets().open(configFile);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            load(bufferedReader);
+            inputStream.close();
+            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return properties;
+        return this;
     }
 
     /**
@@ -87,7 +74,7 @@ public class PropertiesUtil {
      * @return IP地址
      */
     public String getBaseUrl() {
-        return properties.getProperty("BASE_URL");
+        return getProperty("BASE_URL");
     }
 
     /**
@@ -96,7 +83,7 @@ public class PropertiesUtil {
      * @return 端口地址
      */
     public String getPort() {
-        return properties.getProperty("PORT");
+        return getProperty("PORT");
     }
 
     /**
@@ -105,7 +92,7 @@ public class PropertiesUtil {
      * @return
      */
     public String getAppKey() {
-        return properties.getProperty("APP_KEY");
+        return getProperty("APP_KEY");
     }
 
     /**
@@ -114,7 +101,7 @@ public class PropertiesUtil {
      * @return
      */
     public String getAppId() {
-        return properties.getProperty("APP_ID");
+        return getProperty("APP_ID");
     }
 
     /**
@@ -123,7 +110,7 @@ public class PropertiesUtil {
      * @return app密钥
      */
     public String getAppSecret() {
-        return properties.getProperty("APP_SECRET");
+        return getProperty("APP_SECRET");
     }
 
     /**
@@ -132,7 +119,7 @@ public class PropertiesUtil {
      * @return 默认1.0.0
      */
     public String getProtocolVersion() {
-        return properties.getProperty("PROTOCOL_VERSION", "1.0.0");
+        return getProperty("PROTOCOL_VERSION", "1.0.0");
     }
 
     /**
@@ -143,7 +130,7 @@ public class PropertiesUtil {
      * @return String
      */
     public String getPropertyValue(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        return getProperty(key, defaultValue);
     }
 
 }

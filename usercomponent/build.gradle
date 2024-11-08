@@ -27,10 +27,16 @@ android {
     }
     buildTypes {
         release {
+            resValue "string", "user_config_file", "user_prod.properties"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
             consumerProguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            resValue "string", "user_config_file", "user_dev.properties"
+            minifyEnabled false// 混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

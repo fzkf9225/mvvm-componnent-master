@@ -210,7 +210,6 @@
     <public name="camera" type="string"/>
     <public name="file" type="string"/>
     <public name="audio" type="string"/>
-    <public name="app_config_file" type="string"/>
     <public name="login_project_code_hint" type="string"/>
     <public name="login_user_hint" type="string"/>
     <public name="login_tel_hint" type="string"/>
