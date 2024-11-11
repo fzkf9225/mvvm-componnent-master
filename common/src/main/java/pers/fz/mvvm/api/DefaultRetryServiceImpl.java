@@ -2,30 +2,37 @@ package pers.fz.mvvm.api;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
+import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/5/18 9:48
  * describe :
  */
-public class RetryWhenNetworkException implements Function<Observable<? extends Throwable>, Observable<?>> {
-    private final String TAG = RetryWhenNetworkException.class.getSimpleName();
+public class DefaultRetryServiceImpl implements RetryService {
+    private final String TAG = DefaultRetryServiceImpl.class.getSimpleName();
     // 可重试次数
-    private final int maxConnectCount;
+    protected int maxRetries;
     // 当前已重试次数
-    private int currentRetryCount = 0;
+    protected int currentRetryCount = 0;
     // 重试等待时间
-    private int waitRetryTime = 2000;
+    protected int waitRetryTime = 1000;
 
-    public RetryWhenNetworkException(int maxConnectCount) {
-        this.maxConnectCount = maxConnectCount;
+    @Inject
+    public DefaultRetryServiceImpl() {
     }
 
-    public RetryWhenNetworkException(int maxConnectCount, int waitRetryTime) {
-        this.maxConnectCount = maxConnectCount;
+    public DefaultRetryServiceImpl(int maxConnectCount) {
+        this.maxRetries = maxConnectCount;
+    }
+
+    public DefaultRetryServiceImpl(int maxConnectCount, int waitRetryTime) {
+        this.maxRetries = maxConnectCount;
         this.waitRetryTime = waitRetryTime;
     }
 
@@ -48,7 +55,7 @@ public class RetryWhenNetworkException implements Function<Observable<? extends 
                  * 需求2：限制重试次数
                  * 即，当已重试次数 < 设置的重试次数，才选择重试
                  */
-                if (currentRetryCount < maxConnectCount) {
+                if (currentRetryCount < maxRetries) {
 
                     // 记录重试次数
                     currentRetryCount++;
@@ -74,6 +81,11 @@ public class RetryWhenNetworkException implements Function<Observable<? extends 
                 }
             }
         });
+    }
+
+    @Override
+    public void setMaxRetryCount(int maxRetryCount) {
+        this.maxRetries = maxRetryCount;
     }
 }
 

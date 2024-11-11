@@ -15,12 +15,12 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class RetryWhenFlowableException<T> implements Function<Flowable<? extends Throwable>, Flowable<T>> {
     private final String TAG = RetryWhenFlowableException.class.getSimpleName();
     // 可重试次数
-    private final int maxConnectCount;
+    protected int maxConnectCount;
     // 当前已重试次数
-    private int currentRetryCount = 0;
+    protected int currentRetryCount = 0;
     // 重试等待时间
-    private int waitRetryTime = 2000;
-    private final T t;
+    protected int waitRetryTime = 2000;
+    protected final T t;
     public RetryWhenFlowableException(T t,int maxConnectCount) {
         this.maxConnectCount = maxConnectCount;
         this.t = t;
