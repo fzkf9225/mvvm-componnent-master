@@ -17,7 +17,7 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class DefaultRetryServiceImpl implements RetryService {
     private final String TAG = DefaultRetryServiceImpl.class.getSimpleName();
     // 可重试次数
-    protected int maxRetries;
+    protected int maxRetries = ConstantsHelper.RETRY_WHEN_MAX_COUNT;
     // 当前已重试次数
     protected int currentRetryCount = 0;
     // 重试等待时间
