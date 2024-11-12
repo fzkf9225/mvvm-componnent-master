@@ -40,11 +40,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.upload.ProgressRequestBody;
 
 
 public final class FileUtils {
@@ -1146,18 +1149,19 @@ public final class FileUtils {
         }
         return formDataMap;
     }
+
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createFilePart(Context mContext, List<Uri> uriList) {
+    public static List<MultipartBody.Part> createFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createFilePart(mContext, item)));
+        uriList.forEach(item -> multiList.add(createFilePart(mContext, item, uploadListener)));
         return multiList;
     }
 
     @SuppressLint("Range")
-    public static MultipartBody.Part createFilePart(Context mContext, Uri uri) {
+    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1170,14 +1174,19 @@ public final class FileUtils {
             if (pdf == null) {
                 throw new RuntimeException("读取文件失败");
             }
-
             FileDescriptor fileDescriptor = pdf.getFileDescriptor();
             RequestBody requestFile = RequestBody.create(
                     fileDescriptor,
                     MediaType.parse("multipart/form-data")
             );
-            pdf.close();
-            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+            if (uploadListener == null) {
+                pdf.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+            } else {
+                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                pdf.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("无附件操作权限");
@@ -1187,17 +1196,17 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createAssetsFilePart(Context mContext, List<Uri> uriList) {
+    public static List<MultipartBody.Part> createAssetsFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createAssetsFilePart(mContext, item)));
+        uriList.forEach(item -> multiList.add(createAssetsFilePart(mContext, item, uploadListener)));
         return multiList;
     }
 
     @SuppressLint("Range")
-    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri) {
+    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1221,8 +1230,14 @@ public final class FileUtils {
                     byteArrayOutputStream.toByteArray(),
                     MediaType.parse("multipart/form-data")
             );
-            afd.close();
-            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+            if (uploadListener == null) {
+                afd.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+            } else {
+                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                afd.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException("无附件操作权限");
@@ -1232,18 +1247,18 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createTempFilePart(Context mContext, List<Uri> uriList) {
+    public static List<MultipartBody.Part> createTempFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createTempFilePart(mContext, item)));
+        uriList.forEach(item -> multiList.add(createTempFilePart(mContext, item, uploadListener)));
         return multiList;
     }
 
 
     @SuppressLint("Range")
-    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri) {
+    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1270,8 +1285,15 @@ public final class FileUtils {
                 throw new RuntimeException("临时文件生成失败");
             }
             RequestBody requestFile = RequestBody.create(tempFile, MediaType.parse("multipart/form-data"));
-            inputStream.close();
-            return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+
+            if (uploadListener == null) {
+                inputStream.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
+            } else {
+                ProgressRequestBody requestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                inputStream.close();
+                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestBody);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("无附件操作权限");

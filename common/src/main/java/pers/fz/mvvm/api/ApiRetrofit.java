@@ -49,24 +49,38 @@ public class ApiRetrofit {
         return builder;
     }
 
+    /**
+     * 忽略大小写查找请求头Content-Type
+     */
+    public static String findContentType(Headers headers) {
+        for (String name : headers.names()) {
+            if ("Content-Type".equalsIgnoreCase(name)) {
+                return headers.get(name);
+            }
+        }
+        return null;
+    }
+
     public static void printLog(final Request request, final Response response) {
         LogUtil.show(TAG, "--------------------Request Start--------------------");
 
-        LogUtil.show(TAG, "Method：" + request.method());
-        LogUtil.show(TAG, "Url：" + request.url());
-        LogUtil.show(TAG, "HttpHeader：" + request.headers().toString());
-
+        LogUtil.show(TAG, "Request Method：" + request.method());
+        LogUtil.show(TAG, "Request Url：" + request.url());
+        LogUtil.show(TAG, "Request Headers：" + request.headers().toString());
         try {
-            LogUtil.show(TAG, "请求参数：" + bodyToString(request.body()));
+            String contentType = request.header("Content-Type");
+            if (contentType == null || !contentType.contains("multipart/form-data")) {
+                LogUtil.show(TAG, "Request Body：" + bodyToString(request.body()));
+            }
         } catch (IOException e) {
-            LogUtil.show(TAG, "请求参数解析失败");
+            LogUtil.show(TAG, "Request parse error");
         }
         try {
-            LogUtil.show(TAG, "返回请求头：" + response.headers().toString());
+            LogUtil.show(TAG, "Response Headers：" + response.headers().toString());
             ResponseBody responseBody = response.peekBody(1024 * 1024);
-            LogUtil.show(TAG, "返回结果：" + responseBody.string());
+            LogUtil.show(TAG, "Response Body：" + responseBody.string());
         } catch (Exception e) {
-            LogUtil.show(TAG, "返回结果解析失败");
+            LogUtil.show(TAG, "Response parse error");
         }
         LogUtil.show(TAG, "--------------------Request End--------------------");
     }
@@ -100,7 +114,7 @@ public class ApiRetrofit {
         private Converter.Factory converterFactory = null;
         private final List<Interceptor> interceptorList = new ArrayList<>();
         private long timeOut = 15;
-        private boolean useDefaultSign = true;
+        private boolean useDefaultSign = false;
         private ErrorService errorService = null;
         /**
          * 是否单例模式
@@ -149,7 +163,7 @@ public class ApiRetrofit {
             return this;
         }
 
-        private Builder setClient(OkHttpClient okHttpClient) {
+        public Builder setClient(OkHttpClient okHttpClient) {
             this.client = okHttpClient;
             return this;
         }
@@ -159,7 +173,7 @@ public class ApiRetrofit {
             return this;
         }
 
-        private Builder setRetrofit(Retrofit retrofit) {
+        public Builder setRetrofit(Retrofit retrofit) {
             this.retrofit = retrofit;
             return this;
         }
@@ -181,17 +195,6 @@ public class ApiRetrofit {
 
         public Builder setUseDefaultSign(boolean useDefaultSign) {
             this.useDefaultSign = useDefaultSign;
-            return this;
-        }
-
-        public Builder addDefaultHeader() {
-//            String timeStamp = DateUtil.getTimestamp();
-//            addHeader("x-timestamp", timeStamp);
-//            addHeader("x-appid", appId);
-//            addHeader("x-uuid", UUID.randomUUID().toString());
-//            addHeader("x-phoneidentity", ApiAccountHelper.getDeviceId(mContext));
-//            addHeader("x-protocolversion", protocolVersion);
-//            addHeader("x-phoneinfo", ApiAccountHelper.getPhoneInfo(mContext));
             return this;
         }
 
