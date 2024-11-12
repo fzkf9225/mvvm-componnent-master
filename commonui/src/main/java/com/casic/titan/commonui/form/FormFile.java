@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +47,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormFile extends FrameLayout implements FileAddAdapter.FileClearListener, DefaultLifecycleObserver {
+public class FormFile extends ConstraintLayout implements FileAddAdapter.FileClearListener, DefaultLifecycleObserver {
     protected String labelString;
     protected int bgColor = 0xFFF1F3F2;
     protected boolean required = false;
@@ -112,12 +112,14 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
 
     protected void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.form_file, this, true);
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(),12),
+                getPaddingEnd(), DensityUtil.dp2px(getContext(),12));
         tvLabel = findViewById(R.id.tv_label);
         mRecyclerViewFile = findViewById(R.id.mRecyclerViewFile);
         imageAdd = findViewById(R.id.image_add);
         tvEmpty = findViewById(R.id.tv_empty);
         imageAdd.setImageResource(fileAddSrc);
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
         tvRequired = findViewById(R.id.tv_required);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
@@ -127,7 +129,7 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
         tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
-            constraintLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
+            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
         tvEmpty.setVisibility(View.VISIBLE);
         imageAdd.setOnClickListener(v -> {
@@ -142,6 +144,9 @@ public class FormFile extends FrameLayout implements FileAddAdapter.FileClearLis
         fileAddAdapter.setBgColor(bgColor);
         fileAddAdapter.setTextColor(rightTextColor);
         fileAddAdapter.setFileClearListener(this);
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewFile.getLayoutParams();
+        imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
+        mRecyclerViewFile.setLayoutParams(imageLayoutParams);
         mRecyclerViewFile.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {

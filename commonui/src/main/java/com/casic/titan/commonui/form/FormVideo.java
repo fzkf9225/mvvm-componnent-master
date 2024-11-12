@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
@@ -39,6 +40,7 @@ import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
+import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -116,7 +118,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
 
     protected void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
-        setLayoutParams(new Constraints.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setPadding(0, DensityUtil.dp2px(getContext(),12),
                 0, DensityUtil.dp2px(getContext(),12));
         tvLabel = findViewById(R.id.tv_label);
@@ -135,6 +137,10 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         videoAddAdapter.setRadius(radius);
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewVideo.getLayoutParams();
+        imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
+        mRecyclerViewVideo.setLayoutParams(imageLayoutParams);
+        mRecyclerViewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(),4), 0x00000000));
         mRecyclerViewVideo.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {

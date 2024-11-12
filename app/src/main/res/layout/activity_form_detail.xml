@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="data"
+            type="com.casic.titan.demo.bean.FormBean" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".activity.AddWorkBulletinActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+            <!--简报名称-->
+            <com.casic.titan.commonui.form.FormTextView
+                android:id="@+id/tv_bulletin_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:label="简报名称"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:line="-1"
+                app:required="false"
+                app:text="@{data.title}" />
+            <!--简报提交时间-->
+            <com.casic.titan.commonui.form.FormTextView
+                android:id="@+id/tv_bulletin_create_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:label="简报提交时间"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_name"
+                app:line="-1"
+                app:required="false"
+                app:text="@{data.date}" />
+            <!--简报内容-->
+            <com.casic.titan.commonui.form.FormTextView
+                android:id="@+id/tv_bulletin_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:label="简报内容"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_create_time"
+                app:line="-1"
+                app:required="false"
+                app:text="@{data.content}" />
+
+            <View
+                android:id="@+id/v_base_info"
+                style="@style/h_area"
+                android:background="@color/default_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_detail" />
+
+            <!--现场图片-->
+            <com.casic.titan.commonui.form.FormImageShow
+                android:id="@+id/form_screen_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bgColor="@color/default_background"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:label="现场图片"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/v_base_info"
+                app:required="false" />
+
+            <!--现场视频-->
+            <com.casic.titan.commonui.form.FormVideoShow
+                android:id="@+id/form_screen_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bgColor="@color/default_background"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:label="现场视频"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_screen_image"
+                app:required="false" />
+            <!--其他附件-->
+            <com.casic.titan.commonui.form.FormFileShow
+                android:id="@+id/form_screen_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bgColor="@color/default_background"
+                app:bottomBorder="false"
+                app:formImeOptions="actionNext"
+                app:label="其他附件"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_screen_video"
+                app:required="false" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

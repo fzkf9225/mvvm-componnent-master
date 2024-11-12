@@ -32,7 +32,6 @@ public class AppModule {
         return new ApiRetrofit.Builder(Config.getInstance().getApplication())
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
-                .addDefaultHeader()
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(ApiServiceHelper.class);

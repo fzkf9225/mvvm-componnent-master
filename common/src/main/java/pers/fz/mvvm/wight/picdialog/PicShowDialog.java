@@ -97,19 +97,19 @@ public class PicShowDialog extends Dialog {
 
     public static List<ImageInfo> createImageInfo(String image) {
         List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(image, 600, 800));
+        imageInfos.add(new ImageInfo(image, 1080, 1920));
         return imageInfos;
     }
 
     public static List<ImageInfo> createImageInfo(@DrawableRes int imageRes) {
         List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(imageRes, 600, 800));
+        imageInfos.add(new ImageInfo(imageRes, 1080, 1920));
         return imageInfos;
     }
 
     public static List<ImageInfo> createImageInfo(Bitmap bitmap) {
         List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(bitmap, 600, 800));
+        imageInfos.add(new ImageInfo(bitmap, 1080, 1920));
         return imageInfos;
     }
 
@@ -119,7 +119,7 @@ public class PicShowDialog extends Dialog {
         }
         List<ImageInfo> imageInfos = new ArrayList<>();
         for (String img : image) {
-            imageInfos.add(new ImageInfo(img, 600, 800));
+            imageInfos.add(new ImageInfo(img, 1080, 1920));
         }
         return imageInfos;
     }
@@ -130,7 +130,7 @@ public class PicShowDialog extends Dialog {
         }
         List<ImageInfo> imageInfos = new ArrayList<>();
         for (Uri img : uri) {
-            imageInfos.add(new ImageInfo(img, 600, 800));
+            imageInfos.add(new ImageInfo(img, 1080, 1920));
         }
         return imageInfos;
     }
@@ -141,7 +141,7 @@ public class PicShowDialog extends Dialog {
         }
         List<ImageInfo> imageInfos = new ArrayList<>();
         for (String img : images) {
-            imageInfos.add(new ImageInfo(img, 600, 800));
+            imageInfos.add(new ImageInfo(img, 1080, 1920));
         }
         return imageInfos;
     }
@@ -152,7 +152,7 @@ public class PicShowDialog extends Dialog {
         }
         List<ImageInfo> imageInfos = new ArrayList<>();
         for (Uri img : images) {
-            imageInfos.add(new ImageInfo(img, 600, 800));
+            imageInfos.add(new ImageInfo(img, 1080, 1920));
         }
         return imageInfos;
     }

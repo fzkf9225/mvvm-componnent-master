@@ -8,13 +8,13 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -39,6 +39,7 @@ import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
+import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -116,9 +117,9 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
     protected void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
-        setLayoutParams(new Constraints.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
-        setPadding(0, DensityUtil.dp2px(getContext(),12),
-                0, DensityUtil.dp2px(getContext(),12));
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(),12),
+                getPaddingEnd(), DensityUtil.dp2px(getContext(),12));
         tvLabel = findViewById(R.id.tv_label);
         mRecyclerViewImage = findViewById(R.id.mRecyclerViewImage);
         tvRequired = findViewById(R.id.tv_required);
@@ -135,6 +136,10 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         imageAddAdapter.setRadius(radius);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewImage.getLayoutParams();
+        imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
+        mRecyclerViewImage.setLayoutParams(imageLayoutParams);
+        mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(),4), 0x00000000));
         mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {

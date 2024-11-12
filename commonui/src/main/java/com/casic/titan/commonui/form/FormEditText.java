@@ -9,12 +9,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -93,7 +92,7 @@ public class FormEditText extends ConstraintLayout {
 
     private void init() {
         binding = FormEditTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        setLayoutParams(new Constraints.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
         binding.setData(formDataSource);
         binding.editText.setHint(hintString);

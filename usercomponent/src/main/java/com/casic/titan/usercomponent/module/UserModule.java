@@ -37,7 +37,6 @@ public class UserModule {
         return new ApiRetrofit
                 .Builder(Config.getInstance().getApplication())
                 .setBaseUrl(baseUrl)
-                .addDefaultHeader()
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(UserApiService.class);

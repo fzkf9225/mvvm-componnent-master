@@ -1,10 +1,13 @@
 package com.casic.titan.commonui.bean;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
 /**
  * Created by fz on 2023/12/28 17:00
  * describe :附件表
  */
-public class AttachmentBean {
+public class AttachmentBean extends BaseObservable {
     private String fileId;
 
     private String path;
@@ -19,6 +22,10 @@ public class AttachmentBean {
 
     private String fieldName;
 
+    public AttachmentBean() {
+    }
+
+    @Bindable
     public String getFileId() {
         return fileId;
     }
@@ -27,6 +34,7 @@ public class AttachmentBean {
         this.fileId = fileId;
     }
 
+    @Bindable
     public String getPath() {
         return path;
     }
@@ -35,6 +43,7 @@ public class AttachmentBean {
         this.path = path;
     }
 
+    @Bindable
     public String getUrl() {
         return url;
     }
@@ -43,6 +52,7 @@ public class AttachmentBean {
         this.url = url;
     }
 
+    @Bindable
     public String getMainId() {
         return mainId;
     }
@@ -51,6 +61,7 @@ public class AttachmentBean {
         this.mainId = mainId;
     }
 
+    @Bindable
     public String getFileName() {
         return fileName;
     }
@@ -59,6 +70,7 @@ public class AttachmentBean {
         this.fileName = fileName;
     }
 
+    @Bindable
     public String getFileSize() {
         return fileSize;
     }
@@ -67,6 +79,7 @@ public class AttachmentBean {
         this.fileSize = fileSize;
     }
 
+    @Bindable
     public String getFieldName() {
         return fieldName;
     }

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
@@ -83,7 +84,7 @@ public class FormSelection extends ConstraintLayout {
 
     protected void init() {
         binding = FormSelectionBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        setLayoutParams(new Constraints.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT));
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
         binding.setData(formDataSource);
         binding.tvSelection.setSelected(true);
@@ -109,7 +110,7 @@ public class FormSelection extends ConstraintLayout {
             binding.tvSelection.setMaxLines(Integer.MAX_VALUE);
             // 设置自定义布局的paddingTop和paddingBottom
             int padding = DensityUtil.dp2px(getContext(), 12); // 你可以根据需要调整padding值
-            setPadding(0, padding, 0, padding);
+            setPadding(getPaddingStart(), padding, getPaddingEnd(), padding);
         }
     }
 
