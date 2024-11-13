@@ -23,6 +23,27 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
 public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFormDetailBinding> {
    private final List<FormDemoFileBean> imageList = new ArrayList<>();
     private final List<FormDemoFileBean> videoList = new ArrayList<>();
+
+    private String htmlText = "<div class=\"content\"> \n" +
+            " <p style=\"margin: 0 0 0;text-align: center;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 方正小标宋简体;font-size: 29px\"></span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: center;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 方正小标宋简体;font-size: 29px\">信阳市人民政府办公室关于印发信阳市茶叶品牌创建和市场开拓奖励办法的通知</span></p> \n" +
+            " <p style=\"margin: 0px; text-align: center; font-family: Calibri; font-size: 14px; white-space: normal; line-height: 37px;\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;信政办〔2018〕77号</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\"><br></span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">各县、区人民政府，各管理区、开发区，市政府有关部门：</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;text-indent: 43px;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">《信阳市茶叶品牌创建和市场开拓奖励办法》已经市政府同意，现印发给你们，请结合实际，认真组织实施。</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;</span></p> \n" +
+            " <p style=\"margin: 0px; text-align: right; font-family: Calibri; font-size: 14px; white-space: normal; text-indent: 320px; line-height: 37px;\"><span style=\"font-family: 宋体;font-size: 21px\">信阳市人民政府办公室<span style=\"font-family:宋体\"><br></span></span></p> \n" +
+            " <p style=\"margin: 0px; text-align: right; font-family: Calibri; font-size: 14px; white-space: normal; text-indent: 320px; line-height: 37px;\"><span style=\"font-family: 宋体;font-size: 21px\"><span style=\"font-family:宋体\">&nbsp;2018年7月27日</span></span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">&nbsp;</span></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;text-indent: 43px;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\">附件：</span></p> \n" +
+            " <p style=\"line-height: 16px;\"><img src=\"http://lycyj.xinyang.gov.cn/ueditor/php/upload/17921637631177.gif\"><a href=\"http://lycyj.xinyang.gov.cn/ueditor/php/../../upload/2021/16376310357163.pdf\">信阳市茶叶品牌创建和市场开拓奖励办法.pdf</a></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: justify;font-family: Calibri;font-size: 14px;white-space: normal;text-indent: 43px;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\"></span><br></p> \n" +
+            " <p style=\"margin: 0 0 0;text-align: center;font-family: Calibri;font-size: 14px;white-space: normal;line-height: 37px\"><span style=\"font-family: 宋体;font-size: 21px\"></span><br></p> \n" +
+            " <p><br></p> \n" +
+            "</div>";
     @Override
     protected int getLayoutId() {
         return R.layout.activity_form_detail;
@@ -64,7 +85,8 @@ public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFor
         formDemoFileBean.setUrl("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
         formDemoFileBean.setFileName("1.mp4");
         videoList.add(formDemoFileBean);
-        binding.setData(new FormBean("1","我是测试标题","2024-11-12 14:53:07","支付宝称，因系统消息库出现局部故障，导致部分用户的支付功能受到影响。该故障不会影响用户的资金安全，截止到上午10点50分故障已经修复。对于给用户带来的不便，支付宝深表歉意。"));
+        binding.setData(new FormBean("1","我是测试标题","2024-11-12 14:53:07",
+                "支付宝称，因系统消息库出现局部故障，导致部分用户的支付功能受到影响。该故障不会影响用户的资金安全，截止到上午10点50分故障已经修复。对于给用户带来的不便，支付宝深表歉意。",htmlText));
         binding.formScreenImage.setImages(imageList);
         binding.formScreenVideo.setImages(videoList);
     }

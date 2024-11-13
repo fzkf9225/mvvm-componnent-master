@@ -69,6 +69,22 @@
                 app:line="-1"
                 app:required="false"
                 app:text="@{data.content}" />
+            <!--富文本-->
+            <com.casic.titan.commonui.form.FormRichText
+                android:id="@+id/tv_rich_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:label="富文本"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_detail"
+                app:line="-1"
+                app:required="false"
+                app:text="@{data.richText}" />
 
             <View
                 android:id="@+id/v_base_info"
@@ -76,7 +92,7 @@
                 android:background="@color/default_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_detail" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_rich_text" />
 
             <!--现场图片-->
             <com.casic.titan.commonui.form.FormImageShow

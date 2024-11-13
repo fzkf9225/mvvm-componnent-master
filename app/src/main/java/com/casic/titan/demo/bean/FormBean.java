@@ -15,14 +15,16 @@ public class FormBean extends BaseObservable {
 
     private String date;
 
+    private String richText;
     public FormBean() {
     }
 
-    public FormBean(String id, String title, String content, String date) {
+    public FormBean(String id, String title,String date, String content, String richText) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.richText = richText;
     }
 
     @Bindable
@@ -59,6 +61,14 @@ public class FormBean extends BaseObservable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getRichText() {
+        return richText;
+    }
+
+    public void setRichText(String richText) {
+        this.richText = richText;
     }
 }
 

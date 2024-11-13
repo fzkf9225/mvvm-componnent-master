@@ -1,5 +1,6 @@
 package com.casic.titan.commonui.helper;
 
+
 import androidx.databinding.ObservableField;
 
 /**
@@ -8,4 +9,5 @@ import androidx.databinding.ObservableField;
  */
 public class FormDataSource {
     public final ObservableField<String> textValue = new ObservableField<>("");
+
 }

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.adapter.UseCaseAdapter;
 import com.casic.titan.demo.databinding.FragmentHomeBinding;
@@ -16,6 +18,8 @@ import com.gyf.immersionbar.ImmersionBar;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
  * created by fz on 2023/4/28
@@ -45,6 +49,10 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
         binding.setToken(UserAccountHelper.isLogin() ? "已登录" : "暂未登录");
         useCaseAdapter = new UseCaseAdapter(requireContext(), UseCaseEnum.toUseCaseList());
         useCaseAdapter.setOnItemClickListener(this);
+        binding.mRecyclerViewUseCase.addItemDecoration(
+                new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),
+                        0x00000000)
+        );
         binding.mRecyclerViewUseCase.setAdapter(useCaseAdapter);
     }
 

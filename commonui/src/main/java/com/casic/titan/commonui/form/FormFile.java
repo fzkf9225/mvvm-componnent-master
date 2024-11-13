@@ -156,7 +156,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         mRecyclerViewFile.setAdapter(fileAddAdapter);
         mRecyclerViewFile.addItemDecoration(
                 new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),
-                        ContextCompat.getColor(getContext(), R.color.white))
+                        0x00000000)
         );
         if (mediaHelper != null) {
             mediaHelper.getMediaBuilder().setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount);

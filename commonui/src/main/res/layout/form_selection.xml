@@ -17,9 +17,8 @@
             android:lines="1"
             android:textColor="@color/dark_color"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv_selection" />
 
         <TextView
             android:id="@+id/tv_required"

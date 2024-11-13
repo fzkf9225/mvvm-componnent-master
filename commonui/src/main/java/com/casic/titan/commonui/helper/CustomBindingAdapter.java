@@ -1,6 +1,7 @@
 package com.casic.titan.commonui.helper;
 
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 
 import androidx.databinding.BindingAdapter;
@@ -9,6 +10,7 @@ import androidx.databinding.InverseBindingListener;
 
 import com.casic.titan.commonui.form.FormEditArea;
 import com.casic.titan.commonui.form.FormEditText;
+import com.casic.titan.commonui.form.FormRichText;
 import com.casic.titan.commonui.form.FormSelection;
 
 
@@ -134,4 +136,14 @@ public class CustomBindingAdapter {
         }
     }
 
+    @BindingAdapter("text")
+    public static void setText(FormRichText view, CharSequence htmlText) {
+        view.formDataSource.textValue.set(htmlText == null ? null : htmlText.toString());
+    }
+
+    // 添加InverseBindingAdapter用于从视图中获取文本值
+    @InverseBindingAdapter(attribute = "text")
+    public static String getText(FormRichText view) {
+        return view.formDataSource.textValue.get();
+    }
 }

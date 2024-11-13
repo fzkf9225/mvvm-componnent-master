@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -26,6 +27,7 @@ import java.util.List;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
+import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -112,6 +114,10 @@ public class FormFileShow extends ConstraintLayout {
         ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewImage.getLayoutParams();
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
         mRecyclerViewImage.setLayoutParams(imageLayoutParams);
+        mRecyclerViewImage.addItemDecoration(
+                new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),
+                        0x00000000)
+        );
         mRecyclerViewImage.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
