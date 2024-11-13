@@ -10,6 +10,7 @@ import android.content.UriPermission;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -26,9 +27,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**
@@ -180,9 +184,9 @@ public class AttachmentUtil {
     /**
      * 本地文件绝对地址转  List<AttachmentBean>
      *
-     * @param stringList          本地绝对地址集合
-     * @param mainId              主键Id
-     * @param field 字段名称
+     * @param stringList 本地绝对地址集合
+     * @param mainId     主键Id
+     * @param field      字段名称
      * @return
      */
     public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId, @NotNull String field) {
@@ -201,7 +205,7 @@ public class AttachmentUtil {
         return attachmentList;
     }
 
-    public static List<AttachmentBean> coverAttachmentList(List<AttachmentBean> attachmentBeanList, String mainId,@NotNull  String field) {
+    public static List<AttachmentBean> coverAttachmentList(List<AttachmentBean> attachmentBeanList, String mainId, @NotNull String field) {
         if (attachmentBeanList == null) {
             return null;
         }
@@ -355,35 +359,69 @@ public class AttachmentUtil {
 
     public static void viewFile(Context mContext, String path) {
         try {
-            if (new File(path).exists()) {
-                // 字符串是 File 的 AbsolutePath
-                viewAbsoluteFile(mContext, path);
+            if (TextUtils.isEmpty(path)) {
+                Toast.makeText(mContext, "文件地址不存在或已删除！", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (path.startsWith("http") || path.startsWith("HTTP")) {
+                viewUrlFile(mContext, path);
+            } else if (isContentUri(path)) {
+                viewUriFile(mContext, path);
             } else {
-                try {
-                    Uri uri = Uri.parse(path);
-                    // 字符串是 uri.toString() 类型
-                    viewUriFile(mContext, path);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mContext, "该文件暂不支持预览！", Toast.LENGTH_SHORT).show();
-                }
+                viewAbsoluteFile(mContext, path);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(mContext, "文件预览异常！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "此文件暂不支持预览！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static boolean isContentUri(String uriString) {
+        String regex = "^content://.*$";
+        if (uriString.matches(regex)) {
+            return true;
+        }
+        // 进一步使用 Uri 类验证
+        Uri uri = Uri.parse(uriString);
+        return uri != null && Objects.equals(uri.getScheme(), "content");
+    }
+
+    private static void viewUrlFile(Context mContext, String url) {
+        try {
+            String type = getMimeType(url);
+            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+                new PicShowDialog(mContext, PicShowDialog.createImageInfo(url), 0).show();
+            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+                Bundle bundleVideo = new Bundle();
+                bundleVideo.putString("videoName", url);
+                bundleVideo.putString("videoPath", url);
+                VideoPlayerActivity.show(mContext, bundleVideo);
+            } else {
+                // 进一步使用 Uri 类验证
+                Uri uri = Uri.parse(url);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                i.setDataAndType(uri, type);
+                mContext.startActivity(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(mContext, "未找到可以打开此类文件的应用", Toast.LENGTH_SHORT).show();
         }
     }
 
     private static void viewAbsoluteFile(Context mContext, String absolutePath) {
-        if (TextUtils.isEmpty(absolutePath)) {
-            Toast.makeText(mContext, "文件地址不存在或已删除！", Toast.LENGTH_SHORT).show();
-            return;
-        }
         String extension = FileUtils.getUrlFileExtensionName(absolutePath);
+        String fileName = FileUtils.getFileNameByUrl(absolutePath);
         if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
             new PicShowDialog(mContext, PicShowDialog.createImageInfo(absolutePath), 0).show();
         } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
-            Toast.makeText(mContext, "暂不支持视频播放！", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "暂不支持视频播放！", Toast.LENGTH_SHORT).show();
+            Bundle bundleVideo = new Bundle();
+            bundleVideo.putString("videoName", fileName);
+            bundleVideo.putString("videoPath", absolutePath);
+            VideoPlayerActivity.show(mContext, bundleVideo);
         } else {
             try {
                 File file = new File(absolutePath);
@@ -392,16 +430,10 @@ public class AttachmentUtil {
                     return;
                 }
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                    Uri apkFileUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileProvider", file);
-                    i.setDataAndType(apkFileUri, getMimeType(absolutePath));
-                } else {
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.setDataAndType(Uri.parse("file://" + file.toString()),
-                            getMimeType(absolutePath));
-                }
+                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                Uri apkFileUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileProvider", file);
+                i.setDataAndType(apkFileUri, getMimeType(absolutePath));
                 mContext.startActivity(i);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -411,29 +443,21 @@ public class AttachmentUtil {
     }
 
     private static void viewUriFile(Context mContext, String uriPath) {
-        if (TextUtils.isEmpty(uriPath)) {
-            Toast.makeText(mContext, "文件地址不存在或已删除！", Toast.LENGTH_SHORT).show();
-            return;
-        }
         try {
             Uri uri = Uri.parse(uriPath);
             String type = mContext.getContentResolver().getType(uri);
             if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
                 new PicShowDialog(mContext, PicShowDialog.createImageInfo(uriPath), 0).show();
-            }
-//            else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video")||type.startsWith("video"))) {
-//                Toast.makeText(mContext, "暂不支持视频播放！", Toast.LENGTH_SHORT).show();
-//            }
-            else {
+            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+                Bundle bundleVideo = new Bundle();
+                bundleVideo.putString("videoName", uriPath);
+                bundleVideo.putString("videoPath", uriPath);
+                VideoPlayerActivity.show(mContext, bundleVideo);
+            } else {
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                    i.setDataAndType(uri, TextUtils.isEmpty(type) ? "*/*" : type);
-                } else {
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.setDataAndType(uri, TextUtils.isEmpty(type) ? "*/*" : type);
-                }
+                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                i.setDataAndType(uri, TextUtils.isEmpty(type) ? "*/*" : type);
                 mContext.startActivity(i);
             }
         } catch (Exception e) {

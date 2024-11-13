@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.bean.AttachmentBean;
 import com.casic.titan.commonui.databinding.FileAddItemBinding;
+import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
@@ -62,9 +63,8 @@ public class FileAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, File
         } else {
             holder.getBinding().tvFile.setText(mList.get(pos).getFileName());
         }
-        holder.getBinding().tvFile.setOnClickListener(v -> {
-            Toast.makeText(mContext, "暂不支持预览！", Toast.LENGTH_SHORT).show();
-        });
+        holder.getBinding().tvFile.setOnClickListener(v ->
+                AttachmentUtil.viewFile(v.getContext(), mList.get(pos).getPath()));
     }
 
     public void setFileClearListener(FileClearListener fileClearListener) {
