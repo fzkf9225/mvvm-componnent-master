@@ -138,12 +138,6 @@ public class CustomBindingAdapter {
 
     @BindingAdapter("text")
     public static void setText(FormRichText view, CharSequence htmlText) {
-        view.formDataSource.textValue.set(htmlText == null ? null : htmlText.toString());
-    }
-
-    // 添加InverseBindingAdapter用于从视图中获取文本值
-    @InverseBindingAdapter(attribute = "text")
-    public static String getText(FormRichText view) {
-        return view.formDataSource.textValue.get();
+        view.setText(htmlText == null ? null : htmlText.toString());
     }
 }

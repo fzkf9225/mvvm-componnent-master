@@ -4,10 +4,6 @@
 
     <data>
 
-        <variable
-            name="data"
-            type="com.casic.titan.commonui.helper.FormDataSource" />
-
     </data>
 
     <merge>

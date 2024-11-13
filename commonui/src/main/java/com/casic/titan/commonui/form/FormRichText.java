@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
@@ -43,11 +44,11 @@ public class FormRichText extends ConstraintLayout {
     protected int rightTextColor = 0xFF333333;
     protected int labelTextColor = 0xFF999999;
     public FormTextWatcher formTextWatcher;
-    public final FormDataSource formDataSource = new FormDataSource();
     public FormRichTextBinding binding;
     private float formLabelTextSize;
     private float formTextSize;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private Drawable defaultDrawable = null;
 
     public FormRichText(Context context) {
         super(context);
@@ -86,10 +87,10 @@ public class FormRichText extends ConstraintLayout {
     }
 
     protected void init() {
+        defaultDrawable = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
         binding = FormRichTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
-        binding.setData(formDataSource);
         binding.tvRichText.setSelected(true);
         binding.tvRichText.setHint(hintString);
         binding.tvRichText.setTextColor(rightTextColor);
@@ -123,18 +124,21 @@ public class FormRichText extends ConstraintLayout {
     }
 
     public CharSequence getText() {
-        return binding.getData().textValue.get() == null ? "" : binding.getData().textValue.get();
+        return binding.tvRichText.getText();
     }
 
     public void setText(String text) {
-        binding.getData().textValue.set(text);
+        if (TextUtils.isEmpty(text)) {
+            binding.tvRichText.setText(null);
+            return;
+        }
         // 将 HTML 转换为 Spanned 对象并显示在 TextView 中
         ThreadExecutor.getInstance().execute(() -> {
             Spanned spanned = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT, source -> {
                 // 使用Glide加载图片
-                AtomicReference<Drawable> atomicReference = new AtomicReference<>(ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image));
+                Drawable drawable;
                 try {
-                    Drawable drawable = Glide.with(getContext())
+                    drawable = Glide.with(getContext())
                             .asDrawable()
                             .load(source)
                             .submit()
@@ -143,11 +147,11 @@ public class FormRichText extends ConstraintLayout {
                     int width = drawable.getIntrinsicWidth();
                     int height = drawable.getIntrinsicHeight();
                     drawable.setBounds(0, 0, width, height);
-                    atomicReference.set(drawable);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    drawable = defaultDrawable;
                 }
-                return atomicReference.get();
+                return drawable;
             }, (b, s, editable, xmlReader) -> {
 
             });
