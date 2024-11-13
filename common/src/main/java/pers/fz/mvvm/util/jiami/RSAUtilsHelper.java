@@ -17,10 +17,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
-
-import Decoder.BASE64Decoder;
 
 /**
  * created by fz on 2016年10月22日 下午1:44:23
@@ -184,8 +183,7 @@ public final class RSAUtilsHelper {
 	 */
 	public static PublicKey loadPublicKey(String publicKeyStr) throws Exception {
 		try {
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] buffer = decoder.decodeBuffer(publicKeyStr);
+			byte[] buffer = Base64.getDecoder().decode(publicKeyStr);
 			KeyFactory keyFactory = KeyFactory.getInstance(RSA);
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
 			return (RSAPublicKey) keyFactory.generatePublic(keySpec);
@@ -209,8 +207,7 @@ public final class RSAUtilsHelper {
 	public static PrivateKey loadPrivateKey(String privateKeyStr)
 			throws Exception {
 		try {
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] buffer = decoder.decodeBuffer(privateKeyStr);
+			byte[] buffer = Base64.getDecoder().decode(privateKeyStr);
 			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(buffer);
 			KeyFactory keyFactory = KeyFactory.getInstance(RSA);
 			return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);

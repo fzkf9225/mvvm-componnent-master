@@ -30,9 +30,6 @@ import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
 import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -54,12 +51,6 @@ public class PicShowDialog extends Dialog {
     private int position;
     private boolean canSaveImage = true;
     private LinearLayout.LayoutParams paramsL = new LinearLayout.LayoutParams(10, 10);
-    // 图片缓存 默认 等
-    private DisplayImageOptions optionsImag = new DisplayImageOptions.Builder()
-            .showImageForEmptyUri(R.mipmap.ic_default_image)
-            .showImageOnFail(R.mipmap.ic_default_image).cacheInMemory(true).cacheOnDisk(true)
-            .considerExifParams(true).imageScaleType(ImageScaleType.EXACTLY)
-            .bitmapConfig(Bitmap.Config.RGB_565).build();
 
     public PicShowDialog(Context context) {
         super(context, R.style.Pic_Dialog);

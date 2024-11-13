@@ -1,6 +1,5 @@
 package pers.fz.media.videocompressor;
 
-import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 

@@ -5,8 +5,7 @@ import android.content.Context;
 import java.io.InputStream;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
-import Decoder.BASE64Decoder;
+import java.util.Base64;
 
 /**
  * Created by fz on 2017/7/28.
@@ -45,8 +44,7 @@ public class RSAUtils {
             InputStream inPrivate = context.getResources().getAssets().open("rsa_private_key.pem");
             PrivateKey privateKey = RSAUtilsHelper.loadPrivateKey(inPrivate);
             // 因为RSA加密后的内容经Base64再加密转换了一下，所以先Base64解密回来再给RSA解密
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] b1 = decoder.decodeBuffer(data);
+            byte[] b1 = Base64.getDecoder().decode(data);
             byte[] decryptByte = RSAUtilsHelper.decryptData(b1, privateKey);
             String decryptStr = new String(decryptByte);
             return decryptStr;

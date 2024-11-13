@@ -157,8 +157,6 @@
     <public name="icon_play" type="mipmap"/>
     <public name="icon_point1" type="mipmap"/>
     <public name="icon_point2" type="mipmap"/>
-    <public name="icon_search_bg" type="mipmap"/>
-    <public name="icon_search_title_bg" type="mipmap"/>
     <public name="icon_stop" type="mipmap"/>
     <public name="page_icon_empty" type="mipmap"/>
     <public name="star_empty" type="mipmap"/>
