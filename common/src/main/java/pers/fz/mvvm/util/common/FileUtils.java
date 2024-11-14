@@ -1301,29 +1301,31 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static File copyFileToCacheDir(Context context, Uri uri) throws IOException {
-        InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        if (inputStream == null) {
-            throw new RuntimeException("读取文件失败");
-        }
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        String fileName = "file";
+    public static File copyFileToCacheDir(Context mContext, Uri uri) throws IOException {
+        ContentResolver contentResolver = mContext.getContentResolver();
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        String fileName = null;
         if (cursor != null && cursor.moveToFirst()) {
             fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             cursor.close();
         }
-        File cacheDir = context.getCacheDir();
-        File file = new File(cacheDir, fileName);
-        OutputStream outputStream = new FileOutputStream(file);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, length);
+        // 创建临时文件
+        File tempFile = new File(mContext.getCacheDir(), TextUtils.isEmpty(fileName) ? "file" : fileName);
+        tempFile.deleteOnExit();//删除旧文件
+        InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+        FileOutputStream outputStream = new FileOutputStream(tempFile);
+        if (inputStream == null) {
+            return null;
+        }
+        byte[] buffer = new byte[4 * 1024]; // 4K buffer
+        int read;
+        while ((read = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, read);
         }
         outputStream.flush();
-        outputStream.close();
         inputStream.close();
-        return file;
+
+        return tempFile;
     }
 }
 

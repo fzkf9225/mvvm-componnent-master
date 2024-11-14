@@ -10,10 +10,17 @@ import java.util.ArrayList;
 
 public class Mp4Movie {
     private Matrix matrix = Matrix.ROTATE_0;
-    private ArrayList<Track> tracks = new ArrayList<Track>();
+    private final ArrayList<Track> tracks = new ArrayList<Track>();
     private File cacheFile;
     private int width;
     private int height;
+
+    public Mp4Movie(File cacheFile, int angle, int width, int height) {
+        this.cacheFile = cacheFile;
+        this.width = width;
+        this.height = height;
+        setRotation(angle);
+    }
 
     public Matrix getMatrix() {
         return matrix;

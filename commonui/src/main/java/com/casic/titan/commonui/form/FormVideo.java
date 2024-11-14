@@ -52,7 +52,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected boolean compress = false;
-    protected int compressVideo = MediaHelper.VIDEO_MEDIUM;
+    protected int compressVideo = MediaHelper.VIDEO_LOW;
     protected TextView tvLabel, tvRequired;
     protected RecyclerView mRecyclerViewVideo;
     private VideoAddAdapter videoAddAdapter;
@@ -95,7 +95,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
             radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 4);
             labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
-            compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_MEDIUM);
+            compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_LOW);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));

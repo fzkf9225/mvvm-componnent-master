@@ -66,6 +66,8 @@ dependencies {
     implementation libs.androidx.lifecycle.lifecycle.extensions
     implementation libs.org.aspectj.aspectjrt
     implementation libs.googlecode.isoparser
+//    implementation libs.mp4parser.isoparser
+//    implementation libs.mp4parser.muxer
     implementation libs.com.squareup.picasso.picasso
 }
 

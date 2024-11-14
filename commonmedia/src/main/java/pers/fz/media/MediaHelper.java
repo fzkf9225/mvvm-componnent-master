@@ -38,6 +38,7 @@ import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.dialog.TipDialog;
 import pers.fz.media.imgcompressor.ImgCompressor;
+import pers.fz.media.videocompressor.CompressListener;
 import pers.fz.media.videocompressor.VideoCompress;
 
 import java.io.File;
@@ -741,7 +742,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         videoCompressHandler.sendMessage(message);
     }
 
-    private class VideoCompressListener implements VideoCompress.CompressListener {
+    private class VideoCompressListener implements CompressListener {
         private File outPath = null;
         private int index;
 
