@@ -2,15 +2,6 @@ package pers.fz.media.videocompressor;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by fz

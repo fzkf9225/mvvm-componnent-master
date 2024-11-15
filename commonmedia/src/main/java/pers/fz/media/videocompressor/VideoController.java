@@ -1,7 +1,6 @@
 package pers.fz.media.videocompressor;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
@@ -9,11 +8,9 @@ import android.media.MediaCodecList;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import com.coremedia.iso.boxes.Container;
-import com.googlecode.mp4parser.DataSource;
 import com.googlecode.mp4parser.authoring.Movie;
 import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
@@ -21,7 +18,6 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
