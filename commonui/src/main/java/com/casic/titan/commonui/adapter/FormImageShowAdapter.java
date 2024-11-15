@@ -15,7 +15,6 @@ import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImageShowItemBinding;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
-import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
 /**
  * Created by fz on 2024/11/12.
@@ -48,13 +47,13 @@ public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
         });
     }
 
-    public static List<ImageInfo> createImageInfo(List<AttachmentBean> images) {
+    public static List<Object> createImageInfo(List<AttachmentBean> images) {
         if (images == null) {
             return null;
         }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (AttachmentBean img : images) {
-            imageInfos.add(new ImageInfo(img.getUrl(), 1080, 1920));
+        List<Object> imageInfos = new ArrayList<>();
+        for (AttachmentBean item : images) {
+            imageInfos.add(item.getUrl());
         }
         return imageInfos;
     }

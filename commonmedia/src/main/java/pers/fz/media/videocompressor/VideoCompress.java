@@ -58,19 +58,19 @@ public class VideoCompress {
 
         @Override
         public void run() {
-            boolean result = false;
             try {
-                result = VideoController.getInstance().convertVideo(context, srcPath, destPath, mQuality, mListener);
+                //因为是同一个线程，因此正常执行完即为成功！
+                VideoController.getInstance().convertVideo(context, srcPath, destPath, mQuality, mListener);
+                if (mListener != null) {
+                    mListener.onResult(true, "压缩视频成功！");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            if (mListener != null) {
-                if (result) {
-                    mListener.onSuccess();
-                } else {
-                    mListener.onFail();
+                if (mListener != null) {
+                    mListener.onResult(false, e.getMessage());
                 }
             }
+
         }
     }
 }

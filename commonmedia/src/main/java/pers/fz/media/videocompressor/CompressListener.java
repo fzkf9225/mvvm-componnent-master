@@ -7,9 +7,7 @@ package pers.fz.media.videocompressor;
 public interface CompressListener {
     void onStart();
 
-    void onSuccess();
-
-    void onFail();
+    void onResult(boolean isSuccess,String message);
 
     void onProgress(float percent);
 }

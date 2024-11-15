@@ -6,13 +6,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import pers.fz.media.MediaUtil;
 
 /**
  * created by fz on 2024/11/14 9:15
@@ -75,8 +80,30 @@ public class VideoUtils {
         }
         outputStream.flush();
         inputStream.close();
-
         return tempFile;
+    }
+
+    @SuppressLint("Range")
+    public static File createCompressVideoFileByTempFile(File tempFile) throws IOException {
+        if (tempFile == null) {
+            return null;
+        }
+        String basePath = tempFile.getParentFile() + File.separator + "compress" + File.separator;
+        String noRepeatFileName = MediaUtil.getNoRepeatFileName(basePath, "VIDEO_", ".temp");
+        return new File(basePath + noRepeatFileName + ".temp");
+    }
+
+    @SuppressLint("Range")
+    public static FileDescriptor getFileDescriptor(Context mContext, Uri uri) throws IOException {
+        ContentResolver contentResolver = mContext.getContentResolver();
+        if (contentResolver == null) {
+            return null;
+        }
+        ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
+        if (parcelFileDescriptor == null) {
+            return null;
+        }
+        return parcelFileDescriptor.getFileDescriptor();
     }
 }
 

@@ -23,7 +23,6 @@ import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.RxView;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
-import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
@@ -55,7 +54,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 new BannerBean("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg"),
                 new BannerBean("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42")));
         binding.cornersImageView.setOnClickListener(v -> new PicShowDialog(this, List.of(
-                new ImageInfo(imageUrl, 1920, 1080)
+                imageUrl
         ), 0).show());
         binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
         binding.imageCode.setOnClickListener(v -> binding.imageCode.setImageBitmap(Code.getInstance().createBitmap()));

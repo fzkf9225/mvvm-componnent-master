@@ -29,11 +29,11 @@ public class MP4Writer {
     private HashMap<Track, long[]> track2SampleSizes = new HashMap<>();
     private ByteBuffer sizeBuffer = null;
 
-    public MP4Writer createMovie(Mp4Movie mp4Movie,String destinationPath) throws Exception {
+    public MP4Writer createMovie(Mp4Movie mp4Movie) throws Exception {
         currentMp4Movie = mp4Movie;
         fos = new FileOutputStream(mp4Movie.getCacheFile());
 //        fc = fos.getChannel();
-        fc =  new RandomAccessFile(destinationPath, "rw").getChannel();
+        fc = new RandomAccessFile(mp4Movie.getCacheFile().getAbsolutePath(), "rw").getChannel();
         FileTypeBox fileTypeBox = createFileTypeBox();
         fileTypeBox.getBox(fc);
         dataOffset += fileTypeBox.getSize();
@@ -41,6 +41,10 @@ public class MP4Writer {
         mdat = new MdatBox();
         sizeBuffer = ByteBuffer.allocateDirect(4);
         return this;
+    }
+
+    public Mp4Movie getMp4Movie() {
+        return currentMp4Movie;
     }
 
     private void flushCurrentMdat() throws Exception {
@@ -53,7 +57,7 @@ public class MP4Writer {
         fos.flush();
     }
 
-    public boolean writeSampleData(int trackIndex, ByteBuffer byteBuf, MediaCodec.BufferInfo bufferInfo, boolean isAudio) throws Exception {
+    public boolean writeSampleData(int trackIndex, ByteBuffer byteBuf, MediaCodec.BufferInfo bufferInfo) throws Exception {
         if (writeNewMdat) {
             mdat.setContentSize(0);
             mdat.getBox(fc); // Write mdat to file
@@ -80,16 +84,14 @@ public class MP4Writer {
         currentMp4Movie.addSample(trackIndex, dataOffset, bufferInfo);
 
         // Adjust ByteBuffer position and limit
-        byteBuf.position(bufferInfo.offset + (isAudio ? 0 : 4));  // Skip 4 bytes for video header if needed
+        byteBuf.position(bufferInfo.offset + 4);  // Skip 4 bytes for video header if needed
         byteBuf.limit(bufferInfo.offset + bufferInfo.size);
 
         // For video, write frame size info
-        if (!isAudio) {
-            sizeBuffer.position(0);
-            sizeBuffer.putInt(bufferInfo.size - 4);  // Subtract header size for frame size
-            sizeBuffer.position(0);
-            fc.write(sizeBuffer);  // Write frame size
-        }
+        sizeBuffer.position(0);
+        sizeBuffer.putInt(bufferInfo.size - 4);  // Subtract header size for frame size
+        sizeBuffer.position(0);
+        fc.write(sizeBuffer);  // Write frame size
 
         // Write data to file
         fc.write(byteBuf);
@@ -102,8 +104,8 @@ public class MP4Writer {
         return flush;  // Return true if data was flushed
     }
 
-    public int addTrack(MediaFormat mediaFormat, boolean isAudio) throws Exception {
-        return currentMp4Movie.addTrack(mediaFormat, isAudio);
+    public int addTrack(MediaFormat mediaFormat) throws Exception {
+        return currentMp4Movie.addTrack(mediaFormat);
     }
 
     public void finishMovie(boolean error) throws Exception {
@@ -262,7 +264,7 @@ public class MP4Writer {
         tkhd.setEnabled(true);
         tkhd.setInMovie(true);
         tkhd.setInPreview(true);
-        tkhd.setMatrix(track.isAudio() ? Matrix.ROTATE_0 : movie.getMatrix());
+        tkhd.setMatrix(movie.getMatrix());
         tkhd.setAlternateGroup(0);
         tkhd.setCreationTime(track.getCreationTime());
         tkhd.setDuration(track.getDuration() * getTimescale(movie) / track.getTimeScale());
@@ -287,7 +289,7 @@ public class MP4Writer {
 
         // Handler box (for audio/video)
         HandlerBox handlerBox = new HandlerBox();
-        handlerBox.setName(track.isAudio() ? "SoundHandle" : "VideoHandle");
+        handlerBox.setName("VideoHandle");
         handlerBox.setHandlerType(track.getHandler());
         mediaBox.addBox(handlerBox);
 

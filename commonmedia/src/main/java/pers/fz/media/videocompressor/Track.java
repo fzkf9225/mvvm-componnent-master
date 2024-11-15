@@ -37,7 +37,6 @@ public class Track {
     private int width;
     private float volume = 0;
     private ArrayList<Long> sampleDurations = new ArrayList<Long>();
-    private boolean isAudio = false;
     private static Map<Integer, Integer> samplingFrequencyIndexMap = new HashMap<Integer, Integer>();
     private long lastPresentationTimeUs = 0;
     private boolean first = true;
@@ -57,9 +56,8 @@ public class Track {
         samplingFrequencyIndexMap.put(8000, 0xb);
     }
 
-    public Track(int id, MediaFormat format, boolean isAudio) throws Exception {
+    public Track(int id, MediaFormat format) throws Exception {
         trackId = id;
-        if (!isAudio) {
             sampleDurations.add((long)3015);
             duration = 3015;
             width = format.getInteger(MediaFormat.KEY_WIDTH);
@@ -125,50 +123,50 @@ public class Track {
 
                 sampleDescriptionBox.addBox(visualSampleEntry);
             }
-        } else {
-            sampleDurations.add((long)1024);
-            duration = 1024;
-            isAudio = true;
-            volume = 1;
-            timeScale = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-            handler = "soun";
-            headerBox = new SoundMediaHeaderBox();
-            sampleDescriptionBox = new SampleDescriptionBox();
-            AudioSampleEntry audioSampleEntry = new AudioSampleEntry("mp4a");
-            audioSampleEntry.setChannelCount(format.getInteger(MediaFormat.KEY_CHANNEL_COUNT));
-            audioSampleEntry.setSampleRate(format.getInteger(MediaFormat.KEY_SAMPLE_RATE));
-            audioSampleEntry.setDataReferenceIndex(1);
-            audioSampleEntry.setSampleSize(16);
-
-            ESDescriptorBox esds = new ESDescriptorBox();
-            ESDescriptor descriptor = new ESDescriptor();
-            descriptor.setEsId(0);
-
-            SLConfigDescriptor slConfigDescriptor = new SLConfigDescriptor();
-            slConfigDescriptor.setPredefined(2);
-            descriptor.setSlConfigDescriptor(slConfigDescriptor);
-
-            DecoderConfigDescriptor decoderConfigDescriptor = new DecoderConfigDescriptor();
-            decoderConfigDescriptor.setObjectTypeIndication(0x40);
-            decoderConfigDescriptor.setStreamType(5);
-            decoderConfigDescriptor.setBufferSizeDB(1536);
-            decoderConfigDescriptor.setMaxBitRate(96000);
-            decoderConfigDescriptor.setAvgBitRate(96000);
-
-            AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig();
-            audioSpecificConfig.setAudioObjectType(2);
-            audioSpecificConfig.setSamplingFrequencyIndex(samplingFrequencyIndexMap.get((int)audioSampleEntry.getSampleRate()));
-            audioSpecificConfig.setChannelConfiguration(audioSampleEntry.getChannelCount());
-            decoderConfigDescriptor.setAudioSpecificInfo(audioSpecificConfig);
-
-            descriptor.setDecoderConfigDescriptor(decoderConfigDescriptor);
-
-            ByteBuffer data = descriptor.serialize();
-            esds.setEsDescriptor(descriptor);
-            esds.setData(data);
-            audioSampleEntry.addBox(esds);
-            sampleDescriptionBox.addBox(audioSampleEntry);
-        }
+//        } else {
+//            sampleDurations.add((long)1024);
+//            duration = 1024;
+//            isAudio = true;
+//            volume = 1;
+//            timeScale = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
+//            handler = "soun";
+//            headerBox = new SoundMediaHeaderBox();
+//            sampleDescriptionBox = new SampleDescriptionBox();
+//            AudioSampleEntry audioSampleEntry = new AudioSampleEntry("mp4a");
+//            audioSampleEntry.setChannelCount(format.getInteger(MediaFormat.KEY_CHANNEL_COUNT));
+//            audioSampleEntry.setSampleRate(format.getInteger(MediaFormat.KEY_SAMPLE_RATE));
+//            audioSampleEntry.setDataReferenceIndex(1);
+//            audioSampleEntry.setSampleSize(16);
+//
+//            ESDescriptorBox esds = new ESDescriptorBox();
+//            ESDescriptor descriptor = new ESDescriptor();
+//            descriptor.setEsId(0);
+//
+//            SLConfigDescriptor slConfigDescriptor = new SLConfigDescriptor();
+//            slConfigDescriptor.setPredefined(2);
+//            descriptor.setSlConfigDescriptor(slConfigDescriptor);
+//
+//            DecoderConfigDescriptor decoderConfigDescriptor = new DecoderConfigDescriptor();
+//            decoderConfigDescriptor.setObjectTypeIndication(0x40);
+//            decoderConfigDescriptor.setStreamType(5);
+//            decoderConfigDescriptor.setBufferSizeDB(1536);
+//            decoderConfigDescriptor.setMaxBitRate(96000);
+//            decoderConfigDescriptor.setAvgBitRate(96000);
+//
+//            AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig();
+//            audioSpecificConfig.setAudioObjectType(2);
+//            audioSpecificConfig.setSamplingFrequencyIndex(samplingFrequencyIndexMap.get((int)audioSampleEntry.getSampleRate()));
+//            audioSpecificConfig.setChannelConfiguration(audioSampleEntry.getChannelCount());
+//            decoderConfigDescriptor.setAudioSpecificInfo(audioSpecificConfig);
+//
+//            descriptor.setDecoderConfigDescriptor(decoderConfigDescriptor);
+//
+//            ByteBuffer data = descriptor.serialize();
+//            esds.setEsDescriptor(descriptor);
+//            esds.setData(data);
+//            audioSampleEntry.addBox(esds);
+//            sampleDescriptionBox.addBox(audioSampleEntry);
+//        }
     }
 
     public long getTrackId() {
@@ -176,7 +174,7 @@ public class Track {
     }
 
     public void addSample(long offset, MediaCodec.BufferInfo bufferInfo) {
-        boolean isSyncFrame = !isAudio && (bufferInfo.flags & MediaCodec.BUFFER_FLAG_SYNC_FRAME) != 0;
+        boolean isSyncFrame = (bufferInfo.flags & MediaCodec.BUFFER_FLAG_SYNC_FRAME) != 0;
         samples.add(new Sample(offset, bufferInfo.size));
         if (syncSamples != null && isSyncFrame) {
             syncSamples.add(samples.size());
@@ -245,9 +243,5 @@ public class Track {
 
     public ArrayList<Long> getSampleDurations() {
         return sampleDurations;
-    }
-
-    public boolean isAudio() {
-        return isAudio;
     }
 }

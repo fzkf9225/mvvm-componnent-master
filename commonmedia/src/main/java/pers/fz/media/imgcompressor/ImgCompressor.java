@@ -1,5 +1,6 @@
 package pers.fz.media.imgcompressor;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
+import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
@@ -35,8 +37,9 @@ import pers.fz.media.MediaUtil;
  * Created by guizhigang on 16/5/25.
  */
 public class ImgCompressor {
+    @SuppressLint("StaticFieldLeak")
     private volatile static ImgCompressor instance = null;
-    private Context context;
+    private final Context context;
     private CompressListener compressListener;
     private static final int DEFAULT_OUTWIDTH = 720;
     private static final int DEFAULT_OUTHEIGHT = 1080;
@@ -83,14 +86,22 @@ public class ImgCompressor {
                 return null;
             }
         }
+        ParcelFileDescriptor parcelFileDescriptor;
         try {
-            BitmapFactory.decodeFileDescriptor(contentResolver.openFileDescriptor(srcImageUri, "r").getFileDescriptor(), null, options);
+            parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri,"r");
+            if (parcelFileDescriptor == null) {
+                if (compressListener != null) {
+                    compressListener.onCompressFail(new Exception("权限不足！"));
+                }
+                return null;
+            }
+            BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor(), null, options);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             if (compressListener != null) {
-                compressListener.onCompressFail(e);
-                return null;
+                compressListener.onCompressFail(new FileNotFoundException("文件不存在或已删除"));
             }
+            return null;
         }
         //根据原始图片的宽高比和期望的输出图片的宽高比计算最终输出的图片的宽和高
         float srcWidth = options.outWidth;
@@ -123,13 +134,20 @@ public class ImgCompressor {
         }
         options.inSampleSize = computSampleSize(options, actualOutWidth, actualOutHeight);
         options.inJustDecodeBounds = false;
-        Bitmap scaledBitmap = null;
+        Bitmap scaledBitmap;
         try {
-            scaledBitmap = BitmapFactory.decodeFileDescriptor(contentResolver.openFileDescriptor(srcImageUri, "r").getFileDescriptor(), null, options);
+            parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri,"r");
+            if (parcelFileDescriptor == null) {
+                if (compressListener != null) {
+                    compressListener.onCompressFail(new Exception("权限不足！"));
+                }
+                return null;
+            }
+            scaledBitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor(), null, options);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             if (compressListener != null) {
-                compressListener.onCompressFail(e);
+                compressListener.onCompressFail(new FileNotFoundException("文件不存在或已删除"));
             }
             return null;
         }
@@ -143,22 +161,9 @@ public class ImgCompressor {
         }
 
         //处理图片旋转问题
-        ExifInterface exif = null;
+        ExifInterface exif;
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                exif = new ExifInterface(contentResolver.openInputStream(srcImageUri));
-            } else {
-                String filePath = null;
-                String[] filePathColumn = {MediaStore.MediaColumns.DATA};
-                Cursor cursor = context.getContentResolver().query(srcImageUri, filePathColumn, null, null, null);
-                if (cursor != null) {
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    filePath = cursor.getString(columnIndex);
-                    cursor.close();
-                }
-                exif = new ExifInterface(filePath);
-            }
+            exif = new ExifInterface(parcelFileDescriptor.getFileDescriptor());
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
             Matrix matrix = new Matrix();
@@ -226,13 +231,8 @@ public class ImgCompressor {
                 }
             }
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            // 从文件中创建uri
-            return Uri.fromFile(outputFile);
-        } else { //兼容android7.0 使用共享文件的形式
-            return FileProvider.getUriForFile(context,
-                    context.getPackageName() + ".FileProvider", outputFile);
-        }
+        //兼容android7.0 使用共享文件的形式
+        return FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", outputFile);
     }
 
     private static int computSampleSize(BitmapFactory.Options options, float reqWidth, float reqHeight) {
@@ -330,11 +330,11 @@ public class ImgCompressor {
 
 
     private class CompressRunnable implements Runnable {
-        private Uri srcPath = null;
-        private int outWidth = 0;
-        private int outHeight = 0;
-        private int maxFileSize = 0;
-        private String outPath;
+        private final Uri srcPath;
+        private final int outWidth;
+        private final int outHeight;
+        private final int maxFileSize;
+        private final String outPath;
 
         public CompressRunnable( Uri srcPath, String outPath, int outWidth, int outHeight, int maxFileSize) {
             this.srcPath = srcPath;

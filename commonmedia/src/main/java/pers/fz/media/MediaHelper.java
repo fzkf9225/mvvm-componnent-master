@@ -356,6 +356,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 .builder()
                 .show();
     }
+
     /**
      * 判断权限集合
      */
@@ -375,6 +376,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         return ContextCompat.checkSelfPermission(mContext, permission) ==
                 PackageManager.PERMISSION_DENIED;
     }
+
     /**
      * 权限检测
      *
@@ -452,8 +454,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private class ImageCompressHandler extends Handler {
-        private List<Uri> imagesCompressList = null;
-        private List<Uri> srcUriList = null;
+        private final List<Uri> imagesCompressList;
+        private final List<Uri> srcUriList;
 
         public ImageCompressHandler(@NonNull Looper looper, List<Uri> srcUriList) {
             super(looper);
@@ -497,7 +499,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         imageCompressHandler.sendMessage(message);
                     } else {
                         ImgCompressor.getInstance(mediaBuilder.getActivity())
-                                .withListener(new ImageCompressListener(msg.what)).
+                                .withListener(new ImageCompressListener(msg.what, srcUriList.size())).
                                 starCompress(srcUriList.get(msg.what), mediaBuilder.getImageOutPutPath(), 720, 1280,
                                         mediaBuilder.getImageQualityCompress());
                     }
@@ -593,16 +595,18 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private class ImageCompressListener implements ImgCompressor.CompressListener {
-        private int index = 0;
+        private final int index;
+        private final int totalCount;
 
-        public ImageCompressListener(int index) {
+        public ImageCompressListener(int index, int totalCount) {
             this.index = index;
+            this.totalCount = totalCount;
         }
 
         @Override
         public void onCompressStart() {
             if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().refreshLoading("正在压缩第" + (index) + "张图片");
+                mediaBuilder.getOnLoadingListener().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
             }
         }
 
@@ -629,7 +633,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
             showToast("图片压缩错误");
         }
-
     }
 
     private boolean isMoreThanMaxImage() {
@@ -745,10 +748,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private class VideoCompressListener implements CompressListener {
         private File outPath = null;
         private int index;
+        private int totalCount;
 
-        public VideoCompressListener(File outPath, int index) {
+        public VideoCompressListener(File outPath, int index, int totalCount) {
             this.outPath = outPath;
             this.index = index;
+            this.totalCount = totalCount;
         }
 
         @Override
@@ -756,39 +761,43 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
 
         @Override
-        public void onSuccess() {
-            Uri resultUri = null;
+        public void onResult(boolean isSuccess, String message) {
+            if (!isSuccess) {
+                showToast(TextUtils.isEmpty(message) ? "视频压缩异常" : message);
+                if (mediaBuilder.getOnLoadingListener() != null) {
+                    mediaBuilder.getOnLoadingListener().hideLoading();
+                }
+                return;
+            }
+            Uri resultUri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 resultUri = FileProvider.getUriForFile(mediaBuilder.getActivity(),
                         mediaBuilder.getActivity().getPackageName() + ".FileProvider", outPath);
             } else {
                 resultUri = Uri.fromFile(outPath);
             }
-            Message message = new Message();
-            message.what = index + 1;
-            message.obj = resultUri;
-            videoCompressHandler.sendMessage(message);
+            Message msg = new Message();
+            msg.what = index + 1;
+            msg.obj = resultUri;
+            videoCompressHandler.sendMessage(msg);
         }
 
-        @Override
-        public void onFail() {
-            showToast("视频压缩异常");
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().hideLoading();
-            }
-        }
 
         @Override
         public void onProgress(float percent) {
             if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().refreshLoading("正在压缩第" + (index + 1) + "个文件，压缩进度：" + (int) percent + "%");
+                if (percent == 100) {
+                    mediaBuilder.getOnLoadingListener().refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
+                } else {
+                    mediaBuilder.getOnLoadingListener().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
+                }
             }
         }
     }
 
     private class VideoCompressHandler extends Handler {
-        private List<Uri> uriList = null;
-        private List<Uri> compressUriList = null;
+        private final List<Uri> uriList;
+        private final List<Uri> compressUriList;
 
         public VideoCompressHandler(@NonNull Looper looper, List<Uri> videos) {
             super(looper);
@@ -808,7 +817,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 if (msg.what > 0 && msg.obj != null) {
                     compressUriList.add((Uri) msg.obj);
                 }
-                if (uriList.size() == 0 || msg.what >= uriList.size()) {
+                if (uriList.isEmpty() || msg.what >= uriList.size()) {
                     showToast("压缩成功！");
                     if (mediaBuilder.getOnLoadingListener() != null) {
                         mediaBuilder.getOnLoadingListener().hideLoading();
@@ -819,17 +828,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     File outputFile = new File(mediaBuilder.getVideoOutPutPath(), fileName + ".mp4");
                     if (mediaBuilder.getVideoQuality() == VIDEO_HIGH) {
                         VideoCompress.compressVideoHigh(mediaBuilder.getActivity(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what));
+                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     } else if (mediaBuilder.getVideoQuality() == VIDEO_MEDIUM) {
                         VideoCompress.compressVideoMedium(mediaBuilder.getActivity(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what));
+                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     } else {
                         VideoCompress.compressVideoLow(mediaBuilder.getActivity(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what));
+                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     }
                 }
             } catch (Exception e) {
-                LogUtil.show(TAG,"视频加载出现错误："+e);
+                LogUtil.show(TAG, "视频加载出现错误：" + e);
                 e.printStackTrace();
                 showToast("视频加载出现错误");
                 if (mediaBuilder.getOnLoadingListener() != null) {

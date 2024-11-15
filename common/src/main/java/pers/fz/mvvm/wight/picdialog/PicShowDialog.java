@@ -12,10 +12,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -23,34 +25,36 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.ThreadExecutorBounded;
 import pers.fz.mvvm.util.download.DownLoadImageService;
 import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
-import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * 主界面点击发布，弹出半透明对话框
  */
 public class PicShowDialog extends Dialog {
-    private Context context;
-    private View view;
-    private List<ImageInfo> imageInfos;
+    private final Context context;
+    private List<Object> imageInfos;
     private MyViewPager vp;
-    private List<View> views = new ArrayList<View>();
+    private final List<View> dotsView = new ArrayList<>();
     private LayoutAnimationController lac;
     private LinearLayout ll_point;
     private ViewPagerAdapter pageAdapter;
     private int position;
     private boolean canSaveImage = true;
-    private LinearLayout.LayoutParams paramsL = new LinearLayout.LayoutParams(10, 10);
+    private final @DrawableRes int drawableResCurrent = R.mipmap.icon_point2;
+    private final @DrawableRes int drawableResNormal = R.mipmap.icon_point1;
 
     public PicShowDialog(Context context) {
         super(context, R.style.Pic_Dialog);
@@ -68,104 +72,75 @@ public class PicShowDialog extends Dialog {
         this.canSaveImage = canSaveImage;
     }
 
-    public PicShowDialog(Context context, List<ImageInfo> imageInfos, int position) {
+    public PicShowDialog(Context context, List<Object> imageInfos, int position) {
         this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
+        if (this.imageInfos == null) {
+            this.imageInfos = new ArrayList<>();
+        }
         this.position = position;
     }
 
-    public PicShowDialog(Context context, List<ImageInfo> imageInfos, boolean canSaveImage, int position) {
+    public PicShowDialog(Context context, List<Object> imageInfos, boolean canSaveImage, int position) {
         this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
+        if (this.imageInfos == null) {
+            this.imageInfos = new ArrayList<>();
+        }
         this.canSaveImage = canSaveImage;
         this.position = position;
     }
 
-    public PicShowDialog setImages(List<ImageInfo> imageInfoList) {
-
+    public PicShowDialog setImages(List<Object> imageInfoList) {
+        this.imageInfos = imageInfoList;
+        if (this.imageInfos == null) {
+            this.imageInfos = new ArrayList<>();
+        }
         return this;
     }
 
-    public static List<ImageInfo> createImageInfo(String image) {
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(image, 1080, 1920));
-        return imageInfos;
+    public static List<Object> createImageInfo(String image) {
+        return List.of(image);
     }
 
-    public static List<ImageInfo> createImageInfo(@DrawableRes int imageRes) {
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(imageRes, 1080, 1920));
-        return imageInfos;
+    public static List<Object> createImageInfo(@DrawableRes int imageRes) {
+        return List.of(imageRes);
     }
 
-    public static List<ImageInfo> createImageInfo(Bitmap bitmap) {
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(bitmap, 1080, 1920));
-        return imageInfos;
+    public static List<Object> createImageInfo(Bitmap bitmap) {
+        return List.of(bitmap);
     }
 
-    public static List<ImageInfo> createImageInfo(String... image) {
+    public static List<Object> createImageInfo(String... image) {
         if (image == null) {
             return null;
         }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (String img : image) {
-            imageInfos.add(new ImageInfo(img, 1080, 1920));
-        }
+        List<Object> imageInfos = new ArrayList<>();
+        Collections.addAll(imageInfos, image);
         return imageInfos;
     }
 
-    public static List<ImageInfo> createUriImageInfo(Uri... uri) {
+    public static List<Object> createUriImageInfo(Uri... uri) {
         if (uri == null) {
             return null;
         }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (Uri img : uri) {
-            imageInfos.add(new ImageInfo(img, 1080, 1920));
-        }
+        List<Object> imageInfos = new ArrayList<>();
+        Collections.addAll(imageInfos, uri);
         return imageInfos;
     }
 
-    public static List<ImageInfo> createImageInfo(List<String> images) {
+    public static List<Object> createImageInfo(List<String> images) {
         if (images == null) {
             return null;
         }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (String img : images) {
-            imageInfos.add(new ImageInfo(img, 1080, 1920));
-        }
-        return imageInfos;
+        return new ArrayList<>(images);
     }
 
-    public static List<ImageInfo> createUriImageInfo(List<Uri> images) {
+    public static List<Object> createUriImageInfo(List<Uri> images) {
         if (images == null) {
             return null;
         }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (Uri img : images) {
-            imageInfos.add(new ImageInfo(img, 1080, 1920));
-        }
-        return imageInfos;
-    }
-
-    public static List<ImageInfo> createImageInfo(String image, int width, int height) {
-        if (image == null) {
-            return null;
-        }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo(image, width, height));
-        return imageInfos;
-    }
-
-    public static List<ImageInfo> createImageInfo(int width, int height, String... image) {
-        if (image == null) {
-            return null;
-        }
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        for (String img : image) {
-            imageInfos.add(new ImageInfo(img, width, height));
-        }
-        return imageInfos;
+        return new ArrayList<>(images);
     }
 
     @Override
@@ -173,12 +148,9 @@ public class PicShowDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_dialog_pic);
         getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        getWindow().setLayout(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        vp = (MyViewPager) findViewById(R.id.vp);
-        ll_point = (LinearLayout) findViewById(R.id.ll_point);
-//        init();
+        vp = findViewById(R.id.vp);
+        ll_point = findViewById(R.id.ll_point);
         initMyPageAdapter();
-//        vp.setAdapter(new ViewPagerAdapter());
         vp.setCurrentItem(position);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -188,17 +160,16 @@ public class PicShowDialog extends Dialog {
 
             @Override
             public void onPageSelected(int position) {
-                if (views.size() != 0 && views.get(position) != null) {
-
-                    for (int i = 0; i < views.size(); i++) {
-                        if (i == position) {
-                            views.get(i).setBackgroundResource(R.mipmap.icon_point2);
-                        } else {
-                            views.get(i).setBackgroundResource(R.mipmap.icon_point1);
-                        }
-                    }
-
+                if (dotsView.isEmpty()) {
+                    return;
                 }
+                IntStream.range(0, dotsView.size()).forEach(i -> {
+                    if (i == position) {
+                        dotsView.get(i).setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
+                    } else {
+                        dotsView.get(i).setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
+                    }
+                });
             }
 
             @Override
@@ -217,34 +188,32 @@ public class PicShowDialog extends Dialog {
         initPoint();
         if (pageAdapter == null) {
             pageAdapter = new ViewPagerAdapter();
-            if (vp != null) {
-                vp.setAdapter(pageAdapter);
-            }
-
+            vp.setAdapter(pageAdapter);
         } else {
             pageAdapter.notifyDataSetChanged();
         }
     }
 
     private void initPoint() {
-        views.clear();
+        dotsView.clear();
         ll_point.removeAllViews();
-        if (imageInfos.size() == 1) {
-            ll_point.setVisibility(View.GONE);
+        if (imageInfos.size() > 1) {
+            ll_point.setVisibility(View.VISIBLE);
         } else {
-            for (int i = 0; i < imageInfos.size(); i++) {
-                View view = new View(context);
-                paramsL.setMargins(dip2px(context, 5), dip2px(context, 2), 0, dip2px(context, 5));
-                view.setLayoutParams(paramsL);
-                if (i == position) {
-                    view.setBackgroundResource(R.mipmap.icon_point2);
-                } else {
-                    view.setBackgroundResource(R.mipmap.icon_point1);
-                }
-                views.add(view);
-                ll_point.addView(view);
-            }
+            ll_point.setVisibility(View.INVISIBLE);
         }
+        IntStream.range(0, imageInfos.size()).forEach(i -> {
+            ImageView round = new ImageView(getContext());
+            if (i == 0) {
+                round.setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
+            } else {
+                round.setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
+            }
+            dotsView.add(round);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
+            params.leftMargin = DensityUtil.dp2px(context, 8f);
+            ll_point.addView(round, params);
+        });
 
     }
 
@@ -269,10 +238,10 @@ public class PicShowDialog extends Dialog {
                     new ImageSaveDialog(context)
                             .setOnImageSaveListener(dialog -> {
                                 dialog.dismiss();
-                                if (imageInfos.get(position).getUrl() instanceof String ||
-                                        imageInfos.get(position).getUrl() instanceof Integer ||
-                                        imageInfos.get(position).getUrl() instanceof Uri) {
-                                    downloadImage(imageInfos.get(position).getUrl());
+                                if (imageInfos.get(position) instanceof String ||
+                                        imageInfos.get(position) instanceof Integer ||
+                                        imageInfos.get(position) instanceof Uri) {
+                                    downloadImage(imageInfos.get(position));
                                 } else {
                                     ToastUtils.showShort(context, "图片缓存失败");
                                 }
@@ -285,26 +254,16 @@ public class PicShowDialog extends Dialog {
 
             Glide.with(context)
                     .asBitmap()
-                    .load(imageInfos.get(position).getUrl())
+                    .load(imageInfos.get(position))
                     .apply(new RequestOptions().error(R.mipmap.ic_default_image))
                     .into(photoView);
-//            if (imageInfos.get(position).getUrl() instanceof String) {
-//                ImageLoader imageLoader = ImageLoader.getInstance();
-//                imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-//                imageLoader.displayImage((String) imageInfos.get(position).getUrl(), photoView, optionsImag);
-//            } else if (imageInfos.get(position).getUrl() instanceof Integer) {
-//                Glide.with(context).asBitmap().load(imageInfos.get(position).getUrl())
-//                        .apply(new RequestOptions().error(R.mipmap.ic_default_image)).into(photoView);
-//            } else {
-//                Glide.with(context).asBitmap().load(R.mipmap.ic_default_image).into(photoView);
-//            }
             photoView.setOnPhotoTapListener((view1, x, y) -> dismiss());
             container.addView(view);
             return view;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
     }
@@ -328,18 +287,12 @@ public class PicShowDialog extends Dialog {
         }));
     }
 
-    private final Handler handler = new Handler(Looper.myLooper(), new Handler.Callback() {
+    private final Handler handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             ToastUtils.showShort(context, message.obj == null ? "图片保存失败" : message.obj.toString());
             return false;
         }
     });
-
-    private int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
 }
 

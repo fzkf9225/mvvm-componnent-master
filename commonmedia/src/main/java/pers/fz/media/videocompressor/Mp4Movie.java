@@ -14,11 +14,12 @@ public class Mp4Movie {
     private File cacheFile;
     private int width;
     private int height;
-
-    public Mp4Movie(File cacheFile, int angle, int width, int height) {
+    private int bitrate;
+    public Mp4Movie(File cacheFile, int angle, int width, int height,int bitrate) {
         this.cacheFile = cacheFile;
         this.width = width;
         this.height = height;
+        this.bitrate = bitrate;
         setRotation(angle);
     }
 
@@ -38,6 +39,10 @@ public class Mp4Movie {
         cacheFile = file;
     }
 
+    public int getBitrate() {
+        return bitrate;
+    }
+
     public void setRotation(int angle) {
         if (angle == 0) {
             matrix = Matrix.ROTATE_0;
@@ -48,11 +53,6 @@ public class Mp4Movie {
         } else if (angle == 270) {
             matrix = Matrix.ROTATE_270;
         }
-    }
-
-    public void setSize(int w, int h) {
-        width = w;
-        height = h;
     }
 
     public ArrayList<Track> getTracks() {
@@ -71,8 +71,8 @@ public class Mp4Movie {
         track.addSample(offset, bufferInfo);
     }
 
-    public int addTrack(MediaFormat mediaFormat, boolean isAudio) throws Exception {
-        tracks.add(new Track(tracks.size(), mediaFormat, isAudio));
+    public int addTrack(MediaFormat mediaFormat) throws Exception {
+        tracks.add(new Track(tracks.size(), mediaFormat));
         return tracks.size() - 1;
     }
 }

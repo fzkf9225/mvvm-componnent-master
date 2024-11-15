@@ -7,23 +7,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -44,7 +38,6 @@ import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
-import pers.fz.mvvm.wight.picdialog.bean.ImageInfo;
 
 /**
  * Created by fz on 2018/3/15.
@@ -58,7 +51,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
     private boolean canBrowse = false, autoBanner = true, canDownload = true;
     private int dotPosition = DotPosition.INNER_BOTTOM_CENTER;
     private @DrawableRes int placeholderImage;
-    private List<ImageInfo> imageInfosList = new ArrayList<>();
+    private final List<Object> imageInfosList = new ArrayList<>();
     private int mCurrentPosition = 0;
     private List<BannerBean> bannerList;
     private float width, height;
@@ -238,7 +231,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
                         .into(imageView);
                 images.add(imageView);
             }
-            imageInfosList.add(new ImageInfo(imgPath, 1920, 1080));
+            imageInfosList.add(imgPath);
         }
         viewPager.setImages(images);
         initImageRounds();
