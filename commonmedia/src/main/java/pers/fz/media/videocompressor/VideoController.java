@@ -215,17 +215,17 @@ public class VideoController {
             }
             default -> {
                 if (rotationValue == 90) {
-                    resultHeight = videoInfo.width() / 3;
-                    resultWidth = videoInfo.height() / 3;
+                    resultHeight = videoInfo.width() / 2;
+                    resultWidth = videoInfo.height() / 2;
                     rotationValue = 0;
                 } else if (rotationValue == 270) {
-                    resultHeight = videoInfo.width() / 3;
-                    resultWidth = videoInfo.height() / 3;
+                    resultHeight = videoInfo.width() / 2;
+                    resultWidth = videoInfo.height() / 2;
                     rotationValue = 0;
                 } else {
                     rotationValue = 0;
-                    resultWidth = videoInfo.width() / 3;
-                    resultHeight = videoInfo.height() / 3;
+                    resultWidth = videoInfo.width() / 2;
+                    resultHeight = videoInfo.height() / 2;
                 }
                 yield resultWidth * resultHeight * 10;
             }
