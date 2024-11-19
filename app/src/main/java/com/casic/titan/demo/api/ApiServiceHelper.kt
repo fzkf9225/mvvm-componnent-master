@@ -1,9 +1,10 @@
 package com.casic.titan.demo.api
 
-import com.casic.titan.demo.bean.ForestBean
+import com.casic.titan.demo.bean.RegionBean
 import io.reactivex.rxjava3.core.Observable
 import pers.fz.mvvm.bean.base.PageBean
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -13,6 +14,9 @@ import retrofit2.http.Path
  */
 interface ApiServiceHelper {
 
-    @POST("maintain/list/{page}/{size}")
-    fun forestList(@Path("page") current: Int, @Path("size") size: Int,@Body body: Map<String,String>): Observable<PageBean<ForestBean>>
+    /**
+     * 获取行政区划树
+     */
+    @GET("area/findAreaTree")
+    fun getRegionTree(): Observable<List<RegionBean>>
 }

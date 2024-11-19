@@ -29,7 +29,7 @@ public class AppModule {
     {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
         LogUtil.show(ApiRetrofit.TAG,"APP模块baseUrl:"+baseUrl);
-        return new ApiRetrofit.Builder(Config.getInstance().getApplication())
+        return new ApiRetrofit.Builder(application)
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
                 .setErrorService(errorService)

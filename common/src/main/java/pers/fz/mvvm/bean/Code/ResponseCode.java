@@ -36,7 +36,7 @@ public class ResponseCode {
     /**
      * 请求未授权
      */
-    public static final String NO_PERMISSION = "401";
+    public static final String NO_PERMISSION = "403";
     /**
      * 接口异常
      */

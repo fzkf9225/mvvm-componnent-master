@@ -35,6 +35,10 @@ public class RepositoryImpl<BV extends BaseView> implements IRepository {
         this.baseView = baseView;
     }
 
+    public RepositoryImpl(BV baseView) {
+        this.baseView = baseView;
+    }
+
     public void setRetryService(RetryService retryService) {
         this.retryService = retryService;
     }
@@ -58,9 +62,9 @@ public class RepositoryImpl<BV extends BaseView> implements IRepository {
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
-        if (retryWhen() != null) {
+        if (retryService != null) {
             return observable.subscribeOn(Schedulers.io())
-                    .retryWhen(retryWhen())
+                    .retryWhen(retryService)
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && requestConfigEntity.isShowDialog()) {
@@ -119,9 +123,9 @@ public class RepositoryImpl<BV extends BaseView> implements IRepository {
     }
 
     public <T> Observable<T> sendRequest(Observable<T> observable, RequestConfigEntity requestConfigEntity) {
-        if (retryWhen() != null) {
+        if (retryService != null) {
             return observable.subscribeOn(Schedulers.io())
-                    .retryWhen(retryWhen())
+                    .retryWhen(retryService)
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && requestConfigEntity.isShowDialog()) {
@@ -151,7 +155,4 @@ public class RepositoryImpl<BV extends BaseView> implements IRepository {
         }
     }
 
-    public Function<Observable<? extends Throwable>, Observable<?>> retryWhen() {
-        return retryService;
-    }
 }

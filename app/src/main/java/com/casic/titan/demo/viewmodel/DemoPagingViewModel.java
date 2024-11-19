@@ -3,20 +3,16 @@ package com.casic.titan.demo.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.paging.PagingData;
 
 import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.demo.bean.ForestBean;
-import com.casic.titan.demo.repository.DemoPagingRepositoryImpl;
+import com.casic.titan.demo.bean.RegionBean;
+import com.casic.titan.demo.repository.KtDemoPagingRepositoryImpl;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 
 /**
@@ -24,7 +20,7 @@ import pers.fz.mvvm.viewmodel.PagingViewModel;
  * describe :
  */
 @HiltViewModel
-public class DemoPagingViewModel extends PagingViewModel<DemoPagingRepositoryImpl, ForestBean, BaseView> {
+public class DemoPagingViewModel extends PagingViewModel<KtDemoPagingRepositoryImpl, RegionBean, BaseView> {
     @Inject
     ApiServiceHelper apiServiceHelper;
 
@@ -37,8 +33,8 @@ public class DemoPagingViewModel extends PagingViewModel<DemoPagingRepositoryImp
     }
 
     @Override
-    protected DemoPagingRepositoryImpl repository() {
-        return new DemoPagingRepositoryImpl(apiServiceHelper, retryService, baseView);
+    protected KtDemoPagingRepositoryImpl repository() {
+        return new KtDemoPagingRepositoryImpl(apiServiceHelper, retryService, baseView);
     }
 
 }

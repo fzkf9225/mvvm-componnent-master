@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
-import com.casic.titan.demo.bean.ForestBean;
+import com.casic.titan.demo.bean.RegionBean;
 import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -18,10 +18,10 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, ForestBean> {
+public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, RegionBean> {
 
     @Override
-    protected BasePagingAdapter<ForestBean, ?> getRecyclerAdapter() {
+    protected BasePagingAdapter<RegionBean, ?> getRecyclerAdapter() {
         return new PagingDemoAdapter();
     }
 
@@ -32,19 +32,18 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
     }
 
     @Override
-    public void onItemClick(View view, ForestBean item, int position) {
+    public void onItemClick(View view, RegionBean item, int position) {
         super.onItemClick(view, item, position);
-        showToast("点击的是第" + position + "行，内容是：" + item.getCaretaker());
+        showToast("点击的是第" + position + "行，内容是：" + item.getAreaName());
     }
 
     @Override
-    public void onItemLongClick(View view, ForestBean item, int position) {
+    public void onItemLongClick(View view, RegionBean item, int position) {
         super.onItemLongClick(view, item, position);
-        //不能这么删除，这样删除会有bug
         new ConfirmDialog(requireContext())
                 .setSureText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position+1))
+                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position))
                 .builder()
                 .show();
     }
