@@ -1,8 +1,8 @@
 package com.casic.titan.demo.adapter;
 
 
-import com.casic.titan.demo.R;
 import com.casic.titan.demo.BR;
+import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.RegionBean;
 import com.casic.titan.demo.databinding.PagingItemBinding;
 

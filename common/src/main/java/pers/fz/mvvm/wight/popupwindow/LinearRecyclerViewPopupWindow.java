@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
@@ -21,8 +23,6 @@ import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.popupwindow.adapter.ParentAdapter;
 import pers.fz.mvvm.wight.recyclerview.MyLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
-
-import java.util.List;
 
 /**
  * PopupWindow 下拉框

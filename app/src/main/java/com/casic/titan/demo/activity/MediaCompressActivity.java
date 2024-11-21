@@ -12,10 +12,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
-import pers.fz.media.listener.OnLoadingListener;
-import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.listener.OnLoadingListener;
+import pers.fz.mvvm.base.BaseActivity;
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> {
     private UseCase useCase;

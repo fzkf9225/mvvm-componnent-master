@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.UriPermission;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
@@ -17,7 +16,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
-
 
 import com.casic.titan.commonui.api.ConstantsHelper;
 import com.casic.titan.commonui.bean.AttachmentBean;
@@ -32,7 +30,6 @@ import java.util.Objects;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.util.common.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**

@@ -18,8 +18,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
+import pers.fz.mvvm.util.common.StringUtil;
 
 
 /**

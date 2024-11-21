@@ -22,7 +22,6 @@ package com.casic.titan.googlegps.common.network;
 import android.app.Activity;
 import android.os.Handler;
 
-import com.casic.titan.googlegps.R;
 import com.casic.titan.googlegps.common.slf4j.Logs;
 
 import org.slf4j.Logger;

@@ -28,7 +28,6 @@ import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
 import com.casic.titan.googlegps.GpsLoggingService;
 import com.casic.titan.googlegps.common.AppSettings;
-import com.casic.titan.googlegps.common.events.ServiceEvents;
 import com.casic.titan.googlegps.common.events.UploadEvents;
 import com.casic.titan.googlegps.common.network.Networks;
 import com.casic.titan.googlegps.common.slf4j.Logs;

@@ -23,8 +23,6 @@ package com.casic.titan.googlegps.common;
 import android.content.Context;
 import android.os.Build;
 
-import com.casic.titan.googlegps.R;
-
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

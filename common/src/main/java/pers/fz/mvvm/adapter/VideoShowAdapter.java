@@ -2,7 +2,6 @@ package pers.fz.mvvm.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;

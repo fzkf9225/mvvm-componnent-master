@@ -2,19 +2,12 @@ package com.casic.titan.demo.activity;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.casic.titan.commonui.bean.AttachmentBean;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.FormBean;
 import com.casic.titan.demo.databinding.ActivityFormDetailBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseActivity;

@@ -13,23 +13,18 @@ import androidx.paging.PagingData;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.constant.RefreshState;
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.listener.PagingAdapterListener;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.BasePagingViewModel;
-import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 

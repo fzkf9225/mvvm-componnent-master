@@ -25,7 +25,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import com.casic.titan.googlegps.R;
 import com.casic.titan.googlegps.common.slf4j.Logs;
 import com.casic.titan.googlegps.loggers.Files;
 

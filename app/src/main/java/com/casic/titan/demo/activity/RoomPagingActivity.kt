@@ -2,14 +2,10 @@ package com.casic.titan.demo.activity
 
 import android.os.Build
 import android.os.Bundle
-import com.casic.titan.demo.R
 import com.casic.titan.demo.bean.UseCase
-import com.casic.titan.demo.databinding.ActivityRoomPagingBinding
 import com.casic.titan.demo.fragment.RoomSmartPagingFragment
 import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Flowable
-import pers.fz.mvvm.base.BaseActivity
 import pers.fz.mvvm.base.BaseSearchActivity
 
 @AndroidEntryPoint

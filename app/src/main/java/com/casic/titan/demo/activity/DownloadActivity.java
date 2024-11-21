@@ -13,15 +13,12 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityDownloadBinding;
 import com.casic.titan.demo.viewmodel.DownloadViewModel;
-import com.google.gson.Gson;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;

@@ -8,17 +8,13 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.activity.FeedBackActivity;
 import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 
-import androidx.annotation.NonNull;
-
-import javax.inject.Inject;
-
-import dagger.assisted.Assisted;
-import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.activity.TechnicalSupportActivity;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
@@ -26,9 +22,7 @@ import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.cache.GlideCacheUtil;
 import pers.fz.mvvm.util.update.UpdateManger;
-import pers.fz.mvvm.util.update.listener.ApkUpdateListener;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
-import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 /**
  * Create by CherishTang on 2020/3/26 0026

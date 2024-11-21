@@ -9,10 +9,9 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.api.ErrorConsumer;
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.inter.RetryService;
 

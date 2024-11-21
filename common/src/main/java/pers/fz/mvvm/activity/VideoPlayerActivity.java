@@ -12,11 +12,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.viewmodel.VideoPlayerViewModel;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.TextureViewPlayerActivityBinding;
-import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.theme.ThemeUtils;
+import pers.fz.mvvm.viewmodel.VideoPlayerViewModel;
 import pers.fz.mvvm.wight.dialog.MessageDialog;
 
 /**

@@ -2,7 +2,6 @@ package pers.fz.media;
 
 import android.net.Uri;
 
-
 import java.util.List;
 
 /**

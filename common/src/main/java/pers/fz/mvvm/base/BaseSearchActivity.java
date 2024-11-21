@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.lifecycle.MutableLiveData;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.BaseSearchActivityBinding;
 import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;

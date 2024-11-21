@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 /**
  * Created by 陈岗不姓陈 on 2017/10/17.

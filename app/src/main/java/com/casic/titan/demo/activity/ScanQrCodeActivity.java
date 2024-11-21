@@ -1,7 +1,5 @@
 package com.casic.titan.demo.activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +11,8 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityQrCodeBinding;
@@ -33,12 +33,12 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.update.DownloadManger;
-import pers.fz.media.dialog.OpenImageDialog;
 
 
 @AndroidEntryPoint

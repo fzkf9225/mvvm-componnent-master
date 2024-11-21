@@ -1,11 +1,11 @@
 package pers.fz.mvvm.util.common;
 
-import pers.fz.mvvm.api.RegexUtils;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import pers.fz.mvvm.api.RegexUtils;
 
 /**
  * Created by fz on 2018/3/16.

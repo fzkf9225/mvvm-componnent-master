@@ -12,11 +12,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import pers.fz.mvvm.util.common.FileUtils;
-import pers.fz.mvvm.util.log.LogUtil;
-
 import java.io.File;
 import java.io.IOException;
+
+import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/6/14.

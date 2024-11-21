@@ -1,55 +1,70 @@
 package pers.fz.mvvm.bean;
 
 import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 
 import java.util.List;
 
 
 /**
- * Created by CherishTang on 2018/7/11.
- * popupwindow
+ * updated by fz on 2024/11/21.
+ * describe:弹框
  */
-
 public class PopupWindowBean<T> extends BaseObservable {
-    private String id;
-    private String name;
-
+    /**
+     * id
+     */
+    private String popupId;
+    /**
+     * 名称
+     */
+    private String popupName;
+    /**
+     * 是否选中
+     */
     private Boolean isSelected;
+    /**
+     * 是否单选
+     */
     private Boolean isSingleSelected;
+    /**
+     * 子集
+     */
     private List<T> childList;
 
     public PopupWindowBean() {
     }
 
-    public PopupWindowBean(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public PopupWindowBean(String popupName) {
+        this.popupName = popupName;
     }
 
-    public PopupWindowBean(String id, String name, boolean isSingleSelected) {
-        this.id = id;
-        this.name = name;
+    public PopupWindowBean(String popupId, String popupName) {
+        this.popupId = popupId;
+        this.popupName = popupName;
+    }
+
+    public PopupWindowBean(String popupId, String popupName, boolean isSingleSelected) {
+        this.popupId = popupId;
+        this.popupName = popupName;
         this.isSingleSelected = isSingleSelected;
     }
-    @Bindable
-    public String getId() {
-        return id;
+
+    public String getPopupId() {
+        return popupId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPopupId(String popupId) {
+        this.popupId = popupId;
     }
 
-    @Bindable
-    public boolean isSingleSelected() {
-        return isSingleSelected;
+    public String getPopupName() {
+        return popupName;
     }
 
-    public void setSingleSelected(boolean singleSelected) {
-        isSingleSelected = singleSelected;
+    public void setPopupName(String popupName) {
+        this.popupName = popupName;
     }
-    @Bindable
+
     public Boolean getSelected() {
         return isSelected;
     }
@@ -57,7 +72,7 @@ public class PopupWindowBean<T> extends BaseObservable {
     public void setSelected(Boolean selected) {
         isSelected = selected;
     }
-    @Bindable
+
     public Boolean getSingleSelected() {
         return isSingleSelected;
     }
@@ -65,21 +80,12 @@ public class PopupWindowBean<T> extends BaseObservable {
     public void setSingleSelected(Boolean singleSelected) {
         isSingleSelected = singleSelected;
     }
-    @Bindable
+
     public List<T> getChildList() {
         return childList;
     }
 
     public void setChildList(List<T> childList) {
         this.childList = childList;
-    }
-
-    @Bindable
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

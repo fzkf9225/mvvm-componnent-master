@@ -18,7 +18,6 @@ package pers.fz.mvvm.autosize.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;

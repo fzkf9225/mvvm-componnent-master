@@ -1,11 +1,8 @@
 package pers.fz.mvvm.util.log;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.Toast;
 
-import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.wight.dialog.DialogHelper;
 
 /**

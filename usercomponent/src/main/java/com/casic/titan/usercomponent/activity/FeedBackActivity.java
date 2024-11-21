@@ -3,17 +3,17 @@ package com.casic.titan.usercomponent.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.casic.titan.usercomponent.R;
+import com.casic.titan.usercomponent.databinding.FeedbackBinding;
+
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
-
-import com.casic.titan.usercomponent.R;
-import com.casic.titan.usercomponent.databinding.FeedbackBinding;
 
 
 /**

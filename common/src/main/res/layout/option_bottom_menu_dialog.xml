@@ -1,8 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:paddingBottom="@dimen/y32"
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,12 +13,11 @@
     <Button
         android:id="@+id/button_cancel"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x80"
+        android:layout_height="@dimen/height_xl"
         android:layout_marginTop="@dimen/vertical_margin_xl"
         android:background="@drawable/rounded_white"
         android:gravity="center"
         android:text="取消"
         android:textColor="@color/dark_light"
-        android:textSize="@dimen/font_16" />
-
+        android:textSize="@dimen/font_14" />
 </LinearLayout>

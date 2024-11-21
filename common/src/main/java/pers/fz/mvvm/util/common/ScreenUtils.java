@@ -1,6 +1,5 @@
 package pers.fz.mvvm.util.common;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;

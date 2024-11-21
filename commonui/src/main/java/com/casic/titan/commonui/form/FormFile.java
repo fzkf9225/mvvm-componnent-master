@@ -23,7 +23,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileAddAdapter;
 import com.casic.titan.commonui.bean.AttachmentBean;
@@ -34,12 +33,12 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 

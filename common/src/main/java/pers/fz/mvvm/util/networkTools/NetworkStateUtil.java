@@ -1,5 +1,7 @@
 package pers.fz.mvvm.util.networkTools;
 
+import static android.content.Context.WIFI_SERVICE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -12,10 +14,6 @@ import android.os.Build;
 import android.provider.Settings;
 
 import java.lang.reflect.Method;
-
-import static android.content.Context.WIFI_SERVICE;
-
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2017/9/7.

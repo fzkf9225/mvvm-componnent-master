@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.casic.titan.usercomponent.R;
-import com.casic.titan.usercomponent.api.UserApiService;
 import com.casic.titan.usercomponent.bean.RequestLoginBean;
 import com.casic.titan.usercomponent.databinding.LoginBinding;
 import com.casic.titan.usercomponent.view.UserView;
@@ -19,10 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseActivity;
-
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.KeyBoardUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2019/8/23.

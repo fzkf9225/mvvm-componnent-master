@@ -10,23 +10,14 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import androidx.activity.ComponentActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
-
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseViewModel;
-
 import pers.fz.mvvm.databinding.WebViewBinding;
 import pers.fz.mvvm.util.CordovaDialogsHelper;
 import pers.fz.mvvm.util.SystemWebChromeClient;

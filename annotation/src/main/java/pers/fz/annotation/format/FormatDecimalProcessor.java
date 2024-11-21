@@ -1,21 +1,20 @@
 package pers.fz.annotation.format;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.*;
-import com.squareup.javawriter.JavaWriter;
-
-import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
 
 import java.io.IOException;
-
 import java.io.Writer;
-import java.text.DecimalFormat;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;

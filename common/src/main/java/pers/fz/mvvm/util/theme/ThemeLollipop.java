@@ -1,7 +1,6 @@
 package pers.fz.mvvm.util.theme;
 
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;

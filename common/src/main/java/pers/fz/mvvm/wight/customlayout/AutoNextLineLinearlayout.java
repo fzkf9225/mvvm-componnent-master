@@ -6,10 +6,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import pers.fz.mvvm.R;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import pers.fz.mvvm.R;
 
 /**
  * Created by fz on 2017/10/30.

@@ -11,15 +11,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
-import androidx.databinding.BindingAdapter;
-
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.listener.OnProgressEndListener;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/2 9:20

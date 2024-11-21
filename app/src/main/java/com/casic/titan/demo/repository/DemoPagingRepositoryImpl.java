@@ -3,13 +3,10 @@ package com.casic.titan.demo.repository;
 import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.RegionBean;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.bean.base.PageBean;
 import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
 

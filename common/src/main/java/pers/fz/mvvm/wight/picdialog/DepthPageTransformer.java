@@ -2,6 +2,7 @@ package pers.fz.mvvm.wight.picdialog;
 
 import android.annotation.SuppressLint;
 import android.view.View;
+
 import androidx.viewpager.widget.ViewPager;
 
 @SuppressLint("NewApi")

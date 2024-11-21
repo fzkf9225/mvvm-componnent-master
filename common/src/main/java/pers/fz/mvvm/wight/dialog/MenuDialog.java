@@ -17,15 +17,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.MenuListAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -77,7 +77,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
             return this;
         }
         for (String menu : data) {
-            this.menuData.add((T)new PopupWindowBean(null, menu));
+            this.menuData.add((T) new PopupWindowBean(null, menu));
         }
         return this;
     }
@@ -91,6 +91,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         negativeTextColor = ColorStateList.valueOf(color);
         return this;
     }
+
     public MenuDialog<T> setShowCancelButton(boolean showCancelButton) {
         isShowCancelButton = showCancelButton;
         return this;
@@ -120,20 +121,14 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
         mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL,
-                DensityUtil.dp2px(context,1),
-                ContextCompat.getColor(context, R.color.h_line_color),false));
+                DensityUtil.dp2px(context, 1),
+                ContextCompat.getColor(context, R.color.h_line_color), false));
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(inflate);
         Window dialogWindow = getWindow();
-        DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
+        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置Dialog从窗体中间弹出
         dialogWindow.setGravity(gravity);
     }

@@ -12,7 +12,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -24,10 +23,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.bumptech.glide.Glide;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.databinding.FormRichTextBinding;
-import com.casic.titan.commonui.helper.FormDataSource;
 import com.casic.titan.commonui.inter.FormTextWatcher;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.ThreadExecutor;

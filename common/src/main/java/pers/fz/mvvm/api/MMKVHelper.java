@@ -1,19 +1,14 @@
 package pers.fz.mvvm.api;
 
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import pers.fz.mvvm.base.BaseModelEntity;
 
 /**
  * Created by fz on 2023/4/26 14:43

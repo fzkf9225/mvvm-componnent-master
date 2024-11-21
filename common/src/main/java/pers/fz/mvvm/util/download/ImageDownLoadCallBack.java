@@ -1,7 +1,5 @@
 package pers.fz.mvvm.util.download;
 
-import android.graphics.Bitmap;
-
 import java.io.File;
 
 /**

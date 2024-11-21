@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -15,7 +12,6 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
-import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 

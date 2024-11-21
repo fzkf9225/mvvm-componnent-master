@@ -1,6 +1,5 @@
 package com.casic.titan.usercomponent.api;
 
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.BaseApplication;
 
 /**

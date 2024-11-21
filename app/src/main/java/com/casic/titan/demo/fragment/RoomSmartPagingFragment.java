@@ -5,19 +5,12 @@ import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingRoomAdapter;
 import com.casic.titan.demo.bean.Person;
-import com.casic.titan.demo.database.PersonDatabase;
 import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;

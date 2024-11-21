@@ -1,5 +1,7 @@
 package pers.fz.mvvm.api;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +11,10 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+
+import androidx.core.app.ActivityCompat;
+
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,12 +35,6 @@ import java.util.Map;
 import pers.fz.mvvm.util.jiami.Base64Util;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
-
-import static android.content.Context.TELEPHONY_SERVICE;
-
-import androidx.core.app.ActivityCompat;
-
-import com.google.gson.Gson;
 
 /**
  * Created by fz on 2017/8/18.

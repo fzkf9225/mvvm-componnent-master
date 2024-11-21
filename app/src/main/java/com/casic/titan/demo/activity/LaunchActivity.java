@@ -3,14 +3,8 @@ package com.casic.titan.demo.activity;
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.core.splashscreen.SplashScreen;
-
-import com.casic.titan.usercomponent.activity.LoginActivity;
-import com.casic.titan.usercomponent.api.UserAccountHelper;
-import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;

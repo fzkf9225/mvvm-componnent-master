@@ -14,17 +14,12 @@ import com.casic.titan.demo.databinding.ActivityVerifyBinding;
 import com.casic.titan.demo.viewmodel.VerifyViewModel;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 import dagger.hilt.android.AndroidEntryPoint;
-
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.verify.VerifyResult;
-
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 @AndroidEntryPoint
@@ -89,7 +84,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
                 new MenuDialog<>(this)
                         .setData("男", "女", "未知")
                         .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
-                            binding.getData().setSex(list.get(pos).getName());
+                            binding.getData().setSex(list.get(pos).getPopupName());
                             dialog.dismiss();
                         })
                         .builder()

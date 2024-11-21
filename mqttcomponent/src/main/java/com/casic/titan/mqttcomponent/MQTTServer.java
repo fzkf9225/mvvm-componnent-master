@@ -1,7 +1,6 @@
 package com.casic.titan.mqttcomponent;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;

@@ -9,32 +9,22 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import dagger.assisted.Assisted;
-import dagger.hilt.EntryPoint;
-import dagger.hilt.InstallIn;
-import dagger.hilt.android.EntryPointAccessors;
-import dagger.hilt.android.lifecycle.HiltViewModel;
-
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.casic.titan.usercomponent.api.UserApiService;
-import com.casic.titan.usercomponent.bean.UserInfo;
-
-import dagger.hilt.components.SingletonComponent;
-import pers.fz.mvvm.api.AppManager;
-import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.jiami.MD5Util;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.log.ToastUtils;
-
 import com.casic.titan.usercomponent.bean.RequestLoginBean;
+import com.casic.titan.usercomponent.bean.UserInfo;
 import com.casic.titan.usercomponent.repository.UserRepositoryImpl;
 import com.casic.titan.usercomponent.view.UserView;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.api.AppManager;
+import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.inter.RetryService;
+import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.jiami.MD5Util;
 
 /**
  * Create by CherishTang on 2020/3/19 0019

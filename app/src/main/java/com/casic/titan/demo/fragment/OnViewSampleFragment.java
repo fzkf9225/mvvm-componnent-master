@@ -49,7 +49,7 @@ public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewS
     @Override
     public void onItemClick(View view, int position) {
         super.onItemClick(view, position);
-        showToast("点击内容是：" + recyclerViewSampleAdapter.getList().get(position).getName());
+        showToast("点击内容是：" + recyclerViewSampleAdapter.getList().get(position).getPopupName());
     }
 
     @Override

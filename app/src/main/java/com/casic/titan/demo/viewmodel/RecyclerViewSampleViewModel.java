@@ -7,11 +7,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
-import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseRecyclerViewModel;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.bean.base.PageBean;
 

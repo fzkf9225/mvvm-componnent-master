@@ -7,11 +7,9 @@ import com.casic.titan.usercomponent.api.UserApiService;
 import com.casic.titan.usercomponent.bean.RequestLoginBean;
 import com.casic.titan.usercomponent.bean.TokenBean;
 import com.casic.titan.usercomponent.bean.UserInfo;
-import com.casic.titan.usercomponent.enumEntity.GrantType;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.inter.RetryService;

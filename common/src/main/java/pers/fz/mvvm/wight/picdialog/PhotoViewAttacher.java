@@ -15,6 +15,10 @@
  *******************************************************************************/
 package pers.fz.mvvm.wight.picdialog;
 
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -33,16 +37,11 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import java.lang.ref.WeakReference;
 
 import pers.fz.mvvm.wight.picdialog.gestures.OnGestureListener;
 import pers.fz.mvvm.wight.picdialog.gestures.VersionedGestureDetector;
 import pers.fz.mvvm.wight.picdialog.scrollerproxy.ScrollerProxy;
-
-import java.lang.ref.WeakReference;
-
-import static android.view.MotionEvent.ACTION_CANCEL;
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,

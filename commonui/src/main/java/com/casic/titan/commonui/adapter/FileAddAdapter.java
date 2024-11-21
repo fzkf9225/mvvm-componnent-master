@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.bean.AttachmentBean;

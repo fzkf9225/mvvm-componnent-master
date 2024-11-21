@@ -1,8 +1,10 @@
 package pers.fz.mvvm.util.update;
 
 import android.app.Activity;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import pers.fz.mvvm.util.update.listener.ApkUpdateListener;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 

@@ -5,15 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewDataBinding;
 import androidx.paging.LoadState;
 import androidx.paging.LoadStateAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.PagingFooterBinding;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/30 10:47

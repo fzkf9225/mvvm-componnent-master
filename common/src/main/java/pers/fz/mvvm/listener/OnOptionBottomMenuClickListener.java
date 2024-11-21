@@ -2,9 +2,9 @@ package pers.fz.mvvm.listener;
 
 import android.app.Dialog;
 
-import pers.fz.mvvm.bean.PopupWindowBean;
-
 import java.util.List;
+
+import pers.fz.mvvm.bean.PopupWindowBean;
 
 
 /**

@@ -4,14 +4,11 @@ import android.content.Context;
 
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
-
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.ActivityParentCategoryItemBinding;
-import pers.fz.mvvm.util.common.StringUtil;
 
 
 /**
@@ -43,7 +40,7 @@ public class ParentAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAd
 
     @Override
     public void onBindHolder(BaseViewHolder<ActivityParentCategoryItemBinding> holder, int pos) {
-        holder.getBinding().tvParentCategoryName.setText(mList.get(pos).getName());
+        holder.getBinding().tvParentCategoryName.setText(mList.get(pos).getPopupName());
         if (pos == selectedPosition && selectedPosition >= 0) {
             holder.getBinding().tvParentCategoryName.setTextColor(ContextCompat.getColor(mContext, R.color.themeColor));
         } else {

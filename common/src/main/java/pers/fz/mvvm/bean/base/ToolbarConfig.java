@@ -1,9 +1,9 @@
 package pers.fz.mvvm.bean.base;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.StyleRes;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+
 import pers.fz.mvvm.BR;
 import pers.fz.mvvm.R;
 

@@ -19,11 +19,10 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
+import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.viewmodel.BasePagingViewModel;
-import pers.fz.mvvm.viewmodel.PagingViewModel;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
-import pers.fz.mvvm.listener.PagingAdapterListener;
 
 /**
  * Created by fz on 2017/11/17.

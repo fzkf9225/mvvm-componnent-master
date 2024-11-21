@@ -3,16 +3,6 @@ package pers.fz.mvvm.api;
 import android.content.Context;
 import android.text.TextUtils;
 
-
-import okhttp3.Headers;
-import okhttp3.Interceptor;
-import pers.fz.mvvm.base.BaseConverterFactory;
-import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.PropertiesUtil;
-import pers.fz.mvvm.util.jiami.MD5Util;
-import pers.fz.mvvm.util.log.LogUtil;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +10,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+import pers.fz.mvvm.base.BaseConverterFactory;
+import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.util.common.PropertiesUtil;
+import pers.fz.mvvm.util.jiami.MD5Util;
+import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;

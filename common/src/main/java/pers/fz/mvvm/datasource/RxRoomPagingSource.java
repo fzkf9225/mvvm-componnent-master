@@ -6,8 +6,6 @@ import androidx.paging.PagingSource;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

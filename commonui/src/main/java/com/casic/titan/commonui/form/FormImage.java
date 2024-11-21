@@ -21,7 +21,6 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.utils.AttachmentUtil;
 
@@ -30,14 +29,14 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.media.listener.OnLoadingListener;
+import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.media.MediaTypeEnum;
-import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 

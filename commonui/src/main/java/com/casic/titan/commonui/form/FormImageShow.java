@@ -7,7 +7,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,14 +14,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FormImageShowAdapter;
 import com.casic.titan.commonui.bean.AttachmentBean;
 
 import java.util.List;
 
-import pers.fz.mvvm.adapter.ImageShowAdapter;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;

@@ -3,12 +3,10 @@ package com.casic.titan.demo.impl;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.activity.result.ActivityResultLauncher;
 
 import com.casic.titan.demo.activity.MainActivity;
-import com.casic.titan.demo.api.ConstantsHelper;
 import com.casic.titan.userapi.UserService;
 import com.casic.titan.userapi.router.UserRouterService;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
@@ -18,9 +16,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import dagger.hilt.EntryPoint;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.inter.ErrorService;
 
 /**

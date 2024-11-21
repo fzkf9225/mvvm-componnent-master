@@ -12,7 +12,6 @@ import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Created by CherishTang on 2019/5/30.

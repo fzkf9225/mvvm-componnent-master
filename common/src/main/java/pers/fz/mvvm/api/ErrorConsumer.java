@@ -12,7 +12,6 @@ import java.net.UnknownHostException;
 import java.text.ParseException;
 
 import io.reactivex.rxjava3.functions.Consumer;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.base.BaseView;

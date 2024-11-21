@@ -5,6 +5,12 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import okhttp3.Headers;
@@ -13,12 +19,6 @@ import okio.BufferedSource;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * created by fz on 2024/11/7 14:41

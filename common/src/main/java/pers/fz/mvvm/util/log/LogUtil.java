@@ -8,7 +8,6 @@ import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.api.ConstantsHelper;
 
 /**
  * Created by fz on 2017/5/23.

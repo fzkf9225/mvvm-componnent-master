@@ -1,7 +1,6 @@
 package pers.fz.mvvm.wight.customlayout;
 
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -11,26 +10,16 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.ProgressBar;
-
-import androidx.core.content.ContextCompat;
 
 import java.text.NumberFormat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.listener.OnProgressEndListener;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/2 9:20

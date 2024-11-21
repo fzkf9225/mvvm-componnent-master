@@ -24,14 +24,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.ThreadExecutorBounded;
-import pers.fz.mvvm.util.download.DownLoadImageService;
-import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
-import pers.fz.mvvm.util.log.ToastUtils;
-import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -39,6 +31,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import pers.fz.mvvm.R;
+import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.ThreadExecutorBounded;
+import pers.fz.mvvm.util.download.DownLoadImageService;
+import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
+import pers.fz.mvvm.util.log.ToastUtils;
+import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
 
 /**
  * 主界面点击发布，弹出半透明对话框

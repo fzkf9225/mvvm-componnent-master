@@ -2,6 +2,7 @@ package pers.fz.mvvm.wight.picdialog;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import androidx.appcompat.widget.AppCompatImageView;
 
 public class MyImageView extends AppCompatImageView {

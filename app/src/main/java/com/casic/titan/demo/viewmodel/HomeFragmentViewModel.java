@@ -6,13 +6,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 
-import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.demo.view.HomeFragmentView;
-import com.casic.titan.usercomponent.api.UserApiService;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;

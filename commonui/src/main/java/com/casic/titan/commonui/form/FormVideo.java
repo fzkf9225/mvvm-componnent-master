@@ -15,7 +15,6 @@ import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -30,15 +29,15 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.listener.MediaListener;
 import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.listener.MediaListener;
 import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.media.dialog.OpenImageDialog;
-import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 

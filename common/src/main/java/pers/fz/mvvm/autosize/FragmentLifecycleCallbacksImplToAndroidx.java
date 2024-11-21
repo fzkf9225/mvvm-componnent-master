@@ -16,6 +16,7 @@
 package pers.fz.mvvm.autosize;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 

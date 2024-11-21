@@ -2,11 +2,7 @@ package pers.fz.mvvm.wight.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-
-import androidx.databinding.DataBindingUtil;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.LoadingDialogBinding;

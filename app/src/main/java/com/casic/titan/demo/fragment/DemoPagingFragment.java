@@ -16,8 +16,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
-import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.base.BasePagingFragment;
+import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**

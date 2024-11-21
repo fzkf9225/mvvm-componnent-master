@@ -2,13 +2,8 @@ package com.casic.titan.usercomponent.impl;
 
 import com.casic.titan.userapi.UserService;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
-import com.casic.titan.usercomponent.bean.WebSocketSubscribeBean;
-
-import java.util.List;
 
 import javax.inject.Inject;
-
-import pers.fz.mvvm.util.common.StringUtil;
 
 
 /**

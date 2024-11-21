@@ -2,6 +2,7 @@ package pers.fz.mvvm.wight.recyclerview;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 

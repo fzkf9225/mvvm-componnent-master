@@ -1,7 +1,6 @@
 package com.casic.titan.commonui.helper;
 
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 
 import androidx.databinding.BindingAdapter;

@@ -8,11 +8,8 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityDialogBinding;
 import com.casic.titan.demo.viewmodel.DialogViewModel;
 
-
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.log.LogUtil;
 
 @AndroidEntryPoint
 public class DialogActivity extends BaseActivity<DialogViewModel, ActivityDialogBinding> {

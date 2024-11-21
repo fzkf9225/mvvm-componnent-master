@@ -2,6 +2,7 @@ package pers.fz.mvvm.wight.picdialog;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import androidx.appcompat.widget.AppCompatTextView;
 
 public class HandyTextView extends AppCompatTextView {

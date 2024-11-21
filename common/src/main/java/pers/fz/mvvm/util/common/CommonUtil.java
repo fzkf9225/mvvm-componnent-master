@@ -11,7 +11,6 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;

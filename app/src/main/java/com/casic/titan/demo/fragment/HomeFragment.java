@@ -14,7 +14,6 @@ import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.gyf.immersionbar.ImmersionBar;
 
-
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;

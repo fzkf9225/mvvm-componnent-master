@@ -15,10 +15,10 @@
  */
 package pers.fz.mvvm.autosize;
 
-import android.content.Context;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;

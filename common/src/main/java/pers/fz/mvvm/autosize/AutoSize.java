@@ -15,9 +15,6 @@
  */
 package pers.fz.mvvm.autosize;
 
-import static pers.fz.mvvm.autosize.unit.Subunits.MM;
-import static pers.fz.mvvm.autosize.unit.Subunits.PT;
-
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;

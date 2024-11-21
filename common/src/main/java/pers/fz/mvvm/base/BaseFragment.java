@@ -1,7 +1,6 @@
 package pers.fz.mvvm.base;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,19 +16,17 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
-
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
+import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
 
 /**
  * Created by fz on 2017/11/22.

@@ -9,11 +9,14 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.casic.titan.commonui.dialog.TickViewMessageDialog;
 import com.casic.titan.demo.R;
 
 import java.util.Arrays;
 import java.util.List;
 
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
@@ -27,10 +30,7 @@ import pers.fz.mvvm.wight.dialog.EditAreaDialog;
 import pers.fz.mvvm.wight.dialog.InputDialog;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 import pers.fz.mvvm.wight.dialog.MessageDialog;
-import pers.fz.media.dialog.OpenImageDialog;
-import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.wight.dialog.ProgressBarDialog;
-import com.casic.titan.commonui.dialog.TickViewMessageDialog;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
 
@@ -72,7 +72,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
                     .setData(dataList)
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
-                        baseView.showToast(list.get(pos).getName());
+                        baseView.showToast(list.get(pos).getPopupName());
                     })
                     .builder()
                     .show();
@@ -120,7 +120,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
                     .setData(dataList)
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
-                        baseView.showToast(list.get(pos).getName());
+                        baseView.showToast(list.get(pos).getPopupName());
                     })
                     .builder()
                     .show();

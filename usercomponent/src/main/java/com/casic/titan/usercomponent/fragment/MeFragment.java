@@ -16,9 +16,9 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.media.dialog.OpenImageDialog;
 
 /**
  * Created by fz on 2020/03/26.

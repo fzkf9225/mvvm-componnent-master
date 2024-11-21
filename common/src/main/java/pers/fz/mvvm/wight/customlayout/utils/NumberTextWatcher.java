@@ -3,7 +3,6 @@ package pers.fz.mvvm.wight.customlayout.utils;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 

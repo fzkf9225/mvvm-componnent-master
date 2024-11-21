@@ -12,9 +12,6 @@ import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.database.PersonDatabase;
 import com.casic.titan.demo.repository.RoomPagingRepositoryImpl;
 
-import org.reactivestreams.Publisher;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,11 +20,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.functions.Function;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.datasource.RxRoomPagingSource;
-import pers.fz.mvvm.repository.RoomRepositoryImpl;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 
 /**
