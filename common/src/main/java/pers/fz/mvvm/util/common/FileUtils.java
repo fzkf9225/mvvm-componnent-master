@@ -39,13 +39,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.IntStream;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.listener.FileUploadProgressListener;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.upload.ProgressRequestBody;
 
@@ -99,17 +99,6 @@ public final class FileUtils {
     }
 
     /**
-     * "/"
-     */
-    public final static String SEP = File.separator;
-
-    /**
-     * SD卡根目录
-     */
-    public static final String SDPATH = Environment
-            .getExternalStorageDirectory() + File.separator;
-
-    /**
      * 判断SD卡是否可用
      *
      * @return SD卡可用返回true
@@ -124,7 +113,10 @@ public final class FileUtils {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         File file = new File(Environment.getExternalStorageDirectory() + fileName);
         try {
-            file.createNewFile();
+            boolean result = file.createNewFile();
+            if (!result) {
+                return null;
+            }
             FileOutputStream fos = new FileOutputStream(file);
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
             int x = 0;
@@ -148,11 +140,9 @@ public final class FileUtils {
                 return null;
             }
             file = new File(filePath);
-            if (file == null || !file.exists()) {
-                file.createNewFile();
+            if (!file.exists()) {
+                boolean result = file.createNewFile();
             }
-
-
             long fileSize = body.contentLength();
             long fileSizeDownloaded = 0;
             byte[] fileReader = new byte[4096];
@@ -1151,17 +1141,23 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
+    public static List<MultipartBody.Part> createFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createFilePart(mContext, item, uploadListener)));
+        IntStream.range(0, uriList.size()).forEach(i ->
+                multiList.add(createFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
+        );
         return multiList;
     }
 
+    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
+        return createFilePart(mContext, uri, 0, 1, uploadListener);
+    }
+
     @SuppressLint("Range")
-    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
+    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1183,7 +1179,7 @@ public final class FileUtils {
                 pdf.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
             } else {
-                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
                 pdf.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
             }
@@ -1196,17 +1192,23 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createAssetsFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
+    public static List<MultipartBody.Part> createAssetsFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createAssetsFilePart(mContext, item, uploadListener)));
+        IntStream.range(0, uriList.size()).forEach(i ->
+                multiList.add(createAssetsFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
+        );
         return multiList;
     }
 
+    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
+        return createAssetsFilePart(mContext, uri, 0, 1, uploadListener);
+    }
+
     @SuppressLint("Range")
-    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
+    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1234,7 +1236,7 @@ public final class FileUtils {
                 afd.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
             } else {
-                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
                 afd.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
             }
@@ -1247,18 +1249,23 @@ public final class FileUtils {
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createTempFilePart(Context mContext, List<Uri> uriList, Function2<Uri, Integer, Unit> uploadListener) {
+    public static List<MultipartBody.Part> createTempFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
         if (uriList == null || uriList.isEmpty()) {
             return null;
         }
         List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        uriList.forEach(item -> multiList.add(createTempFilePart(mContext, item, uploadListener)));
+        IntStream.range(0, uriList.size()).forEach(i ->
+                multiList.add(createTempFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
+        );
         return multiList;
     }
 
+    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
+        return createTempFilePart(mContext, uri, 0, 1, uploadListener);
+    }
 
     @SuppressLint("Range")
-    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, Function2<Uri, Integer, Unit> uploadListener) {
+    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
         try {
             ContentResolver contentResolver = mContext.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
@@ -1290,7 +1297,7 @@ public final class FileUtils {
                 inputStream.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
             } else {
-                ProgressRequestBody requestBody = new ProgressRequestBody(requestFile, uri, uploadListener);
+                ProgressRequestBody requestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
                 inputStream.close();
                 return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestBody);
             }

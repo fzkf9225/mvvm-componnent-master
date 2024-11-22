@@ -9,6 +9,8 @@ import okio.BufferedSink
 import okio.ForwardingSink
 import okio.Sink
 import okio.buffer
+import pers.fz.mvvm.listener.FileUploadProgressListener
+
 /**
  * created by fz on 2024/11/12 10:12
  * describe:
@@ -16,7 +18,9 @@ import okio.buffer
 class ProgressRequestBody(
     private val requestBody: RequestBody,
     private val uri: Uri,
-    private val progressListener: (Uri, Int) -> Unit
+    private val currentPos: Int,
+    private val totalSize: Int,
+    private val progressListener: FileUploadProgressListener
 ) : RequestBody() {
     override fun contentType(): MediaType? {
         return requestBody.contentType()
@@ -44,7 +48,7 @@ class ProgressRequestBody(
             super.write(source, byteCount)
             bytesWritten += byteCount
             val progress = (100 * bytesWritten / contentLength).toInt()
-            progressListener(uri, progress)
+            progressListener.onProgress(uri,currentPos, totalSize, progress)
         }
     }
 }
