@@ -20,8 +20,6 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
-import pers.fz.mvvm.wight.popupwindow.adapter.ParentAdapter;
-import pers.fz.mvvm.wight.recyclerview.MyLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
@@ -29,14 +27,14 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  *
  * @author fz
  */
-public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements ParentAdapter.OnItemClickListener {
+public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
     private SelectCategory<T> selectCategory;
     private List<T> popupWindowBeanList;
 
     private RecyclerView lvParentCategory = null;
     private RecyclerView lvChildrenCategory = null;
-    private ParentAdapter<T> parentAdapter = null;
-    private ParentAdapter<T> childAdapter = null;
+    private PopupWindowAdapter<T> popupWindowAdapter = null;
+    private PopupWindowAdapter<T> childAdapter = null;
     private PopupWindow popupWindow;
 
     private Integer parentPosition, childPosition;
@@ -85,20 +83,20 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     }
 
     private void initParent() {
-        parentAdapter = new ParentAdapter<>(activity);
-        parentAdapter.setOnItemClickListener(this);
-        parentAdapter.setList(popupWindowBeanList);
-        lvParentCategory.setLayoutManager(new MyLayoutManager(activity));
-        lvParentCategory.setAdapter(parentAdapter);
+        popupWindowAdapter = new PopupWindowAdapter<>(activity);
+        popupWindowAdapter.setOnItemClickListener(this);
+        popupWindowAdapter.setList(popupWindowBeanList);
+        lvParentCategory.setLayoutManager(new LinearLayoutManager(activity));
+        lvParentCategory.setAdapter(popupWindowAdapter);
         lvParentCategory.addItemDecoration(
                 new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
                         ContextCompat.getColor(activity, R.color.h_line_color)));
-        parentAdapter.setHasHeader(true);
-        parentAdapter.setOnHeaderViewClickListener(new OnHeaderViewClickListener() {
+        popupWindowAdapter.setHasHeader(true);
+        popupWindowAdapter.setOnHeaderViewClickListener(new OnHeaderViewClickListener() {
             @Override
             public void onHeaderViewClick(View view) {
                 ((TextView) view.findViewById(R.id.tv_parent_category_name)).setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
-                parentAdapter.setSelectedPosition(-1);
+                popupWindowAdapter.setSelectedPosition(-1);
                 dismiss();
                 if (onHeadViewClickListener != null) {
                     onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, true);
@@ -113,10 +111,10 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     }
 
     private void initChild(List<T> childLists) {
-        childAdapter = new ParentAdapter<>(activity);
+        childAdapter = new PopupWindowAdapter<>(activity);
         childAdapter.setOnItemClickListener(childOnItemClickListener);
         childAdapter.setList(childLists);
-        lvChildrenCategory.setLayoutManager(new MyLayoutManager(activity));
+        lvChildrenCategory.setLayoutManager(new LinearLayoutManager(activity));
         lvChildrenCategory.setAdapter(childAdapter);
         lvChildrenCategory.addItemDecoration(
                 new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, 1,
@@ -127,7 +125,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
             @Override
             public void onHeaderViewClick(View view) {
                 ((TextView) view.findViewById(R.id.tv_parent_category_name)).setTextColor(ContextCompat.getColor(activity, R.color.themeColor));
-                parentAdapter.setSelectedPosition(-1);
+                popupWindowAdapter.setSelectedPosition(-1);
                 dismiss();
                 if (onHeadViewClickListener != null) {
                     onHeadViewClickListener.onHeadViewClick(LinearRecyclerViewPopupWindow.this, false);
@@ -165,11 +163,11 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
 
     @Override
     public void onItemClick(View view, int position) {
-        if (popupWindowBeanList == null || parentAdapter == null) {
+        if (popupWindowBeanList == null || popupWindowAdapter == null) {
             return;
         }
-        if (parentAdapter.getHeaderView() != null) {
-            ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
+        if (popupWindowAdapter.getHeaderView() != null) {
+            ViewHold viewHold = (ViewHold) popupWindowAdapter.getHeaderView().getTag();
             viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
 
@@ -180,11 +178,11 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
             }
         }
         parentPosition = position;
-        if (parentAdapter.getHeaderView() != null) {
-            ViewHold viewHold = (ViewHold) parentAdapter.getHeaderView().getTag();
+        if (popupWindowAdapter.getHeaderView() != null) {
+            ViewHold viewHold = (ViewHold) popupWindowAdapter.getHeaderView().getTag();
             viewHold.textView.setTextColor(ContextCompat.getColor(activity, R.color.black));
         }
-        parentAdapter.setSelectedPosition(position);
+        popupWindowAdapter.setSelectedPosition(position);
         if (hasRight) {
             initChild(popupWindowBeanList.get(position).getChildList());
         }

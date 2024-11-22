@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.databinding.MessageDialogBinding;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 import pers.fz.mvvm.util.common.StringUtil;
 
@@ -22,10 +23,9 @@ import pers.fz.mvvm.util.common.StringUtil;
  * 提示弹框
  */
 public class MessageDialog extends Dialog {
-    private Context context;
+    private final Context context;
     private String content;
-    private View inflate;
-    private TextView dialog_textView, dialog_option,dialog_message_type;
+    private MessageDialogBinding binding;
     private OnDialogInterfaceClickListener sureClickListener;
     private boolean outSide = true;
     private String positiveText = "确定";
@@ -63,28 +63,25 @@ public class MessageDialog extends Dialog {
     }
 
     private void initView() {
-        inflate = LayoutInflater.from(context).inflate(R.layout.message_dialog, null);
-        dialog_textView = inflate.findViewById(R.id.dialog_textView);
-        dialog_option = inflate.findViewById(R.id.dialog_option);
-        dialog_message_type = inflate.findViewById(R.id.dialog_message_type);
-        dialog_option.setText(positiveText);
-        dialog_message_type.setText(messageType);
-        dialog_message_type.setVisibility(StringUtil.isEmpty(dialog_message_type.getText().toString())?View.GONE:View.VISIBLE);
+        binding = MessageDialogBinding.inflate(LayoutInflater.from(context),null,false);
+        binding.dialogOption.setText(positiveText);
+        binding.dialogMessageType.setText(messageType);
+        binding.dialogMessageType.setVisibility(StringUtil.isEmpty(binding.dialogMessageType.getText().toString())?View.GONE:View.VISIBLE);
 
         if (sureClickListener != null) {
-            dialog_option.setOnClickListener(v -> {
+            binding.dialogOption.setOnClickListener(v -> {
                 dismiss();
                 sureClickListener.onDialogClick(this);
             });
         } else {
-            dialog_option.setOnClickListener(v -> dismiss());
+            binding.dialogOption.setOnClickListener(v -> dismiss());
         }
 
-        dialog_textView.setText(content);
+        binding.dialogTextView.setText(content);
 
         setCancelable(outSide);
         setCanceledOnTouchOutside(outSide);
-        setContentView(inflate);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {

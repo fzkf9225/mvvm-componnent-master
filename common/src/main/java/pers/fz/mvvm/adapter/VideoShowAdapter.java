@@ -2,6 +2,7 @@ package pers.fz.mvvm.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -13,11 +14,10 @@ import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.VideoShowItemBinding;
 import pers.fz.mvvm.util.common.FileUtils;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.log.ToastUtils;
 
 /**
- * Created by fz on 2017/10/20.
- * 视频列表
+ * Created by fz on 2024/10/20.
+ * describe:视频列表
  */
 public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowItemBinding> {
 
@@ -47,7 +47,7 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowI
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.show(TAG,"视频播放失败:" + e);
-                ToastUtils.showShort(mContext, "视频播放失败");
+                Toast.makeText(mContext, "视频播放失败", Toast.LENGTH_SHORT).show();
             }
         });
     }

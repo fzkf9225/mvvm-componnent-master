@@ -56,7 +56,7 @@ public class ResponseCode {
     /**
      * 未知来源
      */
-    public static final String UNKOWN_RESOURCE = "10005";
+    public static final String UN_KNOW_RESOURCE = "10005";
     /**
      * 禁止访问
      */

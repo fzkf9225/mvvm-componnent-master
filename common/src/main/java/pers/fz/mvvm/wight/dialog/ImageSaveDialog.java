@@ -20,7 +20,7 @@ import pers.fz.mvvm.R;
  */
 
 public class ImageSaveDialog extends Dialog {
-    private Context mContext;
+    private final Context mContext;
     private OnImageSaveListener onImageSaveListener;
 
     public ImageSaveDialog setOnImageSaveListener(OnImageSaveListener onImageSaveListener) {

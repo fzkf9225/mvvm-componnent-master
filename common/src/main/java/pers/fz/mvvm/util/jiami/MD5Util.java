@@ -13,19 +13,18 @@ public class MD5Util {
      * @throws Exception
      */
     public static String md5Encode(String inStr) throws Exception {
-        MessageDigest md5 = null;
+        MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
         } catch (Exception e) {
-            System.out.println(e.toString());
             e.printStackTrace();
             return "";
         }
         byte[] byteArray = inStr.getBytes("UTF-8");
         byte[] md5Bytes = md5.digest(byteArray);
-        StringBuffer hexValue = new StringBuffer();
-        for (int i = 0; i < md5Bytes.length; i++) {
-            int val = ((int) md5Bytes[i]) & 0xff;
+        StringBuilder hexValue = new StringBuilder();
+        for (byte md5Byte : md5Bytes) {
+            int val = ((int) md5Byte) & 0xff;
             if (val < 16) {
                 hexValue.append("0");
             }
@@ -57,9 +56,9 @@ public class MD5Util {
             byteArray[i] = (byte) charArray[i];
         }
         byte[] md5Bytes = md5.digest(byteArray);
-        StringBuffer hexValue = new StringBuffer();
-        for (int i = 0; i < md5Bytes.length; i++) {
-            int val = ((int) md5Bytes[i]) & 0xff;
+        StringBuilder hexValue = new StringBuilder();
+        for (byte md5Byte : md5Bytes) {
+            int val = ((int) md5Byte) & 0xff;
             if (val < 16) {
                 hexValue.append("0");
             }
@@ -83,21 +82,12 @@ public class MD5Util {
         for (int i = 0; i < a.length; i++) {
             a[i] = (char) (a[i] ^ 't');
         }
-        String s = new String(a);
-        return s;
+        return new String(a);
 
     }
     public static String md5Decode(String str) {
         return convertMD5(convertMD5(str));
     }
 
-    public static void main(String[] args) {
-        String s = new String("appver=1&timestamp=20171213152008&user=4000504137_dev9d4c3cf7040045dc9428dff334fef8d1");
-        System.out.println(md5Decode("a6aeb3ffa55fc7d664406af9c3bd0f1b"));
-        System.out.println("原始：" + s);
-        System.out.println("MD5后：" + string2MD5(s));
-        System.out.println("加密的：" + convertMD5(s));
-        System.out.println("解密的：" + convertMD5(convertMD5(s)));
-    }
 }
 

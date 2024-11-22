@@ -11,7 +11,6 @@ import android.widget.ImageView;
  * <p>&nbsp;</p>
  * To be used via {@link uk.co.senab.photoview.PhotoViewAttacher#( GestureDetector.OnDoubleTapListener)}
  */
-@SuppressLint("NewApi")
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
 
     private PhotoViewAttacher photoViewAttacher;
@@ -81,8 +80,6 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
 
             if (scale < photoViewAttacher.getMediumScale()) {
                 photoViewAttacher.setScale(photoViewAttacher.getMediumScale(), x, y, true);
-//            } else if (scale >= photoViewAttacher.getMediumScale() && scale < photoViewAttacher.getMaximumScale()) {
-//                photoViewAttacher.setScale(photoViewAttacher.getMaximumScale(), x, y, true);
             } else {
                 photoViewAttacher.setScale(photoViewAttacher.getMinimumScale(), x, y, true);
             }

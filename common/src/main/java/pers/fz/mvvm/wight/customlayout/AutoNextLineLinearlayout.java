@@ -1,5 +1,6 @@
 package pers.fz.mvvm.wight.customlayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -17,7 +18,7 @@ import pers.fz.mvvm.R;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class AutoNextLineLinearlayout extends ViewGroup  {
-    private Type mType;
+    private final Type mType;
     private List<WarpLine> mWarpLineGroup;
 
     public AutoNextLineLinearlayout(Context context) {
@@ -33,6 +34,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         mType = new Type(context, attrs);
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int withMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -56,17 +58,17 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             case MeasureSpec.AT_MOST:
                 for (int i = 0; i < childCount; i++) {
                     if (i != 0) {
-                        with += mType.horizontal_Space;
+                        with += (int) mType.horizontal_Space;
                     }
                     with += getChildAt(i).getMeasuredWidth();
                 }
                 with += getPaddingLeft() + getPaddingRight();
-                with = with > withSize ? withSize : with;
+                with = Math.min(with, withSize);
                 break;
             case MeasureSpec.UNSPECIFIED:
                 for (int i = 0; i < childCount; i++) {
                     if (i != 0) {
-                        with += mType.horizontal_Space;
+                        with += (int) mType.horizontal_Space;
                     }
                     with += getChildAt(i).getMeasuredWidth();
                 }
@@ -84,10 +86,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         /**
          * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
          */
-        mWarpLineGroup = new ArrayList<WarpLine>();
+        mWarpLineGroup = new ArrayList<>();
         for (int i = 0; i < childCount; i++) {
             if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontal_Space > with) {
-                if (warpLine.lineView.size() == 0) {
+                if (warpLine.lineView.isEmpty()) {
                     warpLine.addView(getChildAt(i));
                     mWarpLineGroup.add(warpLine);
                     warpLine = new WarpLine();
@@ -103,7 +105,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         /**
          * 添加最后一行
          */
-        if (warpLine.lineView.size() > 0 && !mWarpLineGroup.contains(warpLine)) {
+        if (!warpLine.lineView.isEmpty() && !mWarpLineGroup.contains(warpLine)) {
             mWarpLineGroup.add(warpLine);
         }
         /**
@@ -112,7 +114,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         height = getPaddingTop() + getPaddingBottom();
         for (int i = 0; i < mWarpLineGroup.size(); i++) {
             if (i != 0) {
-                height += mType.vertical_Space;
+                height += (int) mType.vertical_Space;
             }
             height += mWarpLineGroup.get(i).height;
         }
@@ -121,7 +123,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 height = heightSize;
                 break;
             case MeasureSpec.AT_MOST:
-                height = height > heightSize ? heightSize : height;
+                height = Math.min(height, heightSize);
                 break;
             case MeasureSpec.UNSPECIFIED:
                 break;
@@ -142,7 +144,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 View view = warpLine.lineView.get(j);
                 if (isFull()) {//需要充满当前行时
                     view.layout(left, t, left + view.getMeasuredWidth() + lastWidth / warpLine.lineView.size(), t + view.getMeasuredHeight());
-                    left += view.getMeasuredWidth() + mType.horizontal_Space + lastWidth / warpLine.lineView.size();
+                    left += (int) (view.getMeasuredWidth() + mType.horizontal_Space + (float) lastWidth / warpLine.lineView.size());
                 } else {
                     switch (getGrivate()) {
                         case 0://右对齐
@@ -155,10 +157,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                             view.layout(left, t, left + view.getMeasuredWidth(), t + view.getMeasuredHeight());
                             break;
                     }
-                    left += view.getMeasuredWidth() + mType.horizontal_Space;
+                    left += (int) (view.getMeasuredWidth() + mType.horizontal_Space);
                 }
             }
-            t += warpLine.height + mType.vertical_Space;
+            t += (int) (warpLine.height + mType.vertical_Space);
         }
     }
 
@@ -177,10 +179,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         private int height = 0;
 
         private void addView(View view) {
-            if (lineView.size() != 0) {
-                lineWidth += mType.horizontal_Space;
+            if (!lineView.isEmpty()) {
+                lineWidth += (int) mType.horizontal_Space;
             }
-            height = height > view.getMeasuredHeight() ? height : view.getMeasuredHeight();
+            height = Math.max(height, view.getMeasuredHeight());
             lineWidth += view.getMeasuredWidth();
             lineView.add(view);
         }
@@ -250,15 +252,4 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
     public void setIsFull(boolean isFull) {
         mType.isFull = isFull;
     }
-
-    /**
-     * 每行子View的对齐方式
-     */
-    public final static class Gravite {
-        public final static int RIGHT = 0;
-        public final static int LEFT = 1;
-        public final static int CENTER = 2;
-    }
-
-
 }

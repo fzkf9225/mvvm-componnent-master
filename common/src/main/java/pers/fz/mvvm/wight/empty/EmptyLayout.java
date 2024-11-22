@@ -21,7 +21,6 @@ public class EmptyLayout extends LinearLayout {
     public static final int NETWORK_LOADING_REFRESH = 5;
     public static final int NETWORK_LOADING_LOAD_MORE = 6;
     private boolean clickEnable = true;
-    private final Context context;
     private OnEmptyLayoutClickListener onEmptyLayoutClickListener;
     private int mErrorState;
     private String strNoDataContent = "";
@@ -29,13 +28,11 @@ public class EmptyLayout extends LinearLayout {
 
     public EmptyLayout(Context context) {
         super(context);
-        this.context = context;
         init();
     }
 
     public EmptyLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         init();
     }
 
@@ -141,7 +138,7 @@ public class EmptyLayout extends LinearLayout {
     }
 
     public void setTvNoDataContent() {
-        if (!strNoDataContent.equals("")) {
+        if (!strNoDataContent.isEmpty()) {
             binding.tvErrorLayout.setText(strNoDataContent);
         } else {
             binding.tvErrorLayout.setText(R.string.noData);

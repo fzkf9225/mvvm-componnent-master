@@ -63,43 +63,16 @@ public interface IPhotoView {
     Matrix getDisplayMatrix();
 
     /**
-     * Use {@link #getMinimumScale()} instead, this will be removed in future release
-     *
-     * @return The current minimum scale level. What this value represents depends on the current
-     * {@link ImageView.ScaleType}.
-     */
-    @Deprecated
-    float getMinScale();
-
-    /**
      * @return The current minimum scale level. What this value represents depends on the current
      * {@link ImageView.ScaleType}.
      */
     float getMinimumScale();
 
     /**
-     * Use {@link #getMediumScale()} instead, this will be removed in future release
-     *
-     * @return The current middle scale level. What this value represents depends on the current
-     * {@link ImageView.ScaleType}.
-     */
-    @Deprecated
-    float getMidScale();
-
-    /**
      * @return The current medium scale level. What this value represents depends on the current
      * {@link ImageView.ScaleType}.
      */
     float getMediumScale();
-
-    /**
-     * Use {@link #getMaximumScale()} instead, this will be removed in future release
-     *
-     * @return The current maximum scale level. What this value represents depends on the current
-     * {@link ImageView.ScaleType}.
-     */
-    @Deprecated
-    float getMaxScale();
 
     /**
      * @return The current maximum scale level. What this value represents depends on the current
@@ -130,18 +103,6 @@ public interface IPhotoView {
     void setAllowParentInterceptOnEdge(boolean allow);
 
     /**
-     * Use {@link #setMinimumScale(float minimumScale)} instead, this will be removed in future
-     * release
-     * <p>&nbsp;</p>
-     * Sets the minimum scale level. What this value represents depends on the current {@link
-     * ImageView.ScaleType}.
-     *
-     * @param minScale minimum allowed scale
-     */
-    @Deprecated
-    void setMinScale(float minScale);
-
-    /**
      * Sets the minimum scale level. What this value represents depends on the current {@link
      * ImageView.ScaleType}.
      *
@@ -149,36 +110,12 @@ public interface IPhotoView {
      */
     void setMinimumScale(float minimumScale);
 
-    /**
-     * Use {@link #setMediumScale(float mediumScale)} instead, this will be removed in future
-     * release
-     * <p>&nbsp;</p>
-     * Sets the middle scale level. What this value represents depends on the current {@link
-     * ImageView.ScaleType}.
-     *
-     * @param midScale medium scale preset
-     */
-    @Deprecated
-    void setMidScale(float midScale);
-
     /*
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      *
      * @param mediumScale medium scale preset
      */
     void setMediumScale(float mediumScale);
-
-    /**
-     * Use {@link #setMaximumScale(float maximumScale)} instead, this will be removed in future
-     * release
-     * <p>&nbsp;</p>
-     * Sets the maximum scale level. What this value represents depends on the current {@link
-     * ImageView.ScaleType}.
-     *
-     * @param maxScale maximum allowed scale preset
-     */
-    @Deprecated
-    void setMaxScale(float maxScale);
 
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link

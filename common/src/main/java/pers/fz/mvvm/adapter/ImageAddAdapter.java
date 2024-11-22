@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -12,7 +13,6 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**
@@ -63,7 +63,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
                 new PicShowDialog(mContext, PicShowDialog.createUriImageInfo(mList), pos).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.showShort(mContext, "图片打开失败");
+                Toast.makeText(mContext, "图片打开失败", Toast.LENGTH_SHORT).show();
             }
         });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {

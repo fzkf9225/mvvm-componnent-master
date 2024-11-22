@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.adapter.UseCaseAdapter;
 import com.casic.titan.demo.databinding.FragmentHomeBinding;
-import com.casic.titan.demo.enumbean.UseCaseEnum;
+import com.casic.titan.demo.enums.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.gyf.immersionbar.ImmersionBar;

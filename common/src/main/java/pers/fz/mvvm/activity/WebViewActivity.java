@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,8 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.annotation.NonNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
@@ -58,7 +61,7 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         settings.setLoadWithOverviewMode(true);
         binding.webView.setWebViewClient(new MyWebViewClient());
         binding.webView.setWebChromeClient(
-                new SystemWebChromeClient(this,new CordovaDialogsHelper(this),binding.progressBar, toolbarBind.tvTitle)
+                new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind.tvTitle)
         );
     }
 
@@ -70,8 +73,8 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(StringUtil.isEmpty(url)){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (StringUtil.isEmpty(url)) {
             showToast("目标地址为空！");
             return super.onOptionsItemSelected(item);
         }
@@ -96,7 +99,7 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     public void initData(Bundle bundle) {
         toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
         url = bundle.getString(LOAD_URL);
-        if(StringUtil.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             showToast("目标地址为空！");
             return;
         }

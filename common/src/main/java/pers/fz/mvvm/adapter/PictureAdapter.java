@@ -12,9 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Created by fz
+ * Created by fz on 2024/11/22
  *
- * @author fz
  */
 public class PictureAdapter extends PagerAdapter {
 

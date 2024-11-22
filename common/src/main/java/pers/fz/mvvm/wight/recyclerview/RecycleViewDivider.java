@@ -7,14 +7,15 @@ import android.graphics.Rect;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecycleViewDivider extends RecyclerView.ItemDecoration {
 
-    private Paint mPaint;
+    private final Paint mPaint;
     private int mDividerHeight = 1; // 分割线高度，默认为1px
-    private int mOrientation; // 列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
+    private final int mOrientation; // 列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
     private boolean isShowLastDivider = true; // 是否展示最后一行的分隔符
 
     /**
@@ -58,14 +59,14 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
 
     // 获取分割线尺寸
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         outRect.set(0, 0, 0, mDividerHeight);
     }
 
     // 绘制分割线
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
         if (mOrientation == LinearLayoutManager.VERTICAL) {
             drawVertical(c, parent);

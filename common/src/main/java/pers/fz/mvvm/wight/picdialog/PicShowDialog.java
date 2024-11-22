@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -37,7 +38,6 @@ import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.ThreadExecutorBounded;
 import pers.fz.mvvm.util.download.DownLoadImageService;
 import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
 
 /**
@@ -243,7 +243,7 @@ public class PicShowDialog extends Dialog {
                                         imageInfos.get(position) instanceof Uri) {
                                     downloadImage(imageInfos.get(position));
                                 } else {
-                                    ToastUtils.showShort(context, "图片缓存失败");
+                                    Toast.makeText(context, "图片缓存失败", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .build()
@@ -290,7 +290,7 @@ public class PicShowDialog extends Dialog {
     private final Handler handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
-            ToastUtils.showShort(context, message.obj == null ? "图片保存失败" : message.obj.toString());
+            Toast.makeText(context, message.obj == null ? "图片保存失败" : message.obj.toString(), Toast.LENGTH_SHORT).show();
             return false;
         }
     });

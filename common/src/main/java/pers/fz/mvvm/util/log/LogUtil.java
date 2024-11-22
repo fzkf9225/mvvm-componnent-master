@@ -10,7 +10,7 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 import pers.fz.mvvm.api.Config;
 
 /**
- * Created by fz on 2017/5/23.
+ * Created by fz on 2024/5/23.
  * Log日志的打印
  */
 

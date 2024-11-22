@@ -33,7 +33,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * 底部确认弹框
  */
 public class MenuDialog<T extends PopupWindowBean> extends Dialog {
-    private Context context;
+    private final Context context;
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
     /**
      * 是否可以点击外部取消

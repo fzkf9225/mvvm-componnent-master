@@ -13,7 +13,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.wight.customlayout.RoundImageView;
 
 /**
- * Create by CherishTang on 2020/3/27 0027
+ * Create by fz on 2020/3/27 0027
  * describe:
  */
 public class ImageViewAttrAdapter {
@@ -24,6 +24,7 @@ public class ImageViewAttrAdapter {
                 .apply(new RequestOptions().error(R.mipmap.icon_head_default).placeholder(R.mipmap.icon_head_default))
                 .into(imageView);
     }
+
     @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
@@ -31,6 +32,7 @@ public class ImageViewAttrAdapter {
                 .apply(new RequestOptions().error(R.mipmap.ic_default_image).placeholder(R.mipmap.ic_default_image))
                 .into(imageView);
     }
+
     @BindingAdapter({"imageBitmap"})
     public static void loadImage(ImageView imageView, Bitmap bitmap) {
         Glide.with(imageView.getContext())

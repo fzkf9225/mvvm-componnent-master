@@ -6,18 +6,18 @@ import android.graphics.Rect;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * Created by CherishTang on 2018/9/25.
- *
  */
 
-public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
-    private Paint mPaint;
-    private int mDividerWidth;
+public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    private final Paint mPaint;
+    private final int mDividerWidth;
 
     public GridSpacingItemDecoration(int height, @ColorInt int color) {
         mDividerWidth = height;
@@ -28,25 +28,24 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
 
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         int itemPosition = ((RecyclerView.LayoutParams) view.getLayoutParams()).getViewLayoutPosition();
         int spanCount = getSpanCount(parent);
-        int childCount = parent.getAdapter().getItemCount();
+        int childCount = parent.getAdapter() == null ? 0 : parent.getAdapter().getItemCount();
 
         boolean isLastRow = isLastRow(parent, itemPosition, spanCount, childCount);
 
         int top = 0;
         int left;
         int right;
-        int bottom;
         int eachWidth = (spanCount - 1) * mDividerWidth / spanCount;
         int dl = mDividerWidth - eachWidth;
 
         left = itemPosition % spanCount * dl;
         right = eachWidth - left;
-        bottom = mDividerWidth;
-        if (isLastRow){
+        int bottom = mDividerWidth;
+        if (isLastRow) {
             bottom = 0;
         }
         outRect.set(left, top, right, bottom);
@@ -54,9 +53,9 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        super.onDraw(c, parent, state);
-        draw(c, parent);
+    public void onDraw(@NonNull Canvas canvas, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        super.onDraw(canvas, parent, state);
+        draw(canvas, parent);
     }
 
     //绘制item分割线

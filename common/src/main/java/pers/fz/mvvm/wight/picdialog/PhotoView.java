@@ -88,31 +88,13 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public float getMinScale() {
-        return getMinimumScale();
-    }
-
-    @Override
     public float getMinimumScale() {
         return mAttacher.getMinimumScale();
     }
 
     @Override
-    @Deprecated
-    public float getMidScale() {
-        return getMediumScale();
-    }
-
-    @Override
     public float getMediumScale() {
         return mAttacher.getMediumScale();
-    }
-
-    @Override
-    @Deprecated
-    public float getMaxScale() {
-        return getMaximumScale();
     }
 
     @Override
@@ -136,33 +118,14 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public void setMinScale(float minScale) {
-        setMinimumScale(minScale);
-    }
-
-    @Override
     public void setMinimumScale(float minimumScale) {
         mAttacher.setMinimumScale(minimumScale);
-    }
-
-    @Override
-    @Deprecated
-    public void setMidScale(float midScale) {
-        setMediumScale(midScale);
     }
 
     @Override
     public void setMediumScale(float mediumScale) {
         mAttacher.setMediumScale(mediumScale);
     }
-
-    @Override
-    @Deprecated
-    public void setMaxScale(float maxScale) {
-        setMaximumScale(maxScale);
-    }
-
     @Override
     public void setMaximumScale(float maximumScale) {
         mAttacher.setMaximumScale(maximumScale);

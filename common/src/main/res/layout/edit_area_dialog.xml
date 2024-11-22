@@ -1,68 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rounded_white"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/dialog_tips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textColor="@color/themeColor"
-        android:textSize="14sp"
-        tools:text="修改管理员密码" />
+    <data>
 
-    <EditText
-        android:id="@+id/dialog_input"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/round_white_bg_border"
-        android:gravity="top"
-        android:hint="请输入"
-        android:inputType="textMultiLine"
-        android:padding="8dp"
-        android:textSize="14sp" />
-
-    <View
-        style="@style/h_line"
-        android:layout_marginTop="24dp" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/dialog_cancel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:id="@+id/dialog_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="取消"
-            android:textColor="@color/gray"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/themeColor"
+            android:textSize="14sp"
+            tools:text="修改管理员密码" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialog_input"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/round_white_bg_border"
+            android:gravity="top"
+            android:hint="@string/please_entry_something"
+            android:inputType="textMultiLine"
+            android:padding="8dp"
             android:textSize="14sp" />
 
         <View
-            android:id="@+id/s_line"
-            style="@style/s_line" />
+            style="@style/h_line"
+            android:layout_marginTop="24dp" />
 
-        <TextView
-            android:id="@+id/dialog_sure"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="确定"
-            android:textColor="@color/themeColor"
-            android:textSize="14sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dialog_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+            <View
+                android:id="@+id/s_line"
+                style="@style/s_line" />
+
+            <TextView
+                android:id="@+id/dialog_sure"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/sure"
+                android:textColor="@color/themeColor"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

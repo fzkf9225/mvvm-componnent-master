@@ -16,14 +16,12 @@
 package pers.fz.mvvm.wight.picdialog.gestures;
 
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.view.MotionEvent;
 
 import pers.fz.mvvm.wight.picdialog.Compat;
 
 
-@TargetApi(5)
 public class EclairGestureDetector extends CupcakeGestureDetector {
 
     private static final int INVALID_POINTER_ID = -1;

@@ -18,6 +18,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.databinding.InputDialogBinding;
 import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
 import pers.fz.mvvm.util.common.StringUtil;
 
@@ -28,9 +29,7 @@ import pers.fz.mvvm.util.common.StringUtil;
  */
 
 public class InputDialog extends Dialog {
-    private View inflate;
-    private TextView dialogTips, dialogSure, dialogCancel;
-    private EditText inputText;
+    private InputDialogBinding binding;
 
     private OnInputDialogInterfaceListener sureClickListener, cancelClickListener;
     private boolean outSide = true;
@@ -117,49 +116,44 @@ public class InputDialog extends Dialog {
     }
 
     private void initView() {
-        inflate = LayoutInflater.from(getContext()).inflate(
-                R.layout.input_dialog, null);
+        binding = InputDialogBinding.inflate( LayoutInflater.from(getContext()),null,false);
         // 初始化控件
-        dialogTips = inflate.findViewById(R.id.dialog_tips);
-        dialogSure = inflate.findViewById(R.id.dialog_sure);
-        dialogCancel = inflate.findViewById(R.id.dialog_cancel);
-        inputText = inflate.findViewById(R.id.dialog_input);
         if (positiveTextColor != null) {
-            dialogSure.setTextColor(positiveTextColor);
+            binding.dialogSure.setTextColor(positiveTextColor);
         }
 
         if (negativeTextColor != null) {
-            dialogCancel.setTextColor(negativeTextColor);
+            binding.dialogCancel.setTextColor(negativeTextColor);
         }
         if (tipColor != null) {
-            dialogTips.setTextColor(tipColor);
+            binding.dialogTips.setTextColor(tipColor);
         }
-        inputText.setHint(hintStr);
-        inputText.setText(defaultStr);
-        inputText.setInputType(inputType);
-        inputText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
-        dialogSure.setText(strSureText);
-        dialogCancel.setText(strCancelText);
+        binding.dialogInput.setHint(hintStr);
+        binding.dialogInput.setText(defaultStr);
+        binding.dialogInput.setInputType(inputType);
+        binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
+        binding.dialogSure.setText(strSureText);
+        binding.dialogCancel.setText(strCancelText);
         if (StringUtil.isEmpty(tipsStr)) {
-            dialogTips.setVisibility(View.GONE);
+            binding.dialogTips.setVisibility(View.GONE);
         } else {
-            dialogTips.setText(tipsStr);
+            binding.dialogTips.setText(tipsStr);
         }
 
-        dialogSure.setOnClickListener(v -> {
+        binding.dialogSure.setOnClickListener(v -> {
             if (sureClickListener != null) {
-                sureClickListener.onDialogClick(this, inputText.getText().toString());
+                sureClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             }
         });
-        dialogCancel.setOnClickListener(v -> {
+        binding.dialogCancel.setOnClickListener(v -> {
             if (cancelClickListener != null) {
-                cancelClickListener.onDialogClick(this, inputText.getText().toString());
+                cancelClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             } else {
                 dismiss();
             }
         });
         setCanceledOnTouchOutside(outSide);
-        setContentView(inflate);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {

@@ -1,6 +1,7 @@
 package pers.fz.mvvm.adapter;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -9,7 +10,6 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImageShowItemBinding;
-import pers.fz.mvvm.util.log.ToastUtils;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**
@@ -38,7 +38,7 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<String, ImageShowI
                     new PicShowDialog(mContext,PicShowDialog.createImageInfo(mList),pos).show();
                 }catch (Exception e){
                     e.printStackTrace();
-                    ToastUtils.showShort(mContext,"图片打开失败");
+                    Toast.makeText(mContext, "图片打开失败", Toast.LENGTH_SHORT).show();
                 }
         });
     }

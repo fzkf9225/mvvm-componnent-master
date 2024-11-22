@@ -1,4 +1,4 @@
-package pers.fz.mvvm.wight.popupwindow.adapter;
+package pers.fz.mvvm.wight.popupwindow;
 
 import android.content.Context;
 
@@ -12,16 +12,16 @@ import pers.fz.mvvm.databinding.ActivityParentCategoryItemBinding;
 
 
 /**
- * Created by fz on 2018/7/11.
+ * updated by fz on 2024/11/22.
  */
-public class ParentAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, ActivityParentCategoryItemBinding> {
+public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, ActivityParentCategoryItemBinding> {
     private int selectedPosition = -1;
     /**
      * 是否添加不限、全部
      */
     private boolean hasHeader = false;
 
-    public ParentAdapter(Context mContext) {
+    public PopupWindowAdapter(Context mContext) {
         super(mContext);
     }
 
