@@ -124,15 +124,15 @@ public class BaseModelEntity<T> implements Serializable {
     }
 
     private boolean isLongType() {
-        return Long.class.isAssignableFrom(data.getClass()) || int.class.isAssignableFrom(data.getClass());
+        return Long.class.isAssignableFrom(data.getClass()) || long.class.isAssignableFrom(data.getClass());
     }
 
     private boolean isDoubleType() {
-        return Double.class.isAssignableFrom(data.getClass()) || int.class.isAssignableFrom(data.getClass());
+        return Double.class.isAssignableFrom(data.getClass()) || double.class.isAssignableFrom(data.getClass());
     }
 
     private boolean isFloatType() {
-        return Float.class.isAssignableFrom(data.getClass()) || int.class.isAssignableFrom(data.getClass());
+        return Float.class.isAssignableFrom(data.getClass()) || float.class.isAssignableFrom(data.getClass());
     }
 
     private boolean isListType() {
