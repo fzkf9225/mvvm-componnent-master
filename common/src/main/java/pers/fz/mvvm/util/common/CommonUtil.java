@@ -13,10 +13,16 @@ import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pers.fz.mvvm.activity.WebViewActivity;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.util.jiami.MD5Util;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2018/3/16.
@@ -102,4 +108,43 @@ public class CommonUtil {
         return false;
     }
 
+    public static <T> boolean isStringType(T data) {
+        return String.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isObjectType(T data) {
+        return Object.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isBooleanType(T data) {
+        return Boolean.class.isAssignableFrom(data.getClass()) || boolean.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isIntegerType(T data) {
+        return Integer.class.isAssignableFrom(data.getClass()) || int.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isLongType(T data) {
+        return Long.class.isAssignableFrom(data.getClass()) || long.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isDoubleType(T data) {
+        return Double.class.isAssignableFrom(data.getClass()) || double.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isFloatType(T data) {
+        return Float.class.isAssignableFrom(data.getClass()) || float.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isListType(T data) {
+        return List.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isMapType(T data) {
+        return Map.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isArrayType(T data) {
+        return data.getClass().isArray();
+    }
 }
