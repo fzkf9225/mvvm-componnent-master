@@ -14,10 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.bean.Code.ResponseCode;
-import pers.fz.mvvm.util.common.CommonUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.Converter;
 
 /**

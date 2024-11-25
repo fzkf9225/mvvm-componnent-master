@@ -13,16 +13,11 @@ import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import pers.fz.mvvm.activity.WebViewActivity;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.util.jiami.MD5Util;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2018/3/16.
