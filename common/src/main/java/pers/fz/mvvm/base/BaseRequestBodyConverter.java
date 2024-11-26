@@ -25,7 +25,7 @@ import retrofit2.Converter;
  * 来源：
  */
 
-class BaseRequestBodyConverter<T> implements Converter<T, RequestBody> {
+public class BaseRequestBodyConverter<T> implements Converter<T, RequestBody> {
 
     private static final MediaType MEDIA_TYPE = MediaType.Companion.parse("application/json; charset=UTF-8");
     private static final Charset UTF_8 = StandardCharsets.UTF_8;

@@ -48,52 +48,46 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     public T responseConverterNull() {
         // Observable 不能直接返回 null，所以根据泛型创建一个空对象
         try {
-            Type type = ((ParameterizedType) adapter.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            // 判断泛型 T 的类型并创建对应的默认值
-            if (type instanceof ParameterizedType) {
-                Type rawType = ((ParameterizedType) type).getRawType();
-
-                // 判断类型是否为 String
-                if (String.class.equals(rawType)) {
-                    return (T) "";
-                }
-                // 判断类型是否为 Boolean
-                else if (Boolean.class.equals(rawType) || boolean.class.equals(rawType)) {
-                    return (T) Boolean.FALSE;
-                }
-                // 判断类型是否为 Integer
-                else if (Integer.class.equals(rawType) || int.class.equals(rawType)) {
-                    return (T) Integer.valueOf(0);
-                }
-                // 判断类型是否为 Long
-                else if (Long.class.equals(rawType) || long.class.equals(rawType)) {
-                    return (T) Long.valueOf(0);
-                }
-                // 判断类型是否为 Double
-                else if (Double.class.equals(rawType) || double.class.equals(rawType)) {
-                    return (T) Double.valueOf(0);
-                }
-                // 判断类型是否为 Float
-                else if (Float.class.equals(rawType) || float.class.equals(rawType)) {
-                    return (T) Float.valueOf(0);
-                } else if (Array.class.equals(rawType)) {
-                    return (T) new Object[0];
-                }
-                // 判断是否为 Map 类型
-                else if (Map.class.equals(rawType)) {
-                    return (T) new HashMap<>();
-                }
-                // 判断是否为 Collection 类型
-                else if (Collection.class.equals(rawType)) {
-                    return (T) new ArrayList<>();
-                } else if (Object.class.equals(rawType)) {
-                    return (T) new Object();
-                } else {
-                    // 处理特殊的情况，若没有匹配到任何条件
-                    return (T) new Object();
-                }
+            Type rawType = ((ParameterizedType) adapter.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+            // 判断类型是否为 String
+            if (String.class.equals(rawType)) {
+                return (T) "";
             }
-            return (T) new Object();
+            // 判断类型是否为 Boolean
+            else if (Boolean.class.equals(rawType) || boolean.class.equals(rawType)) {
+                return (T) Boolean.FALSE;
+            }
+            // 判断类型是否为 Integer
+            else if (Integer.class.equals(rawType) || int.class.equals(rawType)) {
+                return (T) Integer.valueOf(0);
+            }
+            // 判断类型是否为 Long
+            else if (Long.class.equals(rawType) || long.class.equals(rawType)) {
+                return (T) Long.valueOf(0);
+            }
+            // 判断类型是否为 Double
+            else if (Double.class.equals(rawType) || double.class.equals(rawType)) {
+                return (T) Double.valueOf(0);
+            }
+            // 判断类型是否为 Float
+            else if (Float.class.equals(rawType) || float.class.equals(rawType)) {
+                return (T) Float.valueOf(0);
+            } else if (Array.class.equals(rawType)) {
+                return (T) new Object[0];
+            }
+            // 判断是否为 Map 类型
+            else if (Map.class.equals(rawType)) {
+                return (T) new HashMap<>();
+            }
+            // 判断是否为 Collection 类型
+            else if (Collection.class.equals(rawType)) {
+                return (T) new ArrayList<>();
+            } else if (Object.class.equals(rawType)) {
+                return (T) new Object();
+            } else {
+                // 处理特殊的情况，若没有匹配到任何条件
+                return (T) new Object();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

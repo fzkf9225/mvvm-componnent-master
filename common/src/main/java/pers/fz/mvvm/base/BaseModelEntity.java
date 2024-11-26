@@ -2,9 +2,8 @@ package pers.fz.mvvm.base;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 
-public class BaseModelEntity<T> implements Serializable {
+public class BaseModelEntity<T>{
     public BaseModelEntity() {
     }
 
