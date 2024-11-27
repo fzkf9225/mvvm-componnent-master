@@ -2,10 +2,13 @@ package pers.fz.mvvm.wight.empty;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.core.content.ContextCompat;
 import androidx.annotation.DrawableRes;
 
 import pers.fz.mvvm.R;
@@ -37,7 +40,11 @@ public class EmptyLayout extends LinearLayout {
     }
 
     private void init() {
-        binding = ViewErrorLayoutBinding.inflate(LayoutInflater.from(getContext()), this, false);
+        setGravity(Gravity.CENTER);
+        setOrientation(LinearLayout.VERTICAL);
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_background));
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        binding = ViewErrorLayoutBinding.inflate(LayoutInflater.from(getContext()), this, true);
         binding.imgErrorLayout.setOnClickListener(v -> {
             if (clickEnable) {
                 if (onEmptyLayoutClickListener != null) {
@@ -45,7 +52,10 @@ public class EmptyLayout extends LinearLayout {
                 }
             }
         });
-        addView(binding.getRoot());
+    }
+
+    public ViewErrorLayoutBinding getBinding() {
+        return binding;
     }
 
     public void dismiss() {

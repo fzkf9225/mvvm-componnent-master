@@ -6,13 +6,7 @@
 
     </data>
 
-    <LinearLayout
-        android:id="@+id/layout_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/default_background"
-        android:gravity="center"
-        android:orientation="vertical">
+    <merge>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_error_layout"
@@ -38,5 +32,5 @@
             android:textSize="15sp"
             android:text="@string/loading_now" />
 
-    </LinearLayout>
+    </merge>
 </layout>
