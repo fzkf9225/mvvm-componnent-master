@@ -31,8 +31,8 @@ public abstract class BaseSearchRecyclerViewFragment<VM extends BaseRecyclerView
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        binding.searchLayout.inputEdit.setOnInputSubmitListener(this);
-        binding.searchLayout.buttonSearch.setOnClickListener(v-> keywordsLiveData.postValue(binding.searchLayout.inputEdit.getText().toString()));
+        binding.searchLayout.inputSearch.setOnInputSubmitListener(this);
+        binding.searchLayout.search.setOnClickListener(v-> keywordsLiveData.postValue(binding.searchLayout.inputSearch.getText().toString()));
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class BaseSearchRecyclerViewFragment<VM extends BaseRecyclerView
      */
     public void addMenuView(String hint,View.OnClickListener onClickListener) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.option_item, null);
-        binding.searchLayout.llMenuOption.addView(view);
+        binding.searchLayout.llMenu.addView(view);
         TextView tvOptionMenu = view.findViewById(R.id.tv_option_menu);
         tvOptionMenu.setHint(hint);
         tvOptionMenu.setOnClickListener(onClickListener);
@@ -50,7 +50,7 @@ public abstract class BaseSearchRecyclerViewFragment<VM extends BaseRecyclerView
 
     @Override
     public void onInputSubmit(String query) {
-        keywordsLiveData.postValue(binding.searchLayout.inputEdit.getText().toString());
+        keywordsLiveData.postValue(binding.searchLayout.inputSearch.getText().toString());
     }
 
     @Override

@@ -14,8 +14,8 @@
         android:focusableInTouchMode="true">
 
         <include
-            android:id="@+id/base_search_view"
-            layout="@layout/base_search_view"
+            android:id="@+id/search_view"
+            layout="@layout/search_view"
             app:layout_constraintBottom_toTopOf="@+id/search_view_container"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_weight="1"
-            app:layout_constraintTop_toBottomOf="@+id/base_search_view"
+            app:layout_constraintTop_toBottomOf="@+id/search_view"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

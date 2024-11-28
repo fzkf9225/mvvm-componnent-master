@@ -1,13 +1,11 @@
 <resources>
 
     <string name="nv_index">首页</string>
-    <string name="nv_chengyu">成语</string>
     <string name="nv_info">消息</string>
     <string name="nv_me">我的</string>
     <string name="nv_setting">设置</string>
     <string name="loginClick">点击登录</string>
     <string name="cancel">取消</string>
-    <string name="login_project_code_hint">项目编号</string>
     <string name="login_user_hint">请输入用户名</string>
     <string name="login_tel_hint">请输入手机号码</string>
     <string name="login_pwd_hint">请输入密码</string>
@@ -33,27 +31,12 @@
     <string name="state_submit">正在提交中&#8230;</string>
     <string name="state_loading_again">点击图标,重新加载</string>
 
-    <string name="index_viewpager">侧滑示例</string>
-    <string name="index_search">搜索示例</string>
-    <string name="index_browser">浏览器示例</string>
-    <string name="index_download">下载示例</string>
-    <string name="index_media">多媒体示例</string>
-    <string name="index_hilt">依赖注入</string>
-    <string name="index_live_data">LiveData</string>
-    <string name="index_baidu_map">百度地图</string>
-    <string name="index_sweep">扫一扫示例</string>
-    <string name="index_coordinator">协调布局</string>
-    <string name="index_tool_bar_coordinator">吸顶效果</string>
-    <string name="index_tool_bar_motion_layout">动画</string>
-    <string name="index_tool_bar_video">视频播放</string>
-
     <string name="setting_update">检查更新</string>
     <string name="setting_qrcode">扫描二维码</string>
     <string name="setting_about">关于我们</string>
     <string name="setting_ITSupport">技术支持</string>
     <string name="setting_customes">智能管家</string>
     <string name="setting_feedBack">问题反馈</string>
-
 
     <string name="setting_exit">退出账号</string>
     <string name="manageapplications_settings_title">应用中心</string>
@@ -73,10 +56,8 @@
     <string name="permission_read_external_hint">没有此权限，无法开启这个功能，请开启权限。PERMISSION_READ_EXTERNAL_STORAGE</string>
     <string name="permission_white_external_hint">没有此权限，无法开启这个功能，请开启权限。PERMISSION_WRITE_EXTERNAL_STORAGE</string>
     <string name="permission_recode_audio_hint">没有此权限，无法开启这个功能，请开启权限。PERMISSION_RECORD_AUDIO</string>
-    <string name="last_news">最新资讯</string>
 
     <string name="searchview_query_hint">请输入关键字、标签</string>
-
 
     <string name="pullToRefresh">下拉刷新</string>
     <string name="loosenToRefresh">松开刷新</string>
@@ -100,4 +81,6 @@
     <string name="loading_now">正在加载…</string>
     <string name="please_entry_something">请输入</string>
     <string name="sure">确定</string>
+    <string name="search">搜索</string>
+    <string name="please_enter">请输入</string>
 </resources>

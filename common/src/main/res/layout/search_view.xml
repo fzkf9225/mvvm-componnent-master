@@ -7,7 +7,7 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/ll_search_option"
+        android:id="@+id/ll_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/default_background"
@@ -19,45 +19,46 @@
         android:paddingEnd="@dimen/horizontal_margin_xl">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_search"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_l"
             android:layout_weight="1"
-            android:background="@drawable/rounded_white"
-            android:orientation="horizontal">
+            android:background="@drawable/rounded_white">
 
             <LinearLayout
-                android:id="@+id/ll_menu_option"
+                android:id="@+id/ll_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/input_edit"
                 android:gravity="center"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/input_search"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
-                android:id="@+id/input_edit"
+                android:id="@+id/input_search"
                 android:layout_width="0dp"
                 android:layout_height="33dp"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/ll_menu_option"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@null"
                 android:ellipsize="end"
-                android:textColorHint="@color/nv_bg_color"
-                android:imeOptions="actionSearch"
                 android:gravity="center_vertical"
-                android:hint="请输入"
+                android:hint="@string/please_enter"
+                android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingTop="0dp"
                 android:paddingEnd="@dimen/padding_m"
-                android:paddingBottom="0dp" />
+                android:paddingBottom="0dp"
+                android:textColorHint="@color/nv_bg_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/ll_menu"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/button_search"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/y60"
             android:layout_marginStart="@dimen/horizontal_margin_l"
@@ -67,7 +68,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/padding_l"
             android:paddingEnd="@dimen/padding_l"
-            android:text="搜索"
+            android:text="@string/search"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_l" />
     </LinearLayout>

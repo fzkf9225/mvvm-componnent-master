@@ -1,13 +1,11 @@
 <resources>
 
     <string name="nv_index">Index</string>
-    <string name="nv_chengyu">idiom</string>
     <string name="nv_info">Message</string>
     <string name="nv_me">Mine</string>
     <string name="nv_setting">Setting</string>
     <string name="loginClick">login</string>
     <string name="cancel">cancel</string>
-    <string name="login_project_code_hint">project code</string>
     <string name="login_user_hint">please input username</string>
     <string name="login_tel_hint">please input tel</string>
     <string name="login_pwd_hint">please input password</string>
@@ -32,21 +30,6 @@
     <string name="state_loading_error">data loading&#8230;</string>
     <string name="state_submit">being submitted&#8230;</string>
     <string name="state_loading_again">click the icon to reload</string>
-
-    <string name="index_viewpager">sideslip demo</string>
-    <string name="index_search">search demo</string>
-    <string name="index_browser">browser demo</string>
-    <string name="index_download">download demo</string>
-    <string name="index_media">media demo</string>
-    <string name="index_hilt">hilt demo</string>
-    <string name="index_live_data">LiveData demo</string>
-    <string name="index_baidu_map">baidu map demo</string>
-    <string name="index_sweep">sweep demo</string>
-    <string name="index_coordinator">coordinator demo</string>
-    <string name="index_tool_bar_coordinator">ceiling demo</string>
-    <string name="index_tool_bar_motion_layout">animation</string>
-    <string name="index_tool_bar_video">video demo</string>
-
     <string name="setting_update">check upgrade</string>
     <string name="setting_qrcode">sweep qr code</string>
     <string name="setting_about">about us</string>
@@ -73,7 +56,6 @@
     <string name="permission_read_external_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_READ_EXTERNAL_STORAGE</string>
     <string name="permission_white_external_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_WRITE_EXTERNAL_STORAGE</string>
     <string name="permission_recode_audio_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_RECORD_AUDIO</string>
-    <string name="last_news">news</string>
 
     <string name="searchview_query_hint">please input keywords</string>
 
@@ -101,6 +83,8 @@
     <string name="loading_now">Loading…</string>
     <string name="please_entry_something">Please enter</string>
     <string name="sure">OK</string>
+    <string name="search">Search</string>
+    <string name="please_enter">Please enter</string>
 
 
 </resources>

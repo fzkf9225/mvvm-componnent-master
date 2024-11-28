@@ -27,8 +27,8 @@ public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseA
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        binding.baseSearchView.inputEdit.setOnInputSubmitListener(this);
-        binding.baseSearchView.buttonSearch.setOnClickListener(this);
+        binding.searchView.inputSearch.setOnInputSubmitListener(this);
+        binding.searchView.search.setOnClickListener(this);
     }
 
     /**
@@ -38,7 +38,7 @@ public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseA
      */
     public void addMenuView(String hint,View.OnClickListener onClickListener) {
         View view = LayoutInflater.from(this).inflate(R.layout.option_item, null);
-        binding.baseSearchView.llMenuOption.addView(view);
+        binding.searchView.llMenu.addView(view);
         TextView tvOptionMenu = view.findViewById(R.id.tv_option_menu);
         tvOptionMenu.setHint(hint);
         tvOptionMenu.setOnClickListener(onClickListener);
@@ -46,14 +46,14 @@ public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseA
 
     @Override
     public void onClick(View v) {
-        if (R.id.button_search == v.getId()) {
-            keywordsLiveData.postValue(binding.baseSearchView.inputEdit.getText().toString());
+        if (R.id.search == v.getId()) {
+            keywordsLiveData.postValue(binding.searchView.inputSearch.getText().toString());
         }
     }
 
     @Override
     public void onInputSubmit(String query) {
-        keywordsLiveData.postValue(binding.baseSearchView.inputEdit.getText().toString());
+        keywordsLiveData.postValue(binding.searchView.inputSearch.getText().toString());
     }
 
     @Override

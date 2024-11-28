@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/search_layout"
-            layout="@layout/base_search_view" />
+            layout="@layout/search_view" />
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/smartFreshLayout"
