@@ -1,31 +1,21 @@
 package com.casic.titan.commonui.form;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
-import com.github.gzuliyujiang.dialog.DialogConfig;
-import com.github.gzuliyujiang.dialog.DialogStyle;
-import com.github.gzuliyujiang.wheelpicker.DatimePicker;
-import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
-import com.github.gzuliyujiang.wheelpicker.annotation.TimeMode;
-import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
-import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity;
-import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity;
-import com.github.gzuliyujiang.wheelpicker.widget.DatimeWheelLayout;
-
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
+import pers.fz.mvvm.wight.dialog.DatePickDialog;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -34,7 +24,12 @@ import pers.fz.mvvm.util.common.NumberUtils;
 public class FormDateTime extends FormSelection {
     private String separator = "-";
     private String format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
-    private Activity activity;
+    private int confirmTextColor;
+
+    private int datePickModel = DateMode.YEAR_MONTH_DAY.model;
+
+    private int startYear;
+    private int endYear;
 
     public FormDateTime(Context context) {
         super(context);
@@ -59,7 +54,15 @@ public class FormDateTime extends FormSelection {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             separator = typedArray.getString(R.styleable.FormEditText_separator);
             format = typedArray.getString(R.styleable.FormEditText_format);
+            datePickModel = typedArray.getInt(R.styleable.FormEditText_datePickModel, DateMode.YEAR_MONTH_DAY_HOUR_MINUTE.model);
+            startYear = typedArray.getInteger(R.styleable.FormEditText_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
+            endYear = typedArray.getInteger(R.styleable.FormEditText_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
+            confirmTextColor = typedArray.getColor(R.styleable.FormEditText_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
+        } else {
+            confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
+            startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
+            endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
         }
         if (TextUtils.isEmpty(separator)) {
             separator = "-";
@@ -67,70 +70,39 @@ public class FormDateTime extends FormSelection {
         if (TextUtils.isEmpty(format)) {
             format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
         }
-
-        if (getContext() instanceof Activity) {
-            activity = (Activity) getContext();
-        } else if (getContext() instanceof ContextWrapper) {
-            Context baseContext = ((ContextWrapper) getContext()).getBaseContext();
-            if (baseContext instanceof Activity) {
-                activity = (Activity) baseContext;
-            }
-        }
     }
-
 
     @Override
     protected void init() {
         super.init();
         binding.tvSelection.setOnClickListener(v -> {
-            if (activity == null) {
-                return;
+            DatePickDialog datePickDialog = new DatePickDialog(v.getContext())
+                    .setStartYear(this.startYear)
+                    .setEndYear(this.endYear)
+                    .setPositiveTextColor(this.confirmTextColor)
+                    .setTodayTextColor(this.confirmTextColor)
+                    .setDateMode(DateMode.getMode(this.datePickModel))
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day)
+                                + " " + NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        if (DateUtil.DEFAULT_DATE_TIME_FORMAT.equals(format)) {
+                            formDataSource.textValue.set(text);
+                            return;
+                        }
+                        formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
+                    });
+            if (!TextUtils.isEmpty(formDataSource.textValue.get())) {
+                Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), format);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));
+                datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
+                datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
+                datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
+                datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
+                datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
             }
-            DialogConfig.setDialogStyle(DialogStyle.One);
-            DatimePicker picker = new DatimePicker(activity);
-            final DatimeWheelLayout wheelLayout = picker.getWheelLayout();
-            picker.setOnDatimePickedListener((year, month, day, hour, minute, second) -> {
-                String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day)
-                        + " " + NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
-                if (DateUtil.DEFAULT_DATE_TIME_FORMAT.equals(format)) {
-                    formDataSource.textValue.set(text);
-                    return;
-                }
-                try {
-                    long dateLong = DateUtil.stringToLong(text, DateUtil.DEFAULT_DATE_TIME_FORMAT);
-                    String date = DateUtil.longToString(dateLong, format);
-                    formDataSource.textValue.set(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    formDataSource.textValue.set(text);
-                }
-            });
-
-            wheelLayout.setDateMode(DateMode.YEAR_MONTH_DAY);
-            wheelLayout.setTimeMode(TimeMode.HOUR_24_NO_SECOND);
-            DatimeEntity entityStart = new DatimeEntity();
-            entityStart.setDate(DateEntity.target(1970, 0, 1));
-            entityStart.setTime(TimeEntity.target(0, 0, 0));
-            wheelLayout.setRange(entityStart, DatimeEntity.yearOnFuture(100));
-            wheelLayout.setDateLabel("年", "月", "日");
-            wheelLayout.setTimeLabel("时", "分", "秒");
-            if (TextUtils.isEmpty(formDataSource.textValue.get())) {
-                wheelLayout.setDefaultValue(DatimeEntity.now());
-            } else {
-                try {
-                    Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), format);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(date);
-                    DatimeEntity defaultEntity = new DatimeEntity();
-                    defaultEntity.setDate(DateEntity.target(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)));
-                    defaultEntity.setTime(TimeEntity.target(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)));
-                    wheelLayout.setDefaultValue(defaultEntity);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    wheelLayout.setDefaultValue(DatimeEntity.now());
-                }
-            }
-            picker.show();
+            datePickDialog.builder().show();
         });
     }
 }

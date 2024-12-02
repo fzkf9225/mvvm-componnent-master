@@ -1,6 +1,7 @@
 package pers.fz.mvvm.wight.customlayout;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,73 +20,61 @@ import pers.fz.mvvm.R;
  * describe：自定义圆角矩形
  */
 public class CornerButton extends AppCompatButton {
-    private Paint circlePaint;
-    private Paint backPaint;
-    private Paint textPaint;
     private int storkColor = Color.WHITE;
     private int circleBackColor = Color.WHITE;
-    private float storkWidth, raduis;
-
+    private final GradientDrawable gradientDrawable;
+    private float radius,storkWidth;
     public CornerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setGravity(Gravity.CENTER);
-        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circlePaint.setStyle(Paint.Style.STROKE);
-        backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backPaint.setStyle(Paint.Style.FILL);
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        storkWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
             storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, storkColor);
             circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, circleBackColor);
             storkWidth = typedArray.getDimension(R.styleable.CornerTextView_corner_storkWidth, storkWidth);
-            raduis = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
-
+            radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
             typedArray.recycle();
-            GradientDrawable gd = new GradientDrawable();
-            gd.setColor(circleBackColor);
-            gd.setCornerRadius(raduis);
-            if (storkWidth > 0) {
-                gd.setStroke((int) storkWidth, storkColor);
-            }
-
-            this.setBackground(gd);
-
         }
-        if (storkWidth != 0) {
-            circlePaint.setStrokeWidth(storkWidth);
-            circlePaint.setColor(storkColor);
+        gradientDrawable = new GradientDrawable();
+        gradientDrawable.setColor(circleBackColor);
+        gradientDrawable.setCornerRadius(radius);
+        if (storkWidth > 0) {
+            gradientDrawable.setStroke((int) storkWidth, storkColor);
         }
-        backPaint.setColor(circleBackColor);
-        textPaint.setColor(getCurrentTextColor());
-        textPaint.setTextSize(getTextSize());
+        this.setBackground(gradientDrawable);
     }
 
     public CornerButton(Context context) {
         this(context, null);
-
-    }
-    public void setBackGroundColor(@ColorInt int color) {
-        GradientDrawable myGrad = (GradientDrawable) getBackground();
-        myGrad.setColor(color);
     }
 
-    public void setMyStorkColor(@ColorInt int color) {
+    public void setStorkColor(@ColorInt int color) {
         this.storkColor = color;
-        circlePaint.setColor(storkColor);
-        invalidate();
+        gradientDrawable.setStroke((int) storkWidth, this.storkColor);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setStorkWidth(int width) {
+        this.storkWidth = width;
+        gradientDrawable.setStroke(this.storkColor, storkColor);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setStork(@ColorInt int color,int width) {
+        this.storkColor = color;
+        this.storkWidth = width;
+        gradientDrawable.setStroke(this.storkColor, this.storkColor);
+        this.setBackground(gradientDrawable);
     }
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
-        backPaint.setColor(circleBackColor);
-        invalidate();
+        gradientDrawable.setColor(circleBackColor);
+        this.setBackground(gradientDrawable);
     }
 
-    public void setMyTextColor(@ColorInt int color) {
-        textPaint.setColor(color);
-        invalidate();
+    public void setBackColor(ColorStateList color) {
+        gradientDrawable.setColor(color);
+        this.setBackground(gradientDrawable);
     }
+
 }

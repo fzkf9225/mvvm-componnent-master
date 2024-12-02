@@ -198,6 +198,9 @@
     <public name="Theme.AppCompat.Light.Dialog.Alert.Self" type="style"/>
 
     <!--字符串资源-->
+    <public name="year" type="string"/>
+    <public name="month" type="string"/>
+    <public name="day" type="string"/>
     <public name="please_enter" type="string"/>
     <public name="search" type="string"/>
     <public name="nv_index" type="string"/>

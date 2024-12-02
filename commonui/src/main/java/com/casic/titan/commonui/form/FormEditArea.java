@@ -2,6 +2,7 @@ package com.casic.titan.commonui.form;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -43,6 +44,7 @@ public class FormEditArea extends ConstraintLayout {
     private float formLabelTextSize;
     private float formTextSize;
     private float formRequiredSize;
+    private int maxLength = -1;
 
     public FormEditArea(Context context) {
         super(context);
@@ -71,6 +73,7 @@ public class FormEditArea extends ConstraintLayout {
             labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, labelTextColor);
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
+            maxLength = typedArray.getInt(R.styleable.FormEditText_maxLength, -1);
             inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
             imeOptions = typedArray.getInt(R.styleable.FormEditText_formImeOptions, EditorInfo.IME_ACTION_NEXT);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
@@ -97,7 +100,9 @@ public class FormEditArea extends ConstraintLayout {
         binding.editArea.setImeOptions(imeOptions);
         binding.editArea.setInputType(inputType);
         binding.editArea.setMaxLines(Integer.MAX_VALUE);
-
+        if (maxLength > 0) {
+            binding.editArea.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        }
         binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
         binding.editArea.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
         binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);

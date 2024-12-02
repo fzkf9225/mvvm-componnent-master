@@ -114,7 +114,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cornerButton" />
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image_code"
                 app:layout_constraintTop_toBottomOf="@+id/autoTextView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +147,7 @@
                 app:starFill="@mipmap/star_full"
                 app:starSize="20dp" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_star_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -214,7 +214,7 @@
                 android:text="自定义ImageView"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
-            <pers.fz.mvvm.wight.customlayout.CornersImageView
+            <pers.fz.mvvm.wight.customlayout.CornerImageView
                 android:id="@+id/cornersImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -255,7 +255,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/customEditText"/>
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/numberFormatEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
@@ -337,6 +337,27 @@
                 android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/font_size_xl"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                app:layout_constraintTop_toBottomOf="@+id/iconDotTextView" />
+            <com.casic.titan.commonui.widght.calendar.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:workingDayTextColor="@color/autoColor"
+                app:weekTextColor="@color/theme_green"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:startDate="2023-01-01"
+                app:endDate="2025-12-31"
+                app:showDot="true"
+                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingEnd="@dimen/padding_l">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_message_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:includeFontPadding="false"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xxl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="提示" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/today"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_l"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_message_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialog_message_type"
+            tools:text="今天" />
+
+        <NumberPicker
+            android:id="@+id/yearPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_year_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_year_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/year"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/yearPicker"
+            app:layout_constraintEnd_toStartOf="@+id/monthPicker"
+            app:layout_constraintStart_toEndOf="@+id/yearPicker"
+            app:layout_constraintTop_toTopOf="@+id/yearPicker" />
+
+        <NumberPicker
+            android:id="@+id/monthPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_month_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_year_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_month_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/month"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/monthPicker"
+            app:layout_constraintEnd_toStartOf="@+id/dayPicker"
+            app:layout_constraintStart_toEndOf="@+id/monthPicker"
+            app:layout_constraintTop_toTopOf="@+id/monthPicker" />
+
+        <NumberPicker
+            android:id="@+id/dayPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_day_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_month_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_day_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/day"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/dayPicker"
+            app:layout_constraintEnd_toStartOf="@+id/hourPicker"
+            app:layout_constraintStart_toEndOf="@+id/dayPicker"
+            app:layout_constraintTop_toTopOf="@+id/dayPicker" />
+
+        <NumberPicker
+            android:id="@+id/hourPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_hour_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_day_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_hour_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/hour"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/hourPicker"
+            app:layout_constraintEnd_toStartOf="@+id/minutePicker"
+            app:layout_constraintStart_toEndOf="@+id/hourPicker"
+            app:layout_constraintTop_toTopOf="@+id/hourPicker" />
+
+        <NumberPicker
+            android:id="@+id/minutePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_minute_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_hour_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_minute_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/minute"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/minutePicker"
+            app:layout_constraintEnd_toStartOf="@+id/secondPicker"
+            app:layout_constraintStart_toEndOf="@+id/minutePicker"
+            app:layout_constraintTop_toTopOf="@+id/minutePicker" />
+
+        <NumberPicker
+            android:id="@+id/secondPicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/tv_second_label"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_minute_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_second_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/second"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/secondPicker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/secondPicker"
+            app:layout_constraintTop_toTopOf="@+id/secondPicker" />
+
+        <pers.fz.mvvm.wight.customlayout.CornerButton
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/cancel"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:gravity="center"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            app:corner_backColor="@color/hint_text_color"
+            app:corner_radius="20dp"
+            app:corner_storkColor="@color/hint_text_color"
+            app:corner_storkWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_confirm"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearPicker" />
+
+        <pers.fz.mvvm.wight.customlayout.CornerButton
+            android:id="@+id/dialog_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/sure"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:textSize="@dimen/font_size_xl"
+            app:corner_backColor="@color/themeColor"
+            app:corner_radius="20dp"
+            app:corner_storkColor="@color/themeColor"
+            app:corner_storkWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/dialog_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/yearPicker" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

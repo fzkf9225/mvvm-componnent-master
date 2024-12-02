@@ -73,6 +73,8 @@ dependencies {
     implementation libs.calendarpicker
     implementation libs.github.wheelview
     implementation libs.github.glide
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
     implementation project(':common')
     implementation project(':commonmedia')
 }

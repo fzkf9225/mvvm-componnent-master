@@ -20,10 +20,14 @@
 
     <attr name="label" format="string" />
     <attr name="required" format="boolean" />
+    <attr name="maxLength" format="integer" />
+    <attr name="startYear" format="integer" />
+    <attr name="endYear" format="integer" />
     <attr name="bottomBorder" format="boolean" />
     <attr name="rightTextColor" format="reference|color" />
     <attr name="emptyTextColor" format="reference|color" />
     <attr name="labelTextColor" format="reference|color" />
+    <attr name="confirmTextColor" format="reference|color" />
     <attr name="formLabelTextSize" format="dimension" />
     <attr name="formTextSize" format="dimension" />
     <attr name="formRequiredSize" format="dimension" />
@@ -62,17 +66,31 @@
         <attr name="required" />
         <attr name="formLabelTextSize"/>
         <attr name="formTextSize"/>
+        <attr name="maxLength"/>
         <attr name="formRequiredSize"/>
         <attr name="bottomBorder" />
         <attr name="labelTextColor" />
         <attr name="rightTextColor" />
+        <attr name="confirmTextColor" />
+        <attr name="startYear" />
+        <attr name="endYear" />
+        <attr name="datePickModel" format="enum">
+            <enum name="YEAR_MONTH_DAY" value="0" />
+            <enum name="YEAR_MONTH" value="1" />
+            <enum name="YEAR" value="2" />
+            <enum name="YEAR_MONTH_DAY_HOUR_MINUTE_SECOND" value="3" />
+            <enum name="YEAR_MONTH_DAY_HOUR_MINUTE" value="4" />
+            <enum name="YEAR_MONTH_DAY_HOUR" value="5" />
+            <enum name="HOUR_MINUTE_SECOND" value="6" />
+            <enum name="HOUR_MINUTE" value="7" />
+        </attr>
         <attr name="formatText" format="enum">
             <enum name="normal" value="0" />
             <enum name="Integer" value="1" />
             <enum name="Double" value="2" />
             <enum name="Double_00" value="3" />
             <enum name="Float" value="4" />
-            <enum name="Long" value="4" />
+            <enum name="Long" value="5" />
         </attr>
         <attr name="separator" format="string" />
         <attr name="format" format="string" />
@@ -369,6 +387,24 @@
                  {@link android.view.inputmethod.EditorInfo#IME_FLAG_FORCE_ASCII}. -->
             <flag name="flagForceAscii" value="0x80000000" />
         </attr>
+    </declare-styleable>
 
+    <declare-styleable name="CalendarView">
+        <attr name="weekTextColor" format="reference|color" />
+        <attr name="workingDayTextColor" format="reference|color" />
+        <!--开始日期，日历开始的可选日期-->
+        <attr name="startDate" format="string" />
+        <!--结束日期，日历结束的可选日期-->
+        <attr name="endDate" format="string" />
+        <!--是否显示底部圆点-->
+        <attr name="showDot" format="boolean" />
+        <attr name="selectedBg" format="reference" />
+        <attr name="normalBg" format="reference" />
+        <attr name="selectedTextColor" format="reference|color" />
+        <attr name="normalTextColor" format="reference|color" />
+        <attr name="calendarMode" format="enum">
+            <enum name="single" value="0" />
+            <enum name="range" value="1" />
+        </attr>
     </declare-styleable>
 </resources>

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <pers.fz.mvvm.wight.customlayout.CornersImageView
+        <pers.fz.mvvm.wight.customlayout.CornerImageView
             android:id="@+id/corner_image"
             android:layout_width="0dp"
             android:layout_height="0dp"

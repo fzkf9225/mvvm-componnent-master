@@ -1,6 +1,5 @@
 package com.casic.titan.commonui.helper;
 
-
 import androidx.databinding.ObservableField;
 
 /**

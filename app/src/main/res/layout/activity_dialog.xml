@@ -151,7 +151,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/updateMessageDialog" />
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/circleProgressBarToPostion"
+                android:id="@+id/circleProgressBarToPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
@@ -162,7 +162,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tickViewMessageDialog" />
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/horizontalProgressBarToPostion"
+                android:id="@+id/horizontalProgressBarToPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
@@ -171,7 +171,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/circleProgressBarToPostion" />
+                app:layout_constraintTop_toBottomOf="@+id/circleProgressBarToPosition" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/circleProgressBar"
                 android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalProgressBarToPostion" />
+                app:layout_constraintTop_toBottomOf="@+id/horizontalProgressBarToPosition" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/horizontalProgressBar"
                 android:layout_width="wrap_content"
@@ -194,6 +194,51 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/datePick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="年月日选择器"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalProgressBar" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/timePick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="时分秒选择器"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/datePick" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dateTimePick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="年月日时分秒选择器"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timePick" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/customDateTimePick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="自定义格式年月日时分秒选择器"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateTimePick" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

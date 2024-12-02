@@ -54,7 +54,7 @@ public class LoginDialog extends Dialog {
 
     public LoginDialog builder() {
         View inflate = LayoutInflater.from(mContext).inflate(
-                R.layout.sure_cancel_dialog, null);
+                R.layout.dialog_confirm, null);
         TextView dialogTextView = inflate.findViewById(R.id.dialog_textView);
         dialogTextView.setText(message);
         TextView dialogSure = inflate.findViewById(R.id.dialog_sure);

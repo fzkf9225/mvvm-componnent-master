@@ -76,10 +76,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         new ConfirmDialog(this)
                 .setMessage("通知权限已关闭，是否前往设置中心开启此功能？")
                 .setCanOutSide(false)
-                .setSureText("前往开启")
-                .setCancelText("不在提醒")
-                .setOnCancelClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,  System.currentTimeMillis()))
-                .setOnSureClickListener(dialog -> {
+                .setPositiveText("前往开启")
+                .setNegativeText("不在提醒")
+                .setOnNegativeClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,  System.currentTimeMillis()))
+                .setOnPositiveClickListener(dialog -> {
                     try {
                         Intent intent = new Intent();// 进入设置系统应用权限界面
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

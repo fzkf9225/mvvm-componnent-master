@@ -3,7 +3,11 @@ package com.casic.titan.demo.activity;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
+import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.code.Code;
+import com.casic.titan.commonui.widght.calendar.CalendarView;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
@@ -20,6 +24,7 @@ import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.common.RxView;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
@@ -93,6 +98,8 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             }
         });
         binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,8), 0x00000000));
+        binding.calendarView.initData(getLifecycle(),getSupportFragmentManager());
+        binding.calendarView.registerOnPageChangeCallback((calendarData, pos) -> binding.tvCalendarView.setText(calendarData.getYear()+"-"+ NumberUtils.formatMonthOrDay(calendarData.getMonth())));
     }
 
     public ToolbarConfig createdToolbarConfig() {

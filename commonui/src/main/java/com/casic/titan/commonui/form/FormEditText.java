@@ -41,6 +41,7 @@ public class FormEditText extends ConstraintLayout {
     private int imeOptions = EditorInfo.IME_ACTION_NEXT;
     public final FormDataSource formDataSource = new FormDataSource();
     private int formatText = 0;
+    private int maxLength = -1;
     public FormTextWatcher formTextWatcher;
     public FormEditTextBinding binding;
     private int digits = -1;
@@ -78,10 +79,11 @@ public class FormEditText extends ConstraintLayout {
             inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
             imeOptions = typedArray.getInt(R.styleable.FormEditText_formImeOptions, EditorInfo.IME_ACTION_NEXT);
             formatText = typedArray.getInt(R.styleable.FormEditText_formatText, 0);
+            maxLength = typedArray.getInt(R.styleable.FormEditText_maxLength, -1);
             digits = typedArray.getInt(R.styleable.FormEditText_digits, -1);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
-            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(), 14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -102,6 +104,9 @@ public class FormEditText extends ConstraintLayout {
         binding.tvLabel.setTextColor(labelTextColor);
         binding.editText.setImeOptions(imeOptions);
         binding.editText.setInputType(inputType);
+        if (maxLength > 0) {
+            binding.editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        }
         binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
         binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
         binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);

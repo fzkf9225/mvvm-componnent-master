@@ -60,7 +60,7 @@ public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
             TextView tvCleanUp = (TextView) view;
             new ConfirmDialog(view.getContext())
                     .setMessage("是否确定清理缓存？")
-                    .setOnSureClickListener(dialog -> {
+                    .setOnPositiveClickListener(dialog -> {
                         try {
                             clearCache();
                             tvCleanUp.setText(getCacheSize());

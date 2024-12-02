@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <pers.fz.mvvm.wight.customlayout.CornersImageView
+            <pers.fz.mvvm.wight.customlayout.CornerImageView
                 android:id="@+id/image"
                 imageUri="@{sourceImagePath}"
                 android:layout_width="90dp"
@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <pers.fz.mvvm.wight.customlayout.CornersImageView
+            <pers.fz.mvvm.wight.customlayout.CornerImageView
                 android:id="@+id/image_compress"
                 imageUri="@{compressImagePath}"
                 android:layout_width="90dp"
@@ -87,7 +87,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_image_compress" />
 
 
-            <pers.fz.mvvm.wight.customlayout.CornersImageView
+            <pers.fz.mvvm.wight.customlayout.CornerImageView
                 android:id="@+id/video"
                 imageUri="@{sourceVideoPath}"
                 android:layout_width="90dp"
@@ -98,7 +98,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_image" />
 
-            <pers.fz.mvvm.wight.customlayout.CornersImageView
+            <pers.fz.mvvm.wight.customlayout.CornerImageView
                 android:id="@+id/video_compress"
                 imageUri="@{compressVideoPath}"
                 android:layout_width="90dp"

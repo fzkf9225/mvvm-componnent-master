@@ -4,7 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -13,6 +16,8 @@ import com.casic.titan.commonui.dialog.TickViewMessageDialog;
 import com.casic.titan.demo.R;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import pers.fz.media.dialog.OpenImageDialog;
@@ -20,12 +25,16 @@ import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
+import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.repository.RepositoryImpl;
+import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.DatePickDialog;
 import pers.fz.mvvm.wight.dialog.EditAreaDialog;
 import pers.fz.mvvm.wight.dialog.InputDialog;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
@@ -38,7 +47,7 @@ import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
  * Created by fz on 2023/8/14 10:56
  * describe :
  */
-public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
+public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     List<PopupWindowBean> dataList = Arrays.asList(
             new PopupWindowBean("1", "北京"),
             new PopupWindowBean("2", "上海"),
@@ -79,15 +88,15 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
         } else if (R.id.confirmDialog == view.getId()) {
             new ConfirmDialog(view.getContext())
                     .setMessage("这是确认弹框的示例")
-                    .setCancelText("再想想")
-                    .setSureText("确认")
+                    .setNegativeText("再想想")
+                    .setPositiveText("确认")
                     .setNegativeTextColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.nv_bg_color))
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.themeColor))
-                    .setOnSureClickListener(dialog -> {
+                    .setOnPositiveClickListener(dialog -> {
                         dialog.dismiss();
                         baseView.showToast("您点击的是确认按钮！");
                     })
-                    .setOnCancelClickListener(dialog -> {
+                    .setOnNegativeClickListener(dialog -> {
                         dialog.dismiss();
                         baseView.showToast("您点击的是取消按钮！");
                     })
@@ -164,7 +173,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
                     .setCountDown(3000)
                     .builder()
                     .show();
-        } else if (R.id.circleProgressBarToPostion == view.getId()) {
+        } else if (R.id.circleProgressBarToPosition == view.getId()) {
             ProgressBarSetting progressBarSetting = new ProgressBarSetting(view.getContext());
             progressBarSetting.setMaxProgress(200);
             progressBarSetting.setFontPercent(0);
@@ -180,7 +189,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
                     .builder();
             progressBarDialog.setProcess(80);
             progressBarDialog.show();
-        } else if (R.id.horizontalProgressBarToPostion == view.getId()) {
+        } else if (R.id.horizontalProgressBarToPosition == view.getId()) {
             ProgressBarSetting progressBarSetting = new ProgressBarSetting(view.getContext());
             progressBarSetting.setMaxProgress(200);
             progressBarSetting.setProgressColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_red));
@@ -204,6 +213,57 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
         } else if (R.id.horizontalProgressBar == view.getId()) {
             horizontalProgress = 0;
             horizontalHandler.post(horizontalRunnable = new HorizontalRunnable(view.getContext()));
+        } else if (R.id.datePick == view.getId()) {
+            new DatePickDialog(view.getContext())
+                    .setStartYear(1990)
+                    .setEndYear(2030)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setDateMode(DateMode.YEAR_MONTH_DAY)
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day);
+                        Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
+                    })
+                    .builder()
+                    .show();
+        } else if (R.id.timePick == view.getId()) {
+            new DatePickDialog(view.getContext())
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setDateMode(DateMode.HOUR_MINUTE_SECOND)
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
+                    })
+                    .builder()
+                    .show();
+        } else if (R.id.dateTimePick == view.getId()) {
+            new DatePickDialog(view.getContext())
+                    .setStartYear(1990)
+                    .setEndYear(2030)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day) + " " +
+                                NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
+                    })
+                    .builder()
+                    .show();
+        } else if (R.id.customDateTimePick == view.getId()) {
+            new DatePickDialog(view.getContext())
+                    .setStartYear(1990)
+                    .setEndYear(2030)
+                    .setDateLabel("-","-","-")
+                    .setTimeLabel(":",":",":")
+                    .setGravity(Gravity.CENTER)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE)
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day) + " " +
+                                NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
+                    })
+                    .builder()
+                    .show();
         }
     }
 

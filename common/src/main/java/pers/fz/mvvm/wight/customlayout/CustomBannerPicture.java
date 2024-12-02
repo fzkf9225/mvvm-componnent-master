@@ -218,7 +218,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
                         .into(imageView);
                 images.add(imageView);
             } else {
-                CornersImageView imageView = new CornersImageView(getContext());
+                CornerImageView imageView = new CornerImageView(getContext());
                 imageView.setLeftBottomRadius(leftBottomRadius);
                 imageView.setLeftTopRadius(leftTopRadius);
                 imageView.setRightTopRadius(rightTopRadius);

@@ -122,11 +122,13 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
     }
 
     private void showMessageDialog(String message, final View v) {
-        new ConfirmDialog(mContext).setMessage(message).setOnSureClickListener(dialog -> {
-            if (onUpdateListener != null) {
-                onUpdateListener.onUpdate(v);
-            }
-        }).builder().show();
+        new ConfirmDialog(mContext)
+                .setMessage(message)
+                .setOnPositiveClickListener(dialog -> {
+                    if (onUpdateListener != null) {
+                        onUpdateListener.onUpdate(v);
+                    }
+                }).builder().show();
     }
 
     @Override

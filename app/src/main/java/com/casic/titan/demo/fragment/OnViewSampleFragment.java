@@ -56,9 +56,9 @@ public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewS
     public void onItemLongClick(View view, int position) {
         super.onItemLongClick(view, position);
         new ConfirmDialog(requireContext())
-                .setSureText("确认删除")
+                .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> {
+                .setOnPositiveClickListener(dialog -> {
                     recyclerViewSampleAdapter.getList().remove(position + 1);
                     recyclerViewSampleAdapter.notifyItemRemoved(position + 1);
                 })

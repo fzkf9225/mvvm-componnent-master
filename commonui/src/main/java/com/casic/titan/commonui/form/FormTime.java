@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
 import com.github.gzuliyujiang.dialog.DialogConfig;
@@ -22,8 +23,10 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
+import pers.fz.mvvm.wight.dialog.DatePickDialog;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -31,8 +34,9 @@ import pers.fz.mvvm.util.common.NumberUtils;
  */
 public class FormTime extends FormSelection {
     private String separator = "-";
-    private String format = "HH:mm:ss";
-    private Activity activity;
+    private String format = DateUtil.DEFAULT_FORMAT_TIME;
+    private int confirmTextColor;
+    private int datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
 
     public FormTime(Context context) {
         super(context);
@@ -53,21 +57,17 @@ public class FormTime extends FormSelection {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             separator = typedArray.getString(R.styleable.FormEditText_separator);
             format = typedArray.getString(R.styleable.FormEditText_format);
+            datePickModel = typedArray.getInt(R.styleable.FormEditText_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
+            confirmTextColor = typedArray.getColor(R.styleable.FormEditText_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
+        } else {
+            confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
         }
         if (TextUtils.isEmpty(separator)) {
             separator = "-";
         }
         if (TextUtils.isEmpty(format)) {
-            format = "HH:mm:ss";
-        }
-        if (getContext() instanceof Activity) {
-            activity = (Activity) getContext();
-        } else if (getContext() instanceof ContextWrapper) {
-            Context baseContext = ((ContextWrapper) getContext()).getBaseContext();
-            if (baseContext instanceof Activity) {
-                activity = (Activity) baseContext;
-            }
+            format = DateUtil.DEFAULT_FORMAT_TIME;
         }
     }
 
@@ -76,39 +76,27 @@ public class FormTime extends FormSelection {
     protected void init() {
         super.init();
         binding.tvSelection.setOnClickListener(v -> {
-            if (activity == null) {
-                return;
-            }
-            DialogConfig.setDialogStyle(DialogStyle.One);
-            TimePicker picker = new TimePicker(activity);
-            TimeWheelLayout wheelLayout = picker.getWheelLayout();
-            wheelLayout.setTimeMode(TimeMode.HOUR_24_HAS_SECOND);
-            wheelLayout.setTimeFormatter(new UnitTimeFormatter());
-            if (TextUtils.isEmpty(binding.tvSelection.getText().toString())) {
-                wheelLayout.setDefaultValue(TimeEntity.now());
-            } else {
-                Date date = DateUtil.getDateByFormat(binding.tvSelection.getText().toString(), format);
+            DatePickDialog datePickDialog = new DatePickDialog(v.getContext())
+                    .setPositiveTextColor(this.confirmTextColor)
+                    .setTodayTextColor(this.confirmTextColor)
+                    .setDateMode(DateMode.getMode(this.datePickModel))
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
+                            formDataSource.textValue.set(text);
+                            return;
+                        }
+                        formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                    });
+            if (!TextUtils.isEmpty(formDataSource.textValue.get())) {
+                Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), this.format);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
-                wheelLayout.setDefaultValue(TimeEntity.target(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)));
+                datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
+                datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
+                datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
             }
-            wheelLayout.setResetWhenLinkage(false);
-            picker.setOnTimePickedListener((hour, minute, second) -> {
-                String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
-                if (DateUtil.DEFAULT_FORMAT_TIME.equals(format)) {
-                    binding.tvSelection.setText(text);
-                    return;
-                }
-                try {
-                    long dateLong = DateUtil.stringToLong(text, DateUtil.DEFAULT_FORMAT_TIME);
-                    String date = DateUtil.longToString(dateLong, format);
-                    binding.tvSelection.setText(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    binding.tvSelection.setText(text);
-                }
-            });
-            picker.show();
+            datePickDialog.builder().show();
         });
     }
 }

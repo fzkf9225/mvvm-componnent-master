@@ -22,7 +22,6 @@ import pers.fz.mvvm.database.RoomListStringConverter;
  * Created by fz on 2023/9/5 18:32
  * describe :
  */
-
 @Entity
 @VerifyEntity(sort = true)
 public class Person extends BaseDaoBean {
@@ -43,10 +42,17 @@ public class Person extends BaseDaoBean {
     private String sex;
 
     @VerifyField({
+            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "请选择生日！"),
+    })
+    @VerifyFieldSort(3)
+    @ColumnInfo
+    private String birthday;
+
+    @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
     })
-    @VerifyFieldSort(3)
+    @VerifyFieldSort(4)
     @ColumnInfo
     private String mobile;
 
@@ -54,11 +60,11 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写固话号码！"),
             @VerifyParams(type = VerifyType.TEL_PHONE, errorMsg = "固话号码格式输入不正确！")
     })
-    @VerifyFieldSort(4)
+    @VerifyFieldSort(5)
     @ColumnInfo
     private String tel;
 
-    @VerifyFieldSort(5)
+    @VerifyFieldSort(6)
     @VerifyParams(type = VerifyType.NUMBER_RANGE, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     @ColumnInfo
     private String age;
@@ -69,7 +75,7 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, maxNumber = 200, errorMsg = "你该减肥了！！！"),
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
-    @VerifyFieldSort(6)
+    @VerifyFieldSort(7)
     @ColumnInfo
     private String weight;
     @VerifyField({
@@ -78,29 +84,29 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
-    @VerifyFieldSort(7)
+    @VerifyFieldSort(8)
     @ColumnInfo
     private String height;
     @VerifyField({
 //            @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "邮箱地址为空！"),
             @VerifyParams(type = VerifyType.EMAIL, notNull = false, errorMsg = "邮箱地址错误！")
     })
-    @VerifyFieldSort(8)
+    @VerifyFieldSort(9)
     @ColumnInfo
     private String email;
 
-    @VerifyFieldSort(8)
+    @VerifyFieldSort(10)
     @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的爱好！")
     @ColumnInfo
     @TypeConverters({RoomListStringConverter.class})
     private List<String> hobby;
 
-//    @VerifyFieldSort(9)
+//    @VerifyFieldSort(11)
 //    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
     @Ignore
     private List<Uri> imageList;
 
-//    @VerifyFieldSort(10)
+//    @VerifyFieldSort(12)
 //    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
     @Ignore
     public Family family;
@@ -135,6 +141,16 @@ public class Person extends BaseDaoBean {
     public void setName(String name) {
         this.name = name;
         notifyPropertyChanged(com.casic.titan.demo.BR.name);
+    }
+
+    @Bindable
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+        notifyPropertyChanged(com.casic.titan.demo.BR.birthday);
     }
 
     @Bindable

@@ -60,9 +60,9 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
         super.onItemLongClick(view, item, position);
         //不能这么删除，这样删除会有bug
         new ConfirmDialog(requireContext())
-                .setSureText("确认删除")
+                .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> {
+                .setOnPositiveClickListener(dialog -> {
                     Disposable disposable = mViewModel.getRepository().deleteByParams(new HashMap<>() {{
                                 put("id", item.getId());
                             }}, true)

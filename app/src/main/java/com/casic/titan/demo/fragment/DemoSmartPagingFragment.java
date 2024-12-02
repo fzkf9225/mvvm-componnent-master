@@ -41,9 +41,9 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
     public void onItemLongClick(View view, RegionBean item, int position) {
         super.onItemLongClick(view, item, position);
         new ConfirmDialog(requireContext())
-                .setSureText("确认删除")
+                .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnSureClickListener(dialog -> adapter.notifyItemRemoved(position))
+                .setOnPositiveClickListener(dialog -> adapter.notifyItemRemoved(position))
                 .builder()
                 .show();
     }

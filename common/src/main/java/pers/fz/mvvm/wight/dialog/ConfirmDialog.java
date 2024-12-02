@@ -9,23 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.databinding.DialogConfirmBinding;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 
 
 /**
- * Created by fz on 2017/1/14.
+ * updated by fz on 2024/12/2.
  * describe：确认弹框
  */
 public class ConfirmDialog extends Dialog {
     private final Context context;
     private String content;
-    private OnDialogInterfaceClickListener sureClickListener, cancelClickListener;
+    private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
     private String strSureText = "确定", strCancelText = "取消";
     private boolean isShowSureView = true, isShowCancelView = true, isShowLineView = true;
@@ -38,8 +38,8 @@ public class ConfirmDialog extends Dialog {
         this.context = context;
     }
 
-    public ConfirmDialog setOnSureClickListener(OnDialogInterfaceClickListener sureClickListener) {
-        this.sureClickListener = sureClickListener;
+    public ConfirmDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
+        this.onPositiveClickListener = onPositiveClickListener;
         return this;
     }
 
@@ -48,8 +48,8 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
-    public ConfirmDialog setOnCancelClickListener(OnDialogInterfaceClickListener cancelClickListener) {
-        this.cancelClickListener = cancelClickListener;
+    public ConfirmDialog setOnNegativeClickListener(OnDialogInterfaceClickListener onNegativeClickListener) {
+        this.onNegativeClickListener = onNegativeClickListener;
         return this;
     }
 
@@ -68,23 +68,23 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
-    public ConfirmDialog setSureText(String strSureText) {
+    public ConfirmDialog setPositiveText(String strSureText) {
         this.strSureText = strSureText;
         return this;
     }
 
-    public ConfirmDialog setCancelText(String strCancelText) {
+    public ConfirmDialog setNegativeText(String strCancelText) {
         this.strCancelText = strCancelText;
         return this;
     }
 
-    public ConfirmDialog setShowSureView(boolean isShowSureView) {
+    public ConfirmDialog setShowPositiveView(boolean isShowSureView) {
         this.isShowSureView = isShowSureView;
         this.isShowLineView = this.isShowSureView;
         return this;
     }
 
-    public ConfirmDialog setShowCancelView(boolean isShowCancelView) {
+    public ConfirmDialog setShowNegativeView(boolean isShowCancelView) {
         this.isShowCancelView = isShowCancelView;
         this.isShowLineView = this.isShowCancelView;
         return this;
@@ -96,52 +96,42 @@ public class ConfirmDialog extends Dialog {
     }
 
     private void initView() {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.sure_cancel_dialog, null);
-        TextView dialogTextView = inflate.findViewById(R.id.dialog_textView);
-        TextView dialogSure = inflate.findViewById(R.id.dialog_sure);
-        TextView dialogCancel = inflate.findViewById(R.id.dialog_cancel);
-        View sLine = inflate.findViewById(R.id.s_line);
-        dialogSure.setText(strSureText);
-        dialogCancel.setText(strCancelText);
+        DialogConfirmBinding binding = DialogConfirmBinding.inflate(LayoutInflater.from(context), null, false);
+        binding.dialogSure.setText(strSureText);
+        binding.dialogCancel.setText(strCancelText);
         if (positiveTextColor != null) {
-            dialogSure.setTextColor(positiveTextColor);
+            binding.dialogSure.setTextColor(positiveTextColor);
         }
 
         if (negativeTextColor != null) {
-            dialogCancel.setTextColor(negativeTextColor);
+            binding.dialogCancel.setTextColor(negativeTextColor);
         }
 
         if (!isShowLineView) {
-            sLine.setVisibility(View.GONE);
+            binding.sLine.setVisibility(View.GONE);
         }
         if (!isShowCancelView) {
-            dialogCancel.setVisibility(View.GONE);
+            binding.dialogCancel.setVisibility(View.GONE);
         }
         if (!isShowSureView) {
-            dialogSure.setVisibility(View.GONE);
+            binding.dialogSure.setVisibility(View.GONE);
         }
-
-        if (sureClickListener != null) {
-            dialogSure.setOnClickListener(v -> {
-                dismiss();
-                sureClickListener.onDialogClick(this);
-            });
-        } else {
-            dialogSure.setOnClickListener(v -> dismiss());
-        }
-
-        if (cancelClickListener != null) {
-            dialogCancel.setOnClickListener(v -> {
-                dismiss();
-                cancelClickListener.onDialogClick(this);
-            });
-        } else {
-            dialogCancel.setOnClickListener(v -> dismiss());
-        }
-        dialogTextView.setText(content);
+        binding.dialogSure.setOnClickListener(v -> {
+            dismiss();
+            if (onPositiveClickListener != null) {
+                onPositiveClickListener.onDialogClick(this);
+            }
+        });
+        binding.dialogCancel.setOnClickListener(v -> {
+            dismiss();
+            if (onNegativeClickListener != null) {
+                onNegativeClickListener.onDialogClick(this);
+            }
+        });
+        binding.dialogTextView.setText(content);
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
-        setContentView(inflate);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;

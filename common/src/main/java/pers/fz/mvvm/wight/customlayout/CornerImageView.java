@@ -13,13 +13,12 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Create by CherishTang on 2019/9/3 0003
  * describe:圆角ImageView
  */
-public class CornersImageView extends AppCompatImageView {
+public class CornerImageView extends AppCompatImageView {
     float width, height;
     private int radius;
     private int leftTopRadius;
@@ -30,17 +29,17 @@ public class CornersImageView extends AppCompatImageView {
     private Paint mPaint;
     private final Path mPath = new Path();
 
-    public CornersImageView(Context context) {
+    public CornerImageView(Context context) {
         this(context, null);
         init(context, null);
     }
 
-    public CornersImageView(Context context, AttributeSet attrs) {
+    public CornerImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         init(context, attrs);
     }
 
-    public CornersImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CornerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
