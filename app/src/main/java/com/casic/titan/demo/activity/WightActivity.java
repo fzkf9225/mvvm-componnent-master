@@ -1,12 +1,16 @@
 package com.casic.titan.demo.activity;
 
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.code.Code;
+import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 import com.casic.titan.commonui.widght.calendar.CalendarView;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
@@ -26,6 +30,7 @@ import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.common.RxView;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
@@ -99,7 +104,14 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         });
         binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,8), 0x00000000));
         binding.calendarView.initData(getLifecycle(),getSupportFragmentManager());
-        binding.calendarView.registerOnPageChangeCallback((calendarData, pos) -> binding.tvCalendarView.setText(calendarData.getYear()+"-"+ NumberUtils.formatMonthOrDay(calendarData.getMonth())));
+        binding.calendarView.registerOnPageChangeCallback((calendarData, pos) -> {
+            calendarData.getCalendarDataList().forEach(item->{
+                ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
+                shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.media.R.color.themeColor));
+                item.setDrawable(shapeDrawable);
+            });
+            binding.tvCalendarView.setText(calendarData.getYear()+"-"+ NumberUtils.formatMonthOrDay(calendarData.getMonth()));
+        });
     }
 
     public ToolbarConfig createdToolbarConfig() {

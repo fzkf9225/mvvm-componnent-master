@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.casic.titan.commonui.R
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.databinding.ViewCalendarBinding
+import com.casic.titan.commonui.fragment.CalendarMonthFragment
 import com.casic.titan.commonui.helper.CalendarDataSource
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -27,7 +28,7 @@ import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.util.common.NumberUtils
 import pers.fz.mvvm.util.log.LogUtil
 import pers.fz.mvvm.wight.empty.EmptyLayout
-import java.util.Calendar
+
 
 /**
  * created by fz on 2024/12/2 15:28
@@ -37,14 +38,18 @@ class CalendarView : ConstraintLayout {
     private val binding: ViewCalendarBinding by lazy {
         ViewCalendarBinding.inflate(LayoutInflater.from(context), this, true)
     }
-    protected var weekTextColor: Int = 0x333333
-    protected var workingDayTextColor: Int = 0x333333
+    private var weekTextColor: Int = 0x333333
+    private var workingDayTextColor: Int = 0x333333
     private var startDate: String? = null
     private var endDate: String? = null
 
+    var selectedStartDate: String? = null
+
+    var selectedEndDate: String? = null
+
     private var mMode = Mode.SINGLE
 
-    private var calendarPagerAdapter: MonthViewPagerAdapter? = null
+    var calendarPagerAdapter: MonthViewPagerAdapter? = null
     private var showDot: Boolean? = false
 
     private var selectedBg: Drawable? = null
@@ -53,8 +58,6 @@ class CalendarView : ConstraintLayout {
     private var selectedTextColor: Int = 0xFFFFFFFF.toInt()
     private var normalTextColor: Int = 0xFF333333.toInt()
     private var onViewPagerChangedListener: OnViewPagerChangedListener? = null
-
-    private var dataList: List<CalendarData>? = null
 
     companion object {
         object Mode {
@@ -177,6 +180,12 @@ class CalendarView : ConstraintLayout {
         this.showDot = isShow
     }
 
+    fun isShowDot() = showDot
+
+    fun getStartDate() = startDate
+
+    fun getEndDate() = endDate
+
     /**
      * @param startDate 开始日期，格式：yyyy-MM-dd
      * @param endDate 结束日期，格式：yyyy-MM-dd
@@ -233,8 +242,8 @@ class CalendarView : ConstraintLayout {
                 .observeOn(Schedulers.io())
                 .map {
                     CalendarDataSource.calendarObservableField.set(it)
-                    dataList = ArrayList(it)
-                    notifyData()
+                    val dataList = ArrayList(it)
+                    notifyData(dataList)
                     return@map it
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -244,11 +253,12 @@ class CalendarView : ConstraintLayout {
                         fragmentManager,
                         lifecycle,
                         this,
-                        dataList
+                        it
                     )
                     binding.monthViewPager2.setAdapter(calendarPagerAdapter)
-                    binding.monthViewPager2.currentItem = getCurrentPos()
-                    calendarPagerAdapter?.notifyDataSetChanged()
+                    binding.monthViewPager2.setCurrentItem(
+                        CalendarDataSource.currentMonthPosField.get() ?: 0, false
+                    )
                 }, {
                     binding.emptyLayout.setErrorType(EmptyLayout.LOADING_ERROR)
                     binding.emptyLayout.setErrorMessage("日历信息加载错误")
@@ -257,8 +267,8 @@ class CalendarView : ConstraintLayout {
             val disposable = Observable.just(CalendarDataSource.calendarObservableField.get()!!)
                 .subscribeOn(Schedulers.io()) // 在后台线程进行
                 .map {
-                    dataList = ArrayList(it)
-                    notifyData()
+                    val dataList = ArrayList(it)
+                    notifyData(dataList)
                     return@map it
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -268,42 +278,32 @@ class CalendarView : ConstraintLayout {
                         fragmentManager,
                         lifecycle,
                         this,
-                        dataList
+                        it
                     )
                     binding.monthViewPager2.setAdapter(calendarPagerAdapter)
-                    binding.monthViewPager2.currentItem =
-                        getCurrentPos()
-                    calendarPagerAdapter?.notifyDataSetChanged()
+                    binding.monthViewPager2.setCurrentItem(
+                        CalendarDataSource.currentMonthPosField.get() ?: 0, false
+                    )
                 }, {
+                    LogUtil.show("CalendarView", "日历信息加载错误:" + it)
                     binding.emptyLayout.setErrorType(EmptyLayout.LOADING_ERROR)
                     binding.emptyLayout.setErrorMessage("日历信息加载错误")
                 })
         }
     }
 
-    private fun getCurrentPos(): Int {
-        dataList?.forEachIndexed { index, it ->
-            if (Calendar.getInstance().get(Calendar.YEAR) == it.year && (Calendar.getInstance()
-                    .get(Calendar.MONTH) + 1) == it.month
-            ) {
-                return index
-            }
-        }
-        return 0
-    }
-
-    private fun notifyData() {
-        if (startDate.isNullOrBlank() && endDate.isNullOrBlank()) {
+    private fun notifyData(dataList: List<CalendarData>?) {
+        if (dataList.isNullOrEmpty()) {
             return
         }
-        if (dataList.isNullOrEmpty()) {
+        if (startDate.isNullOrBlank() && endDate.isNullOrBlank()) {
             return
         }
         val startYear = DateUtil.getYear(DateUtil.getDateByDateFormat(startDate))
         val endYear = DateUtil.getYear(DateUtil.getDateByDateFormat(endDate))
         val startMonth = DateUtil.getMonth(DateUtil.getDateByDateFormat(startDate))
         val endMonth = DateUtil.getMonth(DateUtil.getDateByDateFormat(endDate))
-        for (monthOfYear in dataList!!) {
+        for (monthOfYear in dataList) {
             if (monthOfYear.year < startYear || monthOfYear.year > endYear) {
                 continue
             }
@@ -313,27 +313,6 @@ class CalendarView : ConstraintLayout {
             if (monthOfYear.year == endYear && endMonth > monthOfYear.month) {
                 continue
             }
-            monthOfYear.calendarDataList?.forEach { dayOfMonth ->
-                try {
-                    val dayStr =
-                        "${dayOfMonth.year}-${NumberUtils.formatMonthOrDay(dayOfMonth.month)}-${
-                            NumberUtils.formatMonthOrDay(dayOfMonth.day)
-                        }"
-                    val dayLong = DateUtil.stringToLong(dayStr, DateUtil.DEFAULT_FORMAT_DATE)
-                    val startLong = DateUtil.stringToLong(startDate, DateUtil.DEFAULT_FORMAT_DATE)
-                    val endLong = DateUtil.stringToLong(endDate, DateUtil.DEFAULT_FORMAT_DATE)
-                    if (dayLong in startLong..endLong) {
-                        dayOfMonth.isEnable = true
-                    } else {
-                        dayOfMonth.isEnable = false
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
-        dataList?.forEach { monthOfYear ->
             monthOfYear.calendarDataList?.forEach { dayOfMonth ->
                 try {
                     val dayStr =
@@ -358,7 +337,7 @@ class CalendarView : ConstraintLayout {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             onViewPagerChangedListener?.onPagerChanged(
-                calendarPagerAdapter?.getPagerInfo()?.get(position)!!, position
+                calendarPagerAdapter?.dateList?.get(position)!!, position
             )
         }
     }

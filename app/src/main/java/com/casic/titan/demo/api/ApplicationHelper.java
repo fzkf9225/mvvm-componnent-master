@@ -32,11 +32,9 @@ public class ApplicationHelper extends BaseApplication {
         AppSettings.getInstance().onCreate(this);
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()
-                .subscribe(calendarData -> {
-                    LogUtil.show("CalendarView","日历数据："+new Gson().toJson(calendarData));
-                }, throwable -> {
-                    LogUtil.show("CalendarView","日历异常："+throwable);
-                });
+                .subscribe(CalendarDataSource.calendarObservableField::set,
+                        throwable -> LogUtil.show("CalendarView","日历异常："+throwable)
+                );
     }
 
 }

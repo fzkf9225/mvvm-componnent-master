@@ -15,27 +15,20 @@ class MonthViewPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     private var calendarView: CalendarView,
-    private var pagerInfo: List<CalendarData>?
+    val dateList: List<CalendarData>?
 ) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    public fun getPagerInfo() = pagerInfo
-
-    public fun setPagerInfo(pagerInfo: List<CalendarData>) {
-        this.pagerInfo = pagerInfo
-    }
-
     override fun createFragment(position: Int): Fragment {
-        val info = pagerInfo?.get(position)?.calendarDataList
-        return CalendarMonthFragment.newInstance(calendarView,info!!)
+        val info = dateList?.get(position)
+        if (info?.fragment == null) {
+            info?.fragment = CalendarMonthFragment.newInstance(calendarView,info?.calendarDataList!!)
+        }
+        return info!!.fragment
     }
 
     override fun getItemCount(): Int {
-        return pagerInfo?.size ?: 0
-    }
-
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
+        return dateList?.size ?: 0
     }
 
 }

@@ -27,63 +27,14 @@ import pers.fz.mvvm.util.log.LogUtil;
  * describe:
  */
 public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, ItemCalendarDayBinding> {
-    private String startDate;
-    private String endDate;
-
-    private Drawable selectedBg;
-    private Drawable normalBg;
-
-    private int selectedTextColor = Color.WHITE;
-    private int normalTextColor = 0x333333;
-
-    private boolean isShowDot = false;
+    private final CalendarView calendarView;
 
     private int currentPos;
 
-    public CalendarPagerAdapter(Context context) {
+    public CalendarPagerAdapter(Context context, CalendarView calendarView) {
         super(context);
+        this.calendarView = calendarView;
     }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setShowDot(boolean showDot) {
-        isShowDot = showDot;
-    }
-
-    public boolean isShowDot() {
-        return isShowDot;
-    }
-
-    public void setNormalBg(Drawable normalBg) {
-        this.normalBg = normalBg;
-    }
-
-    public void setSelectedBg(Drawable selectedBg) {
-        this.selectedBg = selectedBg;
-    }
-
-    public void setSelectedTextColor(int selectedTextColor) {
-        this.selectedTextColor = selectedTextColor;
-    }
-
-    public void setNormalTextColor(int normalTextColor) {
-        this.normalTextColor = normalTextColor;
-    }
-
     @Override
     public void onBindHolder(BaseViewHolder<ItemCalendarDayBinding> holder, int pos) {
 
@@ -99,18 +50,17 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
         }
         if (mList.get(pos).isEnable()) {
             if (holder.getBinding().getIsSelected()) {
-                holder.getBinding().dayNumber.setTextColor(selectedTextColor);
-                holder.getBinding().dayNumber.setBackground(selectedBg);
+                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor());
+                holder.getBinding().dayNumber.setBackground(calendarView.getSelectedBg());
             } else {
-                holder.getBinding().dayNumber.setTextColor(normalTextColor);
-                holder.getBinding().dayNumber.setBackground(normalBg);
+                holder.getBinding().dayNumber.setTextColor(calendarView.getNormalTextColor());
+                holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
             }
         } else {
             holder.getBinding().dayNumber.setTextColor(ContextCompat.getColor(mContext, pers.fz.mvvm.R.color.nv_bg_color));
-            holder.getBinding().dayNumber.setBackground(normalBg);
+            holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
         }
-
-        if (isShowDot) {
+        if (Boolean.TRUE.equals(calendarView.isShowDot())) {
             holder.getBinding().vCircle.setVisibility(View.VISIBLE);
             holder.getBinding().vCircle.setBackground(mList.get(pos).getDrawable());
         } else {
@@ -119,17 +69,17 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
     }
 
     private Boolean isSelected(String day) {
-        if (TextUtils.isEmpty(startDate) && day.equals(DateUtil.getToday())) {
+        if (TextUtils.isEmpty(calendarView.getSelectedStartDate()) && day.equals(DateUtil.getToday())) {
             return true;
         }
-        if (!TextUtils.isEmpty(startDate) && TextUtils.isEmpty(endDate)) {
-            return day.equals(startDate);
+        if (!TextUtils.isEmpty(calendarView.getSelectedStartDate()) && TextUtils.isEmpty(calendarView.getSelectedEndDate())) {
+            return day.equals(calendarView.getSelectedStartDate());
         }
-        if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
+        if (!TextUtils.isEmpty(calendarView.getSelectedStartDate()) && !TextUtils.isEmpty(calendarView.getSelectedEndDate())) {
             try {
                 long dayLong = DateUtil.stringToLong(day, DateUtil.DEFAULT_FORMAT_DATE);
-                long startLong = DateUtil.stringToLong(startDate, DateUtil.DEFAULT_FORMAT_DATE);
-                long endLong = DateUtil.stringToLong(endDate, DateUtil.DEFAULT_FORMAT_DATE);
+                long startLong = DateUtil.stringToLong(calendarView.getSelectedStartDate(), DateUtil.DEFAULT_FORMAT_DATE);
+                long endLong = DateUtil.stringToLong(calendarView.getSelectedEndDate(), DateUtil.DEFAULT_FORMAT_DATE);
                 return dayLong >= startLong && dayLong <= endLong;
             } catch (ParseException e) {
                 e.printStackTrace();

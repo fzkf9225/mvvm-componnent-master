@@ -3,6 +3,7 @@ package com.casic.titan.commonui.fragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.casic.titan.commonui.R
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.databinding.FragmentCalendarMonthBinding
@@ -21,12 +22,8 @@ import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager
 class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonthBinding>(),
     BaseRecyclerViewAdapter.OnItemClickListener {
     private val adapter: CalendarPagerAdapter by lazy {
-        CalendarPagerAdapter(requireContext()).apply {
+        CalendarPagerAdapter(requireContext(), calendarView).apply {
             setOnItemClickListener(this@CalendarMonthFragment)
-            setNormalBg(calendarView?.getNormalBg())
-            setSelectedBg(calendarView?.getSelectedBg())
-            setNormalTextColor(calendarView!!.getNormalTextColor())
-            setSelectedTextColor(calendarView!!.getSelectedTextColor())
         }
     }
     private var calendarView: CalendarView? = null
@@ -57,30 +54,42 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    public fun refreshData(){
+        adapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onItemClick(view: View, position: Int) {
-        if(!adapter.list[position].isEnable){
+        if (!adapter.list[position].isEnable) {
+            Toast.makeText(requireContext(), "该日期不可选", Toast.LENGTH_SHORT).show()
             return
         }
         when (calendarView?.getMode()) {
             CalendarView.Companion.Mode.SINGLE -> {
-                val selectedDay = "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${NumberUtils.formatMonthOrDay(adapter.list[position].day)}"
+                val selectedDay =
+                    "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${
+                        NumberUtils.formatMonthOrDay(adapter.list[position].day)
+                    }"
                 calendarView?.getOnSelectedChangedListener()?.onDateSelected(selectedDay, null)
-                adapter.startDate = selectedDay
+                calendarView?.selectedStartDate = selectedDay
                 adapter.notifyDataSetChanged()
             }
 
             CalendarView.Companion.Mode.RANGE -> {
-                val selectedDay = "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${NumberUtils.formatMonthOrDay(adapter.list[position].day)}"
+                val selectedDay =
+                    "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${
+                        NumberUtils.formatMonthOrDay(adapter.list[position].day)
+                    }"
                 adapter.currentPos = position
-                if (adapter.startDate.isNullOrBlank()) {
-                    adapter.startDate = selectedDay
+                if (calendarView?.selectedStartDate.isNullOrBlank()) {
+                    calendarView?.selectedStartDate = selectedDay
                     adapter.notifyDataSetChanged()
-                } else if (adapter.endDate.isNullOrBlank()) {
-                    adapter.endDate = selectedDay
+                } else if (calendarView?.selectedEndDate.isNullOrBlank()) {
+                    calendarView?.selectedEndDate = selectedDay
                     adapter.notifyDataSetChanged()
                 } else {
-                    adapter.startDate = selectedDay
-                    adapter.endDate = null
+                    calendarView?.selectedStartDate = selectedDay
+                    calendarView?.selectedEndDate = null
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -88,6 +97,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
     }
 
     companion object {
+        @JvmStatic
         fun newInstance(
             calendarView: CalendarView,
             monthOfYears: List<CalendarData>

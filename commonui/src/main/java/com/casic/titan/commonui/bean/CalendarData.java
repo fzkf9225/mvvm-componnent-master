@@ -3,6 +3,7 @@ package com.casic.titan.commonui.bean;
 import android.graphics.drawable.Drawable;
 
 import androidx.databinding.BaseObservable;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class CalendarData extends BaseObservable {
     private int week;
     private boolean enable;
     private Drawable drawable;
-
+    private Fragment fragment;
     public CalendarData() {
     }
 
@@ -95,6 +96,14 @@ public class CalendarData extends BaseObservable {
 
     public void setCalendarDataList(List<CalendarData> calendarDataList) {
         this.calendarDataList = calendarDataList;
+    }
+
+    public Fragment getFragment() {
+        return fragment;
+    }
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
     }
 }
 
