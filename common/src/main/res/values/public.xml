@@ -118,6 +118,7 @@
     <public name="scale_out" type="anim"/>
 
     <!--layout资源-->
+    <public name="dialog_confirm" type="layout"/>
     <public name="base_activity_constraint" type="layout"/>
     <public name="base_activity_coordinator" type="layout"/>
     <public name="base_activity_title_search" type="layout"/>
