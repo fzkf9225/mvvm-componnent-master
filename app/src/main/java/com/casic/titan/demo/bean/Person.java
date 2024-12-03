@@ -48,6 +48,9 @@ public class Person extends BaseDaoBean {
     @ColumnInfo
     private String birthday;
 
+    @Ignore
+    private String educationalExperienceDate;
+
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
@@ -151,6 +154,16 @@ public class Person extends BaseDaoBean {
     public void setBirthday(String birthday) {
         this.birthday = birthday;
         notifyPropertyChanged(com.casic.titan.demo.BR.birthday);
+    }
+
+    @Bindable
+    public String getEducationalExperienceDate() {
+        return educationalExperienceDate;
+    }
+
+    public void setEducationalExperienceDate(String educationalExperienceDate) {
+        this.educationalExperienceDate = educationalExperienceDate;
+        notifyPropertyChanged(com.casic.titan.demo.BR.educationalExperienceDate);
     }
 
     @Bindable

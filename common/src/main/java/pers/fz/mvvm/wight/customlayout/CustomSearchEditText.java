@@ -30,7 +30,6 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
 
     private Drawable drawableSearch = null;
     private Drawable drawableClear = null;
-    private Context mContext;
     /**
      * 1-左，2-上，3-右，4-下
      */
@@ -38,19 +37,17 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
 
     public CustomSearchEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mContext = context;
         init(attrs);
     }
 
     public CustomSearchEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mContext = context;
         init(attrs);
     }
 
     private void init(AttributeSet attrs) {
         try {
-            TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.CustomEditText, 0, 0);
+            TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CustomEditText, 0, 0);
             for (int i = 0; i < ta.getIndexCount(); i++) {
                 int attr = ta.getIndex(i);
                 if (attr == R.styleable.CustomEditText_drawable_position) {
@@ -67,12 +64,12 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
             setPadding(DensityUtil.dp2px(getContext(),8),0,DensityUtil.dp2px(getContext(),8),0);
             setImeOptions(EditorInfo.IME_ACTION_SEARCH);
             setTextSize(12);
-            setTextColor(ContextCompat.getColor(mContext, R.color.search_view_background));
+            setTextColor(ContextCompat.getColor(getContext(), R.color.search_view_background));
             if (drawableSearch == null) {
-                drawableSearch = ContextCompat.getDrawable(mContext, R.mipmap.ic_search_app_left);
+                drawableSearch = ContextCompat.getDrawable(getContext(), R.mipmap.ic_search_app_left);
             }
             if (drawableClear == null) {
-                drawableClear = ContextCompat.getDrawable(mContext, R.mipmap.icon_clear);
+                drawableClear = ContextCompat.getDrawable(getContext(), R.mipmap.icon_clear);
             }
             if (drawablePosition == 1) {
                 setCompoundDrawablesWithIntrinsicBounds(drawableSearch,
@@ -87,7 +84,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
                 setCompoundDrawablesWithIntrinsicBounds(null,
                         null, drawableSearch, null);
             }
-            setCompoundDrawablePadding(DensityUtil.dp2px(mContext, 8));
+            setCompoundDrawablePadding(DensityUtil.dp2px(getContext(), 8));
             setOnEditorActionListener(this);
             addTextChangedListener(this);
         } catch (Exception e) {
@@ -163,7 +160,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
         try {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String keyword = v.getText().toString().trim();
-                KeyBoardUtils.closeKeyboard(this, mContext);
+                KeyBoardUtils.closeKeyboard(this, getContext());
                 if (onInputSubmitListener != null) {
                     onInputSubmitListener.onInputSubmit(keyword);
                 }

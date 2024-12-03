@@ -10,6 +10,7 @@ import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 
@@ -18,11 +19,11 @@ import pers.fz.mvvm.R;
  * describe
  */
 public class CircleTextView extends AppCompatTextView {
-    private Paint circlePaint;
-    private Paint backPaint;
-    private Paint textPaint;
-    private int storkColor = Color.WHITE;
-    private int circleBackColor = Color.WHITE;
+    private final Paint circlePaint;
+    private final Paint backPaint;
+    private final Paint textPaint;
+    private int storkColor;
+    private int circleBackColor;
     private float storkWidth;
 
     public CircleTextView(Context context, AttributeSet attrs) {
@@ -36,10 +37,13 @@ public class CircleTextView extends AppCompatTextView {
         storkWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
-            storkColor = typedArray.getColor(R.styleable.CircleTextView_storkColor, storkColor);
-            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_backColor, circleBackColor);
-            storkWidth = typedArray.getDimension(R.styleable.CircleTextView_storkWidth,storkWidth);
+            storkColor = typedArray.getColor(R.styleable.CircleTextView_storkColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_backColor, ContextCompat.getColor(context, R.color.white));
+            storkWidth = typedArray.getDimension(R.styleable.CircleTextView_storkWidth, storkWidth);
             typedArray.recycle();
+        } else {
+            storkColor = ContextCompat.getColor(context, R.color.white);
+            circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
         if (storkWidth != 0) {
             circlePaint.setStrokeWidth(storkWidth);
@@ -53,7 +57,6 @@ public class CircleTextView extends AppCompatTextView {
     public CircleTextView(Context context) {
         this(context, null);
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -78,8 +81,8 @@ public class CircleTextView extends AppCompatTextView {
                 radius = textWidth;
             }
         }
-        storkRadius= (int) (radius/2-storkWidth);
-        radius= storkRadius-1;
+        storkRadius = (int) (radius / 2 - storkWidth);
+        radius = storkRadius - 1;
         if (storkWidth != 0) {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, storkRadius, circlePaint);
         }

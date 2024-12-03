@@ -15,6 +15,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
+import androidx.core.content.ContextCompat;
+
 import java.text.NumberFormat;
 
 import pers.fz.mvvm.R;
@@ -34,7 +36,7 @@ public class HorizontalProgressBar extends View {
     private int progressColor = DEFAULT_PROGRESS_COLOR;
     private boolean showText = true;
     private float fontSize = 14;
-    private int fontColor = Color.BLACK;
+    private int fontColor;
     private Paint paintText;
     /**
      * 数字显示的小数点位置，为0时则保留整数
@@ -93,7 +95,7 @@ public class HorizontalProgressBar extends View {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_Progress_Bar);
             bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
             progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
-            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, Color.BLACK);
+            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, ContextCompat.getColor(getContext(), R.color.autoColor));
             fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, DensityUtil.dp2px(getContext(), 14));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2f));
@@ -102,6 +104,7 @@ public class HorizontalProgressBar extends View {
             progress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_progress, 0);
             typedArray.recycle();
         } else {
+            fontColor = ContextCompat.getColor(getContext(), R.color.autoColor);
             fontSize = DensityUtil.sp2px(getContext(), 14);
             bgRadius = DensityUtil.sp2px(getContext(), DEFAULT_RADIUS);
         }

@@ -32,7 +32,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  */
 public class FormVideoShow extends ConstraintLayout {
     protected String labelString;
-    protected int bgColor = 0xFFF1F3F2;
+    protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
@@ -70,6 +70,7 @@ public class FormVideoShow extends ConstraintLayout {
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
+            bgColor = 0xFFF1F3F2;
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }

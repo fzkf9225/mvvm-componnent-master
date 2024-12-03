@@ -37,8 +37,8 @@ public class FormRichText extends ConstraintLayout {
     protected String hintString = "暂无数据";
     protected boolean required = false;
     protected boolean bottomBorder = true;
-    protected int rightTextColor = 0xFF333333;
-    protected int labelTextColor = 0xFF999999;
+    protected int rightTextColor;
+    protected int labelTextColor;
     public FormTextWatcher formTextWatcher;
     public FormRichTextBinding binding;
     private float formLabelTextSize;
@@ -71,12 +71,14 @@ public class FormRichText extends ConstraintLayout {
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(), 14));
-            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, rightTextColor);
-            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, labelTextColor);
+            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             typedArray.recycle();
         } else {
+            rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
         }

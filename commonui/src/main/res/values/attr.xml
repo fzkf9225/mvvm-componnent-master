@@ -31,6 +31,7 @@
     <attr name="formLabelTextSize" format="dimension" />
     <attr name="formTextSize" format="dimension" />
     <attr name="formRequiredSize" format="dimension" />
+    <attr name="dialogBgDrawable" format="reference" />
     <declare-styleable name="FormImage">
         <attr name="label" />
         <attr name="required" />
@@ -74,6 +75,7 @@
         <attr name="confirmTextColor" />
         <attr name="startYear" />
         <attr name="endYear" />
+        <attr name="dialogBgDrawable"/>
         <attr name="datePickModel" format="enum">
             <enum name="YEAR_MONTH_DAY" value="0" />
             <enum name="YEAR_MONTH" value="1" />
@@ -387,21 +389,73 @@
                  {@link android.view.inputmethod.EditorInfo#IME_FLAG_FORCE_ASCII}. -->
             <flag name="flagForceAscii" value="0x80000000" />
         </attr>
-    </declare-styleable>
-
-    <declare-styleable name="CalendarView">
-        <attr name="weekTextColor" format="reference|color" />
-        <attr name="workingDayTextColor" format="reference|color" />
+        <!--圆点文字大小-->
+        <attr name="textSize" />
+        <!--日历宽度，不包括圆点-->
+        <attr name="itemWidth"/>
+        <!--日历高度，不包括圆点-->
+        <attr name="itemHeight"/>
+        <!--周末文字颜色-->
+        <attr name="weekTextColor" />
+        <!--工作日文字颜色-->
+        <attr name="workingDayTextColor"/>
         <!--开始日期，日历开始的可选日期-->
-        <attr name="startDate" format="string" />
+        <attr name="startDate"/>
         <!--结束日期，日历结束的可选日期-->
-        <attr name="endDate" format="string" />
+        <attr name="endDate"/>
+        <!--选中样式-->
+        <attr name="selectedBg"/>
+        <!--默认背景颜色-->
+        <attr name="normalBg"/>
+        <!--选中文字颜色-->
+        <attr name="selectedTextColor"/>
+    </declare-styleable>
+    <!--日历宽度，不包括圆点-->
+    <attr name="itemWidth" format="dimension"/>
+    <!--日历高度，不包括圆点-->
+    <attr name="itemHeight" format="dimension"/>
+    <!--周末文字颜色-->
+    <attr name="weekTextColor" format="reference|color" />
+    <!--工作日文字颜色-->
+    <attr name="workingDayTextColor" format="reference|color" />
+    <!--开始日期，日历开始的可选日期-->
+    <attr name="startDate" format="string" />
+    <!--结束日期，日历结束的可选日期-->
+    <attr name="endDate" format="string" />
+    <!--选中样式-->
+    <attr name="selectedBg" format="reference" />
+    <!--默认背景颜色-->
+    <attr name="normalBg" format="reference" />
+    <!--选中文字颜色-->
+    <attr name="selectedTextColor" format="reference|color" />
+    <declare-styleable name="CalendarView">
+        <!--圆点文字大小-->
+        <attr name="textSize" />
+        <!--圆点宽度-->
+        <attr name="dotWidth" format="dimension"/>
+        <!--圆点高度-->
+        <attr name="dotHeight" format="dimension"/>
+        <!--日历宽度，不包括圆点-->
+        <attr name="itemWidth"/>
+        <!--日历高度，不包括圆点-->
+        <attr name="itemHeight"/>
+        <!--周末文字颜色-->
+        <attr name="weekTextColor" />
+        <!--工作日文字颜色-->
+        <attr name="workingDayTextColor"/>
+        <!--开始日期，日历开始的可选日期-->
+        <attr name="startDate"/>
+        <!--结束日期，日历结束的可选日期-->
+        <attr name="endDate"/>
         <!--是否显示底部圆点-->
         <attr name="showDot" format="boolean" />
-        <attr name="selectedBg" format="reference" />
-        <attr name="normalBg" format="reference" />
-        <attr name="selectedTextColor" format="reference|color" />
-        <attr name="normalTextColor" format="reference|color" />
+        <!--选中样式-->
+        <attr name="selectedBg"/>
+        <!--默认背景颜色-->
+        <attr name="normalBg"/>
+        <!--选中文字颜色-->
+        <attr name="selectedTextColor"/>
+        <!--日历模式：0-单选，1-范围-->
         <attr name="calendarMode" format="enum">
             <enum name="single" value="0" />
             <enum name="range" value="1" />

@@ -49,6 +49,9 @@ public class CirclePaddingImageView extends AppCompatImageView {
             enableSelected = a.getBoolean(R.styleable.CircleImageView_enable_selected, false);
             enablePressed = a.getBoolean(R.styleable.CircleImageView_enable_pressed, false);
             a.recycle();
+        }else{
+            borderColor = 0xFFB4B4B4;
+            borderFocusColor = 0xFFFFFFFF;
         }
 
         bgDefaultDrawable = new GradientDrawable();

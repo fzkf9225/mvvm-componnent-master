@@ -31,7 +31,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  */
 public class FormImageShow extends ConstraintLayout {
     protected String labelString;
-    protected int bgColor = 0xFFF1F3F2;
+    protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
@@ -69,6 +69,7 @@ public class FormImageShow extends ConstraintLayout {
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
+            bgColor = 0xFFF1F3F2;
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -124,7 +125,7 @@ public class FormImageShow extends ConstraintLayout {
     }
 
     public <T extends AttachmentBean> void setImages(List<T> images) {
-        if(adapter instanceof FormImageShowAdapter imageShowAdapter){
+        if (adapter instanceof FormImageShowAdapter imageShowAdapter) {
             imageShowAdapter.setList((List<AttachmentBean>) images);
             imageShowAdapter.notifyDataSetChanged();
         }

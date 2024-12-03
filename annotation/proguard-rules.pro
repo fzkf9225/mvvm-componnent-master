@@ -27,3 +27,7 @@
 -keep @interface pers.fz.annotation.verify.Valid
 -keep @interface pers.fz.annotation.format.FormatDecimal
 -keep class pers.fz.annotation.verify.VerifyResult
+
+#保留注释
+-keepattributes *Annotation*
+-keepattributes *Comments*

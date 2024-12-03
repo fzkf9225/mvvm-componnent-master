@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_name"
                 app:required="true"
                 app:text="@{data.sex}" />
-            <!--性别-->
+            <!--生日-->
             <com.casic.titan.commonui.form.FormDate
                 android:id="@+id/tv_birthday"
                 android:layout_width="match_parent"
@@ -75,6 +75,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_sex"
                 app:required="true"
                 app:text="@{data.birthday}" />
+            <!--教育经历-->
+            <com.casic.titan.commonui.form.FormDateRange
+                android:id="@+id/tv_educational_experience_date"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:confirmTextColor="@color/theme_green"
+                app:workingDayTextColor="@color/autoColor"
+                app:weekTextColor="@color/theme_red"
+                app:selectedBg="@drawable/calendar_day_bg_focused"
+                app:normalBg="@drawable/calendar_day_bg_normal"
+                app:selectedTextColor="@color/white"
+                app:startDate="2024-11-01"
+                app:calendarMode="range"
+                app:endDate="2024-12-31"
+                app:showDot="false"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请选择大学在读时间"
+                app:label="教育经历"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_birthday"
+                app:required="true"
+                app:text="@{data.educationalExperienceDate}" />
             <!--手机号码-->
             <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_mobile"
@@ -90,7 +118,7 @@
                 app:label="手机号码"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_birthday"
+                app:layout_constraintTop_toBottomOf="@+id/tv_educational_experience_date"
                 app:required="true"
                 app:text="@={data.mobile}" />
             <!--座机-->

@@ -33,7 +33,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  */
 public class FormFileShow extends ConstraintLayout {
     protected String labelString;
-    protected int bgColor = 0xFFF1F3F2;
+    protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
@@ -42,8 +42,8 @@ public class FormFileShow extends ConstraintLayout {
     private float formLabelTextSize;
     private float formRequiredSize;
 
-    protected int rightTextColor = 0xFF333333;
-    protected int labelTextColor = 0xFF999999;
+    protected int rightTextColor;
+    protected int labelTextColor;
 
     private float radius = 5;
 
@@ -70,8 +70,8 @@ public class FormFileShow extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
-            rightTextColor = typedArray.getColor(R.styleable.FormImage_rightTextColor, rightTextColor);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, labelTextColor);
+            rightTextColor = typedArray.getColor(R.styleable.FormImage_rightTextColor,  ContextCompat.getColor(getContext(), R.color.auto_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor,  ContextCompat.getColor(getContext(), R.color.dark_color));
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, DensityUtil.dp2px(getContext(), 4));
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
@@ -79,6 +79,9 @@ public class FormFileShow extends ConstraintLayout {
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
+            bgColor = 0xFFF1F3F2;
+            rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             radius = DensityUtil.dp2px(getContext(), 4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);

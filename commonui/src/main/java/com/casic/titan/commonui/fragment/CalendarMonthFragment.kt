@@ -11,9 +11,11 @@ import com.casic.titan.commonui.widght.calendar.CalendarPagerAdapter
 import com.casic.titan.commonui.widght.calendar.CalendarView
 import pers.fz.mvvm.base.BaseFragment
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter
+import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.util.common.NumberUtils
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager
+import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration
 
 /**
  * created by fz on 2024/11/20 15:11
@@ -21,7 +23,7 @@ import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager
  */
 class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonthBinding>(),
     BaseRecyclerViewAdapter.OnItemClickListener {
-    private val adapter: CalendarPagerAdapter by lazy {
+    val adapter: CalendarPagerAdapter by lazy {
         CalendarPagerAdapter(requireContext(), calendarView).apply {
             setOnItemClickListener(this@CalendarMonthFragment)
         }
@@ -33,6 +35,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
         return R.layout.fragment_calendar_month
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun initView(savedInstanceState: Bundle?) {
         binding.recyclerCalendar.layoutManager =
             object : FullyGridLayoutManager(requireContext(), 7) {
@@ -44,43 +47,39 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                     return false
                 }
             }
+        binding.recyclerCalendar.addItemDecoration(
+            GridSpacingItemDecoration(
+                DensityUtil.dp2px(
+                    requireContext(),
+                    8f
+                ), 0x00000000
+            ))
         adapter.list = monthOfYears
         binding.recyclerCalendar.adapter = adapter
-
-    }
-
-    override fun initData(bundle: Bundle?) {
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public fun refreshData(){
-        adapter.notifyDataSetChanged()
+    override fun initData(bundle: Bundle?) {
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onItemClick(view: View, position: Int) {
-        if (!adapter.list[position].isEnable) {
-            Toast.makeText(requireContext(), "该日期不可选", Toast.LENGTH_SHORT).show()
+        val selectedDay =
+            "${adapter.list[position].year}-" +
+                    "${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-" +
+                    NumberUtils.formatMonthOrDay(adapter.list[position].day)
+        if (!adapter.isEnable(selectedDay)) {
+            Toast.makeText(requireContext(), "抱歉，超出可选日期范围", Toast.LENGTH_SHORT).show()
             return
         }
-        when (calendarView?.getMode()) {
+        when (calendarView?.mode) {
             CalendarView.Companion.Mode.SINGLE -> {
-                val selectedDay =
-                    "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${
-                        NumberUtils.formatMonthOrDay(adapter.list[position].day)
-                    }"
                 calendarView?.getOnSelectedChangedListener()?.onDateSelected(selectedDay, null)
                 calendarView?.selectedStartDate = selectedDay
                 adapter.notifyDataSetChanged()
             }
 
             CalendarView.Companion.Mode.RANGE -> {
-                val selectedDay =
-                    "${adapter.list[position].year}-${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-${
-                        NumberUtils.formatMonthOrDay(adapter.list[position].day)
-                    }"
-                adapter.currentPos = position
                 if (calendarView?.selectedStartDate.isNullOrBlank()) {
                     calendarView?.selectedStartDate = selectedDay
                     adapter.notifyDataSetChanged()
@@ -92,6 +91,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                     calendarView?.selectedEndDate = null
                     adapter.notifyDataSetChanged()
                 }
+                calendarView?.getOnSelectedChangedListener()?.onDateSelected(calendarView?.selectedStartDate, calendarView?.selectedEndDate)
             }
         }
     }

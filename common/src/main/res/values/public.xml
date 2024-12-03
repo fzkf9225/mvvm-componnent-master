@@ -198,6 +198,10 @@
     <public name="Theme.AppCompat.Light.Dialog.Alert.Self" type="style"/>
 
     <!--字符串资源-->
+    <public name="today" type="string"/>
+    <public name="hour" type="string"/>
+    <public name="minute" type="string"/>
+    <public name="second" type="string"/>
     <public name="year" type="string"/>
     <public name="month" type="string"/>
     <public name="day" type="string"/>

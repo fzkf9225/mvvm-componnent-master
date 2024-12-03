@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Color资源-->
+    <public name="hint_color" type="color"/>
+    <public name="line" type="color"/>
+    <public name="bg_red" type="color"/>
+    <public name="bg_green_alpha" type="color"/>
+    <public name="bg_red_alpha" type="color"/>
+    <public name="dark_color" type="color"/>
+    <!--drawable-->
+    <public name="line_bottom" type="drawable"/>
+    <public name="line_left" type="drawable"/>
+    <public name="line_left_bottom" type="drawable"/>
+    <public name="line_left_right" type="drawable"/>
+    <public name="line_right" type="drawable"/>
+    <public name="line_top" type="drawable"/>
+    <public name="line_top_bottom" type="drawable"/>
+
+    <!--layout资源-->
+    <public name="dialog_date_range_pick" type="layout"/>
+    <public name="file_add_item" type="layout"/>
+    <public name="form_edit_area" type="layout"/>
+    <public name="form_edit_text" type="layout"/>
+    <public name="form_file" type="layout"/>
+    <public name="form_image" type="layout"/>
+    <public name="form_rich_text" type="layout"/>
+    <public name="form_selection" type="layout"/>
+    <public name="fragment_calendar_month" type="layout"/>
+    <public name="item_calendar_day" type="layout"/>
+    <public name="item_file_show" type="layout"/>
+    <public name="tick_message_dialog" type="layout"/>
+    <public name="view_calendar" type="layout"/>
+
+    <!--图片资源-->
+    <public name="ic_add_theme_color" type="mipmap"/>
+    <public name="ic_clear_image_normal" type="mipmap"/>
+    <public name="ic_clear_image_pressed" type="mipmap"/>
+    <public name="icon_down" type="mipmap"/>
+    <public name="icon_file" type="mipmap"/>
+    <!--字符串资源-->
+    <public name="clear_selected" type="string"/>
+
+</resources>

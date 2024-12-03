@@ -16,10 +16,8 @@ public class CalendarData extends BaseObservable {
     private int year;
     private int month;
     private int day = -1;
-    private int week;
-    private boolean enable;
+    private boolean weekend = false;
     private Drawable drawable;
-    private Fragment fragment;
     public CalendarData() {
     }
 
@@ -66,22 +64,6 @@ public class CalendarData extends BaseObservable {
         this.day = day;
     }
 
-    public int getWeek() {
-        return week;
-    }
-
-    public void setWeek(int week) {
-        this.week = week;
-    }
-
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
     public Drawable getDrawable() {
         return drawable;
     }
@@ -98,12 +80,12 @@ public class CalendarData extends BaseObservable {
         this.calendarDataList = calendarDataList;
     }
 
-    public Fragment getFragment() {
-        return fragment;
+    public boolean isWeekend() {
+        return weekend;
     }
 
-    public void setFragment(Fragment fragment) {
-        this.fragment = fragment;
+    public void setWeekend(boolean weekend) {
+        this.weekend = weekend;
     }
 }
 

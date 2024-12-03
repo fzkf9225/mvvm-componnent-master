@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,11 +26,9 @@ import pers.fz.mvvm.util.common.DensityUtil;
  * 底部按钮textView文本
  */
 public class IconDotTextView extends ConstraintLayout {
-    private float textSize;
     private ImageView mIconView;
     private TextView mTitleView;
     private TextView mDot;
-    private int textColor = 0xff333333;
     private int imageWidth;
     private int imageHeight;
     private Drawable drawableImage;
@@ -56,16 +55,19 @@ public class IconDotTextView extends ConstraintLayout {
     }
 
     private void init(AttributeSet attrs) {
+        int textColor;
+        float textSize;
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.IconDotTextView);
             textSize = a.getDimension(R.styleable.IconDotTextView_text_size, DensityUtil.dp2px(getContext(), 12));
-            textColor = a.getColor(R.styleable.IconDotTextView_text_color, textColor);
+            textColor = a.getColor(R.styleable.IconDotTextView_text_color, ContextCompat.getColor(getContext(), R.color.autoColor));
             imageWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_image_width, 0);
             imageHeight = a.getDimensionPixelSize(R.styleable.IconDotTextView_image_height, 0);
             drawableImage = a.getDrawable(R.styleable.IconDotTextView_imageSrc);
             label = a.getString(R.styleable.IconDotTextView_label);
             a.recycle();
         } else {
+            textColor = ContextCompat.getColor(getContext(), R.color.autoColor);
             textSize = DensityUtil.sp2px(getContext(), 12);
         }
         LayoutInflater.from(getContext()).inflate(R.layout.custom_textview, this, true);

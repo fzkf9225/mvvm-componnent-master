@@ -5,13 +5,10 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.code.Code;
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
-import com.casic.titan.commonui.widght.calendar.CalendarView;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
@@ -30,7 +27,6 @@ import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.common.RxView;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.customlayout.utils.NumberTextWatcher;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
@@ -68,7 +64,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         ), 0).show());
         binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
         binding.imageCode.setOnClickListener(v -> binding.imageCode.setImageBitmap(Code.getInstance().createBitmap()));
-        RxView.setOnClickListener(binding.cornerButton, 3000, view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
+        RxView.setOnClickListener(binding.cornerButton, 3000,"你点的太快了", view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
         binding.numberFormatEditText.addTextChangedListener(new NumberTextWatcher(binding.numberFormatEditText, false));
 
         binding.circleProgressBar.setProgress(80);
@@ -81,13 +77,13 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 "https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"
         ));
         binding.mRecyclerviewImage.setAdapter(imageShowAdapter);
-        binding.mRecyclerviewImage.setLayoutManager(new FullyGridLayoutManager(this,4){
+        binding.mRecyclerviewImage.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,8), 0x00000000));
+        binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
 
         videoShowAdapter = new VideoShowAdapter(this);
         videoShowAdapter.setList(Arrays.asList(
@@ -96,22 +92,37 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 "https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"
         ));
         binding.mRecyclerviewVideo.setAdapter(videoShowAdapter);
-        binding.mRecyclerviewVideo.setLayoutManager(new FullyGridLayoutManager(this,4){
+        binding.mRecyclerviewVideo.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,8), 0x00000000));
-        binding.calendarView.initData(getLifecycle(),getSupportFragmentManager());
-        binding.calendarView.registerOnPageChangeCallback((calendarData, pos) -> {
-            calendarData.getCalendarDataList().forEach(item->{
-                ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
-                shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.media.R.color.themeColor));
-                item.setDrawable(shapeDrawable);
-            });
-            binding.tvCalendarView.setText(calendarData.getYear()+"-"+ NumberUtils.formatMonthOrDay(calendarData.getMonth()));
+        binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
+        //单选日历
+        binding.calendarViewSingle.initData(getLifecycle(), getSupportFragmentManager());
+        ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
+        int width = DensityUtil.dp2px(this, 4f); // 宽度
+        int height = DensityUtil.dp2px(this, 4f); // 高度
+        shapeDrawable.setBounds(0, 0, width, height);
+        shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.media.R.color.theme_green));
+        binding.calendarViewSingle.registerOnPageChangeCallback((fragment, calendarData, pos) -> {
+            calendarData.getCalendarDataList().forEach(item -> item.setDrawable(shapeDrawable));
+            if (fragment != null && fragment instanceof CalendarMonthFragment calendarMonthFragment) {
+                calendarMonthFragment.getAdapter().notifyDataSetChanged();
+            }
+            binding.tvCalendarViewSingle.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（单选模式）");
         });
+        binding.calendarViewSingle.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate));
+        //多选日历
+        binding.calendarViewMulti.initData(getLifecycle(), getSupportFragmentManager());
+        binding.calendarViewMulti.registerOnPageChangeCallback((fragment, calendarData, pos) -> {
+            if (fragment != null && fragment instanceof CalendarMonthFragment calendarMonthFragment) {
+                calendarMonthFragment.getAdapter().notifyDataSetChanged();
+            }
+            binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
+        });
+        binding.calendarViewMulti.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate + "~" + endDate));
     }
 
     public ToolbarConfig createdToolbarConfig() {

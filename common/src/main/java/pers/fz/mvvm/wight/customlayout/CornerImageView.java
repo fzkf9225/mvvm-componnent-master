@@ -25,7 +25,6 @@ public class CornerImageView extends AppCompatImageView {
     private int rightTopRadius;
     private int rightBottomRadius;
     private int leftBottomRadius;
-    private int imageBg = 0xe4e4e4;
     private Paint mPaint;
     private final Path mPath = new Path();
 
@@ -53,15 +52,18 @@ public class CornerImageView extends AppCompatImageView {
 
     private void init(Context context, AttributeSet attrs) {
         int defaultRadius = DensityUtil.dp2px(context, 3);
-        if(attrs!=null){
+        int imageBg;
+        if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
             radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_image_view_radius, defaultRadius);
             leftTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_left_top_radius, defaultRadius);
-            imageBg = array.getColor(R.styleable.Custom_Round_Image_View_image_bg,0xe4e4e4);
+            imageBg = array.getColor(R.styleable.Custom_Round_Image_View_image_bg, 0xFFe4e4e4);
             rightTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_right_top_radius, defaultRadius);
             rightBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_right_bottom_radius, defaultRadius);
             leftBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_left_bottom_radius, defaultRadius);
             array.recycle();
+        } else {
+            imageBg = 0xFFe4e4e4;
         }
 
         //如果四个角的值没有设置，那么就使用通用的radius的值。
@@ -80,7 +82,7 @@ public class CornerImageView extends AppCompatImageView {
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor( imageBg);
+        mPaint.setColor(imageBg);
     }
 
     public void setRadius(int radius) {
@@ -134,7 +136,7 @@ public class CornerImageView extends AppCompatImageView {
             } else {
                 canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
-            canvas.drawPath(mPath,mPaint);
+            canvas.drawPath(mPath, mPaint);
         }
         super.onDraw(canvas);
     }

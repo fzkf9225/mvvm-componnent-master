@@ -33,7 +33,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -339,7 +339,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_calendarView"
+                android:id="@+id/tv_calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -347,17 +347,43 @@
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/iconDotTextView" />
             <com.casic.titan.commonui.widght.calendar.CalendarView
-                android:id="@+id/calendarView"
+                android:id="@+id/calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:workingDayTextColor="@color/autoColor"
-                app:weekTextColor="@color/theme_green"
+                app:weekTextColor="@color/theme_red"
+                app:selectedBg="@drawable/calendar_day_bg_focused"
+                app:normalBg="@drawable/calendar_day_bg_normal"
+                app:selectedTextColor="@color/white"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:startDate="2023-01-01"
+                app:calendarMode="single"
                 app:endDate="2025-12-31"
                 app:showDot="true"
-                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView"/>
-
+                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_single"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_calendarView_multi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/font_size_xl"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                app:layout_constraintTop_toBottomOf="@+id/calendarView_single" />
+            <com.casic.titan.commonui.widght.calendar.CalendarView
+                android:id="@+id/calendarView_multi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:workingDayTextColor="@color/autoColor"
+                app:weekTextColor="@color/theme_red"
+                app:selectedBg="@drawable/calendar_day_bg_focused"
+                app:normalBg="@drawable/calendar_day_bg_normal"
+                app:selectedTextColor="@color/white"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:startDate="2023-01-01"
+                app:calendarMode="range"
+                app:endDate="2025-12-31"
+                app:showDot="false"
+                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_multi"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

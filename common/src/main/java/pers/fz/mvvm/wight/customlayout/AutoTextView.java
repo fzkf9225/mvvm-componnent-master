@@ -17,6 +17,8 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import androidx.core.content.ContextCompat;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.DensityUtil;
 
@@ -27,8 +29,8 @@ import pers.fz.mvvm.util.common.DensityUtil;
 public class AutoTextView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
 
-    private float mHeight;
-    private int mColor = 0x333333;
+    private final float mHeight;
+    private final int mColor;
     private String textStr;
     //mInUp,mOutUp分别构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
@@ -45,25 +47,20 @@ public class AutoTextView extends TextSwitcher implements
 
     public AutoTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.auto3d, 0, 0);
-        for (int i = 0; i < ta.getIndexCount(); i++) {
-            int attr = ta.getIndex(i);
-            if (attr == R.styleable.auto3d_auto_text_size) {
-                mHeight = ta.getDimensionPixelSize(attr, 14);
-            } else if (attr == R.styleable.auto3d_auto_text_color) {
-                mColor = ta.getColor(attr, 0X333333);
-            } else if (attr == R.styleable.auto3d_auto_text) {
-                textStr = ta.getString(attr);
-            }
+        if (attrs != null) {
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.auto3d);
+            mHeight = ta.getDimensionPixelSize(R.styleable.auto3d_auto_text_size, DensityUtil.sp2px(context, 14));
+            mColor = ta.getColor(R.styleable.auto3d_auto_text_color, ContextCompat.getColor(context, R.color.autoColor));
+            textStr = ta.getString(R.styleable.auto3d_auto_text);
+            ta.recycle();
+        } else {
+            mHeight = DensityUtil.sp2px(context, 14);
+            mColor = ContextCompat.getColor(context, R.color.autoColor);
         }
-        ta.recycle();
         init();
     }
 
     private void init() {
-        if (mHeight == 0) {
-            mHeight = DensityUtil.sp2px(getContext(), 14);
-        }
         setFactory(this);
         mInUp = createAnim(-90, 0, true, true);
         mOutUp = createAnim(0, 90, false, true);
@@ -140,8 +137,8 @@ public class AutoTextView extends TextSwitcher implements
         public void initialize(int width, int height, int parentWidth, int parentHeight) {
             super.initialize(width, height, parentWidth, parentHeight);
             mCamera = new Camera();
-            mCenterY = getHeight() / 2;
-            mCenterX = getWidth() / 2;
+            mCenterY = (float) getHeight() / 2;
+            mCenterX = (float) getWidth() / 2;
         }
 
         @Override

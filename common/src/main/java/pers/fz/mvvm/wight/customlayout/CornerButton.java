@@ -11,6 +11,7 @@ import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 
@@ -20,19 +21,23 @@ import pers.fz.mvvm.R;
  * describe：自定义圆角矩形
  */
 public class CornerButton extends AppCompatButton {
-    private int storkColor = Color.WHITE;
-    private int circleBackColor = Color.WHITE;
+    private int storkColor;
+    private int circleBackColor;
     private final GradientDrawable gradientDrawable;
-    private float radius,storkWidth;
+    private float radius, storkWidth;
+
     public CornerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, storkColor);
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, circleBackColor);
+            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
             storkWidth = typedArray.getDimension(R.styleable.CornerTextView_corner_storkWidth, storkWidth);
             radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
             typedArray.recycle();
+        } else {
+            storkColor = ContextCompat.getColor(context, R.color.white);
+            circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(circleBackColor);
@@ -59,7 +64,7 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
-    public void setStork(@ColorInt int color,int width) {
+    public void setStork(@ColorInt int color, int width) {
         this.storkColor = color;
         this.storkWidth = width;
         gradientDrawable.setStroke(this.storkColor, this.storkColor);

@@ -10,6 +10,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.DensityUtil;
@@ -19,7 +20,7 @@ import pers.fz.mvvm.util.common.DensityUtil;
  * describe :
  */
 public class CornerConstraintLayout extends ConstraintLayout {
-    private int circleBackColor = Color.WHITE;
+    private int circleBackColor;
     private float radius;
 
     public CornerConstraintLayout(@NonNull Context context) {
@@ -40,7 +41,7 @@ public class CornerConstraintLayout extends ConstraintLayout {
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, circleBackColor);
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
             radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, DensityUtil.dp2px(getContext(),8));
             typedArray.recycle();
             GradientDrawable gd = new GradientDrawable();
@@ -48,6 +49,7 @@ public class CornerConstraintLayout extends ConstraintLayout {
             gd.setCornerRadius(radius);
             this.setBackground(gd);
         } else {
+            circleBackColor = ContextCompat.getColor(context, R.color.white);
             radius = DensityUtil.dp2px(context, 8f);
             GradientDrawable gd = new GradientDrawable();
             gd.setColor(circleBackColor);

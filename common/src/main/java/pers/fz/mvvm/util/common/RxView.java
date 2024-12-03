@@ -1,6 +1,7 @@
 package pers.fz.mvvm.util.common;
 
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,4 +36,17 @@ public class RxView {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onClickListener);
     }
+
+    public static Disposable setOnClickListener(View view, long interval, String message, Consumer<View> onClickListener) {
+        return Observable.create((ObservableOnSubscribe<View>)
+                        emitter -> view.setOnClickListener(emitter::onNext)
+                )
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .throttleFirst(interval, TimeUnit.MILLISECONDS, Schedulers.computation(), v -> Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onClickListener, throwable -> Toast.makeText(view.getContext(), "操作发生异常", Toast.LENGTH_SHORT).show());
+    }
+
+
 }

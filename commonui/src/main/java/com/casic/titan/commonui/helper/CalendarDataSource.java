@@ -3,6 +3,7 @@ package com.casic.titan.commonui.helper;
 import androidx.databinding.ObservableField;
 
 import com.casic.titan.commonui.bean.CalendarData;
+import com.casic.titan.commonui.widght.calendar.CalendarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,8 +36,8 @@ public class CalendarDataSource {
      */
     public static Observable<CalendarData> observableCalendarData(String startDate, String endDate) {
         Calendar calendar = Calendar.getInstance();
-        // 计算总月份数量
-        int totalMonth = DateUtil.getMonthSpace(startDate, endDate);
+        // 计算总月份数量,因为只是相差，1月和2月相差一个月，但是如果生成日历的话就需要为2，所以需要相差+1
+        int totalMonth = DateUtil.getMonthSpace(startDate, endDate) + 1;
         int currentYear = DateUtil.getCurrentYear();
         int currentMonth = DateUtil.getCurrentMonth();
         // 返回Observable
@@ -58,10 +59,14 @@ public class CalendarDataSource {
                     for (int i = 0; i < firstDayOfWeek - 1; i++) {
                         daysList.add(new CalendarData(yearAndMonth[0], yearAndMonth[1] + 1)); // 月份 +1
                     }
-
                     // 填充本月的日期
                     for (int day = 1; day <= daysInMonthCount; day++) {
-                        daysList.add(new CalendarData(yearAndMonth[0], yearAndMonth[1] + 1, day));
+                        CalendarData calendarData = new CalendarData(yearAndMonth[0], yearAndMonth[1] + 1, day);
+                        Calendar calendarWeek = Calendar.getInstance();
+                        calendarWeek.set(yearAndMonth[0], yearAndMonth[1], day);
+                        int week = calendarWeek.get(Calendar.DAY_OF_WEEK); // 获取今天是周几
+                        calendarData.setWeekend(Calendar.SUNDAY == week || Calendar.SATURDAY == week);
+                        daysList.add(calendarData);
                     }
                     // 返回这个月的日历数据
                     return Observable.just(new CalendarData(yearAndMonth[0], yearAndMonth[1] + 1, daysList));

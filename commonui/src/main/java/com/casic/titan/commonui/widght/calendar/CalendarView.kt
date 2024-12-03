@@ -8,58 +8,111 @@ import android.graphics.drawable.shapes.OvalShape
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.GridLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.casic.titan.commonui.R
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.databinding.ViewCalendarBinding
-import com.casic.titan.commonui.fragment.CalendarMonthFragment
 import com.casic.titan.commonui.helper.CalendarDataSource
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import pers.fz.mvvm.util.common.DateUtil
 import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.common.NumberUtils
 import pers.fz.mvvm.util.log.LogUtil
 import pers.fz.mvvm.wight.empty.EmptyLayout
 
 
 /**
  * created by fz on 2024/12/2 15:28
- * describe:
+ * describe:自定义日历
  */
 class CalendarView : ConstraintLayout {
-    private val binding: ViewCalendarBinding by lazy {
-        ViewCalendarBinding.inflate(LayoutInflater.from(context), this, true)
-    }
-    private var weekTextColor: Int = 0x333333
-    private var workingDayTextColor: Int = 0x333333
-    private var startDate: String? = null
-    private var endDate: String? = null
+    private var binding: ViewCalendarBinding ?=null
 
+    /**
+     * 周末的颜色
+     */
+    var weekTextColor: Int ?=null
+    /**
+     * 工作日的颜色
+     */
+    var workingDayTextColor: Int ?=null
+    var startDate: String? = null
+    var endDate: String? = null
+
+    /**
+     * 选中的开始时间，单击的时候他就是当前时间
+     */
     var selectedStartDate: String? = null
 
+    /**
+     * 选中结束时间
+     */
     var selectedEndDate: String? = null
 
-    private var mMode = Mode.SINGLE
+    /**
+     * 日历模式，单击还是范围
+     */
+    var mode = Mode.SINGLE
 
     var calendarPagerAdapter: MonthViewPagerAdapter? = null
-    private var showDot: Boolean? = false
 
-    private var selectedBg: Drawable? = null
-    private var normalBg: Drawable? = null
+    /**
+     * 是否显示底部的圆点
+     */
+    var showDot: Boolean? = false
 
-    private var selectedTextColor: Int = 0xFFFFFFFF.toInt()
-    private var normalTextColor: Int = 0xFF333333.toInt()
+    /**
+     * 选中背景
+     */
+    var selectedBg: Drawable? = null
+
+    /**
+     * 默认背景
+     */
+    var normalBg: Drawable? = null
+
+    /**
+     * 日历文字颜色大小
+     */
+    var textSize :Float ?=null
+
+    /**
+     * 日历文字可点击范围，也就是选中的大小，不包括下面的点
+     */
+    var itemWidth :Int ?=null
+    /**
+     * 日历文字可点击范围，也就是选中的大小，不包括下面的点
+     */
+    var itemHeight :Int ?=null
+    /**
+     * 日历下面圆点的大小
+     */
+    var dotHeight :Int ?=null
+    /**
+     * 日历下面圆点的大小
+     */
+    var dotWidth :Int ?=null
+    /**
+     * 选中文字颜色
+     */
+    var selectedTextColor: Int ?=null
+
     private var onViewPagerChangedListener: OnViewPagerChangedListener? = null
 
     companion object {
+        const val TAG :String = "CalendarView"
         object Mode {
             //正常默认样式，即日历样式
             const val SINGLE = 0
@@ -101,12 +154,9 @@ class CalendarView : ConstraintLayout {
     private fun initAttrs(attrs: AttributeSet?) {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarView)
-            weekTextColor =
-                typedArray.getColor(R.styleable.CalendarView_weekTextColor, weekTextColor)
-            workingDayTextColor = typedArray.getColor(
-                R.styleable.CalendarView_workingDayTextColor,
-                workingDayTextColor
-            )
+            workingDayTextColor = typedArray.getColor(R.styleable.CalendarView_workingDayTextColor, ContextCompat.getColor(context,R.color.auto_color))
+            //如果没设置默认为工作日文字颜色
+            weekTextColor = typedArray.getColor(R.styleable.CalendarView_weekTextColor, ContextCompat.getColor(context,R.color.auto_color))
             startDate = typedArray.getString(R.styleable.CalendarView_startDate)
             endDate = typedArray.getString(R.styleable.CalendarView_endDate)
             if (startDate.isNullOrBlank()) {
@@ -115,19 +165,42 @@ class CalendarView : ConstraintLayout {
             if (endDate.isNullOrBlank()) {
                 endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
             }
-            mMode = typedArray.getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
+            mode = typedArray.getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
             showDot = typedArray.getBoolean(R.styleable.CalendarView_showDot, false)
             selectedTextColor =
-                typedArray.getColor(R.styleable.CalendarView_selectedTextColor, selectedTextColor)
-            normalTextColor =
-                typedArray.getColor(R.styleable.CalendarView_normalTextColor, normalTextColor)
+                typedArray.getColor(R.styleable.CalendarView_selectedTextColor, ContextCompat.getColor(context,R.color.white))
             selectedBg = typedArray.getDrawable(R.styleable.CalendarView_selectedBg)
             normalBg = typedArray.getDrawable(R.styleable.CalendarView_normalBg)
+            textSize = typedArray.getDimension(R.styleable.CalendarView_textSize,
+                DensityUtil.sp2px(context, 14f).toFloat()
+            )
+
+            itemWidth = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemWidth,
+                DensityUtil.dp2px(context, 36f)
+            )
+            itemHeight = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemHeight,
+                DensityUtil.dp2px(context, 36f)
+            )
+
+            dotWidth = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemWidth,
+                DensityUtil.dp2px(context, 4f)
+            )
+            dotHeight = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemHeight,
+                DensityUtil.dp2px(context, 4f)
+            )
             typedArray.recycle()
         } ?: run {
+            workingDayTextColor = ContextCompat.getColor(context,R.color.auto_color)
+            weekTextColor = ContextCompat.getColor(context,R.color.auto_color)
+            selectedTextColor = ContextCompat.getColor(context,R.color.white)
+            textSize = DensityUtil.sp2px(context, 14f).toFloat()
             startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
             endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
-            mMode = Mode.SINGLE
+            mode = Mode.SINGLE
+            itemWidth = DensityUtil.dp2px(context, 36f)
+            itemHeight = DensityUtil.dp2px(context, 36f)
+            dotWidth = DensityUtil.dp2px(context, 4f)
+            dotHeight = DensityUtil.dp2px(context, 4f)
         }
         if (selectedBg == null) {
             selectedBg = ShapeDrawable(OvalShape()).apply {
@@ -142,9 +215,16 @@ class CalendarView : ConstraintLayout {
     }
 
     private fun initView() {
-        binding.monthViewPager2.registerOnPageChangeCallback(onPagerChangedListener)
-        binding.emptyLayout.setErrorMessage("正在加载日历...")
-        binding.monthViewPager2.offscreenPageLimit = 1
+        binding = ViewCalendarBinding.inflate(LayoutInflater.from(context), this, true)
+        binding?.lifecycleOwner = context as LifecycleOwner
+        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        binding?.monthViewPager2?.registerOnPageChangeCallback(onPagerChangedListener)
+        binding?.emptyLayout?.setErrorMessage("正在加载日历...")
+        refreshTitle()
+    }
+
+    public fun refreshTitle(){
+        binding?.calendarTitle?.removeAllViews()
         for (week in arrayOf("日", "一", "二", "三", "四", "五", "六")) {
             val textView = AppCompatTextView(context)
                 .apply {
@@ -155,8 +235,8 @@ class CalendarView : ConstraintLayout {
                         DensityUtil.sp2px(context, 12f).toFloat()
                     )
                     setTextColor(
-                        if ("日" == week || "六" == week) weekTextColor
-                        else workingDayTextColor
+                        if ("日" == week || "六" == week) weekTextColor!!
+                        else workingDayTextColor!!
                     )
                     layoutParams = GridLayout.LayoutParams().apply {
                         width = 0
@@ -164,7 +244,7 @@ class CalendarView : ConstraintLayout {
                         columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // 设置列的权重
                     }
                 }
-            binding.calendarTitle.addView(textView)
+            binding?.calendarTitle?.addView(textView)
         }
     }
 
@@ -173,18 +253,8 @@ class CalendarView : ConstraintLayout {
     }
 
     fun unregisterOnPageChangeCallback() {
-        binding.monthViewPager2.unregisterOnPageChangeCallback(onPagerChangedListener)
+        binding?.monthViewPager2?.unregisterOnPageChangeCallback(onPagerChangedListener)
     }
-
-    fun setShowDot(isShow: Boolean) {
-        this.showDot = isShow
-    }
-
-    fun isShowDot() = showDot
-
-    fun getStartDate() = startDate
-
-    fun getEndDate() = endDate
 
     /**
      * @param startDate 开始日期，格式：yyyy-MM-dd
@@ -196,44 +266,6 @@ class CalendarView : ConstraintLayout {
         this.endDate = endDate
     }
 
-    fun setMode(mode: Int) {
-        this.mMode = mode
-    }
-
-    fun getMode() = mMode
-
-    fun getNormalBg(): Drawable? {
-        return normalBg
-    }
-
-    fun getSelectedBg(): Drawable? {
-        return selectedBg
-    }
-
-    fun getNormalTextColor(): Int {
-        return normalTextColor
-    }
-
-    fun getSelectedTextColor(): Int {
-        return selectedTextColor
-    }
-
-    fun setNormalTextColor(normalTextColor: Int) {
-        this.normalTextColor = normalTextColor
-    }
-
-    fun setNormalBg(normalBg: Drawable?) {
-        this.normalBg = normalBg
-    }
-
-    fun setSelectedTextColor(selectedTextColor: Int) {
-        this.selectedTextColor = selectedTextColor
-    }
-
-    fun setSelectedBg(selectedBg: Drawable?) {
-        this.selectedBg = selectedBg
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     public fun initData(lifecycle: Lifecycle, fragmentManager: FragmentManager) {
         if (CalendarDataSource.calendarObservableField.get().isNullOrEmpty()) {
@@ -241,92 +273,57 @@ class CalendarView : ConstraintLayout {
                 .toList()
                 .observeOn(Schedulers.io())
                 .map {
-                    CalendarDataSource.calendarObservableField.set(it)
-                    val dataList = ArrayList(it)
-                    notifyData(dataList)
-                    return@map it
+                    val gson = Gson()
+                    val jsonString = gson.toJson(it)
+                    val dataList  = gson.fromJson<List<CalendarData>>(jsonString, object : TypeToken<List<CalendarData?>?>() {}.type)
+                    //序列化和反序列化集合，为的是修改此日历数据不会影响全局数据
+                    return@map dataList
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    binding.emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT)
+                    binding?.emptyLayout?.setErrorType(EmptyLayout.HIDE_LAYOUT)
                     calendarPagerAdapter = MonthViewPagerAdapter(
                         fragmentManager,
                         lifecycle,
                         this,
                         it
                     )
-                    binding.monthViewPager2.setAdapter(calendarPagerAdapter)
-                    binding.monthViewPager2.setCurrentItem(
+                    binding?.monthViewPager2?.setAdapter(calendarPagerAdapter)
+                    binding?.monthViewPager2?.setCurrentItem(
                         CalendarDataSource.currentMonthPosField.get() ?: 0, false
                     )
                 }, {
-                    binding.emptyLayout.setErrorType(EmptyLayout.LOADING_ERROR)
-                    binding.emptyLayout.setErrorMessage("日历信息加载错误")
+                    binding?.emptyLayout?.setErrorType(EmptyLayout.LOADING_ERROR)
+                    binding?.emptyLayout?.setErrorMessage("日历信息加载错误")
                 })
         } else {
             val disposable = Observable.just(CalendarDataSource.calendarObservableField.get()!!)
                 .subscribeOn(Schedulers.io()) // 在后台线程进行
                 .map {
-                    val dataList = ArrayList(it)
-                    notifyData(dataList)
-                    return@map it
+                    val gson = Gson()
+                    val jsonString = gson.toJson(it)
+                    val dataList  = gson.fromJson<List<CalendarData>>(jsonString, object : TypeToken<List<CalendarData?>?>() {}.type)
+                    //序列化和反序列化集合，为的是修改此日历数据不会影响全局数据
+                    return@map dataList
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    binding.emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT)
+                    binding?.emptyLayout?.setErrorType(EmptyLayout.HIDE_LAYOUT)
                     calendarPagerAdapter = MonthViewPagerAdapter(
                         fragmentManager,
                         lifecycle,
                         this,
                         it
                     )
-                    binding.monthViewPager2.setAdapter(calendarPagerAdapter)
-                    binding.monthViewPager2.setCurrentItem(
+                    binding?.monthViewPager2?.setAdapter(calendarPagerAdapter)
+                    binding?.monthViewPager2?.setCurrentItem(
                         CalendarDataSource.currentMonthPosField.get() ?: 0, false
                     )
                 }, {
                     LogUtil.show("CalendarView", "日历信息加载错误:" + it)
-                    binding.emptyLayout.setErrorType(EmptyLayout.LOADING_ERROR)
-                    binding.emptyLayout.setErrorMessage("日历信息加载错误")
+                    binding?.emptyLayout?.setErrorType(EmptyLayout.LOADING_ERROR)
+                    binding?.emptyLayout?.setErrorMessage("日历信息加载错误")
                 })
-        }
-    }
-
-    private fun notifyData(dataList: List<CalendarData>?) {
-        if (dataList.isNullOrEmpty()) {
-            return
-        }
-        if (startDate.isNullOrBlank() && endDate.isNullOrBlank()) {
-            return
-        }
-        val startYear = DateUtil.getYear(DateUtil.getDateByDateFormat(startDate))
-        val endYear = DateUtil.getYear(DateUtil.getDateByDateFormat(endDate))
-        val startMonth = DateUtil.getMonth(DateUtil.getDateByDateFormat(startDate))
-        val endMonth = DateUtil.getMonth(DateUtil.getDateByDateFormat(endDate))
-        for (monthOfYear in dataList) {
-            if (monthOfYear.year < startYear || monthOfYear.year > endYear) {
-                continue
-            }
-            if (monthOfYear.year == startYear && startMonth < monthOfYear.month) {
-                continue
-            }
-            if (monthOfYear.year == endYear && endMonth > monthOfYear.month) {
-                continue
-            }
-            monthOfYear.calendarDataList?.forEach { dayOfMonth ->
-                try {
-                    val dayStr =
-                        "${dayOfMonth.year}-${NumberUtils.formatMonthOrDay(dayOfMonth.month)}-${
-                            NumberUtils.formatMonthOrDay(dayOfMonth.day)
-                        }"
-                    val dayLong = DateUtil.stringToLong(dayStr, DateUtil.DEFAULT_FORMAT_DATE)
-                    val startLong = DateUtil.stringToLong(startDate, DateUtil.DEFAULT_FORMAT_DATE)
-                    val endLong = DateUtil.stringToLong(endDate, DateUtil.DEFAULT_FORMAT_DATE)
-                    dayOfMonth.isEnable = dayLong in startLong..endLong
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
         }
     }
 
@@ -334,28 +331,31 @@ class CalendarView : ConstraintLayout {
      * viewpager2的页面切换监听
      */
     private val onPagerChangedListener = object : ViewPager2.OnPageChangeCallback() {
+        @SuppressLint("NotifyDataSetChanged")
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             onViewPagerChangedListener?.onPagerChanged(
-                calendarPagerAdapter?.dateList?.get(position)!!, position
+                calendarPagerAdapter?.getItem(position),
+                calendarPagerAdapter?.dateList?.get(position)!!,
+                position
             )
         }
     }
 
     public interface OnSelectedChangedListener {
-        fun onDateSelected(startDate: String, endDate: String?)
+        fun onDateSelected(startDate: String?, endDate: String?)
     }
 
     private var mOnSelectedChangedListener: OnSelectedChangedListener? = null
 
     public fun getOnSelectedChangedListener() = mOnSelectedChangedListener
 
-    private fun setOnSelectedChangedListener(listener: OnSelectedChangedListener?) {
+    public fun setOnSelectedChangedListener(listener: OnSelectedChangedListener?) {
         this.mOnSelectedChangedListener = listener;
     }
 
     public interface OnViewPagerChangedListener {
-        fun onPagerChanged(calendarData: CalendarData, pos: Int)
+        fun onPagerChanged(fragment: Fragment?,calendarData: CalendarData, pos: Int)
     }
 
     public fun setOnViewPagerChangedListener(listener: OnViewPagerChangedListener?) {

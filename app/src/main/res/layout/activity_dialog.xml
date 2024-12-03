@@ -238,7 +238,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateTimePick" />
-
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dateRangePickDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="时间范围选择（默认样式）"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customDateTimePick" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/customDateRangePickDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="时间范围选择（自定义样式）"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateRangePickDialog" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

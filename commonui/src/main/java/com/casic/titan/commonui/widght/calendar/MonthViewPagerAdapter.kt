@@ -6,13 +6,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.fragment.CalendarMonthFragment
+import pers.fz.mvvm.util.log.LogUtil
 
 /**
  * created by fz on 2024/11/21 9:00
  * describe:
  */
 class MonthViewPagerAdapter(
-    fragmentManager: FragmentManager,
+    private val fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     private var calendarView: CalendarView,
     val dateList: List<CalendarData>?
@@ -20,15 +21,21 @@ class MonthViewPagerAdapter(
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun createFragment(position: Int): Fragment {
-        val info = dateList?.get(position)
-        if (info?.fragment == null) {
-            info?.fragment = CalendarMonthFragment.newInstance(calendarView,info?.calendarDataList!!)
-        }
-        return info!!.fragment
+        return CalendarMonthFragment.newInstance(
+            calendarView,
+            dateList?.get(position)?.calendarDataList!!
+        )
     }
 
     override fun getItemCount(): Int {
         return dateList?.size ?: 0
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    fun getItem(position: Int): CalendarMonthFragment? {
+        return fragmentManager.findFragmentByTag("f$position") as? CalendarMonthFragment
+    }
 }

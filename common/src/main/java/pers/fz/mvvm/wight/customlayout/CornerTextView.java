@@ -11,6 +11,7 @@ import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 
@@ -20,12 +21,11 @@ import pers.fz.mvvm.R;
  * describe：自定义圆角矩形
  */
 public class CornerTextView extends AppCompatTextView {
-    private Paint circlePaint;
-    private Paint backPaint;
-    private Paint textPaint;
-    private int storkColor = Color.WHITE;
-    private int circleBackColor = Color.WHITE;
-    private float storkWidth, raduis;
+    private final Paint circlePaint;
+    private final Paint backPaint;
+    private final Paint textPaint;
+    private int storkColor;
+    private int circleBackColor;
 
 
     public CornerTextView(Context context, AttributeSet attrs) {
@@ -37,24 +37,24 @@ public class CornerTextView extends AppCompatTextView {
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backPaint.setStyle(Paint.Style.FILL);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        storkWidth = 0;
+        float storkWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, storkColor);
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, circleBackColor);
+            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
             storkWidth = typedArray.getDimension(R.styleable.CornerTextView_corner_storkWidth, storkWidth);
-            raduis = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
-
+            float radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
             typedArray.recycle();
             GradientDrawable gd = new GradientDrawable();//创建drawable
             gd.setColor(circleBackColor);
-            gd.setCornerRadius(raduis);
+            gd.setCornerRadius(radius);
             if (storkWidth > 0) {
                 gd.setStroke((int) storkWidth, storkColor);
             }
-
             this.setBackground(gd);
-
+        }else{
+            storkColor = ContextCompat.getColor(context, R.color.white);
+            circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
         if (storkWidth != 0) {
             circlePaint.setStrokeWidth(storkWidth);

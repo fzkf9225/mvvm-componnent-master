@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_background"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingEnd="@dimen/padding_l">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_message_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="提示" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_selected"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_l"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_message_type"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialog_message_type"
+            tools:text="清空选择" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
+            tools:text="2024-12" />
+
+        <com.casic.titan.commonui.widght.calendar.CalendarView
+            android:id="@+id/calendarView_range"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:calendarMode="range"
+            app:showDot="false"
+            app:layout_constraintTop_toBottomOf="@+id/tv_month"/>
+
+        <pers.fz.mvvm.wight.customlayout.CornerButton
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/cancel"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:gravity="center"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            app:corner_backColor="@color/hint_text_color"
+            app:corner_radius="20dp"
+            app:corner_storkColor="@color/hint_text_color"
+            app:corner_storkWidth="0dp"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_confirm"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView_range" />
+        <pers.fz.mvvm.wight.customlayout.CornerButton
+            android:id="@+id/dialog_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/sure"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:textSize="@dimen/font_size_xl"
+            app:corner_backColor="@color/themeColor"
+            app:corner_radius="20dp"
+            app:corner_storkColor="@color/themeColor"
+            app:corner_storkWidth="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/dialog_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView_range" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

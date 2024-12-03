@@ -31,7 +31,7 @@ public class FormDate extends FormSelection {
 
     private int startYear;
     private int endYear;
-
+    private DatePickDialog datePickDialog;
     public FormDate(Context context) {
         super(context);
     }
@@ -68,27 +68,31 @@ public class FormDate extends FormSelection {
         if (TextUtils.isEmpty(format)) {
             format = DateUtil.DEFAULT_FORMAT_DATE;
         }
+        datePickDialog = new DatePickDialog(getContext())
+                .setStartYear(this.startYear)
+                .setEndYear(this.endYear)
+                .setPositiveTextColor(this.confirmTextColor)
+                .setTodayTextColor(this.confirmTextColor)
+                .setDateMode(DateMode.getMode(this.datePickModel))
+                .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                    String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day);
+                    if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
+                        formDataSource.textValue.set(text);
+                        return;
+                    }
+                    formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
+                })
+                .builder();
     }
 
+    public DatePickDialog getDatePickDialog() {
+        return datePickDialog;
+    }
 
     @Override
     protected void init() {
         super.init();
         binding.tvSelection.setOnClickListener(v -> {
-            DatePickDialog datePickDialog = new DatePickDialog(v.getContext())
-                    .setStartYear(this.startYear)
-                    .setEndYear(this.endYear)
-                    .setPositiveTextColor(this.confirmTextColor)
-                    .setTodayTextColor(this.confirmTextColor)
-                    .setDateMode(DateMode.getMode(this.datePickModel))
-                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day);
-                        if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
-                            formDataSource.textValue.set(text);
-                            return;
-                        }
-                        formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
-                    });
             if (!TextUtils.isEmpty(formDataSource.textValue.get())) {
                 Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), this.format);
                 Calendar calendar = Calendar.getInstance();
@@ -97,7 +101,7 @@ public class FormDate extends FormSelection {
                 datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
                 datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
             }
-            datePickDialog.builder().show();
+            datePickDialog.show();
         });
     }
 }

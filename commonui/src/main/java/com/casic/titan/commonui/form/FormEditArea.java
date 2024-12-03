@@ -34,8 +34,8 @@ public class FormEditArea extends ConstraintLayout {
     private String hintString = "请输入";
     private boolean required = false;
     private boolean bottomBorder = true;
-    protected int rightTextColor = 0xFF333333;
-    protected int labelTextColor = 0xFF999999;
+    protected int rightTextColor;
+    protected int labelTextColor;
     private int inputType = InputType.TYPE_CLASS_TEXT;
     private int imeOptions = EditorInfo.IME_ACTION_NEXT;
     public FormTextWatcher formTextWatcher;
@@ -69,8 +69,8 @@ public class FormEditArea extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             labelString = typedArray.getString(R.styleable.FormEditText_label);
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
-            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, rightTextColor);
-            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, labelTextColor);
+            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             maxLength = typedArray.getInt(R.styleable.FormEditText_maxLength, -1);
@@ -81,6 +81,8 @@ public class FormEditArea extends ConstraintLayout {
             formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             typedArray.recycle();
         } else {
+            rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);

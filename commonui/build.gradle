@@ -68,13 +68,10 @@ dependencies {
     implementation libs.material
     implementation libs.constraintlayout
     implementation libs.androidx.recyclerview
-    implementation libs.androidPicker.common
-    implementation libs.androidpicker.wheelpicker
-    implementation libs.calendarpicker
-    implementation libs.github.wheelview
     implementation libs.github.glide
     implementation libs.reactivex.rxandroid
     implementation libs.rxjava3.rxjava
+    implementation libs.gson
     implementation project(':common')
     implementation project(':commonmedia')
 }
@@ -92,7 +89,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.titan.commonui'
                 artifactId = 'commonui'
-                version = '1.2.3'
+                version = '1.3.0'
             }
         }
         repositories {

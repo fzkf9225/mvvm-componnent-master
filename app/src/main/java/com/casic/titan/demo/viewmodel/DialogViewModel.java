@@ -2,6 +2,10 @@ package com.casic.titan.demo.viewmodel;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -10,9 +14,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 import com.casic.titan.commonui.dialog.TickViewMessageDialog;
+import com.casic.titan.commonui.widght.calendar.CalendarView;
+import com.casic.titan.commonui.widght.calendar.DateRangePickDialog;
 import com.casic.titan.demo.R;
 
 import java.util.Arrays;
@@ -252,8 +262,8 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
             new DatePickDialog(view.getContext())
                     .setStartYear(1990)
                     .setEndYear(2030)
-                    .setDateLabel("-","-","-")
-                    .setTimeLabel(":",":",":")
+                    .setDateLabel("-", "-", "-")
+                    .setTimeLabel(":", ":", ":")
                     .setGravity(Gravity.CENTER)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE)
@@ -263,6 +273,49 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
                         Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
                     })
                     .builder()
+                    .show();
+        } else if (R.id.dateRangePickDialog == view.getId()) {
+            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
+            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            new DateRangePickDialog(view.getContext())
+                    .setGravity(Gravity.BOTTOM)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .builder(fragmentManager, lifecycle)
+                    .show();
+        } else if (R.id.customDateRangePickDialog == view.getId()) {
+            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
+            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
+            shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green));
+            ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
+            shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.transparent));
+
+            // 动态创建一个红色的圆角矩形 ShapeDrawable
+            GradientDrawable shapeDrawableBg = new GradientDrawable();
+            shapeDrawableBg.setShape(GradientDrawable.RECTANGLE);
+            shapeDrawableBg.setColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.default_background));
+            shapeDrawableBg.setCornerRadius(view.getContext().getResources().getDimension(pers.fz.mvvm.R.dimen.radius_l)); // 设置圆角半径，单位为像素
+            int daysInMonthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH); // 获取本月最大天数
+            new DateRangePickDialog(view.getContext())
+                    .setStartDate(DateUtil.getCurrentYear() + "-" + NumberUtils.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
+                    .setEndDate(DateUtil.getCurrentYear() + "-" + NumberUtils.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
+                    .setSelectedTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.white))
+                    .setWeekTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_red))
+                    .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.auto_color))
+                    .setDotWidth(DensityUtil.dp2px(view.getContext(), 6))
+                    .setDotHeight(DensityUtil.dp2px(view.getContext(), 6))
+                    .setItemWidth(DensityUtil.dp2px(view.getContext(), 42))
+                    .setItemHeight(DensityUtil.dp2px(view.getContext(), 42))
+                    .setTextSize((float) DensityUtil.sp2px(view.getContext(), 13f))
+                    .setSelectedBg(shapeDrawableSelected)
+                    .setNormalBg(shapeDrawableNormal)
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setGravity(Gravity.CENTER)
+                    .setBgDrawable(shapeDrawableBg)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
+                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .builder(fragmentManager, lifecycle)
                     .show();
         }
     }
