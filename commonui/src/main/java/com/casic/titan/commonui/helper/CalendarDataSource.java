@@ -29,12 +29,17 @@ public class CalendarDataSource {
                 DateUtil.getCalcDateFormat(DateUtil.getToday(), +10 * 365));
     }
 
+    public static Observable<CalendarData> observableCalendarData(String startDate, String endDate) {
+        return observableCalendarData(startDate, endDate, true);
+    }
+
     /**
      * @param startDate 开启日期，格式：yyyy-MM-dd,可为空，为空的话默认为前10年
      * @param endDate   结束日期，格式：yyyy-MM-dd,可为空，为空的话默认为后10年
-     *                  加载日历数据
+     * @param overwriteIndex 是否覆盖索引，如果覆盖的话calendarObservableField也要覆盖，这两个数据需要同步
+     * 加载日历数据
      */
-    public static Observable<CalendarData> observableCalendarData(String startDate, String endDate) {
+    public static Observable<CalendarData> observableCalendarData(String startDate, String endDate, boolean overwriteIndex) {
         Calendar calendar = Calendar.getInstance();
         // 计算总月份数量,因为只是相差，1月和2月相差一个月，但是如果生成日历的话就需要为2，所以需要相差+1
         int totalMonth = DateUtil.getMonthSpace(startDate, endDate) + 1;
@@ -46,7 +51,7 @@ public class CalendarDataSource {
                 .concatMap(offset -> {
                     // 计算年份和月份
                     int[] yearAndMonth = calculateYearAndMonth(startDate, offset);
-                    if (yearAndMonth[0] == currentYear && yearAndMonth[1] + 1 == currentMonth) {
+                    if (yearAndMonth[0] == currentYear && yearAndMonth[1] + 1 == currentMonth && overwriteIndex) {
                         currentMonthPosField.set(offset);
                     }
                     calendar.set(yearAndMonth[0], yearAndMonth[1], 1); // 设置年份和月份
