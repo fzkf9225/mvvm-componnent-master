@@ -50,7 +50,7 @@ public class DatePickDialog extends Dialog {
     private int endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
     private int endMonth = 12;
     private int defaultYear = Calendar.getInstance().get(Calendar.YEAR);
-    private int defaultMonth = Calendar.getInstance().get(Calendar.MONTH);
+    private int defaultMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
     private int defaultDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     private int defaultMinute = Calendar.getInstance().get(Calendar.MINUTE);
     private int defaultHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
