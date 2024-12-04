@@ -323,6 +323,7 @@ class CalendarView : ConstraintLayout {
                 .toList()
                 .observeOn(Schedulers.io())
                 .map {
+                    CalendarDataSource.calendarObservableField.set(it)
                     val gson = Gson()
                     val jsonString = gson.toJson(it)
                     val dataList = gson.fromJson<List<CalendarData>>(
