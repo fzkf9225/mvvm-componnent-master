@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -165,6 +166,7 @@ public class ConfirmDialog extends Dialog {
             binding.dialogTextView.setText(content);
         } else {
             binding.dialogTextView.setText(spannableContent);
+            binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
