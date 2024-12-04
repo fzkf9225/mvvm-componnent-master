@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FormImageShowAdapter;
 import com.casic.titan.commonui.bean.AttachmentBean;
+import com.casic.titan.commonui.databinding.FormImageBinding;
 
 import java.util.List;
 
@@ -34,12 +35,10 @@ public class FormImageShow extends ConstraintLayout {
     protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
-    protected TextView tvLabel, tvRequired;
-    protected RecyclerView mRecyclerViewImage;
     private BaseRecyclerViewAdapter<?, ?> adapter;
     private float formLabelTextSize;
     private float formRequiredSize;
-
+    private FormImageBinding binding;
     public FormImageShow(Context context) {
         super(context);
         initAttr(null);
@@ -76,34 +75,31 @@ public class FormImageShow extends ConstraintLayout {
     }
 
     protected void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
+        binding = FormImageBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(), 12),
                 getPaddingEnd(), DensityUtil.dp2px(getContext(), 12));
-        tvLabel = findViewById(R.id.tv_label);
-        mRecyclerViewImage = findViewById(R.id.mRecyclerViewImage);
-        tvRequired = findViewById(R.id.tv_required);
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        tvLabel.setText(labelString);
-        tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvLabel.setText(labelString);
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewImage.getLayoutParams();
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) binding.mRecyclerViewImage.getLayoutParams();
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
-        mRecyclerViewImage.setLayoutParams(imageLayoutParams);
+        binding.mRecyclerViewImage.setLayoutParams(imageLayoutParams);
         if (adapter == null) {
             adapter = new FormImageShowAdapter(getContext());
         }
-        mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 12), 0x00000000));
-        mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
+        binding.mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 12), 0x00000000));
+        binding.mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        mRecyclerViewImage.setAdapter(adapter);
+        binding.mRecyclerViewImage.setAdapter(adapter);
     }
 
     public boolean isRequired() {
@@ -112,12 +108,12 @@ public class FormImageShow extends ConstraintLayout {
 
     public void setRequired(boolean required) {
         this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
     public <AD extends BaseRecyclerViewAdapter<?, ?>> void setAdapter(AD adapter) {
         this.adapter = adapter;
-        mRecyclerViewImage.setAdapter(adapter);
+        binding.mRecyclerViewImage.setAdapter(adapter);
     }
 
     public BaseRecyclerViewAdapter<?, ?> getAdapter() {
@@ -131,8 +127,12 @@ public class FormImageShow extends ConstraintLayout {
         }
     }
 
+    public FormImageBinding getBinding() {
+        return binding;
+    }
+
     public void setLabel(String text) {
-        tvLabel.setText(text);
+        binding.tvLabel.setText(text);
     }
 
 

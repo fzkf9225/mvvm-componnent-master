@@ -51,6 +51,12 @@ public class Person extends BaseDaoBean {
     @Ignore
     private String educationalExperienceDate;
 
+    @Ignore
+    private String schoolStartTime;
+
+    @Ignore
+    private String classStartTime;
+
     @VerifyField({
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
@@ -164,6 +170,26 @@ public class Person extends BaseDaoBean {
     public void setEducationalExperienceDate(String educationalExperienceDate) {
         this.educationalExperienceDate = educationalExperienceDate;
         notifyPropertyChanged(com.casic.titan.demo.BR.educationalExperienceDate);
+    }
+
+    @Bindable
+    public String getSchoolStartTime() {
+        return schoolStartTime;
+    }
+
+    public void setSchoolStartTime(String schoolStartTime) {
+        this.schoolStartTime = schoolStartTime;
+        notifyPropertyChanged(com.casic.titan.demo.BR.schoolStartTime);
+    }
+
+    @Bindable
+    public String getClassStartTime() {
+        return classStartTime;
+    }
+
+    public void setClassStartTime(String classStartTime) {
+        this.classStartTime = classStartTime;
+        notifyPropertyChanged(com.casic.titan.demo.BR.classStartTime);
     }
 
     @Bindable

@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_confirm"
+        android:id="@+id/cl_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white_16">
+        android:background="@drawable/rounded_white">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialog_textView"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/dialog_tips"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="90dp"
-            android:gravity="center"
-            android:paddingTop="@dimen/padding_l"
-            android:paddingBottom="@dimen/padding_l"
-            android:paddingStart="@dimen/padding_xl"
-            android:paddingEnd="@dimen/padding_xl"
-            android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xl"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="tel:055165555744" />
+            tools:text="修改管理员密码"
+            android:textColor="@color/autoColor"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialog_input"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y80"
+            android:gravity="center_vertical"
+            android:hint="@string/please_entry_something"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColorHint="@color/hint_text_color"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_tips"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:paddingStart="@dimen/padding_l"
+            android:paddingEnd="@dimen/padding_l"
+            android:background="@drawable/round_white_bg_border"
+            android:textSize="@dimen/font_size_xl" />
 
         <View
             android:id="@+id/h_line"
             android:layout_height="1dp"
             android:layout_width="0dp"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
             android:background="@color/h_line_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
+            app:layout_constraintTop_toBottomOf="@id/dialog_input" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_cancel"
@@ -75,7 +92,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/sure"
             app:layout_constraintHorizontal_weight="1"
-            android:textColor="@color/themeColor"
+            android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/s_line"

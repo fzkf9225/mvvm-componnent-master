@@ -103,6 +103,48 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_birthday"
                 app:required="true"
                 app:text="@{data.educationalExperienceDate}" />
+            <!--开学时间-->
+            <com.casic.titan.commonui.form.FormDateTime
+                android:id="@+id/tv_school_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:confirmTextColor="@color/theme_green"
+                app:startYear="1990"
+                app:endYear="2024"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请选择开学时间"
+                app:label="开学时间"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_educational_experience_date"
+                app:required="true"
+                app:text="@{data.schoolStartTime}" />
+            <!--每天上课时间-->
+            <com.casic.titan.commonui.form.FormTime
+                android:id="@+id/tv_class_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginStart="16dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp"
+                app:bottomBorder="true"
+                app:confirmTextColor="@color/theme_green"
+                app:startYear="1990"
+                app:endYear="2024"
+                app:formImeOptions="actionNext"
+                app:formInputType="text"
+                app:hint="请选择开学时间"
+                app:label="开学时间"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_school_start_time"
+                app:required="true"
+                app:text="@{data.classStartTime}" />
             <!--手机号码-->
             <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_mobile"
@@ -118,7 +160,7 @@
                 app:label="手机号码"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_educational_experience_date"
+                app:layout_constraintTop_toBottomOf="@+id/tv_class_start_time"
                 app:required="true"
                 app:text="@={data.mobile}" />
             <!--座机-->

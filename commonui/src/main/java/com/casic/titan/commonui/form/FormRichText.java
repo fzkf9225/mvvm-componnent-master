@@ -107,6 +107,10 @@ public class FormRichText extends ConstraintLayout {
         binding.tvRichText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    public FormRichTextBinding getBinding() {
+        return binding;
+    }
+
     /**
      * 不要使用这个因为会导致databinding双向绑定无效
      */

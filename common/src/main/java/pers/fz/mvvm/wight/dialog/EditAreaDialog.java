@@ -3,6 +3,7 @@ package pers.fz.mvvm.wight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -12,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.EditAreaDialogBinding;
+import pers.fz.mvvm.databinding.DialogEditAreaBinding;
 import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
 
 
@@ -29,8 +28,8 @@ import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
  */
 
 public class EditAreaDialog extends Dialog {
-    private EditAreaDialogBinding binding;
-    private OnInputDialogInterfaceListener sureClickListener, cancelClickListener;
+    private DialogEditAreaBinding binding;
+    private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
     private String strSureText = "确定", strCancelText = "取消";
     private String tipsStr, hintStr, defaultStr;
@@ -38,14 +37,20 @@ public class EditAreaDialog extends Dialog {
     private int maxWords = 30;
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
+    private ColorStateList textColor = null;
     private ColorStateList tipColor = null;
+
+    private Drawable bgDrawable;
+
+    private final LayoutInflater layoutInflater;
 
     public EditAreaDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
+        layoutInflater = LayoutInflater.from(context);
     }
 
-    public EditAreaDialog setOnSureClickListener(OnInputDialogInterfaceListener sureClickListener) {
-        this.sureClickListener = sureClickListener;
+    public EditAreaDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
+        this.onPositiveClickListener = onPositiveClickListener;
         return this;
     }
 
@@ -54,8 +59,8 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
-    public EditAreaDialog setOnCancelClickListener(OnInputDialogInterfaceListener cancelClickListener) {
-        this.cancelClickListener = cancelClickListener;
+    public EditAreaDialog setOnNegativeClickListener(OnInputDialogInterfaceListener onNegativeClickListener) {
+        this.onNegativeClickListener = onNegativeClickListener;
         return this;
     }
 
@@ -64,8 +69,18 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
+    public EditAreaDialog setBgDrawable(Drawable bgDrawable) {
+        this.bgDrawable = bgDrawable;
+        return this;
+    }
+
     public EditAreaDialog setNegativeTextColor(@ColorInt int color) {
         negativeTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public EditAreaDialog setTextColor(@ColorInt int color) {
+        textColor = ColorStateList.valueOf(color);
         return this;
     }
 
@@ -114,13 +129,22 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
+    public DialogEditAreaBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
-        binding = EditAreaDialogBinding.inflate(LayoutInflater.from(getContext()),null,false);
+        binding = DialogEditAreaBinding.inflate(layoutInflater, null, false);
         // 初始化控件
         if (positiveTextColor != null) {
             binding.dialogSure.setTextColor(positiveTextColor);
         }
-
+        if (textColor != null) {
+            binding.dialogInput.setTextColor(textColor);
+        }
+        if (bgDrawable != null) {
+            binding.clEditArea.setBackground(bgDrawable);
+        }
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
@@ -140,13 +164,13 @@ public class EditAreaDialog extends Dialog {
         }
 
         binding.dialogSure.setOnClickListener(v -> {
-            if (sureClickListener != null) {
-                sureClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+            if (onPositiveClickListener != null) {
+                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             }
         });
         binding.dialogCancel.setOnClickListener(v -> {
-            if (cancelClickListener != null) {
-                cancelClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+            if (onNegativeClickListener != null) {
+                onNegativeClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             } else {
                 dismiss();
             }
@@ -154,12 +178,15 @@ public class EditAreaDialog extends Dialog {
         setCanceledOnTouchOutside(outSide);
         setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
+        if (dialogWindow == null) {
+            return;
+        }
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
         // 设置Dialog从窗体中间弹出

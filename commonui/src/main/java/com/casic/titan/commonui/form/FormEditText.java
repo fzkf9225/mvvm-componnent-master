@@ -121,6 +121,10 @@ public class FormEditText extends ConstraintLayout {
         }
     }
 
+    public FormEditTextBinding getBinding() {
+        return binding;
+    }
+
     /**
      * 不要使用这个因为会导致databinding双向绑定无效
      */

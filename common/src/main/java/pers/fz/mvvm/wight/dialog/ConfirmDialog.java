@@ -3,6 +3,8 @@ package pers.fz.mvvm.wight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,8 +25,8 @@ import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
  * describe：确认弹框
  */
 public class ConfirmDialog extends Dialog {
-    private final Context context;
     private String content;
+    private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
     private String strSureText = "确定", strCancelText = "取消";
@@ -32,10 +34,16 @@ public class ConfirmDialog extends Dialog {
 
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
+    private ColorStateList textColor = null;
+
+    private Drawable bgDrawable;
+    private final LayoutInflater layoutInflater;
+
+    private DialogConfirmBinding binding;
 
     public ConfirmDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
-        this.context = context;
+        layoutInflater = LayoutInflater.from(context);
     }
 
     public ConfirmDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
@@ -58,6 +66,16 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    public ConfirmDialog setSpannableContent(SpannableString spannableContent) {
+        this.spannableContent = spannableContent;
+        return this;
+    }
+
+    public ConfirmDialog setBgDrawable(Drawable bgDrawable) {
+        this.bgDrawable = bgDrawable;
+        return this;
+    }
+
     public ConfirmDialog setPositiveTextColor(@ColorInt int color) {
         positiveTextColor = ColorStateList.valueOf(color);
         return this;
@@ -65,6 +83,11 @@ public class ConfirmDialog extends Dialog {
 
     public ConfirmDialog setNegativeTextColor(@ColorInt int color) {
         negativeTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public ConfirmDialog setTextColor(@ColorInt int color) {
+        textColor = ColorStateList.valueOf(color);
         return this;
     }
 
@@ -95,16 +118,26 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    public DialogConfirmBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
-        DialogConfirmBinding binding = DialogConfirmBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
         binding.dialogSure.setText(strSureText);
         binding.dialogCancel.setText(strCancelText);
         if (positiveTextColor != null) {
             binding.dialogSure.setTextColor(positiveTextColor);
         }
-
+        if (bgDrawable != null) {
+            binding.clConfirm.setBackground(bgDrawable);
+        }
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
+        }
+
+        if (textColor != null) {
+            binding.dialogTextView.setTextColor(textColor);
         }
 
         if (!isShowLineView) {
@@ -128,7 +161,11 @@ public class ConfirmDialog extends Dialog {
                 onNegativeClickListener.onDialogClick(this);
             }
         });
-        binding.dialogTextView.setText(content);
+        if (spannableContent == null) {
+            binding.dialogTextView.setText(content);
+        } else {
+            binding.dialogTextView.setText(spannableContent);
+        }
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
@@ -136,12 +173,12 @@ public class ConfirmDialog extends Dialog {
         if (dialogWindow == null) {
             return;
         }
-        DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
+        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
         // 设置Dialog从窗体中间弹出

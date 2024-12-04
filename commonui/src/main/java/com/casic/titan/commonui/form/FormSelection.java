@@ -114,6 +114,10 @@ public class FormSelection extends ConstraintLayout {
         }
     }
 
+    public FormSelectionBinding getBinding() {
+        return binding;
+    }
+
     /**
      * 不要使用这个因为会导致databinding双向绑定无效
      */

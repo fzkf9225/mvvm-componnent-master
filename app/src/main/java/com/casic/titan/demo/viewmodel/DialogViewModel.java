@@ -123,7 +123,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
                     .setDefaultStr("北京")
                     .setHintStr("请填写城市名称")
                     .setTipsStr("城市")
-                    .setOnSureClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
+                    .setOnPositiveClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
                     .builder()
                     .show();
         } else if (R.id.editAreaDialog == view.getId()) {
@@ -131,7 +131,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
                     .setDefaultStr("北京")
                     .setHintStr("请填写城市名称")
                     .setTipsStr("城市")
-                    .setOnSureClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
+                    .setOnPositiveClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
                     .builder()
                     .show();
         } else if (R.id.menuDialog == view.getId()) {
@@ -146,7 +146,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
         } else if (R.id.messageDialog == view.getId()) {
             new MessageDialog(view.getContext())
                     .setMessage("这是MessageDialog内容")
-                    .setOnSureClickListener(dialog -> baseView.showToast("这是MessageDialog"))
+                    .setOnPositiveClickListener(dialog -> baseView.showToast("这是MessageDialog"))
                     .builder()
                     .show();
         } else if (R.id.openImageDialog == view.getId()) {

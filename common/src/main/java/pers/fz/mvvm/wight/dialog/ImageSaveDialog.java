@@ -16,9 +16,8 @@ import pers.fz.mvvm.R;
 
 /**
  * Created by fz on 2018/3/29.
- * 选择照片和拍照弹框
+ * describe:选择照片和拍照弹框
  */
-
 public class ImageSaveDialog extends Dialog {
     private final Context mContext;
     private OnImageSaveListener onImageSaveListener;
@@ -29,7 +28,7 @@ public class ImageSaveDialog extends Dialog {
     }
 
     public ImageSaveDialog(@NonNull Context context) {
-        super(context,R.style.ActionSheetDialogStyle_No_Bg);
+        super(context, R.style.ActionSheetDialogStyle_No_Bg);
         this.mContext = context;
     }
 
@@ -43,13 +42,16 @@ public class ImageSaveDialog extends Dialog {
         Button saveLocal = dialogView.findViewById(R.id.save_local);
         Button buttonCancel = dialogView.findViewById(R.id.button_cancel);
         buttonCancel.setOnClickListener(v -> dismiss());
-        saveLocal.setOnClickListener(v ->{
+        saveLocal.setOnClickListener(v -> {
             if (onImageSaveListener != null) {
                 onImageSaveListener.saveSuccess(this);
             }
         });
         setContentView(dialogView);
         Window dialogWindow = getWindow();
+        if (dialogWindow == null) {
+            return this;
+        }
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(Gravity.BOTTOM);

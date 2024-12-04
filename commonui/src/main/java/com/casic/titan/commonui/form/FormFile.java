@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileAddAdapter;
 import com.casic.titan.commonui.bean.AttachmentBean;
+import com.casic.titan.commonui.databinding.FormFileBinding;
 import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import java.util.ArrayList;
@@ -51,10 +52,6 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     protected int bgColor = 0xFFF1F3F2;
     protected boolean required = false;
     protected boolean bottomBorder = true;
-    protected TextView tvLabel, tvRequired;
-    protected TextView tvEmpty;
-    protected ImageView imageAdd;
-    protected RecyclerView mRecyclerViewFile;
     private FileAddAdapter fileAddAdapter;
     private MediaHelper mediaHelper;
     private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
@@ -66,6 +63,8 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     private int labelTextColor;
     private int fileAddSrc = R.mipmap.ic_add_theme_color;
     private float radius = 5;
+
+    private FormFileBinding binding;
     public FormFile(Context context) {
         super(context);
         initAttr(null);
@@ -113,28 +112,23 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     }
 
     protected void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.form_file, this, true);
+        binding = FormFileBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(),12),
                 getPaddingEnd(), DensityUtil.dp2px(getContext(),12));
-        tvLabel = findViewById(R.id.tv_label);
-        mRecyclerViewFile = findViewById(R.id.mRecyclerViewFile);
-        imageAdd = findViewById(R.id.image_add);
-        tvEmpty = findViewById(R.id.tv_empty);
-        imageAdd.setImageResource(fileAddSrc);
-        tvRequired = findViewById(R.id.tv_required);
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        tvLabel.setText(labelString);
-        tvEmpty.setTextColor(emptyTextColor);
-        tvLabel.setTextColor(labelTextColor);
-        tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
-        tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+        binding.imageAdd.setImageResource(fileAddSrc);
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvLabel.setText(labelString);
+        binding.tvEmpty.setTextColor(emptyTextColor);
+        binding.tvLabel.setTextColor(labelTextColor);
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        tvEmpty.setVisibility(View.VISIBLE);
-        imageAdd.setOnClickListener(v -> {
+        binding.tvEmpty.setVisibility(View.VISIBLE);
+        binding.imageAdd.setOnClickListener(v -> {
             if (maxCount > 0 && fileAddAdapter.getList().size() >= maxCount) {
                 Toast.makeText(getContext(),"最多只可选择" + maxCount + "个附件",Toast.LENGTH_SHORT).show();
                 return;
@@ -146,17 +140,17 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         fileAddAdapter.setBgColor(bgColor);
         fileAddAdapter.setTextColor(rightTextColor);
         fileAddAdapter.setFileClearListener(this);
-        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewFile.getLayoutParams();
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) binding.mRecyclerViewFile.getLayoutParams();
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
-        mRecyclerViewFile.setLayoutParams(imageLayoutParams);
-        mRecyclerViewFile.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
+        binding.mRecyclerViewFile.setLayoutParams(imageLayoutParams);
+        binding.mRecyclerViewFile.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        mRecyclerViewFile.setAdapter(fileAddAdapter);
-        mRecyclerViewFile.addItemDecoration(
+        binding.mRecyclerViewFile.setAdapter(fileAddAdapter);
+        binding.mRecyclerViewFile.addItemDecoration(
                 new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),
                         0x00000000)
         );
@@ -171,7 +165,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
 
     public void setRequired(boolean required) {
         this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
     public List<AttachmentBean> getImages() {
@@ -185,19 +179,19 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         }
         fileAddAdapter.setList(images);
         fileAddAdapter.notifyDataSetChanged();
-        tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
+        binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
 
     }
 
     public void setLabel(String text) {
-        tvLabel.setText(text);
+        binding.tvLabel.setText(text);
     }
 
     @Override
     public void fileClear(View view, int position) {
         fileAddAdapter.getList().remove(position);
         fileAddAdapter.notifyDataSetChanged();
-        tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
+        binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
     }
 
     public MediaHelper getMediaHelper() {
@@ -251,7 +245,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
             AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
             fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
             fileAddAdapter.notifyDataSetChanged();
-            tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
+            binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
         });
     }
 
@@ -305,9 +299,13 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 fileAddAdapter.notifyDataSetChanged();
-                tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
+                binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
             });
         }
+    }
+
+    public FormFileBinding getBinding() {
+        return binding;
     }
 
     @Override

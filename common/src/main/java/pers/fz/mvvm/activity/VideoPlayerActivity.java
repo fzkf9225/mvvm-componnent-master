@@ -56,7 +56,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
                     .setCanOutSide(false)
                     .setMessage("视频播放地址错误！")
                     .setPositiveText("确定")
-                    .setOnSureClickListener(dialog -> {
+                    .setOnPositiveClickListener(dialog -> {
                         dialog.dismiss();
                         VideoPlayerActivity.this.finish();
                     })

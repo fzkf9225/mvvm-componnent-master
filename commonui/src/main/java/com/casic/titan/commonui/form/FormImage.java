@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
+import com.casic.titan.commonui.databinding.FormImageBinding;
 import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import java.util.ArrayList;
@@ -44,15 +45,13 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, DefaultLifecycleObserver{
+public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, DefaultLifecycleObserver {
     protected String labelString;
     protected int bgColor;
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected boolean compress = false;
     protected int compressImageSize = 300;
-    protected TextView tvLabel, tvRequired;
-    protected RecyclerView mRecyclerViewImage;
     private ImageAddAdapter imageAddAdapter;
     private MediaHelper mediaHelper;
     private int mediaType = OpenImageDialog.CAMERA_ALBUM;
@@ -64,6 +63,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     protected int labelTextColor;
     private float formLabelTextSize;
     private float formRequiredSize;
+    private FormImageBinding binding;
 
     public FormImage(Context context) {
         super(context);
@@ -92,17 +92,17 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
             compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius,  DensityUtil.dp2px(getContext(),8));
+            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, DensityUtil.dp2px(getContext(), 8));
             compressImageSize = typedArray.getInt(R.styleable.FormImage_compressImageSize, 300);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(),14));
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
-            radius =  DensityUtil.dp2px(getContext(),8);
+            radius = DensityUtil.dp2px(getContext(), 8);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -117,18 +117,15 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     }
 
     protected void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
+        binding = FormImageBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(),12),
-                getPaddingEnd(), DensityUtil.dp2px(getContext(),12));
-        tvLabel = findViewById(R.id.tv_label);
-        mRecyclerViewImage = findViewById(R.id.mRecyclerViewImage);
-        tvRequired = findViewById(R.id.tv_required);
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        tvLabel.setText(labelString);
-        tvLabel.setTextColor(labelTextColor);
-        tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(), 12),
+                getPaddingEnd(), DensityUtil.dp2px(getContext(), 12));
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvLabel.setText(labelString);
+        binding.tvLabel.setTextColor(labelTextColor);
+        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
@@ -137,17 +134,17 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         imageAddAdapter.setRadius(radius);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
-        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewImage.getLayoutParams();
+        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) binding.mRecyclerViewImage.getLayoutParams();
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
-        mRecyclerViewImage.setLayoutParams(imageLayoutParams);
-        mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(),4), 0x00000000));
-        mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
+        binding.mRecyclerViewImage.setLayoutParams(imageLayoutParams);
+        binding.mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 4), 0x00000000));
+        binding.mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        mRecyclerViewImage.setAdapter(imageAddAdapter);
+        binding.mRecyclerViewImage.setAdapter(imageAddAdapter);
     }
 
     public void setOnImageAddListener(ImageAddAdapter.ImageViewAddListener onImageAddListener) {
@@ -168,7 +165,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
     public void setRequired(boolean required) {
         this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
     public List<Uri> getImages() {
@@ -211,7 +208,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
     }
 
     public void setLabel(String text) {
-        tvLabel.setText(text);
+        binding.tvLabel.setText(text);
     }
 
     @Override
@@ -249,17 +246,17 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 .setOnLoadingListener(new OnLoadingListener() {
                     @Override
                     public void showLoading(String dialogMessage) {
-                        ((BaseFragment<?, ?>)fragment).showLoading(dialogMessage);
+                        ((BaseFragment<?, ?>) fragment).showLoading(dialogMessage);
                     }
 
                     @Override
                     public void refreshLoading(String dialogMessage) {
-                        ((BaseFragment<?, ?>)fragment).refreshLoading(dialogMessage);
+                        ((BaseFragment<?, ?>) fragment).refreshLoading(dialogMessage);
                     }
 
                     @Override
                     public void hideLoading() {
-                        ((BaseFragment<?, ?>)fragment).hideLoading();
+                        ((BaseFragment<?, ?>) fragment).hideLoading();
                     }
                 })
                 .setMediaListener(new MediaListener() {
@@ -317,17 +314,17 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                     .setOnLoadingListener(new OnLoadingListener() {
                         @Override
                         public void showLoading(String dialogMessage) {
-                            ((BaseActivity<?, ?>)getContext()).showLoading(dialogMessage);
+                            ((BaseActivity<?, ?>) getContext()).showLoading(dialogMessage);
                         }
 
                         @Override
                         public void refreshLoading(String dialogMessage) {
-                            ((BaseActivity<?, ?>)getContext()).refreshLoading(dialogMessage);
+                            ((BaseActivity<?, ?>) getContext()).refreshLoading(dialogMessage);
                         }
 
                         @Override
                         public void hideLoading() {
-                            ((BaseActivity<?, ?>)getContext()).hideLoading();
+                            ((BaseActivity<?, ?>) getContext()).hideLoading();
                         }
                     })
                     .setMediaListener(new MediaListener() {
@@ -373,6 +370,10 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 }
             });
         }
+    }
+
+    public FormImageBinding getBinding() {
+        return binding;
     }
 
     @Override

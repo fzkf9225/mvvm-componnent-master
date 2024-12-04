@@ -29,6 +29,7 @@ public class FormTime extends FormSelection {
     private String format = DateUtil.DEFAULT_FORMAT_TIME;
     private int confirmTextColor;
     private int datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
+    private DatePickDialog datePickDialog;
 
     public FormTime(Context context) {
         super(context);
@@ -61,25 +62,29 @@ public class FormTime extends FormSelection {
         if (TextUtils.isEmpty(format)) {
             format = DateUtil.DEFAULT_FORMAT_TIME;
         }
+        datePickDialog = new DatePickDialog(getContext())
+                .setPositiveTextColor(this.confirmTextColor)
+                .setTodayTextColor(this.confirmTextColor)
+                .setDateMode(DateMode.getMode(this.datePickModel))
+                .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                    String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                    if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
+                        formDataSource.textValue.set(text);
+                        return;
+                    }
+                    formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                })
+                .builder();
     }
 
+    public DatePickDialog getDatePickDialog() {
+        return datePickDialog;
+    }
 
     @Override
     protected void init() {
         super.init();
         binding.tvSelection.setOnClickListener(v -> {
-            DatePickDialog datePickDialog = new DatePickDialog(v.getContext())
-                    .setPositiveTextColor(this.confirmTextColor)
-                    .setTodayTextColor(this.confirmTextColor)
-                    .setDateMode(DateMode.getMode(this.datePickModel))
-                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
-                        if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
-                            formDataSource.textValue.set(text);
-                            return;
-                        }
-                        formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
-                    });
             if (!TextUtils.isEmpty(formDataSource.textValue.get())) {
                 Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), this.format);
                 Calendar calendar = Calendar.getInstance();
@@ -88,7 +93,7 @@ public class FormTime extends FormSelection {
                 datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
                 datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
             }
-            datePickDialog.builder().show();
+            datePickDialog.show();
         });
     }
 }

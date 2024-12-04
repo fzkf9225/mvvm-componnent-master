@@ -3,6 +3,7 @@ package pers.fz.mvvm.wight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -11,14 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.InputDialogBinding;
+import pers.fz.mvvm.databinding.DialogInputBinding;
 import pers.fz.mvvm.listener.OnInputDialogInterfaceListener;
 import pers.fz.mvvm.util.common.StringUtil;
 
@@ -29,9 +28,9 @@ import pers.fz.mvvm.util.common.StringUtil;
  */
 
 public class InputDialog extends Dialog {
-    private InputDialogBinding binding;
+    private DialogInputBinding binding;
 
-    private OnInputDialogInterfaceListener sureClickListener, cancelClickListener;
+    private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
     private String strSureText = "确定", strCancelText = "取消";
     private String tipsStr, hintStr, defaultStr;
@@ -39,14 +38,19 @@ public class InputDialog extends Dialog {
     private int maxWords = 30;
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
+    private ColorStateList textColor = null;
     private ColorStateList tipColor = null;
+
+    private final LayoutInflater layoutInflater;
+    private Drawable bgDrawable;
 
     public InputDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
+        layoutInflater = LayoutInflater.from(context);
     }
 
-    public InputDialog setOnSureClickListener(OnInputDialogInterfaceListener sureClickListener) {
-        this.sureClickListener = sureClickListener;
+    public InputDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
+        this.onPositiveClickListener = onPositiveClickListener;
         return this;
     }
 
@@ -55,8 +59,13 @@ public class InputDialog extends Dialog {
         return this;
     }
 
-    public InputDialog setOnCancelClickListener(OnInputDialogInterfaceListener cancelClickListener) {
-        this.cancelClickListener = cancelClickListener;
+    public InputDialog setBgDrawable(Drawable bgDrawable) {
+        this.bgDrawable = bgDrawable;
+        return this;
+    }
+
+    public InputDialog setOnNegativeClickListener(OnInputDialogInterfaceListener onNegativeClickListener) {
+        this.onNegativeClickListener = onNegativeClickListener;
         return this;
     }
 
@@ -72,6 +81,11 @@ public class InputDialog extends Dialog {
 
     public InputDialog setTipColor(@ColorInt int color) {
         tipColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public InputDialog setTextColor(@ColorInt int color) {
+        this.textColor = ColorStateList.valueOf(color);
         return this;
     }
 
@@ -100,12 +114,12 @@ public class InputDialog extends Dialog {
         return this;
     }
 
-    public InputDialog setSureText(String strSureText) {
+    public InputDialog setPositiveText(String strSureText) {
         this.strSureText = strSureText;
         return this;
     }
 
-    public InputDialog setCancelText(String strCancelText) {
+    public InputDialog setNegativeText(String strCancelText) {
         this.strCancelText = strCancelText;
         return this;
     }
@@ -115,19 +129,32 @@ public class InputDialog extends Dialog {
         return this;
     }
 
+    public DialogInputBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
-        binding = InputDialogBinding.inflate( LayoutInflater.from(getContext()),null,false);
+        binding = DialogInputBinding.inflate(layoutInflater, null, false);
         // 初始化控件
         if (positiveTextColor != null) {
             binding.dialogSure.setTextColor(positiveTextColor);
+        }
+        if (textColor != null) {
+            binding.dialogInput.setTextColor(textColor);
+        }
+
+        if (bgDrawable != null) {
+            binding.clInput.setBackground(bgDrawable);
         }
 
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
+
         if (tipColor != null) {
             binding.dialogTips.setTextColor(tipColor);
         }
+
         binding.dialogInput.setHint(hintStr);
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
@@ -141,13 +168,13 @@ public class InputDialog extends Dialog {
         }
 
         binding.dialogSure.setOnClickListener(v -> {
-            if (sureClickListener != null) {
-                sureClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+            if (onPositiveClickListener != null) {
+                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             }
         });
         binding.dialogCancel.setOnClickListener(v -> {
-            if (cancelClickListener != null) {
-                cancelClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+            if (onNegativeClickListener != null) {
+                onNegativeClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
             } else {
                 dismiss();
             }
@@ -160,7 +187,7 @@ public class InputDialog extends Dialog {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
         // 设置Dialog从窗体中间弹出
