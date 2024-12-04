@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.casic.titan.commonui.R
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.databinding.ViewCalendarBinding
+import com.casic.titan.commonui.fragment.CalendarMonthFragment
 import com.casic.titan.commonui.helper.CalendarDataSource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -38,16 +39,17 @@ import pers.fz.mvvm.wight.empty.EmptyLayout
  * describe:自定义日历
  */
 class CalendarView : ConstraintLayout {
-    var binding: ViewCalendarBinding ?=null
+    var binding: ViewCalendarBinding? = null
 
     /**
      * 周末的颜色
      */
-    var weekTextColor: Int ?=null
+    var weekTextColor: Int? = null
+
     /**
      * 工作日的颜色
      */
-    var workingDayTextColor: Int ?=null
+    var workingDayTextColor: Int? = null
     var startDate: String? = null
     var endDate: String? = null
 
@@ -86,33 +88,38 @@ class CalendarView : ConstraintLayout {
     /**
      * 日历文字颜色大小
      */
-    var textSize :Float ?=null
+    var textSize: Float? = null
 
     /**
      * 日历文字可点击范围，也就是选中的大小，不包括下面的点
      */
-    var itemWidth :Int ?=null
+    var itemWidth: Int? = null
+
     /**
      * 日历文字可点击范围，也就是选中的大小，不包括下面的点
      */
-    var itemHeight :Int ?=null
+    var itemHeight: Int? = null
+
     /**
      * 日历下面圆点的大小
      */
-    var dotHeight :Int ?=null
+    var dotHeight: Int? = null
+
     /**
      * 日历下面圆点的大小
      */
-    var dotWidth :Int ?=null
+    var dotWidth: Int? = null
+
     /**
      * 选中文字颜色
      */
-    var selectedTextColor: Int ?=null
+    var selectedTextColor: Int? = null
 
     private var onViewPagerChangedListener: OnViewPagerChangedListener? = null
 
     companion object {
-        const val TAG :String = "CalendarView"
+        const val TAG: String = "CalendarView"
+
         object Mode {
             //正常默认样式，即日历样式
             const val SINGLE = 0
@@ -154,9 +161,15 @@ class CalendarView : ConstraintLayout {
     private fun initAttrs(attrs: AttributeSet?) {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarView)
-            workingDayTextColor = typedArray.getColor(R.styleable.CalendarView_workingDayTextColor, ContextCompat.getColor(context,R.color.auto_color))
+            workingDayTextColor = typedArray.getColor(
+                R.styleable.CalendarView_workingDayTextColor,
+                ContextCompat.getColor(context, R.color.auto_color)
+            )
             //如果没设置默认为工作日文字颜色
-            weekTextColor = typedArray.getColor(R.styleable.CalendarView_weekTextColor, ContextCompat.getColor(context,R.color.auto_color))
+            weekTextColor = typedArray.getColor(
+                R.styleable.CalendarView_weekTextColor,
+                ContextCompat.getColor(context, R.color.auto_color)
+            )
             startDate = typedArray.getString(R.styleable.CalendarView_startDate)
             endDate = typedArray.getString(R.styleable.CalendarView_endDate)
             if (startDate.isNullOrBlank()) {
@@ -168,31 +181,39 @@ class CalendarView : ConstraintLayout {
             mode = typedArray.getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
             showDot = typedArray.getBoolean(R.styleable.CalendarView_showDot, false)
             selectedTextColor =
-                typedArray.getColor(R.styleable.CalendarView_selectedTextColor, ContextCompat.getColor(context,R.color.white))
+                typedArray.getColor(
+                    R.styleable.CalendarView_selectedTextColor,
+                    ContextCompat.getColor(context, R.color.white)
+                )
             selectedBg = typedArray.getDrawable(R.styleable.CalendarView_selectedBg)
             normalBg = typedArray.getDrawable(R.styleable.CalendarView_normalBg)
-            textSize = typedArray.getDimension(R.styleable.CalendarView_textSize,
+            textSize = typedArray.getDimension(
+                R.styleable.CalendarView_textSize,
                 DensityUtil.sp2px(context, 14f).toFloat()
             )
 
-            itemWidth = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemWidth,
+            itemWidth = typedArray.getDimensionPixelOffset(
+                R.styleable.CalendarView_itemWidth,
                 DensityUtil.dp2px(context, 36f)
             )
-            itemHeight = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemHeight,
+            itemHeight = typedArray.getDimensionPixelOffset(
+                R.styleable.CalendarView_itemHeight,
                 DensityUtil.dp2px(context, 36f)
             )
 
-            dotWidth = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemWidth,
+            dotWidth = typedArray.getDimensionPixelOffset(
+                R.styleable.CalendarView_itemWidth,
                 DensityUtil.dp2px(context, 4f)
             )
-            dotHeight = typedArray.getDimensionPixelOffset(R.styleable.CalendarView_itemHeight,
+            dotHeight = typedArray.getDimensionPixelOffset(
+                R.styleable.CalendarView_itemHeight,
                 DensityUtil.dp2px(context, 4f)
             )
             typedArray.recycle()
         } ?: run {
-            workingDayTextColor = ContextCompat.getColor(context,R.color.auto_color)
-            weekTextColor = ContextCompat.getColor(context,R.color.auto_color)
-            selectedTextColor = ContextCompat.getColor(context,R.color.white)
+            workingDayTextColor = ContextCompat.getColor(context, R.color.auto_color)
+            weekTextColor = ContextCompat.getColor(context, R.color.auto_color)
+            selectedTextColor = ContextCompat.getColor(context, R.color.white)
             textSize = DensityUtil.sp2px(context, 14f).toFloat()
             startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
             endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
@@ -217,13 +238,42 @@ class CalendarView : ConstraintLayout {
     private fun initView() {
         binding = ViewCalendarBinding.inflate(LayoutInflater.from(context), this, true)
         binding?.lifecycleOwner = context as LifecycleOwner
-        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         binding?.monthViewPager2?.registerOnPageChangeCallback(onPagerChangedListener)
         binding?.emptyLayout?.setErrorMessage("正在加载日历...")
         refreshTitle()
     }
 
-    public fun refreshTitle(){
+    @SuppressLint("NotifyDataSetChanged")
+    public fun notifyItemChanged(pos: Int) {
+        val currentFragment = calendarPagerAdapter?.getItem(pos)
+        currentFragment?.adapter?.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public fun notifyItemChanged(pos: Int, calendarData: CalendarData) {
+        calendarPagerAdapter?.dateList!!.toMutableList()[pos] = calendarData
+        calendarPagerAdapter?.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public fun notifyDataChanged(dataList: List<CalendarData>) {
+        calendarPagerAdapter?.dateList = dataList
+        calendarPagerAdapter?.notifyDataSetChanged()
+    }
+
+    public fun getViewPager(): ViewPager2? {
+        return binding?.monthViewPager2
+    }
+
+    public fun getEmptyLayout(): EmptyLayout? {
+        return binding?.emptyLayout
+    }
+
+    public fun refreshTitle() {
         binding?.calendarTitle?.removeAllViews()
         for (week in arrayOf("日", "一", "二", "三", "四", "五", "六")) {
             val textView = AppCompatTextView(context)
@@ -275,7 +325,10 @@ class CalendarView : ConstraintLayout {
                 .map {
                     val gson = Gson()
                     val jsonString = gson.toJson(it)
-                    val dataList  = gson.fromJson<List<CalendarData>>(jsonString, object : TypeToken<List<CalendarData?>?>() {}.type)
+                    val dataList = gson.fromJson<List<CalendarData>>(
+                        jsonString,
+                        object : TypeToken<List<CalendarData?>?>() {}.type
+                    )
                     //序列化和反序列化集合，为的是修改此日历数据不会影响全局数据
                     return@map dataList
                 }
@@ -302,7 +355,10 @@ class CalendarView : ConstraintLayout {
                 .map {
                     val gson = Gson()
                     val jsonString = gson.toJson(it)
-                    val dataList  = gson.fromJson<List<CalendarData>>(jsonString, object : TypeToken<List<CalendarData?>?>() {}.type)
+                    val dataList = gson.fromJson<List<CalendarData>>(
+                        jsonString,
+                        object : TypeToken<List<CalendarData?>?>() {}.type
+                    )
                     //序列化和反序列化集合，为的是修改此日历数据不会影响全局数据
                     return@map dataList
                 }
@@ -335,7 +391,6 @@ class CalendarView : ConstraintLayout {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             onViewPagerChangedListener?.onPagerChanged(
-                calendarPagerAdapter?.getItem(position),
                 calendarPagerAdapter?.dateList?.get(position)!!,
                 position
             )
@@ -355,7 +410,7 @@ class CalendarView : ConstraintLayout {
     }
 
     public interface OnViewPagerChangedListener {
-        fun onPagerChanged(fragment: Fragment?,calendarData: CalendarData, pos: Int)
+        fun onPagerChanged(itemData: CalendarData, pos: Int)
     }
 
     public fun setOnViewPagerChangedListener(listener: OnViewPagerChangedListener?) {

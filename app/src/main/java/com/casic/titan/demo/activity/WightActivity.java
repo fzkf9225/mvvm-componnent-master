@@ -1,5 +1,6 @@
 package com.casic.titan.demo.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -50,6 +51,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         return "组件示例";
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void initView(Bundle savedInstanceState) {
         binding.setImageUrl(imageUrl);
@@ -106,19 +108,21 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         int height = DensityUtil.dp2px(this, 4f); // 高度
         shapeDrawable.setBounds(0, 0, width, height);
         shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.media.R.color.theme_green));
-        binding.calendarViewSingle.registerOnPageChangeCallback((fragment, calendarData, pos) -> {
+        binding.calendarViewSingle.registerOnPageChangeCallback((calendarData, pos) -> {
             calendarData.getCalendarDataList().forEach(item -> item.setDrawable(shapeDrawable));
-            if (fragment != null && fragment instanceof CalendarMonthFragment calendarMonthFragment) {
-                calendarMonthFragment.getAdapter().notifyDataSetChanged();
+            CalendarMonthFragment fragment = binding.calendarViewSingle.getCalendarPagerAdapter().getItem(pos);
+            if (fragment != null) {
+                fragment.getAdapter().notifyDataSetChanged();
             }
             binding.tvCalendarViewSingle.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（单选模式）");
         });
         binding.calendarViewSingle.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate));
         //多选日历
         binding.calendarViewMulti.initData(getLifecycle(), getSupportFragmentManager());
-        binding.calendarViewMulti.registerOnPageChangeCallback((fragment, calendarData, pos) -> {
-            if (fragment != null && fragment instanceof CalendarMonthFragment calendarMonthFragment) {
-                calendarMonthFragment.getAdapter().notifyDataSetChanged();
+        binding.calendarViewMulti.registerOnPageChangeCallback((calendarData, pos) -> {
+            CalendarMonthFragment fragmentMulti = binding.calendarViewMulti.getCalendarPagerAdapter().getItem(pos);
+            if (fragmentMulti != null) {
+                fragmentMulti.getAdapter().notifyDataSetChanged();
             }
             binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
         });

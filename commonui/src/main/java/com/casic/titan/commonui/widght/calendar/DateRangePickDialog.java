@@ -389,17 +389,16 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private final CalendarView.OnViewPagerChangedListener onViewPagerChangedListener = (fragment, calendarData, pos) -> {
+    private final CalendarView.OnViewPagerChangedListener onViewPagerChangedListener = (calendarData, pos) -> {
         String stringBuilder = calendarData.getYear() +
                 "-" +
                 NumberUtils.formatMonthOrDay(calendarData.getMonth());
         binding.tvMonth.setText(stringBuilder);
+        CalendarMonthFragment fragment = binding.calendarViewRange.getCalendarPagerAdapter().getItem(pos);
         if (fragment == null) {
             return;
         }
-        if (fragment instanceof CalendarMonthFragment calendarMonthFragment) {
-            calendarMonthFragment.getAdapter().notifyDataSetChanged();
-        }
+        fragment.getAdapter().notifyDataSetChanged();
     };
 
     @Override

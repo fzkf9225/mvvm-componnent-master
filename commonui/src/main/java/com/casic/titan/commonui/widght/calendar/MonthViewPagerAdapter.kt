@@ -16,7 +16,7 @@ class MonthViewPagerAdapter(
     private val fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     private var calendarView: CalendarView,
-    val dateList: List<CalendarData>?
+    var dateList: List<CalendarData>?
 ) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
