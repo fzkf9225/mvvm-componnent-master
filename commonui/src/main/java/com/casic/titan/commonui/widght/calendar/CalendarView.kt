@@ -38,7 +38,7 @@ import pers.fz.mvvm.wight.empty.EmptyLayout
  * describe:自定义日历
  */
 class CalendarView : ConstraintLayout {
-    private var binding: ViewCalendarBinding ?=null
+    var binding: ViewCalendarBinding ?=null
 
     /**
      * 周末的颜色
