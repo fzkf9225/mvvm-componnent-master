@@ -129,7 +129,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY id "
+        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -163,7 +163,7 @@ abstract class BaseRoomDao<T : Any> {
                     "$entry like '%${keywords ?: ""}%'"
                 } + ")")
         }
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id DESC"
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -187,7 +187,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id DESC"
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -211,7 +211,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY id ASC"
+        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy ASC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -245,7 +245,7 @@ abstract class BaseRoomDao<T : Any> {
                     "$entry like '%${keywords ?: ""}%'"
                 } + ")")
         }
-        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY id ASC"
+        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy ASC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -269,7 +269,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id desc "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy desc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -303,7 +303,7 @@ abstract class BaseRoomDao<T : Any> {
                     "$entry like '%${keywords ?: ""}%'"
                 } + ")")
         }
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id DESC "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -327,7 +327,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id asc "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy asc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -400,7 +400,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY id "
+        val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -424,7 +424,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id desc "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy desc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -458,7 +458,7 @@ abstract class BaseRoomDao<T : Any> {
                     "$entry like '%${keywords ?: ""}%'"
                 } + ")")
         }
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id DESC "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
@@ -482,7 +482,7 @@ abstract class BaseRoomDao<T : Any> {
                     "${entry.key}=${entry.value}"
                 }
             })
-        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY id asc "
+        val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy asc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")

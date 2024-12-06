@@ -1,5 +1,7 @@
 package pers.fz.mvvm.datasource;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.paging.PagingSource;
@@ -29,8 +31,21 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
     private final Map<String, Object> queryParams;
     private int startPage = 0;
 
-    private Set<String> keywordsKey;
-    private String keywords;
+    private final Set<String> keywordsKey;
+    private final String keywords;
+    private String orderBy;
+
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                              Map<String, Object> queryParams,
+                              Set<String> keywordsKey,
+                              String keywords,
+                              String orderBy) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = queryParams;
+        this.keywords = keywords;
+        this.keywordsKey = keywordsKey;
+        this.orderBy = orderBy;
+    }
 
     public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                               Map<String, Object> queryParams,
@@ -54,6 +69,20 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
         this.startPage = startPage;
     }
 
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                              Map<String, Object> queryParams,
+                              Set<String> keywordsKey,
+                              String keywords,
+                              String orderBy,
+                              int startPage) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = queryParams;
+        this.keywords = keywords;
+        this.keywordsKey = keywordsKey;
+        this.startPage = startPage;
+        this.orderBy = orderBy;
+    }
+
     @NonNull
     @Override
     public Single<LoadResult<Integer, T>> loadSingle(@NonNull PagingSource.LoadParams<Integer> loadParams) {
@@ -66,7 +95,7 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
             int offset = nextPageNumber * limit;
             Integer finalNextPageNumber = nextPageNumber;
             return Flowable.create((FlowableOnSubscribe<List<T>>) emitter -> {
-                        emitter.onNext(roomRepositoryImpl.findPageList(queryParams, keywordsKey,keywords,"id", limit, offset));
+                        emitter.onNext(roomRepositoryImpl.findPageList(queryParams, keywordsKey, keywords, TextUtils.isEmpty(orderBy) ? "id" : orderBy, limit, offset));
                         emitter.onComplete();
                     }, BackpressureStrategy.LATEST)
                     .subscribeOn(Schedulers.io())

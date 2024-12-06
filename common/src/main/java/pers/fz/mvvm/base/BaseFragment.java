@@ -48,7 +48,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
 
     public boolean lacksPermissions(String[] permissions) {
-        return PermissionsChecker.getInstance().lacksPermissions(requireContext(),permissions);
+        return PermissionsChecker.getInstance().lacksPermissions(requireContext(), permissions);
     }
 
     /**
@@ -116,9 +116,17 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
                 //如果没有指定泛型参数，则默认使用BaseViewModel
                 modelClass = BaseViewModel.class;
             }
-            mViewModel = (VM)  new ViewModelProvider(this).get(modelClass);
-            mViewModel.createRepository(this);
+            mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
+            mViewModel.createRepository(useActivityViewModel() ? ((BaseActivity)requireActivity()) : this);
         }
+    }
+
+    /**
+     * 是否和activity共用同一个viewModel
+     * @return
+     */
+    public boolean useActivityViewModel() {
+        return false;
     }
 
     /**
@@ -196,7 +204,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showToast(String msg) {
-        if(TextUtils.isEmpty(msg)){
+        if (TextUtils.isEmpty(msg)) {
             return;
         }
         requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show());

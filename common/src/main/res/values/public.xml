@@ -151,8 +151,11 @@
     <!--图片资源-->
     <public name="close" type="mipmap"/>
     <public name="ic_arrow_right" type="mipmap"/>
+    <public name="icon_gx_bottom" type="mipmap"/>
+    <public name="icon_gx_top" type="mipmap"/>
     <public name="ic_arrow_up" type="mipmap"/>
     <public name="ic_default_image" type="mipmap"/>
+    <public name="icon_head_default" type="mipmap"/>
     <public name="ic_search_app_left" type="mipmap"/>
     <public name="icon_clear" type="mipmap"/>
     <public name="icon_fh_black" type="mipmap"/>
