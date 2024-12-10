@@ -1,5 +1,6 @@
 package com.casic.titan.demo.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -38,14 +39,16 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     @Override
     public void onItemClick(View view, Person item, int position) {
         super.onItemClick(view, item, position);
-        Disposable disposable = mViewModel.getRepository().findInfoById(item.getId() ,true)
-                .subscribe((data) -> {
-                    LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
-                    showToast("查询成功！");
-                }, throwable -> {
-                    LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
-                    showToast("查询失败，" + throwable.getMessage());
-                });
+
+        LogUtil.show(ApiRetrofit.TAG, "点击："+position+","+item.getName());
+//        Disposable disposable = mViewModel.getRepository().findInfoById(item.getId() ,true)
+//                .subscribe((data) -> {
+//                    LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
+//                    showToast("查询成功！");
+//                }, throwable -> {
+//                    LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
+//                    showToast("查询失败，" + throwable.getMessage());
+//                });
     }
 
     public void searcher(String keywords) {
@@ -63,11 +66,9 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnPositiveClickListener(dialog -> {
-                    Disposable disposable = mViewModel.getRepository().deleteByParams(new HashMap<>() {{
-                                put("id", item.getId());
-                            }}, true)
-                            .subscribe((integer) -> {
-                                LogUtil.show(ApiRetrofit.TAG, "删除成功：" + integer);
+                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getRepository().delete(item,true)
+                            .subscribe(() -> {
+                                LogUtil.show(ApiRetrofit.TAG, "删除成功" );
                                 showToast("删除成功！");
                                 mViewModel.refreshData();
                                 adapter.refresh();

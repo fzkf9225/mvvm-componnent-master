@@ -21,20 +21,11 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
  * describe :
  */
 public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseView> extends BasePagingViewModel<IR, V> {
-    private PagingConfig pagingConfig;
     protected final static int DEFAULT_START_PAGE = 1;
     protected final static int DEFAULT_PAGE_SIZE = 20;
-    protected final static int DEFAULT_INIT_LOAD_SIZE = DEFAULT_PAGE_SIZE * 2;
     protected final static int DEFAULT_PREFETCH_DISTANCE = 3;
 
-    private int startPage = DEFAULT_START_PAGE;
-    /**
-     * 当请求发生错误时是否用EmptyLayout占用显示错误页
-     */
-    private boolean errorPlaceholder = true;
-
     private LiveData<PagingData<T>> items;
-
 
     public PagingViewModel(@NonNull Application application) {
         super(application);
@@ -45,10 +36,7 @@ public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseV
     }
 
     public LiveData<PagingData<T>> createPagingData() {
-        return PagingLiveData.cachedIn(PagingLiveData.getLiveData(
-                        new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>((PagingRepositoryImpl<T, V>) iRepository, getStartPage()))),
-                getCoroutineScope()
-        );
+        return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>((PagingRepositoryImpl<T, V>) iRepository, getStartPage())));
     }
 
     @Override
@@ -61,34 +49,15 @@ public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseV
         items = createPagingData();
     }
 
-    public CoroutineScope getCoroutineScope() {
-        return ViewModelKt.getViewModelScope(this);
-    }
-
-    public void setErrorPlaceholder(boolean errorPlaceholder) {
-        this.errorPlaceholder = errorPlaceholder;
-    }
-
-    public boolean isErrorPlaceholder() {
-        return errorPlaceholder;
-    }
-
-    public void setStartPage(int startPage) {
-        this.startPage = startPage;
-    }
-
     public int getStartPage() {
-        return startPage;
+        return DEFAULT_START_PAGE;
     }
 
-    public void setPagingConfig(PagingConfig pagingConfig) {
-        this.pagingConfig = pagingConfig;
-    }
-
+    /**
+     * PagingConfig中有两个参数，一个是你每页加载条数，另一个是初始的时候加载条数，Paging3默认会加载每页条数*3，但是最好是设置相同
+     * 不然PagerSource中的分页offset不太好计算，因为可能会每页的loadSize不相同，如果这两个值设置为相同是最方便的，不然的话你需要计算上一页的offset
+     */
     public PagingConfig getPagingConfig() {
-        if (pagingConfig == null) {
-            pagingConfig = new PagingConfig(DEFAULT_PAGE_SIZE, DEFAULT_PREFETCH_DISTANCE, true, DEFAULT_INIT_LOAD_SIZE);
-        }
-        return pagingConfig;
+        return new PagingConfig(DEFAULT_PAGE_SIZE, DEFAULT_PREFETCH_DISTANCE, true, DEFAULT_PAGE_SIZE);
     }
 }

@@ -74,7 +74,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_sex"
                 app:required="true"
-                app:text="@{data.birthday}" />
+                app:text="@={data.birthday}" />
             <!--教育经历-->
             <com.casic.titan.commonui.form.FormDateRange
                 android:id="@+id/tv_educational_experience_date"
@@ -102,7 +102,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_birthday"
                 app:required="true"
-                app:text="@{data.educationalExperienceDate}" />
+                app:text="@={data.educationalExperienceDate}" />
             <!--开学时间-->
             <com.casic.titan.commonui.form.FormDateTime
                 android:id="@+id/tv_school_start_time"
@@ -123,7 +123,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_educational_experience_date"
                 app:required="true"
-                app:text="@{data.schoolStartTime}" />
+                app:text="@={data.schoolStartTime}" />
             <!--每天上课时间-->
             <com.casic.titan.commonui.form.FormTime
                 android:id="@+id/tv_class_start_time"
@@ -144,7 +144,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_school_start_time"
                 app:required="true"
-                app:text="@{data.classStartTime}" />
+                app:text="@={data.classStartTime}" />
             <!--手机号码-->
             <com.casic.titan.commonui.form.FormEditText
                 android:id="@+id/edit_mobile"

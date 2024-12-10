@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 
@@ -46,10 +47,7 @@ public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositor
     }
 
     public LiveData<PagingData<Person>> createPagingData() {
-        return PagingLiveData.cachedIn(PagingLiveData.getLiveData(
-                        new Pager<>(getPagingConfig(), () -> new RxRoomPagingSource<>(iRepository,queryParams,keywordsKey,keywords))),
-                getCoroutineScope()
-        );
+        return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(), () -> new RxRoomPagingSource<>(iRepository,queryParams,keywordsKey,keywords)));
     }
 
     @Override

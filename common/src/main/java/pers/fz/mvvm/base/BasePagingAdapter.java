@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +20,6 @@ import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
  */
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
-    protected final String TAG = this.getClass().getSimpleName();
-    protected RecyclerView mRecyclerView;
 
     public PagingAdapterListener<T> onPagingAdapterListener;
 
@@ -31,19 +28,7 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     }
 
     @Override
-    public void onBindViewHolder(final BaseViewHolder baseViewHolder, final int pos) {
-        baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
-            if (onPagingAdapterListener != null) {
-                onPagingAdapterListener.onItemClick(v, getItem(pos), pos);
-            }
-        });
-        baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
-            if (onPagingAdapterListener != null) {
-                onPagingAdapterListener.onItemLongClick(v, getItem(pos), pos);
-                return true;
-            }
-            return false;
-        });
+    public void onBindViewHolder(BaseViewHolder baseViewHolder, int pos) {
         onBindHolder(baseViewHolder, getItem(pos), pos);
     }
 
@@ -53,12 +38,11 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      * @param holder
      * @param pos
      */
-    public abstract void onBindHolder(final BaseViewHolder<VDB> holder, T item, final int pos);
-
+    public abstract void onBindHolder(BaseViewHolder<VDB> holder, T item, int pos);
 
     @NotNull
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder<VDB> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return createViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getLayoutId(), parent, false));
     }
 
@@ -69,7 +53,7 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
      * @return BaseViewHolder
      */
     protected BaseViewHolder<VDB> createViewHold(VDB binding) {
-        return new BaseViewHolder<>(binding);
+        return new BaseViewHolder<>(binding,this);
     }
 
     /**
@@ -84,20 +68,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     }
 
     @Override
-    public void onViewRecycled(@NonNull BaseViewHolder<VDB> holder) {
-        super.onViewRecycled(holder);
-        try {
-            if (holder.getBinding() == null) {
-                holder.itemView.setOnClickListener(null);
-                return;
-            }
-            holder.getBinding().getRoot().setOnClickListener(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void onItemDismiss(int position) {
         notifyItemRemoved(position);
     }
@@ -105,14 +75,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     @Override
     public void onItemMove(int from, int to) {
         notifyItemMoved(from, to);
-    }
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
     }
 
     public void setOnAdapterListener(PagingAdapterListener<T> l) {

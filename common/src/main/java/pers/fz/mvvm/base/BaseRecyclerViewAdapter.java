@@ -116,20 +116,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
             onBindHeaderHolder(baseViewHolder);
             return;
         }
-        int realPosition = getRealPosition(baseViewHolder);
-        baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(v, getRealPosition(baseViewHolder));
-            }
-        });
-        baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
-            if (mOnItemLongClickListener != null) {
-                mOnItemLongClickListener.onItemLongClick(v, getRealPosition(baseViewHolder));
-                return true;
-            }
-            return false;
-        });
-        onBindHolder(baseViewHolder, realPosition);
+        onBindHolder(baseViewHolder, getRealPosition(baseViewHolder));
     }
 
     /**
@@ -210,7 +197,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      * @return BaseViewHolder
      */
     protected BaseViewHolder<VDB> createViewHold(VDB binding) {
-        return new BaseViewHolder<>(binding);
+        return new BaseViewHolder<>(binding,this);
     }
 
     /**
