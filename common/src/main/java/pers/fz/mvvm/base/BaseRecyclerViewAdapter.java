@@ -256,20 +256,6 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
         mOnItemClickListener = l;
     }
 
-    @Override
-    public void onViewRecycled(@NonNull BaseViewHolder<VDB> holder) {
-        super.onViewRecycled(holder);
-        try {
-            if (holder.getBinding() == null) {
-                holder.itemView.setOnClickListener(null);
-                return;
-            }
-            holder.getBinding().getRoot().setOnClickListener(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setOnItemLongClickListener(OnItemLongClickListener l) {
         mOnItemLongClickListener = l;
     }
