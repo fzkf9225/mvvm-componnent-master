@@ -40,7 +40,7 @@ public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewS
 
     @Override
     protected BaseRecyclerViewAdapter<PopupWindowBean, OptionTextViewBinding> getRecyclerAdapter() {
-        recyclerViewSampleAdapter = new RecyclerViewSampleAdapter(requireContext());
+        recyclerViewSampleAdapter = new RecyclerViewSampleAdapter();
         recyclerViewSampleAdapter.setOnItemClickListener(this);
         recyclerViewSampleAdapter.setOnItemLongClickListener(this);
         return recyclerViewSampleAdapter;
@@ -59,7 +59,7 @@ public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewS
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnPositiveClickListener(dialog -> {
-                    recyclerViewSampleAdapter.getList().remove(position + 1);
+                    recyclerViewSampleAdapter.getList().remove(position);
                     recyclerViewSampleAdapter.notifyItemRemoved(position + 1);
                 })
                 .builder()

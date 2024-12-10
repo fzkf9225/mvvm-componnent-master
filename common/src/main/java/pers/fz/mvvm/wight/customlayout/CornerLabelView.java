@@ -14,7 +14,6 @@ import android.view.View;
 import androidx.annotation.ColorRes;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Create by CherishTang on 2019/11/5

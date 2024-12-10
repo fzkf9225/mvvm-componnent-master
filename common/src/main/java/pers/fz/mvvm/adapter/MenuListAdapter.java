@@ -1,7 +1,5 @@
 package pers.fz.mvvm.adapter;
 
-import android.content.Context;
-
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
@@ -14,8 +12,8 @@ import pers.fz.mvvm.databinding.OptionTextViewBinding;
  */
 public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T,OptionTextViewBinding> {
 
-    public MenuListAdapter(Context mContext) {
-        super(mContext);
+    public MenuListAdapter() {
+        super();
     }
 
     @Override
@@ -26,5 +24,6 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     @Override
     public void onBindHolder(BaseViewHolder<OptionTextViewBinding> viewHolder, int pos) {
         viewHolder.getBinding().setItem(mList.get(pos));
+        viewHolder.getBinding().executePendingBindings();
     }
 }

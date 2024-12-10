@@ -83,7 +83,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     }
 
     private void initParent() {
-        popupWindowAdapter = new PopupWindowAdapter<>(activity);
+        popupWindowAdapter = new PopupWindowAdapter<>();
         popupWindowAdapter.setOnItemClickListener(this);
         popupWindowAdapter.setList(popupWindowBeanList);
         lvParentCategory.setLayoutManager(new LinearLayoutManager(activity));
@@ -111,7 +111,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     }
 
     private void initChild(List<T> childLists) {
-        childAdapter = new PopupWindowAdapter<>(activity);
+        childAdapter = new PopupWindowAdapter<>();
         childAdapter.setOnItemClickListener(childOnItemClickListener);
         childAdapter.setList(childLists);
         lvChildrenCategory.setLayoutManager(new LinearLayoutManager(activity));

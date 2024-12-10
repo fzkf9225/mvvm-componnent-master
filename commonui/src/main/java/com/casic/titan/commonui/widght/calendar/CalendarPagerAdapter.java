@@ -1,14 +1,8 @@
 package com.casic.titan.commonui.widght.calendar;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -24,7 +18,6 @@ import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2024/11/20 15:10
@@ -33,8 +26,8 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, ItemCalendarDayBinding> {
     private final CalendarView calendarView;
 
-    public CalendarPagerAdapter(Context context, CalendarView calendarView) {
-        super(context);
+    public CalendarPagerAdapter(CalendarView calendarView) {
+        super();
         this.calendarView = calendarView;
     }
 
@@ -48,7 +41,7 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          * 设置文字大小
          */
         if (calendarView.getTextSize() == null) {
-            holder.getBinding().dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.sp2px(mContext, 12));
+            holder.getBinding().dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.sp2px(calendarView.getContext(), 12));
         } else {
             holder.getBinding().dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, calendarView.getTextSize());
         }
@@ -57,8 +50,8 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         ConstraintLayout.LayoutParams itemLayoutParams = (ConstraintLayout.LayoutParams) holder.getBinding().dayNumber.getLayoutParams();
         if (calendarView.getItemWidth() == null || calendarView.getItemHeight() == null) {
-            itemLayoutParams.width = DensityUtil.dp2px(mContext, 36f);
-            itemLayoutParams.height = DensityUtil.dp2px(mContext, 36f);
+            itemLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 36f);
+            itemLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 36f);
         } else {
             itemLayoutParams.width = calendarView.getItemWidth();
             itemLayoutParams.height = calendarView.getItemHeight();
@@ -69,8 +62,8 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         ConstraintLayout.LayoutParams dotLayoutParams = (ConstraintLayout.LayoutParams) holder.getBinding().vCircle.getLayoutParams();
         if (calendarView.getDotWidth() == null || calendarView.getDotHeight() == null) {
-            dotLayoutParams.width = DensityUtil.dp2px(mContext, 4f);
-            dotLayoutParams.height = DensityUtil.dp2px(mContext, 4f);
+            dotLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 4f);
+            dotLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 4f);
         } else {
             dotLayoutParams.width = calendarView.getDotWidth();
             dotLayoutParams.height = calendarView.getDotHeight();
@@ -104,7 +97,7 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
                 }
             }
         } else {
-            holder.getBinding().dayNumber.setTextColor(ContextCompat.getColor(mContext, pers.fz.mvvm.R.color.hint_text_color));
+            holder.getBinding().dayNumber.setTextColor(ContextCompat.getColor(calendarView.getContext(), pers.fz.mvvm.R.color.hint_text_color));
             holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
         }
         /*
@@ -120,6 +113,7 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
 
     /**
      * 判断当前日期是否选中
+     *
      * @param day 当期日期
      * @return true选中，默认为false
      */
@@ -146,6 +140,7 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
 
     /**
      * 判断当前日期是否不可选
+     *
      * @param day 当前日期
      * @return true为可点击，默认为false
      */

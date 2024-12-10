@@ -1,6 +1,5 @@
 package pers.fz.mvvm.base;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,12 @@ import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
- * Created by fz on 2017/12/28.
+ * updated by fz on 2024/12/10.
  */
 public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> extends RecyclerView.Adapter<BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
     protected final String TAG = this.getClass().getSimpleName();
-    protected Context mContext;
-    protected List<T> mList = new ArrayList<>();
-    protected RecyclerView mRecyclerView;
+    protected final List<T> mList = new ArrayList<>();
     /**
      * itemView的类型，头布局类型
      */
@@ -47,17 +44,17 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      */
     private View headerView;
 
-    public BaseRecyclerViewAdapter(Context context) {
-        mContext = context;
-        setList(mList);
+    public BaseRecyclerViewAdapter() {
     }
 
-    public BaseRecyclerViewAdapter(Context context, List<T> list) {
-        mContext = context;
-        mList = (list == null) ? new ArrayList<T>() : list;
-        setList(mList);
+    public BaseRecyclerViewAdapter(List<T> list) {
+        setList(list);
     }
 
+    /**
+     * 是否有头布局
+     * @return true为有头布局
+     */
     public boolean hasHeaderView() {
         return getHeaderViewId() != null || headerView != null;
     }
@@ -82,41 +79,14 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
         return null;
     }
 
-
     @Override
     public void onBindViewHolder(final BaseViewHolder baseViewHolder, final int pos) {
         if (getItemViewType(pos) == TYPE_HEAD) {
-            if (getHeaderViewId() != null) {
-                baseViewHolder.getBinding().getRoot().setOnClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewClick(v);
-                    }
-                });
-                baseViewHolder.getBinding().getRoot().setOnLongClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewLongClick(v);
-                        return true;
-                    }
-                    return false;
-                });
-            } else {
-                headerView.setOnClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewClick(v);
-                    }
-                });
-                headerView.setOnLongClickListener(v -> {
-                    if (onHeaderViewClickListener != null) {
-                        onHeaderViewClickListener.onHeaderViewLongClick(v);
-                        return true;
-                    }
-                    return false;
-                });
-            }
             onBindHeaderHolder(baseViewHolder);
             return;
         }
-        onBindHolder(baseViewHolder, getRealPosition(baseViewHolder));
+        int realPosition = hasHeaderView() ? (pos - 1) : pos;
+        onBindHolder(baseViewHolder, realPosition);
     }
 
     /**
@@ -138,8 +108,8 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     @Override
     public int getItemCount() {
-        int count = (mList == null ? 0 : mList.size());
-        if (getHeaderViewId() != null || headerView != null) {
+        int count = mList.size();
+        if (hasHeaderView()) {
             return count + 1;
         }
         return count;
@@ -147,13 +117,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     @Override
     public int getItemViewType(int position) {
-        if (getHeaderViewId() == null && headerView == null) {
-            return TYPE_NORMAL;
-        }
-        if (getHeaderViewId() != null && position == 0) {
-            return TYPE_HEAD;
-        }
-        if (headerView != null && position == 0) {
+        if (hasHeaderView() && position == 0) {
             return TYPE_HEAD;
         }
         return TYPE_NORMAL;
@@ -161,7 +125,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     @NotNull
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEAD && getHeaderViewId() != null) {
             return createHeaderViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getHeaderViewId(), parent, false));
         } else if (viewType == TYPE_HEAD && headerView != null) {
@@ -178,7 +142,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      * @return BaseViewHolder
      */
     protected <HVDB extends ViewDataBinding> BaseViewHolder<HVDB> createHeaderViewHold(HVDB binding) {
-        return new BaseViewHolder<>(binding);
+        return new BaseViewHolder<>(binding, true, this);
     }
 
     /**
@@ -187,7 +151,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      * @return BaseViewHolder
      */
     protected BaseViewHolder createHeaderViewHold(View headerView) {
-        return new BaseViewHolder<>(headerView);
+        return new BaseViewHolder<>(headerView, true, this);
     }
 
     /**
@@ -197,7 +161,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      * @return BaseViewHolder
      */
     protected BaseViewHolder<VDB> createViewHold(VDB binding) {
-        return new BaseViewHolder<>(binding,this);
+        return new BaseViewHolder<>(binding, this);
     }
 
     /**
@@ -207,17 +171,9 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
      */
     protected abstract int getLayoutId();
 
-    public int getItemViewHeight() {
-        return 0;
-    }
-
     public void setList(List<T> list) {
-        this.mList = list;
-    }
-
-    public int getRealPosition(RecyclerView.ViewHolder holder) {
-        int position = holder.getLayoutPosition();
-        return (getHeaderViewId() == null && headerView == null) ? position : position - 1;
+        this.mList.clear();
+        this.mList.addAll(list);
     }
 
     public List<T> getList() {
@@ -225,10 +181,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
     }
 
     public void setList(T[] list) {
-        ArrayList<T> arrayList = new ArrayList<T>(list == null ? 0 : list.length);
-        if (list != null) {
-            arrayList.addAll(Arrays.asList(list));
-        }
+        ArrayList<T> arrayList = list != null ? new ArrayList<>(Arrays.asList(list)) : new ArrayList<>();
         setList(arrayList);
     }
 
@@ -242,14 +195,6 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
     public void onItemMove(int from, int to) {
         Collections.swap(mList, from, to);
         notifyItemMoved(from, to);
-    }
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
     }
 
     public void setOnItemClickListener(OnItemClickListener l) {

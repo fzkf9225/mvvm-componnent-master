@@ -9,7 +9,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.databinding.FormImageBinding;
@@ -110,6 +108,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
     /**
      * 修改mediaType值，传 OpenImageDialog.ALBUM/ OpenImageDialog.CAMERA/ OpenImageDialog.CAMERA_ALBUM
+     *
      * @param mediaType
      */
     public void setMediaType(int mediaType) {
@@ -129,7 +128,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        imageAddAdapter = new ImageAddAdapter(getContext(), maxCount);
+        imageAddAdapter = new ImageAddAdapter(maxCount);
         imageAddAdapter.setBgColor(bgColor);
         imageAddAdapter.setRadius(radius);
         imageAddAdapter.setImageViewAddListener(this);

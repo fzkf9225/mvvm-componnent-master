@@ -40,10 +40,13 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
     @Override
     public void onItemLongClick(View view, RegionBean item, int position) {
         super.onItemLongClick(view, item, position);
+        //不可以这样删除，因为这样值删除了列表项，但是真是数据没有删除
         new ConfirmDialog(requireContext())
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
-                .setOnPositiveClickListener(dialog -> adapter.notifyItemRemoved(position))
+                .setOnPositiveClickListener(dialog -> {
+                    adapter.notifyItemRemoved(position);
+                })
                 .builder()
                 .show();
     }

@@ -3,7 +3,6 @@ package com.casic.titan.commonui.helper;
 import androidx.databinding.ObservableField;
 
 import com.casic.titan.commonui.bean.CalendarData;
-import com.casic.titan.commonui.widght.calendar.CalendarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +12,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2024/12/2 15:40

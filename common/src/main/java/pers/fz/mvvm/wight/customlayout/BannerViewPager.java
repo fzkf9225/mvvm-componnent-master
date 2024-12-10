@@ -14,9 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import pers.fz.mvvm.R;
-
 import java.util.List;
+
+import pers.fz.mvvm.R;
 
 /**
  * Created by fz on 2016/8/19.

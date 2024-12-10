@@ -1,6 +1,5 @@
 package pers.fz.mvvm.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,12 +30,11 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
     private int defaultMaxCount = -1;
     private int bgColor = Color.WHITE;
     private float radius = 5;
-    public VideoAddAdapter(Context context) {
-        super(context);
+    public VideoAddAdapter() {
+        super();
     }
 
-    public VideoAddAdapter(Context context, int maxCount) {
-        super(context);
+    public VideoAddAdapter(int maxCount) {
         this.defaultMaxCount = maxCount;
     }
 
@@ -67,11 +65,11 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos).toString()));
                 bundleVideo.putString("videoPath", mList.get(pos).toString());
-                VideoPlayerActivity.show(mContext, bundleVideo);
+                VideoPlayerActivity.show(v.getContext(), bundleVideo);
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.show(TAG,"视频播放失败:" + e);
-                Toast.makeText(mContext, "视频播放失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
             }
         });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
@@ -89,7 +87,7 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
             holder.getBinding().videoAdd.setVisibility(View.GONE);
             holder.getBinding().ivVideoShow.setVisibility(View.VISIBLE);
-            Glide.with(mContext)
+            Glide.with(holder.getBinding().ivVideoShow.getContext())
                     .load(mList.get(pos))
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                     .into(holder.getBinding().ivVideoShow);

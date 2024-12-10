@@ -8,8 +8,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -21,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileAddAdapter;
@@ -135,7 +132,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
             }
             mediaHelper.openFileDialog(v, "从文件管理器中选择", OpenFileDialog.FILE);
         });
-        fileAddAdapter = new FileAddAdapter(getContext());
+        fileAddAdapter = new FileAddAdapter();
         fileAddAdapter.setRadius(radius);
         fileAddAdapter.setBgColor(bgColor);
         fileAddAdapter.setTextColor(rightTextColor);

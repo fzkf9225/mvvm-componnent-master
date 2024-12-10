@@ -1,7 +1,5 @@
 package pers.fz.mvvm.adapter;
 
-import android.content.Context;
-
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
@@ -14,9 +12,8 @@ import pers.fz.mvvm.databinding.OptionTextViewBinding;
  */
 public class OptionBottomMenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionTextViewBinding> {
 
-    public OptionBottomMenuListAdapter(Context mContext) {
-        super(mContext);
-
+    public OptionBottomMenuListAdapter() {
+        super();
     }
 
     @Override

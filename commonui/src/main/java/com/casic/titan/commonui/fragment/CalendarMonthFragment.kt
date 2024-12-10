@@ -24,7 +24,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration
 class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonthBinding>(),
     BaseRecyclerViewAdapter.OnItemClickListener {
     val adapter: CalendarPagerAdapter by lazy {
-        CalendarPagerAdapter(requireContext(), calendarView).apply {
+        CalendarPagerAdapter(calendarView).apply {
             setOnItemClickListener(this@CalendarMonthFragment)
         }
     }

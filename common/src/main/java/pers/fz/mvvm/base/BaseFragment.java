@@ -123,7 +123,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 是否和activity共用同一个viewModel
-     * @return
+     * @return true代表与Activity共用
      */
     public boolean useActivityViewModel() {
         return false;

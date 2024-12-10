@@ -26,24 +26,65 @@ public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.Vi
         this.binding = binding;
     }
 
-    public <T> BaseViewHolder(@NotNull VDB binding,BaseRecyclerViewAdapter<T,VDB> adapter) {
-        super(binding.getRoot());
-        this.binding = binding;
+    public <T, HVDB extends ViewDataBinding> BaseViewHolder(@NonNull View headerView, boolean isClickable, BaseRecyclerViewAdapter<T, HVDB> adapter) {
+        super(headerView);
+        if (!isClickable) {
+            return;
+        }
         itemView.setOnClickListener(v -> {
-            if (adapter.mOnItemClickListener != null) {
-                adapter.mOnItemClickListener.onItemClick(v, adapter.getRealPosition(this));
+            if (adapter.onHeaderViewClickListener != null) {
+                adapter.onHeaderViewClickListener.onHeaderViewClick(v);
             }
         });
         itemView.setOnLongClickListener(v -> {
-            if (adapter.mOnItemLongClickListener != null) {
-                adapter.mOnItemLongClickListener.onItemLongClick(v, adapter.getRealPosition(this));
+            if (adapter.onHeaderViewClickListener != null) {
+                adapter.onHeaderViewClickListener.onHeaderViewLongClick(v);
                 return true;
             }
             return false;
         });
     }
 
-    public <T> BaseViewHolder(@NonNull  VDB binding,BasePagingAdapter<T,VDB> adapter) {
+    public <T, HVDB extends ViewDataBinding> BaseViewHolder(@NotNull VDB binding, boolean isClickable, BaseRecyclerViewAdapter<T, HVDB> adapter) {
+        super(binding.getRoot());
+        this.binding = binding;
+        if (!isClickable) {
+            return;
+        }
+        itemView.setOnClickListener(v -> {
+            if (adapter.onHeaderViewClickListener != null) {
+                adapter.onHeaderViewClickListener.onHeaderViewClick(v);
+            }
+        });
+        itemView.setOnLongClickListener(v -> {
+            if (adapter.onHeaderViewClickListener != null) {
+                adapter.onHeaderViewClickListener.onHeaderViewLongClick(v);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public <T> BaseViewHolder(@NotNull VDB binding, BaseRecyclerViewAdapter<T, VDB> adapter) {
+        super(binding.getRoot());
+        this.binding = binding;
+        itemView.setOnClickListener(v -> {
+            if (adapter.mOnItemClickListener != null) {
+                int realPos = adapter.hasHeaderView() ? (getAbsoluteAdapterPosition() - 1) : getAbsoluteAdapterPosition();
+                adapter.mOnItemClickListener.onItemClick(v, realPos);
+            }
+        });
+        itemView.setOnLongClickListener(v -> {
+            if (adapter.mOnItemLongClickListener != null) {
+                int realPos = adapter.hasHeaderView() ? (getAbsoluteAdapterPosition() - 1) : getAbsoluteAdapterPosition();
+                adapter.mOnItemLongClickListener.onItemLongClick(v, realPos);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public <T> BaseViewHolder(@NonNull VDB binding, BasePagingAdapter<T, VDB> adapter) {
         super(binding.getRoot());
         this.binding = binding;
         itemView.setOnClickListener(v -> {

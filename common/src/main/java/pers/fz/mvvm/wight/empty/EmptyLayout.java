@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import androidx.core.content.ContextCompat;
 import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.ViewErrorLayoutBinding;

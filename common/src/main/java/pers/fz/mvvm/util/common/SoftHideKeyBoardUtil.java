@@ -2,9 +2,7 @@ package pers.fz.mvvm.util.common;
 
 import android.app.Activity;
 import android.graphics.Rect;
-import android.os.Build;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 /**

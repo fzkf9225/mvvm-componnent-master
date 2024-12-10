@@ -1,8 +1,6 @@
 package com.casic.titan.commonui.form;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;

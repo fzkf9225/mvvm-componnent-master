@@ -4,13 +4,11 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelKt;
 import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 
-import kotlinx.coroutines.CoroutineScope;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.datasource.PagingSource;
 import pers.fz.mvvm.repository.IRepository;

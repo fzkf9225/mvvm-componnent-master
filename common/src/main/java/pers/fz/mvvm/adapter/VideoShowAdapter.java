@@ -1,6 +1,5 @@
 package pers.fz.mvvm.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -21,8 +20,8 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowItemBinding> {
 
-    public VideoShowAdapter(Context context) {
-        super(context);
+    public VideoShowAdapter() {
+        super();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowI
     public void onBindHolder(BaseViewHolder<VideoShowItemBinding> viewHolder, int pos) {
         viewHolder.itemView.setTag(pos);
         viewHolder.getBinding().imagePlay.setTag(R.id.imageUrl, pos);
-        Glide.with(mContext)
+        Glide.with(viewHolder.getBinding().imageVideo.getContext())
                 .load(mList.get(pos))
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                 .into(viewHolder.getBinding().imageVideo);
@@ -43,11 +42,11 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowI
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos).toString()));
                 bundleVideo.putString("videoPath", mList.get(pos).toString());
-                VideoPlayerActivity.show(mContext, bundleVideo);
+                VideoPlayerActivity.show(v.getContext(), bundleVideo);
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.show(TAG,"视频播放失败:" + e);
-                Toast.makeText(mContext, "视频播放失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -1,6 +1,5 @@
 package com.casic.titan.commonui.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 
@@ -22,8 +21,8 @@ public class FileShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ite
     private int textColor = 0x333333;
     private float radius = 5;
 
-    public FileShowAdapter(Context context) {
-        super(context);
+    public FileShowAdapter() {
+        super();
     }
 
     @Override

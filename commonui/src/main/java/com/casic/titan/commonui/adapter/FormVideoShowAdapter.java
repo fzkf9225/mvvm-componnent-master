@@ -1,6 +1,5 @@
 package com.casic.titan.commonui.adapter;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -21,8 +20,8 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 public class FormVideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, VideoShowItemBinding> {
 
-    public FormVideoShowAdapter(Context context) {
-        super(context);
+    public FormVideoShowAdapter() {
+        super();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class FormVideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
     public void onBindHolder(BaseViewHolder<VideoShowItemBinding> viewHolder, int pos) {
         viewHolder.itemView.setTag(pos);
         viewHolder.getBinding().imagePlay.setTag(R.id.imageUrl, pos);
-        Glide.with(mContext)
+        Glide.with(viewHolder.getBinding().imageVideo.getContext())
                 .load(mList.get(pos).getUrl())
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                 .into(viewHolder.getBinding().imageVideo);
@@ -43,11 +42,11 @@ public class FormVideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString("videoName", mList.get(pos).getFileName());
                 bundleVideo.putString("videoPath", mList.get(pos).getUrl());
-                VideoPlayerActivity.show(mContext, bundleVideo);
+                VideoPlayerActivity.show(v.getContext(), bundleVideo);
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.show(TAG, "视频播放失败:" + e);
-                Toast.makeText(mContext, "视频播放失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -48,7 +48,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
                 imageAddAdapter.notifyDataSetChanged();
             }
         });
-        imageAddAdapter = new ImageAddAdapter(this);
+        imageAddAdapter = new ImageAddAdapter();
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.feedBackRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {

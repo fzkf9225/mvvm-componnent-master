@@ -133,7 +133,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         if (bottomBorder) {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
-        videoAddAdapter = new VideoAddAdapter(getContext(), maxCount);
+        videoAddAdapter = new VideoAddAdapter(maxCount);
         videoAddAdapter.setBgColor(bgColor);
         videoAddAdapter.setRadius(radius);
         videoAddAdapter.setVideoAddListener(this);

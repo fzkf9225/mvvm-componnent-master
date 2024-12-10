@@ -1,7 +1,5 @@
 package com.casic.titan.demo.adapter;
 
-import android.content.Context;
-
 import com.bumptech.glide.Glide;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.RecyclerHeaderViewBinding;
@@ -18,12 +16,12 @@ import pers.fz.mvvm.databinding.OptionTextViewBinding;
  * describe :
  */
 public class RecyclerViewSampleAdapter extends BaseRecyclerViewAdapter<PopupWindowBean, OptionTextViewBinding> {
-    public RecyclerViewSampleAdapter(Context context) {
-        super(context);
+    public RecyclerViewSampleAdapter() {
+        super();
     }
 
-    public RecyclerViewSampleAdapter(Context context, List<PopupWindowBean> list) {
-        super(context, list);
+    public RecyclerViewSampleAdapter( List<PopupWindowBean> list) {
+        super(list);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class RecyclerViewSampleAdapter extends BaseRecyclerViewAdapter<PopupWind
     public void onBindHeaderHolder(BaseViewHolder holder) {
         super.onBindHeaderHolder(holder);
         RecyclerHeaderViewBinding binding = (RecyclerHeaderViewBinding) holder.getBinding();
-        Glide.with(mContext)
+        Glide.with(binding.image.getContext())
                 .load("https://img2.baidu.com/it/u=1816408595,1545501487&fm=253&fmt=auto&app=120&f=JPEG?w=607&h=347")
                 .into(binding.image);
     }

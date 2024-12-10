@@ -142,7 +142,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
         });
         mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
-        imageAddAdapter = new ImageAddAdapter(this, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
+        imageAddAdapter = new ImageAddAdapter( MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -153,7 +153,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         binding.imageRecyclerView.setAdapter(imageAddAdapter);
 
-        videoAddAdapter = new VideoAddAdapter(this);
+        videoAddAdapter = new VideoAddAdapter();
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
         binding.videoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {

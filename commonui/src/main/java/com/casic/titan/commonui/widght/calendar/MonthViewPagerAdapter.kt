@@ -6,7 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.fragment.CalendarMonthFragment
-import pers.fz.mvvm.util.log.LogUtil
 
 /**
  * created by fz on 2024/11/21 9:00

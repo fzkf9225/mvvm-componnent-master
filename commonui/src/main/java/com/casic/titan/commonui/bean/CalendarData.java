@@ -3,9 +3,7 @@ package com.casic.titan.commonui.bean;
 import android.graphics.drawable.Drawable;
 
 import androidx.databinding.BaseObservable;
-import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

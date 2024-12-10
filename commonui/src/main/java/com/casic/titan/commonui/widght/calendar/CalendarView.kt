@@ -13,7 +13,6 @@ import android.widget.GridLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -21,7 +20,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.casic.titan.commonui.R
 import com.casic.titan.commonui.bean.CalendarData
 import com.casic.titan.commonui.databinding.ViewCalendarBinding
-import com.casic.titan.commonui.fragment.CalendarMonthFragment
 import com.casic.titan.commonui.helper.CalendarDataSource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

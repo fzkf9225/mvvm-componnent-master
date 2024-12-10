@@ -1,6 +1,5 @@
 package pers.fz.mvvm.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
@@ -27,12 +26,12 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     private int bgColor = Color.WHITE;
     private float radius = 5;
 
-    public ImageAddAdapter(Context context) {
-        super(context);
+    public ImageAddAdapter() {
+        super();
     }
 
-    public ImageAddAdapter(Context context, int maxCount) {
-        super(context);
+    public ImageAddAdapter(int maxCount) {
+        super();
         this.defaultMaxCount = maxCount;
     }
 
@@ -60,10 +59,10 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
         holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor,this.radius);
         holder.getBinding().ivImageShow.setOnClickListener(v -> {
             try {
-                new PicShowDialog(mContext, PicShowDialog.createUriImageInfo(mList), pos).show();
+                new PicShowDialog(v.getContext(), PicShowDialog.createUriImageInfo(mList), pos).show();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(mContext, "图片打开失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
             }
         });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
@@ -79,7 +78,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
             holder.getBinding().ivAdd.setVisibility(View.GONE);
             holder.getBinding().ivImageShow.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
-            Glide.with(mContext)
+            Glide.with(holder.getBinding().ivImageShow.getContext())
                     .load(mList.get(pos))
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                     .into(holder.getBinding().ivImageShow);

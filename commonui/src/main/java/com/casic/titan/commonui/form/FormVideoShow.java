@@ -95,7 +95,7 @@ public class FormVideoShow extends ConstraintLayout {
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
         mRecyclerViewImage.setLayoutParams(imageLayoutParams);
         if (adapter == null) {
-            adapter = new FormVideoShowAdapter(getContext());
+            adapter = new FormVideoShowAdapter();
         }
         mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 12), 0x00000000));
         mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {

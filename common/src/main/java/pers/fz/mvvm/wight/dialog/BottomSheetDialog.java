@@ -79,7 +79,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         RecyclerView mRecyclerViewOption = inflate.findViewById(R.id.mRecyclerView_option);
         Button buttonCancel = inflate.findViewById(R.id.button_cancel);
         buttonCancel.setOnClickListener(v -> dismiss());
-        optionBottomMenuListAdapter = new OptionBottomMenuListAdapter<>(context);
+        optionBottomMenuListAdapter = new OptionBottomMenuListAdapter<>();
         optionBottomMenuListAdapter.setList(menuData);
         optionBottomMenuListAdapter.setOnItemClickListener((view, position) -> {
             if (optionBottomMenuClickListener != null) {

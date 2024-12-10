@@ -46,7 +46,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     protected void initData(Bundle bundle) {
         binding.setIsLogin(UserAccountHelper.isLogin());
         binding.setToken(UserAccountHelper.isLogin() ? "已登录" : "暂未登录");
-        useCaseAdapter = new UseCaseAdapter(requireContext(), UseCaseEnum.toUseCaseList());
+        useCaseAdapter = new UseCaseAdapter(UseCaseEnum.toUseCaseList());
         useCaseAdapter.setOnItemClickListener(this);
         binding.mRecyclerViewUseCase.addItemDecoration(
                 new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),

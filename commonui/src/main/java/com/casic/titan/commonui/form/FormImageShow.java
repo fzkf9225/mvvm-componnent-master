@@ -7,12 +7,10 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FormImageShowAdapter;
@@ -90,7 +88,7 @@ public class FormImageShow extends ConstraintLayout {
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 12);
         binding.mRecyclerViewImage.setLayoutParams(imageLayoutParams);
         if (adapter == null) {
-            adapter = new FormImageShowAdapter(getContext());
+            adapter = new FormImageShowAdapter();
         }
         binding.mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 12), 0x00000000));
         binding.mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {

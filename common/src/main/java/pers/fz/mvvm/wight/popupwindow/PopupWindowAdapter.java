@@ -1,7 +1,5 @@
 package pers.fz.mvvm.wight.popupwindow;
 
-import android.content.Context;
-
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
@@ -21,8 +19,8 @@ public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerV
      */
     private boolean hasHeader = false;
 
-    public PopupWindowAdapter(Context mContext) {
-        super(mContext);
+    public PopupWindowAdapter() {
+        super();
     }
 
     public void setHasHeader(boolean hasHeader) {
@@ -42,9 +40,9 @@ public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerV
     public void onBindHolder(BaseViewHolder<ActivityParentCategoryItemBinding> holder, int pos) {
         holder.getBinding().tvParentCategoryName.setText(mList.get(pos).getPopupName());
         if (pos == selectedPosition && selectedPosition >= 0) {
-            holder.getBinding().tvParentCategoryName.setTextColor(ContextCompat.getColor(mContext, R.color.themeColor));
+            holder.getBinding().tvParentCategoryName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.themeColor));
         } else {
-            holder.getBinding().tvParentCategoryName.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+            holder.getBinding().tvParentCategoryName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
         }
     }
 

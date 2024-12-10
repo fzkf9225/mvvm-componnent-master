@@ -1,6 +1,5 @@
 package pers.fz.mvvm.wight.picdialog;
 
-import android.annotation.SuppressLint;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;

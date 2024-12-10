@@ -3,7 +3,6 @@ package pers.fz.mvvm.wight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,7 +110,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
             buttonCancel.setTextColor(negativeTextColor);
         }
         buttonCancel.setVisibility(isShowCancelButton ? View.VISIBLE : View.GONE);
-        optionBottomMenuListAdapter = new MenuListAdapter<>(context);
+        optionBottomMenuListAdapter = new MenuListAdapter<>();
         optionBottomMenuListAdapter.setList(menuData);
         optionBottomMenuListAdapter.setOnItemClickListener((view, position) -> {
             if (optionBottomMenuClickListener != null) {

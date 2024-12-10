@@ -16,12 +16,12 @@ import pers.fz.mvvm.base.BaseViewHolder;
  * describe :
  */
 public class UseCaseAdapter extends BaseRecyclerViewAdapter<UseCase, UseCaseItemBinding> {
-    public UseCaseAdapter(Context context) {
-        super(context);
+    public UseCaseAdapter() {
+        super();
     }
 
-    public UseCaseAdapter(Context context, List<UseCase> list) {
-        super(context, list);
+    public UseCaseAdapter(List<UseCase> list) {
+        super(list);
     }
 
     @Override

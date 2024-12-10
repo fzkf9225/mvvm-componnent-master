@@ -72,7 +72,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         binding.circleProgressBar.setProgress(80);
         binding.horizontalProgressBar.setProgress(80);
 
-        imageShowAdapter = new ImageShowAdapter(this);
+        imageShowAdapter = new ImageShowAdapter();
         imageShowAdapter.setList(Arrays.asList(
                 "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800",
                 "https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg",
@@ -87,7 +87,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         });
         binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
 
-        videoShowAdapter = new VideoShowAdapter(this);
+        videoShowAdapter = new VideoShowAdapter();
         videoShowAdapter.setList(Arrays.asList(
                 "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800",
                 "https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg",

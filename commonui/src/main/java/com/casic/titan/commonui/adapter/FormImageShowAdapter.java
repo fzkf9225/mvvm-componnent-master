@@ -1,6 +1,5 @@
 package com.casic.titan.commonui.adapter;
 
-import android.content.Context;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -22,8 +21,8 @@ import pers.fz.mvvm.wight.picdialog.PicShowDialog;
  */
 public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, ImageShowItemBinding> {
 
-    public FormImageShowAdapter(Context context) {
-        super(context);
+    public FormImageShowAdapter() {
+        super();
     }
 
     @Override
@@ -33,16 +32,16 @@ public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
 
     @Override
     public void onBindHolder(BaseViewHolder<ImageShowItemBinding> viewHolder, int pos) {
-        Glide.with(mContext)
+        Glide.with(viewHolder.getBinding().cornerImage.getContext())
                 .load(mList.get(pos).getUrl())
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                 .into(viewHolder.getBinding().cornerImage);
         viewHolder.getBinding().cornerImage.setOnClickListener(v -> {
                 try{
-                    new PicShowDialog(mContext,createImageInfo(mList),pos).show();
+                    new PicShowDialog(v.getContext(),createImageInfo(mList),pos).show();
                 }catch (Exception e){
                     e.printStackTrace();
-                    Toast.makeText(mContext, "图片打开失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
                 }
         });
     }

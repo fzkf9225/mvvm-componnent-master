@@ -8,13 +8,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileShowAdapter;
@@ -103,7 +101,7 @@ public class FormFileShow extends ConstraintLayout {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
         if (adapter == null) {
-            adapter = new FileShowAdapter(getContext());
+            adapter = new FileShowAdapter();
             FileShowAdapter fileShowAdapter = (FileShowAdapter) adapter;
             fileShowAdapter.setRadius(radius);
             fileShowAdapter.setBgColor(bgColor);

@@ -3,7 +3,6 @@ package pers.fz.mvvm.util.common;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 /**
  * Created by fz on 2017/9/6.

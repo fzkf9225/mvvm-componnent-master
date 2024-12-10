@@ -13,35 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.databinding.DialogDateRangePickBinding;
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 
-import java.util.Calendar;
-
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.DialogDatePickBinding;
-import pers.fz.mvvm.enums.DateMode;
-import pers.fz.mvvm.listener.OnDatePickSelectedListener;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
-import pers.fz.mvvm.util.log.LogUtil;
 
 
 /**

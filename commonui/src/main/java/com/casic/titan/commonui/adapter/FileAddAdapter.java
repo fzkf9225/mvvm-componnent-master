@@ -1,6 +1,5 @@
 package com.casic.titan.commonui.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,7 +11,6 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**
@@ -25,9 +23,8 @@ public class FileAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, File
     private int textColor = 0x333333;
     private float radius;
 
-    public FileAddAdapter(Context context) {
-        super(context);
-        radius = DensityUtil.dp2px(context,5);
+    public FileAddAdapter() {
+        super();
     }
 
     @Override
