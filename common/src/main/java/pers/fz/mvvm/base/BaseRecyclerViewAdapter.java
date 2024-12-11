@@ -173,7 +173,9 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
 
     public void setList(List<T> list) {
         this.mList.clear();
-        this.mList.addAll(list);
+        if (list != null && !list.isEmpty()) {
+            this.mList.addAll(list);
+        }
     }
 
     public List<T> getList() {
