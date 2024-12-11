@@ -68,11 +68,19 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
         /**
          * 页面page路由
          */
-        private final Fragment toClx;
+        private final Fragment toFragment;
 
-        public PagerInfo(String title, Fragment toClx) {
+        public PagerInfo(String title, Fragment toFragment) {
             this.title = title;
-            this.toClx = toClx;
+            this.toFragment = toFragment;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public Fragment getFragment() {
+            return toFragment;
         }
     }
 
@@ -92,7 +100,7 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
         @Override
         public Fragment createFragment(int position) {
             PagerInfo info = mInfoList[position];
-            return info.toClx;
+            return info.toFragment;
         }
 
         @Override
