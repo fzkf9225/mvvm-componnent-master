@@ -22,6 +22,7 @@ import java.util.List;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.MenuListAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
+import pers.fz.mvvm.databinding.MenuDialogBinding;
 import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
@@ -101,15 +102,19 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    private MenuDialogBinding binding;
+
+    public MenuDialogBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.menu_dialog, null);
-        RecyclerView mRecyclerViewOption = inflate.findViewById(R.id.mRecyclerView_option);
-        Button buttonCancel = inflate.findViewById(R.id.button_cancel);
-        buttonCancel.setOnClickListener(v -> dismiss());
+        binding = MenuDialogBinding.inflate(LayoutInflater.from(context), null, false);
+        binding.buttonCancel.setOnClickListener(v -> dismiss());
         if (negativeTextColor != null) {
-            buttonCancel.setTextColor(negativeTextColor);
+            binding.buttonCancel.setTextColor(negativeTextColor);
         }
-        buttonCancel.setVisibility(isShowCancelButton ? View.VISIBLE : View.GONE);
+        binding.buttonCancel.setVisibility(isShowCancelButton ? View.VISIBLE : View.GONE);
         optionBottomMenuListAdapter = new MenuListAdapter<>();
         optionBottomMenuListAdapter.setList(menuData);
         optionBottomMenuListAdapter.setOnItemClickListener((view, position) -> {
@@ -117,15 +122,18 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
                 optionBottomMenuClickListener.onOptionBottomMenuClick(this, optionBottomMenuListAdapter.getList(), position);
             }
         });
-        mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
-        mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL,
+        binding.mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
+        binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
+        binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL,
                 DensityUtil.dp2px(context, 1),
                 ContextCompat.getColor(context, R.color.h_line_color), false));
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
-        setContentView(inflate);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
+        if (dialogWindow == null) {
+            return;
+        }
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置Dialog从窗体中间弹出

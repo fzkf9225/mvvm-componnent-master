@@ -23,7 +23,7 @@ public class CornerTextView extends AppCompatTextView {
     private final Paint circlePaint;
     private final Paint backPaint;
     private final Paint textPaint;
-    private int storkColor;
+    private int strokeColor;
     private int circleBackColor;
 
 
@@ -36,28 +36,28 @@ public class CornerTextView extends AppCompatTextView {
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backPaint.setStyle(Paint.Style.FILL);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        float storkWidth = 0;
+        float strokeWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
-            storkWidth = typedArray.getDimension(R.styleable.CornerTextView_corner_storkWidth, storkWidth);
-            float radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
+            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+            strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, strokeWidth);
+            float radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
             typedArray.recycle();
             GradientDrawable gd = new GradientDrawable();//创建drawable
             gd.setColor(circleBackColor);
             gd.setCornerRadius(radius);
-            if (storkWidth > 0) {
-                gd.setStroke((int) storkWidth, storkColor);
+            if (strokeWidth > 0) {
+                gd.setStroke((int) strokeWidth, strokeColor);
             }
             this.setBackground(gd);
         }else{
-            storkColor = ContextCompat.getColor(context, R.color.white);
+            strokeColor = ContextCompat.getColor(context, R.color.white);
             circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
-        if (storkWidth != 0) {
-            circlePaint.setStrokeWidth(storkWidth);
-            circlePaint.setColor(storkColor);
+        if (strokeWidth != 0) {
+            circlePaint.setStrokeWidth(strokeWidth);
+            circlePaint.setColor(strokeColor);
         }
         backPaint.setColor(circleBackColor);
         textPaint.setColor(getCurrentTextColor());
@@ -79,7 +79,7 @@ public class CornerTextView extends AppCompatTextView {
 //        int height = getHeight();
 //        int width = getWidth();
 //        int radius;
-//        int storkRadius;
+//        int strokeRadius;
 //        int textWidth = (int) textPaint.measureText(getText().toString());
 //        if (height > textWidth) {
 //            radius = height;
@@ -87,10 +87,10 @@ public class CornerTextView extends AppCompatTextView {
 //            setHeight(textWidth + getPaddingTop() + getPaddingBottom());
 //            radius = textWidth;
 //        }
-//        storkRadius = (int) (radius / 2 - storkWidth);
-//        radius = storkRadius - 1;
-//        if (storkWidth != 0)
-//            canvas.drawRect(getWidth() / 2, getHeight() / 2, storkRadius, circlePaint);
+//        strokeRadius = (int) (radius / 2 - strokeWidth);
+//        radius = strokeRadius - 1;
+//        if (strokeWidth != 0)
+//            canvas.drawRect(getWidth() / 2, getHeight() / 2, strokeRadius, circlePaint);
 //        canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, backPaint);
 //        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
 //
@@ -98,9 +98,9 @@ public class CornerTextView extends AppCompatTextView {
 
     }
 
-    public void setMyStorkColor(@ColorInt int color) {
-        this.storkColor = color;
-        circlePaint.setColor(storkColor);
+    public void setMystrokeColor(@ColorInt int color) {
+        this.strokeColor = color;
+        circlePaint.setColor(strokeColor);
         invalidate();
     }
 

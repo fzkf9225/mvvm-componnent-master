@@ -49,9 +49,9 @@ public class AutoTextView extends TextSwitcher implements
         super(context, attrs);
         if (attrs != null) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.auto3d);
-            mHeight = ta.getDimensionPixelSize(R.styleable.auto3d_auto_text_size, DensityUtil.sp2px(context, 14));
-            mColor = ta.getColor(R.styleable.auto3d_auto_text_color, ContextCompat.getColor(context, R.color.autoColor));
-            textStr = ta.getString(R.styleable.auto3d_auto_text);
+            mHeight = ta.getDimensionPixelSize(R.styleable.auto3d_textSize, DensityUtil.sp2px(context, 14f));
+            mColor = ta.getColor(R.styleable.auto3d_textColor, ContextCompat.getColor(context, R.color.autoColor));
+            textStr = ta.getString(R.styleable.auto3d_text);
             ta.recycle();
         } else {
             mHeight = DensityUtil.sp2px(context, 14);

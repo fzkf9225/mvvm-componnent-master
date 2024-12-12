@@ -104,27 +104,27 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             return;
         }
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.banner);
-        bgColor = ta.getColor(R.styleable.banner_banner_bg_color, Color.WHITE);
-        placeholderImage = ta.getResourceId(R.styleable.banner_banner_placeholder_image, R.mipmap.ic_default_image);
-        canBrowse = ta.getBoolean(R.styleable.banner_can_browse, false);
-        autoBanner = ta.getBoolean(R.styleable.banner_auto_banner, false);
-        canDownload = ta.getBoolean(R.styleable.banner_can_download, false);
+        bgColor = ta.getColor(R.styleable.banner_bgColor, Color.WHITE);
+        placeholderImage = ta.getResourceId(R.styleable.banner_bannerPlaceholderImage, R.mipmap.ic_default_image);
+        canBrowse = ta.getBoolean(R.styleable.banner_canBrowse, false);
+        autoBanner = ta.getBoolean(R.styleable.banner_autoBanner, false);
+        canDownload = ta.getBoolean(R.styleable.banner_canDownload, false);
 
-        dotPosition = ta.getInt(R.styleable.banner_dot_position, DotPosition.INNER_BOTTOM_CENTER);
+        dotPosition = ta.getInt(R.styleable.banner_dotPosition, DotPosition.INNER_BOTTOM_CENTER);
 
-        leftTopRadius = ta.getDimensionPixelSize(R.styleable.banner_banner_left_top_radius, 0);
-        rightTopRadius = ta.getDimensionPixelSize(R.styleable.banner_banner_right_top_radius, 0);
-        rightBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_banner_right_bottom_radius, 0);
-        leftBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_banner_left_bottom_radius, 0);
+        leftTopRadius = ta.getDimensionPixelSize(R.styleable.banner_leftTopRadius, 0);
+        rightTopRadius = ta.getDimensionPixelSize(R.styleable.banner_rightTopRadius, 0);
+        rightBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_rightBottomRadius, 0);
+        leftBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_leftBottomRadius, 0);
 
-        dotHeight = ta.getDimension(R.styleable.banner_dot_height, DensityUtil.dp2px(context, 30));
-        dotBottomMargin = ta.getDimension(R.styleable.banner_dot_bottom_margin, DensityUtil.dp2px(context, 12));
-        dotLeftMargin = ta.getDimension(R.styleable.banner_dot_left_margin, DensityUtil.dp2px(context, 12));
-        dotRightMargin = ta.getDimension(R.styleable.banner_dot_right_margin, DensityUtil.dp2px(context, 12));
-        dotPadding = ta.getDimension(R.styleable.banner_dot_padding, DensityUtil.dp2px(context, 8));
+        dotHeight = ta.getDimension(R.styleable.banner_dotHeight, DensityUtil.dp2px(context, 30));
+        dotBottomMargin = ta.getDimension(R.styleable.banner_dotBottomMargin, DensityUtil.dp2px(context, 12));
+        dotLeftMargin = ta.getDimension(R.styleable.banner_dotLeftMargin, DensityUtil.dp2px(context, 12));
+        dotRightMargin = ta.getDimension(R.styleable.banner_dotRightMargin, DensityUtil.dp2px(context, 12));
+        dotPadding = ta.getDimension(R.styleable.banner_dotPadding, DensityUtil.dp2px(context, 8));
 
-        drawableResCurrent = ta.getResourceId(R.styleable.banner_icon_selected, R.mipmap.icon_point2);
-        drawableResNormal = ta.getResourceId(R.styleable.banner_icon_unselected, R.mipmap.icon_point1);
+        drawableResCurrent = ta.getResourceId(R.styleable.banner_iconSelected, R.mipmap.icon_point2);
+        drawableResNormal = ta.getResourceId(R.styleable.banner_iconUnselected, R.mipmap.icon_point1);
         mPaint.setColor(bgColor);
         ta.recycle();
         initLayout();

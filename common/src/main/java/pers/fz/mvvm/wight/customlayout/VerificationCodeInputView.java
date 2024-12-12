@@ -161,21 +161,21 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
         }
         @SuppressLint("CustomViewStyleable")
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.verification_code, 0, 0);
-        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.verification_code_code_stroke_width, DensityUtil.dp2px(getContext(), 30));
-        mStrokeHeight = ta.getDimensionPixelSize(R.styleable.verification_code_code_stroke_height, DensityUtil.dp2px(getContext(), 30));
-        mStrokePadding = ta.getDimensionPixelSize(R.styleable.verification_code_code_stroke_padding, DensityUtil.dp2px(getContext(), 10));
-        mBorderWidth = ta.getDimensionPixelSize(R.styleable.verification_code_code_stroke_border_width, DensityUtil.dp2px(getContext(), 2));
-        mRadius = ta.getDimensionPixelSize(R.styleable.verification_code_code_stroke_radius, DensityUtil.dp2px(getContext(), 4));
-        mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_code_stroke_color_state_focused_true, ContextCompat.getColor(getContext(), R.color.themeColor));
-        mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_code_stroke_color_state_focused_false, ContextCompat.getColor(getContext(), R.color.white));
-        mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_code_bg_color_state_focused_true, ContextCompat.getColor(getContext(), R.color.white));
-        mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_code_bg_color_state_focused_false, ContextCompat.getColor(getContext(), R.color.transparent));
-        mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursor_width, DensityUtil.dp2px(getContext(), 2));
-        mCursorHeight = ta.getDimensionPixelSize(R.styleable.verification_code_cursor_height, DensityUtil.dp2px(getContext(), 15));
-        mCursorFocusedBgColor = ta.getColor(R.styleable.verification_code_cursor_bg_color_state_focused_true, ContextCompat.getColor(getContext(), R.color.themeColor));
-        mCursorDefaultBgColor = ta.getColor(R.styleable.verification_code_cursor_bg_color_state_focused_false, ContextCompat.getColor(getContext(), R.color.transparent));
-        mMaxLength = ta.getInt(R.styleable.verification_code_code_max_length, 6);
-        mCodeType = ta.getInt(R.styleable.verification_code_code_type, NUMBER);
+        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.verification_code_strokeWidth, DensityUtil.dp2px(getContext(), 30));
+        mStrokeHeight = ta.getDimensionPixelSize(R.styleable.verification_code_strokeWidth, DensityUtil.dp2px(getContext(), 30));
+        mStrokePadding = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokePadding, DensityUtil.dp2px(getContext(), 10));
+        mBorderWidth = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokeBorderWidth, DensityUtil.dp2px(getContext(), 2));
+        mRadius = ta.getDimensionPixelSize(R.styleable.verification_code_radius, DensityUtil.dp2px(getContext(), 4));
+        mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.themeColor));
+        mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.white));
+        mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.white));
+        mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.transparent));
+        mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursorWidth, DensityUtil.dp2px(getContext(), 2));
+        mCursorHeight = ta.getDimensionPixelSize(R.styleable.verification_code_cursorHeight, DensityUtil.dp2px(getContext(), 15));
+        mCursorFocusedBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.themeColor));
+        mCursorDefaultBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.transparent));
+        mMaxLength = ta.getInt(R.styleable.verification_code_codeMaxLength, 6);
+        mCodeType = ta.getInt(R.styleable.verification_code_codeType, NUMBER);
         ta.recycle();
     }
 

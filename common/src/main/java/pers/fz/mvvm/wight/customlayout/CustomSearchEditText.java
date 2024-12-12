@@ -50,7 +50,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
             TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CustomEditText, 0, 0);
             for (int i = 0; i < ta.getIndexCount(); i++) {
                 int attr = ta.getIndex(i);
-                if (attr == R.styleable.CustomEditText_drawable_position) {
+                if (attr == R.styleable.CustomEditText_drawablePosition) {
                     drawablePosition = ta.getInt(attr, 3);
                 } else if (attr == R.styleable.CustomEditText_searchIcon) {
                     drawableSearch = ta.getDrawable(attr);

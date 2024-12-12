@@ -18,29 +18,29 @@ import pers.fz.mvvm.R;
  * describe：自定义圆角矩形
  */
 public class CornerButton extends AppCompatButton {
-    private int storkColor;
+    private int strokeColor;
     private int circleBackColor;
     private final GradientDrawable gradientDrawable;
-    private float radius, storkWidth;
+    private float radius, strokeWidth;
 
     public CornerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            storkColor = typedArray.getColor(R.styleable.CornerTextView_corner_storkColor, ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
-            storkWidth = typedArray.getDimension(R.styleable.CornerTextView_corner_storkWidth, storkWidth);
-            radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, 0);
+            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+            strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, strokeWidth);
+            radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
             typedArray.recycle();
         } else {
-            storkColor = ContextCompat.getColor(context, R.color.white);
+            strokeColor = ContextCompat.getColor(context, R.color.white);
             circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setColor(circleBackColor);
         gradientDrawable.setCornerRadius(radius);
-        if (storkWidth > 0) {
-            gradientDrawable.setStroke((int) storkWidth, storkColor);
+        if (strokeWidth > 0) {
+            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
         }
         this.setBackground(gradientDrawable);
     }
@@ -49,22 +49,22 @@ public class CornerButton extends AppCompatButton {
         this(context, null);
     }
 
-    public void setStorkColor(@ColorInt int color) {
-        this.storkColor = color;
-        gradientDrawable.setStroke((int) storkWidth, this.storkColor);
+    public void setstrokeColor(@ColorInt int color) {
+        this.strokeColor = color;
+        gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setStorkWidth(int width) {
-        this.storkWidth = width;
-        gradientDrawable.setStroke(this.storkColor, storkColor);
+    public void setstrokeWidth(int width) {
+        this.strokeWidth = width;
+        gradientDrawable.setStroke(this.strokeColor, strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setStork(@ColorInt int color, int width) {
-        this.storkColor = color;
-        this.storkWidth = width;
-        gradientDrawable.setStroke(this.storkColor, this.storkColor);
+    public void setstroke(@ColorInt int color, int width) {
+        this.strokeColor = color;
+        this.strokeWidth = width;
+        gradientDrawable.setStroke(this.strokeColor, this.strokeColor);
         this.setBackground(gradientDrawable);
     }
 

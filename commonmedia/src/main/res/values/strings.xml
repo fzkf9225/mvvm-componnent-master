@@ -1,7 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="album">album</string>
     <string name="camera">camera</string>
+    <string name="shoot">shoot</string>
     <string name="file">file manager</string>
     <string name="audio">audio</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel" tools:ignore="ButtonCase">cancel</string>
+    <string name="media_manage">Select from the multimedia file</string>
+    <string name="sure">OK</string>
 </resources>

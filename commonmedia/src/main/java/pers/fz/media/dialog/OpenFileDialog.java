@@ -54,10 +54,14 @@ public class OpenFileDialog extends Dialog {
         initView();
         return this;
     }
+    private ChooseFileDialogBinding binding;
+
+    public ChooseFileDialogBinding getBinding() {
+        return binding;
+    }
 
     private void initView() {
-
-        ChooseFileDialogBinding binding = ChooseFileDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = ChooseFileDialogBinding.inflate(getLayoutInflater(), null, false);
         if (chooseType == AUDIO) {
             if (!TextUtils.isEmpty(buttonMessage)) {
                 binding.chooseFile.setText(buttonMessage);

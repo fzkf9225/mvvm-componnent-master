@@ -21,9 +21,9 @@
 
     <!--自动换行LinearLayout-->
     <style name="WarpLinearLayoutDefault">
-        <item name="grivate">left</item>
-        <item name="horizontal_Space">20dp</item>
-        <item name="vertical_Space">20dp</item>
+        <item name="gravity">left</item>
+        <item name="horizontalSpace">20dp</item>
+        <item name="verticalSpace">20dp</item>
         <item name="isFull">false</item>
     </style>
     <!-- 设置页面item -->

@@ -13,8 +13,8 @@
     <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:corner_backColor="@color/white"
-        app:corner_radius="@dimen/radius_m"
+        app:bgColor="@color/white"
+        app:radius="@dimen/radius_m"
         android:layout_marginStart="@dimen/horizontal_margin_l"
         android:layout_marginEnd="@dimen/horizontal_margin_l"
         android:paddingStart="@dimen/padding_l"

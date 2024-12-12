@@ -68,8 +68,8 @@ public class RoundImageView extends AppCompatImageView {
 
 	    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);
 
-	    mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_border_width, DEFAULT_BORDER_WIDTH);
-	    mBorderColor = a.getColor(R.styleable.CircleImageView_border_color, DEFAULT_BORDER_COLOR);
+	    mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_borderWidth, DEFAULT_BORDER_WIDTH);
+	    mBorderColor = a.getColor(R.styleable.CircleImageView_borderColor, DEFAULT_BORDER_COLOR);
 
 	    a.recycle();
 
@@ -99,8 +99,8 @@ public class RoundImageView extends AppCompatImageView {
 	      return;
 	    }
 
-	    canvas.drawCircle(getWidth() / 2, getHeight() / 2, mDrawableRadius, mBitmapPaint);
-	    canvas.drawCircle(getWidth() / 2, getHeight() / 2, mBorderRadius, mBorderPaint);
+	    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, mDrawableRadius, mBitmapPaint);
+	    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, mBorderRadius, mBorderPaint);
 	  }
 
 	  @Override

@@ -33,9 +33,9 @@ import pers.fz.mvvm.wight.customlayout.round.SpanContainer;
 
 /**
  * Created by fz on 2023/5/23 16:29
- * describe :
+ * describe :渐变背景色且可以设置左右不同文字颜色的TextView
  */
-public class RoundTextView extends AppCompatTextView {
+public class GradationRectTextView extends AppCompatTextView {
 
     private static final String EMPTY_SPACE = "\u3000";
     private int type = RECTANGLE;
@@ -72,15 +72,15 @@ public class RoundTextView extends AppCompatTextView {
     //渐变方向
     GradientDrawable.Orientation orientation;
 
-    public RoundTextView(Context context) {
+    public GradationRectTextView(Context context) {
         this(context, null);
     }
 
-    public RoundTextView(Context context, @Nullable AttributeSet attrs) {
+    public GradationRectTextView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RoundTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public GradationRectTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttr(context, attrs);
         init();
@@ -366,18 +366,18 @@ public class RoundTextView extends AppCompatTextView {
         //左右文字支持xml中设置iconFont
         TypedValue textValue = new TypedValue();
         if(attrs!=null){
-            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RectgleTextView);
-            type = array.getInteger(R.styleable.RectgleTextView_shapeType, 0);
-            mRadius = array.getDimensionPixelOffset(R.styleable.RectgleTextView_totalRadius, 0);
-            mTopLeftRadius = array.getDimensionPixelSize(R.styleable.RectgleTextView_topLeft, 0);
-            mTopRightRadius = array.getDimensionPixelSize(R.styleable.RectgleTextView_topRight, 0);
-            mBottomLeftRadius = array.getDimensionPixelSize(R.styleable.RectgleTextView_bottomLeft, 0);
-            mBottomRightRadius = array.getDimensionPixelSize(R.styleable.RectgleTextView_bottomRight, 0);
-            mStrokeColor = array.getColor(R.styleable.RectgleTextView_strColor, -1);
-            mStrokeWidth = array.getDimensionPixelOffset(R.styleable.RectgleTextView_strWidth, 0);
-            mSolid = array.getColor(R.styleable.RectgleTextView_solidBac, -1);
-            mTextPadding = array.getDimensionPixelOffset(R.styleable.RectgleTextView_textPadding, 0);
-            boolean has = array.getValue(R.styleable.RectgleTextView_textLeft, textValue);
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.GradationRectTextView);
+            type = array.getInteger(R.styleable.GradationRectTextView_shapeType, 0);
+            mRadius = array.getDimensionPixelOffset(R.styleable.GradationRectTextView_totalRadius, 0);
+            mTopLeftRadius = array.getDimensionPixelSize(R.styleable.GradationRectTextView_topLeft, 0);
+            mTopRightRadius = array.getDimensionPixelSize(R.styleable.GradationRectTextView_topRight, 0);
+            mBottomLeftRadius = array.getDimensionPixelSize(R.styleable.GradationRectTextView_bottomLeft, 0);
+            mBottomRightRadius = array.getDimensionPixelSize(R.styleable.GradationRectTextView_bottomRight, 0);
+            mStrokeColor = array.getColor(R.styleable.GradationRectTextView_strColor, -1);
+            mStrokeWidth = array.getDimensionPixelOffset(R.styleable.GradationRectTextView_strWidth, 0);
+            mSolid = array.getColor(R.styleable.GradationRectTextView_solidBac, -1);
+            mTextPadding = array.getDimensionPixelOffset(R.styleable.GradationRectTextView_textPadding, 0);
+            boolean has = array.getValue(R.styleable.GradationRectTextView_textLeft, textValue);
             if (has) {
                 if (textValue.type == TypedValue.TYPE_REFERENCE) {
                     //文字引用
@@ -387,7 +387,7 @@ public class RoundTextView extends AppCompatTextView {
                     mTextLeft = textValue.string;
                 }
             }
-            has = array.getValue(R.styleable.RectgleTextView_textRight, textValue);
+            has = array.getValue(R.styleable.GradationRectTextView_textRight, textValue);
             if (has) {
                 if (textValue.type == TypedValue.TYPE_REFERENCE) {
                     //文字引用
@@ -397,20 +397,20 @@ public class RoundTextView extends AppCompatTextView {
                     mTextRight = textValue.string;
                 }
             }
-            mIconColor = array.getColorStateList(R.styleable.RectgleTextView_iconColor);
-            mLeftColor = array.getColorStateList(R.styleable.RectgleTextView_textLeftColor);
-            mRightColor = array.getColorStateList(R.styleable.RectgleTextView_textRightColor);
-            mLeftSize = array.getDimension(R.styleable.RectgleTextView_textLeftSize, 0);
-            mRightSize = array.getDimension(R.styleable.RectgleTextView_textRightSize, 0);
-            mTextLeftStyle = array.getInt(R.styleable.RectgleTextView_textLeftStyle, Typeface.NORMAL);
-            mTextRightStyle = array.getInt(R.styleable.RectgleTextView_textRightStyle, Typeface.NORMAL);
-            mTextCenterStyle = array.getInt(R.styleable.RectgleTextView_textCenterStyle, Typeface.NORMAL);
-            autoMaxHeight = array.getBoolean(R.styleable.RectgleTextView_autoMaxHeight, false);
+            mIconColor = array.getColorStateList(R.styleable.GradationRectTextView_iconColor);
+            mLeftColor = array.getColorStateList(R.styleable.GradationRectTextView_textLeftColor);
+            mRightColor = array.getColorStateList(R.styleable.GradationRectTextView_textRightColor);
+            mLeftSize = array.getDimension(R.styleable.GradationRectTextView_textLeftSize, 0);
+            mRightSize = array.getDimension(R.styleable.GradationRectTextView_textRightSize, 0);
+            mTextLeftStyle = array.getInt(R.styleable.GradationRectTextView_textLeftStyle, Typeface.NORMAL);
+            mTextRightStyle = array.getInt(R.styleable.GradationRectTextView_textRightStyle, Typeface.NORMAL);
+            mTextCenterStyle = array.getInt(R.styleable.GradationRectTextView_textCenterStyle, Typeface.NORMAL);
+            autoMaxHeight = array.getBoolean(R.styleable.GradationRectTextView_autoMaxHeight, false);
             orientation = switchEnumToOrientation(array.getInt(R.styleable
-                    .RectgleTextView_gradientOrientation, 0));
-            startColor = array.getColorStateList(R.styleable.RectgleTextView_startSolid);
-            centerColor = array.getColorStateList(R.styleable.RectgleTextView_centerSolid);
-            endColor = array.getColorStateList(R.styleable.RectgleTextView_endSolid);
+                    .GradationRectTextView_gradientOrientation, 0));
+            startColor = array.getColorStateList(R.styleable.GradationRectTextView_startSolid);
+            centerColor = array.getColorStateList(R.styleable.GradationRectTextView_centerSolid);
+            endColor = array.getColorStateList(R.styleable.GradationRectTextView_endSolid);
             array.recycle();
         }
     }
@@ -652,7 +652,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置Shape type
      */
-    public RoundTextView type(int type) {
+    public GradationRectTextView type(int type) {
         this.type = type;
         return this;
     }
@@ -660,7 +660,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置边线的宽度
      */
-    public RoundTextView strokeWidth(int width) {
+    public GradationRectTextView strokeWidth(int width) {
         this.mStrokeWidth = width;
         return this;
     }
@@ -668,7 +668,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置边线的宽度
      */
-    public RoundTextView strokeColor(@ColorInt int color) {
+    public GradationRectTextView strokeColor(@ColorInt int color) {
         this.mStrokeColor = color;
         return this;
     }
@@ -676,7 +676,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置填充的颜色
      */
-    public RoundTextView solid(@ColorInt int color) {
+    public GradationRectTextView solid(@ColorInt int color) {
         this.mSolid = color;
         return this;
     }
@@ -684,7 +684,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置radius
      */
-    public RoundTextView radius(int radius) {
+    public GradationRectTextView radius(int radius) {
         this.mRadius = radius;
         return this;
     }
@@ -693,7 +693,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置icon颜色
      */
-    public RoundTextView iconColor(int color) {
+    public GradationRectTextView iconColor(int color) {
         this.mIconColor = ColorStateList.valueOf(color);
         return this;
     }
@@ -701,7 +701,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左文案
      */
-    public RoundTextView textLeft(String textLeft) {
+    public GradationRectTextView textLeft(String textLeft) {
         this.mTextLeft = textLeft;
         return this;
     }
@@ -709,7 +709,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左文案
      */
-    public RoundTextView textLeft(@StringRes int textLeft) {
+    public GradationRectTextView textLeft(@StringRes int textLeft) {
         this.mTextLeft = getContext().getString(textLeft);
         return this;
     }
@@ -717,7 +717,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右文案
      */
-    public RoundTextView textRight(String textRight) {
+    public GradationRectTextView textRight(String textRight) {
         this.mTextRight = textRight;
         return this;
     }
@@ -725,7 +725,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右文案
      */
-    public RoundTextView textRight(@StringRes int textRight) {
+    public GradationRectTextView textRight(@StringRes int textRight) {
         this.mTextRight = getContext().getString(textRight);
         return this;
     }
@@ -733,7 +733,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左文案颜色
      */
-    public RoundTextView textLeftColor(int color) {
+    public GradationRectTextView textLeftColor(int color) {
         this.mLeftColor = ColorStateList.valueOf(color);
         return this;
     }
@@ -741,7 +741,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右文案颜色
      */
-    public RoundTextView textRightColor(int color) {
+    public GradationRectTextView textRightColor(int color) {
         this.mRightColor = ColorStateList.valueOf(color);
         return this;
     }
@@ -749,7 +749,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左文案字号大小
      */
-    public RoundTextView textLeftSize(float leftSize) {
+    public GradationRectTextView textLeftSize(float leftSize) {
         this.mLeftSize = leftSize;
         return this;
     }
@@ -757,7 +757,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右文案字号大小
      */
-    public RoundTextView textRightSize(float rightSize) {
+    public GradationRectTextView textRightSize(float rightSize) {
         this.mRightSize = rightSize;
         return this;
     }
@@ -765,7 +765,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置Icon
      */
-    public RoundTextView icon(String iconText) {
+    public GradationRectTextView icon(String iconText) {
         this.iconString = iconText;
         return this;
     }
@@ -773,7 +773,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置Icon
      */
-    public RoundTextView icon(@StringRes int iconText) {
+    public GradationRectTextView icon(@StringRes int iconText) {
         this.iconString = getContext().getString(iconText);
         return this;
     }
@@ -781,7 +781,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左文案样式
      */
-    public RoundTextView textLeftStyle(int textLeftStyle) {
+    public GradationRectTextView textLeftStyle(int textLeftStyle) {
         this.mTextLeftStyle = textLeftStyle;
         return this;
     }
@@ -789,7 +789,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右文案样式
      */
-    public RoundTextView textRightStyle(int textRightStyle) {
+    public GradationRectTextView textRightStyle(int textRightStyle) {
         this.mTextRightStyle = textRightStyle;
         return this;
     }
@@ -797,7 +797,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置中间文案样式
      */
-    public RoundTextView textCenterStyle(int textCenterStyle) {
+    public GradationRectTextView textCenterStyle(int textCenterStyle) {
         this.mTextCenterStyle = textCenterStyle;
         return this;
     }
@@ -805,7 +805,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右边文字为多个span
      */
-    public RoundTextView spanRight(List<Object> objects, int start, int end, int flags) {
+    public GradationRectTextView spanRight(List<Object> objects, int start, int end, int flags) {
         if (rightContainer == null) {
             rightContainer = new ArrayList<>();
         }
@@ -816,7 +816,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置右边文字为span
      */
-    public RoundTextView spanRight(Object object, int start, int end, int flags) {
+    public GradationRectTextView spanRight(Object object, int start, int end, int flags) {
         if (rightContainer == null) {
             rightContainer = new ArrayList<>();
         }
@@ -827,7 +827,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左边文字为多个span
      */
-    public RoundTextView spanLeft(List<Object> objects, int start, int end, int flags) {
+    public GradationRectTextView spanLeft(List<Object> objects, int start, int end, int flags) {
         if (leftContainer == null) {
             leftContainer = new ArrayList<>();
         }
@@ -838,7 +838,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置左边文字为span
      */
-    public RoundTextView spanLeft(Object object, int start, int end, int flags) {
+    public GradationRectTextView spanLeft(Object object, int start, int end, int flags) {
         if (leftContainer == null) {
             leftContainer = new ArrayList<>();
         }
@@ -849,7 +849,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置文字padding
      */
-    public RoundTextView textPadding(float textPadding) {
+    public GradationRectTextView textPadding(float textPadding) {
         this.mTextPadding = textPadding;
         return this;
     }
@@ -857,7 +857,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 设置三段文字颜色
      */
-    public RoundTextView allTextColor(@ColorInt int color) {
+    public GradationRectTextView allTextColor(@ColorInt int color) {
         ColorStateList temp = ColorStateList.valueOf(color);
         this.mIconColor = temp;
         this.mLeftColor = temp;
@@ -875,7 +875,7 @@ public class RoundTextView extends AppCompatTextView {
     /**
      * 防止重复初始化，最后调用build
      */
-    public RoundTextView build() {
+    public GradationRectTextView build() {
         clearText();
         //initIconFont();
         init();

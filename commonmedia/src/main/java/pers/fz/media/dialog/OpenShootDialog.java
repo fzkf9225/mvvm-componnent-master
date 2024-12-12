@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import pers.fz.media.R;
+import pers.fz.media.databinding.CameraAlbumDialogBinding;
+import pers.fz.media.databinding.ShootDialogBinding;
 
 
 /**
@@ -55,27 +57,28 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
         initView();
         return this;
     }
+    private ShootDialogBinding binding;
+
+    public ShootDialogBinding getBinding() {
+        return binding;
+    }
 
     /**
      * 初始化控件
      */
     private void initView() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.shoot_dialog, null);
-        Button choosePhoto = dialogView.findViewById(R.id.choosePhoto);
-        Button takePhoto = dialogView.findViewById(R.id.button_shoot);
-        Button sheCancel = dialogView.findViewById(R.id.she_cancel);
-        View vLine = dialogView.findViewById(R.id.v_line);
+        binding = ShootDialogBinding.inflate(getLayoutInflater(), null, false);
         if (mediaType == CAMERA) {
-            choosePhoto.setVisibility(View.GONE);
-            vLine.setVisibility(View.GONE);
+            binding.choosePhoto.setVisibility(View.GONE);
+            binding.vLine.setVisibility(View.GONE);
         } else if (mediaType == ALBUM) {
-            takePhoto.setVisibility(View.GONE);
-            vLine.setVisibility(View.GONE);
+            binding.buttonShoot.setVisibility(View.GONE);
+            binding.vLine.setVisibility(View.GONE);
         }
-        sheCancel.setOnClickListener(this);
-        choosePhoto.setOnClickListener(this);
-        takePhoto.setOnClickListener(this);
-        setContentView(dialogView);
+        binding.buttonCancel.setOnClickListener(v->dismiss());
+        binding.choosePhoto.setOnClickListener(this);
+        binding.buttonShoot.setOnClickListener(this);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;

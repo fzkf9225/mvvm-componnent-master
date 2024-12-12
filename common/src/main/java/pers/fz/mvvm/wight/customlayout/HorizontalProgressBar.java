@@ -95,8 +95,8 @@ public class HorizontalProgressBar extends View {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_Progress_Bar);
             bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
             progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
-            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, ContextCompat.getColor(getContext(), R.color.autoColor));
-            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, DensityUtil.dp2px(getContext(), 14));
+            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor, ContextCompat.getColor(getContext(), R.color.autoColor));
+            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_textSize, DensityUtil.dp2px(getContext(), 14));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2f));
             bgRadius = typedArray.getDimension(R.styleable.Custom_Progress_Bar_bgRadius, DensityUtil.dp2px(getContext(), DEFAULT_RADIUS));

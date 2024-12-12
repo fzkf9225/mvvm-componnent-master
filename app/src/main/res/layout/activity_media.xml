@@ -112,7 +112,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:scaleType="centerCrop"
-                app:image_view_radius="@dimen/radius_l"
+                app:radius="@dimen/radius_l"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file"/>
 
@@ -125,7 +125,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:scaleType="centerCrop"
-                app:image_view_radius="@dimen/radius_l"
+                app:radius="@dimen/radius_l"
                 app:layout_constraintStart_toEndOf="@+id/oldImage"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file" />
 

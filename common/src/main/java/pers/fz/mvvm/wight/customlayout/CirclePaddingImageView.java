@@ -17,7 +17,6 @@ import pers.fz.mvvm.R;
 public class CirclePaddingImageView extends AppCompatImageView {
 
     private int borderColor;
-    private int borderFocusColor;
     private boolean enableSelected;
     private boolean enablePressed;
     private int borderWidth;
@@ -40,16 +39,17 @@ public class CirclePaddingImageView extends AppCompatImageView {
     }
 
     private void init(@Nullable AttributeSet attrs) {
+        int borderFocusColor;
         if (attrs != null) {
             // 从XML中获取自定义属性
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircleImageView);
-            borderColor = a.getColor(R.styleable.CircleImageView_border_color, 0xFFB4B4B4);
-            borderFocusColor = a.getColor(R.styleable.CircleImageView_border_focus_color, 0xFFFFFFFF);
-            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_border_width, 0);
-            enableSelected = a.getBoolean(R.styleable.CircleImageView_enable_selected, false);
-            enablePressed = a.getBoolean(R.styleable.CircleImageView_enable_pressed, false);
+            borderColor = a.getColor(R.styleable.CircleImageView_borderColor, 0xFFB4B4B4);
+            borderFocusColor = a.getColor(R.styleable.CircleImageView_borderFocusColor, 0xFFFFFFFF);
+            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_borderWidth, 0);
+            enableSelected = a.getBoolean(R.styleable.CircleImageView_enableSelected, false);
+            enablePressed = a.getBoolean(R.styleable.CircleImageView_enablePressed, false);
             a.recycle();
-        }else{
+        } else {
             borderColor = 0xFFB4B4B4;
             borderFocusColor = 0xFFFFFFFF;
         }

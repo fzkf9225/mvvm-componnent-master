@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import pers.fz.mvvm.R;
 
 
@@ -23,11 +25,11 @@ import pers.fz.mvvm.R;
  *  文字和查看收起在同一行
  */
 
-public class CollapsedTextView extends TextView {
+public class CollapsedTextView extends AppCompatTextView {
     /**
      * 收起状态下的最大行数
      */
-    private int maxLine = 2;
+    private final int maxLine = 2;
     /**
      * 截取后，文本末尾的字符串
      */
@@ -35,19 +37,19 @@ public class CollapsedTextView extends TextView {
     /**
      * 默认全文的Text
      */
-    private static final String EXPANDEDTEXT = "查看全文";
+    private static final String EXPANDED_TEXT = "查看全文";
     /**
      * 默认收起的text
      */
-    private static final String COLLAPSEDTEXT = "收起全文";
+    private static final String COLLAPSED_TEXT = "收起全文";
     /**
      * 全文的text
      */
-    private String expandedText = EXPANDEDTEXT;
+    private String expandedText = EXPANDED_TEXT;
     /**
      * 收起的text
      */
-    private String collapsedText = COLLAPSEDTEXT;
+    private String collapsedText = COLLAPSED_TEXT;
     /**
      * 所有行数
      */
@@ -84,12 +86,6 @@ public class CollapsedTextView extends TextView {
         init(context, attrs);
     }
 
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    public CollapsedTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-//        super(context, attrs, defStyleAttr, defStyleRes);
-//        init(context, attrs);
-//    }
-
     @Override
     public TextPaint getPaint() {
         return super.getPaint();
@@ -101,11 +97,11 @@ public class CollapsedTextView extends TextView {
             allLines = ta.getInt(R.styleable.CollapsedTextView_trimLines, 0);
             expandedText = ta.getString(R.styleable.CollapsedTextView_expandedText);
             if (TextUtils.isEmpty(expandedText)) {
-                expandedText = EXPANDEDTEXT;
+                expandedText = EXPANDED_TEXT;
             }
             collapsedText = ta.getString(R.styleable.CollapsedTextView_collapsedText);
             if (TextUtils.isEmpty(collapsedText)) {
-                collapsedText = COLLAPSEDTEXT;
+                collapsedText = COLLAPSED_TEXT;
             }
         }
 

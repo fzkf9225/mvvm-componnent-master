@@ -40,8 +40,8 @@ public class CornerConstraintLayout extends ConstraintLayout {
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_corner_backColor, ContextCompat.getColor(context, R.color.white));
-            radius = typedArray.getDimension(R.styleable.CornerTextView_corner_radius, DensityUtil.dp2px(getContext(),8));
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+            radius = typedArray.getDimension(R.styleable.CornerTextView_radius, DensityUtil.dp2px(getContext(),8));
             typedArray.recycle();
             GradientDrawable gd = new GradientDrawable();
             gd.setColor(circleBackColor);

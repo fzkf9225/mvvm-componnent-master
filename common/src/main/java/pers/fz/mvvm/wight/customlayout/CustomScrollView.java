@@ -18,7 +18,7 @@ public class CustomScrollView extends ScrollView {
 
     private View inner;
     private float y;
-    private Rect normal = new Rect();
+    private final Rect normal = new Rect();
     private static final int SIZE = 3;
 
     public CustomScrollView(Context context) {

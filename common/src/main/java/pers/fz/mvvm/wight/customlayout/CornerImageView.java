@@ -55,12 +55,12 @@ public class CornerImageView extends AppCompatImageView {
         int imageBg;
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
-            radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_image_view_radius, defaultRadius);
-            leftTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_left_top_radius, defaultRadius);
-            imageBg = array.getColor(R.styleable.Custom_Round_Image_View_image_bg, 0xFFe4e4e4);
-            rightTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_right_top_radius, defaultRadius);
-            rightBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_right_bottom_radius, defaultRadius);
-            leftBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_left_bottom_radius, defaultRadius);
+            radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_radius, defaultRadius);
+            leftTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftTopRadius, defaultRadius);
+            imageBg = array.getColor(R.styleable.Custom_Round_Image_View_bgColor, 0xFFe4e4e4);
+            rightTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightTopRadius, defaultRadius);
+            rightBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightBottomRadius, defaultRadius);
+            leftBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftBottomRadius, defaultRadius);
             array.recycle();
         } else {
             imageBg = 0xFFe4e4e4;

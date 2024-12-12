@@ -23,9 +23,9 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
     AppCompatTextView(context, attrs) {
     private var maxLinesCollapsed: Int = 2
     private var isCollapsed: Boolean = false
-    private val TAG: String = ScalingTextView::class.java.simpleName
     private var mOriginText: String
-    private @ColorInt var mOriginTextColor: Int
+    @ColorInt
+    private var mOriginTextColor: Int
 
     private val DEFAULT_OPEN_SUFFIX = "查看全文"
     private val DEFAULT_CLOSE_SUFFIX = "收起全文"
@@ -34,10 +34,10 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
 
     init {
         val typedValue = context.obtainStyledAttributes(attrs, R.styleable.scaling_text_view)
-        mOriginText = typedValue.getString(R.styleable.scaling_text_view_content_text).toString()
-        maxLinesCollapsed = typedValue.getInt(R.styleable.scaling_text_view_default_line,2).toInt()
-        isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_default_collapsed,false)
-        mOriginTextColor = typedValue.getColor(R.styleable.scaling_text_view_content_text_color,ContextCompat.getColor(context,R.color.themeColor)).toInt()
+        mOriginText = typedValue.getString(R.styleable.scaling_text_view_text).toString()
+        maxLinesCollapsed = typedValue.getInt(R.styleable.scaling_text_view_defaultLine,2).toInt()
+        isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_defaultCollapsed,false)
+        mOriginTextColor = typedValue.getColor(R.styleable.scaling_text_view_textColor,ContextCompat.getColor(context,R.color.themeColor)).toInt()
         text = mOriginText
     }
 

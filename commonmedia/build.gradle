@@ -55,6 +55,9 @@ android {
     dataBinding{
         enabled = true
     }
+    compileOptions {
+        encoding "UTF-8"
+    }
 }
 
 dependencies {
@@ -66,9 +69,8 @@ dependencies {
     implementation libs.androidx.lifecycle.lifecycle.extensions
     implementation libs.org.aspectj.aspectjrt
     implementation libs.googlecode.isoparser
-//    implementation libs.mp4parser.isoparser
-//    implementation libs.mp4parser.muxer
     implementation libs.com.squareup.picasso.picasso
+    implementation libs.constraintlayout
 }
 
 
@@ -85,7 +87,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.media'
                 artifactId = 'media'
-                version = '1.2.0'
+                version = '1.2.1'
             }
         }
         repositories {

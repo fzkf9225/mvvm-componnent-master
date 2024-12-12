@@ -46,9 +46,9 @@ class DividerView : View {
             dashGap = a.getDimension(R.styleable.DividerView_dashGap, 5f)
             dashLength = a.getDimension(R.styleable.DividerView_dashLength, 5f)
             dashThickness = a.getDimension(R.styleable.DividerView_dashThickness, 3f)
-            color = a.getColor(R.styleable.DividerView_divider_line_color, 0x666666)
+            color = a.getColor(R.styleable.DividerView_dividerLineColor, 0x666666)
             orientation =
-                a.getInt(R.styleable.DividerView_divider_orientation, ORIENTATION_HORIZONTAL)
+                a.getInt(R.styleable.DividerView_dividerOrientation, ORIENTATION_HORIZONTAL)
         } finally {
             a.recycle()
         }

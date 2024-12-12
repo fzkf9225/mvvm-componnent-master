@@ -23,17 +23,17 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:corner_backColor="@color/white"
-            app:corner_radius="@dimen/radius_l"
-            app:corner_storkColor="@color/h_line_color"
-            app:corner_storkWidth="1dp"
+            app:bgColor="@color/white"
+            app:radius="@dimen/radius_l"
+            app:strokeColor="@color/h_line_color"
+            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,17 +53,17 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:corner_backColor="@color/white"
-            app:corner_radius="@dimen/radius_l"
-            app:corner_storkColor="@color/h_line_color"
-            app:corner_storkWidth="1dp"
+            app:bgColor="@color/white"
+            app:radius="@dimen/radius_l"
+            app:strokeColor="@color/h_line_color"
+            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_download"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,17 +84,17 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:corner_backColor="@color/white"
-            app:corner_radius="@dimen/radius_l"
-            app:corner_storkColor="@color/h_line_color"
-            app:corner_storkWidth="1dp"
+            app:bgColor="@color/white"
+            app:radius="@dimen/radius_l"
+            app:strokeColor="@color/h_line_color"
+            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_update"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_multi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

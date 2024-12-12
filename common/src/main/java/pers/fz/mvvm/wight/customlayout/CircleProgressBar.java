@@ -82,8 +82,8 @@ public class CircleProgressBar extends View {
             bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
             progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
             strokeWidth = typedArray.getDimension(R.styleable.Custom_Progress_Bar_strokeWidth, DEFAULT_STROKE_WIDTH);
-            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_fontColor, Color.BLACK);
-            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_fontSize, DensityUtil.sp2px(getContext(), 12));
+            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor, Color.BLACK);
+            fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_textSize, DensityUtil.sp2px(getContext(), 12));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2));
             maxProgress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_maxProgress, 100f);

@@ -306,9 +306,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             if (Boolean.FALSE.equals(entry.getValue())) {
                 new TipDialog(getMediaBuilder().getContext())
                         .setMessage("您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改")
-                        .setCancelText("取消")
-                        .setSureText("前往设置")
-                        .setOnSureClickListener(dialog -> {
+                        .setNegativeText("取消")
+                        .setPositiveText("前往设置")
+                        .setOnPositiveClickListener(dialog -> {
                             dialog.dismiss();
                             Intent intent = new Intent();
                             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

@@ -1,47 +1,57 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_white"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/takePhoto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xxl"
+                android:background="@null"
+                android:gravity="center"
+                android:text="@string/camera"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xxl" />
+
+            <View
+                android:id="@+id/v_line"
+                style="@style/h_line" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/choosePhoto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xxl"
+                android:background="@null"
+                android:gravity="center"
+                android:text="@string/album"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_xxl" />
+        </LinearLayout>
+
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/takePhoto"
+            android:id="@+id/button_cancel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxl"
-            android:background="@null"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="@string/camera"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_size_xxl"/>
-        <View
-            android:id="@+id/v_line"
-            style="@style/h_line"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/choosePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xxl"
-            android:background="@null"
-            android:gravity="center"
-            android:text="@string/album"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_size_xxl"/>
+            android:text="@string/cancel"
+            android:textColor="@color/dark_light"
+            android:textSize="@dimen/font_size_xxl" />
+
     </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/she_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_xxl"
-        android:layout_marginTop="@dimen/vertical_margin_xl"
-        android:background="@drawable/rounded_white"
-        android:gravity="center"
-        android:text="@string/cancel"
-        android:textColor="@color/dark_light"
-        android:textSize="@dimen/font_size_xxl" />
-
-</LinearLayout>
+</layout>

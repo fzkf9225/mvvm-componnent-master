@@ -228,7 +228,7 @@ class CalendarView : ConstraintLayout {
         }
         if (normalBg == null) {
             normalBg = ShapeDrawable(OvalShape()).apply {
-                paint.color = ContextCompat.getColor(context, pers.fz.media.R.color.transparent)
+                paint.color = ContextCompat.getColor(context, pers.fz.mvvm.R.color.transparent)
             }
         }
     }

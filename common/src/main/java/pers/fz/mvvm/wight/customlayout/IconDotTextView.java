@@ -59,10 +59,10 @@ public class IconDotTextView extends ConstraintLayout {
         float textSize;
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.IconDotTextView);
-            textSize = a.getDimension(R.styleable.IconDotTextView_text_size, DensityUtil.dp2px(getContext(), 12));
-            textColor = a.getColor(R.styleable.IconDotTextView_text_color, ContextCompat.getColor(getContext(), R.color.autoColor));
-            imageWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_image_width, 0);
-            imageHeight = a.getDimensionPixelSize(R.styleable.IconDotTextView_image_height, 0);
+            textSize = a.getDimension(R.styleable.IconDotTextView_textSize, DensityUtil.dp2px(getContext(), 12f));
+            textColor = a.getColor(R.styleable.IconDotTextView_textColor, ContextCompat.getColor(getContext(), R.color.autoColor));
+            imageWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_imageWidth, 0);
+            imageHeight = a.getDimensionPixelSize(R.styleable.IconDotTextView_imageHeight, 0);
             drawableImage = a.getDrawable(R.styleable.IconDotTextView_imageSrc);
             label = a.getString(R.styleable.IconDotTextView_label);
             a.recycle();

@@ -75,7 +75,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/sure"
             app:layout_constraintHorizontal_weight="1"
-            android:textColor="@color/themeColor"
+            android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/s_line"

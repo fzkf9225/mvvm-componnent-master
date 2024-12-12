@@ -14,7 +14,7 @@ import pers.fz.mvvm.R;
 
 /**
  * Created by fz on 2017/10/30.
- * 自动换行
+ * describe：自动换行
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class AutoNextLineLinearlayout extends ViewGroup  {
@@ -44,11 +44,11 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         int with = 0;
         int height = 0;
         int childCount = getChildCount();
-        /**
-         * 在调用childView。getMeasre之前必须先调用该行代码，用于对子View大小的测量
+        /*
+         * 在调用childView。getMeasure之前必须先调用该行代码，用于对子View大小的测量
          */
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-        /**
+        /*
          * 计算宽度
          */
         switch (withMode) {
@@ -58,7 +58,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             case MeasureSpec.AT_MOST:
                 for (int i = 0; i < childCount; i++) {
                     if (i != 0) {
-                        with += (int) mType.horizontal_Space;
+                        with += (int) mType.horizontalSpace;
                     }
                     with += getChildAt(i).getMeasuredWidth();
                 }
@@ -68,7 +68,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             case MeasureSpec.UNSPECIFIED:
                 for (int i = 0; i < childCount; i++) {
                     if (i != 0) {
-                        with += (int) mType.horizontal_Space;
+                        with += (int) mType.horizontalSpace;
                     }
                     with += getChildAt(i).getMeasuredWidth();
                 }
@@ -79,16 +79,16 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 break;
 
         }
-        /**
+        /*
          * 根据计算出的宽度，计算出所需要的行数
          */
         WarpLine warpLine = new WarpLine();
-        /**
+        /*
          * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
          */
         mWarpLineGroup = new ArrayList<>();
         for (int i = 0; i < childCount; i++) {
-            if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontal_Space > with) {
+            if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontalSpace > with) {
                 if (warpLine.lineView.isEmpty()) {
                     warpLine.addView(getChildAt(i));
                     mWarpLineGroup.add(warpLine);
@@ -102,19 +102,19 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 warpLine.addView(getChildAt(i));
             }
         }
-        /**
+        /*
          * 添加最后一行
          */
         if (!warpLine.lineView.isEmpty() && !mWarpLineGroup.contains(warpLine)) {
             mWarpLineGroup.add(warpLine);
         }
-        /**
+        /* 
          * 计算宽度
          */
         height = getPaddingTop() + getPaddingBottom();
         for (int i = 0; i < mWarpLineGroup.size(); i++) {
             if (i != 0) {
-                height += (int) mType.vertical_Space;
+                height += (int) mType.verticalSpace;
             }
             height += mWarpLineGroup.get(i).height;
         }
@@ -144,9 +144,9 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 View view = warpLine.lineView.get(j);
                 if (isFull()) {//需要充满当前行时
                     view.layout(left, t, left + view.getMeasuredWidth() + lastWidth / warpLine.lineView.size(), t + view.getMeasuredHeight());
-                    left += (int) (view.getMeasuredWidth() + mType.horizontal_Space + (float) lastWidth / warpLine.lineView.size());
+                    left += (int) (view.getMeasuredWidth() + mType.horizontalSpace + (float) lastWidth / warpLine.lineView.size());
                 } else {
-                    switch (getGrivate()) {
+                    switch (getGravity()) {
                         case 0://右对齐
                             view.layout(left + lastWidth, t, left + lastWidth + view.getMeasuredWidth(), t + view.getMeasuredHeight());
                             break;
@@ -157,10 +157,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                             view.layout(left, t, left + view.getMeasuredWidth(), t + view.getMeasuredHeight());
                             break;
                     }
-                    left += (int) (view.getMeasuredWidth() + mType.horizontal_Space);
+                    left += (int) (view.getMeasuredWidth() + mType.horizontalSpace);
                 }
             }
-            t += (int) (warpLine.height + mType.vertical_Space);
+            t += (int) (warpLine.height + mType.verticalSpace);
         }
     }
 
@@ -180,7 +180,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
 
         private void addView(View view) {
             if (!lineView.isEmpty()) {
-                lineWidth += (int) mType.horizontal_Space;
+                lineWidth += (int) mType.horizontalSpace;
             }
             height = Math.max(height, view.getMeasuredHeight());
             lineWidth += view.getMeasuredWidth();
@@ -195,15 +195,15 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         /*
          *对齐方式 right 0，left 1，center 2
         */
-        private int grivate;
+        private int gravity;
         /**
          * 水平间距,单位px
          */
-        private float horizontal_Space;
+        private float horizontalSpace;
         /**
          * 垂直间距,单位px
          */
-        private float vertical_Space;
+        private float verticalSpace;
         /**
          * 是否自动填满
          */
@@ -214,39 +214,39 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 return;
             }
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WarpLinearLayout);
-            grivate = typedArray.getInt(R.styleable.WarpLinearLayout_grivate, grivate);
-            horizontal_Space = typedArray.getDimension(R.styleable.WarpLinearLayout_horizontal_Space, horizontal_Space);
-            vertical_Space = typedArray.getDimension(R.styleable.WarpLinearLayout_vertical_Space, vertical_Space);
+            gravity = typedArray.getInt(R.styleable.WarpLinearLayout_gravity, gravity);
+            horizontalSpace = typedArray.getDimension(R.styleable.WarpLinearLayout_horizontalSpace, horizontalSpace);
+            verticalSpace = typedArray.getDimension(R.styleable.WarpLinearLayout_verticalSpace, verticalSpace);
             isFull = typedArray.getBoolean(R.styleable.WarpLinearLayout_isFull, isFull);
         }
     }
 
-    public int getGrivate() {
-        return mType.grivate;
+    public int getGravity() {
+        return mType.gravity;
     }
 
-    public float getHorizontal_Space() {
-        return mType.horizontal_Space;
+    public float getHorizontalSpace() {
+        return mType.horizontalSpace;
     }
 
-    public float getVertical_Space() {
-        return mType.vertical_Space;
+    public float getVerticalSpace() {
+        return mType.verticalSpace;
     }
 
     public boolean isFull() {
         return mType.isFull;
     }
 
-    public void setGrivate(int grivate) {
-        mType.grivate = grivate;
+    public void setGravity(int gravity) {
+        mType.gravity = gravity;
     }
 
-    public void setHorizontal_Space(float horizontal_Space) {
-        mType.horizontal_Space = horizontal_Space;
+    public void setHorizontalSpace(float horizontalSpace) {
+        mType.horizontalSpace = horizontalSpace;
     }
 
-    public void setVertical_Space(float vertical_Space) {
-        mType.vertical_Space = vertical_Space;
+    public void setVerticalSpace(float verticalSpace) {
+        mType.verticalSpace = verticalSpace;
     }
 
     public void setIsFull(boolean isFull) {

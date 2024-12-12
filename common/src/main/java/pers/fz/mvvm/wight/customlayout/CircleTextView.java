@@ -14,16 +14,16 @@ import androidx.core.content.ContextCompat;
 import pers.fz.mvvm.R;
 
 /**
- * Created by CherishTang on 2019/5/30.
- * describe
+ * Created by fz on 2019/5/30.
+ * describe:圆形AppCompatTextView
  */
 public class CircleTextView extends AppCompatTextView {
     private final Paint circlePaint;
     private final Paint backPaint;
     private final Paint textPaint;
-    private int storkColor;
+    private int strokeColor;
     private int circleBackColor;
-    private float storkWidth;
+    private float strokeWidth;
 
     public CircleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,20 +33,20 @@ public class CircleTextView extends AppCompatTextView {
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backPaint.setStyle(Paint.Style.FILL);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        storkWidth = 0;
+        strokeWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
-            storkColor = typedArray.getColor(R.styleable.CircleTextView_storkColor, ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_backColor, ContextCompat.getColor(context, R.color.white));
-            storkWidth = typedArray.getDimension(R.styleable.CircleTextView_storkWidth, storkWidth);
+            strokeColor = typedArray.getColor(R.styleable.CircleTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
+            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+            strokeWidth = typedArray.getDimension(R.styleable.CircleTextView_strokeWidth, strokeWidth);
             typedArray.recycle();
         } else {
-            storkColor = ContextCompat.getColor(context, R.color.white);
+            strokeColor = ContextCompat.getColor(context, R.color.white);
             circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
-        if (storkWidth != 0) {
-            circlePaint.setStrokeWidth(storkWidth);
-            circlePaint.setColor(storkColor);
+        if (strokeWidth != 0) {
+            circlePaint.setStrokeWidth(strokeWidth);
+            circlePaint.setColor(strokeColor);
         }
         backPaint.setColor(circleBackColor);
         textPaint.setColor(getCurrentTextColor());
@@ -63,7 +63,7 @@ public class CircleTextView extends AppCompatTextView {
         int height = getHeight();
         int width = getWidth();
         int radius;
-        int storkRadius;
+        int strokeRadius;
         int textWidth = (int) textPaint.measureText(getText().toString());
         if (width > height) {
             if (height > textWidth) {
@@ -80,19 +80,19 @@ public class CircleTextView extends AppCompatTextView {
                 radius = textWidth;
             }
         }
-        storkRadius = (int) (radius / 2 - storkWidth);
-        radius = storkRadius - 1;
-        if (storkWidth != 0) {
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, storkRadius, circlePaint);
+        strokeRadius = (int) ((float) radius / 2 - strokeWidth);
+        radius = strokeRadius - 1;
+        if (strokeWidth != 0) {
+            canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, strokeRadius, circlePaint);
         }
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, backPaint);
+        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, radius, backPaint);
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        canvas.drawText(getText().toString(), getWidth() / 2 - textPaint.measureText(getText().toString()) / 2, getHeight() / 2 - fontMetrics.descent + (fontMetrics.bottom - fontMetrics.top) / 2, textPaint);
+        canvas.drawText(getText().toString(), (float) getWidth() / 2 - textPaint.measureText(getText().toString()) / 2, (float) getHeight() / 2 - fontMetrics.descent + (fontMetrics.bottom - fontMetrics.top) / 2, textPaint);
     }
 
-    public void setMyStorkColor(@ColorInt int color) {
-        this.storkColor = color;
-        circlePaint.setColor(storkColor);
+    public void setMystrokeColor(@ColorInt int color) {
+        this.strokeColor = color;
+        circlePaint.setColor(strokeColor);
         invalidate();
     }
 

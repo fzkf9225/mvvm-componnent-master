@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import pers.fz.media.R;
+import pers.fz.media.databinding.CameraAlbumDialogBinding;
+import pers.fz.media.databinding.ChooseFileDialogBinding;
 
 /**
  * Created by fz on 2024/10/31.
@@ -53,24 +55,25 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
         initView();
         return this;
     }
+    private CameraAlbumDialogBinding binding;
+
+    public CameraAlbumDialogBinding getBinding() {
+        return binding;
+    }
 
     private void initView() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.camera_album_dialog, null);
-        Button choosePhoto = dialogView.findViewById(R.id.choosePhoto);
-        Button takePhoto = dialogView.findViewById(R.id.takePhoto);
-        Button sheCancel = dialogView.findViewById(R.id.she_cancel);
-        View vLine = dialogView.findViewById(R.id.v_line);
+        binding = CameraAlbumDialogBinding.inflate(getLayoutInflater(), null, false);
         if (mediaType == CAMERA) {
-            choosePhoto.setVisibility(View.GONE);
-            vLine.setVisibility(View.GONE);
+            binding.choosePhoto.setVisibility(View.GONE);
+            binding.vLine.setVisibility(View.GONE);
         } else if (mediaType == ALBUM) {
-            takePhoto.setVisibility(View.GONE);
-            vLine.setVisibility(View.GONE);
+            binding.takePhoto.setVisibility(View.GONE);
+            binding.vLine.setVisibility(View.GONE);
         }
-        sheCancel.setOnClickListener(this);
-        choosePhoto.setOnClickListener(this);
-        takePhoto.setOnClickListener(this);
-        setContentView(dialogView);
+        binding.buttonCancel.setOnClickListener(view -> dismiss());
+        binding.choosePhoto.setOnClickListener(this);
+        binding.takePhoto.setOnClickListener(this);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;
