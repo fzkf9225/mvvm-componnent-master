@@ -1,5 +1,6 @@
 package pers.fz.mvvm.wight.customlayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -301,6 +302,8 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
     }
 
     public void startLoop() {
+        //防止重复调用启动轮播，这样会越来越快
+        handler.removeCallbacks(loopRunnable);
         handler.postDelayed(loopRunnable, loopInterval);
     }
 
