@@ -8,22 +8,21 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Constraints;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,34 +39,70 @@ import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.wight.picdialog.PicShowDialog;
 
 /**
- * Created by fz on 2018/3/15.
+ * Created by fz on 2024/12/18 10:57
  * 自定义banner轮播图
  */
 
-public class CustomBannerPicture extends ConstraintLayout implements View.OnClickListener, BannerViewPager.OnImageItemClickListener {
-    private final List<ImageView> images = new ArrayList<>();
-    private BannerViewPager viewPager;
+public class BannerView<T extends BannerBean> extends ConstraintLayout {
+    private ViewPager2 viewPager;
     private LinearLayout dotsLayout;
-    private boolean canBrowse = false, autoBanner = true, canDownload = true;
+    /**
+     * 上一次索引位置
+     */
+    private int lastPos = -1;
+    /**
+     * 预览大图
+     */
+    private boolean previewLarger = true;
+    /**
+     * 自动轮播
+     */
+    private boolean autoLoop = true;
+    /**
+     * 底部圆点位置
+     */
     private int dotPosition = DotPosition.INNER_BOTTOM_CENTER;
+    /**
+     * 错误时占位图
+     */
     private @DrawableRes int placeholderImage;
-    private final List<Object> imageInfosList = new ArrayList<>();
-    private int mCurrentPosition = 0;
-    private List<BannerBean> bannerList;
+    /**
+     * banner数据
+     */
+    private List<T> bannerList;
+    /**
+     * 宽高
+     */
     private float width, height;
+    /**
+     * 背景色
+     */
     private int bgColor = Color.WHITE;
+    /**
+     * 各大圆角大小
+     */
     private int leftTopRadius;
     private int rightTopRadius;
     private int rightBottomRadius;
     private int leftBottomRadius;
-    private BannerViewPager.OnImageItemClickListener onImageItemClickListener = this;
+    /**
+     * 自动轮播间隔时间
+     */
+    private int loopInterval = 3000;
+    /**
+     * 选中时圆点样式
+     */
     private @DrawableRes
     int drawableResCurrent = R.mipmap.icon_point2;
+    /**
+     * 未选中时圆点样式
+     */
     private @DrawableRes
     int drawableResNormal = R.mipmap.icon_point1;
     private final Path mPath = new Path();
     private Paint mPaint;
     private float dotHeight = 0, dotBottomMargin, dotLeftMargin, dotRightMargin, dotPadding;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public final static class DotPosition {
         public final static int INNER_BOTTOM_CENTER = 0;
@@ -79,22 +114,32 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
 
     }
 
-    public CustomBannerPicture(@NonNull Context context) {
+    public BannerView(@NonNull Context context) {
         super(context);
         init(context, null);
     }
 
-    public CustomBannerPicture(Context context, AttributeSet attrs) {
+    public BannerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context, context.obtainStyledAttributes(attrs, R.styleable.BannerView, 0, 0));
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    public BannerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, context.obtainStyledAttributes(attrs, R.styleable.BannerView, defStyleAttr, 0));
+    }
+
+    public BannerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, context.obtainStyledAttributes(attrs, R.styleable.BannerView, defStyleAttr, defStyleRes));
+    }
+
+    private void init(Context context, TypedArray ta) {
         mPaint = new Paint();
         mPaint.setColor(bgColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
-        if (attrs == null) {
+        if (ta == null) {
             dotHeight = DensityUtil.dp2px(context, 30f);
             dotBottomMargin = DensityUtil.dp2px(context, 12f);
             dotLeftMargin = DensityUtil.dp2px(context, 12f);
@@ -103,28 +148,26 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             initLayout();
             return;
         }
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.banner);
-        bgColor = ta.getColor(R.styleable.banner_bgColor, Color.WHITE);
-        placeholderImage = ta.getResourceId(R.styleable.banner_bannerPlaceholderImage, R.mipmap.ic_default_image);
-        canBrowse = ta.getBoolean(R.styleable.banner_canBrowse, false);
-        autoBanner = ta.getBoolean(R.styleable.banner_autoBanner, false);
-        canDownload = ta.getBoolean(R.styleable.banner_canDownload, false);
+        bgColor = ta.getColor(R.styleable.BannerView_bgColor, Color.WHITE);
+        placeholderImage = ta.getResourceId(R.styleable.BannerView_bannerPlaceholderImage, R.mipmap.ic_default_image);
+        previewLarger = ta.getBoolean(R.styleable.BannerView_previewLarger, false);
+        autoLoop = ta.getBoolean(R.styleable.BannerView_autoLoop, true);
+        loopInterval = ta.getInt(R.styleable.BannerView_loopInterval, 3000);
+        dotPosition = ta.getInt(R.styleable.BannerView_dotPosition, DotPosition.INNER_BOTTOM_CENTER);
 
-        dotPosition = ta.getInt(R.styleable.banner_dotPosition, DotPosition.INNER_BOTTOM_CENTER);
+        leftTopRadius = ta.getDimensionPixelSize(R.styleable.BannerView_leftTopRadius, 0);
+        rightTopRadius = ta.getDimensionPixelSize(R.styleable.BannerView_rightTopRadius, 0);
+        rightBottomRadius = ta.getDimensionPixelSize(R.styleable.BannerView_rightBottomRadius, 0);
+        leftBottomRadius = ta.getDimensionPixelSize(R.styleable.BannerView_leftBottomRadius, 0);
 
-        leftTopRadius = ta.getDimensionPixelSize(R.styleable.banner_leftTopRadius, 0);
-        rightTopRadius = ta.getDimensionPixelSize(R.styleable.banner_rightTopRadius, 0);
-        rightBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_rightBottomRadius, 0);
-        leftBottomRadius = ta.getDimensionPixelSize(R.styleable.banner_leftBottomRadius, 0);
+        dotHeight = ta.getDimension(R.styleable.BannerView_dotHeight, DensityUtil.dp2px(context, 30));
+        dotBottomMargin = ta.getDimension(R.styleable.BannerView_dotBottomMargin, DensityUtil.dp2px(context, 12));
+        dotLeftMargin = ta.getDimension(R.styleable.BannerView_dotLeftMargin, DensityUtil.dp2px(context, 12));
+        dotRightMargin = ta.getDimension(R.styleable.BannerView_dotRightMargin, DensityUtil.dp2px(context, 12));
+        dotPadding = ta.getDimension(R.styleable.BannerView_dotPadding, DensityUtil.dp2px(context, 8));
 
-        dotHeight = ta.getDimension(R.styleable.banner_dotHeight, DensityUtil.dp2px(context, 30));
-        dotBottomMargin = ta.getDimension(R.styleable.banner_dotBottomMargin, DensityUtil.dp2px(context, 12));
-        dotLeftMargin = ta.getDimension(R.styleable.banner_dotLeftMargin, DensityUtil.dp2px(context, 12));
-        dotRightMargin = ta.getDimension(R.styleable.banner_dotRightMargin, DensityUtil.dp2px(context, 12));
-        dotPadding = ta.getDimension(R.styleable.banner_dotPadding, DensityUtil.dp2px(context, 8));
-
-        drawableResCurrent = ta.getResourceId(R.styleable.banner_iconSelected, R.mipmap.icon_point2);
-        drawableResNormal = ta.getResourceId(R.styleable.banner_iconUnselected, R.mipmap.icon_point1);
+        drawableResCurrent = ta.getResourceId(R.styleable.BannerView_iconSelected, R.mipmap.icon_point2);
+        drawableResNormal = ta.getResourceId(R.styleable.BannerView_iconUnselected, R.mipmap.icon_point1);
         mPaint.setColor(bgColor);
         ta.recycle();
         initLayout();
@@ -136,9 +179,9 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
                 ConstraintLayout.LayoutParams.MATCH_PARENT
         ));
         //初始化ViewPager
-        viewPager = new BannerViewPager(getContext(), autoBanner, drawableResCurrent, drawableResNormal);
+        viewPager = new ViewPager2(getContext());
         viewPager.setId(View.generateViewId());
-        viewPager.setOnImageItemClickListener(onImageItemClickListener);
+        viewPager.registerOnPageChangeCallback(onPageChangeCallback);
         ConstraintLayout.LayoutParams viewPagerLayoutParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT);
@@ -195,56 +238,31 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
         setBackgroundColor(bgColor);
     }
 
-    public void setOnImageItemClickListener(BannerViewPager.OnImageItemClickListener onImageItemClickListener) {
-        this.onImageItemClickListener = onImageItemClickListener;
-    }
-
     private boolean dotIsInner() {
         return DotPosition.INNER_BOTTOM_CENTER == dotPosition || DotPosition.INNER_BOTTOM_LEFT == dotPosition || DotPosition.INNER_BOTTOM_RIGHT == dotPosition;
     }
 
-    public void initView(@NotNull List<BannerBean> bannerList) {
+    public void initView(@NotNull List<T> bannerList) {
+        initView(bannerList, null);
+    }
+
+    public void initView(@NotNull List<T> bannerList, PictureAdapter.OnItemClickListener onItemClickListener) {
         this.bannerList = bannerList;
-        images.clear();
-        for (BannerBean bannerBean : this.bannerList) {
-            Object imgPath = bannerBean.getPath();
-            if (dotIsInner()) {
-                ImageView imageView = new ImageView(getContext());
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                imageView.setOnClickListener(this);
-                Glide.with(getContext())
-                        .load(imgPath)
-                        .apply(new RequestOptions().placeholder(placeholderImage).error(placeholderImage))
-                        .into(imageView);
-                images.add(imageView);
-            } else {
-                CornerImageView imageView = new CornerImageView(getContext());
-                imageView.setLeftBottomRadius(leftBottomRadius);
-                imageView.setLeftTopRadius(leftTopRadius);
-                imageView.setRightTopRadius(rightTopRadius);
-                imageView.setRightBottomRadius(rightBottomRadius);
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                imageView.setOnClickListener(this);
-                Glide.with(getContext())
-                        .load(imgPath)
-                        .apply(new RequestOptions().placeholder(placeholderImage).error(placeholderImage))
-                        .into(imageView);
-                images.add(imageView);
-            }
-            imageInfosList.add(imgPath);
+        if (this.bannerList.isEmpty()) {
+            return;
         }
-        viewPager.setImages(images);
         initImageRounds();
-        viewPager.setAdapter(new PictureAdapter(images));
-        viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
+        viewPager.setAdapter(new PictureAdapter<>(this.bannerList, placeholderImage)
+                .setOnItemClickListener(onItemClickListener == null ? onDefaultImageItemClickListener : onItemClickListener));
+        // 设置初始位置到中间，Viewpager2不支持无线循环，所以设置他的最大页为Integer.MAX_VALUE实现
+        viewPager.setCurrentItem(Integer.MAX_VALUE / 2, false);
+        if (autoLoop) {
+            startLoop();
+        }
     }
 
-    public ViewPager getViewPager() {
+    public ViewPager2 getViewPager() {
         return viewPager;
-    }
-
-    public int getCurrentPosition() {
-        return mCurrentPosition;
     }
 
     public void setRoundDots(@DrawableRes int drawableResCurrent, @DrawableRes int drawableResNormal) {
@@ -256,62 +274,84 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
      * 计算viewPager小底部小圆点的大小
      */
     private void initImageRounds() {
-        List<ImageView> dots = new ArrayList<>();
         dotsLayout.removeAllViews();
         /*
          *当轮播图大于1张时小圆点显示
          */
-        if (images.size() > 1) {
+        if (this.bannerList.size() > 1) {
             dotsLayout.setVisibility(View.VISIBLE);
         } else {
             dotsLayout.setVisibility(View.INVISIBLE);
         }
+        lastPos = 0;
         /*
          * 默认让第一张图片显示深颜色的圆点
          */
-        IntStream.range(0, images.size()).forEach(i -> {
+        IntStream.range(0, this.bannerList.size()).forEach(i -> {
             ImageView round = new ImageView(getContext());
             if (i == 0) {
                 round.setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
             } else {
                 round.setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
             }
-            dots.add(round);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
             params.leftMargin = (int) dotPadding;
             dotsLayout.addView(round, params);
         });
-        viewPager.setDots(dots);
     }
 
-    @Override
-    public void onClick(View v) {
-        if (imageInfosList == null || imageInfosList.isEmpty()) {
-            return;
+    public void startLoop() {
+        handler.postDelayed(loopRunnable, loopInterval);
+    }
+
+    public void stopLoop() {
+        handler.removeCallbacks(loopRunnable);
+    }
+
+    protected Runnable loopRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            if (autoLoop && viewPager != null) {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                handler.postDelayed(this, loopInterval);
+            }
         }
-        if (!StringUtil.isEmpty(bannerList.get(mCurrentPosition).getLinkPath())) {
+    };
+
+    /**
+     * 默认的点击事件
+     */
+    protected final PictureAdapter.OnItemClickListener onDefaultImageItemClickListener = position -> {
+        if (!StringUtil.isEmpty(bannerList.get(position).getLinkUrl())) {
             //排除默认的“#”号空链接
-            if ("#".equals(bannerList.get(mCurrentPosition).getLinkPath())) {
+            if ("#".equals(bannerList.get(position).getLinkUrl())) {
                 return;
             }
-            CommonUtil.toBrowser(getContext(), bannerList.get(mCurrentPosition).getLinkPath(), bannerList.get(mCurrentPosition).isLinkInside());
+            CommonUtil.toBrowser(getContext(), bannerList.get(position).getLinkUrl(), bannerList.get(position).isLinkInside());
             return;
         }
-        if (canBrowse) {
-            new PicShowDialog(getContext(), imageInfosList, mCurrentPosition).show();
+        if (previewLarger) {
+            List<Object> list = new ArrayList<>();
+            this.bannerList.forEach(item -> list.add(item.getBannerUrl()));
+            new PicShowDialog(getContext(), list, position).show();
         }
-    }
-
-    @Override
-    public void onItemClick(int itemPosition) {
-
-    }
-
-    @Override
-    public void getPosition(int itemPosition) {
-        dotsLayout.requestLayout();
-        mCurrentPosition = itemPosition;
-    }
+    };
+    /**
+     * 监听滑动实现底部点的显示
+     */
+    protected final ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            int realPos = position % bannerList.size();
+            dotsLayout.getChildAt(realPos).setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
+            if (lastPos >= 0 && lastPos < dotsLayout.getChildCount() && lastPos != realPos) {
+                dotsLayout.getChildAt(lastPos).setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
+            }
+            lastPos = realPos;
+        }
+    };
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -321,7 +361,7 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         if (!dotIsInner()) {
             super.onDraw(canvas);
             return;
@@ -356,5 +396,12 @@ public class CustomBannerPicture extends ConstraintLayout implements View.OnClic
             canvas.drawPath(mPath, mPaint);
         }
         super.onDraw(canvas);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopLoop();
+        viewPager.unregisterOnPageChangeCallback(onPageChangeCallback);
     }
 }

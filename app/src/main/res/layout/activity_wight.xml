@@ -192,12 +192,12 @@
                 android:text="自定义轮播图"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/roundTextView" />
-            <pers.fz.mvvm.wight.customlayout.CustomBannerPicture
+            <pers.fz.mvvm.wight.customlayout.BannerView
                 android:id="@+id/customBannerPicture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:autoBanner="true"
-                app:canBrowse="true"
+                app:autoLoop="true"
+                app:previewLarger="true"
                 app:dotPosition="inner_bottom_center"
                 app:iconSelected="@mipmap/icon_point1"
                 app:iconUnselected="@mipmap/icon_point2"

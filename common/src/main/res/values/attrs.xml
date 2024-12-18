@@ -111,15 +111,15 @@
         <attr name="trimLines" />
     </declare-styleable>
 
-    <declare-styleable name="banner">
+    <declare-styleable name="BannerView">
         <!--是否可以点击浏览大图-->
         <attr name="bgColor"/>
         <!--是否可以点击浏览大图-->
-        <attr name="canBrowse" format="boolean" />
+        <attr name="previewLarger" format="boolean" />
+        <!--自动轮播间隔时间，默认为3000毫秒，单位为毫秒-->
+        <attr name="loopInterval" format="integer" />
         <!--是否自动轮播-->
-        <attr name="autoBanner" format="boolean" />
-        <!--是否可以下载本地-->
-        <attr name="canDownload" format="boolean" />
+        <attr name="autoLoop" format="boolean" />
         <!--针位置，是在banner内部底下还是外部底下，暂未实现这个功能，out属性用处不大感觉就没写了-->
         <attr name="dotPosition" format="enum">
             <enum name="inner_bottom_center" value="0" />

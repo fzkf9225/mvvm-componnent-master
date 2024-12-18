@@ -66,7 +66,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         ), 0).show());
         binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
         binding.imageCode.setOnClickListener(v -> binding.imageCode.setImageBitmap(Code.getInstance().createBitmap()));
-        RxView.setOnClickListener(binding.cornerButton, 3000,"你点的太快了", view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
+        RxView.setOnClickListener(binding.cornerButton, 3000, "你点的太快了", view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
         binding.numberFormatEditText.addTextChangedListener(new NumberTextWatcher(binding.numberFormatEditText, false));
 
         binding.circleProgressBar.setProgress(80);
@@ -107,7 +107,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         int width = DensityUtil.dp2px(this, 4f); // 宽度
         int height = DensityUtil.dp2px(this, 4f); // 高度
         shapeDrawable.setBounds(0, 0, width, height);
-        shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.media.R.color.theme_green));
+        shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
         binding.calendarViewSingle.registerOnPageChangeCallback((calendarData, pos) -> {
             calendarData.getCalendarDataList().forEach(item -> item.setDrawable(shapeDrawable));
             CalendarMonthFragment fragment = binding.calendarViewSingle.getCalendarPagerAdapter().getItem(pos);
@@ -127,6 +127,8 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
         });
         binding.calendarViewMulti.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate + "~" + endDate));
+
+//        binding.customBannerPicture.setOnViewPagerSelectedListener(position -> LogUtil.show(TAG, "当前选中页：" + position));
     }
 
     public ToolbarConfig createdToolbarConfig() {

@@ -67,10 +67,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             initImmersionBar();
         }
         createViewModel();
-        //是否启用登录拦截器了，写在最前面，防止数据请求等重复检测登录的行为
-        if (onInterceptLoginAnnotation()) {
-            return;
-        }
         initView(savedInstanceState);
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
     }
@@ -320,51 +316,4 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Intent intent) {
         activityResultLauncher.launch(intent);
     }
-
-    public boolean onInterceptLoginAnnotation() {
-        try {
-            if (errorService == null) {
-                return false;
-            }
-            //不包含注解或者登录注解未开启
-            if (!isNeedLogin()) {
-                return false;
-            }
-            //已登录，则跳转登录
-            if (!checkLogin()) {
-                return false;
-            }
-            //如果未登录跳转登录并且把当前页的信息传递过去，以便于登录后回传
-            Bundle bundle = getIntent().getExtras();
-            if (bundle == null) {
-                bundle = new Bundle();
-            }
-            bundle.putString(ConstantsHelper.TARGET_ACTIVITY, getClass().getName());
-            errorService.toLogin(this, bundle);
-            finish();
-            return true;
-        } catch (Exception e) {
-            LogUtil.e(TAG, "登录拦截器异常：" + e);
-        }
-        return false;
-    }
-
-    private boolean checkLogin() {
-        // 检查登录状态的逻辑
-        return !errorService.isLogin();
-    }
-
-    private boolean isNeedLogin() {
-        // 通过反射或注解处理器获取当前 Activity 是否需要登录
-        boolean isAnnotation = getClass().isAnnotationPresent(NeedLogin.class);
-        if (!isAnnotation) {
-            return false;
-        }
-        NeedLogin needLogin = getClass().getAnnotation(NeedLogin.class);
-        if (needLogin == null) {
-            return false;
-        }
-        return needLogin.enable();
-    }
-
 }

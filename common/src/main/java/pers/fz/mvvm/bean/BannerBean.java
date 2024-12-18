@@ -1,50 +1,43 @@
 package pers.fz.mvvm.bean;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
 /**
  * Created by fz on 2017/6/14.
  * 首页banner图
  */
 
-public class BannerBean {
-
-    private String id;
+public class BannerBean extends BaseObservable {
     /**
      * 图片地址
      */
-    private Object path;
+    @Bindable
+    private Object bannerUrl;
     /**
      * 点击图片跳转的页面地址
      */
-    private String linkPath;
+    @Bindable
+    private String linkUrl;
 
     /**
      * 是否在app内部预览
      */
+    @Bindable
     private boolean linkInside = false;
 
-    public BannerBean(Object path) {
-        this.path = path;
+    public BannerBean(Object bannerUrl) {
+        this.bannerUrl = bannerUrl;
     }
 
-    public BannerBean(String id, Object path) {
-        this.id = id;
-        this.path = path;
+    public BannerBean(Object bannerUrl, String linkUrl) {
+        this.bannerUrl = bannerUrl;
+        this.linkUrl = linkUrl;
     }
 
-    public BannerBean(Object path, String linkPath) {
-        this.path = path;
-        this.linkPath = linkPath;
-    }
-
-    public BannerBean(String id, Object path, String linkPath) {
-        this.id = id;
-        this.path = path;
-        this.linkPath = linkPath;
-    }
-
-    public BannerBean(Object path, String linkPath, boolean linkInside) {
-        this.path = path;
-        this.linkPath = linkPath;
+    public BannerBean(Object bannerUrl, String linkUrl, boolean linkInside) {
+        this.bannerUrl = bannerUrl;
+        this.linkUrl = linkUrl;
         this.linkInside = linkInside;
     }
 
@@ -52,29 +45,20 @@ public class BannerBean {
 
     }
 
-    public String getId() {
-        return id;
+    public String getLinkUrl() {
+        return linkUrl;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLinkUrl(String linkUrl) {
+        this.linkUrl = linkUrl;
     }
 
-    public String getLinkPath() {
-        return linkPath;
+    public Object getBannerUrl() {
+        return bannerUrl;
     }
 
-    public void setLinkPath(String linkPath) {
-        this.linkPath = linkPath;
-    }
-
-
-    public Object getPath() {
-        return path;
-    }
-
-    public void setPath(Object path) {
-        this.path = path;
+    public void setBannerUrl(Object bannerUrl) {
+        this.bannerUrl = bannerUrl;
     }
 
     public boolean isLinkInside() {

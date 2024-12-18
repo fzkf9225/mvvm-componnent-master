@@ -1,18 +1,17 @@
 package com.casic.titan.demo.api;
 
-import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.helper.CalendarDataSource;
 import com.casic.titan.demo.BuildConfig;
 import com.casic.titan.googlegps.common.AppSettings;
-import com.google.gson.Gson;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import dagger.hilt.android.HiltAndroidApp;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
+import pers.fz.mvvm.api.DefaultActivityLifecycleCallback;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.api.Config;
+import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -21,10 +20,13 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 @HiltAndroidApp
 public class ApplicationHelper extends BaseApplication {
+    @Inject
+    ErrorService errorService;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
         Config.getInstance().init(this);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
@@ -33,7 +35,7 @@ public class ApplicationHelper extends BaseApplication {
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()
                 .subscribe(CalendarDataSource.calendarObservableField::set,
-                        throwable -> LogUtil.show("CalendarView","日历异常："+throwable)
+                        throwable -> LogUtil.show("CalendarView", "日历异常：" + throwable)
                 );
     }
 
