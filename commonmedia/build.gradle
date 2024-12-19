@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    alias(libs.plugins.google.hilt.android)
 }
 
 android {
@@ -71,6 +72,10 @@ dependencies {
     implementation libs.googlecode.isoparser
     implementation libs.com.squareup.picasso.picasso
     implementation libs.constraintlayout
+
+    implementation libs.google.hilt.android
+    annotationProcessor libs.google.hilt.android.compiler
+    kapt libs.google.hilt.android.compiler
 }
 
 
@@ -87,7 +92,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.media'
                 artifactId = 'media'
-                version = '1.2.1'
+                version = '1.2.2'
             }
         }
         repositories {

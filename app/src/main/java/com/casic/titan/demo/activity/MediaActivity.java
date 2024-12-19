@@ -19,8 +19,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
 import pers.fz.media.dialog.OpenFileDialog;
@@ -28,6 +29,7 @@ import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.media.listener.OnLoadingListener;
+import pers.fz.media.module.MediaActivityComponent;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
@@ -41,7 +43,10 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     private ImageAddAdapter imageAddAdapter;
     private VideoAddAdapter videoAddAdapter;
 
-    private MediaHelper mediaHelper;
+    @Inject
+    @MediaActivityComponent
+    MediaHelper mediaHelper;
+
     private final List<String> audioList = new ArrayList<>();
     private final List<String> fileList = new ArrayList<>();
 
@@ -60,7 +65,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     public void initView(Bundle savedInstanceState) {
         //初始化一些媒体配置
         //新api实现最大可选数量比较鸡肋因此我直接判断选择完的回调方法，当然应该也可以通过重新PickMultipleVisualMedia去实现，没试过看源码应该是可以实现的
-        mediaHelper = new MediaBuilder(this)
+        mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
                 .setChooseType(MediaHelper.PICK_TYPE)
@@ -102,8 +107,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                         return videoAddAdapter.getList().size();
                     }
                 })
-                .setImageQualityCompress(200)
-                .builder();
+                .setImageQualityCompress(200);
         binding.buttonImage.setOnClickListener(v -> {
             try {
                 if (binding.getSourceImagePath() == null) {
@@ -142,7 +146,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
         });
         mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
-        imageAddAdapter = new ImageAddAdapter( MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
+        imageAddAdapter = new ImageAddAdapter(MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -173,7 +177,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
             new PicShowDialog(MediaActivity.this, PicShowDialog.createUriImageInfo(binding.getWaterMarkImagePath()), 0)
                     .show();
-        }) ;
+        });
     }
 
     private List<String> coverUriToString(List<Uri> uriList) {

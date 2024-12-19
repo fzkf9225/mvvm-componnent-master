@@ -1,6 +1,8 @@
 package pers.fz.media;
 
 import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
 
 import androidx.activity.ComponentActivity;
 import androidx.fragment.app.Fragment;
@@ -50,39 +52,32 @@ public class MediaBuilder {
 
     private Context mContext;
     private String waterMark;
-    private String imageOutPutPath;
-    private String videoOutPutPath;
     private Fragment fragment;
+    /**
+     * 是否将拍摄的图片和视频保存到公共目录，默认false
+     */
+    private boolean savePublicPath = true;
+
+    private String imageSubPath;
+
+    private String videoSubPath;
 
     private MediaListener mediaListener;
     private int chooseType = MediaHelper.DEFAULT_TYPE;
+
     public MediaBuilder(@NotNull ComponentActivity mActivity) {
         this.mActivity = mActivity;
         setContext(this.mActivity);
-        String basePath = MediaUtil.getDefaultBasePath(mActivity);
-        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
-                File.separator + basePath;
-        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
-                File.separator + basePath;
     }
 
     public MediaBuilder(@NotNull Fragment fragment) {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
         setContext(this.fragment.getContext());
-        String basePath = MediaUtil.getDefaultBasePath(fragment.requireContext());
-        imageOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES).getAbsolutePath() +
-                File.separator + basePath;
-        videoOutPutPath = mActivity.getExternalFilesDir(android.os.Environment.DIRECTORY_MOVIES).getAbsolutePath() +
-                File.separator + basePath;
     }
 
     public Fragment getFragment() {
         return fragment;
-    }
-
-    public String getImageOutPutPath() {
-        return imageOutPutPath;
     }
 
     public int getAudioMaxSelectedCount() {
@@ -112,31 +107,39 @@ public class MediaBuilder {
     }
 
     /**
-     * 图片自定义输出路径，暂不支持，仅支持内部存储目录即私有目录，媒体文件目录，Android 10+在Picture下，10之前可以自定义
-     *
-     * @param imageOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/image/下
+     * 设置图片子目录
+     * @param subPath 子目录地址
+     * @return 新的父路径
      */
-    public MediaBuilder setImageOutPutPath(String imageOutPutPath) {
-        this.imageOutPutPath = imageOutPutPath;
-        return this;
-    }
-
-    public String getVideoOutPutPath() {
-        return videoOutPutPath;
-    }
-
-    public MediaBuilder setMediaListener(MediaListener mediaListener) {
-        this.mediaListener = mediaListener;
+    public MediaBuilder setDefaultImageSubPath(String subPath) {
+        imageSubPath = subPath;
         return this;
     }
 
     /**
-     * 视频自定义输出路径，暂不支持，仅支持内部存储目录即私有目录,媒体文件目录，Android 10+在Picture下，10之前可以自定义
-     *
-     * @param videoOutPutPath 自定义输出路径，默认是/Pictures/OutPutPath最后一节/video/下
+     * 设置视频子目录地址
+     * @param subPath 子目录地址
+     * @return 新的父路径
      */
-    public MediaBuilder setVideoOutPutPath(String videoOutPutPath) {
-        this.videoOutPutPath = videoOutPutPath;
+    public MediaBuilder setDefaultVideoSubPath(String subPath) {
+        if (TextUtils.isEmpty(subPath)) {
+            return this;
+        }
+        videoSubPath = subPath;
+        return this;
+    }
+
+    /**
+     * 是否保存到公共目录
+     * true代表保存到公共目录
+     */
+    public MediaBuilder setSavePublic(boolean isPublic) {
+        this.savePublicPath = isPublic;
+        return this;
+    }
+
+    public MediaBuilder setMediaListener(MediaListener mediaListener) {
+        this.mediaListener = mediaListener;
         return this;
     }
 
@@ -157,6 +160,51 @@ public class MediaBuilder {
 
     public String getWaterMark() {
         return waterMark;
+    }
+
+    public String getImageSubPath() {
+        return imageSubPath;
+    }
+
+    public String getVideoSubPath() {
+        return videoSubPath;
+    }
+
+    public boolean isSavePublicPath() {
+        return savePublicPath;
+    }
+
+
+    public String getImageOutPutPath() {
+        if (savePublicPath) {
+            if (TextUtils.isEmpty(imageSubPath)) {
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mActivity) + File.separator + "image";
+            } else {
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageSubPath;
+            }
+        } else {
+            if (TextUtils.isEmpty(imageSubPath)) {
+                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "image";
+            } else {
+                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + imageSubPath;
+            }
+        }
+    }
+
+    public String getVideoOutPutPath() {
+        if (savePublicPath) {
+            if (TextUtils.isEmpty(videoSubPath)) {
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mActivity) + File.separator + "video";
+            } else {
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageSubPath;
+            }
+        } else {
+            if (TextUtils.isEmpty(videoSubPath)) {
+                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "video";
+            } else {
+                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + videoSubPath;
+            }
+        }
     }
 
     /**

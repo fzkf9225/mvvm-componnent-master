@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
@@ -24,18 +25,18 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
      * 拍照返回的uri
      */
     private Uri uri;
-    private String savePath;
+    private final MediaBuilder mediaBuilder;
     /**
      * 录制时长
      */
     private int durationLimit = 30;
 
-    public TakeVideoUri(String savePath) {
-        this.savePath = savePath;
+    public TakeVideoUri(MediaBuilder mediaBuilder) {
+        this.mediaBuilder = mediaBuilder;
     }
 
-    public TakeVideoUri(String savePath, int durationLimit) {
-        this.savePath = savePath;
+    public TakeVideoUri(MediaBuilder mediaBuilder, int durationLimit) {
+        this.mediaBuilder = mediaBuilder;
         this.durationLimit = durationLimit;
     }
 
@@ -45,20 +46,32 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
         String mimeType = "video/mp4";
         String fileName = "VIDEO_" + System.currentTimeMillis() + ".mp4";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-            values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator +
-                    MediaUtil.getLastPath(savePath, MediaUtil.getDefaultBasePath(context)) + File.separator + "video");
-            uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-        } else {
-            File file = new File(savePath + File.separator + "video" + File.separator + fileName);
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
+            //如果保存到公共目录
+            if (mediaBuilder.isSavePublicPath()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+                //如果没有设置子目录的话，则默认取包名
+                if (TextUtils.isEmpty(mediaBuilder.getVideoSubPath())) {
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + MediaUtil.getDefaultBasePath(context) + File.separator + "video");
+                } else {
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator +
+                            mediaBuilder.getVideoSubPath());
+                }
+                uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                File file = new File(mediaBuilder.getVideoOutPutPath() + File.separator + fileName);
+                if (file.getParentFile() != null && !file.getParentFile().exists()) {
+                    boolean isCreated = file.getParentFile().mkdirs();
+                }
+                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", file);
             }
-            //应用认证表示
-            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",
-                    file);
+        } else {
+            File file = new File(mediaBuilder.getVideoOutPutPath() + File.separator + fileName);
+            if (file.getParentFile() != null && !file.getParentFile().exists()) {
+                boolean isCreated = file.getParentFile().mkdirs();
+            }
+            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", file);
         }
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
                 // 视频质量。0 低质量；1 高质量
