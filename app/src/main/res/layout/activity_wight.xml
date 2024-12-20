@@ -232,7 +232,7 @@
                 android:layout_height="@dimen/height_xl"
                 android:inputType="text"
                 android:textColor="@color/white"
-                android:background="@drawable/round_phone_code"
+                android:background="@drawable/round_theme_color"
                 android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_l"
                 android:hint="这是一个自定义输入框CustomSearchEditText"

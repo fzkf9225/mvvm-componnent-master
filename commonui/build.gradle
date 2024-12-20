@@ -92,7 +92,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.titan.commonui'
                 artifactId = 'commonui'
-                version = '1.3.4'
+                version = '1.3.5'
             }
         }
         repositories {

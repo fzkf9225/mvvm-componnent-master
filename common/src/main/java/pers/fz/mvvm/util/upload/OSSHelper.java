@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 /**
  * Created by fz on 2023/5/29 15:54
@@ -107,7 +107,7 @@ public class OSSHelper {
                 ObjectMetadata metadata = s3.getObjectMetadata(bucketName, objectName);
                 // 从对象键中提取文件名
                 String objectKey = objectName;
-                String fileName = FileUtils.autoRenameFileName(savePath, FileUtils.getFileNameByUrl(objectKey));
+                String fileName = FileUtil.autoRenameFileName(savePath, FileUtil.getFileNameByUrl(objectKey));
                 String targetFilePath = savePath + fileName;
                 LogUtil.d(TAG, "文件名：" + fileName);
                 LogUtil.d(TAG, "object length = " + metadata.getContentLength() + " type = " + metadata.getContentType());

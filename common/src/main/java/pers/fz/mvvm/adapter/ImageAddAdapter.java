@@ -12,7 +12,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2017/10/20.
@@ -59,7 +59,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
         holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor,this.radius);
         holder.getBinding().ivImageShow.setOnClickListener(v -> {
             try {
-                new PicShowDialog(v.getContext(), PicShowDialog.createUriImageInfo(mList), pos).show();
+                new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createUriImageInfo(mList), pos).show();
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

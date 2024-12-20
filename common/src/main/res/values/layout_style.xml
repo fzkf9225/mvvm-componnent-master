@@ -3,12 +3,12 @@
     <!-- 横向线条 -->
     <style name="h_line">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/x1</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/h_line_color</item>
     </style>
     <!-- 竖向区域 -->
     <style name="s_line">
-        <item name="android:layout_width">@dimen/x1</item>
+        <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/h_line_color</item>
     </style>
@@ -17,6 +17,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_s</item>
         <item name="android:background">@color/h_area</item>
+    </style>
+
+    <style name="popup_anim_style_alpha">
+        <item name="android:windowEnterAnimation">@anim/popup_select_image_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_select_image_hide</item>
     </style>
 
     <!--自动换行LinearLayout-->
@@ -88,8 +93,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingTop">@dimen/y40</item>
-        <item name="android:paddingBottom">@dimen/y40</item>
+        <item name="android:paddingTop">@dimen/padding_xl</item>
+        <item name="android:paddingBottom">@dimen/padding_xl</item>
         <item name="android:layout_marginStart">@dimen/horizontal_margin_xl</item>
         <item name="android:layout_marginEnd">@dimen/horizontal_margin_xl</item>
     </style>

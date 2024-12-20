@@ -31,8 +31,6 @@ public class FormVideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
 
     @Override
     public void onBindHolder(BaseViewHolder<VideoShowItemBinding> viewHolder, int pos) {
-        viewHolder.itemView.setTag(pos);
-        viewHolder.getBinding().imagePlay.setTag(R.id.imageUrl, pos);
         Glide.with(viewHolder.getBinding().imageVideo.getContext())
                 .load(mList.get(pos).getUrl())
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))

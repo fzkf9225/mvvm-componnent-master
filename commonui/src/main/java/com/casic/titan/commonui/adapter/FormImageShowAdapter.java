@@ -13,7 +13,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImageShowItemBinding;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2024/11/12.
@@ -38,7 +38,7 @@ public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
                 .into(viewHolder.getBinding().cornerImage);
         viewHolder.getBinding().cornerImage.setOnClickListener(v -> {
                 try{
-                    new PicShowDialog(v.getContext(),createImageInfo(mList),pos).show();
+                    new PreviewPhotoDialog(v.getContext(),createImageInfo(mList),pos).show();
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

@@ -60,11 +60,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/search"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/y60"
+            android:layout_height="@dimen/height_l"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:layout_marginBottom="@dimen/vertical_margin_xl"
-            android:background="@drawable/round_phone_code"
+            android:background="@drawable/round_theme_color"
             android:gravity="center"
             android:paddingStart="@dimen/padding_l"
             android:paddingEnd="@dimen/padding_l"

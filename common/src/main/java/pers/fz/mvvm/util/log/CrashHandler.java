@@ -25,7 +25,7 @@ import java.util.Objects;
 
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 
 /**
  * <h3>全局捕获异常</h3>
@@ -219,9 +219,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param
      */
     public void autoClear(final int autoClearDay) {
-        FileUtils.delete(mContext.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + File.separator + "crash" + File.separator,
+        FileUtil.delete(mContext.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + File.separator + "crash" + File.separator,
                 (file, filename) -> {
-                    String s = FileUtils.getFileNameWithoutExtension(filename);
+                    String s = FileUtil.getFileNameWithoutExtension(filename);
                     int day = autoClearDay < 0 ? autoClearDay : -1 * autoClearDay;
                     String date = "crash-" + DateUtil.getOtherDay(day);
                     return date.compareTo(s) >= 0;

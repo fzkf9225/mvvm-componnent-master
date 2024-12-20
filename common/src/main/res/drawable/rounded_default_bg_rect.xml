@@ -5,9 +5,9 @@
         android:color="@color/default_background" />
 
     <corners
-        android:radius="@dimen/x5"/>
+        android:radius="@dimen/radius_s"/>
     <size
-        android:width="@dimen/x24"
-        android:height="@dimen/y10"/>
+        android:width="12dp"
+        android:height="5dp"/>
 
 </shape>

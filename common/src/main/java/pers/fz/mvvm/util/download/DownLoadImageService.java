@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target;
 import java.io.File;
 import java.io.IOException;
 
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -37,7 +37,7 @@ public class DownLoadImageService implements Runnable {
         this.context = context;
         String extension = null;
         try {
-            extension = FileUtils.getFileExtension(url.toString());
+            extension = FileUtil.getFileExtension(url.toString());
             LogUtil.show(TAG, "后缀名：" + extension);
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,8 +46,8 @@ public class DownLoadImageService implements Runnable {
         if (TextUtils.isEmpty(extension)) {
             extension = "jpg";
         }
-        String name = FileUtils.getNoRepeatFileName(filePath, "IMG_", "." + extension);
-        this.filePath = FileUtils.getDefaultBasePath(context) + File.separator + filePath + File.separator + name + "." + extension;
+        String name = FileUtil.getNoRepeatFileName(filePath, "IMG_", "." + extension);
+        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + filePath + File.separator + name + "." + extension;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DownLoadImageService implements Runnable {
                     boolean isCreated = currentFile.getParentFile().mkdirs();
                 }
                 try {
-                    boolean isCopy = FileUtils.copyFile(resource.getAbsolutePath(), currentFile.getAbsolutePath());
+                    boolean isCopy = FileUtil.copyFile(resource.getAbsolutePath(), currentFile.getAbsolutePath());
                     if (!isCopy) {
                         if (callBack != null) {
                             callBack.onDownLoadFailed("文件重命名失败");

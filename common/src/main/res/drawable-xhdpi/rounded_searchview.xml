@@ -3,8 +3,8 @@
 
     <solid android:color="@color/h_area" />
     <stroke
-        android:width="@dimen/x1"
+        android:width="1dp"
         android:color="@color/h_line_color" />
-    <corners android:radius="@dimen/x35" />
+    <corners android:radius="@dimen/radius_xl" />
 
 </shape>

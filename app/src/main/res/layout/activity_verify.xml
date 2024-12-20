@@ -340,7 +340,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_xxxxl"
                 android:layout_marginTop="@dimen/vertical_margin_xxxxl"
                 android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
-                android:background="@drawable/round_login_button_48"
+                android:background="@drawable/round_theme_color_48"
                 android:text="校验"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_xxl"

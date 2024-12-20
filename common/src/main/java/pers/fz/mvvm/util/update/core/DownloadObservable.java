@@ -17,7 +17,7 @@ import okhttp3.Headers;
 import okhttp3.MediaType;
 import okio.BufferedSource;
 import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
 
 /**
@@ -65,7 +65,7 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
                 int progress = (int) ((downloadByte * 100) / totalByte);
 
                 mainHandler.post(() -> downloadNotificationUtil.updateNotification(fileUrl.hashCode(),
-                        progress, FileUtils.getFileName(fileUrl)));
+                        progress, FileUtil.getFileName(fileUrl)));
             }
             randomAccessFile.close();
 
@@ -74,9 +74,9 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
             String contentDisposition = findHeaderIgnoreCase(interceptor.getHeaders(), "Content-Disposition");
             //获取请求头中的Content-Disposition，有值的话说明指定了文件名和后缀名
             if (mediaType != null && !TextUtils.isEmpty(contentDisposition)) {
-                fileName = FileUtils.autoRenameFileName(saveBasePath, getFileNameFromForceDownloadHeader(contentDisposition));
+                fileName = FileUtil.autoRenameFileName(saveBasePath, getFileNameFromForceDownloadHeader(contentDisposition));
             } else {
-                fileName = FileUtils.autoRenameFileName(saveBasePath, FileUtils.getFileNameByUrl(fileUrl));
+                fileName = FileUtil.autoRenameFileName(saveBasePath, FileUtil.getFileNameByUrl(fileUrl));
             }
             File newFile = new File(saveBasePath + fileName);
             boolean renameSuccess = tempFile.renameTo(newFile);

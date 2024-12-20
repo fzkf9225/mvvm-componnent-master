@@ -13,6 +13,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.databinding.ImageSaveDialogBinding;
 
 /**
  * Created by fz on 2018/3/29.
@@ -21,6 +22,7 @@ import pers.fz.mvvm.R;
 public class ImageSaveDialog extends Dialog {
     private final Context mContext;
     private OnImageSaveListener onImageSaveListener;
+    private ImageSaveDialogBinding binding;
 
     public ImageSaveDialog setOnImageSaveListener(OnImageSaveListener onImageSaveListener) {
         this.onImageSaveListener = onImageSaveListener;
@@ -37,17 +39,19 @@ public class ImageSaveDialog extends Dialog {
         this.mContext = context;
     }
 
+    public ImageSaveDialogBinding getBinding() {
+        return binding;
+    }
+
     public ImageSaveDialog build() {
-        View dialogView = LayoutInflater.from(mContext).inflate(R.layout.image_save_dialog, null);
-        Button saveLocal = dialogView.findViewById(R.id.save_local);
-        Button buttonCancel = dialogView.findViewById(R.id.button_cancel);
-        buttonCancel.setOnClickListener(v -> dismiss());
-        saveLocal.setOnClickListener(v -> {
+        binding = ImageSaveDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding.buttonCancel.setOnClickListener(v -> dismiss());
+        binding.saveLocal.setOnClickListener(v -> {
             if (onImageSaveListener != null) {
                 onImageSaveListener.saveSuccess(this);
             }
         });
-        setContentView(dialogView);
+        setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return this;

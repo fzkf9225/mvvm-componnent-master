@@ -92,7 +92,6 @@
     <public name="pg" type="drawable"/>
     <public name="pop_bg" type="drawable"/>
     <public name="primarybar_txt" type="drawable"/>
-    <public name="round_login_button_48" type="drawable"/>
     <public name="round_nv_color_48" type="drawable"/>
     <public name="round_phone_code" type="drawable"/>
     <public name="round_progress_dialog" type="drawable"/>
@@ -103,11 +102,8 @@
     <public name="rounded_theme_rect" type="drawable"/>
     <public name="rounded_white" type="drawable"/>
     <public name="rounded_white_16" type="drawable"/>
-    <public name="seekbar_progress_drawable" type="drawable"/>
     <public name="selector_button" type="drawable"/>
     <public name="selector_image_media_play" type="drawable"/>
-    <public name="shape_divider_linear" type="drawable"/>
-    <public name="shape_thumb_round" type="drawable"/>
 
     <!--动画资源-->
     <public name="actionsheet_dialog_in" type="anim"/>
@@ -200,7 +196,6 @@
     <public name="ActionSheetDialogStyle_No_Bg" type="style"/>
     <public name="popup_anim_style_alpha" type="style"/>
     <public name="App.Theme.Dialog.Alert" type="style"/>
-    <public name="Theme.AppCompat.Light.Dialog.Alert.Self" type="style"/>
 
     <!--字符串资源-->
     <public name="today" type="string"/>

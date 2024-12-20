@@ -1,35 +1,36 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save_local"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xl"
-            android:background="@null"
+            android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="保存至本地"
-            android:textColor="@color/dark_light"
+            android:text="@string/save_to_local"
+            android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xxl" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:background="@drawable/rounded_white"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl" />
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_xl"
-        android:layout_marginTop="@dimen/vertical_margin_l"
-        android:background="@drawable/rounded_white"
-        android:gravity="center"
-        android:text="取消"
-        android:textColor="@color/dark_light"
-        android:textSize="@dimen/font_size_xxl" />
-
-</LinearLayout>
+</layout>

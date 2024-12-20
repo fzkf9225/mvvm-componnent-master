@@ -18,7 +18,7 @@ import java.util.Random;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.update.core.DownloadRetrofitFactory;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
 import pers.fz.mvvm.util.update.util.DownloadUtil;
@@ -61,7 +61,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
         downloadMap.add(apkUrl);
         DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
         Disposable disposable = DownloadRetrofitFactory.enqueue(apkUrl, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator).map(file -> {
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator).map(file -> {
                     downloadMap.remove(apkUrl);
                     return file;
                 })

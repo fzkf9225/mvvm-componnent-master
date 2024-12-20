@@ -9,7 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/x35"
+        android:paddingBottom="@dimen/padding_xl"
         android:background="@color/default_background"
         android:scrollbars="none">
 
@@ -43,15 +43,15 @@
                     android:text="程序错误" />
             </RadioGroup>
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/proDescribe"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x300"
+                android:layout_height="150dp"
                 android:layout_margin="@dimen/vertical_margin_l"
                 android:background="@drawable/bg_edittext"
                 android:gravity="top"
                 android:hint="请输入遇到的问题或者功能意见..."
-                android:padding="@dimen/x10"
+                android:padding="@dimen/padding_m"
                 android:textColorHint="#AAAAAA"
                 android:textSize="@dimen/font_size_xl" />
 
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_l"
@@ -79,7 +79,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_xl" />
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_l"
@@ -107,7 +107,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_xl" />
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/linkWay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,9 +122,13 @@
 
             <View style="@style/h_line" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/feedBackBtn"
-                style="@style/customs_Button_text_white"
+                android:textSize="@dimen/font_size_xl"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xl"
+                android:background="@drawable/round_theme_color"
                 android:layout_marginTop="@dimen/vertical_margin_xxxl"
                 android:text="提交" />
         </LinearLayout>

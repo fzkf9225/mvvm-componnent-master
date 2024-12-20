@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
@@ -141,5 +143,14 @@ public class CommonUtil {
 
     public static <T> boolean isArrayType(T data) {
         return data.getClass().isArray();
+    }
+
+    public static ShapeDrawable createCircleDrawable(int color, int size) {
+        ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
+        shapeDrawable.getPaint().setColor(color);
+        shapeDrawable.getPaint().setAntiAlias(true); // 启用抗锯齿
+        shapeDrawable.setIntrinsicWidth(size);
+        shapeDrawable.setIntrinsicHeight(size);
+        return shapeDrawable;
     }
 }

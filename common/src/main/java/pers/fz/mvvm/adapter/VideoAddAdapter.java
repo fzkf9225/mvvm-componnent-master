@@ -14,7 +14,7 @@ import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.VideoAddItemBinding;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -63,7 +63,7 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
         holder.getBinding().ivVideoShow.setOnClickListener(v -> {
             try {
                 Bundle bundleVideo = new Bundle();
-                bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos).toString()));
+                bundleVideo.putString("videoName", FileUtil.getFileName(mList.get(pos).toString()));
                 bundleVideo.putString("videoPath", mList.get(pos).toString());
                 VideoPlayerActivity.show(v.getContext(), bundleVideo);
             } catch (Exception e) {

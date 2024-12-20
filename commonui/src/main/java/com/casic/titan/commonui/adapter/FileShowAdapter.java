@@ -10,7 +10,7 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 
 /**
  * Created by fz on 2024/2/26.
@@ -47,9 +47,9 @@ public class FileShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ite
         viewHolder.getBinding().tvFile.setTextColor(textColor);
         viewHolder.getBinding().layout.setBgColorAndRadius(bgColor, radius);
         if (TextUtils.isEmpty(mList.get(pos).getFileName())) {
-            viewHolder.getBinding().tvFile.setText(FileUtils.getFileName(mList.get(pos).getPath()));
+            viewHolder.getBinding().tvFile.setText(FileUtil.getFileName(mList.get(pos).getPath()));
         } else {
-            viewHolder.getBinding().tvFile.setText(FileUtils.getFileName(mList.get(pos).getFileName()));
+            viewHolder.getBinding().tvFile.setText(FileUtil.getFileName(mList.get(pos).getFileName()));
         }
         viewHolder.getBinding().tvFile.setOnClickListener(v -> AttachmentUtil.viewFile(v.getContext(), mList.get(pos).getPath()));
     }

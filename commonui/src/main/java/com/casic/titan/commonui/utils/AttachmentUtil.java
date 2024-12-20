@@ -29,8 +29,8 @@ import java.util.Objects;
 
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.util.common.FileUtils;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2024/2/28 10:53
@@ -101,7 +101,7 @@ public class AttachmentUtil {
             AttachmentBean attachment = new AttachmentBean();
             attachment.setMainId(mainId);
             attachment.setPath(str);
-            attachment.setFileName(FileUtils.getFileNameByUrl(str));
+            attachment.setFileName(FileUtil.getFileNameByUrl(str));
             attachmentList.add(attachment);
         }
         return attachmentList;
@@ -196,7 +196,7 @@ public class AttachmentUtil {
             attachment.setMainId(mainId);
             attachment.setPath(str);
             attachment.setFieldName(field);
-            attachment.setFileName(FileUtils.getFileName(str));
+            attachment.setFileName(FileUtil.getFileName(str));
             attachmentList.add(attachment);
         }
         return attachmentList;
@@ -387,7 +387,7 @@ public class AttachmentUtil {
         try {
             String type = getMimeType(url);
             if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
-                new PicShowDialog(mContext, PicShowDialog.createImageInfo(url), 0).show();
+                new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(url), 0).show();
             } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString("videoName", url);
@@ -409,10 +409,10 @@ public class AttachmentUtil {
     }
 
     private static void viewAbsoluteFile(Context mContext, String absolutePath) {
-        String extension = FileUtils.getUrlFileExtensionName(absolutePath);
-        String fileName = FileUtils.getFileNameByUrl(absolutePath);
+        String extension = FileUtil.getUrlFileExtensionName(absolutePath);
+        String fileName = FileUtil.getFileNameByUrl(absolutePath);
         if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
-            new PicShowDialog(mContext, PicShowDialog.createImageInfo(absolutePath), 0).show();
+            new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(absolutePath), 0).show();
         } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
 //            Toast.makeText(mContext, "暂不支持视频播放！", Toast.LENGTH_SHORT).show();
             Bundle bundleVideo = new Bundle();
@@ -444,7 +444,7 @@ public class AttachmentUtil {
             Uri uri = Uri.parse(uriPath);
             String type = mContext.getContentResolver().getType(uri);
             if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
-                new PicShowDialog(mContext, PicShowDialog.createImageInfo(uriPath), 0).show();
+                new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(uriPath), 0).show();
             } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString("videoName", uriPath);

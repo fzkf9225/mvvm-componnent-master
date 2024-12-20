@@ -31,7 +31,7 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/dialog_input"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y80"
+            android:layout_height="@dimen/height_xl"
             android:gravity="center_vertical"
             android:hint="@string/please_entry_something"
             android:maxLines="1"

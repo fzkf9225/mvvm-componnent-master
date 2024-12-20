@@ -32,7 +32,7 @@ import pers.fz.media.module.MediaActivityComponent;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint
@@ -158,7 +158,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             if (binding.getWaterMarkImagePath() == null) {
                 return;
             }
-            new PicShowDialog(MediaActivity.this, PicShowDialog.createUriImageInfo(binding.getWaterMarkImagePath()), 0)
+            new PreviewPhotoDialog(MediaActivity.this, PreviewPhotoDialog.createUriImageInfo(binding.getWaterMarkImagePath()), 0)
                     .show();
         });
     }

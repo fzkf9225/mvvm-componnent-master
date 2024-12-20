@@ -4,6 +4,6 @@
     <solid
         android:color="@color/nv_bg_color" />
     <corners
-        android:radius="@dimen/x48"/>
+        android:radius="24dp"/>
 
 </shape>

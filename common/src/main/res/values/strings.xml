@@ -47,15 +47,6 @@
     <string name="lockViewTips">This password is used for security verification when the app is unlocked and used again after the screen is locked</string>
     <string name="set_lockView">Please set a gesture password</string>
 
-    <string name="permission_get_accounts_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_GET_ACCOUNTS</string>
-    <string name="permission_read_phone_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_READ_PHONE_STATE</string>
-    <string name="permission_call_phone_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_CALL_PHONE</string>
-    <string name="permission_camera_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_CAMERA</string>
-    <string name="permission_access_fine_location_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_ACCESS_FINE_LOCATION</string>
-    <string name="permission_access_coarse_location_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_ACCESS_COARSE_LOCATION</string>
-    <string name="permission_read_external_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_READ_EXTERNAL_STORAGE</string>
-    <string name="permission_white_external_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_WRITE_EXTERNAL_STORAGE</string>
-    <string name="permission_recode_audio_hint">Without this permission, this function cannot be enabled. Please enable the permission。PERMISSION_RECORD_AUDIO</string>
 
     <string name="searchview_query_hint">please input keywords</string>
 
@@ -92,6 +83,7 @@
     <string name="hour">Hours</string>
     <string name="minute">Minute</string>
     <string name="second">Second</string>
+    <string name="save_to_local">Save to local</string>
 
 
 </resources>

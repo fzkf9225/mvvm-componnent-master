@@ -1,6 +1,5 @@
 package pers.fz.mvvm.wight.customlayout;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,7 +37,7 @@ import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2024/12/18 10:57
@@ -93,13 +93,11 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
     /**
      * 选中时圆点样式
      */
-    private @DrawableRes
-    int drawableResCurrent = R.mipmap.icon_point2;
+    private Drawable drawableResCurrent;
     /**
      * 未选中时圆点样式
      */
-    private @DrawableRes
-    int drawableResNormal = R.mipmap.icon_point1;
+    private Drawable drawableResNormal;
     private final Path mPath = new Path();
     private Paint mPaint;
     private float dotHeight = 0, dotBottomMargin, dotLeftMargin, dotRightMargin, dotPadding;
@@ -112,7 +110,6 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         public final static int OUTER_CENTER = 3;
         public final static int OUTER_BOTTOM_LEFT = 4;
         public final static int OUTER_BOTTOM_RIGHT = 5;
-
     }
 
     public BannerView(@NonNull Context context) {
@@ -140,6 +137,10 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         mPaint.setColor(bgColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
+        drawableResCurrent = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
+                DensityUtil.dp2px(context, 6));
+        drawableResNormal = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
+                DensityUtil.dp2px(context, 6));
         if (ta == null) {
             dotHeight = DensityUtil.dp2px(context, 30f);
             dotBottomMargin = DensityUtil.dp2px(context, 12f);
@@ -167,8 +168,16 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         dotRightMargin = ta.getDimension(R.styleable.BannerView_dotRightMargin, DensityUtil.dp2px(context, 12));
         dotPadding = ta.getDimension(R.styleable.BannerView_dotPadding, DensityUtil.dp2px(context, 8));
 
-        drawableResCurrent = ta.getResourceId(R.styleable.BannerView_iconSelected, R.mipmap.icon_point2);
-        drawableResNormal = ta.getResourceId(R.styleable.BannerView_iconUnselected, R.mipmap.icon_point1);
+        drawableResCurrent = ta.getDrawable(R.styleable.BannerView_iconSelected);
+        drawableResNormal = ta.getDrawable(R.styleable.BannerView_iconUnselected);
+        if (drawableResCurrent == null) {
+            drawableResCurrent = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
+                    DensityUtil.dp2px(context, 6));
+        }
+        if (drawableResNormal == null) {
+            drawableResNormal = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
+                    DensityUtil.dp2px(context, 6));
+        }
         mPaint.setColor(bgColor);
         ta.recycle();
         initLayout();
@@ -266,7 +275,7 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         return viewPager;
     }
 
-    public void setRoundDots(@DrawableRes int drawableResCurrent, @DrawableRes int drawableResNormal) {
+    public void setRoundDots(Drawable drawableResCurrent, Drawable drawableResNormal) {
         this.drawableResCurrent = drawableResCurrent;
         this.drawableResNormal = drawableResNormal;
     }
@@ -291,9 +300,9 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         IntStream.range(0, this.bannerList.size()).forEach(i -> {
             ImageView round = new ImageView(getContext());
             if (i == 0) {
-                round.setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
+                round.setBackground(drawableResCurrent);
             } else {
-                round.setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
+                round.setBackground(drawableResNormal);
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
             params.leftMargin = (int) dotPadding;
@@ -337,7 +346,7 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         if (previewLarger) {
             List<Object> list = new ArrayList<>();
             this.bannerList.forEach(item -> list.add(item.getBannerUrl()));
-            new PicShowDialog(getContext(), list, position).show();
+            new PreviewPhotoDialog(getContext(), list, position).show();
         }
     };
     /**
@@ -348,9 +357,9 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         public void onPageSelected(int position) {
             super.onPageSelected(position);
             int realPos = position % bannerList.size();
-            dotsLayout.getChildAt(realPos).setBackground(ContextCompat.getDrawable(getContext(), drawableResCurrent));
+            dotsLayout.getChildAt(realPos).setBackground(drawableResCurrent);
             if (lastPos >= 0 && lastPos < dotsLayout.getChildCount() && lastPos != realPos) {
-                dotsLayout.getChildAt(lastPos).setBackground(ContextCompat.getDrawable(getContext(), drawableResNormal));
+                dotsLayout.getChildAt(lastPos).setBackground(drawableResNormal);
             }
             lastPos = realPos;
         }

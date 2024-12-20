@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/tv_option_menu"
-            android:layout_width="@dimen/x160"
+            android:layout_width="80dp"
             android:layout_height="@dimen/height_xxxl"
             android:ellipsize="end"
             android:gravity="center"
@@ -24,7 +24,7 @@
 
         <View
             style="@style/s_line"
-            android:layout_height="@dimen/y30"
+            android:layout_height="@dimen/height_s"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 </layout>

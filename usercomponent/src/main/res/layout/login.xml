@@ -20,7 +20,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_xxxxl"
                 android:layout_marginTop="@dimen/vertical_margin_xxxxl"
                 android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
-                android:background="@drawable/round_login_button_48"
+                android:background="@drawable/round_theme_color_48"
                 android:onClick="@{(view) ->loginViewModel.loginClick(view,loginBean,password)}"
                 android:text="登录"
                 android:textColor="@color/white"
@@ -30,7 +30,7 @@
                 android:id="@+id/edit_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y200"
+                android:layout_marginTop="100dp"
                 android:orientation="vertical">
 
                 <LinearLayout

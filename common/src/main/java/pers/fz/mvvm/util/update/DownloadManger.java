@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.update.core.DownloadRetrofitFactory;
 
 
@@ -76,7 +76,7 @@ public class DownloadManger {
         downloadMap.add(fileUrl);
         if (TextUtils.isEmpty(saveBasePath)) {
             saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                    File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator;
+                    File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator;
         }
         return DownloadRetrofitFactory.enqueue(fileUrl, saveBasePath).map(file -> {
             downloadMap.remove(fileUrl);
@@ -87,7 +87,7 @@ public class DownloadManger {
     public Observable<File> download(Activity mContext, String fileUrl) {
         return download(mContext, fileUrl,
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator);
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator);
     }
 
     /**
@@ -95,7 +95,7 @@ public class DownloadManger {
      */
     public Single<List<File>> download(Activity mContext, List<String> urlString) {
         return download(mContext, urlString, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                File.separator + FileUtils.getDefaultBasePath(mContext) + File.separator);
+                File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator);
     }
 
     /**

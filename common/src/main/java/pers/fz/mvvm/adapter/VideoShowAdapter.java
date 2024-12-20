@@ -11,7 +11,7 @@ import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.VideoShowItemBinding;
-import pers.fz.mvvm.util.common.FileUtils;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -31,8 +31,6 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowI
 
     @Override
     public void onBindHolder(BaseViewHolder<VideoShowItemBinding> viewHolder, int pos) {
-        viewHolder.itemView.setTag(pos);
-        viewHolder.getBinding().imagePlay.setTag(R.id.imageUrl, pos);
         Glide.with(viewHolder.getBinding().imageVideo.getContext())
                 .load(mList.get(pos))
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
@@ -40,7 +38,7 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<String, VideoShowI
         viewHolder.getBinding().imagePlay.setOnClickListener( v -> {
             try {
                 Bundle bundleVideo = new Bundle();
-                bundleVideo.putString("videoName", FileUtils.getFileName(mList.get(pos).toString()));
+                bundleVideo.putString("videoName", FileUtil.getFileName(mList.get(pos).toString()));
                 bundleVideo.putString("videoPath", mList.get(pos).toString());
                 VideoPlayerActivity.show(v.getContext(), bundleVideo);
             } catch (Exception e) {

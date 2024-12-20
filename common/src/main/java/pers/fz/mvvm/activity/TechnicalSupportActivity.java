@@ -8,7 +8,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.TechnicalSupportActivityBinding;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.mvvm.wight.picdialog.PicShowDialog;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 
 /**
@@ -29,7 +29,7 @@ public class TechnicalSupportActivity extends BaseActivity<EmptyViewModel, Techn
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        binding.imageQrCode.setOnClickListener(v -> new PicShowDialog(this, PicShowDialog.createImageInfo(R.mipmap.icon_wechat), 0).show());
+        binding.imageQrCode.setOnClickListener(v -> new PreviewPhotoDialog(this, PreviewPhotoDialog.createImageInfo(R.mipmap.icon_wechat), 0).show());
     }
 
     @Override
