@@ -14,7 +14,6 @@ import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
-import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.base.BaseActivity;
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> {
@@ -51,22 +50,6 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
 
         mediaHelper = new MediaBuilder(this)
-                .setOnLoadingListener(new OnLoadingListener() {
-                    @Override
-                    public void showLoading(String dialogMessage) {
-                       MediaCompressActivity.this.showLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void refreshLoading(String dialogMessage) {
-                        MediaCompressActivity.this.refreshLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void hideLoading() {
-                        MediaCompressActivity.this.hideLoading();
-                    }
-                })
                 .setImageMaxSelectedCount(1)
                 .setImageQualityCompress(200)
                 .setVideoQuality(MediaHelper.VIDEO_MEDIUM)

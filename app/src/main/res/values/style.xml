@@ -7,7 +7,7 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <!--动画执行时间-->
         <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/AppTheme</item>
+        <item name="postSplashScreenTheme">@style/AppBaseTheme</item>
     </style>
     <style name="CollapsingToolbarTitleStyle" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:textColor">@color/black</item>

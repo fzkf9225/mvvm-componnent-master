@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#272a30</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="gray">#666666</color>
     <color name="background">#FFE4E3E3</color>
-    <color name="themeColor">#1c50b5</color>
-    <color name="theme_red">#EA3F25</color>
-    <color name="theme_green">#238C00</color>
-    <color name="theme_orange">#F77832</color>
-    <color name="theme_yellow">#F4D000</color>
-    <color name="hint_text_color">#c4c4c4</color>
-    <color name="h_line_color">#dddddd</color>
-    <color name="dark_light">#5d5d5d</color>
+    <color name="themeColor">#FF1C50B5</color>
+    <color name="theme_red">#FFEA3F25</color>
+    <color name="theme_green">#FF238C00</color>
+    <color name="theme_orange">#FFF77832</color>
+    <color name="theme_yellow">#FFF4D000</color>
+    <color name="hint_text_color">#FFc4c4c4</color>
+    <color name="h_line_color">#FFdddddd</color>
+    <color name="dark_light">#FF5d5d5d</color>
     <color name="transparent">#00000000</color>
-    <color name="search_view_background">#9b9b9b</color>
-    <color name="autoColor">#333333</color>
-    <color name="autoBg">#eef0f3</color>
-    <color name="nv_bg_color">#999999</color>
-    <color name="bg_color">#EDEDED</color>
-    <color name="h_area">#F3F3F3</color>
-    <color name="default_background">#eef3f2</color>
-    <color name="green">#5fb878</color>
+    <color name="search_view_background">#FF9b9b9b</color>
+    <color name="autoColor">#FF333333</color>
+    <color name="autoBg">#FFeef0f3</color>
+    <color name="nv_bg_color">#FF999999</color>
+    <color name="bg_color">#FFEDEDED</color>
+    <color name="h_area">#FFF3F3F3</color>
+    <color name="default_background">#FFeef3f2</color>
+    <color name="green">#FF5fb878</color>
 
 </resources>

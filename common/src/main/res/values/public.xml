@@ -58,6 +58,7 @@
     <public name="design_fab_image_size" type="dimen" />
 
     <!--Color资源-->
+    <public name="white" type="color"/>
     <public name="gray" type="color"/>
     <public name="background" type="color"/>
     <public name="themeColor" type="color"/>
@@ -187,19 +188,16 @@
     <public name="list_text_right_show_all" type="style"/>
     <public name="AppBaseTheme" type="style"/>
     <public name="loading_dialog" type="style"/>
-    <public name="AppTheme" type="style"/>
     <public name="MyCustomTabLayout" type="style"/>
     <public name="ActionSheetDialogStyle" type="style"/>
     <public name="ActionSheetDialogAnimation" type="style"/>
     <public name="Pic_Dialog" type="style"/>
     <public name="ShowImageDialogAnimation" type="style"/>
     <public name="dialog" type="style"/>
-    <public name="activityAppBaseTheme" type="style"/>
     <public name="ToolBarStyle_black" type="style"/>
     <public name="OverflowMenuStyle" type="style"/>
     <public name="ToolBarStyle_white" type="style"/>
     <public name="ActionSheetDialogStyle_No_Bg" type="style"/>
-    <public name="AppTheme.NoActionBar" type="style"/>
     <public name="popup_anim_style_alpha" type="style"/>
     <public name="App.Theme.Dialog.Alert" type="style"/>
     <public name="Theme.AppCompat.Light.Dialog.Alert.Self" type="style"/>

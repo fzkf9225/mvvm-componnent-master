@@ -33,7 +33,6 @@ import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.listener.MediaListener;
-import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
@@ -200,22 +199,6 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         mediaHelper = new MediaBuilder((ComponentActivity) getContext())
                 .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
-                .setOnLoadingListener(new OnLoadingListener() {
-                    @Override
-                    public void showLoading(String dialogMessage) {
-                        ((BaseFragment<?, ?>)fragment).showLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void refreshLoading(String dialogMessage) {
-                        ((BaseFragment<?, ?>)fragment).refreshLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void hideLoading() {
-                        ((BaseFragment<?, ?>)fragment).hideLoading();
-                    }
-                })
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -251,22 +234,6 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         DefaultLifecycleObserver.super.onCreate(owner);
         if (getContext() instanceof ComponentActivity) {
             mediaHelper = new MediaBuilder((ComponentActivity) getContext())
-                    .setOnLoadingListener(new OnLoadingListener() {
-                        @Override
-                        public void showLoading(String dialogMessage) {
-                            ((BaseActivity<?, ?>)getContext()).showLoading(dialogMessage);
-                        }
-
-                        @Override
-                        public void refreshLoading(String dialogMessage) {
-                            ((BaseActivity<?, ?>)getContext()).refreshLoading(dialogMessage);
-                        }
-
-                        @Override
-                        public void hideLoading() {
-                            ((BaseActivity<?, ?>)getContext()).hideLoading();
-                        }
-                    })
                     .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                     .setChooseType(MediaHelper.PICK_TYPE)
                     .setWaterMark("金光林务")

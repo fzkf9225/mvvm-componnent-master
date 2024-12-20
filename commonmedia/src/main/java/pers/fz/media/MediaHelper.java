@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import pers.fz.media.dialog.MediaProgressDialog;
 import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
@@ -120,9 +121,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private static final String THREAD_NAME = "mediaHelperThread";
     private final HandlerThread handlerThread = new HandlerThread(THREAD_NAME, 10);
 
-    // 注册图片选择框监听,new ActivityResultContracts.PickMultipleVisualMedia(9)也可以选择图片而且还有选择框提供，
-    // 但是这个api只能再registerForActivityResult中创建
-    // 而registerForActivityResult只能再onCreate中注册，这就导致无法利用它限制图片上传数量，因为它每次都是限制9张，并且不能修改,试过重写这个类也不行
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
         if (mediaBuilder.getFragment() == null) {
@@ -459,8 +457,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             super(looper);
             this.srcUriList = srcUriList;
             imagesCompressList = new ArrayList<>();
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().showLoading("正在处理图片...");
+            if (mediaBuilder.isShowLoading()) {
+                showLoading("正在处理图片...");
             }
         }
 
@@ -477,8 +475,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 if (srcUriList == null || srcUriList.isEmpty() ||
                         msg.what >= srcUriList.size()) {
                     showToast("图片压缩成功！");
-                    if (mediaBuilder.getOnLoadingListener() != null) {
-                        mediaBuilder.getOnLoadingListener().hideLoading();
+                    if (mediaBuilder.isShowLoading()) {
+                        hideLoading();
                     }
                     mutableLiveDataCompress.postValue(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE.getMediaType()));
                 } else {
@@ -506,8 +504,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 LogUtil.show(TAG, "图片压缩出现错误:" + e);
                 e.printStackTrace();
                 showToast("图片压缩出现错误");
-                if (mediaBuilder.getOnLoadingListener() != null) {
-                    mediaBuilder.getOnLoadingListener().hideLoading();
+                if (mediaBuilder.isShowLoading()) {
+                    hideLoading();
                 }
             }
         }
@@ -531,8 +529,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = 100;
         handlerWaterMark.sendMessage(message);
-        if (mediaBuilder.getOnLoadingListener() != null) {
-            mediaBuilder.getOnLoadingListener().showLoading("正在为图片添加水印...");
+        if (mediaBuilder.isShowLoading()) {
+            showLoading("正在为图片添加水印...");
         }
     }
 
@@ -547,8 +545,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = alpha;
         handlerWaterMark.sendMessage(message);
-        if (mediaBuilder.getOnLoadingListener() != null) {
-            mediaBuilder.getOnLoadingListener().showLoading("正在为图片添加水印...");
+        if (mediaBuilder.isShowLoading()) {
+            showLoading("正在为图片添加水印...");
         }
     }
 
@@ -556,8 +554,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             if (msg.obj == null) {
-                if (mediaBuilder.getOnLoadingListener() != null) {
-                    mediaBuilder.getOnLoadingListener().hideLoading();
+                if (mediaBuilder.isShowLoading()) {
+                    hideLoading();
                 }
                 mutableLiveDataWaterMark.postValue(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE.getMediaType()));
                 return true;
@@ -568,8 +566,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             String outputPath = MediaUtil.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
             File outputFile = new File(mediaBuilder.getImageOutPutPath(), outputPath + ".jpg");
             MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().hideLoading();
+            if (mediaBuilder.isShowLoading()) {
+                hideLoading();
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 // 从文件中创建uri
@@ -603,16 +601,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
         @Override
         public void onCompressStart() {
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
+            if (mediaBuilder.isShowLoading()) {
+                refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
             }
         }
 
         @Override
         public void onCompressEnd(ImgCompressor.CompressResult imageOutPath) {
             if (imageOutPath.getStatus() == ImgCompressor.CompressResult.RESULT_ERROR || imageOutPath.getOutPath() == null) {
-                if (mediaBuilder.getOnLoadingListener() != null) {
-                    mediaBuilder.getOnLoadingListener().hideLoading();
+                if (mediaBuilder.isShowLoading()) {
+                    hideLoading();
                 }
                 showToast("图片压缩错误");
                 return;
@@ -626,8 +624,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         @Override
         public void onCompressFail(Exception exception) {
             LogUtil.show(TAG, "图片压缩异常：" + exception);
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().hideLoading();
+            if (mediaBuilder.isShowLoading()) {
+                hideLoading();
             }
             showToast("图片压缩错误");
         }
@@ -762,8 +760,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         public void onResult(boolean isSuccess, String message) {
             if (!isSuccess) {
                 showToast(TextUtils.isEmpty(message) ? "视频压缩异常" : message);
-                if (mediaBuilder.getOnLoadingListener() != null) {
-                    mediaBuilder.getOnLoadingListener().hideLoading();
+                if (mediaBuilder.isShowLoading()) {
+                    hideLoading();
                 }
                 return;
             }
@@ -783,11 +781,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
         @Override
         public void onProgress(float percent) {
-            if (mediaBuilder.getOnLoadingListener() != null) {
+            if (mediaBuilder.isShowLoading()) {
                 if (percent == 100) {
-                    mediaBuilder.getOnLoadingListener().refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
+                    refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
                 } else {
-                    mediaBuilder.getOnLoadingListener().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
+                    refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
                 }
             }
         }
@@ -801,8 +799,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             super(looper);
             this.uriList = videos;
             compressUriList = new ArrayList<>();
-            if (mediaBuilder.getOnLoadingListener() != null) {
-                mediaBuilder.getOnLoadingListener().showLoading("正在处理视频...");
+            if (mediaBuilder.isShowLoading()) {
+                showLoading("正在处理视频...");
             }
         }
 
@@ -817,8 +815,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 }
                 if (uriList.isEmpty() || msg.what >= uriList.size()) {
                     showToast("压缩成功！");
-                    if (mediaBuilder.getOnLoadingListener() != null) {
-                        mediaBuilder.getOnLoadingListener().hideLoading();
+                    if (mediaBuilder.isShowLoading()) {
+                        hideLoading();
                     }
                     mutableLiveDataCompress.postValue(new MediaBean(compressUriList, MediaTypeEnum.VIDEO.getMediaType()));
                 } else {
@@ -839,8 +837,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 LogUtil.show(TAG, "视频加载出现错误：" + e);
                 e.printStackTrace();
                 showToast("视频加载出现错误");
-                if (mediaBuilder.getOnLoadingListener() != null) {
-                    mediaBuilder.getOnLoadingListener().hideLoading();
+                if (mediaBuilder.isShowLoading()) {
+                    hideLoading();
                 }
             }
         }
@@ -928,15 +926,29 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     protected void showToast(String message) {
-        try {
-            if (TextUtils.isEmpty(message)) {
-                return;
-            }
-            mediaBuilder.getActivity().runOnUiThread(() -> {
-                Toast.makeText(mediaBuilder.getActivity(), message, Toast.LENGTH_SHORT).show();
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(message)) {
+            return;
         }
+        mediaBuilder.getActivity().runOnUiThread(() -> Toast.makeText(mediaBuilder.getActivity(), message, Toast.LENGTH_SHORT).show());
     }
+
+    private void showLoading(String dialogMessage) {
+        mediaBuilder.getActivity().runOnUiThread(() ->
+                MediaProgressDialog.getInstance(getMediaBuilder().getContext())
+                        .setCanCancel(false)
+                        .setMessage(dialogMessage)
+                        .builder()
+                        .show());
+    }
+
+    public void refreshLoading(String dialogMessage) {
+        mediaBuilder.getActivity().runOnUiThread(() ->
+                MediaProgressDialog.getInstance(getMediaBuilder().getContext())
+                        .refreshMessage(dialogMessage));
+    }
+
+    public void hideLoading() {
+        mediaBuilder.getActivity().runOnUiThread(() -> MediaProgressDialog.getInstance(getMediaBuilder().getContext()).dismiss());
+    }
+
 }

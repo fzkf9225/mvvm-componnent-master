@@ -28,7 +28,6 @@ import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.listener.MediaListener;
-import pers.fz.media.listener.OnLoadingListener;
 import pers.fz.media.module.MediaActivityComponent;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
@@ -70,22 +69,6 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setVideoMaxSelectedCount(2)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setWaterMark("仅测试使用")
-                .setOnLoadingListener(new OnLoadingListener() {
-                    @Override
-                    public void showLoading(String dialogMessage) {
-                        MediaActivity.this.showLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void refreshLoading(String dialogMessage) {
-                        MediaActivity.this.refreshLoading(dialogMessage);
-                    }
-
-                    @Override
-                    public void hideLoading() {
-                        MediaActivity.this.hideLoading();
-                    }
-                })
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {

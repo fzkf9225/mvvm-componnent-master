@@ -14,16 +14,10 @@ import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.gyf.immersionbar.ImmersionBar;
 
-import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.media.MediaHelper;
-import pers.fz.media.module.MediaFragmentComponent;
-import pers.fz.media.module.MediaFragmentModule;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
@@ -33,10 +27,6 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 @AndroidEntryPoint
 public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> implements BaseRecyclerViewAdapter.OnItemClickListener {
     private UseCaseAdapter useCaseAdapter;
-    @Inject
-    @MediaFragmentComponent
-    MediaHelper mediaHelper;
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
@@ -53,7 +43,6 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
 
     @Override
     protected void initData(Bundle bundle) {
-        LogUtil.show(TAG, "mediaHelper:" + (mediaHelper == null));
         binding.setIsLogin(UserAccountHelper.isLogin());
         binding.setToken(UserAccountHelper.isLogin() ? "已登录" : "暂未登录");
         useCaseAdapter = new UseCaseAdapter(UseCaseEnum.toUseCaseList());

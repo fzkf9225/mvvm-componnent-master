@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 import pers.fz.media.listener.MediaListener;
-import pers.fz.media.listener.OnLoadingListener;
 
 /**
  * Created by fz on 2021/2/7 9:10
@@ -47,7 +46,6 @@ public class MediaBuilder {
      * 图片压缩大小限制，默认200
      */
     public int imageQualityCompress = 200;
-    private OnLoadingListener onLoadingListener;
     private final ComponentActivity mActivity;
 
     private Context mContext;
@@ -57,6 +55,10 @@ public class MediaBuilder {
      * 是否将拍摄的图片和视频保存到公共目录，默认false
      */
     private boolean savePublicPath = true;
+    /**
+     * 是否显示加载dialog
+     */
+    private boolean showLoading = true;
 
     private String imageSubPath;
 
@@ -73,7 +75,7 @@ public class MediaBuilder {
     public MediaBuilder(@NotNull Fragment fragment) {
         this.mActivity = fragment.getActivity();
         this.fragment = fragment;
-        setContext(this.fragment.getContext());
+        setContext(this.fragment.requireContext());
     }
 
     public Fragment getFragment() {
@@ -140,11 +142,6 @@ public class MediaBuilder {
 
     public MediaBuilder setMediaListener(MediaListener mediaListener) {
         this.mediaListener = mediaListener;
-        return this;
-    }
-
-    public MediaBuilder setOnLoadingListener(OnLoadingListener onLoadingListener) {
-        this.onLoadingListener = onLoadingListener;
         return this;
     }
 
@@ -250,6 +247,15 @@ public class MediaBuilder {
         return this;
     }
 
+    public boolean isShowLoading() {
+        return showLoading;
+    }
+
+    public MediaBuilder setShowLoading(boolean showLoading) {
+        this.showLoading = showLoading;
+        return this;
+    }
+
     public int getMaxVideoTime() {
         return maxVideoTime;
     }
@@ -276,10 +282,6 @@ public class MediaBuilder {
 
     public int getVideoMaxSelectedCount() {
         return videoMaxSelectedCount;
-    }
-
-    public OnLoadingListener getOnLoadingListener() {
-        return onLoadingListener;
     }
 
     public ComponentActivity getActivity() {
