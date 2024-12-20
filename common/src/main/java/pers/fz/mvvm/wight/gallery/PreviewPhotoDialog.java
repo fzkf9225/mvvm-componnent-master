@@ -30,7 +30,8 @@ import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
- * 主界面点击发布，弹出半透明对话框
+ * created by fz 2024/12/20
+ * describe：大图预览dialog
  */
 public class PreviewPhotoDialog extends Dialog {
     public final static String TAG = PreviewPhotoDialog.class.getSimpleName();
