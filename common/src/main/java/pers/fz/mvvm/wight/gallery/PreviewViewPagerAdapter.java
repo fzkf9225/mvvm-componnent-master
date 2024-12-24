@@ -1,14 +1,22 @@
 package pers.fz.mvvm.wight.gallery;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +29,7 @@ import pers.fz.mvvm.databinding.ItemPicShowBinding;
 import pers.fz.mvvm.util.common.ThreadExecutorBounded;
 import pers.fz.mvvm.util.download.DownLoadImageService;
 import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.ImageSaveDialog;
 
 /**
@@ -77,7 +86,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<Object, Ite
                         .show();
                 return true;
             });
-            binding.picPv.setOnViewTapListener((v, x, y) -> previewPhotoDialog.dismiss());
+            binding.picPv.setOnPhotoTapListener((v, x, y) -> previewPhotoDialog.dismiss());
         }
     }
 

@@ -96,7 +96,7 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
     }
 
     @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
+    public boolean onDoubleTapEvent(@NonNull MotionEvent event) {
         // Wait for the confirmed onDoubleTap() instead
         return false;
     }

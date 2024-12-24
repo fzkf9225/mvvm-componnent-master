@@ -15,6 +15,7 @@
  *******************************************************************************/
 package pers.fz.mvvm.wight.gallery;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -23,8 +24,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.appcompat.widget.AppCompatImageView;
+
+import pers.fz.mvvm.util.log.LogUtil;
 
 
 public class PhotoView extends AppCompatImageView implements IPhotoView {
@@ -41,11 +46,11 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
         this(context, attr, 0);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         super.setScaleType(ScaleType.MATRIX);
         mAttacher = new PhotoViewAttacher(this);
-
         if (null != mPendingScaleType) {
             setScaleType(mPendingScaleType);
             mPendingScaleType = null;
@@ -56,7 +61,7 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     public void setPhotoViewRotation(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
     }
-    
+
     @Override
     public void setRotationTo(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
@@ -126,6 +131,7 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     public void setMediumScale(float mediumScale) {
         mAttacher.setMediumScale(mediumScale);
     }
+
     @Override
     public void setMaximumScale(float maximumScale) {
         mAttacher.setMaximumScale(maximumScale);

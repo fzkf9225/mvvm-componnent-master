@@ -42,8 +42,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import java.lang.ref.WeakReference;
 
+import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.wight.gallery.gestures.FroyoGestureDetector;
 import pers.fz.mvvm.wight.gallery.gestures.OnGestureListener;
-import pers.fz.mvvm.wight.gallery.gestures.VersionedGestureDetector;
 import pers.fz.mvvm.wight.gallery.scrollerproxy.ScrollerProxy;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
@@ -77,7 +78,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     /**
      * @return true if the ImageView exists, and it's Drawable existss
      */
-    private static boolean hasDrawable(ImageView imageView) {
+    private static boolean hasDrawable(AppCompatImageView imageView) {
         return null != imageView && null != imageView.getDrawable();
     }
 
@@ -111,7 +112,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    private WeakReference<ImageView> mImageView;
+    private WeakReference<AppCompatImageView> mImageView;
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
@@ -137,15 +138,16 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
+    @SuppressLint("ClickableViewAccessibility")
     public PhotoViewAttacher(AppCompatImageView imageView) {
         mImageView = new WeakReference<>(imageView);
-
         imageView.setDrawingCacheEnabled(true);
         imageView.setOnTouchListener(this);
 
         ViewTreeObserver observer = imageView.getViewTreeObserver();
-        if (null != observer)
+        if (null != observer){
             observer.addOnGlobalLayoutListener(this);
+        }
 
         // Make sure we using MATRIX Scale Type
         setImageViewScaleTypeMatrix(imageView);
@@ -153,14 +155,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (imageView.isInEditMode()) {
             return;
         }
-        // Create Gesture Detectors...
-        mScaleDragDetector =  VersionedGestureDetector.newInstance(
-                imageView.getContext(), this);
+        mScaleDragDetector = new FroyoGestureDetector(imageView.getContext());
+        mScaleDragDetector.setOnGestureListener(this);
 
-        mGestureDetector = new GestureDetector(imageView.getContext(),
-                new GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
-                    public void onLongPress(@NonNull MotionEvent e) {
+                    public void onLongPress(@NonNull MotionEvent event) {
+                        LogUtil.show(PreviewPhotoDialog.TAG,"onLongPress:"+event.getX()+",y"+event.getY());
                         if (null != mLongClickListener) {
                             mLongClickListener.onLongClick(getImageView());
                         }
@@ -173,10 +174,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
-        if (newOnDoubleTapListener != null)
-            this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
-        else
-            this.mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
+        this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener == null ? new DefaultOnDoubleTapListener(this) : newOnDoubleTapListener);
     }
 
     @Override
@@ -245,8 +243,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public void
-    setPhotoViewRotation(float degrees) {
+    public void setPhotoViewRotation(float degrees) {
         mSuppMatrix.setRotate(degrees % 360);
         checkAndDisplayMatrix();
     }
@@ -263,8 +260,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkAndDisplayMatrix();
     }
 
-    public ImageView getImageView() {
-        ImageView imageView = null;
+    public AppCompatImageView getImageView() {
+        AppCompatImageView imageView = null;
 
         if (null != mImageView) {
             imageView = mImageView.get();
@@ -281,9 +278,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public float getMinimumScale() {
         return mMinScale;
     }
+
     public float getMediumScale() {
         return mMidScale;
     }
+
     @Override
     public float getMaximumScale() {
         return mMaxScale;
@@ -304,7 +303,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (mScaleDragDetector.isScaling()) {
             return; // Do not drag if we are already scaling
         }
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
 
@@ -334,8 +333,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onFling(float startX, float startY, float velocityX,
-                              float velocityY) {
-        ImageView imageView = getImageView();
+                        float velocityY) {
+        AppCompatImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
                 getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
@@ -344,7 +343,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onGlobalLayout() {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
 
         if (null != imageView) {
             if (mZoomEnabled) {
@@ -389,14 +388,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
-
-        if (mZoomEnabled && hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && hasDrawable((AppCompatImageView) v)) {
             ViewParent parent = v.getParent();
             switch (ev.getAction()) {
                 case ACTION_DOWN:
                     // First, disable the Parent from intercepting the touch
                     // event
-                    if (null != parent){
+                    if (null != parent) {
                         parent.requestDisallowInterceptTouchEvent(true);
                     }
                     // If we're flinging, and the user presses down, cancel
@@ -507,15 +505,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void setScale(float scale, float focalX, float focalY,
                          boolean animate) {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
 
         if (null != imageView) {
             // Check to see if the scale is within bounds
             if (scale < mMinScale || scale > mMaxScale) {
-//                LogManager
-//                        .getLogger()
-//                        .i(LOG_TAG,
-//                                "Scale must be within the range of minScale and maxScale");
                 return;
             }
 
@@ -544,7 +538,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     public void update() {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
 
         if (null != imageView) {
             if (mZoomEnabled) {
@@ -590,7 +584,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private void checkImageViewScaleType() {
         ImageView imageView = getImageView();
 
-        /**
+        /*
          * PhotoView's getScaleType() will just divert to this.getScaleType() so
          * only call if we're not attached to a PhotoView.
          */
@@ -603,7 +597,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     private boolean checkMatrixBounds() {
-        final ImageView imageView = getImageView();
+        final AppCompatImageView imageView = getImageView();
         if (null == imageView) {
             return false;
         }
@@ -665,7 +659,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
 
         if (null != imageView) {
             Drawable d = imageView.getDrawable();
@@ -680,7 +674,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     public Bitmap getVisibleRectangleBitmap() {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
         return imageView == null ? null : imageView.getDrawingCache();
     }
 
@@ -718,7 +712,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     private void setImageViewMatrix(Matrix matrix) {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
         if (null != imageView) {
 
             checkImageViewScaleType();
@@ -740,7 +734,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * @param d - Drawable being displayed
      */
     private void updateBaseMatrix(Drawable d) {
-        ImageView imageView = getImageView();
+        AppCompatImageView imageView = getImageView();
         if (null == imageView || null == d) {
             return;
         }
@@ -966,7 +960,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 return; // remaining post that should not be handled
             }
 
-            ImageView imageView = getImageView();
+            AppCompatImageView imageView = getImageView();
             if (null != imageView && mScroller.computeScrollOffset()) {
 
                 final int newX = mScroller.getCurrX();

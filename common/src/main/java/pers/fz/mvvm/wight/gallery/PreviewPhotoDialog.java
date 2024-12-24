@@ -28,6 +28,7 @@ import java.util.stream.IntStream;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * 主界面点击发布，弹出半透明对话框
@@ -43,8 +44,6 @@ public class PreviewPhotoDialog extends Dialog {
     private boolean canSaveImage = true;
     private Drawable drawableResCurrent = null;
     private Drawable drawableResNormal = null;
-
-    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public PreviewPhotoDialog(Context context) {
         super(context, R.style.Pic_Dialog);
@@ -173,6 +172,14 @@ public class PreviewPhotoDialog extends Dialog {
                 }
                 position = pos;
             }
+        });
+        viewPager.setOnTouchListener((v, event) -> {
+            try {
+                return super.onTouchEvent(event);
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            }
+            return false;
         });
     }
 

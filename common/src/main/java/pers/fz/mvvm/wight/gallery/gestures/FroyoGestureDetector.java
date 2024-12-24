@@ -35,8 +35,7 @@ public class FroyoGestureDetector extends EclairGestureDetector {
                     return false;
                 }
 
-                mListener.onScale(scaleFactor,
-                        detector.getFocusX(), detector.getFocusY());
+                mListener.onScale(scaleFactor, detector.getFocusX(), detector.getFocusY());
                 return true;
             }
 
