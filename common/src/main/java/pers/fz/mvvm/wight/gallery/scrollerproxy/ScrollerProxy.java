@@ -20,7 +20,7 @@ import android.content.Context;
 public abstract class ScrollerProxy {
 
     public static ScrollerProxy getScroller(Context context) {
-        return new IcsScroller(context);
+        return new GingerScroller(context);
     }
 
     public abstract boolean computeScrollOffset();

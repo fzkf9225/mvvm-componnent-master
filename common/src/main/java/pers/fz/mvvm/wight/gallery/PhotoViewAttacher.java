@@ -43,7 +43,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import java.lang.ref.WeakReference;
 
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.gallery.gestures.FroyoGestureDetector;
+import pers.fz.mvvm.wight.gallery.gestures.EclairGestureDetector;
 import pers.fz.mvvm.wight.gallery.gestures.OnGestureListener;
 import pers.fz.mvvm.wight.gallery.scrollerproxy.ScrollerProxy;
 
@@ -116,7 +116,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
-    private pers.fz.mvvm.wight.gallery.gestures.GestureDetector mScaleDragDetector;
+    private EclairGestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
@@ -155,7 +155,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (imageView.isInEditMode()) {
             return;
         }
-        mScaleDragDetector = new FroyoGestureDetector(imageView.getContext());
+        mScaleDragDetector = new EclairGestureDetector(imageView.getContext());
         mScaleDragDetector.setOnGestureListener(this);
 
         mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -884,7 +884,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             if (imageView == null) {
                 return;
             }
-
             float t = interpolate();
             float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
             float deltaScale = scale / getScale();
@@ -894,7 +893,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
-                Compat.postOnAnimation(imageView, this);
+                imageView.postOnAnimation(this);
             }
         }
 
@@ -973,7 +972,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 mCurrentY = newY;
 
                 // Post On animation
-                Compat.postOnAnimation(imageView, this);
+                imageView.postOnAnimation(this);
             }
         }
     }

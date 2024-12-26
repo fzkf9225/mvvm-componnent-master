@@ -61,4 +61,5 @@ public class GingerScroller extends ScrollerProxy {
     public int getCurrY() {
         return mScroller.getCurrY();
     }
+
 }

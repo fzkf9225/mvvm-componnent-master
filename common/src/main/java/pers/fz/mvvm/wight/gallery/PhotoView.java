@@ -36,8 +36,6 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
 
     private final PhotoViewAttacher mAttacher;
 
-    private ScaleType mPendingScaleType;
-
     public PhotoView(Context context) {
         this(context, null);
     }
@@ -51,10 +49,6 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
         super(context, attr, defStyle);
         super.setScaleType(ScaleType.MATRIX);
         mAttacher = new PhotoViewAttacher(this);
-        if (null != mPendingScaleType) {
-            setScaleType(mPendingScaleType);
-            mPendingScaleType = null;
-        }
     }
 
     @Override
@@ -211,8 +205,6 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     public void setScaleType(ScaleType scaleType) {
         if (null != mAttacher) {
             mAttacher.setScaleType(scaleType);
-        } else {
-            mPendingScaleType = scaleType;
         }
     }
 
@@ -246,5 +238,4 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
     }
-
 }

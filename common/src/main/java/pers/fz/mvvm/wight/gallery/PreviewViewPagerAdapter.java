@@ -56,6 +56,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<Object, Ite
 
     @Override
     public void onBindHolder(BaseViewHolder<ItemPicShowBinding> holder, int pos) {
+        holder.getBinding().picPv.setAllowParentInterceptOnEdge(true);
         Glide.with(holder.itemView.getContext())
                 .asBitmap()
                 .load(mList.get(pos))
@@ -86,7 +87,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<Object, Ite
                         .show();
                 return true;
             });
-            binding.picPv.setOnPhotoTapListener((v, x, y) -> previewPhotoDialog.dismiss());
+            binding.picPv.setOnPhotoTapListener((v,x,y) -> previewPhotoDialog.dismiss());
         }
     }
 

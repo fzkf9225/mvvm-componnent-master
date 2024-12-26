@@ -16,21 +16,21 @@
 package pers.fz.mvvm.wight.gallery.gestures;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-public class CupcakeGestureDetector implements GestureDetector {
+import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+
+public class CupcakeGestureDetector {
 
     protected OnGestureListener mListener;
-    private static final String LOG_TAG = "CupcakeGestureDetector";
     float mLastTouchX;
     float mLastTouchY;
     final float mTouchSlop;
     final float mMinimumVelocity;
 
-    @Override
     public void setOnGestureListener(OnGestureListener listener) {
         this.mListener = listener;
     }
@@ -43,6 +43,7 @@ public class CupcakeGestureDetector implements GestureDetector {
     }
 
     private VelocityTracker mVelocityTracker;
+
     private boolean mIsDragging;
 
     float getActiveX(MotionEvent ev) {
@@ -57,7 +58,6 @@ public class CupcakeGestureDetector implements GestureDetector {
         return false;
     }
 
-    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -65,7 +65,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 } else {
-                    Log.i(LOG_TAG, "Velocity tracker is null");
+                    LogUtil.show(PreviewPhotoDialog.TAG, "Velocity tracker is null");
                 }
 
                 mLastTouchX = getActiveX(ev);
@@ -136,7 +136,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 break;
             }
         }
-
         return true;
     }
+
 }

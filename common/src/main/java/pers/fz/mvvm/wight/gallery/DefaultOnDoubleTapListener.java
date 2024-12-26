@@ -41,33 +41,28 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         if (this.photoViewAttacher == null) {
             return false;
         }
-        try {
-            ImageView imageView = photoViewAttacher.getImageView();
-            if (null != photoViewAttacher.getOnPhotoTapListener()) {
-                final RectF displayRect = photoViewAttacher.getDisplayRect();
+        ImageView imageView = photoViewAttacher.getImageView();
+        if (null != photoViewAttacher.getOnPhotoTapListener()) {
+            final RectF displayRect = photoViewAttacher.getDisplayRect();
 
-                if (null != displayRect) {
-                    final float x = event.getX(), y = event.getY();
+            if (null != displayRect) {
+                final float x = event.getX(), y = event.getY();
 
-                    // Check to see if the user tapped on the photo
-                    if (displayRect.contains(x, y)) {
+                // Check to see if the user tapped on the photo
+                if (displayRect.contains(x, y)) {
 
-                        float xResult = (x - displayRect.left)
-                                / displayRect.width();
-                        float yResult = (y - displayRect.top)
-                                / displayRect.height();
+                    float xResult = (x - displayRect.left)
+                            / displayRect.width();
+                    float yResult = (y - displayRect.top)
+                            / displayRect.height();
 
-                        photoViewAttacher.getOnPhotoTapListener().onPhotoTap(imageView, xResult, yResult);
-                        return true;
-                    }
+                    photoViewAttacher.getOnPhotoTapListener().onPhotoTap(imageView, xResult, yResult);
+                    return true;
                 }
             }
-            if (null != photoViewAttacher.getOnViewTapListener()) {
-                photoViewAttacher.getOnViewTapListener().onViewTap(imageView, event.getX(), event.getY());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.e(PreviewPhotoDialog.TAG, "onSingleTapConfirmed:" + e);
+        }
+        if (null != photoViewAttacher.getOnViewTapListener()) {
+            photoViewAttacher.getOnViewTapListener().onViewTap(imageView, event.getX(), event.getY());
         }
         return false;
     }
@@ -78,19 +73,14 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
             return false;
         }
 
-        try {
-            float scale = photoViewAttacher.getScale();
-            float x = event.getX();
-            float y = event.getY();
+        float scale = photoViewAttacher.getScale();
+        float x = event.getX();
+        float y = event.getY();
 
-            if (scale < photoViewAttacher.getMediumScale()) {
-                photoViewAttacher.setScale(photoViewAttacher.getMediumScale(), x, y, true);
-            } else {
-                photoViewAttacher.setScale(photoViewAttacher.getMinimumScale(), x, y, true);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            LogUtil.e(PreviewPhotoDialog.TAG, "onDoubleTap:" + e);
+        if (scale < photoViewAttacher.getMediumScale()) {
+            photoViewAttacher.setScale(photoViewAttacher.getMediumScale(), x, y, true);
+        } else {
+            photoViewAttacher.setScale(photoViewAttacher.getMinimumScale(), x, y, true);
         }
         return true;
     }
