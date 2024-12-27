@@ -16,7 +16,7 @@
        specific language governing permissions and limitations
        under the License.
 */
-package pers.fz.mvvm.util;
+package pers.fz.mvvm.util.common;
 
 import android.app.AlertDialog;
 import android.content.Context;

@@ -1,5 +1,6 @@
 package pers.fz.mvvm.util.log;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.io.BufferedReader;
@@ -11,6 +12,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import pers.fz.mvvm.util.common.DateUtil;
+
 /**
  * Created by CherishTang on 2018/7/23.
  * 日志记录至本地
@@ -20,18 +23,17 @@ public class LogcatHelper {
     private static LogcatHelper INSTANCE = null;
     private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
-    private int mPId;
+    private final int mPId;
 
     /**
      * 初始化目录
      */
     public void init(Context context) {
-        PATH_LOGCAT = context.getExternalCacheDir().getAbsolutePath()+File.separator + "log";
+        PATH_LOGCAT = context.getExternalCacheDir().getAbsolutePath() + File.separator + "log";
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
-            file.mkdirs();
+            boolean isCreated = file.mkdirs();
         }
-
     }
 
     public static LogcatHelper getInstance(Context context) {
@@ -60,25 +62,24 @@ public class LogcatHelper {
         }
     }
 
-    private class LogDumper extends Thread {
+    private static class LogDumper extends Thread {
 
         private Process logcatProc;
         private BufferedReader mReader = null;
         private boolean mRunning = true;
-        String cmds = null;
-        private String mPID;
+        private final String cmds;
+        private final String mPID;
         private FileOutputStream out = null;
 
         public LogDumper(String pid, String dir) {
             mPID = pid;
             try {
-                out = new FileOutputStream(new File(dir, "log-"
-                        + getFileName() + ".log"));
+                out = new FileOutputStream(new File(dir, "log-" + DateUtil.getToday() + ".log"));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
-            /**
+            /*
              *
              * 日志等级：*:v , *:d , *:w , *:e , *:f , *:s
              *
@@ -103,12 +104,12 @@ public class LogcatHelper {
                 logcatProc = Runtime.getRuntime().exec(cmds);
                 mReader = new BufferedReader(new InputStreamReader(
                         logcatProc.getInputStream()), 1024);
-                String line = null;
+                String line;
                 while (mRunning && (line = mReader.readLine()) != null) {
                     if (!mRunning) {
                         break;
                     }
-                    if (line.length() == 0) {
+                    if (line.isEmpty()) {
                         continue;
                     }
                     if (out != null && line.contains(mPID)) {
@@ -146,9 +147,4 @@ public class LogcatHelper {
 
     }
 
-    public String getFileName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String date = format.format(new Date(System.currentTimeMillis()));
-        return date;// 2012年10月03日 23:41:31
-    }
 }

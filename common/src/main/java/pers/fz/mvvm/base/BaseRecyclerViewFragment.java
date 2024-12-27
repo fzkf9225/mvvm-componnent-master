@@ -226,7 +226,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
                 getRecyclerView().setVisibility(View.GONE);
             }
             //刷新,加载
-            case EmptyLayout.NETWORK_LOADING_REFRESH, EmptyLayout.NETWORK_LOADING_LOAD_MORE -> {
+            case EmptyLayout.NETWORK_LOADING_REFRESH -> {
                 emptyLayout.setVisibility(View.GONE);
                 getRecyclerView().setVisibility(View.VISIBLE);
             }

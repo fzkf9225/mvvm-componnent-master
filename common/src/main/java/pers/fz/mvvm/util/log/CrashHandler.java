@@ -41,7 +41,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
     @SuppressLint("StaticFieldLeak")
-    public static final CrashHandler INSTANCE = new CrashHandler();
+    private final static CrashHandler instance = new CrashHandler();
     private Context mContext;
     // 用来存储设备信息和异常信息
     private final Map<String, String> infos = new HashMap<>();
@@ -49,20 +49,18 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 保证只有一个CrashHandler实例
      */
-    public CrashHandler() {
+    private CrashHandler() {
     }
 
     /**
      * 获取CrashHandler实例 ,单例模式
      */
     public static CrashHandler getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     /**
      * 初始化
-     *
-     * @param context
      */
     public void init(Context context) {
         mContext = context;

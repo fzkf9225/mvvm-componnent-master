@@ -10,16 +10,18 @@ import android.widget.FrameLayout;
  * describe:
  */
 public class SoftHideKeyBoardUtil {
-    public static void assistActivity (Activity activity) {
+    public static void assistActivity(Activity activity) {
         new SoftHideKeyBoardUtil(activity);
     }
+
     private final View mChildOfContent;
     private int usableHeightPrevious;
     private final FrameLayout.LayoutParams frameLayoutParams;
     //为适应华为小米等手机键盘上方出现黑条或不适配
     private int contentHeight;//获取setContentView本来view的高度
     private boolean first = true;//只用获取一次
-    private  int statusBarHeight;//状态栏高度
+    private int statusBarHeight;//状态栏高度
+
     private SoftHideKeyBoardUtil(Activity activity) {
         //1､找到Activity的最外层布局控件，它其实是一个DecorView,它所用的控件就是FrameLayout
         FrameLayout content = (FrameLayout) activity.findViewById(android.R.id.content);
@@ -50,7 +52,7 @@ public class SoftHideKeyBoardUtil {
             //4､Activity中xml布局的高度-当前可用高度
             int heightDifference = usableHeightSansKeyboard - usableHeightNow;
             //5､高度差大于屏幕1/4时，说明键盘弹出
-            if (heightDifference > (usableHeightSansKeyboard/4)) {
+            if (heightDifference > (usableHeightSansKeyboard / 4)) {
                 // 6､键盘弹出了，Activity的xml布局高度应当减去键盘高度
                 frameLayoutParams.height = usableHeightSansKeyboard - heightDifference + statusBarHeight;
             } else {
@@ -61,6 +63,7 @@ public class SoftHideKeyBoardUtil {
             usableHeightPrevious = usableHeightNow;
         }
     }
+
     private int computeUsableHeight() {
         Rect r = new Rect();
         mChildOfContent.getWindowVisibleDisplayFrame(r);

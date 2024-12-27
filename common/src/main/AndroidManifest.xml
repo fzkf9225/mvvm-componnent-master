@@ -85,7 +85,7 @@
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 此处适配android 7.0 -->
         <activity
-            android:name=".activity.TechnicalSupportActivity"
+            android:name="com.casic.titan.usercomponent.TechnicalSupportActivity"
             android:exported="false" />
         <activity
             android:name=".activity.WebViewActivity"

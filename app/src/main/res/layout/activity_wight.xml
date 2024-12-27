@@ -200,8 +200,6 @@
                 app:autoLoop="true"
                 app:previewLarger="true"
                 app:dotPosition="inner_bottom_center"
-                app:iconSelected="@mipmap/icon_point1"
-                app:iconUnselected="@mipmap/icon_point2"
                 app:leftTopRadius="@dimen/radius_l"
                 app:rightTopRadius="@dimen/radius_l"
                 app:leftBottomRadius="@dimen/radius_l"

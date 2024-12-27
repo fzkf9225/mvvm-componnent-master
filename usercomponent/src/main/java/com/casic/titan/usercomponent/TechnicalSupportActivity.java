@@ -1,12 +1,13 @@
-package pers.fz.mvvm.activity;
+package com.casic.titan.usercomponent;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import pers.fz.mvvm.R;
+import com.casic.titan.usercomponent.databinding.TechnicalSupportActivityBinding;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.databinding.TechnicalSupportActivityBinding;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
@@ -15,6 +16,7 @@ import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
  * Created by fz on 2019/12/23
  * describe:技术支持
  */
+@AndroidEntryPoint
 public class TechnicalSupportActivity extends BaseActivity<EmptyViewModel, TechnicalSupportActivityBinding> {
 
     @Override

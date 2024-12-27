@@ -28,66 +28,76 @@ public class LogUtil {
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
     }
 
-    public static void show(String str) {
-        if (Config.enableDebug.get()) {
-            Logger.i(str);
+    public static void loggerShow(String tag,String str) {
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.i(tag,str);
     }
 
     public static void show(String tag, String str) {
-        if (Config.enableDebug.get()) {
-            Log.d(tag, str);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Log.d(tag, str);
     }
 
-    public static void i(String str) {
-        if (Config.enableDebug.get()) {
-            Logger.i(str);
+    public static void loggerI(String tag,String str) {
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.i(tag,str);
     }
 
     public static void i(String tag, String str) {
-        if (Config.enableDebug.get()) {
-            Log.i(tag, str);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Log.i(tag, str);
     }
 
-    public static void d(String str) {
-        if (Config.enableDebug.get()) {
-            Logger.d(str);
+    public static void loggerD(String tag,String str) {
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.d(tag,str);
     }
 
     public static void d(String tag, String str) {
-        if (Config.enableDebug.get()) {
-            Log.d(tag, str);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Log.d(tag, str);
     }
 
     public static void e(String tag, String error) {
-        if (Config.enableDebug.get()) {
-            Log.e(tag, error);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Log.e(tag, error);
     }
 
     public static void json(final String json) {
-        if (Config.enableDebug.get()) {
-            Logger.json(json);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.json(json);
     }
 
     public static void xml(final String xml) {
-        if (Config.enableDebug.get()) {
-            Logger.xml(xml);
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.xml(xml);
     }
 
     public static void e(Throwable exception) {
         if (exception == null) {
             return;
         }
-        if (Config.enableDebug.get()) {
-            Logger.e(exception, exception.getMessage());
+        if (!Config.enableDebug.get()) {
+            return;
         }
+        Logger.e(exception, exception.getMessage());
     }
 }

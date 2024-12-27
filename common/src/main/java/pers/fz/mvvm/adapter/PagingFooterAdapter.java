@@ -23,7 +23,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder<PagingFooterBinding> holder, @NonNull LoadState loadState) {
+    public void onBindViewHolder(@NonNull BaseViewHolder<PagingFooterBinding> holder, @NonNull LoadState loadState) {
 
         if (loadState instanceof LoadState.Error) {
             holder.getBinding().progressBar.setVisibility(View.GONE);

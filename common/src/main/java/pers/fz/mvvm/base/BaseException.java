@@ -111,7 +111,7 @@ public class BaseException extends IOException {
     public static final String DOWNLOADING_ERROR = "1021";
     public static final String DOWNLOADING_ERROR_MSG = "检测到当前文件已有下载任务正在进行中";
 
-    private String errorMsg;
+    private final String errorMsg;
     private String errorCode;
 
     public String getErrorMsg() {

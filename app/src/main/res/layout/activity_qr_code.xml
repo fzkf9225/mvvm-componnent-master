@@ -39,7 +39,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_scan_info" />
-
+            <Button
+                android:id="@+id/button_custom_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="自定义扫码框扫码"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_scan" />
             <EditText
                 android:id="@+id/edit_create_qrcode"
                 android:layout_width="match_parent"
@@ -48,7 +57,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:text="https://www.baidu.com"
-                app:layout_constraintTop_toBottomOf="@+id/button_scan" />
+                app:layout_constraintTop_toBottomOf="@+id/button_custom_scan" />
 
             <Button
                 android:id="@+id/create_qr_code"

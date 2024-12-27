@@ -1,5 +1,7 @@
 package pers.fz.mvvm.base;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 
@@ -56,6 +58,7 @@ public class BaseModelEntity<T>{
         this.data = data;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "BaseModelEntity{" +

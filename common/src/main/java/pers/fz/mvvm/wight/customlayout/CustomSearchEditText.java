@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.KeyBoardUtils;
+import pers.fz.mvvm.util.common.KeyBoardUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
@@ -160,7 +160,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
         try {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String keyword = v.getText().toString().trim();
-                KeyBoardUtils.closeKeyboard(this, getContext());
+                KeyBoardUtil.closeKeyboard(this, getContext());
                 if (onInputSubmitListener != null) {
                     onInputSubmitListener.onInputSubmit(keyword);
                 }

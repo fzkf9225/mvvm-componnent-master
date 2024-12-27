@@ -6,7 +6,7 @@ import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.databinding.SettingBinding;
 import com.casic.titan.usercomponent.viewmodel.SettingViewModel;
 
-import pers.fz.mvvm.activity.TechnicalSupportActivity;
+import com.casic.titan.usercomponent.TechnicalSupportActivity;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseActivity;
 

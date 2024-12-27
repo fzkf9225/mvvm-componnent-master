@@ -19,7 +19,7 @@ import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.common.KeyBoardUtils;
+import pers.fz.mvvm.util.common.KeyBoardUtil;
 
 /**
  * Created by fz on 2019/8/23.
@@ -77,8 +77,8 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
     @Override
     public void hideKeyboard() {
         try {
-            KeyBoardUtils.closeKeyboard(binding.userEdit, this);
-            KeyBoardUtils.closeKeyboard(binding.passwordEdit, this);
+            KeyBoardUtil.closeKeyboard(binding.userEdit, this);
+            KeyBoardUtil.closeKeyboard(binding.passwordEdit, this);
         } catch (Exception e) {
             e.printStackTrace();
         }

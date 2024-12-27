@@ -22,7 +22,6 @@ public class EmptyLayout extends LinearLayout {
     public static final int NO_DATA = 3;
     public static final int NO_DATA_ENABLE_CLICK = 10;
     public static final int NETWORK_LOADING_REFRESH = 5;
-    public static final int NETWORK_LOADING_LOAD_MORE = 6;
     private boolean clickEnable = true;
     private OnEmptyLayoutClickListener onEmptyLayoutClickListener;
     private int mErrorState;

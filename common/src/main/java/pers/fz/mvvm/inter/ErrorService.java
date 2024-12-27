@@ -17,12 +17,12 @@ public interface ErrorService {
 
     /**
      * 是否登录
-     * @return
+     * @return 是否已登录
      */
     boolean isLogin();
     /**
      * 是否登录超时或者登录无效等情况，他包含是否登录
-     * @return
+     * @return 是否为登录过期
      */
     boolean isLoginPast(String errorCode);
 
@@ -40,7 +40,7 @@ public interface ErrorService {
     void toLogin(Context context,Bundle bundle);
     /**
      * 是否有操作权限
-     * @return
+     * @return 是否有权限
      */
     boolean hasPermission(String errorCode);
 
@@ -49,20 +49,20 @@ public interface ErrorService {
     void toNoPermission(Context context);
     /**
      * 崩溃日志
-     * @param errorInfo
+     * @param errorInfo 上传登录日志
      */
     void uploadErrorInfo(String errorInfo);
 
     Class<?> getMainActivity();
     /**
      * 获取用户token
-     * @return
+     * @return token
      */
     String getToken();
 
     /**
      * 获取用户RefreshToken
-     * @return
+     * @return 刷新token
      */
     String getRefreshToken();
 

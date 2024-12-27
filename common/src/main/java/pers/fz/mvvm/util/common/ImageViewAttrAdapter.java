@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util;
+package pers.fz.mvvm.util.common;
 
 import android.graphics.Bitmap;
 import android.net.Uri;

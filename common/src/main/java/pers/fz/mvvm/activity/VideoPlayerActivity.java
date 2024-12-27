@@ -9,6 +9,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.gyf.immersionbar.BarHide;
+import com.gyf.immersionbar.ImmersionBar;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import pers.fz.mvvm.R;
@@ -43,8 +45,13 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     }
 
     @Override
+    protected void initImmersionBar() {
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+    }
+
+    @Override
     public void initView(Bundle savedInstanceState) {
-        ThemeUtils.translucentStatusBar(this, true);
+
     }
 
     @Override

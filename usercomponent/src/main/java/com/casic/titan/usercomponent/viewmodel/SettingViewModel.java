@@ -15,12 +15,12 @@ import com.casic.titan.usercomponent.activity.FeedBackActivity;
 import com.casic.titan.usercomponent.activity.LoginActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 
-import pers.fz.mvvm.activity.TechnicalSupportActivity;
+import com.casic.titan.usercomponent.TechnicalSupportActivity;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
-import pers.fz.mvvm.util.cache.GlideCacheUtil;
+import pers.fz.mvvm.util.common.CacheUtil;
 import pers.fz.mvvm.util.update.UpdateManger;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
@@ -81,11 +81,11 @@ public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
     public String getCacheSize() {
         String size = null;
         try {
-            long cacheSize = GlideCacheUtil.getInstance().getFolderSize(getApplication().getCacheDir());
+            long cacheSize = CacheUtil.getInstance().getFolderSize(getApplication().getCacheDir());
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                cacheSize += GlideCacheUtil.getInstance().getFolderSize(getApplication().getExternalCacheDir());
+                cacheSize += CacheUtil.getInstance().getFolderSize(getApplication().getExternalCacheDir());
             }
-            size = GlideCacheUtil.getFormatSize(cacheSize);
+            size = CacheUtil.getFormatSize(cacheSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,9 +96,9 @@ public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
      * 清理缓存
      */
     public void clearCache() {
-        GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getCacheDir().getAbsolutePath(), false);
+        CacheUtil.getInstance().deleteFolderFile(getApplication().getCacheDir().getAbsolutePath(), false);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            GlideCacheUtil.getInstance().deleteFolderFile(getApplication().getExternalCacheDir().getAbsolutePath(), false);
+            CacheUtil.getInstance().deleteFolderFile(getApplication().getExternalCacheDir().getAbsolutePath(), false);
         }
     }
 

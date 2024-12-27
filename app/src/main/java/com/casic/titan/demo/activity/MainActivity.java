@@ -44,11 +44,15 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
-    public void initView(Bundle savedInstanceState) {
+    protected void initImmersionBar() {
         ImmersionBar.with(this)
                 .autoStatusBarDarkModeEnable(true, 0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.default_background)
                 .init();
+    }
+
+    @Override
+    public void initView(Bundle savedInstanceState) {
         //如果xml中是androidx.fragment.app.FragmentContainerView，则使用这种方式获取navController
         NavHostFragment navHostFragment = binding.navHostFragmentActivityMain.getFragment();
         NavController navController = navHostFragment.getNavController();

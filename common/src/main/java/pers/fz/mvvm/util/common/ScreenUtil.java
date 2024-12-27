@@ -17,10 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
  * 获得屏幕相关的辅助类
  */
 
-public class ScreenUtils {
-    private ScreenUtils() {
-        /* cannot be instantiated */
-        throw new UnsupportedOperationException("cannot be instantiated");
+public class ScreenUtil {
+    private ScreenUtil() {
     }
 
     /**

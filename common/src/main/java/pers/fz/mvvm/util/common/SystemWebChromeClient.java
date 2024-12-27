@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util;
+package pers.fz.mvvm.util.common;
 
 import android.app.Activity;
 import android.content.Context;

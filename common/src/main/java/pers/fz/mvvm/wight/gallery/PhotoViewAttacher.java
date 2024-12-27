@@ -161,7 +161,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public void onLongPress(@NonNull MotionEvent event) {
-                        LogUtil.show(PreviewPhotoDialog.TAG,"onLongPress:"+event.getX()+",y"+event.getY());
                         if (null != mLongClickListener) {
                             mLongClickListener.onLongClick(getImageView());
                         }

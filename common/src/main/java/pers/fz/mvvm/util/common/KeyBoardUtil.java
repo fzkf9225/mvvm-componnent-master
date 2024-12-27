@@ -1,6 +1,7 @@
 package pers.fz.mvvm.util.common;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -10,7 +11,7 @@ import android.widget.EditText;
   * 打开或关闭软键盘
  */
 
-public class KeyBoardUtils {
+public class KeyBoardUtil {
     /**
      * 打卡软键盘
      *
@@ -43,4 +44,9 @@ public class KeyBoardUtils {
 
         imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
+
+     public static void setListener(Activity activity, SoftKeyBoardListener.OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
+         SoftKeyBoardListener softKeyBoardListener = new SoftKeyBoardListener(activity);
+         softKeyBoardListener.setOnSoftKeyBoardChangeListener(onSoftKeyBoardChangeListener);
+     }
 }

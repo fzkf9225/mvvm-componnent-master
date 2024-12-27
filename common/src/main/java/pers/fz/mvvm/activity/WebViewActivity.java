@@ -22,8 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.WebViewBinding;
-import pers.fz.mvvm.util.CordovaDialogsHelper;
-import pers.fz.mvvm.util.SystemWebChromeClient;
+import pers.fz.mvvm.util.common.CordovaDialogsHelper;
+import pers.fz.mvvm.util.common.SystemWebChromeClient;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

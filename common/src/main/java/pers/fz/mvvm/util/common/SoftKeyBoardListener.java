@@ -56,18 +56,14 @@ public class SoftKeyBoardListener {
         });
     }
 
-    private void setOnSoftKeyBoardChangeListener(OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
+    public void setOnSoftKeyBoardChangeListener(OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
         this.onSoftKeyBoardChangeListener = onSoftKeyBoardChangeListener;
     }
 
     public interface OnSoftKeyBoardChangeListener {
         void keyBoardShow(int height);
-
         void keyBoardHide(int height);
     }
 
-    public static void setListener(Activity activity, OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
-        SoftKeyBoardListener softKeyBoardListener = new SoftKeyBoardListener(activity);
-        softKeyBoardListener.setOnSoftKeyBoardChangeListener(onSoftKeyBoardChangeListener);
-    }
+
 }

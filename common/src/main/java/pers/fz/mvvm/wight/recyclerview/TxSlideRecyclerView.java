@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Create by CherishTang on 2019/8/28 0028
+ * Create by fz on 2019/8/28 0028
  * describe:
  */
 public class TxSlideRecyclerView extends RecyclerView {

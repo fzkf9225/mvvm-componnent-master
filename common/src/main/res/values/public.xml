@@ -82,7 +82,6 @@
     <!--drawable-->
     <public name="bg_edittext" type="drawable"/>
     <public name="border" type="drawable"/>
-    <public name="dot_selector" type="drawable"/>
     <public name="ib_clear_image_selector" type="drawable"/>
     <public name="ic_red_dot" type="drawable"/>
     <public name="main_index_selector" type="drawable"/>
@@ -159,8 +158,6 @@
     <public name="icon_fh_white" type="mipmap"/>
     <public name="icon_pause" type="mipmap"/>
     <public name="icon_play" type="mipmap"/>
-    <public name="icon_point1" type="mipmap"/>
-    <public name="icon_point2" type="mipmap"/>
     <public name="icon_stop" type="mipmap"/>
     <public name="page_icon_empty" type="mipmap"/>
     <public name="star_empty" type="mipmap"/>

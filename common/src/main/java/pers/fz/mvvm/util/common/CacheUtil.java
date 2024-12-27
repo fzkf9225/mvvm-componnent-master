@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.cache;
+package pers.fz.mvvm.util.common;
 
 import android.content.Context;
 import android.os.Looper;
@@ -11,8 +11,6 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import java.io.File;
 import java.math.BigDecimal;
 
-import pers.fz.mvvm.util.common.ThreadExecutor;
-
 /**
  *Created by fz on 2016/6/21.
  * Glide图片缓存工具类，获取缓存大小
@@ -20,13 +18,13 @@ import pers.fz.mvvm.util.common.ThreadExecutor;
  * cleanUp.setText(str);
  */
 
-public class GlideCacheUtil {
+public class CacheUtil {
 
     private static final class InstHolder {
-        private static final GlideCacheUtil INSTANCE = new GlideCacheUtil();
+        private static final CacheUtil INSTANCE = new CacheUtil();
     }
 
-    public static GlideCacheUtil getInstance() {
+    public static CacheUtil getInstance() {
         return InstHolder.INSTANCE;
     }
 

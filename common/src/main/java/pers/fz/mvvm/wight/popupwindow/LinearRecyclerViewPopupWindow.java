@@ -28,26 +28,22 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * @author fz
  */
 public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
-    private SelectCategory<T> selectCategory;
-    private List<T> popupWindowBeanList;
+    private final SelectCategory<T> selectCategory;
+    private final List<T> popupWindowBeanList;
 
     private RecyclerView lvParentCategory = null;
     private RecyclerView lvChildrenCategory = null;
     private PopupWindowAdapter<T> popupWindowAdapter = null;
     private PopupWindowAdapter<T> childAdapter = null;
-    private PopupWindow popupWindow;
+    private final PopupWindow popupWindow;
 
     private Integer parentPosition, childPosition;
-    private Context activity;
-    private boolean hasRight;
+    private final Context activity;
+    private final boolean hasRight;
     private OnHeadViewClickListener onHeadViewClickListener;
 
     /**
      * 构造器
-     *
-     * @param popupWindowBeanList
-     * @param activity
-     * @param selectCategory
      */
     public LinearRecyclerViewPopupWindow(List<T> popupWindowBeanList,
                                          Context activity, boolean hasRight,
@@ -138,29 +134,6 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
             }
         });
     }
-
-    @Override
-    public void showAsDropDown(View anchor) {
-        if (Build.VERSION.SDK_INT == 24) {
-            Rect rect = new Rect();
-            anchor.getGlobalVisibleRect(rect);
-            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
-            setHeight(h);
-        }
-        super.showAsDropDown(anchor);
-    }
-
-    @Override
-    public void showAsDropDown(View anchor, int xoff, int yoff) {
-        if (Build.VERSION.SDK_INT == 24) {
-            Rect rect = new Rect();
-            anchor.getGlobalVisibleRect(rect);
-            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
-            setHeight(h);
-        }
-        super.showAsDropDown(anchor, xoff, yoff);
-    }
-
     @Override
     public void onItemClick(View view, int position) {
         if (popupWindowBeanList == null || popupWindowAdapter == null) {
@@ -188,7 +161,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         }
     }
 
-    private BaseRecyclerViewAdapter.OnItemClickListener childOnItemClickListener = new BaseRecyclerViewAdapter.OnItemClickListener() {
+    private final BaseRecyclerViewAdapter.OnItemClickListener childOnItemClickListener = new BaseRecyclerViewAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
             if (popupWindowBeanList == null || popupWindowBeanList.size() <= parentPosition ||

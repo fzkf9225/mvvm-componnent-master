@@ -45,7 +45,6 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
 
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void initView(Bundle savedInstanceState) {
         mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);

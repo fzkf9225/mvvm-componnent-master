@@ -19,8 +19,8 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     private final Paint mPaint;
     private final int mDividerWidth;
 
-    public GridSpacingItemDecoration(int height, @ColorInt int color) {
-        mDividerWidth = height;
+    public GridSpacingItemDecoration(int mDividerWidth, @ColorInt int color) {
+        this.mDividerWidth = mDividerWidth;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
@@ -95,10 +95,8 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             int orientation = ((StaggeredGridLayoutManager) layoutManager)
                     .getOrientation();
             if (orientation == StaggeredGridLayoutManager.VERTICAL) {
-                if ((pos + 1) % spanCount == 0)// 如果是最后一列，则不需要绘制右边
-                {
-                    return true;
-                }
+                // 如果是最后一列，则不需要绘制右边
+                return (pos + 1) % spanCount == 0;
             } else {
                 childCount = childCount - childCount % spanCount;
                 // 如果是最后一列，则不需要绘制右边

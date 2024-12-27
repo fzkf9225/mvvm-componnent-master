@@ -20,30 +20,36 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.android.Intents;
+import com.gyf.immersionbar.BarHide;
+import com.gyf.immersionbar.ImmersionBar;
 import com.journeyapps.barcodescanner.CaptureManager;
 
 import java.util.Map;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.ActivityCaptureBinding;
 import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
+import pers.fz.mvvm.util.zxing.CustomViewfinderView;
+import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
  * created by fz on 2023/11/8 11:10
  * describe:自定义扫码页面
  */
-public class CaptureActivity extends AppCompatActivity {
+@AndroidEntryPoint
+public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCaptureBinding> {
     private final String TAG = this.getClass().getSimpleName();
     private CaptureManager capture;
-    private ActivityCaptureBinding binding;
     private ActivityResultLauncher<String> openGalleryRequest;
-    private ActivityResultLauncher<String[]> permissionLauncher = null;
 
     private final String[] PERMISSIONS_READ = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE
@@ -57,16 +63,32 @@ public class CaptureActivity extends AppCompatActivity {
             Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
     };
 
+    public final static String SCAN_COLOR = "scanColor";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_capture);
-        //修改框框颜色
-//        CustomViewfinderView customViewfinderView = binding.dbvCustom.findViewById(R.id.zxing_viewfinder_view);
-//        customViewfinderView.setLineColor(ContextCompat.getColor(this,R.color.theme_orange));
-//        customViewfinderView.setScanLineColor(ContextCompat.getColor(this,R.color.theme_orange));
+    protected void initImmersionBar() {
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_capture;
+    }
+
+    @Override
+    public String setTitleBar() {
+        return "";
+    }
+
+    @Override
+    protected boolean hasToolBar() {
+        return false;
+    }
+
+    @Override
+    public void initView(Bundle savedInstanceState) {
+        registerPermissionLauncher();
         openGalleryRequest = registerForActivityResult(new ActivityResultContracts.GetContent(), activityResultCallback);
-        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
         binding.scanFlashLight.setOnClickListener(v -> switchFlashLight());
         binding.scanPhoto.setOnClickListener(v -> openGallery());
         capture = new CaptureManager(this, binding.dbvCustom);
@@ -74,18 +96,14 @@ public class CaptureActivity extends AppCompatActivity {
         capture.decode();
     }
 
-    /**
-     * 权限回调
-     */
-    ActivityResultCallback<Map<String, Boolean>> permissionCallback = result -> {
-        for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-            LogUtil.show(TAG, entry.getKey() + ":" + entry.getValue());
-            if (Boolean.FALSE.equals(entry.getValue())) {
-                Toast.makeText(this, "您拒绝了当前权限，无法打开相册", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-    };
+    @Override
+    public void initData(Bundle bundle) {
+        int scanColor = bundle.getInt(SCAN_COLOR, ContextCompat.getColor(this, R.color.themeColor));
+        //修改框框颜色
+        CustomViewfinderView customViewfinderView = binding.dbvCustom.findViewById(R.id.zxing_viewfinder_view);
+        customViewfinderView.setLineColor(scanColor);
+        customViewfinderView.setScanLineColor(scanColor);
+    }
 
     ActivityResultCallback<Uri> activityResultCallback = result -> {
         if (result == null) {
@@ -97,17 +115,17 @@ public class CaptureActivity extends AppCompatActivity {
     private void openGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_UPSIDE_DOWN_CAKE)) {
-                permissionLauncher.launch(PERMISSIONS_READ_UPSIDE_DOWN_CAKE);
+                requestPermission(PERMISSIONS_READ_UPSIDE_DOWN_CAKE);
                 return;
             }
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
             if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_TIRAMISU)) {
-                permissionLauncher.launch(PERMISSIONS_READ_TIRAMISU);
+                requestPermission(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
             if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ)) {
-                permissionLauncher.launch(PERMISSIONS_READ);
+                requestPermission(PERMISSIONS_READ);
                 return;
             }
         }
@@ -194,9 +212,7 @@ public class CaptureActivity extends AppCompatActivity {
         if (openGalleryRequest != null) {
             openGalleryRequest.unregister();
         }
-        if (permissionLauncher != null) {
-            permissionLauncher.unregister();
-        }
+        unregisterPermission();
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.core.content.ContextCompat;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityQrCodeBinding;
@@ -103,6 +104,25 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
             //设置是否启用闪光灯
             scanOptions.setTorchEnabled(false);
             scanOptions.setOrientationLocked(false);
+            scanOptions.setCaptureActivity(CaptureActivity.class);
+            barcodeLauncher.launch(scanOptions);
+        });
+
+        binding.buttonCustomScan.setOnClickListener(v -> {
+            ScanOptions scanOptions = new ScanOptions();
+            scanOptions.setBeepEnabled(true);
+            //设置是否在扫描成功时保存条形码图像
+            scanOptions.setBarcodeImageEnabled(false);
+            // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
+            scanOptions.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+            // Use a specific camera of the device
+            scanOptions.setCameraId(0);
+            //底部的提示文字，设为""可以置空
+            scanOptions.setPrompt("");
+            //设置是否启用闪光灯
+            scanOptions.setTorchEnabled(false);
+            scanOptions.setOrientationLocked(false);
+            scanOptions.addExtra(CaptureActivity.SCAN_COLOR, ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_red));
             scanOptions.setCaptureActivity(CaptureActivity.class);
             barcodeLauncher.launch(scanOptions);
         });

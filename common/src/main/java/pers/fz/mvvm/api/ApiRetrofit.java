@@ -60,10 +60,9 @@ public class ApiRetrofit {
 
     public static void printLog(final Request request, final Response response) {
         LogUtil.show(TAG, "--------------------Request Start--------------------");
-
         LogUtil.show(TAG, "Request Method：" + request.method());
         LogUtil.show(TAG, "Request Url：" + request.url());
-        LogUtil.show(TAG, "Request Headers：" + request.headers().toString());
+        LogUtil.show(TAG, "Request Headers：" + request.headers());
         try {
             String contentType = request.header("Content-Type");
             if (contentType == null || !contentType.contains("multipart/form-data")) {
@@ -73,7 +72,7 @@ public class ApiRetrofit {
             LogUtil.show(TAG, "Request parse error");
         }
         try {
-            LogUtil.show(TAG, "Response Headers：" + response.headers().toString());
+            LogUtil.show(TAG, "Response Headers：" + response.headers());
             ResponseBody responseBody = response.peekBody(1024 * 1024);
             LogUtil.show(TAG, "Response Body：" + responseBody.string());
         } catch (Exception e) {
