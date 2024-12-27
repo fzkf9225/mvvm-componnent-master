@@ -155,6 +155,7 @@ afterEvaluate {
     publishing {
         publications {
             plugin(MavenPublication) {
+                from components.release
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'pers.fz.mvvm'
                 artifactId = 'common'

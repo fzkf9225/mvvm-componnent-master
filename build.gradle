@@ -17,6 +17,6 @@ plugins {
     alias(libs.plugins.google.hilt.android) apply false
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

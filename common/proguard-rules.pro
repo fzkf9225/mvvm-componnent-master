@@ -470,6 +470,5 @@
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
-#保留注释
--keepattributes *Annotation*
--keepattributes *Comments*
+# 保留注释
+-keepattributes *Annotation*,SourceFile,LineNumberTable,LocalVariableTable
