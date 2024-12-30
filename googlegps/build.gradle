@@ -60,14 +60,27 @@ dependencies {
 //# 如果你的项目使用了gradle wrapper组件的话请使用以下命令
 //# ./gradlew publish
 apply plugin: 'maven-publish'
+
+// 任务注册：生成源代码 JAR
+tasks.register('androidSourcesJar', Jar) {
+    archiveClassifier.set("sources") // 设置 classifier 为 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar // 将源码 JAR 添加到 artifacts
+}
+
 afterEvaluate {
     publishing {
         publications {
             plugin(MavenPublication) {
+                // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
+                artifact(androidSourcesJar)
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.titan.googlegps'
                 artifactId = 'googlegps'
-                version = '1.0.0'
+                version = '1.0.1'
             }
         }
         repositories {
