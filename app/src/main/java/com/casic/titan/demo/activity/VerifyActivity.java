@@ -16,14 +16,10 @@ import com.casic.titan.demo.viewmodel.VerifyViewModel;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.functions.Action;
-import io.reactivex.rxjava3.functions.Consumer;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.verify.VerifyResult;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 @AndroidEntryPoint
@@ -42,9 +38,9 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        getLifecycle().addObserver(binding.formImage);
-        getLifecycle().addObserver(binding.formVideo);
-        getLifecycle().addObserver(binding.formFile);
+        binding.formImage.bindLifecycle(this);
+        binding.formVideo.bindLifecycle(this);
+        binding.formFile.bindLifecycle(this);
         binding.editHobby.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,11 +102,4 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
         binding.setData(new Person("张三", "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getLifecycle().removeObserver(binding.formImage);
-        getLifecycle().removeObserver(binding.formVideo);
-        getLifecycle().removeObserver(binding.formFile);
-    }
 }

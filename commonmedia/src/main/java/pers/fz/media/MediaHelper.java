@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import pers.fz.media.dialog.MediaProgressDialog;
 import pers.fz.media.dialog.OpenFileDialog;
@@ -78,13 +80,13 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public final static int DEFAULT_ALBUM_MAX_COUNT = 9;
     /**
-     * 最大可选的视频数量，默认1张
+     * 最大可选的视频数量，默认9张
      */
-    public final static int DEFAULT_VIDEO_MAX_COUNT = 1;
+    public final static int DEFAULT_VIDEO_MAX_COUNT = 9;
     /**
-     * 最大可选的音频数量，默认1张
+     * 最大可选的音频数量，默认9张
      */
-    public final static int DEFAULT_AUDIO_MAX_COUNT = 1;
+    public final static int DEFAULT_AUDIO_MAX_COUNT = 9;
     /**
      * 最大可选的文件数量
      */
@@ -99,6 +101,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public final static int DEFAULT_TYPE = 0;
 
     private final MediaBuilder mediaBuilder;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     //旧版文件
     private ActivityResultLauncher<String[]> imageMuLtiSelectorLauncher = null;
     private ActivityResultLauncher<String[]> imageSingleSelectorLauncher = null;
@@ -123,11 +127,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
-        if (mediaBuilder.getFragment() == null) {
-            mediaBuilder.getActivity().getLifecycle().addObserver(this);
-        } else {
-            mediaBuilder.getFragment().getLifecycle().addObserver(this);
+        if (this.mediaBuilder.getLifecycleOwner() == null) {
+            return;
         }
+        this.mediaBuilder.getLifecycleOwner().getLifecycle().addObserver(this);
     }
 
     public MediaBuilder getMediaBuilder() {
@@ -137,90 +140,54 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onCreate(owner);
-        if (mediaBuilder.getFragment() == null) {
-            //新选择器，兼容性不是很好
-            if (mediaBuilder.getImageMaxSelectedCount() > 1) {
-                pickMuLtiImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()),
-                        new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
-            } else {
-                pickImageSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
-            }
-            if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
-                pickMuLtiVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()),
-                        new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
-            } else {
-                pickVideoSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(MediaTypeEnum.VIDEO, mutableLiveData));
-            }
-            //传统选择器
-            imageMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
-            imageSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
-            //传统选择器
-            audioMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.AUDIO, mutableLiveData));
-            audioSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.AUDIO, mutableLiveData));
-            //传统选择器
-            fileMuLtiSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.FILE, mutableLiveData));
-            fileSingleSelectorLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.FILE, mutableLiveData));
-
-            //权限监听
-            permissionLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeCameraUri(mediaBuilder),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            videoLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
-            videoMultiLauncher = mediaBuilder.getActivity().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
-            shootLauncher = mediaBuilder.getActivity().registerForActivityResult(new TakeVideoUri(mediaBuilder, mediaBuilder.getMaxVideoTime()),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+        ActivityResultRegistry registry;
+        if (owner instanceof ComponentActivity) {
+            registry = ((ComponentActivity) owner).getActivityResultRegistry();
+        } else if (owner instanceof Fragment) {
+            registry = ((Fragment) owner).requireActivity().getActivityResultRegistry();
         } else {
-            //新选择器，兼容性不是很好
-            if (mediaBuilder.getImageMaxSelectedCount() > 1) {
-                pickMuLtiImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()),
-                        new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
-            } else {
-                pickImageSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
-            }
-            if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
-                pickMuLtiVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()),
-                        new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
-            } else {
-                pickVideoSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.PickVisualMedia(),
-                        new SingleSelectorCallBack(MediaTypeEnum.VIDEO, mutableLiveData));
-            }
-            //注册图片选择框监听
-            imageMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE, mutableLiveData));
-            imageSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
-            //传统选择器
-            audioMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.AUDIO, mutableLiveData));
-            audioSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.AUDIO, mutableLiveData));
-            //传统选择器
-            fileMuLtiSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.FILE, mutableLiveData));
-            fileSingleSelectorLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new SingleSelectorCallBack(MediaTypeEnum.FILE, mutableLiveData));
-            //权限监听
-            permissionLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
-            cameraLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeCameraUri(mediaBuilder),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
-            videoMultiLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenMultipleDocuments(),
-                    new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO, mutableLiveData));
-            videoLauncher = mediaBuilder.getFragment().registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
-            shootLauncher = mediaBuilder.getFragment().registerForActivityResult(new TakeVideoUri(mediaBuilder, mediaBuilder.getMaxVideoTime()),
-                    new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+            throw new RuntimeException("请使用Activity或Fragment的lifecycle对象");
         }
+        //新选择器，兼容性不是很好,register中的key不能重复，如果重复则默认为同一个因此当你一个页面有多个实例的时候就会有问题
+        if (mediaBuilder.getImageMaxSelectedCount() > 1) {
+            pickMuLtiImageSelectorLauncher = registry.register("pickMuLtiImageSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getImageMaxSelectedCount()),
+                    new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE));
+        }
+        pickImageSelectorLauncher = registry.register("pickImageSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.PickVisualMedia(),
+                new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
+        if (mediaBuilder.getVideoMaxSelectedCount() > 1) {
+            pickMuLtiVideoSelectorLauncher = registry.register("pickMuLtiVideoSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.PickMultipleVisualMedia(mediaBuilder.getVideoMaxSelectedCount()),
+                    new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO));
+        }
+        pickVideoSelectorLauncher = registry.register("pickVideoSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.PickVisualMedia(),
+                new SingleSelectorCallBack(MediaTypeEnum.VIDEO, mutableLiveData));
+
+        //传统选择器
+        imageMuLtiSelectorLauncher = registry.register("imageMuLtiSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenMultipleDocuments(),
+                new MultiSelectorCallBack(this, MediaTypeEnum.IMAGE));
+        imageSingleSelectorLauncher = registry.register("imageSingleSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenDocument(),
+                new SingleSelectorCallBack(MediaTypeEnum.IMAGE, mutableLiveData));
+        //传统选择器
+        audioMuLtiSelectorLauncher = registry.register("audioMuLtiSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenMultipleDocuments(),
+                new MultiSelectorCallBack(this, MediaTypeEnum.AUDIO));
+        audioSingleSelectorLauncher = registry.register("audioSingleSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenDocument(),
+                new SingleSelectorCallBack(MediaTypeEnum.AUDIO, mutableLiveData));
+        //传统选择器
+        fileMuLtiSelectorLauncher = registry.register("fileMuLtiSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenMultipleDocuments(),
+                new MultiSelectorCallBack(this, MediaTypeEnum.FILE));
+        fileSingleSelectorLauncher = registry.register("fileSingleSelector" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenDocument(),
+                new SingleSelectorCallBack(MediaTypeEnum.FILE, mutableLiveData));
+
+        //权限监听
+        permissionLauncher = registry.register("permission" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
+        cameraLauncher = registry.register("camera" + UUID.randomUUID().toString(), owner, new TakeCameraUri(mediaBuilder),
+                new CameraCallBack(mediaBuilder, MediaTypeEnum.IMAGE, mutableLiveData));
+        videoLauncher = registry.register("video" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenDocument(),
+                new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
+        videoMultiLauncher = registry.register("videoMulti" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.OpenMultipleDocuments(),
+                new MultiSelectorCallBack(this, MediaTypeEnum.VIDEO));
+        shootLauncher = registry.register("shoot" + UUID.randomUUID().toString(), owner, new TakeVideoUri(mediaBuilder, mediaBuilder.getMaxVideoTime()),
+                new CameraCallBack(mediaBuilder, MediaTypeEnum.VIDEO, mutableLiveData));
     }
 
     @Override
@@ -278,20 +245,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     }
 
-    public void unregister(Fragment fragment) {
-        fragment.getLifecycle().addObserver(this);
-    }
-
-    public void unregister(ComponentActivity activity) {
-        activity.getLifecycle().addObserver(this);
-    }
-
     public void unregister() {
-        if (mediaBuilder.getFragment() == null) {
-            mediaBuilder.getActivity().getLifecycle().removeObserver(this);
-        } else {
-            mediaBuilder.getFragment().getLifecycle().removeObserver(this);
+        if (mediaBuilder.getLifecycleOwner() == null) {
+            return;
         }
+        mediaBuilder.getLifecycleOwner().getLifecycle().removeObserver(this);
     }
 
     /**
@@ -480,7 +438,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     }
                     mutableLiveDataCompress.postValue(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE.getMediaType()));
                 } else {
-                    ContentResolver contentResolver = mediaBuilder.getActivity().getContentResolver();
+                    ContentResolver contentResolver = mediaBuilder.getContext().getContentResolver();
                     Cursor cursor = contentResolver.query(srcUriList.get(msg.what), null, null, null, null);
                     double size = -1;
                     if (cursor != null && cursor.moveToFirst()) {
@@ -494,7 +452,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         message.what = msg.what + 1;
                         imageCompressHandler.sendMessage(message);
                     } else {
-                        ImgCompressor.getInstance(mediaBuilder.getActivity())
+                        ImgCompressor.getInstance(mediaBuilder.getContext())
                                 .withListener(new ImageCompressListener(msg.what, srcUriList.size())).
                                 starCompress(srcUriList.get(msg.what), mediaBuilder.getImageOutPutPath(), 720, 1280,
                                         mediaBuilder.getImageQualityCompress());
@@ -573,8 +531,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 // 从文件中创建uri
                 mutableLiveDataWaterMark.postValue(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
             } else { //兼容android7.0 使用共享文件的形式
-                mutableLiveDataWaterMark.postValue(new MediaBean(List.of(FileProvider.getUriForFile(mediaBuilder.getActivity(),
-                        mediaBuilder.getActivity().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
+                mutableLiveDataWaterMark.postValue(new MediaBean(List.of(FileProvider.getUriForFile(mediaBuilder.getContext(),
+                        mediaBuilder.getContext().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
             }
             if (bitmapNew.isRecycled()) {
                 bitmapNew.recycle();
@@ -767,8 +725,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             }
             Uri resultUri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                resultUri = FileProvider.getUriForFile(mediaBuilder.getActivity(),
-                        mediaBuilder.getActivity().getPackageName() + ".FileProvider", outPath);
+                resultUri = FileProvider.getUriForFile(mediaBuilder.getContext(),
+                        mediaBuilder.getContext().getPackageName() + ".FileProvider", outPath);
             } else {
                 resultUri = Uri.fromFile(outPath);
             }
@@ -823,13 +781,13 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     String fileName = MediaUtil.getNoRepeatFileName(mediaBuilder.getVideoOutPutPath(), "VIDEO_", ".mp4");
                     File outputFile = new File(mediaBuilder.getVideoOutPutPath(), fileName + ".mp4");
                     if (mediaBuilder.getVideoQuality() == VIDEO_HIGH) {
-                        VideoCompress.compressVideoHigh(mediaBuilder.getActivity(),
+                        VideoCompress.compressVideoHigh(mediaBuilder.getContext(),
                                 uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     } else if (mediaBuilder.getVideoQuality() == VIDEO_MEDIUM) {
-                        VideoCompress.compressVideoMedium(mediaBuilder.getActivity(),
+                        VideoCompress.compressVideoMedium(mediaBuilder.getContext(),
                                 uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     } else {
-                        VideoCompress.compressVideoLow(mediaBuilder.getActivity(),
+                        VideoCompress.compressVideoLow(mediaBuilder.getContext(),
                                 uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
                     }
                 }
@@ -929,11 +887,11 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         if (TextUtils.isEmpty(message)) {
             return;
         }
-        mediaBuilder.getActivity().runOnUiThread(() -> Toast.makeText(mediaBuilder.getActivity(), message, Toast.LENGTH_SHORT).show());
+        mainHandler.post(() -> Toast.makeText(mediaBuilder.getContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     private void showLoading(String dialogMessage) {
-        mediaBuilder.getActivity().runOnUiThread(() ->
+        mainHandler.post(() ->
                 MediaProgressDialog.getInstance(getMediaBuilder().getContext())
                         .setCanCancel(false)
                         .setMessage(dialogMessage)
@@ -942,13 +900,13 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     public void refreshLoading(String dialogMessage) {
-        mediaBuilder.getActivity().runOnUiThread(() ->
+        mainHandler.post(() ->
                 MediaProgressDialog.getInstance(getMediaBuilder().getContext())
                         .refreshMessage(dialogMessage));
     }
 
     public void hideLoading() {
-        mediaBuilder.getActivity().runOnUiThread(() -> MediaProgressDialog.getInstance(getMediaBuilder().getContext()).dismiss());
+        mainHandler.post(() -> MediaProgressDialog.getInstance(getMediaBuilder().getContext()).dismiss());
     }
 
 }

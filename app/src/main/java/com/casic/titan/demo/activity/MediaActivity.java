@@ -28,7 +28,7 @@ import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.listener.MediaListener;
-import pers.fz.media.module.MediaActivityComponent;
+import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
@@ -43,7 +43,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     private VideoAddAdapter videoAddAdapter;
 
     @Inject
-    @MediaActivityComponent
+    @MediaModule.ActivityMediaHelper
     MediaHelper mediaHelper;
 
     private final List<String> audioList = new ArrayList<>();
@@ -208,13 +208,5 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     @Override
     public void videoAdd(View view) {
         mediaHelper.openShootDialog(view, OpenShootDialog.CAMERA_ALBUM);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mediaHelper != null) {
-            mediaHelper.unregister(this);
-        }
     }
 }

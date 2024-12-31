@@ -29,6 +29,7 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import pers.fz.media.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenFileDialog;
@@ -43,7 +44,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormFile extends ConstraintLayout implements FileAddAdapter.FileClearListener, DefaultLifecycleObserver {
+public class FormFile extends ConstraintLayout implements FileAddAdapter.FileClearListener {
     protected String labelString;
     protected int bgColor = 0xFFF1F3F2;
     protected boolean required = false;
@@ -61,6 +62,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     private float radius = 5;
 
     private FormFileBinding binding;
+
     public FormFile(Context context) {
         super(context);
         initAttr(null);
@@ -88,19 +90,19 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
             emptyTextColor = typedArray.getColor(R.styleable.FormImage_emptyTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            fileAddSrc = typedArray.getResourceId(R.styleable.FormImage_file_add_src,R.mipmap.ic_add_theme_color);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius,  DensityUtil.dp2px(getContext(),4));
+            fileAddSrc = typedArray.getResourceId(R.styleable.FormImage_file_add_src, R.mipmap.ic_add_theme_color);
+            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, DensityUtil.dp2px(getContext(), 4));
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(),14));
-            formTextSize = typedArray.getDimension(R.styleable.FormImage_formTextSize, DensityUtil.sp2px(getContext(),14));
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
+            formTextSize = typedArray.getDimension(R.styleable.FormImage_formTextSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
             rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             emptyTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
-            radius =  DensityUtil.dp2px(getContext(),4);
+            radius = DensityUtil.dp2px(getContext(), 4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -110,8 +112,8 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     protected void init() {
         binding = FormFileBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(),12),
-                getPaddingEnd(), DensityUtil.dp2px(getContext(),12));
+        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(), 12),
+                getPaddingEnd(), DensityUtil.dp2px(getContext(), 12));
         binding.imageAdd.setImageResource(fileAddSrc);
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         binding.tvLabel.setText(labelString);
@@ -126,7 +128,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         binding.tvEmpty.setVisibility(View.VISIBLE);
         binding.imageAdd.setOnClickListener(v -> {
             if (maxCount > 0 && fileAddAdapter.getList().size() >= maxCount) {
-                Toast.makeText(getContext(),"最多只可选择" + maxCount + "个附件",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "最多只可选择" + maxCount + "个附件", Toast.LENGTH_SHORT).show();
                 return;
             }
             mediaHelper.openFileDialog(v, "从文件管理器中选择", OpenFileDialog.FILE);
@@ -176,7 +178,6 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         fileAddAdapter.setList(images);
         fileAddAdapter.notifyDataSetChanged();
         binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
-
     }
 
     public void setLabel(String text) {
@@ -193,10 +194,9 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
     public MediaHelper getMediaHelper() {
         return mediaHelper;
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void initFragment(Fragment fragment) {
-        mediaHelper = new MediaBuilder((ComponentActivity) getContext())
+    public void bindLifecycle(LifecycleOwner lifecycleOwner){
+        mediaHelper = new MediaBuilder(getContext())
+                .bindLifeCycle(lifecycleOwner)
                 .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setMediaListener(new MediaListener() {
@@ -221,7 +221,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
                     }
                 })
                 .builder();
-        mediaHelper.getMutableLiveData().observe(fragment, mediaBean -> {
+        mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
             AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
             fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
             fileAddAdapter.notifyDataSetChanged();
@@ -229,55 +229,8 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         });
     }
 
-    @Override
-    public void onCreate(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onCreate(owner);
-        if (getContext() instanceof ComponentActivity) {
-            mediaHelper = new MediaBuilder((ComponentActivity) getContext())
-                    .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                    .setChooseType(MediaHelper.PICK_TYPE)
-                    .setWaterMark("金光林务")
-                    .setMediaListener(new MediaListener() {
-                        @Override
-                        public int onSelectedFileCount() {
-                            return fileAddAdapter.getList().size();
-                        }
-
-                        @Override
-                        public int onSelectedAudioCount() {
-                            return fileAddAdapter.getList().size();
-                        }
-
-                        @Override
-                        public int onSelectedImageCount() {
-                            return fileAddAdapter.getList().size();
-                        }
-
-                        @Override
-                        public int onSelectedVideoCount() {
-                            return fileAddAdapter.getList().size();
-                        }
-                    })
-                    .builder();
-            mediaHelper.getMutableLiveData().observe(owner, mediaBean -> {
-                AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-                fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
-                fileAddAdapter.notifyDataSetChanged();
-                binding.tvEmpty.setVisibility((fileAddAdapter.getList() == null || fileAddAdapter.getList().isEmpty()) ? View.VISIBLE : View.GONE);
-            });
-        }
-    }
-
     public FormFileBinding getBinding() {
         return binding;
-    }
-
-    @Override
-    public void onDestroy(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onDestroy(owner);
-        if (mediaHelper != null) {
-            mediaHelper.unregister();
-        }
     }
 
 }

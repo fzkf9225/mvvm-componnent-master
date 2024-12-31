@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import androidx.activity.ComponentActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +28,8 @@ public class MediaBuilder {
      * 视频压缩质量
      */
     private int videoQuality = MediaHelper.VIDEO_LOW;
+
+    private LifecycleOwner lifecycleOwner;
     /**
      * 最大相册选择数量
      */
@@ -46,11 +50,9 @@ public class MediaBuilder {
      * 图片压缩大小限制，默认200
      */
     public int imageQualityCompress = 200;
-    private final ComponentActivity mActivity;
 
     private Context mContext;
     private String waterMark;
-    private Fragment fragment;
     /**
      * 是否将拍摄的图片和视频保存到公共目录，默认false
      */
@@ -67,19 +69,8 @@ public class MediaBuilder {
     private MediaListener mediaListener;
     private int chooseType = MediaHelper.DEFAULT_TYPE;
 
-    public MediaBuilder(@NotNull ComponentActivity mActivity) {
-        this.mActivity = mActivity;
-        setContext(this.mActivity);
-    }
-
-    public MediaBuilder(@NotNull Fragment fragment) {
-        this.mActivity = fragment.getActivity();
-        this.fragment = fragment;
-        setContext(this.fragment.requireContext());
-    }
-
-    public Fragment getFragment() {
-        return fragment;
+    public MediaBuilder(@NotNull Context context) {
+        this.mContext = context;
     }
 
     public int getAudioMaxSelectedCount() {
@@ -115,6 +106,11 @@ public class MediaBuilder {
      */
     public MediaBuilder setDefaultImageSubPath(String subPath) {
         imageSubPath = subPath;
+        return this;
+    }
+
+    public MediaBuilder bindLifeCycle(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
         return this;
     }
 
@@ -175,15 +171,15 @@ public class MediaBuilder {
     public String getImageOutPutPath() {
         if (savePublicPath) {
             if (TextUtils.isEmpty(imageSubPath)) {
-                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mActivity) + File.separator + "image";
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mContext) + File.separator + "image";
             } else {
                 return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageSubPath;
             }
         } else {
             if (TextUtils.isEmpty(imageSubPath)) {
-                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "image";
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "image";
             } else {
-                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + imageSubPath;
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + imageSubPath;
             }
         }
     }
@@ -191,15 +187,15 @@ public class MediaBuilder {
     public String getVideoOutPutPath() {
         if (savePublicPath) {
             if (TextUtils.isEmpty(videoSubPath)) {
-                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mActivity) + File.separator + "video";
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mContext) + File.separator + "video";
             } else {
                 return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageSubPath;
             }
         } else {
             if (TextUtils.isEmpty(videoSubPath)) {
-                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "video";
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "video";
             } else {
-                return mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + videoSubPath;
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + videoSubPath;
             }
         }
     }
@@ -256,6 +252,10 @@ public class MediaBuilder {
         return this;
     }
 
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+
     public int getMaxVideoTime() {
         return maxVideoTime;
     }
@@ -282,10 +282,6 @@ public class MediaBuilder {
 
     public int getVideoMaxSelectedCount() {
         return videoMaxSelectedCount;
-    }
-
-    public ComponentActivity getActivity() {
-        return mActivity;
     }
 
     public MediaHelper builder() {

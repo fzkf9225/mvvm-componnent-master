@@ -14,9 +14,9 @@ import com.gyf.immersionbar.ImmersionBar;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
@@ -27,9 +27,13 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
 @AndroidEntryPoint
 public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> {
     private final String TAG = this.getClass().getSimpleName();
-    private MediaHelper mediaHelper;
     @Inject
     UserRouterService userRouterService;
+
+    @Inject
+    @MediaModule.FragmentMediaHelper
+    MediaHelper mediaHelper;
+
     @Override
     protected int getLayoutId() {
         return R.layout.me_fragment;
@@ -38,12 +42,10 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
     @Override
     protected void initView(Bundle savedInstanceState) {
         ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true,0.2f)
+                .autoStatusBarDarkModeEnable(true, 0.2f)
                 .statusBarColor(pers.fz.mvvm.R.color.themeColor)
                 .init();
-        mediaHelper = new MediaBuilder(this)
-                .setImageMaxSelectedCount(1)
-                .builder();
+        mediaHelper.getMediaBuilder().setImageMaxSelectedCount(1);
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
 //            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
 //                if (mediaBean.getMediaList() == null || mediaBean.getMediaList().size() == 0) {
@@ -60,13 +62,13 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
             if (UserAccountHelper.isLogin()) {
                 return;
             }
-            userRouterService.toLogin(requireContext(),loginLauncher);
+            userRouterService.toLogin(requireContext(), loginLauncher);
         });
         binding.tvSetting.setOnClickListener(v -> startActivity(SettingActivity.class));
         binding.tvModifyPassword.setOnClickListener(v -> startActivity(ModifyPasswordActivity.class));
         binding.headImg.setOnClickListener(v -> {
             if (!UserAccountHelper.isLogin()) {
-                userRouterService.toLogin(requireContext(),loginLauncher);
+                userRouterService.toLogin(requireContext(), loginLauncher);
             } else {
                 new OpenImageDialog(requireActivity())
                         .setMediaType(OpenImageDialog.CAMERA_ALBUM)
@@ -76,6 +78,7 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
             }
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -92,13 +95,5 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
      */
     private void checkUserInfo() {
 
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mediaHelper != null) {
-            mediaHelper.unregister(this);
-        }
     }
 }

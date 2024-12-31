@@ -6,6 +6,8 @@ import android.view.View;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.databinding.FeedbackBinding;
 
+import javax.inject.Inject;
+
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
@@ -23,7 +25,9 @@ import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener {
     private ImageAddAdapter imageAddAdapter;
-    private MediaHelper mediaHelper;
+    @Inject
+    MediaHelper mediaHelper;
+
     @Override
     protected int getLayoutId() {
         return R.layout.feedback;
@@ -36,11 +40,6 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        //初始化一些媒体配置
-        mediaHelper = new MediaBuilder(this)
-                .setImageMaxSelectedCount(9)
-                .setImageQualityCompress(200)
-                .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
@@ -82,13 +81,5 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
                 .setOnOpenImageClickListener(mediaHelper)
                 .builder()
                 .show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mediaHelper != null) {
-            mediaHelper.unregister(this);
-        }
     }
 }

@@ -8,17 +8,23 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityMediaCompressBinding;
 import com.casic.titan.demo.viewmodel.MediaCompressViewModel;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.base.BaseActivity;
+
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> {
     private UseCase useCase;
-    private MediaHelper mediaHelper;
+    @Inject
+    @MediaModule.ActivityMediaHelper
+    MediaHelper mediaHelper;
 
     @Override
     protected int getLayoutId() {
@@ -49,11 +55,9 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
 
-        mediaHelper = new MediaBuilder(this)
+        mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(1)
-                .setImageQualityCompress(200)
-                .setVideoQuality(MediaHelper.VIDEO_MEDIUM)
-                .builder();
+                .setVideoQuality(MediaHelper.VIDEO_MEDIUM);
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
@@ -73,11 +77,4 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mediaHelper != null) {
-            mediaHelper.unregister(this);
-        }
-    }
 }

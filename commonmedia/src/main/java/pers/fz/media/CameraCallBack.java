@@ -54,7 +54,7 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
      * @return
      */
     public boolean isFileUriExists(Uri uri) {
-        ContentResolver contentResolver = mediaBuilder.getActivity().getContentResolver();
+        ContentResolver contentResolver = mediaBuilder.getContext().getContentResolver();
         InputStream inputStream = null;
         try {
             inputStream = contentResolver.openInputStream(uri);

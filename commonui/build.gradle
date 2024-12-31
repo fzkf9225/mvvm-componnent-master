@@ -102,10 +102,10 @@ afterEvaluate {
             plugin(MavenPublication) {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
-                artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
+                artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.titan.commonui'
                 artifactId = 'commonui'
-                version = '1.3.6'
+                version = '1.3.7'
             }
         }
         repositories {

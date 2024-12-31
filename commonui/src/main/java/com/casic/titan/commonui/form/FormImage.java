@@ -26,6 +26,7 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import pers.fz.media.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
@@ -42,7 +43,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, DefaultLifecycleObserver {
+public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener {
     protected String labelString;
     protected int bgColor;
     protected boolean required = false;
@@ -236,9 +237,9 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         imageAddAdapter.notifyDataSetChanged();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void initFragment(Fragment fragment) {
-        this.mediaHelper = new MediaBuilder(fragment)
+    public void bindLifecycle(LifecycleOwner lifecycleOwner){
+        mediaHelper = new MediaBuilder(getContext())
+                .bindLifeCycle(lifecycleOwner)
                 .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setMediaListener(new MediaListener() {
@@ -265,7 +266,8 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 .setImageQualityCompress(compressImageSize)
                 .builder();
         //图片、视频选择结果回调通知
-        mediaHelper.getMutableLiveData().observe(fragment, mediaBean -> {
+        mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
+            LogUtil.show(MediaHelper.TAG,"FormImage");
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());
@@ -276,7 +278,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 }
             }
         });
-        mediaHelper.getMutableLiveDataCompress().observe(fragment, mediaBean -> {
+        mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
@@ -285,69 +287,8 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onCreate(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onCreate(owner);
-        if (getContext() instanceof ComponentActivity) {
-            mediaHelper = new MediaBuilder((ComponentActivity) getContext())
-                    .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                    .setChooseType(MediaHelper.PICK_TYPE)
-                    .setMediaListener(new MediaListener() {
-                        @Override
-                        public int onSelectedFileCount() {
-                            return 0;
-                        }
-
-                        @Override
-                        public int onSelectedAudioCount() {
-                            return 0;
-                        }
-
-                        @Override
-                        public int onSelectedImageCount() {
-                            return imageAddAdapter.getList().size();
-                        }
-
-                        @Override
-                        public int onSelectedVideoCount() {
-                            return 0;
-                        }
-                    })
-                    .setImageQualityCompress(compressImageSize)
-                    .builder();
-            //图片、视频选择结果回调通知
-            mediaHelper.getMutableLiveData().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
-                    if (compress) {
-                        mediaHelper.startCompressImage(mediaBean.getMediaList());
-                    } else {
-                        imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                        imageAddAdapter.notifyDataSetChanged();
-                        AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-                    }
-                }
-            });
-            mediaHelper.getMutableLiveDataCompress().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
-                    imageAddAdapter.getList().addAll(mediaBean.getMediaList());
-                    imageAddAdapter.notifyDataSetChanged();
-                    AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-                }
-            });
-        }
-    }
-
     public FormImageBinding getBinding() {
         return binding;
-    }
-
-    @Override
-    public void onDestroy(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onDestroy(owner);
-        if (mediaHelper != null) {
-            mediaHelper.unregister();
-        }
     }
 
 }

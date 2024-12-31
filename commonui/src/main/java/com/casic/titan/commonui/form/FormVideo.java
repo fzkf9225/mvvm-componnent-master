@@ -27,6 +27,7 @@ import com.casic.titan.commonui.utils.AttachmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import pers.fz.media.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
@@ -44,7 +45,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormVideo extends ConstraintLayout implements VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener, DefaultLifecycleObserver{
+public class FormVideo extends ConstraintLayout implements VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
     protected String labelString;
     protected int bgColor;
     protected boolean required = false;
@@ -96,13 +97,13 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
             compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_LOW);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(),14));
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
-            radius =  DensityUtil.dp2px(getContext(),4);
+            radius = DensityUtil.dp2px(getContext(), 4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -119,8 +120,8 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
     protected void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setPadding(0, DensityUtil.dp2px(getContext(),12),
-                0, DensityUtil.dp2px(getContext(),12));
+        setPadding(0, DensityUtil.dp2px(getContext(), 12),
+                0, DensityUtil.dp2px(getContext(), 12));
         tvLabel = findViewById(R.id.tv_label);
         mRecyclerViewVideo = findViewById(R.id.mRecyclerViewImage);
         tvRequired = findViewById(R.id.tv_required);
@@ -140,7 +141,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewVideo.getLayoutParams();
         imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
         mRecyclerViewVideo.setLayoutParams(imageLayoutParams);
-        mRecyclerViewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(),4), 0x00000000));
+        mRecyclerViewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 4), 0x00000000));
         mRecyclerViewVideo.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
@@ -241,9 +242,9 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         videoAddAdapter.notifyDataSetChanged();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void initFragment(Fragment fragment) {
-        this.mediaHelper = new MediaBuilder(fragment)
+    public void bindLifecycle(LifecycleOwner lifecycleOwner){
+        mediaHelper = new MediaBuilder(getContext())
+                .bindLifeCycle(lifecycleOwner)
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaHelper.PICK_TYPE)
                 .setVideoQuality(compressVideo)
@@ -270,7 +271,8 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
                 })
                 .builder();
         //图片、视频选择结果回调通知
-        mediaHelper.getMutableLiveData().observe(fragment, mediaBean -> {
+        mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
+            LogUtil.show(MediaHelper.TAG,"FormVideo");
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
                 if (compress) {
                     mediaHelper.startCompressVideo(mediaBean.getMediaList());
@@ -281,7 +283,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
                 }
             }
         });
-        mediaHelper.getMutableLiveDataCompress().observe(fragment, mediaBean -> {
+        mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
@@ -289,67 +291,5 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
             }
         });
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onCreate(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onCreate(owner);
-        if (getContext() instanceof ComponentActivity) {
-            mediaHelper = new MediaBuilder((ComponentActivity) getContext())
-                    .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                    .setChooseType(MediaHelper.PICK_TYPE)
-                    .setVideoQuality(compressVideo)
-                    .setMediaListener(new MediaListener() {
-                        @Override
-                        public int onSelectedFileCount() {
-                            return 0;
-                        }
-
-                        @Override
-                        public int onSelectedAudioCount() {
-                            return 0;
-                        }
-
-                        @Override
-                        public int onSelectedImageCount() {
-                            return 0;
-                        }
-
-                        @Override
-                        public int onSelectedVideoCount() {
-                            return videoAddAdapter.getList().size();
-                        }
-                    })
-                    .builder();
-            //图片、视频选择结果回调通知
-            mediaHelper.getMutableLiveData().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
-                    if (compress) {
-                        mediaHelper.startCompressVideo(mediaBean.getMediaList());
-                    } else {
-                        videoAddAdapter.getList().addAll(mediaBean.getMediaList());
-                        videoAddAdapter.notifyDataSetChanged();
-                        AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-                    }
-                }
-            });
-            mediaHelper.getMutableLiveDataCompress().observe(owner, mediaBean -> {
-                if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
-                    videoAddAdapter.getList().addAll(mediaBean.getMediaList());
-                    videoAddAdapter.notifyDataSetChanged();
-                    AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onDestroy(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onDestroy(owner);
-        if (mediaHelper != null) {
-            mediaHelper.unregister();
-        }
-    }
-
 
 }
