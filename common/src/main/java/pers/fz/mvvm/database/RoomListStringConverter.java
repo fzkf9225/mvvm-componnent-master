@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * created by fz on 2024/11/6 10:52
- * describe:
+ * describe:room数据库字符串集合类型转换器
  */
 public class RoomListStringConverter {
     @TypeConverter

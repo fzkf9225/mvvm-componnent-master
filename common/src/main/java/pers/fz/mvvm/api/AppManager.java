@@ -1,5 +1,6 @@
 package pers.fz.mvvm.api;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -153,14 +154,15 @@ public class AppManager {
     /**
      * 检查手机上是否安装了指定的软件
      *
-     * @param context
+     * @param context 上下文
      * @param packageName：应用包名
-     * @return
+     * @return true代表安装，false代表未安装
      */
     public static boolean isInstalled(Context context, String packageName) {
         //获取PackageManager
         final PackageManager packageManager = context.getPackageManager();
         //获取所有已安装程序的包信息
+        @SuppressLint("QueryPermissionsNeeded")
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
         //用于存储所有已安装程序的包名
         List<String> packageNames = new ArrayList<String>();
@@ -225,8 +227,12 @@ public class AppManager {
         return false;
     }
 
-    public String getVersion(Context context)//获取版本号
-    {
+    /**
+     * 获取版本名称，String类型的版本名称
+     * @param context 上下文
+     * @return 版本名称，例如：1.0
+     */
+    public String getVersion(Context context) {
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.versionName;
@@ -236,8 +242,12 @@ public class AppManager {
         }
     }
 
-    public long getVersionCode(Context context)//获取版本号(内部识别号)
-    {
+    /**
+     * 获取app的版本号，int类型只
+     * @param context 上下文
+     * @return int类型的版本号
+     */
+    public long getVersionCode(Context context){
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -251,8 +261,12 @@ public class AppManager {
         }
     }
 
-    public int getAppIcon(Context context)//桌面图标
-    {
+    /**
+     * 获取app的桌面图标
+     * @param context 上下文
+     * @return 桌面图标资源id
+     */
+    public int getAppIcon(Context context){
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.applicationInfo.icon;
@@ -262,9 +276,12 @@ public class AppManager {
         }
     }
 
-    //获取app名称
-    public String getAppName(Context context)
-    {
+    /**
+     * 获取app的应用名称，也就是app模块的那个名字
+     * @param context 上下文
+     * @return app的桌面名称
+     */
+    public String getAppName(Context context) {
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return context.getPackageManager().getApplicationLabel(pi.applicationInfo).toString();

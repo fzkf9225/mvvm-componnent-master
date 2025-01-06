@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.activity.OnBackPressedCallback;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.gyf.immersionbar.BarHide;
@@ -51,7 +53,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
 
     @Override
     public void initView(Bundle savedInstanceState) {
-
+        getOnBackPressedDispatcher().addCallback(this,onBackPressedCallback);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         //是否可以滑动调整
         binding.videoPlayer.setIsTouchWiget(true);
         //设置返回按键功能
-        binding.videoPlayer.getBackButton().setOnClickListener(v -> onBackPressed());
+        binding.videoPlayer.getBackButton().setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.videoPlayer.startPlayLogic();
     }
 
@@ -112,17 +114,13 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         GSYVideoManager.releaseAllVideos();
     }
 
-    @Override
-    public void onBackPressed() {
-        //先返回正常状态
-//        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//            binding.videoPlayer.getFullscreenButton().performClick();
-//            return;
-//        }
-        //释放所有
-        binding.videoPlayer.setVideoAllCallBack(null);
-        super.onBackPressed();
-    }
+    protected OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            //释放所有
+            binding.videoPlayer.setVideoAllCallBack(null);
+        }
+    };
 
     public static void show(Context context, Bundle bundle) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);

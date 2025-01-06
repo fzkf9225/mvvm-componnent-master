@@ -221,9 +221,9 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
         capture.onSaveInstanceState(outState);
     }
 
-    @SuppressLint("MissingSuperCall")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         capture.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

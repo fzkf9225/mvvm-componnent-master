@@ -19,6 +19,7 @@ import java.util.Random;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.update.core.DownloadRetrofitFactory;
 import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
 import pers.fz.mvvm.util.update.util.DownloadUtil;
@@ -46,8 +47,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
             return;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //申请WRITE_EXTERNAL_STORAGE权限
                 ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         0x02);
@@ -55,7 +55,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
             }
         }
         if (downloadMap.contains(apkUrl)) {
-            Toast.makeText(mContext, "当前文件正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "新版本正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
         downloadMap.add(apkUrl);

@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by fz on 2017/12/28.
+ * updated by fz on 2024/12/28.
+ * describe:RecyclerView的通用ViewHolder，此次修改主要把单击和长按事件放在了ViewHolder中，减少滑动带来的资源消耗
  */
-
 public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
     private VDB binding;

@@ -21,11 +21,10 @@ import pers.fz.mvvm.R;
  * describe: tabLayout+viewpager侧滑fragment布局封装
  */
 public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseFragment<VM, VDB> {
-    public ViewPager2 mBaseViewPager;
+    protected ViewPager2 mBaseViewPager;
     protected TabLayout tabLayout;
-    public LinearLayout llTab;
-
-    public BaseViewPagerAdapter adapter;
+    protected LinearLayout llTab;
+    protected BaseViewPagerAdapter adapter;
 
     @Override
     protected int getLayoutId() {
@@ -47,7 +46,7 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
         tabLayout.setOverScrollMode(scrollMode);
     }
 
-    public int getCurrentItem() {
+    protected int getCurrentItem() {
         return mBaseViewPager.getCurrentItem();
     }
 

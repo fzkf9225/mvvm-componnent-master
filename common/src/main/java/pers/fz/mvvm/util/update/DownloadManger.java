@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.update.core.DownloadRetrofitFactory;
 
 
@@ -50,6 +51,11 @@ public class DownloadManger {
         return updateManger;
     }
 
+
+    public List<String> getDownloadMap() {
+        return downloadMap;
+    }
+
     /**
      * 下载文件
      *
@@ -62,11 +68,10 @@ public class DownloadManger {
             return Observable.error(new BaseException(BaseException.DOWNLOAD_URL_404_MSG, BaseException.DOWNLOAD_URL_404));
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //申请WRITE_EXTERNAL_STORAGE权限
                 ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        0x02);
+                        0x01);
                 return Observable.error(new BaseException(BaseException.DOWNLOAD_NOT_PERMISSION_MSG, BaseException.DOWNLOAD_NOT_PERMISSION));
             }
         }

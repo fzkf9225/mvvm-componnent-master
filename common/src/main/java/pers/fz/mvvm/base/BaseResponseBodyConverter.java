@@ -25,7 +25,7 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     private final TypeAdapter<T> adapter;
     private final Gson gson;
 
-    BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
+    public BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
         this.adapter = adapter;
         this.gson = gson;
     }

@@ -33,8 +33,17 @@ public interface ErrorService {
      */
     void toLogin(Context mContext, ActivityResultLauncher<Intent> activityResultLauncher);
 
+    /**
+     * activity跳转登录
+     * @param mContext fromActivity
+     * @param bundle 传递参数
+     * @param activityResultLauncher launcher
+     */
     void toLogin(Context mContext, Bundle bundle, ActivityResultLauncher<Intent> activityResultLauncher);
-
+    /**
+     * activity跳转登录
+     * @param context 上下文
+     */
     void toLogin(Context context);
 
     void toLogin(Context context,Bundle bundle);
@@ -44,8 +53,16 @@ public interface ErrorService {
      */
     boolean hasPermission(String errorCode);
 
+    /**
+     * 跳转到无权限页面目标页，大部分是跳转到登录页
+     * @param mContext 上下文
+     * @param activityResultLauncher launcher
+     */
     void toNoPermission(Context mContext, ActivityResultLauncher<Intent> activityResultLauncher);
-
+    /**
+     * 跳转到无权限页面目标页，大部分是跳转到登录页
+     * @param context 上下文
+     */
     void toNoPermission(Context context);
     /**
      * 崩溃日志
@@ -53,6 +70,10 @@ public interface ErrorService {
      */
     void uploadErrorInfo(String errorInfo);
 
+    /**
+     * app主页Activity，因为登录页在其他模块，这个主要是其他子模块使用
+     * @return app主页Activity
+     */
     Class<?> getMainActivity();
     /**
      * 获取用户token
@@ -66,6 +87,10 @@ public interface ErrorService {
      */
     String getRefreshToken();
 
+    /**
+     * 默认的请求头
+     * @return Map请求头
+     */
     Map<String,String> initHeaderMap();
 
 }

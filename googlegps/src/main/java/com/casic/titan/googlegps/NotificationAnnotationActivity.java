@@ -22,6 +22,7 @@ package com.casic.titan.googlegps;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.casic.titan.googlegps.common.slf4j.Logs;
@@ -39,14 +40,15 @@ public class NotificationAnnotationActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        getOnBackPressedDispatcher().addCallback(this,onBackPressedCallback);
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
+    protected OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            finish();
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

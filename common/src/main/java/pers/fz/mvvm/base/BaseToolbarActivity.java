@@ -16,11 +16,6 @@ import pers.fz.mvvm.R;
  */
 public abstract class BaseToolbarActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseActivity<VM, VDB> {
 
-    @Override
-    protected boolean hasToolBar() {
-        return true;
-    }
-
     /**
      * 给toolbar添加菜单
      *

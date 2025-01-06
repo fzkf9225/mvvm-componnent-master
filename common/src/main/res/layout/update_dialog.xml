@@ -29,7 +29,7 @@
             app:layout_constraintTop_toBottomOf="@+id/image_bg"
             android:background="@mipmap/icon_gx_bottom">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/updateTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="是否更新到1.0.1" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/updateMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

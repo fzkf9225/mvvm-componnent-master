@@ -1,5 +1,7 @@
 package pers.fz.mvvm.base;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -41,7 +43,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     }
 
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NotNull Annotation[] annotations,
+    public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NonNull @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
         return new BaseResponseBodyConverter<>(gson,adapter);
@@ -49,7 +51,7 @@ public final class BaseConverterFactory extends Converter.Factory {
 
     @Override
     public Converter<?, RequestBody> requestBodyConverter(@NotNull Type type,
-                                                          @NotNull Annotation[] parameterAnnotations, @NotNull Annotation[] methodAnnotations, Retrofit retrofit) {
+                                                          @NonNull @NotNull Annotation[] parameterAnnotations, @NonNull @NotNull Annotation[] methodAnnotations, @NonNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
         return new BaseRequestBodyConverter<>(gson, adapter);
     }

@@ -26,14 +26,35 @@ import pers.fz.mvvm.repository.RoomRepositoryImpl;
  * describe:
  */
 public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
-
+    /**
+     * 存储库管理
+     */
     private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
+    /**
+     * 查询参数，map集合
+     */
     private final Map<String, Object> queryParams;
-
+    /**
+     * 关联模糊搜索的字段名集合
+     */
     private final Set<String> keywordsKey;
+    /**
+     * 关键字
+     */
     private final String keywords;
+    /**
+     * 排序字段名，直接写字段名就行
+     */
     private String orderBy;
 
+    /**
+     * 构造方法
+     * @param roomRepositoryImpl repository管理
+     * @param queryParams 查询参数，map集合
+     * @param keywordsKey 关键字集合，模糊搜索关键词key，直接写字段名即可
+     * @param keywords 关键字，上面是关联的key集合，这里是具体的搜索关键字
+     * @param orderBy 排序字段名，直接写字段名就行
+     */
     public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                               Map<String, Object> queryParams,
                               Set<String> keywordsKey,
@@ -45,7 +66,13 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
         this.keywordsKey = keywordsKey;
         this.orderBy = orderBy;
     }
-
+    /**
+     * 构造方法
+     * @param roomRepositoryImpl repository管理
+     * @param queryParams 查询参数，map集合
+     * @param keywordsKey 关键字集合，模糊搜索关键词key，直接写字段名即可
+     * @param keywords 关键字，上面是关联的key集合，这里是具体的搜索关键字
+     */
     public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
                               Map<String, Object> queryParams,
                               Set<String> keywordsKey,

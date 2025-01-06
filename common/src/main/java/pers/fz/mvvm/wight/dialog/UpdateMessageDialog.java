@@ -128,7 +128,9 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
                     if (onUpdateListener != null) {
                         onUpdateListener.onUpdate(v);
                     }
-                }).builder().show();
+                })
+                .builder()
+                .show();
     }
 
     @Override

@@ -82,7 +82,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbarBind.setToolbarConfig(createdToolbarConfig());
-            toolbarBind.mainBar.setNavigationOnClickListener(v -> onBackPressed());
+            toolbarBind.mainBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
             binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);

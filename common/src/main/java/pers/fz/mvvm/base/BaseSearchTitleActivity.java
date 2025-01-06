@@ -41,7 +41,7 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         searchBinding.setToolbarConfig(createdToolbarConfig());
-        searchBinding.searchToolBar.setNavigationOnClickListener(v -> onBackPressed());
+        searchBinding.searchToolBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
     }
 
     @Override
