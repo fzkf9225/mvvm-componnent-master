@@ -42,6 +42,22 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
         mBaseViewPager.setCurrentItem(0, true);
     }
 
+    public BaseViewPagerAdapter getAdapter() {
+        return adapter;
+    }
+
+    public ViewPager2 getViewPager() {
+        return mBaseViewPager;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+    public LinearLayout getLayoutTab() {
+        return llTab;
+    }
+
     public void setOverScrollMode(int scrollMode) {
         tabLayout.setOverScrollMode(scrollMode);
     }
