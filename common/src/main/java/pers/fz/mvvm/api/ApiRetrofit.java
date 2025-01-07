@@ -22,7 +22,7 @@ import pers.fz.mvvm.base.BaseConverterFactory;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.PropertiesUtil;
-import pers.fz.mvvm.util.jiami.MD5Util;
+import pers.fz.mvvm.util.encode.MD5Util;
 import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.Converter;
 import retrofit2.Retrofit;

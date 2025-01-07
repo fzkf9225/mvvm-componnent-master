@@ -49,7 +49,7 @@ import pers.fz.mvvm.autosize.utils.Preconditions;
  * ================================================
  */
 public final class AutoSize {
-    private static SparseArray<DisplayMetricsInfo> mCache = new SparseArray<>();
+    private static final SparseArray<DisplayMetricsInfo> mCache = new SparseArray<>();
     private static final int MODE_SHIFT = 30;
     private static final int MODE_MASK = 0x3 << MODE_SHIFT;
     private static final int MODE_ON_WIDTH = 1 << MODE_SHIFT;

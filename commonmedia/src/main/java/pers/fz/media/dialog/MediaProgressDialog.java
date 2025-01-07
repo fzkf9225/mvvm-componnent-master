@@ -12,7 +12,6 @@ import pers.fz.media.databinding.MediaLoadingDialogBinding;
  * Created by fz on 2024/12/20.
  * 自定义加载dialog
  */
-
 public class MediaProgressDialog extends Dialog {
     private volatile static MediaProgressDialog instance;
     private MediaLoadingDialogBinding loadingDialogBinding;

@@ -1,5 +1,6 @@
 package pers.fz.mvvm.wight.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -148,6 +149,7 @@ public class TxSlideRecyclerView extends RecyclerView {
         return super.onInterceptTouchEvent(e);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         int x = (int) e.getX();

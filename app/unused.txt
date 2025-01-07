@@ -19609,9 +19609,9 @@ pers.fz.mvvm.util.theme.ThemeLollipop:
 pers.fz.mvvm.util.theme.ThemeUtils:
     static int getPxFromDp(android.content.Context,float)
     static void setContentTopPadding(android.app.Activity,int)
-pers.fz.mvvm.util.update.core.RetrofitFactory:
+pers.fz.mvvm.util.download.core.RetrofitFactory:
     private static final int TIME_OUT_SECOND
-pers.fz.mvvm.util.update.util.NoticeNotificationUtil
+pers.fz.mvvm.util.download.util.NoticeNotificationUtil
 pers.fz.mvvm.util.upload.OSSHelper$DownloadRunnable$1
 pers.fz.mvvm.util.upload.OSSHelper$DownloadRunnable
 pers.fz.mvvm.util.upload.OSSHelper$OSSCallback

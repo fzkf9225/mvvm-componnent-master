@@ -21,7 +21,7 @@ import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.common.CacheUtil;
-import pers.fz.mvvm.util.update.UpdateManger;
+import pers.fz.mvvm.util.download.UpdateManger;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**

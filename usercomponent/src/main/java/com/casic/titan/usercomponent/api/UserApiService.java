@@ -3,6 +3,7 @@ package com.casic.titan.usercomponent.api;
 import com.casic.titan.usercomponent.bean.TokenBean;
 import com.casic.titan.usercomponent.bean.UserInfo;
 
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -35,7 +36,20 @@ public interface UserApiService {
                                        @Field("grant_type") String grant_type, @Field("scope") String scope,
                                        @Field("type") String type);
 
+    /**
+     * 获取token
+     *
+     * @return
+     */
+    @POST("blade-auth/oauth/token")
+    @FormUrlEncoded
+    Flowable<TokenBean> refreshTokenFlow(@Field("refresh_token") String refreshToken, @Field("tenantld") String tenantld,
+                                     @Field("grant_type") String grant_type, @Field("scope") String scope,
+                                     @Field("type") String type);
+
     @GET("http://192.168.0.23:19901/pms/user/getLoginUserInfo")
     Observable<UserInfo> getUserInfo();
 
+    @GET("http://192.168.0.23:19901/pms/user/getLoginUserInfo")
+    Flowable<UserInfo> getUserInfoFlow();
 }

@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.UpdateDialogBinding;
-import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
+import pers.fz.mvvm.util.network.NetworkStateUtil;
 
 
 /**

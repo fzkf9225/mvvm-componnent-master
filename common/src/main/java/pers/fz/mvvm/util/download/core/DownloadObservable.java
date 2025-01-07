@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.update.core;
+package pers.fz.mvvm.util.download.core;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -18,7 +18,7 @@ import okhttp3.MediaType;
 import okio.BufferedSource;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.util.common.FileUtil;
-import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
+import pers.fz.mvvm.util.download.util.DownloadNotificationUtil;
 
 /**
  * created by fz on 2024/11/7 14:41

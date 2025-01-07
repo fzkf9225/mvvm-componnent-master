@@ -54,11 +54,11 @@ public final class AutoSizeConfig {
     /**
      * 用来管理外部三方库 {@link Activity} 的适配
      */
-    private ExternalAdaptManager mExternalAdaptManager = new ExternalAdaptManager();
+    private final ExternalAdaptManager mExternalAdaptManager = new ExternalAdaptManager();
     /**
      * 用来管理 AndroidAutoSize 支持的所有单位, AndroidAutoSize 支持五种单位 (dp、sp、pt、in、mm)
      */
-    private UnitsManager mUnitsManager = new UnitsManager();
+    private final UnitsManager mUnitsManager = new UnitsManager();
     /**
      * 最初的 {@link DisplayMetrics#density}
      */

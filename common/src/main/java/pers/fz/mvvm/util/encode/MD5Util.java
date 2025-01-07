@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.jiami;
+package pers.fz.mvvm.util.encode;
 
 import java.security.MessageDigest;
 

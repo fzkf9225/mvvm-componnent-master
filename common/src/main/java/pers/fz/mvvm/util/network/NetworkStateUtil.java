@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.networkTools;
+package pers.fz.mvvm.util.network;
 
 import static android.content.Context.WIFI_SERVICE;
 

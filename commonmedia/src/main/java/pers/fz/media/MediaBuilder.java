@@ -28,7 +28,9 @@ public class MediaBuilder {
      * 视频压缩质量
      */
     private int videoQuality = MediaHelper.VIDEO_LOW;
-
+    /**
+     * lifecycle绑定
+     */
     private LifecycleOwner lifecycleOwner;
     /**
      * 最大相册选择数量
@@ -285,6 +287,9 @@ public class MediaBuilder {
     }
 
     public MediaHelper builder() {
+        if (lifecycleOwner == null) {
+            throw new RuntimeException("please bind lifecycle");
+        }
         return new MediaHelper(this);
     }
 

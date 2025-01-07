@@ -13,8 +13,8 @@ import java.util.List;
  * describe :
  */
 public class SingleSelectorCallBack implements ActivityResultCallback<Uri> {
-    private MediaTypeEnum mediaType;
-    private MutableLiveData<MediaBean> mutableLiveData;
+    private final MediaTypeEnum mediaType;
+    private final MutableLiveData<MediaBean> mutableLiveData;
 
     public SingleSelectorCallBack(MediaTypeEnum mediaType, MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaType = mediaType;

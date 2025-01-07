@@ -23,7 +23,7 @@ import java.util.List;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.base.PageBean;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.networkTools.NetworkStateUtil;
+import pers.fz.mvvm.util.network.NetworkStateUtil;
 import pers.fz.mvvm.wight.empty.EmptyLayout;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 

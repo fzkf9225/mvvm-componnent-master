@@ -23,8 +23,8 @@ import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.update.DownloadManger;
-import pers.fz.mvvm.util.update.UpdateManger;
+import pers.fz.mvvm.util.download.DownloadManger;
+import pers.fz.mvvm.util.download.UpdateManger;
 
 @AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {

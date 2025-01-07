@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.update.core;
+package pers.fz.mvvm.util.download.core;
 
 
 import java.io.IOException;

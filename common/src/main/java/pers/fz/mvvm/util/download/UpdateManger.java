@@ -1,30 +1,27 @@
-package pers.fz.mvvm.util.update;
+package pers.fz.mvvm.util.download;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.reactivex.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.util.update.core.DownloadRetrofitFactory;
-import pers.fz.mvvm.util.update.listener.ApkUpdateListener;
-import pers.fz.mvvm.util.update.util.DownloadNotificationUtil;
-import pers.fz.mvvm.util.update.util.DownloadUtil;
+import pers.fz.mvvm.util.download.core.DownloadRetrofitFactory;
+import pers.fz.mvvm.util.download.listener.ApkUpdateListener;
+import pers.fz.mvvm.util.download.util.DownloadNotificationUtil;
+import pers.fz.mvvm.util.download.util.DownloadUtil;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 
 /**

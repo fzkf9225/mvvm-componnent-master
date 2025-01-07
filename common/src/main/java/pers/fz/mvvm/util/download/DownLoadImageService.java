@@ -65,7 +65,7 @@ public class DownLoadImageService implements Runnable {
             @Override
             public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
                 File currentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), filePath);
-                if (!currentFile.getParentFile().exists()) {
+                if (currentFile.getParentFile() != null && !currentFile.getParentFile().exists()) {
                     boolean isCreated = currentFile.getParentFile().mkdirs();
                 }
                 try {
@@ -90,14 +90,4 @@ public class DownLoadImageService implements Runnable {
             }
         }).submit();
     }
-    // 其次把文件插入到系统图库
-//        try {
-//            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-//                    currentFile.getAbsolutePath(), fileName, null);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        // 最后通知图库更新
-//        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-//                Uri.fromFile(new File(currentFile.getPath()))));
 }

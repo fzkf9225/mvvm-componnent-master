@@ -1,4 +1,4 @@
-package pers.fz.mvvm.util.update.util;
+package pers.fz.mvvm.util.download.util;
 
 import android.content.Context;
 import android.content.Intent;

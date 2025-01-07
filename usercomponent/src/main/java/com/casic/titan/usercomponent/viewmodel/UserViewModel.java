@@ -24,7 +24,7 @@ import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.jiami.MD5Util;
+import pers.fz.mvvm.util.encode.MD5Util;
 
 /**
  * Create by CherishTang on 2020/3/19 0019

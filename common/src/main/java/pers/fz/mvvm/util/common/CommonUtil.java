@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import pers.fz.mvvm.activity.WebViewActivity;
-import pers.fz.mvvm.util.jiami.MD5Util;
+import pers.fz.mvvm.util.encode.MD5Util;
 
 /**
  * Created by fz on 2018/3/16.
