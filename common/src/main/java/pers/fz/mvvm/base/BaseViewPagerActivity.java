@@ -13,10 +13,10 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.PagerInfo;
 
 /**
- * Create by CherishTang on 2019/8/1
- * describe: tabLayout+viewpager侧滑fragment布局封装
+ * Created by fz on 2021/2/7 14:13
+ * describe:自定义toolbar样式baseActivity
  */
-public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseFragment<VM, VDB> {
+public abstract class BaseViewPagerActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseActivity<VM, VDB> {
     protected ViewPager2 mBaseViewPager;
     protected TabLayout tabLayout;
     protected LinearLayout llTab;
@@ -28,11 +28,11 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    public void initView(Bundle savedInstanceState) {
         mBaseViewPager = binding.getRoot().findViewById(R.id.viewpager);
         tabLayout = binding.getRoot().findViewById(R.id.tabLayout);
         llTab = binding.getRoot().findViewById(R.id.ll_tab);
-        adapter = new BaseViewPagerAdapter(getChildFragmentManager(), this.getLifecycle(), getPagers());
+        adapter = new BaseViewPagerAdapter(getSupportFragmentManager(), this.getLifecycle(), getPagers());
         mBaseViewPager.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, mBaseViewPager, tabConfigurationStrategy).attach();
         mBaseViewPager.setCurrentItem(0, true);
@@ -60,11 +60,6 @@ public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extend
 
     protected int getCurrentItem() {
         return mBaseViewPager.getCurrentItem();
-    }
-
-    @Override
-    protected void initData(Bundle bundle) {
-
     }
 
     protected TabLayoutMediator.TabConfigurationStrategy tabConfigurationStrategy = (tab, position) -> tab.setText(adapter.getPagerInfo()[position].getTitle());

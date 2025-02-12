@@ -1,5 +1,7 @@
 package pers.fz.mvvm.base;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
 /**
@@ -138,6 +140,7 @@ public class BaseException extends IOException {
         this.errorMsg = message;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "BaseException{" +

@@ -50,6 +50,7 @@ public class DefaultActivityLifecycleCallback implements Application.ActivityLif
             }
             //不包含注解或者登录注解未开启
             if (!isNeedLogin(activity)) {
+
                 return;
             }
             //已登录，则跳转登录

@@ -25,7 +25,7 @@ public interface BaseView {
     /**
      * 显示错误信息
      *
-     * @param msg
+     * @param msg 吐司提示的问题
      */
     void showToast(String msg);
 

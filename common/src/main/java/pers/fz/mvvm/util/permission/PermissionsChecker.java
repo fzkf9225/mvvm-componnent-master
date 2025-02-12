@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.List;
+
 /**
  * Created by fz on 2024/10/31.
  * describe:检查权限的工具类
@@ -26,6 +28,18 @@ public class PermissionsChecker {
      * 判断权限集合
      */
     public boolean lacksPermissions(Context mContext, String... permissions) {
+        for (String permission : permissions) {
+            if (lacksPermission(mContext, permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断权限集合
+     */
+    public boolean lacksPermissions(Context mContext, List<String> permissions) {
         for (String permission : permissions) {
             if (lacksPermission(mContext, permission)) {
                 return true;

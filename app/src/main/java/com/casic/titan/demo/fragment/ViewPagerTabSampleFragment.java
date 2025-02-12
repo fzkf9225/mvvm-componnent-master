@@ -2,6 +2,7 @@ package com.casic.titan.demo.fragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseViewPagerFragment;
+import pers.fz.mvvm.bean.PagerInfo;
 import pers.fz.mvvm.databinding.BaseTablayoutViewpagerBinding;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

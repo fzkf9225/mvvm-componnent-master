@@ -17,7 +17,7 @@
     </style>
 
     <!--tabLayout布局样式-->
-    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+    <style name="customTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/themeColor</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_xxl</item>

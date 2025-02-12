@@ -18,6 +18,7 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -145,16 +146,23 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         return PermissionsChecker.getInstance().lacksPermissions(this, permission);
     }
 
+    public boolean lacksPermissions(List<String> permission) {
+        return PermissionsChecker.getInstance().lacksPermissions(this, permission);
+    }
     /**
      * 权限请求
      *
      * @param permissions 权限
      */
-    public void requestPermission(String[] permissions) {
+    public void requestPermission(String... permissions) {
         // 缺少权限时, 进入权限配置页面
         permissionLauncher.launch(permissions);
     }
 
+    public void requestPermission(List<String> permissions) {
+        // 缺少权限时, 进入权限配置页面
+        permissionLauncher.launch(permissions.stream().toArray(String[]::new));
+    }
     /**
      * 注册权限请求监听
      */
@@ -265,9 +273,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (TextUtils.isEmpty(msg)) {
             return;
         }
-        runOnUiThread(() -> {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        });
+        runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
     }
 
     /**

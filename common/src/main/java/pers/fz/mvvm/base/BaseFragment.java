@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -42,13 +43,21 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     protected ErrorService errorService;
     protected ActivityResultLauncher<Intent> loginLauncher = null;
 
-    public void requestPermission(String[] permissions) {
+    public void requestPermission(String... permissions) {
         permissionLauncher.launch(permissions);
     }
 
+    public void requestPermission(List<String> permissions) {
+        // 缺少权限时, 进入权限配置页面
+        permissionLauncher.launch(permissions.stream().toArray(String[]::new));
+    }
 
-    public boolean lacksPermissions(String[] permissions) {
+    public boolean lacksPermissions(String... permissions) {
         return PermissionsChecker.getInstance().lacksPermissions(requireContext(), permissions);
+    }
+
+    public boolean lacksPermissions(List<String> permission) {
+        return PermissionsChecker.getInstance().lacksPermissions(requireContext(), permission);
     }
 
     /**

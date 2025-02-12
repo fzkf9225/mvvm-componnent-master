@@ -26,7 +26,7 @@ import pers.fz.mvvm.R;
  * AppManager.getAppManager().finishActivity(this);
  */
 public class AppManager {
-    private final static String TAG = AppManager.class.getSimpleName();
+    public final static String TAG = AppManager.class.getSimpleName();
 
     private static Stack<Activity> activityStack;
 
