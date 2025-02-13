@@ -19,97 +19,95 @@ import pers.fz.mvvm.R;
  * describe：自定义圆角矩形
  */
 public class CornerEditText extends AppCompatEditText {
-    private final Paint circlePaint;
-    private final Paint backPaint;
-    private final Paint textPaint;
     private int strokeColor;
     private int circleBackColor;
+    private float radius;
+    private float strokeWidth;
+    private GradientDrawable gradientDrawable = new GradientDrawable();
 
+    public CornerEditText(Context context) {
+        this(context, null);
+    }
 
     public CornerEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circlePaint.setStyle(Paint.Style.STROKE);
-        backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        backPaint.setStyle(Paint.Style.FILL);
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        float strokeWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
             strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
             circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, ContextCompat.getColor(context, R.color.white));
-            strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, strokeWidth);
-            float radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
+            strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, 0);
+            radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
             typedArray.recycle();
-            GradientDrawable gd = new GradientDrawable();//创建drawable
-            gd.setColor(circleBackColor);
-            gd.setCornerRadius(radius);
-            if (strokeWidth > 0) {
-                gd.setStroke((int) strokeWidth, strokeColor);
-            }
-            this.setBackground(gd);
         } else {
             strokeColor = ContextCompat.getColor(context, R.color.white);
             circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
-        if (strokeWidth != 0) {
-            circlePaint.setStrokeWidth(strokeWidth);
-            circlePaint.setColor(strokeColor);
+
+        gradientDrawable.setColor(circleBackColor);
+        gradientDrawable.setCornerRadius(radius);
+        if (strokeWidth > 0) {
+            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
         }
-        backPaint.setColor(circleBackColor);
-        textPaint.setColor(getCurrentTextColor());
-        textPaint.setTextSize(getTextSize());
-    }
-
-    public CornerEditText(Context context) {
-        this(context, null);
-
-    }
-
-    public void setBackGroundColor(@ColorInt int color) {
-        GradientDrawable myGrad = (GradientDrawable) getBackground();
-        myGrad.setColor(color);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-//        int height = getHeight();
-//        int width = getWidth();
-//        int radius;
-//        int strokeRadius;
-//        int textWidth = (int) textPaint.measureText(getText().toString());
-//        if (height > textWidth) {
-//            radius = height;
-//        } else {
-//            setHeight(textWidth + getPaddingTop() + getPaddingBottom());
-//            radius = textWidth;
-//        }
-//        strokeRadius = (int) (radius / 2 - strokeWidth);
-//        radius = strokeRadius - 1;
-//        if (strokeWidth != 0)
-//            canvas.drawRect(getWidth() / 2, getHeight() / 2, strokeRadius, circlePaint);
-//        canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, backPaint);
-//        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-//
-//        canvas.drawText(getText().toString(), getWidth() / 2 - textPaint.measureText(getText().toString()) / 2, getHeight() / 2 - fontMetrics.descent + (fontMetrics.bottom - fontMetrics.top) / 2, textPaint);
-
-    }
-
-    public void setMystrokeColor(@ColorInt int color) {
-        this.strokeColor = color;
-        circlePaint.setColor(strokeColor);
-        invalidate();
+        this.setBackground(gradientDrawable);
     }
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
-        backPaint.setColor(circleBackColor);
-        invalidate();
+        gradientDrawable.setColor(circleBackColor);
+        gradientDrawable.setCornerRadius(radius);
+        this.setBackground(gradientDrawable);
     }
 
-    public void setMyTextColor(@ColorInt int color) {
-        textPaint.setColor(color);
-        invalidate();
+    public void setStroke(int strokeWidth,int color) {
+        this.strokeColor = color;
+        this.strokeWidth = strokeWidth;
+        gradientDrawable.setColor(circleBackColor);
+        gradientDrawable.setCornerRadius(radius);
+        if (strokeWidth > 0) {
+            gradientDrawable.setStroke(strokeWidth, strokeColor);
+        }
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setBgColor(int color) {
+        this.circleBackColor = color;
+        gradientDrawable.setColor(this.circleBackColor);
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setGradientDrawable(GradientDrawable gradientDrawable) {
+        this.gradientDrawable = gradientDrawable;
+        this.setBackground(this.gradientDrawable);
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setBgColorAndRadius(int color, float radius) {
+        this.radius = radius;
+        this.circleBackColor = color;
+        gradientDrawable.setColor(this.circleBackColor);
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public float getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public int getStrokeColor() {
+        return strokeColor;
+    }
+
+    public int getCircleBackColor() {
+        return circleBackColor;
     }
 }

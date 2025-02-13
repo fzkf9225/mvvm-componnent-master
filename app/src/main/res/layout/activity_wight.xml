@@ -50,6 +50,7 @@
                 android:textColor="@color/white"
                 app:bgColor="@color/themeColor"
                 app:radius="@dimen/radius_m"
+                android:gravity="center"
                 app:strokeColor="@color/theme_red"
                 app:strokeWidth="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -230,12 +231,17 @@
                 android:layout_height="@dimen/height_xl"
                 android:inputType="text"
                 android:textColor="@color/white"
-                android:background="@drawable/round_theme_color"
                 android:textColorHint="@color/nv_bg_color"
+                app:bgColor="@color/white"
+                app:radius="@dimen/radius_m"
+                app:strokeColor="@color/themeColor"
+                app:strokeWidth="1dp"
+                app:enableBgStyle="true"
                 android:textSize="@dimen/font_size_l"
                 android:hint="这是一个自定义输入框CustomSearchEditText"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/cornersImageView" />
+
             <pers.fz.mvvm.wight.customlayout.CornerEditText
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"

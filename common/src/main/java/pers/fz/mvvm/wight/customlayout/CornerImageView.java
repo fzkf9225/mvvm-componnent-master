@@ -15,7 +15,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
- * Create by CherishTang on 2019/9/3 0003
+ * created by fz on 2019/9/3 0003
  * describe:圆角ImageView
  */
 public class CornerImageView extends AppCompatImageView {

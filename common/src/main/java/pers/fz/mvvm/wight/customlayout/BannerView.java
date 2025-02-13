@@ -41,7 +41,7 @@ import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2024/12/18 10:57
- * 自定义banner轮播图
+ * describe：自定义banner轮播图
  */
 
 public class BannerView<T extends BannerBean> extends ConstraintLayout {

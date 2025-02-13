@@ -23,6 +23,10 @@ public class CornerButton extends AppCompatButton {
     private final GradientDrawable gradientDrawable;
     private float radius, strokeWidth;
 
+    public CornerButton(Context context) {
+        this(context, null);
+    }
+
     public CornerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (attrs != null) {
@@ -45,23 +49,19 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
-    public CornerButton(Context context) {
-        this(context, null);
-    }
-
-    public void setstrokeColor(@ColorInt int color) {
+    public void setStrokeColor(@ColorInt int color) {
         this.strokeColor = color;
         gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setstrokeWidth(int width) {
+    public void setStrokeWidth(int width) {
         this.strokeWidth = width;
         gradientDrawable.setStroke(this.strokeColor, strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setstroke(@ColorInt int color, int width) {
+    public void setStroke(@ColorInt int color, int width) {
         this.strokeColor = color;
         this.strokeWidth = width;
         gradientDrawable.setStroke(this.strokeColor, this.strokeColor);
@@ -79,4 +79,17 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
+    public void setRadius(float radius) {
+        this.radius = radius;
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setBgColorAndRadius(int color, float radius) {
+        this.radius = radius;
+        this.circleBackColor = color;
+        gradientDrawable.setColor(this.circleBackColor);
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
 }

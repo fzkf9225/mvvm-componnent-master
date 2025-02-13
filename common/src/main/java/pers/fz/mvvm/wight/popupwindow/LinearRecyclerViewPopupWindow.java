@@ -1,8 +1,6 @@
 package pers.fz.mvvm.wight.popupwindow;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +21,8 @@ import pers.fz.mvvm.listener.OnHeaderViewClickListener;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
- * PopupWindow 下拉框
- *
- * @author fz
+ * updated by fz on 2025/2/13 14:17
+ * describe：PopupWindow 下拉框
  */
 public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
     private final SelectCategory<T> selectCategory;
@@ -42,13 +39,9 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
     private final boolean hasRight;
     private OnHeadViewClickListener onHeadViewClickListener;
 
-    /**
-     * 构造器
-     */
     public LinearRecyclerViewPopupWindow(List<T> popupWindowBeanList,
                                          Context activity, boolean hasRight,
                                          SelectCategory<T> selectCategory) {
-
         this.selectCategory = selectCategory;
         this.popupWindowBeanList = popupWindowBeanList;
         this.activity = activity;
@@ -56,9 +49,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
         popupWindow = this;
         init();
         initParent();
-        if (!hasRight) {
-            lvChildrenCategory.setVisibility(View.GONE);
-        }
+        lvChildrenCategory.setVisibility(hasRight ? View.VISIBLE : View.GONE);
     }
 
     private void init() {
@@ -134,6 +125,7 @@ public class LinearRecyclerViewPopupWindow<T extends PopupWindowBean> extends Po
             }
         });
     }
+
     @Override
     public void onItemClick(View view, int position) {
         if (popupWindowBeanList == null || popupWindowAdapter == null) {

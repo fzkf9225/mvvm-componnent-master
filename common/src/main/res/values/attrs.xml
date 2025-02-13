@@ -154,7 +154,7 @@
         <attr name="bgColor"/>
         <attr name="strokeWidth"/>
         <attr name="radius"/>
-    </declare-styleable>
+</declare-styleable>
 
     <declare-styleable name="Custom_Round_Image_View">
         <attr name="radius"/>
@@ -224,6 +224,11 @@
         </attr>
         <attr name="searchIcon" format="reference" />
         <attr name="clearIcon" format="reference" />
+        <attr name="enableBgStyle" format="boolean" />
+        <attr name="strokeColor" />
+        <attr name="bgColor"/>
+        <attr name="strokeWidth"/>
+        <attr name="radius"/>
     </declare-styleable>
 
     <declare-styleable name="MaterialRipple">

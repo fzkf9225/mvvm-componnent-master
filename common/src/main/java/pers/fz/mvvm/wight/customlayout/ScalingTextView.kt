@@ -19,16 +19,18 @@ import pers.fz.mvvm.R
  * Created by fz on 2023/8/14 16:31
  * describe :
  */
-class ScalingTextView(context: Context, attrs: AttributeSet?) :
-    AppCompatTextView(context, attrs) {
+class ScalingTextView(context: Context, attrs: AttributeSet?) : AppCompatTextView(context, attrs) {
     private var maxLinesCollapsed: Int = 2
     private var isCollapsed: Boolean = false
     private var mOriginText: String
     @ColorInt
     private var mOriginTextColor: Int
 
-    private val DEFAULT_OPEN_SUFFIX = "查看全文"
-    private val DEFAULT_CLOSE_SUFFIX = "收起全文"
+    companion object{
+        private const val DEFAULT_OPEN_SUFFIX = "查看全文"
+        private const val DEFAULT_CLOSE_SUFFIX = "收起全文"
+    }
+
     private val ellipsis = "..."
     private var spannableString: SpannableString? = null
 
@@ -55,6 +57,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) :
             ds.isUnderlineText = true
         }
     }
+
     fun setOriginText(mOriginText:String ){
         this.mOriginText = mOriginText;
         requestLayout();

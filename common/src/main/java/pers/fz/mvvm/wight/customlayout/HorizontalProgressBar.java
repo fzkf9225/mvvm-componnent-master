@@ -25,7 +25,7 @@ import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Created by fz on 2023/11/2 9:20
- * describe :自定义圆形进度条
+ * describe :自定义水平横向进度条
  */
 public class HorizontalProgressBar extends View {
     private final String TAG = HorizontalProgressBar.class.getSimpleName();

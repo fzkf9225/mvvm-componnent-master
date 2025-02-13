@@ -119,5 +119,24 @@
         <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textColor">@color/autoColor</item>
     </style>
-
+    <!--ShapeableImageView圆形,cornerFamily如果为cut的话是直接裁剪，如果下面这个rounded修改为cut，则就成为了菱形-->
+    <style name="CircleShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <!--ShapeableImageView  4dp矩形圆角-->
+    <style name="RoundedShapeAppearanceS">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_s</item>
+    </style>
+    <!--ShapeableImageView  8dp矩形圆角-->
+    <style name="RoundedShapeAppearanceM">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_m</item>
+    </style>
+    <!--ShapeableImageView  12dp矩形圆角-->
+    <style name="RoundedShapeAppearanceL">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_l</item>
+    </style>
 </resources>

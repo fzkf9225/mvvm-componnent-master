@@ -193,6 +193,10 @@
     <public name="ActionSheetDialogStyle_No_Bg" type="style"/>
     <public name="popup_anim_style_alpha" type="style"/>
     <public name="App.Theme.Dialog.Alert" type="style"/>
+    <public name="CircleShapeAppearance" type="style"/>
+    <public name="RoundedShapeAppearanceS" type="style"/>
+    <public name="RoundedShapeAppearanceM" type="style"/>
+    <public name="RoundedShapeAppearanceL" type="style"/>
 
     <!--字符串资源-->
     <public name="today" type="string"/>

@@ -24,7 +24,8 @@ import pers.fz.mvvm.util.common.DensityUtil;
 
 
 /**
- * 继承TextSwitcher控件，自定义控件，添加切换动画
+ * updated by fz on 2025/2/13 10:54
+ * describe：继承TextSwitcher控件，自定义控件，添加切换动画
  */
 public class AutoTextView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
@@ -42,7 +43,6 @@ public class AutoTextView extends TextSwitcher implements
 
     public AutoTextView(Context context) {
         this(context, null);
-        init();
     }
 
     public AutoTextView(Context context, AttributeSet attrs) {

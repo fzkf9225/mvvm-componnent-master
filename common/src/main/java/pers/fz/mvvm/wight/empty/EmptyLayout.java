@@ -45,10 +45,11 @@ public class EmptyLayout extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         binding = ViewErrorLayoutBinding.inflate(LayoutInflater.from(getContext()), this, true);
         binding.imgErrorLayout.setOnClickListener(v -> {
-            if (clickEnable) {
-                if (onEmptyLayoutClickListener != null) {
-                    onEmptyLayoutClickListener.onEmptyLayoutClick(v);
-                }
+            if (!clickEnable) {
+               return;
+            }
+            if (onEmptyLayoutClickListener != null) {
+                onEmptyLayoutClickListener.onEmptyLayoutClick(v);
             }
         });
     }

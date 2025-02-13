@@ -8,6 +8,7 @@ import androidx.paging.PagingSource;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +67,37 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
         this.keywordsKey = keywordsKey;
         this.orderBy = orderBy;
     }
+    /**
+     * 构造方法
+     * @param roomRepositoryImpl repository管理
+     * @param keywordsKey 关键字集合，模糊搜索关键词key，直接写字段名即可
+     * @param keywords 关键字，上面是关联的key集合，这里是具体的搜索关键字
+     * @param orderBy 排序字段名，直接写字段名就行
+     */
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+                              Set<String> keywordsKey,
+                              String keywords,
+                              String orderBy) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = new HashMap<>();
+        this.keywords = keywords;
+        this.keywordsKey = keywordsKey;
+        this.orderBy = orderBy;
+    }
+
+    /**
+     * 构造方法
+     * @param roomRepositoryImpl repository管理
+     * @param orderBy 排序字段名，直接写字段名就行
+     */
+    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl, String orderBy) {
+        this.roomRepositoryImpl = roomRepositoryImpl;
+        this.queryParams = new HashMap<>();
+        this.keywords = null;
+        this.keywordsKey = null;
+        this.orderBy = orderBy;
+    }
+
     /**
      * 构造方法
      * @param roomRepositoryImpl repository管理

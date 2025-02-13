@@ -34,6 +34,8 @@ public class IconDotTextView extends ConstraintLayout {
     private Drawable drawableImage;
     private String label;
 
+    public final String DEFAULT_MORE_TEXT = "99+";
+
     public IconDotTextView(Context context) {
         super(context);
         init(null);
@@ -41,24 +43,23 @@ public class IconDotTextView extends ConstraintLayout {
 
     public IconDotTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs);
+        init(context.obtainStyledAttributes(attrs, R.styleable.IconDotTextView));
     }
 
     public IconDotTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init(context.obtainStyledAttributes(attrs, R.styleable.IconDotTextView,defStyleAttr,0));
     }
 
     public IconDotTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
+        init(context.obtainStyledAttributes(attrs, R.styleable.IconDotTextView,defStyleAttr,defStyleRes));
     }
 
-    private void init(AttributeSet attrs) {
+    private void init(TypedArray a) {
         int textColor;
         float textSize;
-        if (attrs != null) {
-            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.IconDotTextView);
+        if (a != null) {
             textSize = a.getDimension(R.styleable.IconDotTextView_textSize, DensityUtil.dp2px(getContext(), 12f));
             textColor = a.getColor(R.styleable.IconDotTextView_textColor, ContextCompat.getColor(getContext(), R.color.autoColor));
             imageWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_imageWidth, 0);
@@ -93,7 +94,7 @@ public class IconDotTextView extends ConstraintLayout {
     public void showRedDot(int count) {
         mDot.setVisibility(count > 0 ? VISIBLE : GONE);
         if (count > 99) {
-            mDot.setText("99+");
+            mDot.setText(DEFAULT_MORE_TEXT);
         } else {
             mDot.setText(String.valueOf(count));
         }

@@ -40,7 +40,6 @@
                 android:layout_height="33dp"
                 android:background="@null"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
                 android:hint="@string/please_enter"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
