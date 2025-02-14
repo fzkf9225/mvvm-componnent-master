@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.casic.titan.commonui.code.Code;
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 import com.casic.titan.demo.R;
@@ -127,7 +128,12 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
         });
         binding.calendarViewMulti.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate + "~" + endDate));
-
+        Glide.with(this)
+                .load("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800")
+                .into(binding.circleShapeableImageView);
+        Glide.with(this)
+                .load("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg")
+                .into(binding.roundedShapeableImageView);
 //        binding.customBannerPicture.setOnViewPagerSelectedListener(position -> LogUtil.show(TAG, "当前选中页：" + position));
     }
 

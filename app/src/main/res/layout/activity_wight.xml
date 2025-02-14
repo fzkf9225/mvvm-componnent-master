@@ -390,6 +390,33 @@
                 app:endDate="2025-12-31"
                 app:showDot="false"
                 app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_multi"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/circleShapeableImageView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:shapeAppearanceOverlay="@style/CircleShapeAppearance"
+                app:strokeColor="@color/theme_green"
+                android:scaleType="centerCrop"
+                app:strokeWidth="3dp" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/roundedShapeableImageView"
+                android:layout_width="0dp"
+                app:layout_constraintDimensionRatio="w,9:16"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                app:layout_constraintTop_toBottomOf="@+id/circleShapeableImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
+                app:strokeColor="@color/theme_green"
+                android:scaleType="centerCrop"
+                app:strokeWidth="3dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
