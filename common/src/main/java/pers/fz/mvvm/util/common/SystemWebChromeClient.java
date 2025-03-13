@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.PermissionRequest;
@@ -21,17 +22,20 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import pers.fz.mvvm.util.log.LogUtil;
+
 /**
  * Created by fz on 2024/2/1 14:59
  * describe :
  */
 public class SystemWebChromeClient extends WebChromeClient {
+    public final static String TAG = "SystemWebChromeClient";
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
     private final static int MAX_PROGRESS = 100;
-    private long MAX_QUOTA = 100 * 1024 * 1024;
-    private CordovaDialogsHelper dialogsHelper;
-    private ProgressBar progressBar;
-    private Context mContext;
+    private final long MAX_QUOTA = 100 * 1024 * 1024;
+    private final CordovaDialogsHelper dialogsHelper;
+    private final ProgressBar progressBar;
+    private final Context mContext;
     private TextView tvBarTitle;
     /**
      * 文件服务
@@ -95,7 +99,12 @@ public class SystemWebChromeClient extends WebChromeClient {
         });
         return true;
     }
-
+    @Override
+    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        LogUtil.show(TAG,"SourceId："+consoleMessage.sourceId()+"，MessageLevel："+consoleMessage.messageLevel()+
+                ",LineNumber："+consoleMessage.lineNumber()+",Message："+consoleMessage.message());
+        return super.onConsoleMessage(consoleMessage);
+    }
     /**
      * Tell the client to display a prompt dialog to the user.
      * If the client returns true, WebView will assume that the client will
