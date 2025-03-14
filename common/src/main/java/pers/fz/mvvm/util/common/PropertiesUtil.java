@@ -16,7 +16,7 @@ import pers.fz.mvvm.R;
  * created by fz on 2023/4/23 10:05
  * describe:
  **/
-public class PropertiesUtil extends Properties{
+public class PropertiesUtil extends Properties {
     private final static String TAG = PropertiesUtil.class.getSimpleName();
 
     private PropertiesUtil() {
@@ -52,6 +52,7 @@ public class PropertiesUtil extends Properties{
         }
         return this;
     }
+
     public PropertiesUtil loadConfig(Context mContext, String configFile) {
         try {
             if (TextUtils.isEmpty(configFile)) {

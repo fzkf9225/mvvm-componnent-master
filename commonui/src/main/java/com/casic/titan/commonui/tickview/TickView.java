@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.casic.titan.commonui.R;
@@ -36,7 +37,7 @@ public class TickView extends View {
     private Paint mPaintTick;
 
     //整个圆外切的矩形
-    private RectF mRectF = new RectF();
+    private final RectF mRectF = new RectF();
 
     //控件中心的X,Y坐标
     private int centerX;
@@ -162,7 +163,7 @@ public class TickView extends View {
         ObjectAnimator mCircleAnimator = ObjectAnimator.ofInt(this, "circleRadius", mConfig.getRadius() - 5, 0);
         mCircleAnimator.setInterpolator(new DecelerateInterpolator());
         mCircleAnimator.setDuration(mCircleAnimatorDuration);
-        Animator mTickAnima;
+        ValueAnimator mTickAnima;
         //勾勾alpha动画
         if (mConfig.getTickAnim() == TickViewConfig.ANIM_ALPHA) {
             //勾出来的透明渐变
@@ -182,12 +183,7 @@ public class TickView extends View {
                     mTickPathMeasureDst.reset();
                 }
             });
-            ((ValueAnimator) mTickAnima).addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    setTickProgress((Float) animation.getAnimatedValue());
-                }
-            });
+            mTickAnima.addUpdateListener(animation -> setTickProgress((Float) animation.getAnimatedValue()));
             mTickAnima.setInterpolator(new DecelerateInterpolator());
         }
         //最后的放大再回弹的动画，改变画笔的宽度来实现
@@ -296,7 +292,7 @@ public class TickView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         if (mConfig.isNeedToReApply()) {
             applyConfig(mConfig);
         }

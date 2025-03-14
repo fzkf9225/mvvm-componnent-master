@@ -64,9 +64,6 @@ public class StorageUtil {
             if (size <= deviceRomMemoryMap[i]) {
                 break;
             }
-            if (i == deviceRomMemoryMap.length) {
-                i--;
-            }
         }
         return displayRomSize[i];
     }
@@ -90,14 +87,15 @@ public class StorageUtil {
                 Log.i(str2, num + "\t");
             }
             // 获得系统总内存，单位是KB
-            int i = Integer.valueOf(arrayOfString[1]).intValue();
+            int i = Integer.parseInt(arrayOfString[1]);
             //int值乘以1024转换为long类型
-            initial_memory = new Long((long) i * 1024);
+            initial_memory = i * 1024L;
             localBufferedReader.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
-        long memory = initial_memory / 1024 / 1024;//获取MB
-        return memory;
+        //获取MB
+        return initial_memory / 1024 / 1024;
     }
 
 
@@ -133,11 +131,12 @@ public class StorageUtil {
                 Log.i(str2, num + "\t");
             }
             // 获得系统总内存，单位是KB
-            int i = Integer.valueOf(arrayOfString[1]).intValue();
+            int i = Integer.parseInt(arrayOfString[1]);
             //int值乘以1024转换为long类型
-            initial_memory = new Long((long) i * 1024);
+            initial_memory = i * 1024L;
             localBufferedReader.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return Formatter.formatFileSize(context, initial_memory);// Byte转换为KB或者MB，内存大小规格化
     }

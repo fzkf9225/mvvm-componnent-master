@@ -25,7 +25,7 @@ import com.casic.titan.commonui.tickview.TickView;
  * 提示弹框
  */
 public class TickViewMessageDialog extends Dialog {
-    private Context context;
+    private final Context context;
     private String content;
     private OnCheckedChangeListener onCheckedChangeListener;
     private OnTickViewHideListener onTickViewHideListener;

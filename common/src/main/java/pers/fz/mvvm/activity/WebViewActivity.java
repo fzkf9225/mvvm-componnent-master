@@ -34,13 +34,24 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
 @AndroidEntryPoint
 public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding> {
 
-    public final static String TITLE = "title_text";
-    public final static String LOAD_URL = "load_url";
+    public final static String TITLE = "titleText";
+    public final static String LOAD_URL = "loadUrl";
+    public final static String TOOLBAR = "toolbar";
     private String url;
+    private boolean hasToolbar;
 
     @Override
     protected int getLayoutId() {
         return R.layout.web_view;
+    }
+
+    @Override
+    protected boolean hasToolBar() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            return true;
+        }
+        return hasToolbar = bundle.getBoolean(TOOLBAR, true);
     }
 
     @Override
@@ -70,19 +81,25 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         settings.setLoadWithOverviewMode(true);
         binding.webView.setWebViewClient(new MyWebViewClient());
         binding.webView.setWebChromeClient(
-                new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind.tvTitle)
+                new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind == null ? null : toolbarBind.tvTitle)
         );
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (!hasToolbar) {
+            return super.onCreateOptionsMenu(menu);
+        }
         getMenuInflater().inflate(R.menu.menu_browser, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (!hasToolbar) {
+            return super.onOptionsItemSelected(item);
+        }
         if (StringUtil.isEmpty(url)) {
             showToast("目标地址为空！");
             return super.onOptionsItemSelected(item);
@@ -106,7 +123,9 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
 
     @Override
     public void initData(Bundle bundle) {
-        toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
+        if (hasToolbar) {
+            toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
+        }
         url = bundle.getString(LOAD_URL);
         if (TextUtils.isEmpty(url)) {
             showToast("目标地址为空！");
@@ -126,6 +145,22 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         Bundle bundle = new Bundle();
         bundle.putString(LOAD_URL, loadUrl);
         bundle.putString(TITLE, titleText);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
+    public static void show(Context context, String loadUrl, String titleText,boolean hasToolbar) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(LOAD_URL, loadUrl);
+        bundle.putString(TITLE, titleText);
+        bundle.putBoolean(TOOLBAR, hasToolbar);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
+    public static void show(Context context, Bundle bundle) {
+        Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

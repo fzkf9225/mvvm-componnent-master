@@ -75,15 +75,15 @@ public class NumberUtils {
      * @return 返回整数部分
      */
     private static String getInteger(String tempString) {
-        /** 用来保存整数部分数字串 */
+        /*  用来保存整数部分数字串 */
         String strInteger = null;//
-        /** 记录"."所在位置 */
+        /* 记录"."所在位置 */
         int intDotPos = tempString.indexOf(".");
         int intSignPos = tempString.indexOf("-");
         if (intDotPos == -1) {
             intDotPos = tempString.length();
         }
-        /** 取出整数部分 */
+        /* 取出整数部分 */
         strInteger = tempString.substring(intSignPos + 1, intDotPos);
         strInteger = new StringBuffer(strInteger).reverse().toString();
         StringBuffer sbResult = new StringBuffer();
@@ -100,20 +100,20 @@ public class NumberUtils {
         replace(sbResult, "零亿", "亿");
         replace(sbResult, "零零", "零");
         replace(sbResult, "零零零", "零");
-        /** 这两句不能颠倒顺序 */
+        /* 这两句不能颠倒顺序 */
         replace(sbResult, "零零零零万", "");
         replace(sbResult, "零零零零", "");
-        /** 这样读起来更习惯. */
+        /* 这样读起来更习惯. */
         replace(sbResult, "壹拾亿", "拾亿");
         replace(sbResult, "壹拾万", "拾万");
-        /** 删除个位上的零 */
+        /* 删除个位上的零 */
         if (sbResult.charAt(sbResult.length() - 1) == '零' && sbResult.length() != 1) {
             sbResult.deleteCharAt(sbResult.length() - 1);
         }
         if (strInteger.length() == 2) {
             replace(sbResult, "壹拾", "拾");
         }
-        /** 将结果反转回来. */
+        /* 将结果反转回来. */
         return sbResult.toString();
     }
 
@@ -126,7 +126,7 @@ public class NumberUtils {
     private static String getFraction(String tempString) {
         String strFraction = null;
         int intDotPos = tempString.indexOf(".");
-        /** 没有点说明没有小数，直接返回 */
+        /* 没有点说明没有小数，直接返回 */
         if (intDotPos == -1) {
             return "";
         }
@@ -145,7 +145,7 @@ public class NumberUtils {
      * @return
      */
     private static String getDot(String tempString) {
-        return tempString.indexOf(".") != -1 ? "点" : "";
+        return tempString.contains(".") ? "点" : "";
     }
 
     /**
@@ -155,7 +155,7 @@ public class NumberUtils {
      * @return
      */
     private static String getSign(String tempString) {
-        return tempString.indexOf("-") != -1 ? "负" : "";
+        return tempString.contains("-") ? "负" : "";
     }
 
     /**
@@ -166,9 +166,8 @@ public class NumberUtils {
      */
     public static String numberToChinese(double tempNumber) {
         DecimalFormat df = new DecimalFormat("#.#########");
-        String pTemp = String.valueOf(df.format(tempNumber));
-        StringBuffer sbResult = new StringBuffer(getSign(pTemp) + getInteger(pTemp) + getDot(pTemp) + getFraction(pTemp));
-        return sbResult.toString();
+        String pTemp = df.format(tempNumber);
+        return getSign(pTemp) + getInteger(pTemp) + getDot(pTemp) + getFraction(pTemp);
     }
 
     public static String numberToChinese(BigDecimal tempNumber) {
@@ -186,11 +185,11 @@ public class NumberUtils {
         if (pValue == null || pSource == null || pDest == null) {
             return;
         }
-        /** 记录pSource在pValue中的位置 */
+        /* 记录pSource在pValue中的位置 */
         int intPos = 0;
         do {
             intPos = pValue.toString().indexOf(pSource);
-            /** 没有找到pSource */
+            /* 没有找到pSource */
             if (intPos == -1) {
                 break;
             }
@@ -263,10 +262,11 @@ public class NumberUtils {
         }
         return data;
     }
+
     /**
      * 格式化月份始终保持两位数字
      * @param month 01~12
-     * @return
+     * @return 01~12
      */
     public static String formatMonthOrDay(int month) {
         try {
@@ -284,18 +284,18 @@ public class NumberUtils {
      * @param longNumber
      * @return
      */
-    public static String formatLongNumber(String longNumber){
-        if(longNumber==null) {
+    public static String formatLongNumber(String longNumber) {
+        if (longNumber == null) {
             return null;
         }
-            if(isNumeric(longNumber)){
-                if(longNumber.contains("e")||longNumber.contains("E")){
-                    BigDecimal bd = new BigDecimal(longNumber);
-                    return formatInteger(bd.toPlainString());
-                }else{
-                    return formatInteger(longNumber);
-                }
+        if (isNumeric(longNumber)) {
+            if (longNumber.contains("e") || longNumber.contains("E")) {
+                BigDecimal bd = new BigDecimal(longNumber);
+                return formatInteger(bd.toPlainString());
+            } else {
+                return formatInteger(longNumber);
             }
+        }
         return longNumber;
     }
 
@@ -304,20 +304,21 @@ public class NumberUtils {
      * @param longNumber
      * @return
      */
-    public static String formatLongDecimalNumber(String longNumber){
-        if(longNumber==null) {
+    public static String formatLongDecimalNumber(String longNumber) {
+        if (longNumber == null) {
             return null;
         }
-        if(isNumeric(longNumber)){
-            if(longNumber.contains("e")||longNumber.contains("E")){
+        if (isNumeric(longNumber)) {
+            if (longNumber.contains("e") || longNumber.contains("E")) {
                 BigDecimal bd = new BigDecimal(longNumber);
                 return decimalFormat(bd.toPlainString());
-            }else{
+            } else {
                 return decimalFormat(longNumber);
             }
         }
         return longNumber;
     }
+
     /**
      * 判断是否是科学计算法、数字、浮点
      * @param str 原字符串
@@ -337,8 +338,9 @@ public class NumberUtils {
         pattern = Pattern.compile(regx);
         return pattern.matcher(str).matches();
     }
+
     public static boolean isNullOrZero(String number) {
-        if (null == number || "".equals(number) || number.isEmpty()) {
+        if (null == number || number.isEmpty()) {
             return true;
         }
         if ("0".equals(number) || "0.0".equals(number) || "0.00".equals(number)) {

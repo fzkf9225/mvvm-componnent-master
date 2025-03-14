@@ -12,8 +12,8 @@ import pers.fz.mvvm.databinding.LoadingDialogBinding;
  * 自定义加载dialog
  */
 
-public class CustomProgressDialog extends Dialog {
-    private volatile static CustomProgressDialog customProgressDialog;
+public class LoadingProgressDialog extends Dialog {
+    private volatile static LoadingProgressDialog loadingProgressDialog;
     private LoadingDialogBinding loadingDialogBinding;
     private boolean isCanCancel = false;
     private OnCancelListener onCancelListener;
@@ -22,19 +22,19 @@ public class CustomProgressDialog extends Dialog {
      */
     private String message = "正在加载,请稍后...";
 
-    public CustomProgressDialog(Context context) {
+    public LoadingProgressDialog(Context context) {
         super(context, R.style.loading_dialog);
     }
 
-    public static CustomProgressDialog getInstance(Context context) {
-        if (customProgressDialog == null || !customProgressDialog.isShowing()) {
-            synchronized (CustomProgressDialog.class) {
-                if (customProgressDialog == null || !customProgressDialog.isShowing()) {
-                    customProgressDialog = new CustomProgressDialog(context);
+    public static LoadingProgressDialog getInstance(Context context) {
+        if (loadingProgressDialog == null || !loadingProgressDialog.isShowing()) {
+            synchronized (LoadingProgressDialog.class) {
+                if (loadingProgressDialog == null || !loadingProgressDialog.isShowing()) {
+                    loadingProgressDialog = new LoadingProgressDialog(context);
                 }
             }
         }
-        return customProgressDialog;
+        return loadingProgressDialog;
     }
 
     public void refreshMessage(String message) {
@@ -42,11 +42,11 @@ public class CustomProgressDialog extends Dialog {
         loadingDialogBinding.setMessage(message);
     }
 
-    public CustomProgressDialog(Context context, int theme) {
+    public LoadingProgressDialog(Context context, int theme) {
         super(context, theme);
     }
 
-    public CustomProgressDialog setCanCancel(boolean isCanCancel) {
+    public LoadingProgressDialog setCanCancel(boolean isCanCancel) {
         this.isCanCancel = isCanCancel;
         return this;
     }
@@ -56,12 +56,12 @@ public class CustomProgressDialog extends Dialog {
         setCancelable(isCanCancel);
     }
 
-    public CustomProgressDialog setCanCelListener(OnCancelListener onCancelListener) {
+    public LoadingProgressDialog setCanCelListener(OnCancelListener onCancelListener) {
         this.onCancelListener = onCancelListener;
         return this;
     }
 
-    public CustomProgressDialog builder() {
+    public LoadingProgressDialog builder() {
         createLoadingDialog();
         return this;
     }
@@ -77,7 +77,7 @@ public class CustomProgressDialog extends Dialog {
                 LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
-    public CustomProgressDialog setMessage(String message) {
+    public LoadingProgressDialog setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -85,6 +85,6 @@ public class CustomProgressDialog extends Dialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        customProgressDialog = null;
+        loadingProgressDialog = null;
     }
 }

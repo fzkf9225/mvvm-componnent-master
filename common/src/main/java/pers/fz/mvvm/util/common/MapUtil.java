@@ -45,7 +45,7 @@ public class MapUtil {
      * @return 是否为非空
      */
     public static boolean isNotEmpty(Map<?, ?> map) {
-        return null != map && false == map.isEmpty();
+        return null != map && !map.isEmpty();
     }
 
     /**
@@ -154,7 +154,7 @@ public class MapUtil {
      */
     public static <K, V> TreeMap<K, V> newTreeMap(Map<K, V> map, Comparator<? super K> comparator) {
         final TreeMap<K, V> treeMap = new TreeMap<>(comparator);
-        if (false == isEmpty(map)) {
+        if (!isEmpty(map)) {
             treeMap.putAll(map);
         }
         return treeMap;

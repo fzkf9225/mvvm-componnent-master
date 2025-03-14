@@ -17,18 +17,18 @@ public class StringUtil {
     /**
      * 过滤空NULL
      *
-     * @param o
-     * @return
+     * @param o 过滤null
+     * @return null转为空字符串
      */
     public static String filterNull(Object o) {
-        return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
+        return (o == null || "null".equals(o.toString())) ? "" : o.toString().trim();
     }
 
     /**
      * 过滤空NULL
      *
-     * @param args
-     * @return
+     * @param args 字符串数组
+     * @return 拼接字符串且过滤空
      */
     public static String filterNull(String... args) {
         if (args == null) {
@@ -46,8 +46,8 @@ public class StringUtil {
     /**
      * 是否为空
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @return true为空
      */
     public static boolean isEmpty(Object o) {
         if (o == null) {
@@ -59,8 +59,8 @@ public class StringUtil {
     /**
      * 是否不为空
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @return true为不空
      */
     public static boolean isNotEmpty(Object o) {
         if (o == null) {
@@ -72,8 +72,8 @@ public class StringUtil {
     /**
      * 是否可转化为数字
      *
-     * @param o
-     * @return
+     * @param o 判断是否可转化为数字
+     * @return 是数字
      */
     public static boolean isNum(Object o) {
         try {
@@ -87,8 +87,8 @@ public class StringUtil {
     /**
      * 是否可转化为Long型数字
      *
-     * @param o
-     * @return
+     * @param o 判断是否可转化为Long型数字
+     * @return true可转为long
      */
     public static boolean isLong(Object o) {
         try {
@@ -105,8 +105,8 @@ public class StringUtil {
     /**
      * 转化为Long型数字, 不可转化时返回0
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @return Long型数字
      */
     public static Long toLong(Object o) {
         if (isLong(o)) {
@@ -119,8 +119,8 @@ public class StringUtil {
     /**
      * 转化为int型数字, 不可转化时返回0
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @return int型数字
      */
     public static int toInt(Object o) {
         if (isNum(o)) {
@@ -133,8 +133,8 @@ public class StringUtil {
     /**
      * 按字符从左截取固定长度字符串, 防止字符串超长, 默认截取50
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @return 截取后的字符串
      */
     public static String holdMaxlength(Object o) {
         int maxLength = 50;
@@ -147,8 +147,9 @@ public class StringUtil {
     /**
      * 从左截取固定长度字符串, 防止字符串超长, maxLength
      *
-     * @param o
-     * @return
+     * @param o 对象
+     * @param maxLength 截取长度
+     * @return maxLength长度截取后的字符串
      */
     public static String holdMaxLength(Object o, int maxLength) {
         maxLength = maxLength <= 0 ? 50 : maxLength;
@@ -161,9 +162,9 @@ public class StringUtil {
     /**
      * 按字节截取字符串
      *
-     * @param o
-     * @param len
-     * @return
+     * @param o 对象
+     * @param len 长度
+     * @return 截取后的字符串
      */
     private static String subStringByByte(Object o, int len) {
         if (o == null) {
@@ -352,10 +353,10 @@ public class StringUtil {
     /**
      * 替换字符串,支持字符串为空的情形
      *
-     * @param strData
-     * @param regex
-     * @param replacement
-     * @return
+     * @param strData 字符串
+     * @param regex 正则
+     * @param replacement 替换字符串
+     * @return 替换后的字符串
      */
     public static String replace(String strData, String regex, String replacement) {
         return strData == null ? "" : strData.replaceAll(regex, replacement);
@@ -364,10 +365,10 @@ public class StringUtil {
     /**
      * 字符串转为HTML显示字符
      *
-     * @param strData
-     * @return
+     * @param strData 字符串
+     * @return HTML显示字符
      */
-    public static String String2HTML(String strData) {
+    public static String string2HTML(String strData) {
         if (strData == null || "".equals(strData)) {
             return "";
         }
@@ -481,8 +482,8 @@ public class StringUtil {
     /**
      * 将字符串中所有的，替换成|
      *
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return 字符串
      */
     public static String commaToVert(String str) {
         if (str != null && !str.isBlank() && str.contains(",")) {
@@ -495,7 +496,7 @@ public class StringUtil {
     /**
      * 去掉字符串中、前、后的空格
      *
-     * @param name
+     * @param name 覅富川
      */
     public static String extractBlank(String name) {
         if (name != null && !name.isEmpty()) {
@@ -508,8 +509,8 @@ public class StringUtil {
     /**
      * 将null换成""
      *
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return 格式化后的字符串
      */
     public static String convertStr(String str) {
         return str != null && !"null".equals(str) ? str.trim() : "";

@@ -399,8 +399,8 @@ public final class FileUtil {
             charsetName = "utf-8";
         }
         File file = new File(filePath);
-        StringBuilder fileContent = new StringBuilder("");
-        if (file == null || !file.isFile()) {
+        StringBuilder fileContent = new StringBuilder();
+        if (!file.isFile()) {
             return null;
         }
         BufferedReader reader = null;
@@ -410,7 +410,7 @@ public final class FileUtil {
             reader = new BufferedReader(is);
             String line = null;
             while ((line = reader.readLine()) != null) {
-                if (!fileContent.toString().equals("")) {
+                if (!fileContent.toString().isEmpty()) {
                     fileContent.append("\r\n");
                 }
                 fileContent.append(line);
@@ -456,7 +456,7 @@ public final class FileUtil {
         }
         File file = new File(filePath);
         List<String> fileContent = new ArrayList<String>();
-        if (file == null || !file.isFile()) {
+        if (!file.isFile()) {
             return null;
         }
         BufferedReader reader = null;
@@ -728,9 +728,6 @@ public final class FileUtil {
             return null;
         }
         String[] pathArr = path.split(File.separator);
-        if (pathArr == null) {
-            return null;
-        }
         if (pathArr.length == 0) {
             return null;
         }
@@ -748,9 +745,6 @@ public final class FileUtil {
             return defaultPath;
         }
         String[] pathArr = path.split(File.separator);
-        if (pathArr == null) {
-            return defaultPath;
-        }
         if (pathArr.length == 0) {
             return defaultPath;
         }

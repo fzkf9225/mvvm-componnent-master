@@ -5,29 +5,24 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
 import com.casic.titan.commonui.dialog.TickViewMessageDialog;
-import com.casic.titan.commonui.widght.calendar.CalendarView;
 import com.casic.titan.commonui.widght.calendar.DateRangePickDialog;
 import com.casic.titan.demo.R;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import pers.fz.media.dialog.OpenImageDialog;
@@ -43,7 +38,7 @@ import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
-import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
 import pers.fz.mvvm.wight.dialog.DatePickDialog;
 import pers.fz.mvvm.wight.dialog.EditAreaDialog;
 import pers.fz.mvvm.wight.dialog.InputDialog;
@@ -113,7 +108,7 @@ public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
                     .builder()
                     .show();
         } else if (R.id.customProgressDialog == view.getId()) {
-            new CustomProgressDialog(view.getContext())
+            new LoadingProgressDialog(view.getContext())
                     .setMessage("加载中...")
                     .setCanCancel(true)
                     .builder()

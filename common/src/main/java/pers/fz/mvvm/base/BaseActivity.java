@@ -1,6 +1,7 @@
 package pers.fz.mvvm.base;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,15 +26,12 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.annotations.interrupte.NeedLogin;
 import pers.fz.mvvm.api.AppManager;
-import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
 import pers.fz.mvvm.wight.dialog.LoginDialog;
 
 /**
@@ -149,6 +147,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public boolean lacksPermissions(List<String> permission) {
         return PermissionsChecker.getInstance().lacksPermissions(this, permission);
     }
+
     /**
      * 权限请求
      *
@@ -161,8 +160,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     public void requestPermission(List<String> permissions) {
         // 缺少权限时, 进入权限配置页面
-        permissionLauncher.launch(permissions.stream().toArray(String[]::new));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(permissions.toArray(String[]::new));
+        } else {
+            permissionLauncher.launch(permissions.stream().toArray(String[]::new));
+        }
     }
+
     /**
      * 注册权限请求监听
      */
@@ -244,7 +248,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
-        CustomProgressDialog.getInstance(this)
+        LoadingProgressDialog.getInstance(this)
                 .setCanCancel(isCanCancel)
                 .setMessage(dialogMessage)
                 .builder()
@@ -259,13 +263,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public void refreshLoading(String dialogMessage) {
         runOnUiThread(() ->
-                CustomProgressDialog.getInstance(this)
+                LoadingProgressDialog.getInstance(this)
                         .refreshMessage(dialogMessage));
     }
 
     @Override
     public void hideLoading() {
-        runOnUiThread(() -> CustomProgressDialog.getInstance(this).dismiss());
+        runOnUiThread(() -> LoadingProgressDialog.getInstance(this).dismiss());
     }
 
     @Override

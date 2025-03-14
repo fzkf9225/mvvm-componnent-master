@@ -47,7 +47,6 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
  */
 @AndroidEntryPoint
 public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCaptureBinding> {
-    private final String TAG = this.getClass().getSimpleName();
     private CaptureManager capture;
     private ActivityResultLauncher<String> openGalleryRequest;
 

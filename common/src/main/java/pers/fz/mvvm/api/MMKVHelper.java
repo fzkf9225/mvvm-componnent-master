@@ -18,6 +18,9 @@ public class MMKVHelper {
     private static volatile MMKVHelper mmkvHelper;
     private static MMKV mmkv;
 
+    private MMKVHelper() {
+    }
+
     public static MMKVHelper getInstance() {
         if (mmkvHelper == null) {
             synchronized (MMKVHelper.class) {

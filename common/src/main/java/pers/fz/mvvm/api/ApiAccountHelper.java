@@ -279,7 +279,8 @@ public class ApiAccountHelper {
                 }
                 return res1.toString();
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return "02:00:00:00:00:00";
     }

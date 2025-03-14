@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.wight.dialog.CustomProgressDialog;
+import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
 
 /**
  * Created by fz on 2017/11/22.
@@ -177,7 +177,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * @param dialogMessage 弹框内容，如果内容为空则不展示文字部分
      */
     private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
-        CustomProgressDialog.getInstance(getContext())
+        LoadingProgressDialog.getInstance(getContext())
                 .setCanCancel(isCanCancel)
                 .setMessage(dialogMessage)
                 .builder()
@@ -194,7 +194,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public void hideLoading() {
         if (!requireActivity().isFinishing()) {
-            requireActivity().runOnUiThread(() -> CustomProgressDialog.getInstance(getContext()).dismiss());
+            requireActivity().runOnUiThread(() -> LoadingProgressDialog.getInstance(getContext()).dismiss());
         }
     }
 
@@ -202,10 +202,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     public void refreshLoading(String dialogMessage) {
         if (!requireActivity().isFinishing()) {
             requireActivity().runOnUiThread(() -> {
-                if (CustomProgressDialog.getInstance(requireActivity()) == null || !CustomProgressDialog.getInstance(requireActivity()).isShowing()) {
+                if (LoadingProgressDialog.getInstance(requireActivity()) == null || !LoadingProgressDialog.getInstance(requireActivity()).isShowing()) {
                     return;
                 }
-                CustomProgressDialog.getInstance(requireActivity())
+                LoadingProgressDialog.getInstance(requireActivity())
                         .refreshMessage(dialogMessage);
             });
         }

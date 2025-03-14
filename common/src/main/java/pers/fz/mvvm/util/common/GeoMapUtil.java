@@ -4,10 +4,11 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Created by fz on 2024/2/26 13:30
- * describe :
+ * describe :经纬度格式转换工具类
  */
 public class GeoMapUtil {
 
@@ -44,8 +45,8 @@ public class GeoMapUtil {
                     s = BigDecimal.ZERO;
                 }
                 //divide相除可能会报错（无限循环小数），要设置保留小数点
-                return d.add(m.divide(bd, 8, BigDecimal.ROUND_HALF_UP)
-                        .add(s.divide(bd.multiply(bd), 8, BigDecimal.ROUND_HALF_UP))).doubleValue();
+                return d.add(m.divide(bd, 8, RoundingMode.HALF_UP)
+                        .add(s.divide(bd.multiply(bd), 8, RoundingMode.HALF_UP))).doubleValue();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,8 +88,8 @@ public class GeoMapUtil {
                     s = BigDecimal.ZERO;
                 }
                 //divide相除可能会报错（无限循环小数），要设置保留小数点
-                return d.add(m.divide(bd, 8, BigDecimal.ROUND_HALF_UP)
-                        .add(s.divide(bd.multiply(bd), 8, BigDecimal.ROUND_HALF_UP))).toString();
+                return d.add(m.divide(bd, 8, RoundingMode.HALF_UP)
+                        .add(s.divide(bd.multiply(bd), 8, RoundingMode.HALF_UP))).toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,11 +102,11 @@ public class GeoMapUtil {
         try {
             // 将double类型转换为度分秒
             BigDecimal degreesBigDecimal = new BigDecimal(decimal);
-            BigDecimal degrees = degreesBigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
+            BigDecimal degrees = degreesBigDecimal.setScale(0, RoundingMode.DOWN);
             BigDecimal minutesBigDecimal = degreesBigDecimal.subtract(degrees).multiply(new BigDecimal(60));
-            BigDecimal minutes = minutesBigDecimal.setScale(0, BigDecimal.ROUND_DOWN);
+            BigDecimal minutes = minutesBigDecimal.setScale(0, RoundingMode.DOWN);
             BigDecimal secondsBigDecimal = minutesBigDecimal.subtract(minutes).multiply(new BigDecimal(60));
-            BigDecimal seconds = secondsBigDecimal.setScale(2, BigDecimal.ROUND_DOWN);
+            BigDecimal seconds = secondsBigDecimal.setScale(2, RoundingMode.DOWN);
 
             // 格式化输出
             return String.format("%d°%d′%s″", degrees.intValue(), minutes.intValue(), seconds.toString());

@@ -3,6 +3,7 @@ package pers.fz.mvvm.util.common;
 import android.text.TextUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
@@ -27,7 +28,7 @@ public class MathUtil {
                 sum = sum.add(TextUtils.isEmpty(str) ? BigDecimal.ZERO : new BigDecimal(str));
             }
             BigDecimal count = new BigDecimal(numbers.length);
-            return sum.divide(count, 2, BigDecimal.ROUND_HALF_UP);
+            return sum.divide(count, 2, RoundingMode.HALF_UP);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +114,7 @@ public class MathUtil {
         }
         BigDecimal b1 = TextUtils.isEmpty(v1) ? BigDecimal.ZERO : new BigDecimal(v1);
         BigDecimal b2 = TextUtils.isEmpty(v2) ? BigDecimal.ONE : new BigDecimal(v2);
-        return b1.divide(b2, DEFAULT_DIV_SCALE, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, DEFAULT_DIV_SCALE, RoundingMode.HALF_UP);
     }
 
 
@@ -127,7 +128,7 @@ public class MathUtil {
         }
         BigDecimal b1 = TextUtils.isEmpty(v1) ? BigDecimal.ZERO : new BigDecimal(v1);
         BigDecimal b2 = TextUtils.isEmpty(v2) ? BigDecimal.ONE : new BigDecimal(v2);
-        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, scale, RoundingMode.HALF_UP);
     }
 
     // 除法,默认精度
@@ -137,7 +138,7 @@ public class MathUtil {
         }
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        return b1.divide(b2, DEFAULT_DIV_SCALE, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, DEFAULT_DIV_SCALE, RoundingMode.HALF_UP);
     }
 
     // 除法,自定义精度
@@ -150,7 +151,7 @@ public class MathUtil {
         }
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, scale, RoundingMode.HALF_UP);
     }
 
     // 对一个double截取指定的长度,利用除以1实现
@@ -163,7 +164,7 @@ public class MathUtil {
         }
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal("1");
-        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, scale, RoundingMode.HALF_UP);
     }
 
     // 对一个double截取指定的长度,利用除以1实现
@@ -173,7 +174,7 @@ public class MathUtil {
         }
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal("1");
-        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP);
+        return b1.divide(b2, scale, RoundingMode.HALF_UP);
     }
 
 
@@ -196,30 +197,16 @@ public class MathUtil {
 
     // 判断2个double的值,v1大于v2返回true,否则返回false
     public static boolean valuesGreater(double v1, double v2) {
-        boolean result;
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        int resultInt = b1.compareTo(b2);
-        if (resultInt > 0) {
-            result = true;
-        } else {
-            result = false;
-        }
-        return result;
+        return b1.compareTo(b2) > 0;
     }
 
     // 判断2个double的值,v1小于v2返回true,否则返回false
     public static boolean valuesLess(double v1, double v2) {
-        boolean result;
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        int resultInt = b1.compareTo(b2);
-        if (resultInt < 0) {
-            result = true;
-        } else {
-            result = false;
-        }
-        return result;
+        return b1.compareTo(b2) < 0;
     }
 
     // DecimalFormat格式化，使用默认的格式样式

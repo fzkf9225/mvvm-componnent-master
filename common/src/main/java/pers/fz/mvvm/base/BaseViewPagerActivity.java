@@ -62,6 +62,9 @@ public abstract class BaseViewPagerActivity<VM extends BaseViewModel, VDB extend
         return mBaseViewPager.getCurrentItem();
     }
 
+    /**
+     * tabLayout与ViewPager联动回调
+     */
     protected TabLayoutMediator.TabConfigurationStrategy tabConfigurationStrategy = (tab, position) -> tab.setText(adapter.getPagerInfo()[position].getTitle());
 
     protected abstract PagerInfo[] getPagers();

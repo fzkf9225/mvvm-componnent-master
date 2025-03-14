@@ -8,11 +8,12 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by CherishTang on 2018/7/12.
  * px与dp互转
  */
-
 public class DensityUtil {
     private final static String TAG = DensityUtil.class.getSimpleName();
 
@@ -35,9 +36,9 @@ public class DensityUtil {
         //添加字体变化的监听
         activity.registerComponentCallbacks(new ComponentCallbacks() {
             @Override
-            public void onConfigurationChanged(Configuration newConfig) {
+            public void onConfigurationChanged(@NonNull Configuration newConfig) {
                 //字体改变后,将appScaledDensity重新赋值
-                if (newConfig != null && newConfig.fontScale > 0) {
+                if (newConfig.fontScale > 0) {
                     appScaledDensity = activity.getResources().getDisplayMetrics().scaledDensity;
                 }
             }

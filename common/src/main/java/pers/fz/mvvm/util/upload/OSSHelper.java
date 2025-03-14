@@ -66,14 +66,14 @@ public class OSSHelper {
     /**
      * 上传
      */
-    private final class DownloadRunnable implements Runnable {
-        private String objectName;
-        private String accessKey;
-        private String secretKey;
-        private String secretToken;
-        private String bucketName;
-        private String savePath;
-        private OSSCallback callback;
+    private static final class DownloadRunnable implements Runnable {
+        private final String objectName;
+        private final String accessKey;
+        private final String secretKey;
+        private final String secretToken;
+        private final String bucketName;
+        private final String savePath;
+        private final OSSCallback callback;
 
         public DownloadRunnable(String objectName, String accessKey, String secretKey, String secretToken, String bucketName, String savePath, OSSCallback callback) {
             this.objectName = objectName;
@@ -148,15 +148,15 @@ public class OSSHelper {
         ThreadExecutor.getInstance().execute(new UploadRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, uri, callback));
     }
 
-    private final class UploadRunnable implements Runnable {
-        private String endPoint;
-        private String accessKey;
-        private String secretKey;
-        private String secretToken;
-        private String bucketName;
-        private Uri uri;
+    private static final class UploadRunnable implements Runnable {
+        private final String endPoint;
+        private final String accessKey;
+        private final String secretKey;
+        private final String secretToken;
+        private final String bucketName;
+        private final Uri uri;
         private long transferred;
-        private OSSCallback callback;
+        private final OSSCallback callback;
         private long size = -1;
         private String fileName = null;
         private int lastProcess = -1;
@@ -245,15 +245,15 @@ public class OSSHelper {
         ThreadExecutor.getInstance().execute(new UploadFileRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, file, callback));
     }
 
-    private final class UploadFileRunnable implements Runnable {
-        private String endPoint;
-        private String accessKey;
-        private String secretKey;
-        private String secretToken;
-        private String bucketName;
-        private File file;
+    private static final class UploadFileRunnable implements Runnable {
+        private final String endPoint;
+        private final String accessKey;
+        private final String secretKey;
+        private final String secretToken;
+        private final String bucketName;
+        private final File file;
         private long transferred;
-        private OSSCallback callback;
+        private final OSSCallback callback;
         private int lastProcess = -1;
 
         public UploadFileRunnable(String endPoint, String accessKey, String secretKey, String secretToken, String bucketName, File file, OSSCallback callback) {

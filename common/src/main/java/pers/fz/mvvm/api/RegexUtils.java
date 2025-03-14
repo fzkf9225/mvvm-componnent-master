@@ -7,79 +7,91 @@ import java.util.regex.Pattern;
  * Created by fz on 2017/12/27.
  * 正则工具类
  */
-
 public class RegexUtils {
 
     public static final String nameRegex = "^([\\u4e00-\\u9fa5]+|([a-z]+\\s?)+)$";//身份证正则
 
     /**
-     * Email正则表达式="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+     * Email正则表达式
      */
-    //public static final String EMAIL = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";;
-    public static final String EMAIL = "\\w+(\\.\\w+)*@\\w+(\\.\\w+)+";
-    /**
-     * 电话号码正则表达式= (^(\d{2,4}[-_－—]?)?\d{3,8}([-_－—]?\d{3,8})?([-_－—]?\d{1,7})?$)|(^0?1[35]\d{9}$)
-     */
-    public static final String PHONE = "(^(\\d{2,4}[-_－—]?)?\\d{3,8}([-_－—]?\\d{3,8})?([-_－—]?\\d{1,7})?$)|(^0?1[35]\\d{9}$)";
-    /**
-     * 手机号码正则表达式=^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$
-     */
-    public static final String MOBILE = "^((13[0-9])|(15[0-9])|(18[0,1,2,3,5-9])|(17[0-9])|(19[0,2,6,7,8,9])|(147)|(145))\\d{8}$";
+    public static final String EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
 
     /**
-     * Integer正则表达式 ^-?(([1-9]\d*$)|0)
+     * 电话号码正则表达式
+     */
+    public static final String PHONE = "(^(\\d{2,4}[-_－—]?)?\\d{3,8}([-_－—]?\\d{3,8})?([-_－—]?\\d{1,7})?$)|(^0?1[35]\\d{9}$)";
+
+    /**
+     * 手机号码正则表达式
+     */
+    public static final String MOBILE = "^((13[0-9])|(14[5-9])|(15[0-3,5-9])|(16[5-6])|(17[0-8])|(18[0-9])|(19[1,8,9]))\\d{8}$";
+
+    /**
+     * Integer正则表达式
      */
     public static final String INTEGER = "^-?(([1-9]\\d*$)|0)";
+
     /**
-     * 正整数正则表达式 >=0 ^[1-9]\d*|0$
+     * 正整数正则表达式 >=0
      */
     public static final String INTEGER_NEGATIVE = "^[1-9]\\d*|0$";
+
     /**
-     * 负整数正则表达式 <=0 ^-[1-9]\d*|0$
+     * 负整数正则表达式 <=0
      */
     public static final String INTEGER_POSITIVE = "^-[1-9]\\d*|0$";
+
     /**
-     * Double正则表达式 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
+     * Double正则表达式
      */
     public static final String DOUBLE = "^[-+]?[0-9]+(\\.[0-9]+)?$";
+
     /**
      * 两位有效数字
      */
     public static final String DOUBLE_00 = "^\\d+\\.\\d{2}$";
+
     /**
-     * 正Double正则表达式 >=0 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
+     * 正Double正则表达式 >=0
      */
     public static final String DOUBLE_NEGATIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
+
     /**
-     * 负Double正则表达式 <= 0 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
+     * 负Double正则表达式 <= 0
      */
     public static final String DOUBLE_POSITIVE = "^-[0-9]+(\\.[0-9]+)?$";
+
     /**
-     * 年龄正则表达式 ^(?:[1-9][0-9]?|1[01][0-9]|120)$ 匹配0-120岁
+     * 年龄正则表达式 匹配0-120岁
      */
     public static final String AGE = "^(?:[1-9][0-9]?|1[01][0-9]|120)$";
+
     /**
-     * 邮编正则表达式 [0-9]\d{5}(?!\d) 国内6位邮编
+     * 邮编正则表达式 国内6位邮编
      */
     public static final String CODE = "[0-9]\\d{5}(?!\\d)";
+
     /**
-     * 匹配由数字、26个英文字母或者下划线组成的字符串 ^\w+$
+     * 匹配由数字、26个英文字母或者下划线组成的字符串
      */
     public static final String STR_ENG_NUM_ = "^\\w+$";
+
     /**
-     * 匹配由数字和26个英文字母组成的字符串 ^[A-Za-z0-9]+$
+     * 匹配由数字和26个英文字母组成的字符串
      */
     public static final String STR_ENG_NUM = "^[A-Za-z0-9]+";
+
     /**
-     * 匹配由26个英文字母组成的字符串 ^[A-Za-z]+$
+     * 匹配由26个英文字母组成的字符串
      */
     public static final String STR_ENG = "^[A-Za-z]+$";
+
     /**
      * 过滤特殊字符串正则
-     * regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“'。，、？]";
      */
     public static final String STR_SPECIAL = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“'。，、？]";
-    /***
+
+    /**
      * 日期正则 支持：
      * YYYY-MM-DD
      * YYYY/MM/DD
@@ -96,7 +108,8 @@ public class RegexUtils {
             "|(^([1][89][2468][048])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$)|(^([2-9][0-9][2468][048])([-\\/\\._]?)(0?2)" +
             "([-\\/\\._]?)(29)$)|(^([1][89][13579][26])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$)|" +
             "(^([2-9][0-9][13579][26])([-\\/\\._]?)(0?2)([-\\/\\._]?)(29)$))";
-    /***
+
+    /**
      * 日期正则 支持：
      * YYYY-MM-DD
      */
@@ -106,17 +119,12 @@ public class RegexUtils {
      * URL正则表达式
      * 匹配 http www ftp
      */
-    public static final String URL = "^(http|www|ftp|)?(://)?(\\w+(-\\w+)*)(\\.(\\w+(-\\w+)*))*((:\\d+)?)(/(\\w+(-\\w+)*))*(\\.?(\\w)*)(\\?)?" +
-            "(((\\w*%)*(\\w*\\?)*(\\w*:)*(\\w*\\+)*(\\w*\\.)*(\\w*&)*(\\w*-)*(\\w*=)*(\\w*%)*(\\w*\\?)*" +
-            "(\\w*:)*(\\w*\\+)*(\\w*\\.)*" +
-            "(\\w*&)*(\\w*-)*(\\w*=)*)*(\\w*)*)$";
+    public static final String URL = "^(https?|ftp):\\/\\/([^\\s\\/$.?#].[^\\s]*)$";
 
     /**
      * 身份证正则表达式
      */
-    public static final String IDCARD = "((11|12|13|14|15|21|22|23|31|32|33|34|35|36|37|41|42|43|44|45|46|50|51|52|53|54|61|62|63|64|65)[0-9]{4})" +
-            "(([1|2][0-9]{3}[0|1][0-9][0-3][0-9][0-9]{3}" +
-            "[Xx0-9])|([0-9]{2}[0|1][0-9][0-3][0-9][0-9]{3}))";
+    public static final String IDCARD = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
 
     /**
      * 机构代码
@@ -124,57 +132,57 @@ public class RegexUtils {
     public static final String JIGOU_CODE = "^[A-Z0-9]{8}-[A-Z0-9]$";
 
     /**
-     * 匹配数字组成的字符串 ^[0-9]+$
+     * 匹配数字组成的字符串
      */
     public static final String STR_NUM = "^[0-9]+$";
 
-////------------------验证方法
+    ////------------------验证方法
 
     /**
      * 判断字段是否为空 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
-    public static synchronized boolean StrisNull(String str) {
-        return null == str || str.trim().length() <= 0 ? true : false;
+    public static synchronized boolean strIsNull(String str) {
+        return null == str || str.trim().isEmpty();
     }
 
     /**
      * 判断字段是非空 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
-    public static boolean StrNotNull(String str) {
-        return !StrisNull(str);
+    public static boolean strNotNull(String str) {
+        return !strIsNull(str);
     }
 
     /**
      * 字符串null转空
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
-    public static String nulltoStr(String str) {
-        return StrisNull(str) ? "" : str;
+    public static String nullToStr(String str) {
+        return strIsNull(str) ? "" : str;
     }
 
     /**
      * 字符串null赋值默认值
      *
      * @param str    目标字符串
-     * @param defaut 默认值
+     * @param defaultStr 默认值
      * @return String
      */
-    public static String nulltoStr(String str, String defaut) {
-        return StrisNull(str) ? defaut : str;
+    public static String nullToStr(String str, String defaultStr) {
+        return strIsNull(str) ? defaultStr : str;
     }
 
     /**
      * 判断字段是否为Email 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isEmail(String str) {
@@ -184,7 +192,7 @@ public class RegexUtils {
     /**
      * 判断是否为电话号码 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isPhone(String str) {
@@ -194,7 +202,7 @@ public class RegexUtils {
     /**
      * 判断是否为手机号码 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isMobile(String str) {
@@ -204,7 +212,7 @@ public class RegexUtils {
     /**
      * 判断是否为Url 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isUrl(String str) {
@@ -214,7 +222,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为数字 正负整数 正负浮点数 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isNumber(String str) {
@@ -224,7 +232,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为INTEGER 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isInteger(String str) {
@@ -234,7 +242,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为正整数正则表达式 >=0 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isINTEGER_NEGATIVE(String str) {
@@ -244,7 +252,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为负整数正则表达式 <=0 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isINTEGER_POSITIVE(String str) {
@@ -254,7 +262,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为DOUBLE 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isDouble(String str) {
@@ -264,7 +272,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为DOUBLE 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isDoubleTwoDecimals(String str) {
@@ -274,7 +282,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为正浮点数正则表达式 >=0 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isDOUBLE_NEGATIVE(String str) {
@@ -284,7 +292,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为负浮点数正则表达式 <=0 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isDOUBLE_POSITIVE(String str) {
@@ -294,7 +302,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为日期 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isDate(String str) {
@@ -304,8 +312,8 @@ public class RegexUtils {
     /**
      * 验证2010-12-10
      *
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return boolean
      */
     public static boolean isDate1(String str) {
         return Regular(str, DATE_FORMAT1);
@@ -314,7 +322,7 @@ public class RegexUtils {
     /**
      * 判断字段是否为年龄 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isAge(String str) {
@@ -325,22 +333,22 @@ public class RegexUtils {
      * 判断字段是否超长
      * 字串为空返回fasle, 超过长度{leng}返回ture 反之返回false
      *
-     * @param str
-     * @param leng
+     * @param str 字符串
+     * @param length 长度
      * @return boolean
      */
-    public static boolean isLengOut(String str, int leng) {
-        return StrisNull(str) ? false : str.trim().length() > leng;
+    public static boolean isLengthOut(String str, int length) {
+        return !strIsNull(str) && str.trim().length() > length;
     }
 
     /**
      * 判断字段是否为身份证 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isIdCard(String str) {
-        if (StrisNull(str)) {
+        if (strIsNull(str)) {
             return false;
         }
         if (str.trim().length() == 15 || str.trim().length() == 18) {
@@ -348,13 +356,12 @@ public class RegexUtils {
         } else {
             return false;
         }
-
     }
 
     /**
      * 判断字段是否为邮编 符合返回ture
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isCode(String str) {
@@ -364,7 +371,7 @@ public class RegexUtils {
     /**
      * 判断字符串是不是全部是英文字母
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isEnglish(String str) {
@@ -374,7 +381,7 @@ public class RegexUtils {
     /**
      * 判断字符串是不是全部是英文字母+数字
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isENG_NUM(String str) {
@@ -384,7 +391,7 @@ public class RegexUtils {
     /**
      * 判断字符串是不是全部是英文字母+数字+下划线
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isENG_NUM_(String str) {
@@ -394,7 +401,7 @@ public class RegexUtils {
     /**
      * 过滤特殊字符串 返回过滤后的字符串
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static String filterStr(String str) {
@@ -406,16 +413,16 @@ public class RegexUtils {
     /**
      * 校验机构代码格式
      *
-     * @return
+     * @return boolean
      */
-    public static boolean isJigouCode(String str) {
+    public static boolean isJiGouCode(String str) {
         return Regular(str, JIGOU_CODE);
     }
 
     /**
      * 判断字符串是不是数字组成
      *
-     * @param str
+     * @param str 字符串
      * @return boolean
      */
     public static boolean isSTR_NUM(String str) {
@@ -434,7 +441,7 @@ public class RegexUtils {
      * @return boolean
      */
     private static boolean Regular(String str, String pattern) {
-        if (null == str || str.trim().length() <= 0) {
+        if (null == str || str.trim().isEmpty()) {
             return false;
         }
         Pattern p = Pattern.compile(pattern);
@@ -474,5 +481,4 @@ public class RegexUtils {
         // 返回
         return str;
     }
-
 }

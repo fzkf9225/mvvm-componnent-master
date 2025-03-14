@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  *Created by fz on 2016/6/21.
@@ -34,7 +35,7 @@ public class CacheUtil {
     public void clearImageDiskCache(final Context context) {
         try {
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                ThreadExecutor.getInstance().execute(()->Glide.get(context).clearDiskCache());
+                ThreadExecutor.getInstance().execute(() -> Glide.get(context).clearDiskCache());
             } else {
                 Glide.get(context).clearDiskCache();
             }
@@ -62,7 +63,7 @@ public class CacheUtil {
     public void clearImageAllCache(Context context) {
         clearImageDiskCache(context);
         clearImageMemoryCache(context);
-        String ImageExternalCatchDir=context.getExternalCacheDir()+ ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
+        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
         deleteFolderFile(ImageExternalCatchDir, true);
     }
 
@@ -72,7 +73,7 @@ public class CacheUtil {
      */
     public String getCacheSize(Context context) {
         try {
-            return getFormatSize(getFolderSize(new File(context.getCacheDir() + "/"+ InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
+            return getFormatSize(getFolderSize(new File(context.getCacheDir() + "/" + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,6 +91,9 @@ public class CacheUtil {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
+            if (fileList == null || fileList.length == 0) {
+                return 0;
+            }
             for (File aFileList : fileList) {
                 if (aFileList.isDirectory()) {
                     size = size + getFolderSize(aFileList);
@@ -114,18 +118,15 @@ public class CacheUtil {
                 File file = new File(filePath);
                 if (file.isDirectory()) {
                     File[] files = file.listFiles();
+                    if (files == null || files.length == 0) {
+                        return;
+                    }
                     for (File file1 : files) {
                         deleteFolderFile(file1.getAbsolutePath(), true);
                     }
                 }
                 if (deleteThisPath) {
-                    if (!file.isDirectory()) {
-                        file.delete();
-                    } else {
-                        if (file.listFiles().length == 0) {
-                            file.delete();
-                        }
-                    }
+                    boolean isDelete = file.delete();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,23 +149,23 @@ public class CacheUtil {
         double megaByte = kiloByte / 1024;
         if (megaByte < 1) {
             BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
-            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+            return result1.setScale(2, RoundingMode.HALF_UP).toPlainString() + "KB";
         }
 
         double gigaByte = megaByte / 1024;
         if (gigaByte < 1) {
             BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
-            return result2.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
+            return result2.setScale(2, RoundingMode.HALF_UP).toPlainString() + "MB";
         }
 
         double teraBytes = gigaByte / 1024;
         if (teraBytes < 1) {
             BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
-            return result3.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
+            return result3.setScale(2, RoundingMode.HALF_UP).toPlainString() + "GB";
         }
         BigDecimal result4 = new BigDecimal(teraBytes);
 
-        return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
+        return result4.setScale(2, RoundingMode.HALF_UP).toPlainString() + "TB";
     }
 
 }
