@@ -86,7 +86,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             rightTextColor = typedArray.getColor(R.styleable.FormImage_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             emptyTextColor = typedArray.getColor(R.styleable.FormImage_emptyTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
@@ -101,7 +101,7 @@ public class FormFile extends ConstraintLayout implements FileAddAdapter.FileCle
         } else {
             rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             emptyTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             radius = DensityUtil.dp2px(getContext(), 4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);

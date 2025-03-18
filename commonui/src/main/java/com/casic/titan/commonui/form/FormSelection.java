@@ -68,14 +68,14 @@ public class FormSelection extends ConstraintLayout {
             formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
             rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormEditText_line, 1);
             typedArray.recycle();
         } else {
             rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);

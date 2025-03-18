@@ -36,6 +36,7 @@ public class FormVideoShow extends ConstraintLayout {
     protected boolean required = false;
     protected boolean bottomBorder = true;
     protected TextView tvLabel, tvRequired;
+    protected int labelTextColor;
     protected RecyclerView mRecyclerViewImage;
     private BaseRecyclerViewAdapter<?, ?> adapter;
     private float formLabelTextSize;
@@ -64,6 +65,7 @@ public class FormVideoShow extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
@@ -71,6 +73,7 @@ public class FormVideoShow extends ConstraintLayout {
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -86,6 +89,7 @@ public class FormVideoShow extends ConstraintLayout {
         tvRequired = findViewById(R.id.tv_required);
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvLabel.setText(labelString);
+        tvLabel.setTextColor(labelTextColor);
         tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {

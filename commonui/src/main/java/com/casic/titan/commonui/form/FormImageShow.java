@@ -35,6 +35,7 @@ public class FormImageShow extends ConstraintLayout {
     protected boolean bottomBorder = true;
     private BaseRecyclerViewAdapter<?, ?> adapter;
     private float formLabelTextSize;
+    protected int labelTextColor;
     private float formRequiredSize;
     private FormImageBinding binding;
     public FormImageShow(Context context) {
@@ -61,12 +62,14 @@ public class FormImageShow extends ConstraintLayout {
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
@@ -79,6 +82,7 @@ public class FormImageShow extends ConstraintLayout {
                 getPaddingEnd(), DensityUtil.dp2px(getContext(), 12));
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         binding.tvLabel.setText(labelString);
+        binding.tvLabel.setTextColor(labelTextColor);
         binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
         binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
         if (bottomBorder) {

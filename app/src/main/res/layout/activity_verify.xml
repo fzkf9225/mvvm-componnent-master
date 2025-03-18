@@ -92,7 +92,7 @@
                 app:selectedTextColor="@color/white"
                 app:startDate="2024-11-01"
                 app:calendarMode="range"
-                app:endDate="2024-12-31"
+                app:endDate="2027-12-31"
                 app:showDot="false"
                 app:formImeOptions="actionNext"
                 app:formInputType="text"

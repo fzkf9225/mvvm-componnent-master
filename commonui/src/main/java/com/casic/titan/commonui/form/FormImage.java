@@ -87,7 +87,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             labelString = typedArray.getString(R.styleable.FormImage_label);
             bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, DensityUtil.dp2px(getContext(), 8));
@@ -99,7 +99,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             radius = DensityUtil.dp2px(getContext(), 8);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);

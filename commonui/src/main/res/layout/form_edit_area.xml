@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
-            android:textColor="@color/dark_color"
+            android:textColor="@color/auto_color"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/edit_area"
             app:layout_constraintStart_toStartOf="parent"

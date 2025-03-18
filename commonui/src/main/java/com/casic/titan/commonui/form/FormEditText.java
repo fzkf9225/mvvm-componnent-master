@@ -2,11 +2,14 @@ package com.casic.titan.commonui.form;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,11 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.databinding.FormEditTextBinding;
+import com.casic.titan.commonui.enums.LabelAlignEnum;
 import com.casic.titan.commonui.helper.FormDataSource;
 import com.casic.titan.commonui.impl.DecimalDigitsInputFilter;
 import com.casic.titan.commonui.inter.FormTextWatcher;
+import com.google.android.material.shape.MaterialShapeDrawable;
 
 import pers.fz.mvvm.util.common.DensityUtil;
 
@@ -73,7 +78,7 @@ public class FormEditText extends ConstraintLayout {
             labelString = typedArray.getString(R.styleable.FormEditText_label);
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
             rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
             inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
@@ -87,7 +92,7 @@ public class FormEditText extends ConstraintLayout {
             typedArray.recycle();
         } else {
             rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -96,7 +101,6 @@ public class FormEditText extends ConstraintLayout {
 
     private void init() {
         binding = FormEditTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         binding.setLifecycleOwner((LifecycleOwner) getContext());
         binding.setData(formDataSource);
         binding.editText.setHint(hintString);

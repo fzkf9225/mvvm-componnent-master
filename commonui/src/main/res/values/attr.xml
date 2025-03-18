@@ -17,20 +17,33 @@
         </attr>
         <attr name="clickable" format="boolean" />
     </declare-styleable>
-
+    <!--label文字内容-->
     <attr name="label" format="string" />
+    <!--是否展示*，提示必填-->
     <attr name="required" format="boolean" />
+    <!--输入框最大文本输入长度-->
     <attr name="maxLength" format="integer" />
+    <!--开始年度，例如：2025-->
     <attr name="startYear" format="integer" />
+    <!--结束年度，例如：2027-->
     <attr name="endYear" format="integer" />
+    <!--是否展示表单底部边框-->
     <attr name="bottomBorder" format="boolean" />
+    <!--输入框、选择框、文本内容文字颜色-->
     <attr name="rightTextColor" format="reference|color" />
+    <!--空白内容时，占用的文字颜色-->
     <attr name="emptyTextColor" format="reference|color" />
+    <!--label文字颜色-->
     <attr name="labelTextColor" format="reference|color" />
+    <!--确认按钮颜色-->
     <attr name="confirmTextColor" format="reference|color" />
+    <!--label文字大小-->
     <attr name="formLabelTextSize" format="dimension" />
+    <!--输入框、选择框、文本内容文字大小-->
     <attr name="formTextSize" format="dimension" />
+    <!--*号大小-->
     <attr name="formRequiredSize" format="dimension" />
+    <!--弹框整体北京样式，drawable-->
     <attr name="dialogBgDrawable" format="reference" />
     <declare-styleable name="FormImage">
         <attr name="label" />
@@ -41,24 +54,37 @@
         <attr name="rightTextColor" />
         <attr name="formLabelTextSize"/>
         <attr name="formTextSize"/>
+        <!--默认的添加图标资源-->
         <attr name="file_add_src" format="reference"/>
         <attr name="formRequiredSize"/>
+        <!--矩形框圆角大小-->
         <attr name="add_image_radius" format="dimension"/>
         <!--是否默认开启压缩-->
         <attr name="compress" format="boolean"/>
         <!--压缩图片大小，单位kb-->
         <attr name="compressImageSize" format="integer" />
+        <!--最大可选数量-->
         <attr name="maxCount" format="integer"/>
+        <!--字段名，AttachmentUtil自动转换-->
         <attr name="field" format="string"/>
+        <!--添加图片视频的时候，框框背景色-->
         <attr name="bgColor" format="color" />
+        <!--媒体样式-->
         <attr name="mediaType">
+            <!--相册、拍照兼具-->
             <enum name="camera_album" value="3" />
+            <!--仅拍照-->
             <enum name="camera" value="1" />
+            <!--仅相册-->
             <enum name="album" value="2" />
         </attr>
+        <!--视频压缩质量-->
         <attr name="compress_video" format="enum">
+            <!--高质量，即压缩比例小-->
             <enum name="high" value="1" />
+            <!--中等质量-->
             <enum name="medium" value="2" />
+            <!--低质量，即压缩比例最大-->
             <enum name="low" value="3" />
         </attr>
     </declare-styleable>
@@ -76,16 +102,26 @@
         <attr name="startYear" />
         <attr name="endYear" />
         <attr name="dialogBgDrawable"/>
+        <!--日历选择样式-->
         <attr name="datePickModel" format="enum">
+            <!--年月日-->
             <enum name="YEAR_MONTH_DAY" value="0" />
+            <!--年月-->
             <enum name="YEAR_MONTH" value="1" />
+            <!--年-->
             <enum name="YEAR" value="2" />
+            <!--年月日时分秒-->
             <enum name="YEAR_MONTH_DAY_HOUR_MINUTE_SECOND" value="3" />
+            <!--年月日时分-->
             <enum name="YEAR_MONTH_DAY_HOUR_MINUTE" value="4" />
+            <!--年月日时-->
             <enum name="YEAR_MONTH_DAY_HOUR" value="5" />
+            <!--时分秒-->
             <enum name="HOUR_MINUTE_SECOND" value="6" />
+            <!--时分-->
             <enum name="HOUR_MINUTE" value="7" />
         </attr>
+        <!--输入框输入的样式，可以自动格式化，但是目前未实现次功能-->
         <attr name="formatText" format="enum">
             <enum name="normal" value="0" />
             <enum name="Integer" value="1" />
@@ -94,12 +130,19 @@
             <enum name="Float" value="4" />
             <enum name="Long" value="5" />
         </attr>
+        <!--分隔符-->
         <attr name="separator" format="string" />
+        <!--时间格式化的样式，例如：yyyy-MM-dd-->
         <attr name="format" format="string" />
+        <!--开始时间格式化的样式，例如：yyyy-MM-dd-->
         <attr name="startFormat" format="string" />
+        <!--截止时间格式化的样式，例如：yyyy-MM-dd-->
         <attr name="endFormat" format="string" />
+        <!--提示文字-->
         <attr name="hint" format="string" />
+        <!--显示行数-->
         <attr name="line" format="integer" />
+        <!--小数点位数-->
         <attr name="digits" format="integer" />
         <!-- 引用原生属性 -->
         <attr name="formInputType">

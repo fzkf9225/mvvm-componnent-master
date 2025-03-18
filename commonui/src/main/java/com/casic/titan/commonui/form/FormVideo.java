@@ -92,7 +92,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
             required = typedArray.getBoolean(R.styleable.FormImage_required, false);
             compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
             radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 4);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
             compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_LOW);
             mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
@@ -102,7 +102,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             radius = DensityUtil.dp2px(getContext(), 4);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
