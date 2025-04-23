@@ -135,7 +135,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
             if (errorService == null || model == null) {
                 return;
             }
-            if (!errorService.isLoginPast(model.getCode())) {
+            if (errorService.isLoginPast(model.getCode())) {
                 errorService.toLogin(requireContext(), loginLauncher);
                 return;
             }

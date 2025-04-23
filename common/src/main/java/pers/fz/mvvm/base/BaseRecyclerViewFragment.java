@@ -176,7 +176,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             if (errorService == null||model==null) {
                 return;
             }
-            if (!errorService.isLoginPast(model.getCode())) {
+            if (errorService.isLoginPast(model.getCode())) {
                 errorService.toLogin(requireContext(),loginLauncher);
                 return;
             }
