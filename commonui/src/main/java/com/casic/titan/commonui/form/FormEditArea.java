@@ -1,6 +1,7 @@
 package com.casic.titan.commonui.form;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -92,7 +93,10 @@ public class FormEditArea extends ConstraintLayout {
     private void init() {
         binding = FormEditAreaBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        binding.setLifecycleOwner((LifecycleOwner) getContext());
+        lifecycleOwner = findLifecycleOwner(getContext());
+        if (lifecycleOwner != null) {
+            binding.setLifecycleOwner(lifecycleOwner);
+        }
         binding.setData(formDataSource);
         binding.editArea.setHint(hintString);
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
@@ -117,6 +121,31 @@ public class FormEditArea extends ConstraintLayout {
         return binding;
     }
 
+    private LifecycleOwner lifecycleOwner;
+
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+
+    private LifecycleOwner findLifecycleOwner(Context context) {
+        if (context instanceof LifecycleOwner) {
+            return (LifecycleOwner) context;
+        } else if (context instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) context).getBaseContext();
+            if (baseContext instanceof LifecycleOwner) {
+                return (LifecycleOwner) baseContext;
+            }
+        }
+        return null; // 或抛出异常
+    }
+
+    // 如果需要在外部设置LifecycleOwner
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        this.lifecycleOwner = owner;
+        if (binding != null) {
+            binding.setLifecycleOwner(this.lifecycleOwner);
+        }
+    }
     /**
      * 不要使用这个因为会导致databinding双向绑定无效
      */

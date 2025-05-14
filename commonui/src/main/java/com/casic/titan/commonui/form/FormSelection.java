@@ -1,6 +1,7 @@
 package com.casic.titan.commonui.form;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -64,9 +65,9 @@ public class FormSelection extends ConstraintLayout {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
             labelString = typedArray.getString(R.styleable.FormEditText_label);
             hintString = typedArray.getString(R.styleable.FormEditText_hint);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(),14));
-            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(),14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(),14));
+            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(), 14));
+            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
@@ -85,7 +86,10 @@ public class FormSelection extends ConstraintLayout {
     protected void init() {
         binding = FormSelectionBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        binding.setLifecycleOwner((LifecycleOwner) getContext());
+        lifecycleOwner = findLifecycleOwner(getContext());
+        if (lifecycleOwner != null) {
+            binding.setLifecycleOwner(lifecycleOwner);
+        }
         binding.setData(formDataSource);
         binding.tvSelection.setSelected(true);
         binding.tvSelection.setHint(hintString);
@@ -111,6 +115,32 @@ public class FormSelection extends ConstraintLayout {
             // 设置自定义布局的paddingTop和paddingBottom
             int padding = DensityUtil.dp2px(getContext(), 12); // 你可以根据需要调整padding值
             setPadding(getPaddingStart(), padding, getPaddingEnd(), padding);
+        }
+    }
+
+    private LifecycleOwner lifecycleOwner;
+
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+
+    private LifecycleOwner findLifecycleOwner(Context context) {
+        if (context instanceof LifecycleOwner) {
+            return (LifecycleOwner) context;
+        } else if (context instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) context).getBaseContext();
+            if (baseContext instanceof LifecycleOwner) {
+                return (LifecycleOwner) baseContext;
+            }
+        }
+        return null; // 或抛出异常
+    }
+
+    // 如果需要在外部设置LifecycleOwner
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        this.lifecycleOwner = owner;
+        if (binding != null) {
+            binding.setLifecycleOwner(this.lifecycleOwner);
         }
     }
 

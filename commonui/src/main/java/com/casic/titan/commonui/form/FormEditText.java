@@ -1,6 +1,7 @@
 package com.casic.titan.commonui.form;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -101,7 +102,10 @@ public class FormEditText extends ConstraintLayout {
 
     private void init() {
         binding = FormEditTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        binding.setLifecycleOwner((LifecycleOwner) getContext());
+        lifecycleOwner = findLifecycleOwner(getContext());
+        if (lifecycleOwner != null) {
+            binding.setLifecycleOwner(lifecycleOwner);
+        }
         binding.setData(formDataSource);
         binding.editText.setHint(hintString);
         binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
@@ -124,7 +128,31 @@ public class FormEditText extends ConstraintLayout {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
         }
     }
+    private LifecycleOwner lifecycleOwner;
 
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+
+    private LifecycleOwner findLifecycleOwner(Context context) {
+        if (context instanceof LifecycleOwner) {
+            return (LifecycleOwner) context;
+        } else if (context instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) context).getBaseContext();
+            if (baseContext instanceof LifecycleOwner) {
+                return (LifecycleOwner) baseContext;
+            }
+        }
+        return null; // 或抛出异常
+    }
+
+    // 如果需要在外部设置LifecycleOwner
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        this.lifecycleOwner = owner;
+        if (binding != null) {
+            binding.setLifecycleOwner(this.lifecycleOwner);
+        }
+    }
     public FormEditTextBinding getBinding() {
         return binding;
     }

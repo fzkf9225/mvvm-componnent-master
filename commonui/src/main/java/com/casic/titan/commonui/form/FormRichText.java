@@ -1,6 +1,7 @@
 package com.casic.titan.commonui.form;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -88,7 +89,10 @@ public class FormRichText extends ConstraintLayout {
         defaultDrawable = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
         binding = FormRichTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        binding.setLifecycleOwner((LifecycleOwner) getContext());
+        lifecycleOwner = findLifecycleOwner(getContext());
+        if (lifecycleOwner != null) {
+            binding.setLifecycleOwner(lifecycleOwner);
+        }
         binding.tvRichText.setSelected(true);
         binding.tvRichText.setHint(hintString);
         binding.tvRichText.setTextColor(rightTextColor);
@@ -106,7 +110,31 @@ public class FormRichText extends ConstraintLayout {
         // 使链接可点击
         binding.tvRichText.setMovementMethod(LinkMovementMethod.getInstance());
     }
+    private LifecycleOwner lifecycleOwner;
 
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
+
+    private LifecycleOwner findLifecycleOwner(Context context) {
+        if (context instanceof LifecycleOwner) {
+            return (LifecycleOwner) context;
+        } else if (context instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) context).getBaseContext();
+            if (baseContext instanceof LifecycleOwner) {
+                return (LifecycleOwner) baseContext;
+            }
+        }
+        return null; // 或抛出异常
+    }
+
+    // 如果需要在外部设置LifecycleOwner
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        this.lifecycleOwner = owner;
+        if (binding != null) {
+            binding.setLifecycleOwner(this.lifecycleOwner);
+        }
+    }
     public FormRichTextBinding getBinding() {
         return binding;
     }
