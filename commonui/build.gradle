@@ -19,6 +19,11 @@ android {
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
         //加载项目build.gradle的anroid标签下
         dataBinding {
             enabled = true
@@ -77,6 +82,14 @@ dependencies {
     implementation libs.gson
     implementation project(':common')
     implementation project(':commonmedia')
+
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    kapt libs.room.compiler
+    // optional - RxJava3 support for Room
+    implementation libs.room.rxjava3
+    // optional - Paging 3 Integration
+    implementation libs.room.paging
 }
 
 //执行以下命令完成制品推送
@@ -105,7 +118,7 @@ afterEvaluate {
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.titan.commonui'
                 artifactId = 'commonui'
-                version = '1.3.10'
+                version = '1.4.0'
             }
         }
         repositories {

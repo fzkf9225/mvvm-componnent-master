@@ -7,6 +7,9 @@ import android.text.TextWatcher;
 
 import androidx.core.content.ContextCompat;
 
+import com.casic.titan.commonui.database.AttachmentDatabase;
+import com.casic.titan.commonui.repository.AttachmentRepositoryImpl;
+import com.casic.titan.commonui.utils.AttachmentUtil;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
@@ -16,10 +19,13 @@ import com.casic.titan.demo.viewmodel.VerifyViewModel;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.rxjava3.functions.Action;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.verify.VerifyResult;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 
 @AndroidEntryPoint
@@ -67,6 +73,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
                 finish();
             }
         });
+        AttachmentRepositoryImpl attachmentRepository = new AttachmentRepositoryImpl(AttachmentDatabase.getInstance(getApplication()).getAttachmentDao(),this);
         binding.verifySubmit.setOnClickListener(v -> {
             showLoading("验证中...");
             binding.getData().setImageList(binding.formImage.getImages());

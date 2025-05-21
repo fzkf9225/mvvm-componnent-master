@@ -20,8 +20,11 @@ import java.util.concurrent.TimeUnit
  */
 open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     private val roomDao: DB,
-    private val baseView: BV
+    protected val baseView: BV
 ) : IRepository {
+
+    fun getRoomDao() = roomDao
+
     /**
      * 离开页面，是否取消网络
      */
@@ -34,17 +37,17 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
         ArrayList<Subscription>()
     }
 
-    private fun addSubscription(subscription: Subscription) {
+    protected fun addSubscription(subscription: Subscription) {
         subscriptionList.add(subscription)
     }
 
-    private fun removeSubscription(subscription: Subscription) {
+    protected fun removeSubscription(subscription: Subscription) {
         subscriptionList.isNotEmpty().let {
             subscriptionList.remove(subscription)
         }
     }
 
-    private fun removeDisposable(disposable: Disposable) {
+    protected fun removeDisposable(disposable: Disposable) {
         if (compositeDisposable.isDisposed) {
             return
         }
@@ -181,7 +184,10 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.DELETE_SUCCESS_MSG, BaseException.DELETE_SUCCESS)
+                    throw BaseException(
+                        BaseException.DELETE_SUCCESS_MSG,
+                        BaseException.DELETE_SUCCESS
+                    )
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -218,7 +224,10 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.DELETE_SUCCESS_MSG, BaseException.DELETE_SUCCESS)
+                    throw BaseException(
+                        BaseException.DELETE_SUCCESS_MSG,
+                        BaseException.DELETE_SUCCESS
+                    )
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -255,7 +264,10 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.DELETE_SUCCESS_MSG, BaseException.DELETE_SUCCESS)
+                    throw BaseException(
+                        BaseException.DELETE_SUCCESS_MSG,
+                        BaseException.DELETE_SUCCESS
+                    )
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {

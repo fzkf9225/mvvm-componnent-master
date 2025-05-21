@@ -1,13 +1,26 @@
 package com.casic.titan.commonui.bean;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import java.util.UUID;
 
 /**
  * Created by fz on 2023/12/28 17:00
  * describe :附件表
  */
+@Entity
 public class AttachmentBean extends BaseObservable {
+    /**
+     * 移动端主键
+     */
+    @PrimaryKey
+    @NonNull
+    private String mobileId = UUID.randomUUID().toString().replace("-", "");
+
     private String fileId;
 
     private String path;
@@ -22,7 +35,18 @@ public class AttachmentBean extends BaseObservable {
 
     private String fieldName;
 
+    private long createdTime = System.currentTimeMillis();
+
     public AttachmentBean() {
+    }
+
+    @NonNull
+    public String getMobileId() {
+        return mobileId;
+    }
+
+    public void setMobileId(@NonNull String mobileId) {
+        this.mobileId = mobileId;
     }
 
     @Bindable
@@ -88,4 +112,11 @@ public class AttachmentBean extends BaseObservable {
         this.fieldName = fieldName;
     }
 
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+    }
 }

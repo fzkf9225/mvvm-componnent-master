@@ -145,7 +145,7 @@ abstract class BaseRoomDao<T : Any> {
         keywords: String?,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): List<T> {
         var conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -177,7 +177,7 @@ abstract class BaseRoomDao<T : Any> {
         params: Map<String, Any>,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): List<T> {
         val conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -201,7 +201,7 @@ abstract class BaseRoomDao<T : Any> {
         params: Map<String, Any>,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): List<T> {
         val conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -227,7 +227,7 @@ abstract class BaseRoomDao<T : Any> {
         keywords: String?,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): List<T> {
         var conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -259,7 +259,7 @@ abstract class BaseRoomDao<T : Any> {
         params: Map<String, Any>,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): Flowable<List<T>> {
         val conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -285,7 +285,7 @@ abstract class BaseRoomDao<T : Any> {
         keywords: String?,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): Flowable<List<T>> {
         var conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -317,7 +317,7 @@ abstract class BaseRoomDao<T : Any> {
         params: Map<String, Any>,
         orderBy: String?,
         limit: Int = 10,
-        offset: Int = 10
+        offset: Int = 0
     ): Flowable<List<T>> {
         val conditions =
             if (params.isEmpty()) "" else (" WHERE " + params.entries.joinToString(" and ") { entry ->
@@ -500,6 +500,7 @@ abstract class BaseRoomDao<T : Any> {
      */
     @RawQuery(observedEntities = [BaseDaoBean::class])
     protected abstract fun doQueryByParamsLiveData(query: SupportSQLiteQuery): LiveData<List<T>>
+
     /**
      * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
      */
