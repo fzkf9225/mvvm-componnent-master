@@ -104,7 +104,7 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?
             item.mainId = mainId
             item.mobileId = UUID.randomUUID().toString().replace("-", "")
         }
-        getRoomDao().insert(dataList)
+        getRoomDao().insertOnly(dataList)
     }
 
     fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String, fieldName: String) {
@@ -117,7 +117,7 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?
             item.fieldName = fieldName
             item.mobileId = UUID.randomUUID().toString().replace("-", "")
         }
-        getRoomDao().insert(dataList)
+        getRoomDao().insertOnly(dataList)
     }
 
     suspend fun saveOrUpdateSuspend(
@@ -139,7 +139,7 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?
                 item.fieldName = fieldName
                 item.mobileId = UUID.randomUUID().toString().replace("-", "")
             }
-            getRoomDao().insert(dataList)
+            getRoomDao().insertOnly(dataList)
         }
     }
 
