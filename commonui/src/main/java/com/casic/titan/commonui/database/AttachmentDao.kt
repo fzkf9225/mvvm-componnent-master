@@ -2,21 +2,13 @@ package com.casic.titan.commonui.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RawQuery
-import androidx.room.Transaction
-import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.casic.titan.commonui.bean.AttachmentBean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import pers.fz.mvvm.api.ApiRetrofit
-import pers.fz.mvvm.bean.BaseDaoBean
 import pers.fz.mvvm.database.BaseRoomDao
-import pers.fz.mvvm.util.log.LogUtil
 
 /**
  * created by fz on 2024/11/6 10:31
@@ -32,11 +24,17 @@ abstract class AttachmentDao : BaseRoomDao<AttachmentBean>() {
         return AttachmentBean::class.java.getSimpleName()
     }
 
+    @Query("Delete FROM AttachmentBean WHERE mobileId = :mobileId")
+    abstract fun deleteByMobileId(mobileId: String)
+
     @Query("Delete FROM AttachmentBean WHERE mainId = :mainId")
     abstract fun deleteByMainId(mainId: String)
 
     @Query("Delete FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName")
     abstract fun delete(mainId: String, fieldName: String)
+
+    @Query("Select * FROM AttachmentBean")
+    abstract fun queryAll(): List<AttachmentBean>
 
     @Query("Select * FROM AttachmentBean WHERE mainId = :mainId")
     abstract fun queryByMainId(mainId: String): List<AttachmentBean>

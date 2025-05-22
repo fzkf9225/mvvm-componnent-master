@@ -1,6 +1,7 @@
 package pers.fz.mvvm.repository
 
 import androidx.lifecycle.LiveData
+import androidx.room.PrimaryKey
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -379,7 +380,59 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
+    /**
+     * 根据ID查询单个对象
+     */
+    fun findInfoById(
+        primaryKey: String,
+        id: Long,
+        showLoading: Boolean = false
+    ): Single<T> {
+        return roomDao.findInfoById(primaryKey,id)
+            .timeout(30, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { onSubscribe ->
+                addDisposable(onSubscribe)
+                if (!showLoading) {
+                    return@doOnSubscribe
+                }
+                baseView?.showLoading("正在查询数据,请稍后...")
+            }
+            .doFinally {
+                if (!showLoading) {
+                    return@doFinally
+                }
+                baseView?.hideLoading()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
+    /**
+     * 根据ID查询单个对象
+     */
+    fun findInfoById(
+        primaryKey: String,
+        id: String,
+        showLoading: Boolean = false
+    ): Single<T> {
+        return roomDao.findInfoById(primaryKey,id)
+            .timeout(30, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { onSubscribe ->
+                addDisposable(onSubscribe)
+                if (!showLoading) {
+                    return@doOnSubscribe
+                }
+                baseView?.showLoading("正在查询数据,请稍后...")
+            }
+            .doFinally {
+                if (!showLoading) {
+                    return@doFinally
+                }
+                baseView?.hideLoading()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
     /**
      * 分页查询
      */

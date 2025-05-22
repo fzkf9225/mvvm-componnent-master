@@ -95,23 +95,42 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?
         return getRoomDao().insert(dataList)
     }
 
-    suspend fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String) {
-        withContext(Dispatchers.IO) {
-            getRoomDao().deleteByMainId(mainId)
-            if (dataList.isNullOrEmpty()) {
-                return@withContext
-            }
-            dataList.forEach { item ->
-                item.mainId = mainId
-                item.mobileId = UUID.randomUUID().toString().replace("-", "")
-            }
-            getRoomDao().insert(dataList)
+    fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String) {
+        getRoomDao().deleteByMainId(mainId)
+        if (dataList.isNullOrEmpty()) {
+            return
         }
+        dataList.forEach { item ->
+            item.mainId = mainId
+            item.mobileId = UUID.randomUUID().toString().replace("-", "")
+        }
+        getRoomDao().insert(dataList)
     }
 
-    suspend fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String, fieldName: String) {
+    fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String, fieldName: String) {
+        getRoomDao().delete(mainId, fieldName)
+        if (dataList.isNullOrEmpty()) {
+            return
+        }
+        dataList.forEach { item ->
+            item.mainId = mainId
+            item.fieldName = fieldName
+            item.mobileId = UUID.randomUUID().toString().replace("-", "")
+        }
+        getRoomDao().insert(dataList)
+    }
+
+    suspend fun saveOrUpdateSuspend(
+        dataList: List<AttachmentBean>?,
+        mainId: String,
+        fieldName: String?
+    ) {
         withContext(Dispatchers.IO) {
-            getRoomDao().delete(mainId, fieldName)
+            if (fieldName.isNullOrEmpty()) {
+                getRoomDao().deleteByMobileId(mainId)
+            } else {
+                getRoomDao().delete(mainId, fieldName)
+            }
             if (dataList.isNullOrEmpty()) {
                 return@withContext
             }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
 import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
@@ -46,7 +47,20 @@ abstract class BaseRoomDao<T : Any> {
      */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     @Transaction
-    abstract fun insert(personList: List<T>): Completable
+    abstract fun insert(list: List<T>): Completable
+
+    /**
+     * 添加数组对象数据
+     */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Transaction
+    abstract fun insertOnly(vararg objs: T)
+    /**
+     * 添加数组对象数据
+     */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Transaction
+    abstract fun insertOnly(list: List<T>)
 
     /**
      * 根据对象中的主键删除（主键是自动增长的，无需手动赋值）
@@ -56,15 +70,42 @@ abstract class BaseRoomDao<T : Any> {
     abstract fun delete(obj: T): Completable
 
     /**
+     * 根据对象中的主键删除（主键是自动增长的，无需手动赋值）
+     */
+    @Delete
+    @Transaction
+    abstract fun deleteOnly(obj: T): Int?
+
+    /**
+     * 根据对象中的主键删除（主键是自动增长的，无需手动赋值）
+     */
+    @Delete
+    @Transaction
+    abstract fun deleteOnly(vararg obj: T): Int?
+    /**
+     * 根据对象中的主键删除（主键是自动增长的，无需手动赋值）
+     */
+    @Delete
+    @Transaction
+    abstract fun deleteOnly(list: List<T>): Int?
+    /**
      * 根据对象中的主键更新（主键是自动增长的，无需手动赋值）
      */
     @Update
     @Transaction
     abstract fun update(vararg obj: T): Completable
 
+    /**
+     * 根据对象中的主键更新（主键是自动增长的，无需手动赋值）
+     */
+    @Update
+    @Transaction
+    abstract fun updateOnly(vararg obj: T): Int?
+
 
     fun deleteAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()}")
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryByParams(query)
     }
 
@@ -96,18 +137,41 @@ abstract class BaseRoomDao<T : Any> {
 
     fun findAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("select * from ${getTableName()}")
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryByParams(query)
     }
 
     fun findInfoById(id: Long): Single<T> {
         val query =
             SimpleSQLiteQuery("select * from ${getTableName()} where id = ?", arrayOf<Any>(id))
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
     fun findInfoById(id: String): Single<T> {
         val query =
             SimpleSQLiteQuery("select * from ${getTableName()} where id = ?", arrayOf<Any>(id))
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        return doFind(query)
+    }
+
+    fun findInfoById(primaryKey: String, id: Long): Single<T> {
+        val query =
+            SimpleSQLiteQuery(
+                "select * from ${getTableName()} where ? = ?",
+                arrayOf<Any>(primaryKey, id)
+            )
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        return doFind(query)
+    }
+
+    fun findInfoById(primaryKey: String, id: String): Single<T> {
+        val query =
+            SimpleSQLiteQuery(
+                "select * from ${getTableName()} where ? = ?",
+                arrayOf<Any>(primaryKey, id)
+            )
+        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
