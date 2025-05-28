@@ -42,6 +42,11 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
         Type baseModelType = TypeToken.getParameterized(BaseModelEntity.class, actualType).getType();
         // 解析 JSON
         BaseModelEntity<T> baseModel = gson.fromJson(jsonString, baseModelType);
+
+        if (!ResponseCode.isOK(baseModel.getCode())) {
+            throw new BaseException(baseModel.getMessage(), baseModel.getCode());
+        }
+
         if (baseModel.getData() == null) {
             return adapter.fromJson(gson.toJson(responseConverterNull()));
         }
