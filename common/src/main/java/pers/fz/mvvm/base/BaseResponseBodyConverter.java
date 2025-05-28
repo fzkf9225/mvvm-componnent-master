@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.bean.Code.ResponseCode;
+import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.Converter;
 
 /**
@@ -33,12 +36,12 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     @Override
     public T convert(ResponseBody value) throws IOException {
         String jsonString = value.string();
-        BaseModelEntity<T> baseModel = gson.fromJson(jsonString,
-                new TypeToken<BaseModelEntity<T>>() {
-                }.getType());
-        if (!ResponseCode.isOK(baseModel.getCode())) {
-            throw new BaseException(baseModel.getMessage(), baseModel.getCode());
-        }
+        // 获取 T 的实际类型
+        Type actualType = ((ParameterizedType) Objects.requireNonNull(adapter.getClass().getGenericSuperclass())).getActualTypeArguments()[0];
+        // 构建 BaseModelEntity<T> 的完整类型
+        Type baseModelType = TypeToken.getParameterized(BaseModelEntity.class, actualType).getType();
+        // 解析 JSON
+        BaseModelEntity<T> baseModel = gson.fromJson(jsonString, baseModelType);
         if (baseModel.getData() == null) {
             return adapter.fromJson(gson.toJson(responseConverterNull()));
         }

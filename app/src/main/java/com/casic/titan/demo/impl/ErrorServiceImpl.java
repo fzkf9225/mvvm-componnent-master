@@ -107,7 +107,7 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public Map<String, String> initHeaderMap() {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("authorization", "8702499f-694c-40f4-bef7-ffbe700e03d5");
+        headerMap.put("authorization", "8d7fa3fb-4898-4008-a355-5723094c31fb");
         return headerMap;
     }
 

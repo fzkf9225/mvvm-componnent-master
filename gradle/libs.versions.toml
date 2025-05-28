@@ -3,7 +3,7 @@ compileSdkVersion = "34"
 minSdkVersion = "26"
 targetSdkVersion = "34"
 agp = "8.10.0-alpha08"
-kotlin = "2.0.0"
+kotlin = "2.0.21"
 
 kotlinxCoroutinesCoreVersion = "1.8.0"
 roomVersion = "2.6.1"
