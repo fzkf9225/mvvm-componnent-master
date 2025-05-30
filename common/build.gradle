@@ -150,7 +150,7 @@ dependencies {
     // optional - Paging 3 Integration
     implementation libs.room.paging
 
-
+    implementation libs.bouncycastle.bcprov
 }
 
 apply plugin: 'maven-publish'

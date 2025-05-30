@@ -66,7 +66,7 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnPositiveClickListener(dialog -> {
-                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getRepository().delete(item,true)
+                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getIRepository().delete(item,true)
                             .subscribe(() -> {
                                 LogUtil.show(ApiRetrofit.TAG, "删除成功" );
                                 showToast("删除成功！");

@@ -1,8 +1,9 @@
 package com.casic.titan.demo.repository;
 
 import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.demo.bean.RegionBean;
+import com.casic.titan.demo.bean.NotificationMessageBean;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
@@ -14,7 +15,7 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
  * Created by fz on 2023/12/1 15:25
  * describe :
  */
-public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<RegionBean, BaseView> {
+public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<NotificationMessageBean, BaseView> {
     private ApiServiceHelper apiServiceHelper;
 
     public DemoPagingRepositoryImpl(ApiServiceHelper apiServiceHelper, RetryService retryService, BaseView baseView) {
@@ -23,9 +24,16 @@ public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<RegionBean, B
     }
 
     @Override
-    public Observable<List<RegionBean>> requestPaging(int currentPage, int pageSize) {
+    public Observable<List<NotificationMessageBean>> requestPaging(int currentPage, int pageSize) {
+        NotificationMessageBean notificationMessageBean = new NotificationMessageBean();
+        notificationMessageBean.setType("1");
         return sendRequest(
-                apiServiceHelper.getRegionTree(),
+                apiServiceHelper.getNewList(currentPage,pageSize,notificationMessageBean).map(response -> {
+                    if(response.getList()==null){
+                        return Collections.emptyList();
+                    }
+                    return response.getList();
+                }),
                 getRequestConfigEntity());
     }
 }

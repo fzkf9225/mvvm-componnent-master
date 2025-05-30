@@ -9,7 +9,7 @@ import com.casic.titan.demo.R;
 import com.casic.titan.demo.activity.PagingDetailActivity;
 import com.casic.titan.demo.adapter.PagingHeaderDemoAdapter;
 import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.demo.bean.RegionBean;
+import com.casic.titan.demo.bean.NotificationMessageBean;
 import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import javax.inject.Inject;
@@ -25,11 +25,11 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, PagingRecyclerViewBinding, RegionBean> {
+public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, PagingRecyclerViewBinding, NotificationMessageBean> {
     @Inject
     ApiServiceHelper apiServiceHelper;
     @Override
-    protected BasePagingAdapter<RegionBean, ?> getRecyclerAdapter() {
+    protected BasePagingAdapter<NotificationMessageBean, ?> getRecyclerAdapter() {
         return new PagingHeaderDemoAdapter();
     }
 
@@ -45,11 +45,11 @@ public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, 
     }
 
     @Override
-    public void onItemClick(View view, RegionBean item, int position) {
+    public void onItemClick(View view, NotificationMessageBean item, int position) {
         super.onItemClick(view, item, position);
-        showToast("点击的是第" + position + "行，内容是：" + item.getAreaCode());
+        showToast("点击的是第" + position + "行，内容是：" + item.getTitle());
         Bundle bundle = new Bundle();
-        bundle.putString(PagingDetailActivity.ARGS, item.getAreaName());
+        bundle.putString(PagingDetailActivity.ARGS, item.getTitle());
         bundle.putInt(PagingDetailActivity.LINE, position);
         Navigation.findNavController(view).navigate(
                 R.id.navigate_to_paging_detail,
@@ -57,7 +57,7 @@ public class DemoPagingFragment extends BasePagingFragment<DemoPagingViewModel, 
     }
 
     @Override
-    public void onItemLongClick(View view, RegionBean item, int position) {
+    public void onItemLongClick(View view, NotificationMessageBean item, int position) {
         super.onItemLongClick(view, item, position);
         new ConfirmDialog(requireContext())
                 .setPositiveText("确认删除")

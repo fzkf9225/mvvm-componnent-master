@@ -19,7 +19,7 @@ public class SplashViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 }

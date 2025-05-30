@@ -34,7 +34,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
  */
 public class ApiRetrofit {
     public static final String TAG = ApiRetrofit.class.getSimpleName();
-    private static ApiRetrofit apiRetrofit;
+    private static volatile ApiRetrofit apiRetrofit;
 
     private final Builder builder;
 
@@ -44,18 +44,6 @@ public class ApiRetrofit {
 
     public Builder getBuilder() {
         return builder;
-    }
-
-    /**
-     * 忽略大小写查找请求头Content-Type
-     */
-    public static String findContentType(Headers headers) {
-        for (String name : headers.names()) {
-            if ("Content-Type".equalsIgnoreCase(name)) {
-                return headers.get(name);
-            }
-        }
-        return null;
     }
 
     public static void printLog(final Request request, final Response response) {
@@ -99,10 +87,29 @@ public class ApiRetrofit {
      * 建造者模式，创建网络请求对象
      */
     public static class Builder {
+        /**
+         * 基础url
+         */
         private String baseUrl;
+        /**
+         * appId
+         */
         private String appId;
+        /**
+         * appSecret
+         */
         private String appSecret;
+        /**
+         * 系统标识，在非单例的情况下使用，用来区分不同的请求头
+         */
+        private String system;
+        /**
+         * 接口协议版本，只是我们自己的版本不是http，为了方便做兼容
+         */
         private String protocolVersion;
+        /**
+         * 请求头
+         */
         private final Map<String, String> headerMap = new HashMap<>();
         private final Context mContext;
         private Retrofit retrofit = null;
@@ -113,9 +120,18 @@ public class ApiRetrofit {
         private boolean useDefaultSign = false;
         private ErrorService errorService = null;
         /**
+         * 请求成功版本号，如果自定义converterFactory情况下不生效
+         */
+        private String successCode;
+        /**
          * 是否单例模式
          */
         private boolean singleInstance = true;
+
+        public Builder setSuccessCode(String successCode) {
+            this.successCode = successCode;
+            return this;
+        }
 
         public Builder setErrorService(ErrorService errorService) {
             this.errorService = errorService;
@@ -138,6 +154,11 @@ public class ApiRetrofit {
 
         public Builder setAppId(String appId) {
             this.appId = appId;
+            return this;
+        }
+
+        public Builder setSystem(String system) {
+            this.system = system;
             return this;
         }
 
@@ -200,14 +221,23 @@ public class ApiRetrofit {
             }
             if (TextUtils.isEmpty(appId)) {
                 this.appId = PropertiesUtil.getInstance().loadConfig(mContext).getAppId();
+                if (!TextUtils.isEmpty(appId)) {
+                    headerMap.put("x-appId", appId);
+                }
             }
 
             if (TextUtils.isEmpty(appSecret)) {
                 this.appSecret = PropertiesUtil.getInstance().loadConfig(mContext).getAppSecret();
+                if (!TextUtils.isEmpty(appSecret)) {
+                    headerMap.put("x-appSecret", appSecret);
+                }
             }
 
             if (TextUtils.isEmpty(protocolVersion)) {
                 this.protocolVersion = PropertiesUtil.getInstance().loadConfig(mContext).getProtocolVersion();
+                if (!TextUtils.isEmpty(protocolVersion)) {
+                    headerMap.put("x-protocolVersion", protocolVersion);
+                }
             }
             if (client == null) {
                 OkHttpClient.Builder build = new OkHttpClient.Builder()
@@ -216,7 +246,7 @@ public class ApiRetrofit {
                             Request.Builder requestBuilder = chain.request().newBuilder();
                             //判断errorService是否为空
                             if (errorService != null) {
-                                headerMap.putAll(errorService.initHeaderMap());
+                                headerMap.putAll(errorService.defaultRequestHeader(system));
                             }
                             //添加默认请求头
                             requestBuilder.headers(Headers.of(headerMap));
@@ -242,7 +272,7 @@ public class ApiRetrofit {
                 client = build.build();
             }
             if (converterFactory == null) {
-                converterFactory = BaseConverterFactory.create();
+                converterFactory = BaseConverterFactory.create(successCode);
             }
             if (retrofit == null) {
                 retrofit = new Retrofit.Builder()

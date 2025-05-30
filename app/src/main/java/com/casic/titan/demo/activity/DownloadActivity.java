@@ -2,12 +2,19 @@ package com.casic.titan.demo.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
@@ -22,6 +29,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;
+import pers.fz.mvvm.util.common.ScreenUtil;
+import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.download.DownloadManger;
 import pers.fz.mvvm.util.download.UpdateManger;
@@ -29,6 +38,7 @@ import pers.fz.mvvm.util.download.UpdateManger;
 @AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {
     private UseCase useCase;
+
 
     @Override
     protected int getLayoutId() {
@@ -57,7 +67,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
             }
             Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
                     .subscribe(file -> {
-                        LogUtil.show(ApiRetrofit.TAG,"下载成功："+file.getAbsolutePath());
+                        LogUtil.show(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
                         showToast("下载成功！");
                     }, throwable -> {
                         if (throwable instanceof BaseException baseException) {
@@ -109,4 +119,6 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
     }
+
+
 }

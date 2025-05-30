@@ -46,7 +46,7 @@ public class UserViewModel extends BaseViewModel<UserRepositoryImpl, UserView> {
     }
 
     @Override
-    protected UserRepositoryImpl repository() {
+    protected UserRepositoryImpl createRepository() {
         return new UserRepositoryImpl(userApiService, retryService, baseView);
     }
 

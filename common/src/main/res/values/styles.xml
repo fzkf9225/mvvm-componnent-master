@@ -103,7 +103,7 @@
 
     </style>
     <style name="ToolBarStyle_white" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="actionMenuTextColor">@android:color/white</item> <!--  menu 敲定颜色-->
+        <item name="actionMenuTextColor">#ff0000</item> <!--  menu 敲定颜色-->
         <item name="android:textSize">@dimen/font_size_xl</item> <!--  搞掂字体大小-->
         <item name="android:textStyle">normal</item>
         <item name="colorControlNormal">@color/white</item>

@@ -49,15 +49,19 @@ abstract class AttachmentDao : BaseRoomDao<AttachmentBean>() {
     abstract override fun doFindLiveData(query: SupportSQLiteQuery): LiveData<AttachmentBean>
 
     @RawQuery(observedEntities = [AttachmentBean::class])
-    abstract override fun doQueryByParamsLiveData(query: SupportSQLiteQuery): LiveData<List<AttachmentBean>>
+    abstract override fun doFindListLiveData(query: SupportSQLiteQuery): LiveData<List<AttachmentBean>>
 
     @RawQuery(observedEntities = [AttachmentBean::class])
     abstract override fun doFind(query: SupportSQLiteQuery): Single<AttachmentBean>
 
     @RawQuery(observedEntities = [AttachmentBean::class])
-    abstract override fun doQueryByParams(query: SupportSQLiteQuery): Flowable<List<AttachmentBean>>
+    abstract override fun doFindList(query: SupportSQLiteQuery): Single<List<AttachmentBean>>
 
     @RawQuery(observedEntities = [AttachmentBean::class])
-    abstract override fun findPageList(query: SupportSQLiteQuery): List<AttachmentBean>
+    abstract override fun doQueryFlowable(query: SupportSQLiteQuery): Flowable<List<AttachmentBean>>
+
+    @RawQuery(observedEntities = [AttachmentBean::class])
+    abstract override fun doQueryList(query: SupportSQLiteQuery): List<AttachmentBean>
+
 }
 

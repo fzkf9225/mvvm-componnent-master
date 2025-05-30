@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.casic.titan.demo.adapter.PagingDemoAdapter;
-import com.casic.titan.demo.bean.RegionBean;
+import com.casic.titan.demo.bean.NotificationMessageBean;
 import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.mvvm.api.ApiRetrofit;
+import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**
@@ -18,10 +21,10 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * describe :
  */
 @AndroidEntryPoint
-public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, RegionBean> {
+public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, NotificationMessageBean> {
 
     @Override
-    protected BasePagingAdapter<RegionBean, ?> getRecyclerAdapter() {
+    protected BasePagingAdapter<NotificationMessageBean, ?> getRecyclerAdapter() {
         return new PagingDemoAdapter();
     }
 
@@ -32,13 +35,13 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
     }
 
     @Override
-    public void onItemClick(View view, RegionBean item, int position) {
+    public void onItemClick(View view, NotificationMessageBean item, int position) {
         super.onItemClick(view, item, position);
-        showToast("点击的是第" + position + "行，内容是：" + item.getAreaName());
+        showToast("点击的是第" + position + "行，内容是：" + item.getTitle());
     }
 
     @Override
-    public void onItemLongClick(View view, RegionBean item, int position) {
+    public void onItemLongClick(View view, NotificationMessageBean item, int position) {
         super.onItemLongClick(view, item, position);
         //不可以这样删除，因为这样值删除了列表项，但是真是数据没有删除
         new ConfirmDialog(requireContext())
@@ -50,5 +53,4 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
                 .builder()
                 .show();
     }
-
 }

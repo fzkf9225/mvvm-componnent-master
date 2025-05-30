@@ -11,8 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/8/7 9:17
@@ -43,6 +45,7 @@ public class PagingSource<T, BV extends BaseView> extends RxPagingSource<Integer
                             .onErrorReturn(LoadResult.Error::new));
         } catch (Exception e) {
             e.printStackTrace();
+            LogUtil.show(ApiRetrofit.TAG, "PagingSource请求错误：" + e);
             pagingRepository.onError(e);
             return Single.just(new LoadResult.Error<>(e));
         }

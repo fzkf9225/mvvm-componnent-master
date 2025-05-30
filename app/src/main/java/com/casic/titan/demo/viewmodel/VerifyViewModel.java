@@ -10,8 +10,10 @@ import com.casic.titan.demo.database.PersonDatabase;
 import com.casic.titan.demo.repository.RoomPagingRepositoryImpl;
 
 import io.reactivex.rxjava3.disposables.Disposable;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * created by fz on 2024/11/6 10:57
@@ -26,7 +28,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
     }
 
     @Override
-    protected RoomPagingRepositoryImpl repository() {
+    protected RoomPagingRepositoryImpl createRepository() {
         return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
     }
 
@@ -35,6 +37,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
                 () -> {
                     liveData.postValue(true);
                 }, throwable -> {
+                    LogUtil.show(ApiRetrofit.TAG,"错误："+throwable);
                     baseView.showToast(throwable.getMessage());
                     liveData.postValue(false);
                 });

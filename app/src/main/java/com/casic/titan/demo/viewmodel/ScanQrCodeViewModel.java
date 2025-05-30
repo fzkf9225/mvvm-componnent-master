@@ -21,7 +21,7 @@ public class ScanQrCodeViewModel extends BaseViewModel<RepositoryImpl,ScanQrCode
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 }

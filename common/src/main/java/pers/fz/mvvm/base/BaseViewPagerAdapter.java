@@ -39,7 +39,7 @@ public class BaseViewPagerAdapter extends FragmentStateAdapter {
     }
 
     public Fragment getItem(int position){
-        return fragmentManager.findFragmentByTag("f$position");
+        return fragmentManager.findFragmentByTag("f"+position);
     }
 
     public Fragment getFragment(int position){

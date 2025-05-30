@@ -17,7 +17,7 @@ public class VideoPlayerViewModel extends BaseViewModel<RepositoryImpl, BaseView
         super(application);
     }
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 

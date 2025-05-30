@@ -31,7 +31,7 @@ public class MainViewModel extends BaseViewModel<RepositoryImpl, BaseView> imple
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 

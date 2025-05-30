@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
+import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
@@ -102,11 +103,10 @@ abstract class BaseRoomDao<T : Any> {
     @Transaction
     abstract fun updateOnly(vararg obj: T): Int?
 
-
     fun deleteAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()}")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     /**
@@ -116,7 +116,7 @@ abstract class BaseRoomDao<T : Any> {
     fun deleteByParams(params: String, value: String): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $params='${value}'")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     /**
@@ -132,13 +132,13 @@ abstract class BaseRoomDao<T : Any> {
         }
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $conditions")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     fun findAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("select * from ${getTableName()}")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     fun findInfoById(id: Long): Single<T> {
@@ -197,7 +197,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     /**
@@ -231,7 +231,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return findPageList(query)
+        return doQueryList(query)
     }
 
     /**
@@ -255,7 +255,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return findPageList(query)
+        return doQueryList(query)
     }
 
     /**
@@ -279,7 +279,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return findPageList(query)
+        return doQueryList(query)
     }
 
     /**
@@ -313,7 +313,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return findPageList(query)
+        return doQueryList(query)
     }
 
     /**
@@ -337,7 +337,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     /**
@@ -371,7 +371,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     /**
@@ -395,12 +395,12 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParams(query)
+        return doQueryFlowable(query)
     }
 
     fun deleteAllLiveData(): LiveData<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -410,7 +410,7 @@ abstract class BaseRoomDao<T : Any> {
     fun deleteByParamsLiveData(params: String, value: String): LiveData<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $params='${value}'")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -426,12 +426,12 @@ abstract class BaseRoomDao<T : Any> {
         }
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $conditions")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     fun findAllLiveData(): LiveData<List<T>> {
         val query = SimpleSQLiteQuery("select * from ${getTableName()}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     fun findInfoByIdLiveData(id: Long): LiveData<T> {
@@ -468,7 +468,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -492,7 +492,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -526,7 +526,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -550,7 +550,7 @@ abstract class BaseRoomDao<T : Any> {
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
         LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
-        return doQueryByParamsLiveData(query)
+        return doFindListLiveData(query)
     }
 
     /**
@@ -563,23 +563,28 @@ abstract class BaseRoomDao<T : Any> {
      * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
      */
     @RawQuery(observedEntities = [BaseDaoBean::class])
-    protected abstract fun doQueryByParamsLiveData(query: SupportSQLiteQuery): LiveData<List<T>>
+    protected abstract fun doFindListLiveData(query: SupportSQLiteQuery): LiveData<List<T>>
 
     /**
      * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
      */
     @RawQuery(observedEntities = [BaseDaoBean::class])
     protected abstract fun doFind(query: SupportSQLiteQuery): Single<T>
+    /**
+     * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
+     */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract fun doFindList(query: SupportSQLiteQuery): Single<List<T>>
+    /**
+     * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
+     */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract fun doQueryFlowable(query: SupportSQLiteQuery): Flowable<List<T>>
 
     /**
      * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
      */
     @RawQuery(observedEntities = [BaseDaoBean::class])
-    protected abstract fun doQueryByParams(query: SupportSQLiteQuery): Flowable<List<T>>
+    protected abstract fun doQueryList(query: SupportSQLiteQuery): List<T>
 
-    /**
-     * 占位方法如果你需要调用这个方法最好是重写一下BaseDaoBean修改为你的实体表，不写observedEntities会无法编译
-     */
-    @RawQuery(observedEntities = [BaseDaoBean::class])
-    protected abstract fun findPageList(query: SupportSQLiteQuery): List<T>
 }

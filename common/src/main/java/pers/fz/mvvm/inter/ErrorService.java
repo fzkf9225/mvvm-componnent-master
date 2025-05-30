@@ -89,8 +89,9 @@ public interface ErrorService {
 
     /**
      * 默认的请求头
+     * @param system 系统标识
      * @return Map请求头
      */
-    Map<String,String> initHeaderMap();
+    Map<String,String> defaultRequestHeader(String system);
 
 }

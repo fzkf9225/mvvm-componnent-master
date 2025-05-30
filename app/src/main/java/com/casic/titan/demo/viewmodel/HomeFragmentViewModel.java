@@ -21,7 +21,7 @@ public class HomeFragmentViewModel extends BaseViewModel<RepositoryImpl, BaseVie
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 

@@ -73,7 +73,6 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
                 finish();
             }
         });
-        AttachmentRepositoryImpl attachmentRepository = new AttachmentRepositoryImpl(AttachmentDatabase.getInstance(getApplication()).getAttachmentDao(),this);
         binding.verifySubmit.setOnClickListener(v -> {
             showLoading("验证中...");
             binding.getData().setImageList(binding.formImage.getImages());

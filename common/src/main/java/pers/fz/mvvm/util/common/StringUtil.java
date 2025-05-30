@@ -1,5 +1,7 @@
 package pers.fz.mvvm.util.common;
 
+import android.text.TextUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -516,4 +518,59 @@ public class StringUtil {
         return str != null && !"null".equals(str) ? str.trim() : "";
     }
 
+    /**
+     * 手机号脱敏
+     * @param phoneNumber 手机号
+     * @return 脱敏后的手机号
+     */
+    public static String desensitizePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return "";
+        }
+        return phoneNumber.length() >= 11 ?
+                phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7) :
+                phoneNumber;
+    }
+
+    /**
+     * 姓名脱敏
+     * @param name 姓名
+     * @return 脱敏后的姓名
+     */
+    public static String desensitizeName(String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
+        }
+        String[] nameList = name.split(" ");
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < nameList.length; i++) {
+            if (i > 0) {
+                result.append(" ");
+            }
+            if (!nameList[i].isEmpty()) {
+                result.append(nameList[i].charAt(0)).append("****");
+            } else {
+                result.append(nameList[i]);
+            }
+        }
+        return result.toString();
+    }
+
+    public static String getFirstName(String userName) {
+        if (userName == null || userName.isEmpty()) {
+            return null;
+        }
+        String stringWithoutNumbers = userName.replaceAll("\\d", "");
+        if (stringWithoutNumbers.isEmpty()) {
+            return null;
+        }
+
+        if (stringWithoutNumbers.length() == 1) {
+            return stringWithoutNumbers;
+        } else if (stringWithoutNumbers.length() == 2) {
+            return stringWithoutNumbers.substring(1);
+        } else {
+            return stringWithoutNumbers.substring(stringWithoutNumbers.length() - 2);
+        }
+    }
 }

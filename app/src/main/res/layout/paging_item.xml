@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.casic.titan.demo.bean.RegionBean" />
+            type="com.casic.titan.demo.bean.NotificationMessageBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@{item.areaCode}"
+            android:text="@{item.title}"
             android:textColor="@color/black"
             android:textSize="16sp"
             tools:text="这是标题哦！！！！"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="@{item.areaName}"
+            android:text="@{item.publishDate}"
             android:textColor="#999999"
             android:textSize="12sp"
             tools:text="2023-12-01"
@@ -49,12 +49,12 @@
             android:layout_width="0dp"
             app:layout_constraintHorizontal_weight="1"
             android:layout_height="wrap_content"
-            android:text="@{item.superiorName}"
+            android:text="@{item.content}"
             android:textColor="#444444"
             android:layout_marginTop="8dp"
             tools:text="这是很长很长的内容哦！！！"
             android:textSize="14sp"
-            android:lines="1"
+            android:maxLines="2"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_date"

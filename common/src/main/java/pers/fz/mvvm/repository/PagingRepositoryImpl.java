@@ -3,12 +3,14 @@ package pers.fz.mvvm.repository;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.ErrorConsumer;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.RequestConfigEntity;
 import pers.fz.mvvm.inter.RetryService;
+import pers.fz.mvvm.util.log.LogUtil;
 
 /**
  * Created by fz on 2023/12/1 11:14

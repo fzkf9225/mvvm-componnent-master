@@ -38,7 +38,7 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     public boolean isLoginPast(String errorCode) {
-        return !UserAccountHelper.isLoginPast(errorCode);
+        return UserAccountHelper.isLoginPast(errorCode);
     }
 
     @Override
@@ -105,9 +105,9 @@ public class ErrorServiceImpl implements ErrorService {
     }
 
     @Override
-    public Map<String, String> initHeaderMap() {
+    public Map<String, String> defaultRequestHeader(String system) {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("authorization", "8d7fa3fb-4898-4008-a355-5723094c31fb");
+        headerMap.put("authorization", "7252fde8-9159-4389-8030-22add2b30c87");
         return headerMap;
     }
 

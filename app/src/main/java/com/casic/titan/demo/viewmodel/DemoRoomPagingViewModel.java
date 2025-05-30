@@ -51,7 +51,7 @@ public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositor
     }
 
     @Override
-    protected RoomPagingRepositoryImpl repository() {
+    protected RoomPagingRepositoryImpl createRepository() {
         return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
     }
 

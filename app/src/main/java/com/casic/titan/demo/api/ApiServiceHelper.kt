@@ -1,8 +1,11 @@
 package com.casic.titan.demo.api
 
-import com.casic.titan.demo.bean.RegionBean
+import com.casic.titan.demo.bean.NotificationMessageBean
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.http.GET
+import pers.fz.mvvm.bean.base.PageBean
+import retrofit2.http.Body
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 /**
  * Created by fz on 2020/2/7
@@ -13,6 +16,10 @@ interface ApiServiceHelper {
     /**
      * 获取行政区划树
      */
-    @GET("area/findAreaTree")
-    fun getRegionTree(): Observable<List<RegionBean>>
+    @POST("news/{page}/{size}")
+    fun getNewList(
+        @Path("page") page: Int,
+        @Path("size") size: Int,
+        @Body notificationMessageBean: NotificationMessageBean
+    ): Observable<PageBean<NotificationMessageBean>>
 }

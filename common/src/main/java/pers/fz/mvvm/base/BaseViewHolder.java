@@ -46,23 +46,8 @@ public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.Vi
     }
 
     public <T, HVDB extends ViewDataBinding> BaseViewHolder(@NotNull VDB binding, boolean isClickable, BaseRecyclerViewAdapter<T, HVDB> adapter) {
-        super(binding.getRoot());
+        this(binding.getRoot(),isClickable,adapter);
         this.binding = binding;
-        if (!isClickable) {
-            return;
-        }
-        itemView.setOnClickListener(v -> {
-            if (adapter.onHeaderViewClickListener != null) {
-                adapter.onHeaderViewClickListener.onHeaderViewClick(v);
-            }
-        });
-        itemView.setOnLongClickListener(v -> {
-            if (adapter.onHeaderViewClickListener != null) {
-                adapter.onHeaderViewClickListener.onHeaderViewLongClick(v);
-                return true;
-            }
-            return false;
-        });
     }
 
     public <T> BaseViewHolder(@NotNull VDB binding, BaseRecyclerViewAdapter<T, VDB> adapter) {

@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 
 import com.casic.titan.demo.api.ApiServiceHelper;
-import com.casic.titan.demo.bean.RegionBean;
+import com.casic.titan.demo.bean.NotificationMessageBean;
 import com.casic.titan.demo.repository.KtDemoPagingRepositoryImpl;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import pers.fz.mvvm.viewmodel.PagingViewModel;
  * describe :
  */
 @HiltViewModel
-public class DemoPagingViewModel extends PagingViewModel<KtDemoPagingRepositoryImpl, RegionBean, BaseView> {
+public class DemoPagingViewModel extends PagingViewModel<KtDemoPagingRepositoryImpl, NotificationMessageBean, BaseView> {
     @Inject
     ApiServiceHelper apiServiceHelper;
 
@@ -33,7 +33,7 @@ public class DemoPagingViewModel extends PagingViewModel<KtDemoPagingRepositoryI
     }
 
     @Override
-    protected KtDemoPagingRepositoryImpl repository() {
+    protected KtDemoPagingRepositoryImpl createRepository() {
         return new KtDemoPagingRepositoryImpl(apiServiceHelper, retryService, baseView);
     }
 

@@ -5,29 +5,31 @@
 
     </data>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/default_background">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/default_background">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never" />
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <pers.fz.mvvm.wight.empty.EmptyLayout
+                android:id="@+id/mEmptyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/default_background"
+                android:gravity="center" />
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <pers.fz.mvvm.wight.empty.EmptyLayout
-            android:id="@+id/mEmptyLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:background="@color/default_background"/>
-    </FrameLayout>
 </layout>

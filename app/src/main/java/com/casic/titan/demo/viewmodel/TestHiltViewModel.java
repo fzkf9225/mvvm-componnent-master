@@ -50,7 +50,7 @@ public class TestHiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return new RepositoryImpl(retryService, baseView);
     }
 

@@ -1,5 +1,7 @@
 package pers.fz.mvvm.base;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -27,10 +29,16 @@ import retrofit2.Converter;
 public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private final TypeAdapter<T> adapter;
     private final Gson gson;
+    private final String successCode;
 
-    public BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
+    public BaseResponseBodyConverter(String successCode, Gson gson, TypeAdapter<T> adapter) {
+        this.successCode = successCode;
         this.adapter = adapter;
         this.gson = gson;
+    }
+
+    public BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {
+        this(null,gson,adapter);
     }
 
     @Override
@@ -42,9 +50,14 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
         Type baseModelType = TypeToken.getParameterized(BaseModelEntity.class, actualType).getType();
         // 解析 JSON
         BaseModelEntity<T> baseModel = gson.fromJson(jsonString, baseModelType);
-
-        if (!ResponseCode.isOK(baseModel.getCode())) {
-            throw new BaseException(baseModel.getMessage(), baseModel.getCode());
+        if (TextUtils.isEmpty(successCode)) {
+            if (!ResponseCode.isOK(baseModel.getCode())) {
+                throw new BaseException(baseModel.getMessage(), baseModel.getCode());
+            }
+        } else {
+            if (!successCode.equalsIgnoreCase(baseModel.getCode())) {
+                throw new BaseException(baseModel.getMessage(), baseModel.getCode());
+            }
         }
 
         if (baseModel.getData() == null) {

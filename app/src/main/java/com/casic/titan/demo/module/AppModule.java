@@ -22,11 +22,11 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class AppModule {
 
     @Provides
-    public ApiServiceHelper provideApiServiceHelper(Application application,ErrorService errorService)
-    {
+    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService) {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
-        LogUtil.show(ApiRetrofit.TAG,"APP模块baseUrl:"+baseUrl);
-        return new ApiRetrofit.Builder(application)
+        LogUtil.show(ApiRetrofit.TAG, "App模块baseUrl:" + baseUrl);
+        return new ApiRetrofit
+                .Builder(application)
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
                 .setErrorService(errorService)

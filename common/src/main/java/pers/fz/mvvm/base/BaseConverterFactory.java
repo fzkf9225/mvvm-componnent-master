@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.bean.Code.ResponseCode;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
@@ -24,21 +25,27 @@ import retrofit2.Retrofit;
  */
 
 public final class BaseConverterFactory extends Converter.Factory {
+    private String successCode = ResponseCode.OK;
 
     public static BaseConverterFactory create() {
-        return create(new GsonBuilder().disableHtmlEscaping().create());
+        return create(null,new GsonBuilder().disableHtmlEscaping().create());
     }
 
-    public static BaseConverterFactory create(Gson gson) {
+    public static BaseConverterFactory create(String successCode) {
+        return create(successCode,new GsonBuilder().disableHtmlEscaping().create());
+    }
+
+    public static BaseConverterFactory create(String successCode,Gson gson) {
         if (gson == null) {
             throw new NullPointerException("gson == null");
         }
-        return new BaseConverterFactory(gson);
+        return new BaseConverterFactory(successCode,gson);
     }
 
     private final Gson gson;
 
-    private BaseConverterFactory(Gson gson) {
+    private BaseConverterFactory(String successCode,Gson gson) {
+        this.successCode = successCode;
         this.gson = gson;
     }
 
@@ -46,7 +53,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NonNull @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new BaseResponseBodyConverter<>(gson,adapter);
+        return new BaseResponseBodyConverter<>(successCode,gson,adapter);
     }
 
     @Override
@@ -54,5 +61,13 @@ public final class BaseConverterFactory extends Converter.Factory {
                                                           @NonNull @NotNull Annotation[] parameterAnnotations, @NonNull @NotNull Annotation[] methodAnnotations, @NonNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
         return new BaseRequestBodyConverter<>(gson, adapter);
+    }
+
+    public String getSuccessCode() {
+        return successCode;
+    }
+
+    public void setSuccessCode(String successCode) {
+        this.successCode = successCode;
     }
 }

@@ -41,14 +41,14 @@ public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> 
         return baseView;
     }
 
-    protected abstract IR repository();
+    protected abstract IR createRepository();
 
     public void createRepository(BV baseView) {
         this.baseView = baseView;
-        iRepository = repository();
+        iRepository = createRepository();
     }
 
-    public IR getRepository() {
+    public IR getIRepository() {
         return iRepository;
     }
 

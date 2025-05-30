@@ -19,7 +19,7 @@ public class BaseRecyclerViewModel<BV extends BaseView,T> extends BaseViewModel<
     }
 
     @Override
-    protected RepositoryImpl repository() {
+    protected RepositoryImpl createRepository() {
         return null;
     }
 
