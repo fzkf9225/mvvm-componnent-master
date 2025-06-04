@@ -2,6 +2,7 @@ package pers.fz.mvvm.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,14 +12,12 @@ import androidx.activity.OnBackPressedCallback;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.gyf.immersionbar.BarHide;
-import com.gyf.immersionbar.ImmersionBar;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.TextureViewPlayerActivityBinding;
-import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.viewmodel.VideoPlayerViewModel;
 import pers.fz.mvvm.wight.dialog.MessageDialog;
 
@@ -47,8 +46,8 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     }
 
     @Override
-    protected void initImmersionBar() {
-        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+    public ToolbarConfig createdToolbarConfig() {
+        return new ToolbarConfig(this).setStatusBarColor(Color.BLACK).setLightMode(false).applyStatusBar();
     }
 
     @Override

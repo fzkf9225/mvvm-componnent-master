@@ -85,6 +85,4 @@ dependencies {
     implementation libs.google.hilt.android
     kapt libs.google.hilt.android.compiler
 
-    implementation libs.geyifeng.immersionbar
-
 }

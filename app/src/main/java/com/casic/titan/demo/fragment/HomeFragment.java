@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.casic.titan.demo.R;
@@ -12,12 +13,12 @@ import com.casic.titan.demo.databinding.FragmentHomeBinding;
 import com.casic.titan.demo.enums.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.HomeFragmentViewModel;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
-import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
@@ -34,11 +35,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        registerPermissionLauncher();
-        ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true, 0.2f)
-                .statusBarColor(pers.fz.mvvm.R.color.default_background)
-                .init();
+        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), pers.fz.mvvm.R.color.default_background),false);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     }
 
     @Override
-    protected void onLoginSuccessCallback(Bundle bundle) {
+    public void onLoginSuccessCallback(Bundle bundle) {
         super.onLoginSuccessCallback(bundle);
 
     }

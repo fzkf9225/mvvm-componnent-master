@@ -65,7 +65,6 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
         return new BaseViewHolder<>(PagingFooterBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
-
     @Override
     public boolean displayLoadStateAsItem(@NonNull LoadState loadState) {
         return loadState instanceof LoadState.Loading ||

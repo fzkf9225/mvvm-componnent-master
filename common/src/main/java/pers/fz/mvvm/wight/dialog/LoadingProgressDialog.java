@@ -13,7 +13,7 @@ import pers.fz.mvvm.databinding.LoadingDialogBinding;
  */
 
 public class LoadingProgressDialog extends Dialog {
-    private volatile static LoadingProgressDialog loadingProgressDialog;
+    private volatile static LoadingProgressDialog instance;
     private LoadingDialogBinding loadingDialogBinding;
     private boolean isCanCancel = false;
     private OnCancelListener onCancelListener;
@@ -27,14 +27,14 @@ public class LoadingProgressDialog extends Dialog {
     }
 
     public static LoadingProgressDialog getInstance(Context context) {
-        if (loadingProgressDialog == null || !loadingProgressDialog.isShowing()) {
+        if (instance == null || !instance.isShowing()) {
             synchronized (LoadingProgressDialog.class) {
-                if (loadingProgressDialog == null || !loadingProgressDialog.isShowing()) {
-                    loadingProgressDialog = new LoadingProgressDialog(context);
+                if (instance == null || !instance.isShowing()) {
+                    instance = new LoadingProgressDialog(context);
                 }
             }
         }
-        return loadingProgressDialog;
+        return instance;
     }
 
     public void refreshMessage(String message) {
@@ -69,7 +69,7 @@ public class LoadingProgressDialog extends Dialog {
     private void createLoadingDialog() {
         loadingDialogBinding = LoadingDialogBinding.inflate(getLayoutInflater(),null, false);
         loadingDialogBinding.setMessage(message);
-        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(isCanCancel);
         setCancelable(isCanCancel);
         setOnCancelListener(onCancelListener);
         setContentView(loadingDialogBinding.getRoot(), new LinearLayout.LayoutParams(
@@ -83,8 +83,28 @@ public class LoadingProgressDialog extends Dialog {
     }
 
     @Override
+    public void show() {
+        // 防止重复显示
+        if (!isShowing()) {
+            super.show();
+        }
+    }
+
+    @Override
     public void dismiss() {
-        super.dismiss();
-        loadingProgressDialog = null;
+        try {
+            if (isShowing()) {
+                super.dismiss();
+            }
+        } finally {
+            instance = null;
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // 清理资源但不置空instance
+        instance = null;
     }
 }

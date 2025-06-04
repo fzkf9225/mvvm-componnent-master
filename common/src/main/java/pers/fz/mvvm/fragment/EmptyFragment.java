@@ -30,4 +30,8 @@ public class EmptyFragment extends BaseFragment<EmptyViewModel, EmptyFragmentBin
     protected void initData(Bundle bundle) {
 
     }
+
+    public EmptyLayout getEmptyLayout() {
+        return binding.mEmptyLayout;
+    }
 }

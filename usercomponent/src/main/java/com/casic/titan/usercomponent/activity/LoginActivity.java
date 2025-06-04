@@ -2,6 +2,7 @@ package com.casic.titan.usercomponent.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.KeyBoardUtil;
 
@@ -45,6 +47,11 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
     @Override
     protected boolean hasToolBar() {
         return false;
+    }
+
+    @Override
+    protected boolean enableImmersionBar() {
+        return true;
     }
 
     @Override
@@ -131,4 +138,5 @@ public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> imp
         AppManager.getAppManager().finishAllActivity();
         startActivity(errorService.getMainActivity());
     }
+
 }

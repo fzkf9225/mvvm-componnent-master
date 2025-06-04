@@ -28,23 +28,27 @@ public final class BaseConverterFactory extends Converter.Factory {
     private String successCode = ResponseCode.OK;
 
     public static BaseConverterFactory create() {
-        return create(null,new GsonBuilder().disableHtmlEscaping().create());
+        return create(null, new GsonBuilder().disableHtmlEscaping().create());
     }
 
     public static BaseConverterFactory create(String successCode) {
-        return create(successCode,new GsonBuilder().disableHtmlEscaping().create());
+        return create(successCode, new GsonBuilder().disableHtmlEscaping().create());
     }
 
-    public static BaseConverterFactory create(String successCode,Gson gson) {
+    public static BaseConverterFactory create(Gson gson) {
+        return create(null, gson);
+    }
+
+    public static BaseConverterFactory create(String successCode, Gson gson) {
         if (gson == null) {
             throw new NullPointerException("gson == null");
         }
-        return new BaseConverterFactory(successCode,gson);
+        return new BaseConverterFactory(successCode, gson);
     }
 
     private final Gson gson;
 
-    private BaseConverterFactory(String successCode,Gson gson) {
+    private BaseConverterFactory(String successCode, Gson gson) {
         this.successCode = successCode;
         this.gson = gson;
     }
@@ -53,7 +57,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NonNull @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new BaseResponseBodyConverter<>(successCode,gson,adapter);
+        return new BaseResponseBodyConverter<>(successCode, gson, adapter);
     }
 
     @Override

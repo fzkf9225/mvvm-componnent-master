@@ -102,7 +102,6 @@ dependencies {
     implementation libs.scwang90.refresh.layout.kernel
     implementation libs.refresh.header.classics
     implementation libs.refresh.footer.classics
-    implementation libs.geyifeng.immersionbar
 
     implementation libs.androidx.lifecycle.lifecycle.extensions
     //放着没有及时回收造成RxJava内存泄漏

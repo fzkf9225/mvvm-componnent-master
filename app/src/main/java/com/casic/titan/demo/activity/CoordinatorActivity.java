@@ -6,10 +6,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityCoordinatorBinding;
-import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
@@ -34,14 +34,6 @@ public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCo
     }
 
     @Override
-    protected void initImmersionBar() {
-        ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true, 0.2f)
-                .keyboardEnable(true)
-                .titleBar(binding.detailToolbar).init();
-    }
-
-    @Override
     public void initView(Bundle savedInstanceState) {
         binding.text.setText("关于Snackbar在4.4和emui3.1上高度显示不准确的问题是由于沉浸式使用了系统的" +
                 "WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS或者WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION" +
@@ -52,12 +44,11 @@ public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCo
         binding.detailToolbar.setNavigationOnClickListener(v -> finish());
         binding.toolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsingToolbarTitleStyle);
         binding.toolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedToolbarTitleStyle);
-        binding.fab.setOnClickListener(v-> showToast("点击事件"));
+        binding.fab.setOnClickListener(v -> showToast("点击事件"));
     }
 
     @Override
     public void initData(Bundle bundle) {
 
     }
-
 }

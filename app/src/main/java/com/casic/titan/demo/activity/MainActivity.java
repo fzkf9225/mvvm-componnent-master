@@ -1,12 +1,14 @@
 package com.casic.titan.demo.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -14,7 +16,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.databinding.ActivityMainBinding;
 import com.casic.titan.demo.viewmodel.MainViewModel;
-import com.gyf.immersionbar.ImmersionBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppSettingHelper;
@@ -44,11 +45,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
     }
 
     @Override
-    protected void initImmersionBar() {
-        ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true, 0.2f)
-                .statusBarColor(pers.fz.mvvm.R.color.default_background)
-                .init();
+    protected boolean enableImmersionBar() {
+        return true;
     }
 
     @Override

@@ -128,7 +128,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     protected abstract BasePagingAdapter<T, ?> getRecyclerAdapter();
 
     @Override
-    protected void onLoginSuccessCallback(Bundle bundle) {
+    public void onLoginSuccessCallback(Bundle bundle) {
         super.onLoginSuccessCallback(bundle);
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
         adapter.refresh();
@@ -157,7 +157,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
                 return;
             }
             if (errorService.isLoginPast(model.getCode())) {
-                errorService.toLogin(requireContext(), loginLauncher);
+                errorService.toLogin(requireContext(), authManager.getLauncher());
                 return;
             }
             if (!errorService.hasPermission(model.getCode())) {

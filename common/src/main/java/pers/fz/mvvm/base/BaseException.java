@@ -8,7 +8,7 @@ import java.io.IOException;
  * Create by CherishTang on 2019/8/1
  * describe:自定义异常封装
  */
-public class BaseException extends IOException {
+public class BaseException extends RuntimeException {
     /**
      * 解析数据失败
      */

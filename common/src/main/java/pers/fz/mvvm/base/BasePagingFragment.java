@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
@@ -110,8 +111,8 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected abstract BasePagingAdapter<T, ?> getRecyclerAdapter();
 
     @Override
-    protected void onLoginSuccessCallback(Bundle bundle) {
-        super.onLoginSuccessCallback(bundle);
+    public void onLoginSuccessCallback(@Nullable Bundle data) {
+        super.onLoginSuccessCallback(data);
         setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
         onRefresh();
     }
@@ -136,7 +137,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
                 return;
             }
             if (errorService.isLoginPast(model.getCode())) {
-                errorService.toLogin(requireContext(), loginLauncher);
+                errorService.toLogin(requireContext(), authManager.getLauncher());
                 return;
             }
             if (!errorService.hasPermission(model.getCode())) {

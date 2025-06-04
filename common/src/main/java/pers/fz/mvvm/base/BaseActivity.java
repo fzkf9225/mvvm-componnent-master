@@ -1,26 +1,19 @@
 package pers.fz.mvvm.base;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.gyf.immersionbar.ImmersionBar;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -29,42 +22,37 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
+import pers.fz.mvvm.helper.AuthManager;
+import pers.fz.mvvm.helper.UiController;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
 import pers.fz.mvvm.wight.dialog.LoginDialog;
 
 /**
  * Create by CherishTang on 2019/8/1
  * describe:BaseActivity封装
  */
-public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener {
+public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
     protected VM mViewModel;
     protected VDB binding;
     protected BaseActivityConstraintBinding toolbarBind;
-    private ActivityResultLauncher<String[]> permissionLauncher;
-    protected ActivityResultLauncher<Intent> loginLauncher;
     @Inject
     public ErrorService errorService;
+
+    protected AuthManager authManager;
+
+    private UiController uiController;
 
     protected abstract int getLayoutId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK) {
-                onLoginSuccessCallback(result.getData() == null ? null : result.getData().getExtras());
-            } else {
-                onLoginFailCallback(result.getResultCode(), result.getData() == null ? null : result.getData().getExtras());
-            }
-        });
+        authManager = new AuthManager(this);
+        authManager.setAuthCallback(this);
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
+        uiController = new UiController(this, getLifecycle());
         initToolbar();
-        if (enableImmersionBar()) {
-            initImmersionBar();
-        }
         createViewModel();
         initView(savedInstanceState);
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
@@ -83,6 +71,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             toolbarBind.setToolbarConfig(createdToolbarConfig());
             toolbarBind.mainBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
+            createdToolbarConfig();
             binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);
         }
@@ -98,27 +87,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * @return toolbar配置
      */
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig().setTitle(setTitleBar()).setBgColor(R.color.white);
-    }
-
-    /**
-     * 初始化沉浸式
-     * Init immersion bar.
-     */
-    protected void initImmersionBar() {
-        //设置共同沉浸式样式
-        if (toolbarBind == null) {
-            ImmersionBar.with(this)
-                    .keyboardEnable(true)
-                    .init();
-        } else {
-            ImmersionBar.with(this)
-                    .statusBarColor(toolbarBind.getToolbarConfig().getBgColor())
-                    .autoStatusBarDarkModeEnable(true, 0.2f)
-                    .keyboardEnable(true)
-                    .titleBar(toolbarBind.mainBar)
-                    .init();
-        }
+        return new ToolbarConfig(this).setEnableImmersionBar(enableImmersionBar()).setLightMode(false).setTitle(setTitleBar()).setBgColor(R.color.white).applyStatusBar();
     }
 
     /**
@@ -139,83 +108,26 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
-
-    public boolean lacksPermissions(String... permission) {
-        return PermissionsChecker.getInstance().lacksPermissions(this, permission);
-    }
-
-    public boolean lacksPermissions(List<String> permission) {
-        return PermissionsChecker.getInstance().lacksPermissions(this, permission);
-    }
-
-    /**
-     * 权限请求
-     *
-     * @param permissions 权限
-     */
-    public void requestPermission(String... permissions) {
-        // 缺少权限时, 进入权限配置页面
-        permissionLauncher.launch(permissions);
-    }
-
-    public void requestPermission(List<String> permissions) {
-        // 缺少权限时, 进入权限配置页面
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionLauncher.launch(permissions.toArray(String[]::new));
-        } else {
-            permissionLauncher.launch(permissions.stream().toArray(String[]::new));
-        }
-    }
-
-    /**
-     * 注册权限请求监听
-     */
-    protected void registerPermissionLauncher() {
-        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            for (Map.Entry<String, Boolean> stringBooleanEntry : result.entrySet()) {
-                if (Boolean.FALSE.equals(stringBooleanEntry.getValue())) {
-                    onPermissionRefused(result);
-                    return;
-                }
-            }
-            onPermissionGranted(result);
-        });
-    }
-
-    protected void unregisterPermission() {
-        if (permissionLauncher != null) {
-            permissionLauncher.unregister();
-        }
-    }
-
-    protected void onLoginSuccessCallback(Bundle bundle) {
+    @Override
+    public void onLoginSuccessCallback(@Nullable Bundle data) {
 
     }
 
-    protected void onLoginFailCallback(int resultCode, Bundle bundle) {
+    @Override
+    public void onLoginFailCallback(int resultCode, @Nullable Bundle data) {
 
-    }
-
-    /**
-     * 权限同意
-     */
-    protected void onPermissionGranted(Map<String, Boolean> permissions) {
-
-    }
-
-    /**
-     * 权限拒绝
-     */
-    protected void onPermissionRefused(Map<String, Boolean> permissions) {
-        showToast("拒绝权限可能会导致应用软件运行异常!");
     }
 
     protected boolean hasToolBar() {
         return true;
     }
 
+    /**
+     * 是否启用沉浸式状态栏
+     * @return true:沉浸式状态栏
+     */
     protected boolean enableImmersionBar() {
-        return true;
+        return false;
     }
 
     public abstract String setTitleBar();
@@ -234,8 +146,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().finishActivity(this);
-        if (loginLauncher != null) {
-            loginLauncher.unregister();
+        if (authManager != null) {
+            authManager.unregister();
         }
     }
 
@@ -244,40 +156,27 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (errorService == null) {
             return;
         }
-        errorService.toLogin(this, loginLauncher);
-    }
-
-    private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
-        LoadingProgressDialog.getInstance(this)
-                .setCanCancel(isCanCancel)
-                .setMessage(dialogMessage)
-                .builder()
-                .show();
+        errorService.toLogin(this, authManager.getLauncher());
     }
 
     @Override
     public void showLoading(String dialogMessage) {
-        runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
+        uiController.showLoading(dialogMessage, false);
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        runOnUiThread(() ->
-                LoadingProgressDialog.getInstance(this)
-                        .refreshMessage(dialogMessage));
+        uiController.refreshLoading(dialogMessage);
     }
 
     @Override
     public void hideLoading() {
-        runOnUiThread(() -> LoadingProgressDialog.getInstance(this).dismiss());
+        uiController.hideLoading();
     }
 
     @Override
     public void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
+        uiController.showToast(msg);
     }
 
     /**
@@ -291,7 +190,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(this, loginLauncher);
+            errorService.toLogin(this, authManager.getLauncher());
             return;
         }
         if (!errorService.hasPermission(model.getCode())) {

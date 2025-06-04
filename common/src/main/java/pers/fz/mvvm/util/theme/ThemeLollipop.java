@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import pers.fz.mvvm.util.common.ScreenUtil;
+
 class ThemeLollipop {
     static void setStatusBarColor(Activity activity, int statusColor) {
         Window window = activity.getWindow();
@@ -96,7 +98,7 @@ class ThemeLollipop {
         //为Toolbar添加一个状态栏的高度, 同时为Toolbar添加paddingTop,使Toolbar覆盖状态栏，ToolBar的title可以正常显示.
         if (toolbar.getTag() == null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            int statusBarHeight = getStatusBarHeight(activity);
+            int statusBarHeight = ScreenUtil.getStatusBarHeight(activity);
             lp.height += statusBarHeight;
             toolbar.setLayoutParams(lp);
             toolbar.setPadding(toolbar.getPaddingStart(), toolbar.getPaddingTop() + statusBarHeight, toolbar.getPaddingEnd(), toolbar.getPaddingBottom());
@@ -134,12 +136,7 @@ class ThemeLollipop {
         window.setStatusBarColor(Color.TRANSPARENT);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
-        ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbarLayout, new OnApplyWindowInsetsListener() {
-            @Override
-            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
-                return insets;
-            }
-        });
+        ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbarLayout, (v, insets) -> insets);
 
         ViewGroup mContentView = window.findViewById(Window.ID_ANDROID_CONTENT);
         View mChildView = mContentView.getChildAt(0);
@@ -153,7 +150,7 @@ class ThemeLollipop {
         toolbar.setFitsSystemWindows(false);
         if (toolbar.getTag() == null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            int statusBarHeight = getStatusBarHeight(activity);
+            int statusBarHeight =  ScreenUtil.getStatusBarHeight(activity);
             lp.height += statusBarHeight;
             toolbar.setLayoutParams(lp);
             toolbar.setPadding(toolbar.getPaddingStart(), toolbar.getPaddingTop() + statusBarHeight, toolbar.getPaddingEnd(), toolbar.getPaddingBottom());
@@ -179,14 +176,10 @@ class ThemeLollipop {
                         if (ThemeUtils.MIUISetStatusBarLightMode(activity, true)) {
                             return;
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            activity.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            //SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                            activity.getWindow().setStatusBarColor(statusBarColor);
-                        } else if (!ThemeUtils.FlymeSetStatusBarLightMode(activity, true)) {
-                            setStatusBarColor(activity, statusBarColor);
-                        }
+                        activity.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                        //SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        activity.getWindow().setStatusBarColor(statusBarColor);
                     }
                 } else {
                     //toolbar显示时同时显示状态栏
@@ -197,23 +190,11 @@ class ThemeLollipop {
                             translucentStatusBar(activity, true);
                             return;
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                        } else if (ThemeUtils.FlymeSetStatusBarLightMode(activity, true)) {
-                        }
+                        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                         translucentStatusBar(activity, true);
                     }
                 }
             }
         });
-    }
-
-    private static int getStatusBarHeight(Context context) {
-        int result = 0;
-        int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resId > 0) {
-            result = context.getResources().getDimensionPixelOffset(resId);
-        }
-        return result;
     }
 }

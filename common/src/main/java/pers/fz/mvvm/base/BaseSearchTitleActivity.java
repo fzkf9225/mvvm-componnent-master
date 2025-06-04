@@ -7,8 +7,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.MutableLiveData;
 
-import com.gyf.immersionbar.ImmersionBar;
-
 import java.util.Objects;
 
 import pers.fz.mvvm.R;
@@ -70,21 +68,12 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
     };
 
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig()
+        return new ToolbarConfig(this)
                 .setTitle(setTitleBar())
                 .setTextColor(R.color.white)
                 .setBackIconRes(pers.fz.mvvm.R.mipmap.icon_fh_white)
-                .setBgColor(pers.fz.mvvm.R.color.themeColor);
-    }
-
-    @Override
-    protected void initImmersionBar() {
-        ImmersionBar.with(this)
-                .statusBarColor(searchBinding.getToolbarConfig().getBgColor())
-                .autoStatusBarDarkModeEnable(true, 0.2f)
-                .keyboardEnable(true)
-                .titleBar(searchBinding.searchToolBar)
-                .init();
+                .setBgColor(pers.fz.mvvm.R.color.themeColor)
+                .applyStatusBar();
     }
 
     public MutableLiveData<String> getKeywordsLiveData() {

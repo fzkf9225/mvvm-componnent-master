@@ -1,7 +1,6 @@
 package pers.fz.mvvm.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -19,17 +18,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.android.Intents;
-import com.gyf.immersionbar.BarHide;
-import com.gyf.immersionbar.ImmersionBar;
 import com.journeyapps.barcodescanner.CaptureManager;
-
-import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
@@ -37,7 +30,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.ActivityCaptureBinding;
 import pers.fz.mvvm.util.common.QRCodeUtil;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
+import pers.fz.mvvm.util.permission.PermissionManager;
 import pers.fz.mvvm.util.zxing.CustomViewfinderView;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
@@ -46,7 +39,7 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
  * describe:自定义扫码页面
  */
 @AndroidEntryPoint
-public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCaptureBinding> {
+public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptureBinding> {
     private CaptureManager capture;
     private ActivityResultLauncher<String> openGalleryRequest;
 
@@ -63,10 +56,11 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
     };
 
     public final static String SCAN_COLOR = "scanColor";
+    private PermissionManager permissionManager;
 
     @Override
-    protected void initImmersionBar() {
-        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+    protected boolean enableImmersionBar() {
+        return true;
     }
 
     @Override
@@ -86,7 +80,10 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        registerPermissionLauncher();
+        permissionManager = new PermissionManager(this);
+        permissionManager.setOnGrantedCallback(map -> {
+
+        });
         openGalleryRequest = registerForActivityResult(new ActivityResultContracts.GetContent(), activityResultCallback);
         binding.scanFlashLight.setOnClickListener(v -> switchFlashLight());
         binding.scanPhoto.setOnClickListener(v -> openGallery());
@@ -113,18 +110,18 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
 
     private void openGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_UPSIDE_DOWN_CAKE)) {
-                requestPermission(PERMISSIONS_READ_UPSIDE_DOWN_CAKE);
+            if (permissionManager.lacksPermissions(PERMISSIONS_READ_UPSIDE_DOWN_CAKE)) {
+                permissionManager.request(PERMISSIONS_READ_UPSIDE_DOWN_CAKE);
                 return;
             }
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ_TIRAMISU)) {
-                requestPermission(PERMISSIONS_READ_TIRAMISU);
+            if (permissionManager.lacksPermissions(PERMISSIONS_READ_TIRAMISU)) {
+                permissionManager.request(PERMISSIONS_READ_TIRAMISU);
                 return;
             }
         } else {
-            if (PermissionsChecker.getInstance().lacksPermissions(this, PERMISSIONS_READ)) {
-                requestPermission(PERMISSIONS_READ);
+            if (permissionManager.lacksPermissions(PERMISSIONS_READ)) {
+                permissionManager.request(PERMISSIONS_READ);
                 return;
             }
         }
@@ -211,7 +208,9 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
         if (openGalleryRequest != null) {
             openGalleryRequest.unregister();
         }
-        unregisterPermission();
+        if (permissionManager != null) {
+            permissionManager.unregister();
+        }
     }
 
     @Override
@@ -230,4 +229,5 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel,ActivityCapture
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return binding.dbvCustom.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
     }
+
 }

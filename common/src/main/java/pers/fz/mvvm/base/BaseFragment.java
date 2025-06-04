@@ -1,16 +1,13 @@
 package pers.fz.mvvm.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
@@ -20,92 +17,36 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
+import pers.fz.mvvm.helper.AuthManager;
+import pers.fz.mvvm.helper.UiController;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
-import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
 
 /**
  * Created by fz on 2017/11/22.
  * BaseFragment封装
  */
-public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView {
+public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView ,AuthManager.AuthCallback{
     protected String TAG = this.getClass().getSimpleName();
 
     protected VM mViewModel;
     protected VDB binding;
-    private ActivityResultLauncher<String[]> permissionLauncher;
     @Inject
     protected ErrorService errorService;
-    protected ActivityResultLauncher<Intent> loginLauncher = null;
 
-    public void requestPermission(String... permissions) {
-        permissionLauncher.launch(permissions);
-    }
+    protected AuthManager authManager;
 
-    public void requestPermission(List<String> permissions) {
-        // 缺少权限时, 进入权限配置页面
-        permissionLauncher.launch(permissions.stream().toArray(String[]::new));
-    }
-
-    public boolean lacksPermissions(String... permissions) {
-        return PermissionsChecker.getInstance().lacksPermissions(requireContext(), permissions);
-    }
-
-    public boolean lacksPermissions(List<String> permission) {
-        return PermissionsChecker.getInstance().lacksPermissions(requireContext(), permission);
-    }
-
-    /**
-     * 注册权限请求监听
-     */
-    protected void registerPermissionLauncher() {
-        permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-            for (Map.Entry<String, Boolean> stringBooleanEntry : result.entrySet()) {
-                if (Boolean.FALSE.equals(stringBooleanEntry.getValue())) {
-                    onPermissionRefused(result);
-                    return;
-                }
-            }
-            onPermissionGranted(result);
-        });
-    }
-
-    protected void unregisterPermission() {
-        if (permissionLauncher != null) {
-            permissionLauncher.unregister();
-        }
-    }
-
-    /**
-     * 权限同意
-     */
-    protected void onPermissionGranted(Map<String, Boolean> permissions) {
-
-    }
-
-    /**
-     * 权限拒绝
-     */
-    protected void onPermissionRefused(Map<String, Boolean> permissions) {
-        showToast("拒绝权限可能会导致应用软件运行异常!");
-    }
+    private UiController uiController;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        authManager = new AuthManager(this);
+        authManager.setAuthCallback(this);
+        uiController = new UiController(requireContext(),getLifecycle());
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
         binding.setLifecycleOwner(this);
-        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                onLoginSuccessCallback(result.getData() == null ? null : result.getData().getExtras());
-            } else {
-                onLoginFailCallback(result.getResultCode(), result.getData() == null ? null : result.getData().getExtras());
-            }
-        });
         createViewModel();
         initView(savedInstanceState);
         initData(getArguments() == null ? new Bundle() : getArguments());
@@ -155,68 +96,52 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      */
     protected abstract void initData(Bundle bundle);
 
-    protected void onLoginSuccessCallback(Bundle bundle) {
+    @Override
+    public void onLoginSuccessCallback(@Nullable Bundle data) {
 
     }
 
-    protected void onLoginFailCallback(int resultCode, Bundle bundle) {
+    @Override
+    public void onLoginFailCallback(int resultCode, @Nullable Bundle data) {
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (loginLauncher != null) {
-            loginLauncher.unregister();
+        if (authManager != null) {
+            authManager.unregister();
         }
     }
 
-    /**
-     * 显示加载弹框
-     *
-     * @param dialogMessage 弹框内容，如果内容为空则不展示文字部分
-     */
-    private void showLoadingDialog(String dialogMessage, boolean isCanCancel) {
-        LoadingProgressDialog.getInstance(getContext())
-                .setCanCancel(isCanCancel)
-                .setMessage(dialogMessage)
-                .builder()
-                .show();
-    }
 
     @Override
     public void showLoading(String dialogMessage) {
-        if (!requireActivity().isFinishing()) {
-            requireActivity().runOnUiThread(() -> showLoadingDialog(dialogMessage, false));
+        if (requireActivity().isFinishing()) {
+            return;
         }
+        uiController.showLoading(requireActivity(),dialogMessage,false);
     }
 
     @Override
     public void hideLoading() {
-        if (!requireActivity().isFinishing()) {
-            requireActivity().runOnUiThread(() -> LoadingProgressDialog.getInstance(getContext()).dismiss());
+        if (requireActivity().isFinishing()) {
+            return;
         }
+        uiController.hideLoading();
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        if (!requireActivity().isFinishing()) {
-            requireActivity().runOnUiThread(() -> {
-                if (LoadingProgressDialog.getInstance(requireActivity()) == null || !LoadingProgressDialog.getInstance(requireActivity()).isShowing()) {
-                    return;
-                }
-                LoadingProgressDialog.getInstance(requireActivity())
-                        .refreshMessage(dialogMessage);
-            });
+        if (requireActivity().isFinishing()) {
+            return;
         }
+        uiController.refreshLoading(dialogMessage);
     }
 
     @Override
     public void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show());
+        uiController.showToast(msg);
     }
 
     @Override
@@ -225,7 +150,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(requireContext(), loginLauncher);
+            errorService.toLogin(requireContext(), authManager.getLauncher());
             return;
         }
         if (!errorService.hasPermission(model.getCode())) {

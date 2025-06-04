@@ -25,7 +25,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:toolbarId="@+id/toolbar">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mIv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -38,9 +38,9 @@
                     android:layout_below="@+id/view"
                     style="@style/Widget.AppCompat.Toolbar"
                     app:layout_collapseMode="pin"
-                    android:textColor="@color/black"
-                    app:titleTextColor="@color/black"
-                    app:navigationIcon="@mipmap/icon_fh_black"
+                    android:textColor="@color/white"
+                    app:titleTextColor="@color/white"
+                    app:navigationIcon="@mipmap/icon_fh_white"
                     app:title="结合CoordinatorLayout使用" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

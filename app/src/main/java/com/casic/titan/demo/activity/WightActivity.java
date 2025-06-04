@@ -1,6 +1,7 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -138,10 +139,13 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
     }
 
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig().setTitle(setTitleBar())
+        return new ToolbarConfig(this)
+                .setLightMode(true)
+                .setTitle(setTitleBar())
                 .setTextColor(R.color.white)
                 .setBackIconRes(pers.fz.mvvm.R.mipmap.icon_fh_white)
-                .setBgColor(pers.fz.mvvm.R.color.themeColor);
+                .setBgColor(pers.fz.mvvm.R.color.themeColor)
+                .applyStatusBar();
     }
 
 

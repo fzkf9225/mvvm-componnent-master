@@ -25,6 +25,7 @@ import pers.fz.mvvm.databinding.WebViewBinding;
 import pers.fz.mvvm.util.common.CordovaDialogsHelper;
 import pers.fz.mvvm.util.common.SystemWebChromeClient;
 import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.util.common.WebViewUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
@@ -62,27 +63,9 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initView(Bundle savedInstanceState) {
-        WebSettings settings = binding.webView.getSettings();
-        settings.setGeolocationEnabled(true);
-// 启用 DOM 存储（适用于 Vue 等现代框架）
-        settings.setDomStorageEnabled(true);
-        // 启用缓存
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        // 允许加载外部资源
-        settings.setAllowContentAccess(true);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setJavaScriptEnabled(true);
-        settings.setTextZoom(100);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-        settings.setAllowFileAccess(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
+        WebViewUtil.setDefaultSetting(binding.webView);
         binding.webView.setWebViewClient(new MyWebViewClient());
-        binding.webView.setWebChromeClient(
-                new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind == null ? null : toolbarBind.tvTitle)
-        );
+        binding.webView.setWebChromeClient(new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind == null ? null : toolbarBind.tvTitle));
     }
 
 

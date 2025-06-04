@@ -61,6 +61,7 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
     @Override
     public void initView(Bundle savedInstanceState) {
         mediaHelper = new MediaBuilder(this)
+                .bindLifeCycle(this)
                 .setImageMaxSelectedCount(1)
                 .setChooseType(MediaHelper.DEFAULT_TYPE)
                 .builder();

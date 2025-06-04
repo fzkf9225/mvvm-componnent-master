@@ -95,7 +95,6 @@ dependencies {
     annotationProcessor project(':annotation')
 
     implementation libs.github.glide
-    implementation libs.geyifeng.immersionbar
 
     implementation libs.logger
 

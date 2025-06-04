@@ -33,12 +33,12 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<String, ImageShowI
                 .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                 .into(viewHolder.getBinding().cornerImage);
         viewHolder.getBinding().cornerImage.setOnClickListener(v -> {
-                try{
-                    new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(mList),pos).show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
-                }
+            try {
+                new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(mList), pos).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

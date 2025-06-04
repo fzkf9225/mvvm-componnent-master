@@ -9,6 +9,7 @@ object WebViewUtil {
     const val TAG = "WebViewUtil"
 
     @SuppressLint("SetJavaScriptEnabled")
+    @JvmStatic
     fun setDefaultSetting(mWebView: WebView) {
         mWebView.clearCache(true)
         mWebView.settings.apply {
@@ -45,12 +46,14 @@ object WebViewUtil {
         mWebView.requestFocusFromTouch()
     }
 
+    @JvmStatic
     public fun postJs(mWebView: WebView, js: String) {
         mWebView.post {
             mWebView.evaluateJavascript(js, null)
         }
     }
 
+    @JvmStatic
     public fun executeJs(mWebView: WebView, js: String) {
         mWebView.evaluateJavascript(js, null)
     }

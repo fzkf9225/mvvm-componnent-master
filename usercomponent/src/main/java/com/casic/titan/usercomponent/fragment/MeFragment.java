@@ -2,6 +2,8 @@ package com.casic.titan.usercomponent.fragment;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+
 import com.casic.titan.userapi.router.UserRouterService;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.activity.ModifyPasswordActivity;
@@ -9,7 +11,6 @@ import com.casic.titan.usercomponent.activity.PersonalCenterActivity;
 import com.casic.titan.usercomponent.activity.SettingActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.casic.titan.usercomponent.databinding.MeFragmentBinding;
-import com.gyf.immersionbar.ImmersionBar;
 
 import javax.inject.Inject;
 
@@ -18,6 +19,8 @@ import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.base.BaseFragment;
+import pers.fz.mvvm.util.common.ScreenUtil;
+import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
@@ -41,10 +44,7 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ImmersionBar.with(this)
-                .autoStatusBarDarkModeEnable(true, 0.2f)
-                .statusBarColor(pers.fz.mvvm.R.color.themeColor)
-                .init();
+        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), pers.fz.mvvm.R.color.themeColor),true);
         mediaHelper.getMediaBuilder().setImageMaxSelectedCount(1);
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
 //            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
@@ -62,13 +62,13 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
             if (UserAccountHelper.isLogin()) {
                 return;
             }
-            userRouterService.toLogin(requireContext(), loginLauncher);
+            userRouterService.toLogin(requireContext(), authManager.getLauncher());
         });
         binding.tvSetting.setOnClickListener(v -> startActivity(SettingActivity.class));
         binding.tvModifyPassword.setOnClickListener(v -> startActivity(ModifyPasswordActivity.class));
         binding.headImg.setOnClickListener(v -> {
             if (!UserAccountHelper.isLogin()) {
-                userRouterService.toLogin(requireContext(), loginLauncher);
+                userRouterService.toLogin(requireContext(), authManager.getLauncher());
             } else {
                 new OpenImageDialog(requireActivity())
                         .setMediaType(OpenImageDialog.CAMERA_ALBUM)

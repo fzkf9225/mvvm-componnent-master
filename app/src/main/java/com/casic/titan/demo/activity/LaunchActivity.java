@@ -18,6 +18,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.LaunchLayoutBinding;
+import pers.fz.mvvm.util.permission.PermissionManager;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
@@ -41,10 +42,12 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBin
             Manifest.permission.POST_NOTIFICATIONS
     };
     private SplashScreen splashScreen;
+
+    protected PermissionManager permissionManager;
     /**
      * 控制是否保持启动页面的变量,值为false时继续往下走
      */
-    private AtomicBoolean keepOnScreenCondition = new AtomicBoolean(false);
+    private final AtomicBoolean keepOnScreenCondition = new AtomicBoolean(false);
 
     @Override
     public String setTitleBar() {
@@ -69,21 +72,30 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBin
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        registerPermissionLauncher();
+        permissionManager = new PermissionManager(this);
+        permissionManager.setOnDeniedCallback(map -> {
+            showToast("拒绝权限可能会导致应用软件运行异常");
+            keepOnScreenCondition.compareAndSet(false, true);
+            startCountDown();
+        });
+        permissionManager.setOnGrantedCallback(map -> {
+            keepOnScreenCondition.compareAndSet(false, true);
+            startCountDown();
+        });
     }
 
     @Override
     public void initData(Bundle bundle) {
         splashScreen.setKeepOnScreenCondition(() -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (lacksPermissions(PERMISSIONS_TIRAMISU)) {
-                    requestPermission(PERMISSIONS_TIRAMISU);
+                if (permissionManager.lacksPermissions(PERMISSIONS_TIRAMISU)) {
+                    permissionManager.request(PERMISSIONS_TIRAMISU);
                 } else {
                     startCountDown();
                 }
             } else {
-                if (lacksPermissions(PERMISSIONS)) {
-                    requestPermission(PERMISSIONS);
+                if (permissionManager.lacksPermissions(PERMISSIONS)) {
+                    permissionManager.request(PERMISSIONS);
                 } else {
                     startCountDown();
                 }
@@ -94,22 +106,6 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBin
             LogUtil.show(TAG, "---------------setOnExitAnimationListener--------------");
             showToast("SplashScreen动画播放结束");
         });
-    }
-
-    @Override
-    protected void onPermissionGranted(Map<String, Boolean> permissions) {
-        if (permissions == null || permissions.size() == 0) {
-            return;
-        }
-        keepOnScreenCondition.compareAndSet(false, true);
-        startCountDown();
-    }
-
-    @Override
-    protected void onPermissionRefused(Map<String, Boolean> permissions) {
-        super.onPermissionRefused(permissions);
-        keepOnScreenCondition.compareAndSet(false, true);
-        startCountDown();
     }
 
     private void startCountDown() {
@@ -137,6 +133,9 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBin
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(permissionManager!=null){
+            permissionManager.unregister();
+        }
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }

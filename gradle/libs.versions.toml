@@ -34,7 +34,6 @@ geniusVersion = "2.0.0"
 glideVersion = "4.15.1"
 gsonVersion = "2.11.0"
 hiltVersion = "2.52"
-immersionbarVersion = "3.2.2"
 jtsCoreVersion = "1.18.1"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -90,7 +89,6 @@ com-birbit-android-priority-jobqueue = { module = "com.birbit:android-priority-j
 com-squareup-picasso-picasso = { module = "com.squareup.picasso:picasso", version.ref = "squareupPicasso" }
 com-trello-rxlifecycle2-rxlifecycle-components = { module = "com.trello.rxlifecycle2:rxlifecycle-components", version.ref = "rxlifecycleVersion" }
 core = { module = "com.google.zxing:core", version.ref = "zxingCoreVersion" }
-geyifeng-immersionbar = { module = "com.geyifeng.immersionbar:immersionbar", version.ref = "immersionbarVersion" }
 github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
 github-gsyvideoplayer-x64 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64", version.ref = "gsyVersion" }
