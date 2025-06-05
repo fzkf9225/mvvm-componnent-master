@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 import javax.inject.Inject;
 
 import pers.fz.mvvm.helper.AuthManager;
-import pers.fz.mvvm.helper.UiController;
+import pers.fz.mvvm.helper.UIController;
 import pers.fz.mvvm.inter.ErrorService;
 
 /**
@@ -38,13 +38,12 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     protected AuthManager authManager;
 
-    private UiController uiController;
+    private UIController uiController;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        authManager = new AuthManager(this);
-        authManager.setAuthCallback(this);
-        uiController = new UiController(requireContext(),getLifecycle());
+        createAuthManager();
+        createUIController();
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
         binding.setLifecycleOwner(this);
         createViewModel();
@@ -53,6 +52,18 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return binding.getRoot();
     }
 
+    protected void createAuthManager() {
+        if (authManager == null) {
+            authManager = new AuthManager(this);
+        }
+        authManager.setAuthCallback(this);
+    }
+
+    protected void createUIController() {
+        if (uiController == null) {
+            uiController = new UIController(requireContext(), getLifecycle());
+        }
+    }
     /**
      * 创建viewModel
      */

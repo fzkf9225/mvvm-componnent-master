@@ -23,7 +23,7 @@ import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.helper.AuthManager;
-import pers.fz.mvvm.helper.UiController;
+import pers.fz.mvvm.helper.UIController;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.wight.dialog.LoginDialog;
 
@@ -41,21 +41,33 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     protected AuthManager authManager;
 
-    private UiController uiController;
+    private UIController uiController;
 
     protected abstract int getLayoutId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        authManager = new AuthManager(this);
-        authManager.setAuthCallback(this);
+        createAuthManager();
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
-        uiController = new UiController(this, getLifecycle());
+        createUIController();
         initToolbar();
         createViewModel();
         initView(savedInstanceState);
         initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
+    }
+
+    protected void createAuthManager() {
+        if (authManager == null) {
+            authManager = new AuthManager(this);
+        }
+        authManager.setAuthCallback(this);
+    }
+
+    protected void createUIController() {
+        if (uiController == null) {
+            uiController = new UIController(this, getLifecycle());
+        }
     }
 
     protected void initToolbar() {

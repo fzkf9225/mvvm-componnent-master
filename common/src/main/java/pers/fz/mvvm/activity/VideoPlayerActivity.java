@@ -2,7 +2,6 @@ package pers.fz.mvvm.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -47,7 +46,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
 
     @Override
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig(this).setStatusBarColor(Color.BLACK).setLightMode(false).applyStatusBar();
+        return new ToolbarConfig(this).setStatusBarColor(android.R.color.black).setLightMode(false).applyStatusBar();
     }
 
     @Override

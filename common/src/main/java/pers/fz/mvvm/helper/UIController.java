@@ -15,12 +15,12 @@ import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
  * created by fz on 2025/6/4 9:56
  * describe:
  */
-public class UiController implements LifecycleObserver {
+public class UIController implements LifecycleObserver {
     private final Context context;
     private LoadingProgressDialog loadingDialog;
     private final Handler mainHandler;
 
-    public UiController(Context context, Lifecycle lifecycle) {
+    public UIController(Context context, Lifecycle lifecycle) {
         this.context = context;
         lifecycle.addObserver(this);
         mainHandler = new Handler(Looper.getMainLooper());
