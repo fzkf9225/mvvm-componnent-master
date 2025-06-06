@@ -26,6 +26,8 @@
                 android:id="@+id/tv_bulletin_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:labelAlign="top"
+                app:labelTextStyle="bold"
                 app:bottomBorder="true"
                 app:label="简报名称"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -41,6 +43,8 @@
                 android:layout_height="wrap_content"
                 app:bottomBorder="true"
                 app:label="简报提交时间"
+                app:labelAlign="top"
+                app:labelTextStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_name"
@@ -54,6 +58,8 @@
                 android:layout_height="wrap_content"
                 app:bottomBorder="true"
                 app:label="简报内容"
+                app:labelAlign="top"
+                app:labelTextStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_create_time"
@@ -71,9 +77,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bulletin_detail"
                 app:line="-1"
+                app:labelAlign="top"
+                app:labelTextStyle="bold"
                 app:required="false"
                 app:text="@{data.richText}" />
-
             <View
                 android:id="@+id/v_base_info"
                 style="@style/h_area"
@@ -109,7 +116,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_screen_image"
                 app:required="false" />
-
             <!--其他附件-->
             <com.casic.titan.commonui.form.FormFileShow
                 android:id="@+id/form_screen_file"

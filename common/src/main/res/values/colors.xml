@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#272a30</color>
+    <color name="colorPrimaryDark">#FF272a30</color>
     <color name="gray">#666666</color>
     <color name="background">#FFE4E3E3</color>
     <color name="themeColor">#FF1C50B5</color>
@@ -8,17 +8,17 @@
     <color name="theme_green">#FF238C00</color>
     <color name="theme_orange">#FFF77832</color>
     <color name="theme_yellow">#FFF4D000</color>
-    <color name="hint_text_color">#FFc4c4c4</color>
+    <color name="hint_text_color">#FFC4C4C4</color>
     <color name="h_line_color">#FFdddddd</color>
     <color name="dark_light">#FF5d5d5d</color>
     <color name="transparent">#00000000</color>
-    <color name="search_view_background">#FF9b9b9b</color>
+    <color name="search_view_background">#FF9B9B9B</color>
     <color name="autoColor">#FF333333</color>
-    <color name="autoBg">#FFeef0f3</color>
+    <color name="autoBg">#FFEEF0F3</color>
     <color name="nv_bg_color">#FF999999</color>
     <color name="bg_color">#FFEDEDED</color>
     <color name="h_area">#FFF3F3F3</color>
-    <color name="default_background">#FFeef3f2</color>
-    <color name="green">#FF5fb878</color>
+    <color name="default_background">#FFEEF3F2</color>
+    <color name="green">#FF5FB878</color>
 
 </resources>

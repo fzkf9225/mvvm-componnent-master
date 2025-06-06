@@ -1,185 +1,217 @@
 package com.casic.titan.commonui.form;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.databinding.FormEditTextBinding;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
-import com.casic.titan.commonui.helper.FormDataSource;
 import com.casic.titan.commonui.impl.DecimalDigitsInputFilter;
 import com.casic.titan.commonui.inter.FormTextWatcher;
-import com.google.android.material.shape.MaterialShapeDrawable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pers.fz.mvvm.util.common.DensityUtil;
-
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormEditText extends ConstraintLayout {
-    private String labelString;
-    private String hintString = "请输入";
-    private boolean required = false;
-    private boolean bottomBorder = true;
-    protected int rightTextColor;
-    protected int labelTextColor;
-    private int inputType = InputType.TYPE_CLASS_TEXT;
-    private int imeOptions = EditorInfo.IME_ACTION_NEXT;
-    public final FormDataSource formDataSource = new FormDataSource();
-    private int formatText = 0;
-    private int maxLength = -1;
-    public FormTextWatcher formTextWatcher;
-    public FormEditTextBinding binding;
-    private int digits = -1;
-    private float formLabelTextSize;
-    private float formTextSize;
-    private float formRequiredSize;
+public class FormEditText extends FormConstraintLayout {
+    /**
+     * 输入框类型
+     */
+    protected int inputType = InputType.TYPE_CLASS_TEXT;
+    /**
+     * 回车按钮样式
+     */
+    protected int imeOptions = EditorInfo.IME_ACTION_NEXT;
+    /**
+     * 输入框格式，暂未实现功能
+     */
+    protected int formatText = 0;
+    /**
+     * 可输入最大长度，默认为-1，不限制
+     */
+    protected int maxLength = -1;
+    /**
+     * 小数位，只有在小数的时候才有效，所以请配合输入类型使用
+     */
+    protected int digits = -1;
+    /**
+     * 输入框背景
+     */
+    protected Drawable inputDrawable;
+    /**
+     * 输入框高度
+     */
+    protected float inputHeight;
 
-    public FormEditText(Context context) {
+    public FormEditText(@NonNull Context context) {
         super(context);
-        initAttr(null);
-        init();
     }
 
-    public FormEditText(Context context, @Nullable AttributeSet attrs) {
+    public FormEditText(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initAttr(attrs);
-        init();
     }
 
-    public FormEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormEditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(attrs);
-        init();
     }
 
-    private void initAttr(AttributeSet attrs) {
+    @Override
+    protected void initAttr(AttributeSet attrs) {
+        super.initAttr(attrs);
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
-            labelString = typedArray.getString(R.styleable.FormEditText_label);
-            hintString = typedArray.getString(R.styleable.FormEditText_hint);
-            rightTextColor = typedArray.getColor(R.styleable.FormEditText_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            labelTextColor = typedArray.getColor(R.styleable.FormEditText_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            required = typedArray.getBoolean(R.styleable.FormEditText_required, false);
-            bottomBorder = typedArray.getBoolean(R.styleable.FormEditText_bottomBorder, true);
-            inputType = typedArray.getInt(R.styleable.FormEditText_formInputType, InputType.TYPE_CLASS_TEXT);
-            imeOptions = typedArray.getInt(R.styleable.FormEditText_formImeOptions, EditorInfo.IME_ACTION_NEXT);
-            formatText = typedArray.getInt(R.styleable.FormEditText_formatText, 0);
-            maxLength = typedArray.getInt(R.styleable.FormEditText_maxLength, -1);
-            digits = typedArray.getInt(R.styleable.FormEditText_digits, -1);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormEditText_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            formTextSize = typedArray.getDimension(R.styleable.FormEditText_formTextSize, DensityUtil.sp2px(getContext(), 14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormEditText_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            inputType = typedArray.getInt(R.styleable.FormUI_formInputType, InputType.TYPE_CLASS_TEXT);
+            imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+            formatText = typedArray.getInt(R.styleable.FormUI_formatText, 0);
+            maxLength = typedArray.getInt(R.styleable.FormUI_maxLength, -1);
+            digits = typedArray.getInt(R.styleable.FormUI_digits, -1);
+            inputDrawable = typedArray.getDrawable(R.styleable.FormUI_inputDrawable);
+            inputHeight = typedArray.getDimension(R.styleable.FormUI_inputHeight, DensityUtil.dp2px(getContext(), 35f));
             typedArray.recycle();
         } else {
-            rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
-            formTextSize = DensityUtil.sp2px(getContext(), 14);
+            digits = -1;
+            inputType = InputType.TYPE_CLASS_TEXT;
+            inputDrawable = null;
+            inputHeight = DensityUtil.dp2px(getContext(), 35f);
         }
     }
 
-    private void init() {
-        binding = FormEditTextBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        lifecycleOwner = findLifecycleOwner(getContext());
-        if (lifecycleOwner != null) {
-            binding.setLifecycleOwner(lifecycleOwner);
+    @Override
+    public void createLabel() {
+        super.createLabel();
+        if (LabelAlignEnum.LEFT.value == labelAlign) {
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
+            params.topMargin = (int) defaultTextMargin;
         }
-        binding.setData(formDataSource);
-        binding.editText.setHint(hintString);
-        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        binding.tvLabel.setText(labelString);
-        binding.editText.setTextColor(rightTextColor);
-        binding.tvLabel.setTextColor(labelTextColor);
-        binding.editText.setImeOptions(imeOptions);
-        binding.editText.setInputType(inputType);
-        if (maxLength > 0) {
-            binding.editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+    }
+
+    @Override
+    public void layoutLabel() {
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.applyTo(this);
+            ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+            params.topMargin = (int) defaultTextMargin;
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+            constraintSet.applyTo(this);
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
+            params.topMargin = (int) defaultTextMargin;
+        } else {
+
         }
-        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        binding.editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
-        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+    }
+
+    @Override
+    public void createText() {
+        AppCompatEditText editText = new AppCompatEditText(getContext());
+        editText.setId(View.generateViewId());
+        editText.setHint(hintString);
+        editText.setTextColor(rightTextColor);
+        editText.setBackground(inputDrawable);
+        editText.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        editText.setTextColor(rightTextColor);
+        editText.setHintTextColor(ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.hint_text_color));
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        editText.setImeOptions(imeOptions);
+        editText.setInputType(inputType);
+        // 创建过滤器列表
+        List<InputFilter> filters = new ArrayList<>();
+
+        // 添加小数位数过滤器（如果有设置）
         if (digits > 0) {
-            binding.editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(digits)});
+            filters.add(new DecimalDigitsInputFilter(digits));
         }
-        // 添加底部边框
-        if (bottomBorder) {
-            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
+        // 添加长度限制过滤器（如果有设置）
+        if (maxLength > 0) {
+            filters.add(new InputFilter.LengthFilter(maxLength));
         }
+        // 将多个过滤器合并设置（不会覆盖已有过滤器）
+        if (!filters.isEmpty()) {
+            editText.setFilters(filters.toArray(new InputFilter[0]));
+        }
+        // 设置水平权重
+        ConstraintLayout.LayoutParams params;
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            editText.setPadding(0, 0, 0, 0);
+            editText.setGravity(Gravity.START | android.view.Gravity.CENTER_VERTICAL);
+            params = new ConstraintLayout.LayoutParams(
+                    0, (int) inputHeight);
+            params.setMarginStart((int) textEndMargin);
+            params.setMarginEnd((int) textEndMargin);
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            editText.setPadding(0, (int) defaultTextMargin, 0, (int) defaultTextMargin);
+            editText.setGravity(android.view.Gravity.END | android.view.Gravity.CENTER_VERTICAL);
+            params = new ConstraintLayout.LayoutParams(
+                    0, LayoutParams.WRAP_CONTENT);
+            params.setMarginStart((int) textStartMargin);
+            params.setMarginEnd((int) textEndMargin);
+            params.horizontalWeight = 1;
+        } else {
+            params = new ConstraintLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        }
+        editText.setLines(1);
+        tvSelection = editText;
+        addView(tvSelection, params);
     }
-    private LifecycleOwner lifecycleOwner;
 
-    public LifecycleOwner getLifecycleOwner() {
-        return lifecycleOwner;
-    }
+    @Override
+    public void layoutText() {
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.BOTTOM);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+            constraintSet.applyTo(this);
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.START, tvRequired.getId(), ConstraintSet.END);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+            constraintSet.applyTo(this);
+        } else {
 
-    private LifecycleOwner findLifecycleOwner(Context context) {
-        if (context instanceof LifecycleOwner) {
-            return (LifecycleOwner) context;
-        } else if (context instanceof ContextWrapper) {
-            Context baseContext = ((ContextWrapper) context).getBaseContext();
-            if (baseContext instanceof LifecycleOwner) {
-                return (LifecycleOwner) baseContext;
-            }
         }
-        return null; // 或抛出异常
-    }
-
-    // 如果需要在外部设置LifecycleOwner
-    public void setLifecycleOwner(LifecycleOwner owner) {
-        this.lifecycleOwner = owner;
-        if (binding != null) {
-            binding.setLifecycleOwner(this.lifecycleOwner);
-        }
-    }
-    public FormEditTextBinding getBinding() {
-        return binding;
     }
 
     /**
      * 不要使用这个因为会导致databinding双向绑定无效
      */
     public void addTextChangedListener(TextWatcher watcher) {
-        binding.editText.addTextChangedListener(watcher);
+        AppCompatEditText editText = (AppCompatEditText) tvSelection;
+        editText.addTextChangedListener(watcher);
     }
 
-    /**
-     * 推荐使用这个
-     */
-    public void addTextChangedListener(FormTextWatcher formTextWatcher) {
-        this.formTextWatcher = formTextWatcher;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public CharSequence getText() {
-        return binding.getData().textValue.get() == null ? "" : binding.getData().textValue.get();
-    }
-
-    public void setText(String text) {
-        formDataSource.textValue.set(text);
-    }
 }

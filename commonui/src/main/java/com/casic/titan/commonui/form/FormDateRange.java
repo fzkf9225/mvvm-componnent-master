@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -31,17 +32,36 @@ public class FormDateRange extends FormSelection {
     /**
      * 默认起始位前一年1月1日，结束为后一年12月31日
      */
-    private String startDate;
-    private String endDate;
-    private String separator = "-";
-    private String startFormat = DateUtil.DEFAULT_FORMAT_DATE;
-    private String endFormat = DateUtil.DEFAULT_FORMAT_DATE;
+    protected String startDate;
+    /**
+     * 默认起始位前一年1月1日，结束为后一年12月31日
+     */
+    protected String endDate;
+    /**
+     * 时间格式分隔符，默认为 "-"，也就是yyyy-MM-dd中间的"-"。这里没有实现这个功能
+     */
+    protected String separator = "-";
+    /**
+     * 起始时间格式，默认yyyy-MM-dd
+     */
+    protected String startFormat = DateUtil.DEFAULT_FORMAT_DATE;
+    /**
+     * 结束时间格式，默认yyyy-MM-dd
+     */
+    protected String endFormat = DateUtil.DEFAULT_FORMAT_DATE;
+    /**
+     * 日期选择dialog
+     */
+    protected DateRangePickDialog dateRangePickDialog;
+    /**
+     * fragment管理器
+     */
+    protected FragmentManager fragmentManager;
 
-    private DateRangePickDialog dateRangePickDialog;
-
-    private FragmentManager fragmentManager;
-
-    private Lifecycle lifecycle;
+    /**
+     * lifecycle
+     */
+    protected Lifecycle lifecycle;
 
     public FormDateRange(Context context) {
         super(context);
@@ -81,18 +101,18 @@ public class FormDateRange extends FormSelection {
         /*dialog背景*/
         Drawable dialogBgDrawable = null;
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
-            separator = typedArray.getString(R.styleable.FormEditText_separator);
-            startFormat = typedArray.getString(R.styleable.FormEditText_startFormat);
-            endFormat = typedArray.getString(R.styleable.FormEditText_endFormat);
-            dialogBgDrawable = typedArray.getDrawable(R.styleable.FormEditText_dialogBgDrawable);
-            confirmTextColor = typedArray.getColor(R.styleable.FormEditText_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            separator = typedArray.getString(R.styleable.FormUI_separator);
+            startFormat = typedArray.getString(R.styleable.FormUI_startFormat);
+            endFormat = typedArray.getString(R.styleable.FormUI_endFormat);
+            dialogBgDrawable = typedArray.getDrawable(R.styleable.FormUI_dialogBgDrawable);
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             //日历
-            workingDayTextColor = typedArray.getColor(R.styleable.FormEditText_workingDayTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.autoColor));
+            workingDayTextColor = typedArray.getColor(R.styleable.FormUI_workingDayTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.autoColor));
             // 如果没设置默认为工作日文字颜色
-            weekTextColor = typedArray.getColor(R.styleable.FormEditText_weekTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.autoColor));
-            startRangeDate = typedArray.getString(R.styleable.FormEditText_startDate);
-            endRangeDate = typedArray.getString(R.styleable.FormEditText_endDate);
+            weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.autoColor));
+            startRangeDate = typedArray.getString(R.styleable.FormUI_startDate);
+            endRangeDate = typedArray.getString(R.styleable.FormUI_endDate);
             if (TextUtils.isEmpty(startRangeDate)) {
                 startRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365);
             }
@@ -100,15 +120,15 @@ public class FormDateRange extends FormSelection {
             if (TextUtils.isEmpty(endRangeDate)) {
                 endRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365);
             }
-            selectedTextColor = typedArray.getColor(R.styleable.FormEditText_selectedTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.white));
-            selectedBg = typedArray.getDrawable(R.styleable.FormEditText_selectedBg);
-            normalBg = typedArray.getDrawable(R.styleable.FormEditText_normalBg);
-            textSize = typedArray.getDimension(R.styleable.FormEditText_textSize,
+            selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.white));
+            selectedBg = typedArray.getDrawable(R.styleable.FormUI_selectedBg);
+            normalBg = typedArray.getDrawable(R.styleable.FormUI_normalBg);
+            textSize = typedArray.getDimension(R.styleable.FormUI_textSize,
                     DensityUtil.sp2px(getContext(), 14f));
 
-            itemWidth = typedArray.getDimensionPixelOffset(R.styleable.FormEditText_itemWidth,
+            itemWidth = typedArray.getDimensionPixelOffset(R.styleable.FormUI_itemWidth,
                     DensityUtil.dp2px(getContext(), 36f));
-            itemHeight = typedArray.getDimensionPixelOffset(R.styleable.FormEditText_itemHeight,
+            itemHeight = typedArray.getDimensionPixelOffset(R.styleable.FormUI_itemHeight,
                     DensityUtil.dp2px(getContext(), 36f));
             typedArray.recycle();
         } else {
@@ -172,13 +192,12 @@ public class FormDateRange extends FormSelection {
                     if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(endDate)) {
                         FormDateRange.this.startDate = null;
                         FormDateRange.this.endDate = null;
-                        formDataSource.textValue.set(null);
+                        ((AppCompatTextView) tvSelection).setText(null);
                         return;
                     }
                     FormDateRange.this.startDate = DateUtil.dateFormat(startDate, startFormat);
                     FormDateRange.this.endDate = DateUtil.dateFormat(endDate, endFormat);
-                    formDataSource.textValue.set(FormDateRange.this.startDate + " ~ " + FormDateRange.this.endDate);
-
+                    ((AppCompatTextView) tvSelection).setText(FormDateRange.this.startDate + " ~ " + FormDateRange.this.endDate);
                 })
                 .builder(fragmentManager, lifecycle);
     }
@@ -197,9 +216,9 @@ public class FormDateRange extends FormSelection {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        binding.tvSelection.setOnClickListener(v -> {
+    public void createText() {
+        super.createText();
+        tvSelection.setOnClickListener(v -> {
             if (fragmentManager == null || lifecycle == null) {
                 Toast.makeText(getContext(), "请先初始化！", Toast.LENGTH_SHORT).show();
                 return;

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
@@ -23,15 +24,30 @@ import pers.fz.mvvm.wight.dialog.DatePickDialog;
  * describe :
  */
 public class FormDateTime extends FormSelection {
-    private String separator = "-";
-    private String format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
-    private int confirmTextColor;
-
-    private int datePickModel = DateMode.YEAR_MONTH_DAY.model;
-
-    private int startYear;
-    private int endYear;
-    private DatePickDialog datePickDialog;
+    /**
+     * 时间格式，默认yyyy-MM-dd HH:mm:ss
+     */
+    protected String format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
+    /**
+     * 确认按钮背景色
+     */
+    protected int confirmTextColor;
+    /**
+     * 日期选择模式，参考DateMode
+     */
+    protected int datePickModel = DateMode.YEAR_MONTH_DAY.model;
+    /**
+     * 起始年份
+     */
+    protected int startYear;
+    /**
+     * 结束年份
+     */
+    protected int endYear;
+    /**
+     * 日期dialog
+     */
+    protected DatePickDialog datePickDialog;
 
     public FormDateTime(Context context) {
         super(context);
@@ -53,21 +69,17 @@ public class FormDateTime extends FormSelection {
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormEditText);
-            separator = typedArray.getString(R.styleable.FormEditText_separator);
-            format = typedArray.getString(R.styleable.FormEditText_format);
-            datePickModel = typedArray.getInt(R.styleable.FormEditText_datePickModel, DateMode.YEAR_MONTH_DAY_HOUR_MINUTE.model);
-            startYear = typedArray.getInteger(R.styleable.FormEditText_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
-            endYear = typedArray.getInteger(R.styleable.FormEditText_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
-            confirmTextColor = typedArray.getColor(R.styleable.FormEditText_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            format = typedArray.getString(R.styleable.FormUI_format);
+            datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY_HOUR_MINUTE.model);
+            startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
+            endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
         } else {
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
-        }
-        if (TextUtils.isEmpty(separator)) {
-            separator = "-";
         }
         if (TextUtils.isEmpty(format)) {
             format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
@@ -82,10 +94,10 @@ public class FormDateTime extends FormSelection {
                     String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day)
                             + " " + NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
                     if (DateUtil.DEFAULT_DATE_TIME_FORMAT.equals(format)) {
-                        formDataSource.textValue.set(text);
+                        ((AppCompatTextView) tvSelection).setText(text);
                         return;
                     }
-                    formDataSource.textValue.set(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
+                    ((AppCompatTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
                 })
                 .builder();
     }
@@ -95,11 +107,12 @@ public class FormDateTime extends FormSelection {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        binding.tvSelection.setOnClickListener(v -> {
-            if (!TextUtils.isEmpty(formDataSource.textValue.get())) {
-                Date date = DateUtil.getDateByFormat(formDataSource.textValue.get(), format);
+    public void createText() {
+        super.createText();
+        tvSelection.setOnClickListener(v -> {
+            AppCompatTextView textView = (AppCompatTextView) tvSelection;
+            if (!TextUtils.isEmpty(textView.getText())) {
+                Date date = DateUtil.getDateByFormat(textView.getText().toString(), format);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
                 datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));

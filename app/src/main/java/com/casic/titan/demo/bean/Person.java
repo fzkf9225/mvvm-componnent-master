@@ -131,8 +131,9 @@ public class Person extends BaseDaoBean {
     }
 
     @Ignore
-    public Person(String name, String mobile, String tel, String age, String weight, String height, String email, List<String> hobby) {
+    public Person(String name, String birthday, String mobile, String tel, String age, String weight, String height, String email, List<String> hobby) {
         this.name = name;
+        this.birthday = birthday;
         this.mobile = mobile;
         this.tel = tel;
         this.age = age;

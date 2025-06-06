@@ -33,14 +33,27 @@ import pers.fz.mvvm.wight.dialog.LoginDialog;
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
+    /**
+     * viewModel
+     */
     protected VM mViewModel;
+    /**
+     * 正文布局
+     */
     protected VDB binding;
+    /**
+     * toolbar布局
+     */
     protected BaseActivityConstraintBinding toolbarBind;
     @Inject
     public ErrorService errorService;
-
+    /**
+     * 认证管理，管理登录相关
+     */
     protected AuthManager authManager;
-
+    /**
+     * UI控制器。管理弹框、toast之类
+     */
     private UIController uiController;
 
     protected abstract int getLayoutId();

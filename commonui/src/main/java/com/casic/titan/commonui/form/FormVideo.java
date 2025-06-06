@@ -6,20 +6,14 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.utils.AttachmentUtil;
@@ -35,77 +29,96 @@ import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
-import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormVideo extends ConstraintLayout implements VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
-    protected String labelString;
-    protected int bgColor;
-    protected boolean required = false;
-    protected boolean bottomBorder = true;
-    protected boolean compress = false;
+public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
+    /**
+     * 是否启用压缩，默认为true：启用压缩
+     */
+    protected boolean compress = true;
+    /**
+     * 压缩质量，默认为低质量
+     */
     protected int compressVideo = MediaHelper.VIDEO_LOW;
-    protected TextView tvLabel, tvRequired;
-    protected RecyclerView mRecyclerViewVideo;
-    private VideoAddAdapter videoAddAdapter;
-    private MediaHelper mediaHelper;
-    private int mediaType = OpenShootDialog.CAMERA_ALBUM;
-    private VideoAddAdapter.VideoAddListener videoAddListener;
-    private VideoAddAdapter.VideoClearListener videoClearListener;
-    private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
-    //不用转换单位
-    private float radius = 4;
-    protected int labelTextColor;
-    private float formLabelTextSize;
-    private float formRequiredSize;
+    /**
+     * 适配器
+     */
+    protected VideoAddAdapter videoAddAdapter;
+    /**
+     * 媒体管理器
+     */
+    protected MediaHelper mediaHelper;
+    /**
+     * 媒体选择类型，默认为：相册相机都可
+     */
+    protected int mediaType = OpenShootDialog.CAMERA_ALBUM;
+    /**
+     * 添加视频适配监听器
+     */
+    protected VideoAddAdapter.VideoAddListener videoAddListener;
+    /**
+     * 删除视频监听器
+     */
+    protected VideoAddAdapter.VideoClearListener videoClearListener;
+    /**
+     * 最大可选数量
+     */
+    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    /**
+     * 显示数量标签文字大小
+     */
+    protected float formCountLabelTextSize;
+    /**
+     * 显示数量标签文字颜色
+     */
+    protected int countLabelTextColor;
+    /**
+     * 是否显示数量标签
+     */
+    protected boolean showCountLabel;
 
-    public FormVideo(Context context) {
+    /**
+     * 显示数量标签控件
+     */
+    protected AppCompatTextView tvCountLabel;
+
+    public FormVideo(@NonNull Context context) {
         super(context);
-        initAttr(null);
-        init();
     }
 
-    public FormVideo(Context context, @Nullable AttributeSet attrs) {
+    public FormVideo(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initAttr(attrs);
-        init();
     }
 
-    public FormVideo(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormVideo(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(attrs);
-        init();
     }
 
+    @Override
     protected void initAttr(AttributeSet attrs) {
+        super.initAttr(attrs);
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
-            labelString = typedArray.getString(R.styleable.FormImage_label);
-            bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
-            required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, 4);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
-            compressVideo = typedArray.getInt(R.styleable.FormImage_compressImageSize, MediaHelper.VIDEO_LOW);
-            mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
-            maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+            compress = typedArray.getBoolean(R.styleable.FormUI_compress, compress);
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compressImageSize, MediaHelper.VIDEO_LOW);
+            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
+            maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
+            formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color));
+            showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             typedArray.recycle();
         } else {
-            bgColor = 0xFFF1F3F2;
+            showCountLabel = true;
+            formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
+            countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);
+            compress = true;
+            compressVideo = MediaHelper.VIDEO_LOW;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            radius = DensityUtil.dp2px(getContext(), 4);
-            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
     }
 
@@ -117,39 +130,50 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         this.mediaType = mediaType;
     }
 
+    public AppCompatTextView getTvCountLabel() {
+        return tvCountLabel;
+    }
+
+    @Override
     protected void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.form_image, this, true);
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setPadding(0, DensityUtil.dp2px(getContext(), 12),
-                0, DensityUtil.dp2px(getContext(), 12));
-        tvLabel = findViewById(R.id.tv_label);
-        mRecyclerViewVideo = findViewById(R.id.mRecyclerViewImage);
-        tvRequired = findViewById(R.id.tv_required);
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        tvLabel.setText(labelString);
-        tvLabel.setTextColor(labelTextColor);
-        tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
-        if (bottomBorder) {
-            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
+        super.init();
+        if (showCountLabel) {
+            createCountLabel();
+            layoutCountLabel();
         }
         videoAddAdapter = new VideoAddAdapter(maxCount);
         videoAddAdapter.setBgColor(bgColor);
         videoAddAdapter.setRadius(radius);
+        videoAddAdapter.setErrorImage(errorImage);
+        videoAddAdapter.setPlaceholderImage(placeholderImage);
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
-        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) mRecyclerViewVideo.getLayoutParams();
-        imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
-        mRecyclerViewVideo.setLayoutParams(imageLayoutParams);
-        mRecyclerViewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 4), 0x00000000));
-        mRecyclerViewVideo.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        });
-        mRecyclerViewVideo.setAdapter(videoAddAdapter);
+        mediaRecyclerView.setAdapter(videoAddAdapter);
     }
+
+    public void createCountLabel() {
+        tvCountLabel = new AppCompatTextView(getContext());
+        tvCountLabel.setId(View.generateViewId());
+        tvCountLabel.setLines(1);
+        tvCountLabel.setTextColor(countLabelTextColor);
+        tvCountLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formCountLabelTextSize);
+        tvCountLabel.setText("0/" + maxCount);
+        LayoutParams params = new LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.setMarginStart((int) labelStartMargin);
+        params.setMarginEnd((int) labelStartMargin);
+        addView(tvCountLabel, params);
+    }
+
+    public void layoutCountLabel() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(this);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
+        constraintSet.applyTo(this);
+    }
+
 
     public void setOnVideoAddListener(VideoAddAdapter.VideoAddListener videoAddListener) {
         this.videoAddListener = videoAddListener;
@@ -161,15 +185,6 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
 
     public int getMaxCount() {
         return maxCount;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
     public List<Uri> getImages() {
@@ -200,6 +215,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         }
         videoAddAdapter.setList(uriList);
         videoAddAdapter.notifyDataSetChanged();
+        refreshCountLabel();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -209,10 +225,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         }
         videoAddAdapter.setList(images);
         videoAddAdapter.notifyDataSetChanged();
-    }
-
-    public void setLabel(String text) {
-        tvLabel.setText(text);
+        refreshCountLabel();
     }
 
     @Override
@@ -232,6 +245,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         return mediaType;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void videoClear(View view, int position) {
         if (videoClearListener != null) {
@@ -240,8 +254,16 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
         }
         videoAddAdapter.getList().remove(position);
         videoAddAdapter.notifyDataSetChanged();
+        refreshCountLabel();
     }
 
+    public void refreshCountLabel(){
+        if (tvCountLabel == null) {
+            return;
+        }
+        tvCountLabel.setText((videoAddAdapter.getList() == null ? 0 : videoAddAdapter.getList().size()) + "/" + maxCount);
+    }
+    @SuppressLint("NotifyDataSetChanged")
     public void bindLifecycle(LifecycleOwner lifecycleOwner){
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
@@ -280,6 +302,8 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
                     videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                     videoAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+
+                    refreshCountLabel();
                 }
             }
         });
@@ -288,6 +312,7 @@ public class FormVideo extends ConstraintLayout implements VideoAddAdapter.Video
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                refreshCountLabel();
             }
         });
     }

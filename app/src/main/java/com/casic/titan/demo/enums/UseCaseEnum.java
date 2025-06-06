@@ -8,6 +8,7 @@ import com.casic.titan.demo.activity.DemoSmartPagingActivity;
 import com.casic.titan.demo.activity.DialogActivity;
 import com.casic.titan.demo.activity.DownloadActivity;
 import com.casic.titan.demo.activity.FormDetailActivity;
+import com.casic.titan.demo.activity.FormTopDetailActivity;
 import com.casic.titan.demo.activity.GoogleGPSActivity;
 import com.casic.titan.demo.activity.HiltActivity;
 import com.casic.titan.demo.activity.MediaActivity;
@@ -17,6 +18,7 @@ import com.casic.titan.demo.activity.RoomPagingActivity;
 import com.casic.titan.demo.activity.ScanQrCodeActivity;
 import com.casic.titan.demo.activity.TargetActivity;
 import com.casic.titan.demo.activity.VerifyActivity;
+import com.casic.titan.demo.activity.VerifyTopActivity;
 import com.casic.titan.demo.activity.ViewPagerSampleActivity;
 import com.casic.titan.demo.activity.WightActivity;
 import com.casic.titan.demo.bean.UseCase;
@@ -47,8 +49,10 @@ public enum UseCaseEnum {
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),
     VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器", "在线视频播放器，集成自GSYVideoPlayer", getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class, "CoordinatorLayout沉浸式", "侧滑标签页面", null),
-    ANNOTATION(VerifyActivity.class, "自定义注解测试", "通过自定义注解验证实体类参数问题", null),
-    FORM_UI(FormDetailActivity.class, "表单样式", "封装的表单样式", null),
+    ANNOTATION(VerifyActivity.class, "自定义注解测试-Left", "通过自定义注解验证实体类参数问题，表单对齐方式为left，也是默认方式", null),
+    ANNOTATION_TOP(VerifyTopActivity.class, "自定义注解测试-Top", "通过自定义注解验证实体类参数问题，表单对齐方式为top", null),
+    FORM_UI(FormDetailActivity.class, "表单样式-Left", "封装的表单样式，表单对齐方式为left，也是默认方式", null),
+    FORM_UI_TOP(FormTopDetailActivity.class, "表单样式-Top", "封装的表单样式，表单对齐方式为top", null),
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片", null),
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),

@@ -6,104 +6,121 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.databinding.FormImageBinding;
 import com.casic.titan.commonui.utils.AttachmentUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.media.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
-import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends ConstraintLayout implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener {
-    protected String labelString;
-    protected int bgColor;
-    protected boolean required = false;
-    protected boolean bottomBorder = true;
-    protected boolean compress = false;
+public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener {
+    /**
+     * 是否压缩，默认为true：启用压缩
+     */
+    protected boolean compress = true;
+    /**
+     * 压缩图片大小，默认为300kb
+     */
     protected int compressImageSize = 300;
-    private ImageAddAdapter imageAddAdapter;
-    private MediaHelper mediaHelper;
-    private int mediaType = OpenImageDialog.CAMERA_ALBUM;
-    private ImageAddAdapter.ImageViewAddListener onImageAddListener;
-    private ImageAddAdapter.ImageViewClearListener onImageClearListener;
-    private int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
-    //不用转换单位
-    private float radius = 8;
-    protected int labelTextColor;
-    private float formLabelTextSize;
-    private float formRequiredSize;
-    private FormImageBinding binding;
+    /**
+     * 适配器
+     */
+    protected ImageAddAdapter imageAddAdapter;
+    /**
+     * 媒体管理器
+     */
+    protected MediaHelper mediaHelper;
+    /**
+     * 媒体选择类型，默认：相机和相册
+     */
+    protected int mediaType = OpenImageDialog.CAMERA_ALBUM;
+    /**
+     * 添加图片监听器
+     */
+    protected ImageAddAdapter.ImageViewAddListener onImageAddListener;
+    /**
+     * 删除图片监听器
+     */
+    protected ImageAddAdapter.ImageViewClearListener onImageClearListener;
+    /**
+     * 最大可选数量
+     */
+    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    /**
+     * 显示数量标签文字大小
+     */
+    protected float formCountLabelTextSize;
+    /**
+     * 显示数量标签颜色
+     */
+    protected int countLabelTextColor;
+    /**
+     * 是否显示数量标签
+     */
+    protected boolean showCountLabel;
+    /**
+     * 数量标签控件
+     */
+    protected AppCompatTextView tvCountLabel;
 
-    public FormImage(Context context) {
+    public FormImage(@NonNull Context context) {
         super(context);
-        initAttr(null);
-        init();
     }
 
-    public FormImage(Context context, @Nullable AttributeSet attrs) {
+    public FormImage(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initAttr(attrs);
-        init();
     }
 
-    public FormImage(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormImage(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(attrs);
-        init();
     }
 
+    @Override
     protected void initAttr(AttributeSet attrs) {
+        super.initAttr(attrs);
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormImage);
-            labelString = typedArray.getString(R.styleable.FormImage_label);
-            bgColor = typedArray.getColor(R.styleable.FormImage_bgColor, 0xFFF1F3F2);
-            required = typedArray.getBoolean(R.styleable.FormImage_required, false);
-            labelTextColor = typedArray.getColor(R.styleable.FormImage_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
-            compress = typedArray.getBoolean(R.styleable.FormImage_compress, false);
-            bottomBorder = typedArray.getBoolean(R.styleable.FormImage_bottomBorder, true);
-            radius = typedArray.getDimension(R.styleable.FormImage_add_image_radius, DensityUtil.dp2px(getContext(), 8));
-            compressImageSize = typedArray.getInt(R.styleable.FormImage_compressImageSize, 300);
-            mediaType = typedArray.getInt(R.styleable.FormImage_mediaType, OpenImageDialog.CAMERA_ALBUM);
-            maxCount = typedArray.getInt(R.styleable.FormImage_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormImage_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormImage_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            compress = typedArray.getBoolean(R.styleable.FormUI_compress, true);
+            formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color));
+            showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
+            compressImageSize = typedArray.getInt(R.styleable.FormUI_compressImageSize, 300);
+            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
+            maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             typedArray.recycle();
         } else {
-            bgColor = 0xFFF1F3F2;
+            showCountLabel = true;
+            formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
+            countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);
+            compress = true;
+            compressImageSize = 300;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            radius = DensityUtil.dp2px(getContext(), 8);
-            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
         }
+    }
+
+
+    public AppCompatTextView getTvCountLabel() {
+        return tvCountLabel;
     }
 
     /**
@@ -115,35 +132,44 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         this.mediaType = mediaType;
     }
 
+    @Override
     protected void init() {
-        binding = FormImageBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        setPadding(getPaddingStart(), DensityUtil.dp2px(getContext(), 12),
-                getPaddingEnd(), DensityUtil.dp2px(getContext(), 12));
-        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        binding.tvLabel.setText(labelString);
-        binding.tvLabel.setTextColor(labelTextColor);
-        binding.tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
-        binding.tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
-        if (bottomBorder) {
-            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_bottom));
+        super.init();
+        if (showCountLabel) {
+            createCountLabel();
+            layoutCountLabel();
         }
         imageAddAdapter = new ImageAddAdapter(maxCount);
         imageAddAdapter.setBgColor(bgColor);
         imageAddAdapter.setRadius(radius);
+        imageAddAdapter.setErrorImage(errorImage);
+        imageAddAdapter.setPlaceholderImage(placeholderImage);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
-        ConstraintLayout.LayoutParams imageLayoutParams = (LayoutParams) binding.mRecyclerViewImage.getLayoutParams();
-        imageLayoutParams.topMargin = DensityUtil.dp2px(getContext(), 6);
-        binding.mRecyclerViewImage.setLayoutParams(imageLayoutParams);
-        binding.mRecyclerViewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(getContext(), 4), 0x00000000));
-        binding.mRecyclerViewImage.setLayoutManager(new FullyGridLayoutManager(getContext(), 4) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        });
-        binding.mRecyclerViewImage.setAdapter(imageAddAdapter);
+        mediaRecyclerView.setAdapter(imageAddAdapter);
+    }
+
+    public void createCountLabel() {
+        tvCountLabel = new AppCompatTextView(getContext());
+        tvCountLabel.setId(View.generateViewId());
+        tvCountLabel.setLines(1);
+        tvCountLabel.setTextColor(countLabelTextColor);
+        tvCountLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formCountLabelTextSize);
+        tvCountLabel.setText("0/" + maxCount);
+        LayoutParams params = new LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.setMarginStart((int) labelStartMargin);
+        params.setMarginEnd((int) labelStartMargin);
+        addView(tvCountLabel, params);
+    }
+
+    public void layoutCountLabel() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(this);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
+        constraintSet.connect(tvCountLabel.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
+        constraintSet.applyTo(this);
     }
 
     public void setOnImageAddListener(ImageAddAdapter.ImageViewAddListener onImageAddListener) {
@@ -156,15 +182,6 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
 
     public int getMaxCount() {
         return maxCount;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-        binding.tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
     }
 
     public List<Uri> getImages() {
@@ -182,7 +199,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         return uriStringList;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     public void setStringImages(List<String> images) {
         if (images == null) {
             imageAddAdapter.setList(new ArrayList<>());
@@ -197,17 +214,22 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         imageAddAdapter.notifyDataSetChanged();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     public void setImages(List<Uri> images) {
         if (images == null) {
             images = new ArrayList<>();
         }
         imageAddAdapter.setList(images);
         imageAddAdapter.notifyDataSetChanged();
+        refreshCountLabel();
     }
 
-    public void setLabel(String text) {
-        binding.tvLabel.setText(text);
+    @SuppressLint("SetTextI18n")
+    public void refreshCountLabel(){
+        if (tvCountLabel == null) {
+            return;
+        }
+        tvCountLabel.setText((imageAddAdapter.getList() == null ? 0 : imageAddAdapter.getList().size()) + "/" + maxCount);
     }
 
     @Override
@@ -227,6 +249,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         return mediaType;
     }
 
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     @Override
     public void imgClear(View view, int position) {
         if (onImageClearListener != null) {
@@ -235,9 +258,11 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
         }
         imageAddAdapter.getList().remove(position);
         imageAddAdapter.notifyDataSetChanged();
+        refreshCountLabel();
     }
 
-    public void bindLifecycle(LifecycleOwner lifecycleOwner){
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
+    public void bindLifecycle(LifecycleOwner lifecycleOwner) {
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
                 .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
@@ -267,7 +292,6 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            LogUtil.show(MediaHelper.TAG,"FormImage");
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());
@@ -275,6 +299,7 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                     imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                     imageAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                    refreshCountLabel();
                 }
             }
         });
@@ -283,12 +308,9 @@ public class FormImage extends ConstraintLayout implements ImageAddAdapter.Image
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                refreshCountLabel();
             }
         });
-    }
-
-    public FormImageBinding getBinding() {
-        return binding;
     }
 
 }

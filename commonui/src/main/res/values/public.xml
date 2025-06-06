@@ -20,12 +20,6 @@
     <!--layout资源-->
     <public name="dialog_date_range_pick" type="layout"/>
     <public name="file_add_item" type="layout"/>
-    <public name="form_edit_area" type="layout"/>
-    <public name="form_edit_text" type="layout"/>
-    <public name="form_file" type="layout"/>
-    <public name="form_image" type="layout"/>
-    <public name="form_rich_text" type="layout"/>
-    <public name="form_selection" type="layout"/>
     <public name="fragment_calendar_month" type="layout"/>
     <public name="item_calendar_day" type="layout"/>
     <public name="item_file_show" type="layout"/>

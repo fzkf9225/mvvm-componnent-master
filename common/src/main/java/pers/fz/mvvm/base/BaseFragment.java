@@ -30,14 +30,23 @@ import pers.fz.mvvm.inter.ErrorService;
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView ,AuthManager.AuthCallback{
     protected String TAG = this.getClass().getSimpleName();
-
+    /**
+     * viewModel
+     */
     protected VM mViewModel;
+    /**
+     * 正文布局
+     */
     protected VDB binding;
     @Inject
     protected ErrorService errorService;
-
+    /**
+     * 认证管理，管理登录相关
+     */
     protected AuthManager authManager;
-
+    /**
+     * UI控制器。管理弹框、toast之类
+     */
     private UIController uiController;
 
     @Override

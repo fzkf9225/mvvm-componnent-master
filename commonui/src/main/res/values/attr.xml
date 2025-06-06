@@ -31,6 +31,26 @@
     <attr name="bottomBorder" format="boolean" />
     <!--输入框、选择框、文本内容文字颜色-->
     <attr name="rightTextColor" format="reference|color" />
+    <!--底部边框颜色-->
+    <attr name="borderBottomColor" format="reference|color" />
+    <!--底部边框左侧margin-->
+    <attr name="borderBottomStartMargin" format="dimension" />
+    <!--当主文本超过一行的时候，需要设置margin不然就会导致多个控件上下挤在一起-->
+    <attr name="defaultTextMargin" format="dimension" />
+    <!--输入框高度，当对齐方式为top的时候起作用-->
+    <attr name="inputHeight" format="dimension" />
+    <!--多行文本输入框内部padding-->
+    <attr name="editAreaPadding" format="dimension" />
+    <!--底部边框右侧margin-->
+    <attr name="borderBottomEndMargin" format="dimension" />
+    <!--label文字左侧margin-->
+    <attr name="labelStartMargin" format="dimension" />
+    <!--label文字右侧margin-->
+    <attr name="labelEndMargin" format="dimension" />
+    <!--正文文字左侧margin-->
+    <attr name="textStartMargin" format="dimension" />
+    <!--正文文字右侧margin-->
+    <attr name="textEndMargin" format="dimension" />
     <!--空白内容时，占用的文字颜色-->
     <attr name="emptyTextColor" format="reference|color" />
     <!--label文字颜色-->
@@ -43,28 +63,28 @@
     <attr name="formTextSize" format="dimension" />
     <!--*号大小-->
     <attr name="formRequiredSize" format="dimension" />
-    <!--弹框整体北京样式，drawable-->
+    <!--弹框整体背景样式，drawable-->
     <attr name="dialogBgDrawable" format="reference" />
-    <declare-styleable name="FormImage">
-        <attr name="label" />
-        <attr name="required" />
-        <attr name="bottomBorder" />
-        <attr name="labelTextColor" />
-        <attr name="emptyTextColor" />
-        <attr name="rightTextColor" />
-        <attr name="formLabelTextSize"/>
-        <attr name="formTextSize"/>
+    <!--input输入框样式，drawable-->
+    <attr name="inputDrawable" format="reference" />
+
+    <declare-styleable name="FormUI">
         <!--默认的添加图标资源-->
-        <attr name="file_add_src" format="reference"/>
-        <attr name="formRequiredSize"/>
+        <attr name="fileAddSrc" format="reference"/>
+        <!--空白内容时，占用的文字颜色-->
+        <attr name="emptyTextColor"/>
         <!--矩形框圆角大小-->
-        <attr name="add_image_radius" format="dimension"/>
+        <attr name="mediaItemRadius" format="dimension"/>
         <!--是否默认开启压缩-->
         <attr name="compress" format="boolean"/>
         <!--压缩图片大小，单位kb-->
         <attr name="compressImageSize" format="integer" />
         <!--最大可选数量-->
         <attr name="maxCount" format="integer"/>
+        <!--一列显示几个-->
+        <attr name="columnCount" format="integer"/>
+        <!--列之间间距-->
+        <attr name="columnMargin" format="dimension"/>
         <!--字段名，AttachmentUtil自动转换-->
         <attr name="field" format="string"/>
         <!--添加图片视频的时候，框框背景色-->
@@ -87,21 +107,81 @@
             <!--低质量，即压缩比例最大-->
             <enum name="low" value="3" />
         </attr>
-    </declare-styleable>
-    <declare-styleable name="FormEditText">
+        <attr name="labelAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+        </attr>
+        <!-- Default text typeface style. -->
+        <attr name="labelTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+        </attr>
+        <!--label文字内容-->
         <attr name="label" />
+        <!--下拉框图标-->
+        <attr name="selectionIcon" format="reference"/>
+        <!--占位图片-->
+        <attr name="placeholderImage" format="reference"/>
+        <!--加载错误图片-->
+        <attr name="errorImage" format="reference"/>
+        <!--是否必填，也就是是否显示必填的*号-->
         <attr name="required" />
+        <!--媒体选择总数显示提示文字的大小-->
+        <attr name="formCountLabelTextSize" format="dimension"/>
+        <!--媒体选择总数显示提示文字颜色-->
+        <attr name="countLabelTextColor" format="reference|color" />
+        <!--是否显示媒体选择总数显示提示文字-->
+        <attr name="showCountLabel" format="boolean" />
+        <!--label文字大小-->
         <attr name="formLabelTextSize"/>
+        <!--正文文字大小-->
         <attr name="formTextSize"/>
+        <!--暂无数据占位布局的文字大小-->
+        <attr name="emptyTextSize" format="dimension"/>
+        <!--暂无数据占位布局的文字内容-->
+        <attr name="emptyText" format="string"/>
+        <!--input输入框，最大输入长度，默认不限制-->
         <attr name="maxLength"/>
+        <!--*号文字大小-->
         <attr name="formRequiredSize"/>
+        <!--是否展示底部边框-->
         <attr name="bottomBorder" />
+        <!--label文字颜色-->
         <attr name="labelTextColor" />
+        <!--正文文字颜色-->
         <attr name="rightTextColor" />
+        <!--FormFile中列表中文字颜色-->
+        <attr name="itemTextColor" />
+        <!--正文默认的边距，防止跟边框重合-->
+        <attr name="defaultTextMargin" />
+        <!--底部边框颜色-->
+        <attr name="borderBottomColor" />
+        <!--底部边框左边margin-->
+        <attr name="borderBottomStartMargin" />
+        <!--底部边框右边margin-->
+        <attr name="borderBottomEndMargin" />
+        <!--输入框高度-->
+        <attr name="inputHeight" />
+        <!--多行文本输入框，内部padding-->
+        <attr name="editAreaPadding" />
+        <!--label文字左侧margin-->
+        <attr name="labelStartMargin" />
+        <!--label文字右侧margin-->
+        <attr name="labelEndMargin" />
+        <!--正文文字左侧margin-->
+        <attr name="textStartMargin" />
+        <!--正文文字右侧margin-->
+        <attr name="textEndMargin" />
+        <!--确认按钮文字颜色-->
         <attr name="confirmTextColor" />
+        <!--开始年份-->
         <attr name="startYear" />
+        <!--结束年份-->
         <attr name="endYear" />
+        <!--dialog背景-->
         <attr name="dialogBgDrawable"/>
+        <!--input输入框背景-->
+        <attr name="inputDrawable"/>
         <!--日历选择样式-->
         <attr name="datePickModel" format="enum">
             <!--年月日-->

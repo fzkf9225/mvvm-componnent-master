@@ -1,6 +1,9 @@
 package com.casic.titan.commonui.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,8 +24,24 @@ import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
  */
 public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, ImageShowItemBinding> {
 
+    private float radius = 8;
+    protected Drawable placeholderImage;
+    protected Drawable errorImage;
+
     public FormImageShowAdapter() {
         super();
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public void setPlaceholderImage(Drawable placeholderImage) {
+        this.placeholderImage = placeholderImage;
+    }
+
+    public void setErrorImage(Drawable errorImage) {
+        this.errorImage = errorImage;
     }
 
     @Override
@@ -32,9 +51,11 @@ public class FormImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean
 
     @Override
     public void onBindHolder(BaseViewHolder<ImageShowItemBinding> viewHolder, int pos) {
+        viewHolder.getBinding().cornerImage.setRadius((int) this.radius);
         Glide.with(viewHolder.getBinding().cornerImage.getContext())
                 .load(mList.get(pos).getUrl())
-                .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
+                .apply(new RequestOptions().placeholder(placeholderImage ==null? ContextCompat.getDrawable(viewHolder.itemView.getContext(),R.mipmap.ic_default_image) :placeholderImage)
+                .error(errorImage ==null? ContextCompat.getDrawable(viewHolder.itemView.getContext(),R.mipmap.ic_default_image) :errorImage))
                 .into(viewHolder.getBinding().cornerImage);
         viewHolder.getBinding().cornerImage.setOnClickListener(v -> {
                 try{

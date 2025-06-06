@@ -17,7 +17,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginEnd="@dimen/vertical_margin_l"
-            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

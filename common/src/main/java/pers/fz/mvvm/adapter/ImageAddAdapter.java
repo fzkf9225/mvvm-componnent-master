@@ -1,17 +1,26 @@
 package pers.fz.mvvm.adapter;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.jetbrains.annotations.NotNull;
+
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.databinding.ImgAddItemBinding;
+import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
@@ -24,15 +33,29 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     //最大上传数量
     private int defaultMaxCount = -1;
     private int bgColor = Color.WHITE;
-    private float radius = 5;
+    private float radius = 8;
+
+    protected Drawable placeholderImage;
+    protected Drawable errorImage;
 
     public ImageAddAdapter() {
         super();
+        if (Config.getInstance().getApplication() != null) {
+            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
+        }
     }
 
     public ImageAddAdapter(int maxCount) {
         super();
         this.defaultMaxCount = maxCount;
+    }
+
+    public void setPlaceholderImage(Drawable placeholderImage) {
+        this.placeholderImage = placeholderImage;
+    }
+
+    public void setErrorImage(Drawable errorImage) {
+        this.errorImage = errorImage;
     }
 
     public void setBgColor(int bgColor) {
@@ -56,7 +79,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
                 imageViewClearListener.imgClear(v, pos);
             }
         });
-        holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor,this.radius);
+        holder.getBinding().ivImageShow.setRadius((int) this.radius);
+        holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor, this.radius);
         holder.getBinding().ivImageShow.setOnClickListener(v -> {
             try {
                 new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createUriImageInfo(mList), pos).show();
@@ -80,7 +104,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivImageShow.getContext())
                     .load(mList.get(pos))
-                    .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
+                    .apply(new RequestOptions().placeholder(placeholderImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :placeholderImage)
+                            .error(errorImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :errorImage))
                     .into(holder.getBinding().ivImageShow);
         }
     }

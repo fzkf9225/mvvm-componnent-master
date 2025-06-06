@@ -51,7 +51,7 @@ public class CornerImageView extends AppCompatImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        int defaultRadius = DensityUtil.dp2px(context, 3);
+        int defaultRadius = DensityUtil.dp2px(context, 4);
         int imageBg;
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
@@ -87,6 +87,11 @@ public class CornerImageView extends AppCompatImageView {
 
     public void setRadius(int radius) {
         this.radius = radius;
+        leftTopRadius = radius;
+        rightTopRadius = radius;
+        rightBottomRadius = radius;
+        leftBottomRadius = radius;
+        invalidate();
     }
 
     public void setLeftTopRadius(int leftTopRadius) {
@@ -107,7 +112,6 @@ public class CornerImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         //这里做下判断，只有图片的宽高大于设置的圆角距离的时候才进行裁剪
         int maxLeft = Math.max(leftTopRadius, leftBottomRadius);
         int maxRight = Math.max(rightTopRadius, rightBottomRadius);
