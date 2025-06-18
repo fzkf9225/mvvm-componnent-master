@@ -3,20 +3,22 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
 }
 
 android {
     namespace 'pers.fz.mvvm'
     compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
         ndk {
             //选择要添加的对应cpu类型的.so库。
@@ -55,6 +57,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    ksp {
+        arg("jvmTarget", "17")
     }
     dataBinding {
         enabled = true
@@ -143,7 +148,7 @@ dependencies {
 
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
-    kapt libs.room.compiler
+    ksp libs.room.compiler
     // optional - RxJava3 support for Room
     implementation libs.room.rxjava3
     // optional - Paging 3 Integration

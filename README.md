@@ -32,7 +32,7 @@ TAG值为类名：`ApiRetrofit`
 ### 导入公共依赖包
 由于集成的aar包有隔离效果因此需要在继承base类时导入他们的包，不然就会找不到引用的第三方库，但是如果你没有以aar引用而是直接module引用的话，可以直接将`implementation` 改成`api`即可
 ```
-//沉浸式通知栏框架
+//沉浸式通知栏框架最新版本已经去除了这个包，这个包虽然功能很强大，但是我们会用到的功能会很少而且有bug直接影响到我们常用功能，因此去掉了，自己写了个简单的沉浸式通知栏功能
     implementation "com.geyifeng.immersionbar:immersionbar:3.2.2"
 //RxJava、RxAndroid和Retrofit网络框架
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"

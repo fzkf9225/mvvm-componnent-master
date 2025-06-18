@@ -2,11 +2,15 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 android {
     namespace 'com.casic.titan.commonui'
     compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
@@ -19,12 +23,10 @@ android {
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
         }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
-        //加载项目build.gradle的anroid标签下
+        //加载项目build.gradle的android标签下
         dataBinding {
             enabled = true
         }
@@ -52,6 +54,9 @@ android {
     }
     lint {
         baseline = file("lint-baseline.xml")
+    }
+    ksp {
+        arg("jvmTarget", "17")
     }
     kotlinOptions {
         jvmTarget = '17'
@@ -85,7 +90,7 @@ dependencies {
 
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
-    kapt libs.room.compiler
+    ksp libs.room.compiler
     // optional - RxJava3 support for Room
     implementation libs.room.rxjava3
     // optional - Paging 3 Integration

@@ -57,7 +57,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NonNull @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new BaseResponseBodyConverter<>(successCode, gson, adapter);
+        return new BaseResponseBodyConverter<>(successCode, gson, adapter,type);
     }
 
     @Override

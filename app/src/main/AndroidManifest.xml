@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.casic.titan.demo">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 13的通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 一般来说，允许用户自定义头像的app都需要这个权限 -->
