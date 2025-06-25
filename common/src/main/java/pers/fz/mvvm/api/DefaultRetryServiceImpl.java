@@ -1,9 +1,12 @@
 package pers.fz.mvvm.api;
 
+import org.reactivestreams.Publisher;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
@@ -16,73 +19,94 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 public class DefaultRetryServiceImpl implements RetryService {
     private final String TAG = DefaultRetryServiceImpl.class.getSimpleName();
-    // 可重试次数
+    // 最大可重试次数
     protected int maxRetries = ConstantsHelper.RETRY_WHEN_MAX_COUNT;
     // 当前已重试次数
     protected int currentRetryCount = 0;
-    // 重试等待时间
+    // 重试等待时间(毫秒)
     protected int waitRetryTime = 1000;
+    // 每次重试等待时间增量(毫秒)
+    protected int waitRetryIncrement = 500;
 
     @Inject
     public DefaultRetryServiceImpl() {
     }
 
-    public DefaultRetryServiceImpl(int maxConnectCount) {
-        this.maxRetries = maxConnectCount;
+    public DefaultRetryServiceImpl(int maxRetries) {
+        this.maxRetries = maxRetries;
     }
 
-    public DefaultRetryServiceImpl(int maxConnectCount, int waitRetryTime) {
-        this.maxRetries = maxConnectCount;
+    public DefaultRetryServiceImpl(int maxRetries, int waitRetryTime) {
+        this.maxRetries = maxRetries;
         this.waitRetryTime = waitRetryTime;
     }
 
+    public DefaultRetryServiceImpl(int maxRetries, int waitRetryTime, int waitRetryIncrement) {
+        this.maxRetries = maxRetries;
+        this.waitRetryTime = waitRetryTime;
+        this.waitRetryIncrement = waitRetryIncrement;
+    }
+
     @Override
-    public Observable<?> apply(Observable<? extends Throwable> throwableObservable) throws Exception {
-        // 参数Observable<Throwable>中的泛型 = 上游操作符抛出的异常，可通过该条件来判断异常的类型
+    public Observable<?> handleObservableError(Observable<? extends Throwable> throwableObservable) {
         return throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
-            // 输出异常信息
             LogUtil.e(throwable);
-            /**
-             * 需求1：根据异常类型选择是否重试
-             * 即，当发生的异常 = 网络异常 = IO异常 才选择重试
-             */
-//                if (throwable instanceof TimeoutException ) {
-//                    FLog.d("属于IO异常，需重试");
-            LogUtil.show(TAG, "属于网络异常，需重试");
-            /**
-             * 需求2：限制重试次数
-             * 即，当已重试次数 < 设置的重试次数，才选择重试
-             */
-            if (currentRetryCount < maxRetries) {
+            LogUtil.show(TAG, "发生网络异常，判断是否需要重试");
 
-                // 记录重试次数
+            if (shouldRetry(throwable)) {
                 currentRetryCount++;
-                LogUtil.show(TAG, "重试次数 = " + currentRetryCount);
-
-                /**
-                 * 需求2：实现重试
-                 * 通过返回的Observable发送的事件 = Next事件，从而使得retryWhen（）重订阅，最终实现重试功能
-                 *
-                 * 需求3：延迟1段时间再重试
-                 * 采用delay操作符 = 延迟一段时间发送，以实现重试间隔设置
-                 *
-                 * 需求4：遇到的异常越多，时间越长
-                 * 在delay操作符的等待时间内设置 = 每重试1次，增多延迟重试时间0.5s
-                 */
-                // 设置等待时间
-                LogUtil.show(TAG, "等待时间 =" + waitRetryTime);
-                return Observable.just(1).delay(waitRetryTime, TimeUnit.MILLISECONDS);
-            } else {
-                // 若重试次数已 > 设置重试次数，则不重试
-                // 通过发送error来停止重试（可在观察者的onError（）中获取信息）
-                return Observable.error(throwable);
+                int currentWaitTime = calculateWaitTime();
+                LogUtil.show(TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
+                return Observable.timer(currentWaitTime, TimeUnit.MILLISECONDS);
             }
+            return Observable.error(throwable);
         });
+    }
+
+    @Override
+    public Publisher<?> handleFlowableError(Flowable<Throwable> throwableFlowable) {
+        return throwableFlowable.flatMap((Function<Throwable, Publisher<?>>) throwable -> {
+            LogUtil.e(throwable);
+            LogUtil.show(TAG, "发生网络异常，判断是否需要重试");
+
+            if (shouldRetry(throwable)) {
+                currentRetryCount++;
+                int currentWaitTime = calculateWaitTime();
+                LogUtil.show(TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
+                return Flowable.timer(currentWaitTime, TimeUnit.MILLISECONDS);
+            }
+            return Flowable.error(throwable);
+        });
+    }
+
+    /**
+     * 判断是否应该重试
+     */
+    protected boolean shouldRetry(Throwable throwable) {
+        // 这里可以根据实际需求添加更多的异常类型判断
+        // 示例中保持简单逻辑，所有异常都重试
+        return currentRetryCount < maxRetries;
+    }
+
+    /**
+     * 计算当前应该等待的时间
+     * 基础等待时间 + (重试次数 * 每次增量)
+     */
+    protected int calculateWaitTime() {
+        return waitRetryTime + (currentRetryCount * waitRetryIncrement);
     }
 
     @Override
     public void setMaxRetryCount(int maxRetryCount) {
         this.maxRetries = maxRetryCount;
+    }
+
+    public void setWaitRetryTime(int waitRetryTime) {
+        this.waitRetryTime = waitRetryTime;
+    }
+
+    public void setWaitRetryIncrement(int waitRetryIncrement) {
+        this.waitRetryIncrement = waitRetryIncrement;
     }
 }
 

@@ -165,7 +165,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     @Override
-    public void onErrorCode(BaseModelEntity model) {
+    public void onErrorCode(BaseResponse model) {
         if (errorService == null || model == null) {
             return;
         }

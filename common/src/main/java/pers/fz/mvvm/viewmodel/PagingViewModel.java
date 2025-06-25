@@ -18,7 +18,7 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
  * Created by fz on 2023/12/1 14:17
  * describe :
  */
-public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseView> extends BasePagingViewModel<IR, V> {
+public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends BaseView> extends BasePagingViewModel<IR, V> {
     protected final static int DEFAULT_START_PAGE = 1;
     protected final static int DEFAULT_PAGE_SIZE = 20;
     protected final static int DEFAULT_PREFETCH_DISTANCE = 3;
@@ -34,7 +34,7 @@ public abstract class PagingViewModel<IR extends IRepository, T, V extends BaseV
     }
 
     public LiveData<PagingData<T>> createPagingData() {
-        return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>((PagingRepositoryImpl<T, V>) iRepository, getStartPage())));
+        return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(), () -> new PagingSource<T, V>((PagingRepositoryImpl<?,T, V>) iRepository, getStartPage())));
     }
 
     @Override

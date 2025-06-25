@@ -14,12 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.ResponseBody;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.bean.Code.ResponseCode;
-import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.Converter;
 
 /**
@@ -47,9 +44,9 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     public T convert(ResponseBody value) throws IOException {
         String jsonString = value.string();
         // 构建 BaseModelEntity<T> 的完整类型
-        Type baseModelType = TypeToken.getParameterized(BaseModelEntity.class, actualType).getType();
+        Type baseModelType = TypeToken.getParameterized(BaseResponse.class, actualType).getType();
         // 解析 JSON
-        BaseModelEntity<T> baseModel = gson.fromJson(jsonString, baseModelType);
+        BaseResponse<T> baseModel = gson.fromJson(jsonString, baseModelType);
         if (TextUtils.isEmpty(successCode)) {
             if (!ResponseCode.isOK(baseModel.getCode())) {
                 throw new BaseException(baseModel.getMessage(), baseModel.getCode());

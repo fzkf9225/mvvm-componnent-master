@@ -210,7 +210,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * @param model 错误吗实体
      */
     @Override
-    public void onErrorCode(BaseModelEntity model) {
+    public void onErrorCode(BaseResponse model) {
         if (errorService == null || model == null) {
             return;
         }

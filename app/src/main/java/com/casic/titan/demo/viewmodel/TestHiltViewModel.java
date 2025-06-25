@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.inter.RetryService;
@@ -25,7 +26,7 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 @HiltViewModel
-public class TestHiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+public class TestHiltViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
     @Inject
     @HiltUserServiceModule.HiltUser
     HiltUserService hiltUserService;
@@ -51,7 +52,7 @@ public class TestHiltViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
 
     @Override
     protected RepositoryImpl createRepository() {
-        return new RepositoryImpl(retryService, baseView);
+        return null;
     }
 
     public void onClick(View view) {

@@ -165,7 +165,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     @Override
-    public void onErrorCode(BaseModelEntity model) {
+    public void onErrorCode(BaseResponse model) {
         try {
             if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
                     emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {

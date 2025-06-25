@@ -1,8 +1,12 @@
 plugins {
-    id 'com.android.library'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.hilt.android)
+    id 'kotlin-kapt'
 }
 
 android {
+    namespace 'com.casic.titan.userapi'
     compileSdk libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -19,18 +23,33 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    namespace 'com.casic.titan.userapi'
+
+    dataBinding {
+        enabled = true
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 dependencies {
 
+    implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
 
+    implementation libs.google.hilt.android
+    annotationProcessor libs.google.hilt.android.compiler
+    kapt libs.google.hilt.android.compiler
+
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+
+    implementation libs.gson
 }

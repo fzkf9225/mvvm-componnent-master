@@ -307,9 +307,9 @@
     *** get*() ;
 }
 
--keep class pers.fz.mvvm.base.BaseModelEntity { *; }
--dontwarn pers.fz.mvvm.base.BaseModelEntity
--keepclassmembers class pers.fz.mvvm.base.BaseModelEntity{
+-keep class pers.fz.mvvm.base.BaseResponse { *; }
+-dontwarn pers.fz.mvvm.base.BaseResponse
+-keepclassmembers class pers.fz.mvvm.base.BaseResponse{
     void set*( *** ) ;
     *** get*() ;
 }

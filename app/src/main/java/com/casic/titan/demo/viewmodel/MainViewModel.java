@@ -12,6 +12,7 @@ import com.casic.titan.demo.api.ApiServiceHelper;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
@@ -21,7 +22,7 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 @HiltViewModel
-public class MainViewModel extends BaseViewModel<RepositoryImpl, BaseView> implements DefaultLifecycleObserver {
+public class MainViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> implements DefaultLifecycleObserver {
     @Inject
     ApiServiceHelper apiServiceHelper;
 

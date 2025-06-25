@@ -3,6 +3,7 @@ package com.casic.titan.demo.impl;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.activity.result.ActivityResultLauncher;
 
@@ -107,7 +108,9 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public Map<String, String> defaultRequestHeader(String system) {
         Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("authorization", "7252fde8-9159-4389-8030-22add2b30c87");
+        if(!TextUtils.isEmpty(userService.getToken())){
+            headerMap.put("authorization", userService.getToken());
+        }
         return headerMap;
     }
 

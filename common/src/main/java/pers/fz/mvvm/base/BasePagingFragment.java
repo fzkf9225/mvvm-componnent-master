@@ -1,6 +1,5 @@
 package pers.fz.mvvm.base;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -128,7 +127,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     }
 
     @Override
-    public void onErrorCode(BaseModelEntity model) {
+    public void onErrorCode(BaseResponse model) {
         try {
             if (mViewModel != null) {
                 setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);

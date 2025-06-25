@@ -8,12 +8,9 @@ import com.casic.titan.demo.bean.NotificationMessageBean;
 import com.casic.titan.demo.viewmodel.DemoPagingViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.api.ApiRetrofit;
-import pers.fz.mvvm.base.BaseModelEntity;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.ConfirmDialog;
 
 /**

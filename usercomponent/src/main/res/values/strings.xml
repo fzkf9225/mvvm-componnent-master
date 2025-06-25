@@ -1,3 +1,22 @@
 <resources>
-
+    <string name="user_setting_gps">GPS setting</string>
+    <string name="user_setting_clear_cache">Clear cache</string>
+    <string name="user_setting_patrol_mode">Patrol mode</string>
+    <string name="user_overlay">Floating window permission</string>
+    <string name="user_setting_notice">Notify permission</string>
+    <string name="user_setting_battery">Battery optimization whitelist</string>
+    <string name="user_functional_opinion">Functional opinion</string>
+    <string name="user_function_error">Program error</string>
+    <string name="user_enter_opinion">Please enter the problem or feature comment…</string>
+    <string name="user_contact_person">Contact person</string>
+    <string name="user_hint_optional_name">Optional, Name</string>
+    <string name="user_contact_method">Contact information</string>
+    <string name="user_hint_contact_info">Optional, QQ/email/phone/number/etc</string>
+    <string name="user_submit">submit</string>
+    <string name="user_input_image_code">Please enter the graphic verification code</string>
+    <string name="user_login">Log in</string>
+    <string name="user_account_login_label">Hubei Smart Forestry Mobile Application Platform</string>
+    <string name="user_exit_account">Exit the account</string>
+    <string name="user_technical_support">Aerospace Science and Industry (Beijing) Space Information Application Co., Ltd.</string>
+    <string name="user_modify_password">Change the password</string>
 </resources>

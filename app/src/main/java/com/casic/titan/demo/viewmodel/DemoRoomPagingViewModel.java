@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.api.RepositoryFactory;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.datasource.RxRoomPagingSource;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
@@ -52,7 +53,8 @@ public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositor
 
     @Override
     protected RoomPagingRepositoryImpl createRepository() {
-        return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
+        return RepositoryFactory.create(RoomPagingRepositoryImpl.class,PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
+//        return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
     }
 
     @Override

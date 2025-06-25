@@ -13,9 +13,9 @@ import java.text.ParseException;
 
 import io.reactivex.rxjava3.functions.Consumer;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.base.BaseModelEntity;
+import pers.fz.mvvm.base.BaseResponse;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.bean.RequestConfigEntity;
+import pers.fz.mvvm.bean.ApiRequestOptions;
 import pers.fz.mvvm.util.log.LogUtil;
 import retrofit2.HttpException;
 
@@ -25,13 +25,13 @@ import retrofit2.HttpException;
  */
 public class ErrorConsumer implements Consumer<Throwable> {
     private final BaseView baseView;
-    private RequestConfigEntity requestConfigEntity;
+    private ApiRequestOptions apiRequestOptions;
 
-    public ErrorConsumer(BaseView baseView, RequestConfigEntity requestConfigEntity) {
+    public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions) {
         this.baseView = baseView;
-        this.requestConfigEntity = requestConfigEntity;
-        if (this.requestConfigEntity == null) {
-            this.requestConfigEntity = RequestConfigEntity.getDefault();
+        this.apiRequestOptions = apiRequestOptions;
+        if (this.apiRequestOptions == null) {
+            this.apiRequestOptions = ApiRequestOptions.getDefault();
         }
     }
 
@@ -39,7 +39,7 @@ public class ErrorConsumer implements Consumer<Throwable> {
     public void accept(Throwable e) throws Throwable {
         LogUtil.show(ApiRetrofit.TAG, "BaseViewModel|系统异常: " + e);
 
-        if (baseView != null && requestConfigEntity != null && requestConfigEntity.isShowDialog()) {
+        if (baseView != null && apiRequestOptions != null && apiRequestOptions.isShowDialog()) {
             baseView.hideLoading();
         }
         BaseException be;
@@ -49,14 +49,14 @@ public class ErrorConsumer implements Consumer<Throwable> {
                 be = (BaseException) e;
                 //回调到view层 处理 或者根据项目情况处理
                 if (baseView != null) {
-                    if (requestConfigEntity != null && requestConfigEntity.isShowToast()) {
-                        if (!TextUtils.isEmpty(requestConfigEntity.getToastMsg())) {
-                            baseView.showToast(requestConfigEntity.getToastMsg());
+                    if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
+                        if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
+                            baseView.showToast(apiRequestOptions.getToastMsg());
                         } else {
                             baseView.showToast(be.getErrorMsg());
                         }
                     }
-                    baseView.onErrorCode(new BaseModelEntity<>(be.getErrorCode(), be.getErrorMsg(), requestConfigEntity == null ? null : requestConfigEntity.getRequestParams()));
+                    baseView.onErrorCode(new BaseResponse<>(be.getErrorCode(), be.getErrorMsg(), apiRequestOptions == null ? null : apiRequestOptions.getRequestParams()));
                     return;
                 }
             } else {
@@ -84,10 +84,10 @@ public class ErrorConsumer implements Consumer<Throwable> {
         }
         LogUtil.show(ApiRetrofit.TAG, "BaseViewModel|异常消息: " + be.getErrorMsg());
         if (baseView != null) {
-            baseView.onErrorCode(new BaseModelEntity<>(be.getErrorCode(), be.getErrorMsg(), requestConfigEntity == null ? null : requestConfigEntity.getRequestParams()));
-            if (requestConfigEntity.isShowToast()) {
-                if (!TextUtils.isEmpty(requestConfigEntity.getToastMsg())) {
-                    baseView.showToast(requestConfigEntity.getToastMsg());
+            baseView.onErrorCode(new BaseResponse<>(be.getErrorCode(), be.getErrorMsg(), apiRequestOptions == null ? null : apiRequestOptions.getRequestParams()));
+            if (apiRequestOptions.isShowToast()) {
+                if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
+                    baseView.showToast(apiRequestOptions.getToastMsg());
                 } else {
                     baseView.showToast(be.getErrorMsg());
                 }

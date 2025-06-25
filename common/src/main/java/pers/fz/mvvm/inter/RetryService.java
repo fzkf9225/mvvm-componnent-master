@@ -1,6 +1,9 @@
 package pers.fz.mvvm.inter;
 
 
+import org.reactivestreams.Publisher;
+
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function;
 
@@ -8,6 +11,16 @@ import io.reactivex.rxjava3.functions.Function;
  * Created by fz on 2023/5/17 10:43
  * describe : 接口请求错误重试接口，需要重写这个实现无感刷新token等作用
  */
-public interface RetryService extends Function<Observable<? extends Throwable>, Observable<?>> {
+public interface RetryService{
+    /**
+     * 处理Observable类型的错误重试
+     */
+    Observable<?> handleObservableError(Observable<? extends Throwable> observable);
+
+    /**
+     * 处理Flowable类型的错误重试
+     */
+    Publisher<?> handleFlowableError(Flowable<Throwable> flowable);
+
     void setMaxRetryCount(int maxRetryCount);
 }

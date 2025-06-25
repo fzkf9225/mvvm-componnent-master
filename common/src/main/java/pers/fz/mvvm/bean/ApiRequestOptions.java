@@ -1,12 +1,14 @@
 package pers.fz.mvvm.bean;
 
+import androidx.annotation.NonNull;
+
 import java.util.Map;
 
 /**
  * Created by fz on 2023/12/1 8:54
  * describe :
  */
-public class RequestConfigEntity {
+public class ApiRequestOptions {
     /**
      * 是否展示加载框
      */
@@ -28,7 +30,7 @@ public class RequestConfigEntity {
      */
     private String dialogMessage = "正在加载，请稍后...";
 
-    private RequestConfigEntity() {
+    private ApiRequestOptions() {
     }
 
     public boolean isShowDialog() {
@@ -72,49 +74,49 @@ public class RequestConfigEntity {
     }
 
     public static class Builder {
-        private volatile RequestConfigEntity requestConfigEntity;
+        private volatile ApiRequestOptions apiRequestOptions;
 
         public Builder() {
-            if (requestConfigEntity == null) {
-                synchronized (RequestConfigEntity.class) {
-                    if (requestConfigEntity == null) {
-                        requestConfigEntity = new RequestConfigEntity();
+            if (apiRequestOptions == null) {
+                synchronized (ApiRequestOptions.class) {
+                    if (apiRequestOptions == null) {
+                        apiRequestOptions = new ApiRequestOptions();
                     }
                 }
             }
         }
 
         public Builder setShowDialog(boolean showDialog) {
-            requestConfigEntity.setShowDialog(showDialog);
+            apiRequestOptions.setShowDialog(showDialog);
             return this;
         }
 
         public Builder setShowToast(boolean showToast) {
-            requestConfigEntity.setShowToast(showToast);
+            apiRequestOptions.setShowToast(showToast);
             return this;
         }
 
         public Builder setToastMsg(String toastMsg) {
-            requestConfigEntity.setToastMsg(toastMsg);
+            apiRequestOptions.setToastMsg(toastMsg);
             return this;
         }
 
         public Builder setRequestParams(Map<String,?> requestParams) {
-            requestConfigEntity.setRequestParams(requestParams);
+            apiRequestOptions.setRequestParams(requestParams);
             return this;
         }
 
         public Builder setDialogMessage(String dialogMessage) {
-            requestConfigEntity.setDialogMessage(dialogMessage);
+            apiRequestOptions.setDialogMessage(dialogMessage);
             return this;
         }
 
-        public RequestConfigEntity build() {
-            return requestConfigEntity;
+        public ApiRequestOptions build() {
+            return apiRequestOptions;
         }
     }
 
-    public static RequestConfigEntity getDefault() {
+    public static ApiRequestOptions getDefault() {
         return new Builder()
                 .setShowDialog(true)
                 .setDialogMessage("正在加载，请稍后...")
@@ -122,6 +124,7 @@ public class RequestConfigEntity {
                 .build();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RequestConfigEntity{" +

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.casic.titan.googlegps.GpsLoggingService;
 
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
@@ -21,7 +22,7 @@ import pers.fz.mvvm.util.log.LogUtil;
  * Created by fz on 2024/3/26 10:56
  * describe :
  */
-public class GoogleGpsViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
     /**
      * gps的Intent
      */

@@ -1,6 +1,6 @@
 package com.casic.titan.usercomponent.api;
 
-import com.casic.titan.usercomponent.bean.UserInfo;
+import com.casic.titan.userapi.bean.UserInfo;
 
 import pers.fz.mvvm.api.MMKVHelper;
 import pers.fz.mvvm.bean.Code.ResponseCode;
@@ -35,6 +35,10 @@ public class UserAccountHelper {
      * baseUrl地址
      */
     private static final String BASE_URL = "base_url";
+    /**
+     * 是否同意协议
+     */
+    private static final String AGREE_AGREEMENT = "agreeAgreement";
 
     /**
      * 判断是否登录
@@ -64,7 +68,20 @@ public class UserAccountHelper {
         MMKVHelper.getInstance().put(USER_INFO, userInfo);
         MMKVHelper.getInstance().put(USER_STATE, isSuccess);
     }
+    /**
+     * 获取是否同意协议
+     */
+    public static boolean isAgree()  {
+        return MMKVHelper.getInstance().getBoolean(AGREE_AGREEMENT, false);
+    }
 
+    /**
+     * 保存是否同意协议
+     * @param isAgree token值
+     */
+    public static void setAgreement(boolean isAgree) {
+        MMKVHelper.getInstance().put(AGREE_AGREEMENT, isAgree);
+    }
     /**
      * 获取登录状态
      *

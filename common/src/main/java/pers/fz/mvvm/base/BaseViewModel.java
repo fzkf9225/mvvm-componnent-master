@@ -10,11 +10,12 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.AndroidViewModel;
 
 import pers.fz.mvvm.repository.IRepository;
+
 /**
  * Create by CherishTang on 2020/3/19 0019
  * describe:baseViewMode封装
  */
-public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> extends AndroidViewModel {
+public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseView> extends AndroidViewModel {
     protected final String TAG = this.getClass().getSimpleName();
 
     protected IR iRepository;
@@ -29,7 +30,7 @@ public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> 
     protected void onCleared() {
         super.onCleared();
         if (iRepository != null) {
-            iRepository.removeDisposable();
+            iRepository.clear();
         }
     }
 
@@ -46,6 +47,9 @@ public abstract class BaseViewModel<IR extends IRepository,BV extends BaseView> 
     public void createRepository(BV baseView) {
         this.baseView = baseView;
         iRepository = createRepository();
+        if (iRepository != null && iRepository.getBaseView() == null) {
+            iRepository.setBaseView(baseView);
+        }
     }
 
     public IR getIRepository() {

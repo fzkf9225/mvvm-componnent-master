@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
@@ -16,7 +17,7 @@ import pers.fz.mvvm.repository.RepositoryImpl;
  * describe :
  */
 @HiltViewModel
-public class EmptyViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+public class EmptyViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
 
     @Inject
     public EmptyViewModel(@NonNull Application application) {
@@ -24,7 +25,7 @@ public class EmptyViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected BaseRepository<BaseView> createRepository() {
         return null;
     }
 }

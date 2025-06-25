@@ -1,142 +1,187 @@
-package com.casic.titan.usercomponent.activity;
+package com.casic.titan.usercomponent.activity
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Bundle
+import android.text.InputType
+import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.view.KeyEvent
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.casic.titan.userapi.bean.UserInfo
+import com.casic.titan.userapi.UserService
+import com.casic.titan.usercomponent.R
+import com.casic.titan.usercomponent.api.UserAccountHelper
+import com.casic.titan.usercomponent.bean.RequestLoginBean
+import com.casic.titan.usercomponent.databinding.ActivityLoginBinding
+import com.casic.titan.usercomponent.view.UserView
+import com.casic.titan.usercomponent.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import pers.fz.mvvm.api.AppManager
+import pers.fz.mvvm.api.ConstantsHelper
+import pers.fz.mvvm.base.BaseActivity
+import pers.fz.mvvm.base.BaseResponse
+import pers.fz.mvvm.inter.ErrorService
+import pers.fz.mvvm.util.common.KeyBoardUtil
+import pers.fz.mvvm.util.common.RxView
+import pers.fz.mvvm.wight.dialog.MessageDialog
+import javax.inject.Inject
 
-import com.casic.titan.usercomponent.R;
-import com.casic.titan.usercomponent.bean.RequestLoginBean;
-import com.casic.titan.usercomponent.databinding.LoginBinding;
-import com.casic.titan.usercomponent.view.UserView;
-import com.casic.titan.usercomponent.viewmodel.UserViewModel;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.api.AppManager;
-import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.bean.base.ToolbarConfig;
-import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.common.KeyBoardUtil;
 
 /**
- * Created by fz on 2019/8/23.
+ * Created by fz on 2024/10/09 15:56.
  * describe：登录，登录方式：账号密码登录
  */
 @AndroidEntryPoint
-public class LoginActivity extends BaseActivity<UserViewModel, LoginBinding> implements UserView {
-    private String password = "admin";
-    private Bundle bundle;
+class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), UserView {
+    private var password: String? = null
+    private var bundle: Bundle? = null
+
+    companion object {
+        const val NOT_SUPPORT_LOGIN = "notSupportLogin"
+    }
+
     @Inject
-    ErrorService errorService;
+    lateinit var errorService: ErrorService
 
-    @Override
-    public String setTitleBar() {
-        return "登录";
+    @Inject
+    lateinit var userService: UserService
+
+    override fun setTitleBar(): String {
+        return "登录"
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.login;
+
+    override fun getLayoutId(): Int {
+        return R.layout.activity_login
     }
 
-    @Override
-    protected boolean hasToolBar() {
-        return false;
+    override fun hasToolBar(): Boolean {
+        return false
     }
 
-    @Override
-    protected boolean enableImmersionBar() {
-        return true;
-    }
+    override fun initView(savedInstanceState: Bundle?) {
+        binding.cbAgreement.isChecked = UserAccountHelper.isAgree()
+        binding.loginViewModel = mViewModel
+        binding.loginBean = RequestLoginBean(userService.account)
+        binding.password = password
+        Glide.with(this)
+            .load(R.mipmap.user_login_bg)
+            .into(binding.imageLoginBg)
 
-    @Override
-    public void initView(Bundle savedInstanceState) {
-        binding.setLoginViewModel(mViewModel);
-        RequestLoginBean requestLoginBean = new RequestLoginBean();
-        requestLoginBean.setUsername("admin");
-        binding.setLoginBean(requestLoginBean);
-        binding.setPassword(password);
-    }
-
-    @Override
-    public void initData(Bundle bundle) {
-        this.bundle = bundle;
-        mViewModel.getLiveData().observe(this, userInfo -> mViewModel.loginCallback(userInfo, binding.userEdit.getText().toString()));
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent mIntent = new Intent(Intent.ACTION_MAIN);
-            mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mIntent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(mIntent);
-            return true;
+        // 设置CheckBox的文本和点击事件
+        binding.cbAgreement.text = mViewModel.agreementSpannableString()
+        binding.cbAgreement.movementMethod = LinkMovementMethod.getInstance()
+        //防止快速点击
+        RxView.setOnClickListener(binding.loginSubmit) {
+            mViewModel.loginClick(binding)
         }
-        return super.onKeyDown(keyCode, event);
+        binding.switchPasswordType.setOnClickListener {
+            if(it.isSelected){
+                it.isSelected = false;
+                binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT;//设置密码不可见
+            }else{
+                it.isSelected = true;
+                binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;//设置密码可见
+            }
+        }
     }
 
-    @Override
-    public void hideKeyboard() {
+    @SuppressLint("SetTextI18n")
+    override fun initData(bundle: Bundle?) {
+        this.bundle = bundle
+        binding.tvAppVersion.text = "版本 ${AppManager.getAppManager().getVersion(this@LoginActivity)}"
+        mViewModel.liveData.observe(this) { userInfo: UserInfo? ->
+            mViewModel.loginCallback(
+                userInfo,
+                binding.editAccount.text.toString()
+            )
+        }
+        mViewModel.imageLiveData.observe(this) { data ->
+            Glide.with(this).load(data.imageBase64).apply(
+                RequestOptions().error(pers.fz.mvvm.R.mipmap.ic_default_image)
+                    .placeholder(pers.fz.mvvm.R.mipmap.ic_default_image)
+            ).into(binding.imageVerificationCode)
+        }
+        mViewModel.getImageCode(binding.loginBean!!)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            val mIntent = Intent(Intent.ACTION_MAIN)
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            mIntent.addCategory(Intent.CATEGORY_HOME)
+            startActivity(mIntent)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun hideKeyboard() {
         try {
-            KeyBoardUtil.closeKeyboard(binding.userEdit, this);
-            KeyBoardUtil.closeKeyboard(binding.passwordEdit, this);
-        } catch (Exception e) {
-            e.printStackTrace();
+            KeyBoardUtil.closeKeyboard(binding.editAccount, this)
+            KeyBoardUtil.closeKeyboard(binding.editPassword, this)
+            KeyBoardUtil.closeKeyboard(binding.editVerificationCode, this)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     @SuppressLint("UnsafeIntentLaunch")
-    @Override
-    public void toLast() {
-        showToast("登录成功！");
-        setResult(RESULT_OK, getIntent().putExtras(bundle));
-        finish();
+    override fun toLast() {
+        showToast("登录成功！")
+        setResult(RESULT_OK, intent.putExtras(bundle!!))
+        finish()
     }
 
-    @Override
-    public boolean hasTarget() {
-        String targetActivity = bundle.getString(ConstantsHelper.TARGET_ACTIVITY);
+    override fun hasTarget(): Boolean {
+        val targetActivity = bundle!!.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
-            return false;
+            return false
         }
         try {
             //是否报错，不报错说明目标页面存在
-            Class.forName(targetActivity);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
+            Class.forName(targetActivity)
+            return true
+        } catch (e: ClassNotFoundException) {
+            return false
         }
     }
 
-    @Override
-    public void toTarget() {
-        String targetActivity = bundle.getString(ConstantsHelper.TARGET_ACTIVITY);
+    override fun toTarget() {
+        val targetActivity = bundle!!.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
-            toLast();
-            return;
+            toLast()
+            return
         }
         try {
             //是否报错，不报错说明目标页面存在
-            Intent intent = new Intent(this, Class.forName(targetActivity));
-            intent.putExtras(bundle);
-            startActivity(intent);
-            finish();
-        } catch (ClassNotFoundException e) {
-            toLast();
+            val intent = Intent(this, Class.forName(targetActivity))
+            intent.putExtras(bundle!!)
+            startActivity(intent)
+            finish()
+        } catch (e: ClassNotFoundException) {
+            toLast()
         }
     }
 
-    @Override
-    public void toMain() {
-        showToast("登录成功！");
-        AppManager.getAppManager().finishAllActivity();
-        startActivity(errorService.getMainActivity());
+    override fun toMain() {
+        showToast("登录成功！")
+        AppManager.getAppManager().finishAllActivity()
+        startActivity(errorService.mainActivity)
     }
 
+    override fun onErrorCode(model: BaseResponse<*>?) {
+        super.onErrorCode(model)
+        if(NOT_SUPPORT_LOGIN == model?.code){
+            MessageDialog(this)
+                .setMessage(model.message)
+                .setOnPositiveClickListener{
+                    it.dismiss()
+                }
+                .builder()
+                .show()
+        }
+    }
 }

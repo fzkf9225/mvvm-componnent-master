@@ -15,12 +15,14 @@ import pers.fz.mvvm.repository.PagingRepositoryImpl;
  * Created by fz on 2023/12/1 15:25
  * describe :
  */
-public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<NotificationMessageBean, BaseView> {
-    private ApiServiceHelper apiServiceHelper;
+public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<ApiServiceHelper,NotificationMessageBean, BaseView> {
 
-    public DemoPagingRepositoryImpl(ApiServiceHelper apiServiceHelper, RetryService retryService, BaseView baseView) {
+    public DemoPagingRepositoryImpl(RetryService retryService, BaseView baseView) {
         super(retryService, baseView);
-        this.apiServiceHelper = apiServiceHelper;
+    }
+
+    public DemoPagingRepositoryImpl(BaseView baseView) {
+        super(baseView);
     }
 
     @Override
@@ -28,12 +30,12 @@ public class DemoPagingRepositoryImpl extends PagingRepositoryImpl<NotificationM
         NotificationMessageBean notificationMessageBean = new NotificationMessageBean();
         notificationMessageBean.setType("1");
         return sendRequest(
-                apiServiceHelper.getNewList(currentPage,pageSize,notificationMessageBean).map(response -> {
+                apiService.getNewList(currentPage,pageSize,notificationMessageBean).map(response -> {
                     if(response.getList()==null){
                         return Collections.emptyList();
                     }
                     return response.getList();
                 }),
-                getRequestConfigEntity());
+                getApiRequestOptions());
     }
 }

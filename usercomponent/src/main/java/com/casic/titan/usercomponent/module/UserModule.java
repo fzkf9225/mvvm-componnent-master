@@ -27,17 +27,17 @@ import pers.fz.mvvm.util.log.LogUtil;
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
 public class UserModule {
 
-    @Inject
-    ErrorService errorService;
     @Provides
-    public UserApiService provideUserApiService(Application application)
+    public UserApiService provideUserApiService(Application application,ErrorService errorService)
     {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application, ContextCompat.getString(application, R.string.user_config_file)).getBaseUrl();
         LogUtil.show(ApiRetrofit.TAG,"登录baseUrl:"+baseUrl);
         return new ApiRetrofit
-                .Builder(Config.getInstance().getApplication())
+                .Builder(application)
+                .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
                 .setErrorService(errorService)
+                .setTimeOut(15)
                 .builder()
                 .getApiService(UserApiService.class);
     }

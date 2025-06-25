@@ -1,0 +1,22 @@
+<resources>
+    <string name="user_setting_gps">GPS设置</string>
+    <string name="user_setting_clear_cache">清理缓存</string>
+    <string name="user_setting_patrol_mode">巡护方式</string>
+    <string name="user_overlay">悬浮窗权限</string>
+    <string name="user_setting_notice">通知权限</string>
+    <string name="user_setting_battery">电池优化白名单</string>
+    <string name="user_functional_opinion">功能意见</string>
+    <string name="user_function_error">程序错误</string>
+    <string name="user_enter_opinion">请输入遇到的问题或者功能意见...</string>
+    <string name="user_contact_person">联系人　</string>
+    <string name="user_hint_optional_name">选填，姓名</string>
+    <string name="user_contact_method">联系方式</string>
+    <string name="user_hint_contact_info">选填，QQ、邮箱、电话号码等</string>
+    <string name="user_submit">提交</string>
+    <string name="user_input_image_code">请输入图形验证码</string>
+    <string name="user_login">登录</string>
+    <string name="user_account_login_label">湖北智慧林业移动应用平台</string>
+    <string name="user_exit_account">退出账号</string>
+    <string name="user_technical_support">技术支持：航天科工（北京）空间信息应用股份有限公司</string>
+    <string name="user_modify_password">修改密码</string>
+</resources>

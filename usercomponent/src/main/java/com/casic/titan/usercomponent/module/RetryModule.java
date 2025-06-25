@@ -1,13 +1,11 @@
 package com.casic.titan.usercomponent.module;
 
-import com.casic.titan.usercomponent.impl.RetryFlowServiceImpl;
 import com.casic.titan.usercomponent.impl.RetryServiceImpl;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
-import pers.fz.mvvm.inter.RetryFlowService;
 import pers.fz.mvvm.inter.RetryService;
 
 /**
@@ -19,7 +17,7 @@ import pers.fz.mvvm.inter.RetryService;
 public abstract class RetryModule {
     @Binds
     abstract RetryService bindRetryService(RetryServiceImpl retryServiceImpl);
-
-    @Binds
-    abstract RetryFlowService bindRetryFlowService(RetryFlowServiceImpl retryFlowService);
+//
+//    @Binds
+//    abstract RetryFlowService bindRetryFlowService(RetryFlowServiceImpl retryFlowService);
 }

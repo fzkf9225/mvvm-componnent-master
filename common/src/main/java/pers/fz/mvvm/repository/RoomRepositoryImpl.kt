@@ -1,16 +1,13 @@
 package pers.fz.mvvm.repository
 
 import androidx.lifecycle.LiveData
-import androidx.room.PrimaryKey
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.reactivestreams.Subscription
 import pers.fz.mvvm.base.BaseException
+import pers.fz.mvvm.base.BaseRepository
 import pers.fz.mvvm.base.BaseView
 import pers.fz.mvvm.database.BaseRoomDao
 import java.util.concurrent.TimeUnit
@@ -21,57 +18,10 @@ import java.util.concurrent.TimeUnit
  */
 open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     private val roomDao: DB,
-    protected val baseView: BV
-) : IRepository {
+    baseView: BV
+) : BaseRepository<BV>(baseView) {
 
     fun getRoomDao() = roomDao
-
-    /**
-     * 离开页面，是否取消网络
-     */
-    protected val compositeDisposable: CompositeDisposable by lazy {
-        CompositeDisposable()
-    }
-
-
-    private val subscriptionList by lazy {
-        ArrayList<Subscription>()
-    }
-
-    protected fun addSubscription(subscription: Subscription) {
-        subscriptionList.add(subscription)
-    }
-
-    protected fun removeSubscription(subscription: Subscription) {
-        subscriptionList.isNotEmpty().let {
-            subscriptionList.remove(subscription)
-        }
-    }
-
-    protected fun removeDisposable(disposable: Disposable) {
-        if (compositeDisposable.isDisposed) {
-            return
-        }
-        compositeDisposable.remove(disposable)
-    }
-
-    override fun addDisposable(disposable: Disposable) {
-        compositeDisposable.add(disposable)
-    }
-
-    override fun removeDisposable() {
-        //默认取消所有订阅，但不会导致正在进行的任务终止，而是等待它们完成，仅仅只是取消订阅关系而已
-        compositeDisposable.clear()
-        //默认取消所有订阅，并取消所有正在进行的任务
-//            compositeDisposable.dispose();
-        subscriptionList.isNotEmpty().let {
-            for (subscription in subscriptionList) {
-                subscription.cancel()
-            }
-        }
-        subscriptionList.clear()
-    }
-
     /**
      * 添加单个对象
      */

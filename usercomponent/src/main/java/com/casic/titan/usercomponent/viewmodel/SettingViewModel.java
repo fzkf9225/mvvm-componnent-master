@@ -17,6 +17,7 @@ import com.casic.titan.usercomponent.api.UserAccountHelper;
 
 import com.casic.titan.usercomponent.TechnicalSupportActivity;
 import pers.fz.mvvm.api.ConstantsHelper;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
@@ -28,7 +29,7 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * Create by CherishTang on 2020/3/26 0026
  * describe:
  */
-public class SettingViewModel extends BaseViewModel<RepositoryImpl,BaseView> {
+public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,BaseView> {
 
     public SettingViewModel(@NonNull Application application) {
         super(application);

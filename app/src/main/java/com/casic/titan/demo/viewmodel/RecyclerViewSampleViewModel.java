@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseRecyclerViewModel;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.bean.base.PageBean;
@@ -16,10 +17,15 @@ import pers.fz.mvvm.bean.base.PageBean;
  * Created by fz on 2023/8/14 10:56
  * describe :
  */
-public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseView, PopupWindowBean> {
+public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseRepository<BaseView>,BaseView, PopupWindowBean> {
 
     public RecyclerViewSampleViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected BaseRepository<BaseView> createRepository() {
+        return null;
     }
 
     public void loadData(int mCurrentPage) {

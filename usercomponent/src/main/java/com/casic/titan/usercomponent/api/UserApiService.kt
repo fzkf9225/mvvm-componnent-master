@@ -1,55 +1,63 @@
-package com.casic.titan.usercomponent.api;
+package com.casic.titan.usercomponent.api
 
-import com.casic.titan.usercomponent.bean.TokenBean;
-import com.casic.titan.usercomponent.bean.UserInfo;
-
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
+import com.casic.titan.userapi.bean.UserInfo
+import com.casic.titan.usercomponent.bean.GraphicVerificationCodeBean
+import com.casic.titan.usercomponent.bean.RequestLoginBean
+import com.casic.titan.usercomponent.bean.TokenBean
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
+import pers.fz.mvvm.api.BaseApiService
+import pers.fz.mvvm.bean.base.PageBean
+import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Query
 
 /**
  * Created by fz on 2023/4/25 13:08
  * describe :
  */
-public interface UserApiService {
+interface UserApiService : BaseApiService {
     /**
      * 获取token
-     *
-     * @return
      */
-    @POST("http://192.168.0.23:19901/blade-auth/oauth/token")
-    @FormUrlEncoded
-    Observable<TokenBean> getToken(@Field("userName") String username, @Field("password") String password,
-                                   @Field("code") String code, @Field("num") String num);
+    @POST("user/loginApp")
+    fun getToken(@Body requestLoginBean: RequestLoginBean): Observable<TokenBean>
+
+    @GET("code/getCode")
+    fun getImageCode(@Query("num") randomNumber: String): Observable<GraphicVerificationCodeBean>
 
     /**
      * 获取token
-     *
-     * @return
      */
     @POST("blade-auth/oauth/token")
-    @FormUrlEncoded
-    Observable<TokenBean> refreshToken(@Field("refresh_token") String refreshToken,@Field("tenantld") String tenantld,
-                                       @Field("grant_type") String grant_type, @Field("scope") String scope,
-                                       @Field("type") String type);
-
+    fun refreshToken(
+        @Field("refresh_token") refreshToken: String?, @Field("tenantld") tenantld: String?,
+        @Field("grant_type") grant_type: String?, @Field("scope") scope: String?,
+        @Field("type") type: String?
+    ): Observable<TokenBean>
     /**
      * 获取token
-     *
-     * @return
      */
     @POST("blade-auth/oauth/token")
-    @FormUrlEncoded
-    Flowable<TokenBean> refreshTokenFlow(@Field("refresh_token") String refreshToken, @Field("tenantld") String tenantld,
-                                     @Field("grant_type") String grant_type, @Field("scope") String scope,
-                                     @Field("type") String type);
+    fun refreshTokenFlow(
+        @Field("refresh_token") refreshToken: String?, @Field("tenantld") tenantld: String?,
+        @Field("grant_type") grant_type: String?, @Field("scope") scope: String?,
+        @Field("type") type: String?
+    ): Flowable<TokenBean>
 
-    @GET("http://192.168.0.23:19901/pms/user/getLoginUserInfo")
-    Observable<UserInfo> getUserInfo();
+    @GET("user/getLoginUserInfo")
+    fun getUserInfo(): Observable<UserInfo>
 
-    @GET("http://192.168.0.23:19901/pms/user/getLoginUserInfo")
-    Flowable<UserInfo> getUserInfoFlow();
+    @GET("user/getLoginUserInfo")
+    fun getUserInfoFlow(): Flowable<UserInfo>
+
+    @PUT("user")
+    fun modifyUserInfo(@Body userInfo: UserInfo): Observable<Any>
+
+    @GET("user/logoutApp")
+    fun logout(): Observable<Any>
 }

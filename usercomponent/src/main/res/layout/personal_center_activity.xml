@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/tv_name"
             style="@style/user_content"
-            android:text="@{userInfo.name}"
+            android:text="@{userInfo.realName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/tv_name_label"
@@ -76,7 +76,7 @@
         <TextView
             android:id="@+id/tv_role"
             style="@style/user_content"
-            android:text="@={userInfo.roleName}"
+            android:text="@={userInfo.position}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/tv_role_label"
@@ -95,7 +95,7 @@
         <TextView
             android:id="@+id/tv_user_name"
             style="@style/user_content"
-            android:text="@={userInfo.realName}"
+            android:text="@={userInfo.userName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/tv_user_name_label"
@@ -125,6 +125,6 @@
 
         <variable
             name="userInfo"
-            type="com.casic.titan.usercomponent.bean.UserInfo" />
+            type="com.casic.titan.userapi.bean.UserInfo" />
     </data>
 </layout>

@@ -27,6 +27,7 @@ import java.util.List;
 
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.bean.PopupWindowBean;
@@ -52,7 +53,7 @@ import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
  * Created by fz on 2023/8/14 10:56
  * describe :
  */
-public class DialogViewModel extends BaseViewModel<RepositoryImpl, BaseView> {
+public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
     List<PopupWindowBean> dataList = Arrays.asList(
             new PopupWindowBean("1", "北京"),
             new PopupWindowBean("2", "上海"),

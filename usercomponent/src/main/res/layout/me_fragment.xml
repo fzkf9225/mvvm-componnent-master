@@ -6,7 +6,7 @@
     <data>
         <variable
             name="user"
-            type="com.casic.titan.usercomponent.bean.UserInfo" />
+            type="com.casic.titan.userapi.bean.UserInfo" />
         <import type="pers.fz.mvvm.util.common.StringUtil"/>
     </data>
 
@@ -36,7 +36,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginTop="48dp"
-                    app:headerUrl="@{user.avatar}"
+                    app:headerUrl="@{user.userIcon}"
                     android:src="@mipmap/icon_head_default" />
 
                 <TextView
@@ -48,7 +48,7 @@
                     android:layout_marginTop="56dp"
                     android:layout_toEndOf="@+id/headImg"
                     android:includeFontPadding="false"
-                    android:text='@{StringUtil.isEmpty(user.name)?"点击登录":user.name}'
+                    android:text='@{StringUtil.isEmpty(user.realName)?"点击登录":user.realName}'
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_xxl" />
 

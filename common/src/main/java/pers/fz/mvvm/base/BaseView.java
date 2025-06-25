@@ -32,6 +32,6 @@ public interface BaseView {
     /**
      * 错误码
      */
-    void onErrorCode(BaseModelEntity model);
+    void onErrorCode(BaseResponse model);
 
 }

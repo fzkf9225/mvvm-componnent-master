@@ -5,16 +5,16 @@ import androidx.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 
-public class BaseModelEntity<T>{
-    public BaseModelEntity() {
+public class BaseResponse<T>{
+    public BaseResponse() {
     }
 
-    public BaseModelEntity(String code, String msg) {
+    public BaseResponse(String code, String msg) {
         this.code = code;
         this.message = msg;
     }
 
-    public BaseModelEntity(String code, String message, T data) {
+    public BaseResponse(String code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -61,7 +61,7 @@ public class BaseModelEntity<T>{
     @NonNull
     @Override
     public String toString() {
-        return "BaseModelEntity{" +
+        return "BaseResponse{" +
                 "code='" + code + '\'' +
                 ", message='" + message + '\'' +
                 ", data=" + data +

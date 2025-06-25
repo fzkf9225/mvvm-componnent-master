@@ -12,6 +12,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 import pers.fz.mvvm.api.ApiRetrofit;
+import pers.fz.mvvm.api.BaseApiService;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
 import pers.fz.mvvm.util.log.LogUtil;
@@ -22,13 +23,13 @@ import pers.fz.mvvm.util.log.LogUtil;
  */
 public class PagingSource<T, BV extends BaseView> extends RxPagingSource<Integer, T> {
     private Integer startPage = 1;
-    private final PagingRepositoryImpl<T, BV> pagingRepository;
+    private final PagingRepositoryImpl<?,T, BV> pagingRepository;
 
-    public PagingSource(PagingRepositoryImpl<T, BV> pagingRepository) {
+    public <API extends BaseApiService> PagingSource(PagingRepositoryImpl<API,T, BV> pagingRepository) {
         this.pagingRepository = pagingRepository;
     }
 
-    public PagingSource(PagingRepositoryImpl<T, BV> pagingRepository, Integer startPage) {
+    public <API extends BaseApiService> PagingSource(PagingRepositoryImpl<API,T, BV> pagingRepository, Integer startPage) {
         this.pagingRepository = pagingRepository;
         this.startPage = startPage;
     }
