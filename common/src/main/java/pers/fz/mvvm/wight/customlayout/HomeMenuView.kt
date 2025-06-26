@@ -21,8 +21,8 @@ import pers.fz.mvvm.adapter.Viewpager2MenuAdapter
 import pers.fz.mvvm.bean.HomeMenuBean
 import pers.fz.mvvm.listener.OnMenuClickListener
 import pers.fz.mvvm.listener.PagingAdapterListener
-import pers.fz.mvvm.util.common.CommonUtil
 import pers.fz.mvvm.util.common.DensityUtil
+import pers.fz.mvvm.util.common.DrawableUtil
 import java.util.function.IntConsumer
 import java.util.stream.IntStream
 
@@ -54,7 +54,7 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
      * 未选中时圆点样式
      */
     private val defaultDrawableResNormal: Drawable by lazy {
-        CommonUtil.createCircleDrawable(
+        DrawableUtil.createCircleDrawable(
             ContextCompat.getColor(context, R.color.gray),
             DensityUtil.dp2px(context, 5f)
         )

@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -20,37 +21,27 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
 dependencies {
 
+    implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
-    implementation libs.play.services.location
-    implementation libs.github.live.event.bus.x
-    implementation libs.androidx.preference
-    //Debug Logging
-    implementation(libs.slf4j.slf4j.api)
-    implementation(libs.github.logback.android.classic){
-        exclude group: 'com.google.android', module: 'android'
-    }
-    implementation libs.gson
-    //OKHTTP client
-    implementation libs.okhttp
-
-    //OKHTTP interceptor, works with oauth signpost
-    implementation libs.se.okhttp.signpost
-    //Android Priority Jobqueue
-    implementation (libs.com.birbit.android.priority.jobqueue){
-        exclude group: 'com.google.android', module: 'android'
-    }
-    implementation libs.org.apache.jackrabbit.jackrabbit.webdav
-    //CSV library
-    implementation(libs.org.apache.commons.commons.csv3)
     implementation libs.netty.all
     implementation libs.org.apache.commons.commons.lang3
 }

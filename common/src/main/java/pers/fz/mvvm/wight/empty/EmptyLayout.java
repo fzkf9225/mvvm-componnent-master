@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
@@ -16,39 +17,77 @@ import pers.fz.mvvm.databinding.ViewErrorLayoutBinding;
 
 public class EmptyLayout extends LinearLayout {
 
-    public static final int HIDE_LAYOUT = 4;
-    public static final int LOADING_ERROR = 1;
-    public static final int NETWORK_LOADING = 2;
-    public static final int NO_DATA = 3;
-    public static final int NO_DATA_ENABLE_CLICK = 10;
-    public static final int NETWORK_LOADING_REFRESH = 5;
+    public enum State {
+        /**
+         * 隐藏布局
+         */
+        HIDE_LAYOUT,
+        /**
+         * 错误
+         */
+        LOADING_ERROR,
+        /**
+         * 加载中
+         */
+        NETWORK_LOADING,
+        /**
+         * 暂无数据
+         */
+        NO_DATA,
+        /**
+         * 暂无数据，点击重试
+         */
+        NO_DATA_ENABLE_CLICK,
+        /**
+         * 加载中，点击重试
+         */
+        NETWORK_LOADING_REFRESH
+    }
+
     private boolean clickEnable = true;
     private OnEmptyLayoutClickListener onEmptyLayoutClickListener;
-    private int mErrorState;
-    private String strNoDataContent = "";
-    private ViewErrorLayoutBinding binding;
+    private State currentState;
+    private String customNoDataContent = "";
+
+    // 默认资源
+    @DrawableRes private int defaultErrorImage = R.mipmap.loading_error;
+    @DrawableRes private int defaultLoadingImage = R.mipmap.icon_loading_again;
+    @DrawableRes private int defaultNoDataImage = R.mipmap.page_icon_empty;
+    @StringRes private int defaultErrorText = R.string.state_load_error;
+    @StringRes private int defaultLoadingText = R.string.state_loading;
+    @StringRes private int defaultNoDataText = R.string.noData;
+    @StringRes private int defaultClickableNoDataText = R.string.state_loading_again;
+
+    private final ViewErrorLayoutBinding binding;
 
     public EmptyLayout(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public EmptyLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public EmptyLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init();
+        binding = ViewErrorLayoutBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        setupClickListener();
     }
 
     private void init() {
         setGravity(Gravity.CENTER);
         setOrientation(LinearLayout.VERTICAL);
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.default_background));
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        binding = ViewErrorLayoutBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+    }
+
+    private void setupClickListener() {
         binding.imgErrorLayout.setOnClickListener(v -> {
-            if (!clickEnable) {
-               return;
-            }
-            if (onEmptyLayoutClickListener != null) {
+            if (clickEnable && onEmptyLayoutClickListener != null) {
                 onEmptyLayoutClickListener.onEmptyLayoutClick(v);
             }
         });
@@ -59,107 +98,147 @@ public class EmptyLayout extends LinearLayout {
     }
 
     public void dismiss() {
-        mErrorState = HIDE_LAYOUT;
-        setVisibility(View.GONE);
+        setState(State.HIDE_LAYOUT);
     }
 
-    public int getErrorState() {
-        return mErrorState;
+    public State getCurrentState() {
+        return currentState;
     }
 
     public boolean isLoadError() {
-        return mErrorState == LOADING_ERROR;
+        return currentState == State.LOADING_ERROR;
     }
 
     public boolean isLoading() {
-        return mErrorState == NETWORK_LOADING;
+        return currentState == State.NETWORK_LOADING ||
+                currentState == State.NETWORK_LOADING_REFRESH;
     }
 
-    public void setOnEmptyLayoutClickListener(OnEmptyLayoutClickListener onEmptyLayoutClickListener) {
-        this.onEmptyLayoutClickListener = onEmptyLayoutClickListener;
-    }
-
-    public interface OnEmptyLayoutClickListener {
-        void onEmptyLayoutClick(View v);
+    public void setOnEmptyLayoutClickListener(OnEmptyLayoutClickListener listener) {
+        this.onEmptyLayoutClickListener = listener;
     }
 
     public void setErrorMessage(String msg) {
         binding.tvErrorLayout.setText(msg);
     }
 
-    /**
-     * 新添设置背景
-     */
     public void setErrorImage(@DrawableRes int imgResource) {
         binding.imgErrorLayout.setImageResource(imgResource);
     }
 
-    public void setErrorType(int i) {
-        setVisibility(View.VISIBLE);
-        switch (i) {
-            case LOADING_ERROR -> {
-                mErrorState = LOADING_ERROR;
-                binding.imgErrorLayout.setVisibility(View.VISIBLE);
-                setErrorImage(R.mipmap.loading_error);
-                binding.tvErrorLayout.setText(R.string.state_load_error);
-                binding.loading.stop();
-                binding.loading.setVisibility(View.GONE);
-                clickEnable = true;
-            }
-            case NETWORK_LOADING, NETWORK_LOADING_REFRESH -> {
-                mErrorState = i == NETWORK_LOADING ? NETWORK_LOADING : NETWORK_LOADING_REFRESH;
-                setErrorImage(R.mipmap.icon_loading_again);
-                binding.loading.setVisibility(View.VISIBLE);
-                binding.loading.start();
-                binding.imgErrorLayout.setVisibility(View.GONE);
-                binding.tvErrorLayout.setText(R.string.state_loading);
-                clickEnable = false;
-            }
-            case NO_DATA -> {
-                mErrorState = NO_DATA;
-                setErrorImage(R.mipmap.page_icon_empty);
-                binding.imgErrorLayout.setVisibility(View.VISIBLE);
-                binding.loading.stop();
-                binding.loading.setVisibility(View.GONE);
-                setTvNoDataContent();
-                clickEnable = true;
-            }
-            case HIDE_LAYOUT -> {
-                binding.loading.stop();
-                setVisibility(View.GONE);
-            }
-            case NO_DATA_ENABLE_CLICK -> {
-                mErrorState = NO_DATA_ENABLE_CLICK;
-                setErrorImage(R.mipmap.icon_loading_again);
-                binding.imgErrorLayout.setVisibility(View.VISIBLE);
-                binding.loading.stop();
-                binding.loading.setVisibility(View.GONE);
-                setTvNoDataContent();
-                binding.tvErrorLayout.setText(R.string.state_loading_again);
-                clickEnable = true;
-            }
-            default -> {
-            }
+    public void setState(State state) {
+        this.currentState = state;
+
+        if (state == State.HIDE_LAYOUT) {
+            hide();
+            return;
         }
+
+        setVisibility(View.VISIBLE);
+        updateViewForState(state);
+    }
+
+    private void updateViewForState(State state) {
+        switch (state) {
+            case LOADING_ERROR:
+                setupErrorState();
+                break;
+            case NETWORK_LOADING:
+            case NETWORK_LOADING_REFRESH:
+                setupLoadingState(state);
+                break;
+            case NO_DATA:
+                setupNoDataState(false);
+                break;
+            case NO_DATA_ENABLE_CLICK:
+                setupNoDataState(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setupErrorState() {
+        setErrorImage(defaultErrorImage);
+        binding.imgErrorLayout.setVisibility(View.VISIBLE);
+        binding.tvErrorLayout.setText(defaultErrorText);
+        stopLoading();
+        clickEnable = true;
+    }
+
+    private void setupLoadingState(State state) {
+        setErrorImage(defaultLoadingImage);
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.loading.start();
+        binding.imgErrorLayout.setVisibility(View.GONE);
+        binding.tvErrorLayout.setText(defaultLoadingText);
+        clickEnable = false;
+    }
+
+    private void setupNoDataState(boolean clickable) {
+        setErrorImage(clickable ? defaultLoadingImage : defaultNoDataImage);
+        binding.imgErrorLayout.setVisibility(View.VISIBLE);
+        stopLoading();
+        setNoDataContentText(clickable);
+        clickEnable = true;
+    }
+
+    private void setNoDataContentText(boolean clickable) {
+        if (!customNoDataContent.isEmpty()) {
+            binding.tvErrorLayout.setText(customNoDataContent);
+        } else {
+            binding.tvErrorLayout.setText(clickable ? defaultClickableNoDataText : defaultNoDataText);
+        }
+    }
+
+    private void stopLoading() {
+        binding.loading.stop();
+        binding.loading.setVisibility(View.GONE);
+    }
+
+    private void hide() {
+        stopLoading();
+        setVisibility(View.GONE);
     }
 
     public void setNoDataContent(String noDataContent) {
-        strNoDataContent = noDataContent;
+        this.customNoDataContent = noDataContent;
     }
 
-    public void setTvNoDataContent() {
-        if (!strNoDataContent.isEmpty()) {
-            binding.tvErrorLayout.setText(strNoDataContent);
-        } else {
-            binding.tvErrorLayout.setText(R.string.noData);
-        }
+    // 设置默认资源的方法
+    public void setDefaultErrorImage(@DrawableRes int resId) {
+        this.defaultErrorImage = resId;
+    }
+
+    public void setDefaultLoadingImage(@DrawableRes int resId) {
+        this.defaultLoadingImage = resId;
+    }
+
+    public void setDefaultNoDataImage(@DrawableRes int resId) {
+        this.defaultNoDataImage = resId;
+    }
+
+    public void setDefaultErrorText(@StringRes int resId) {
+        this.defaultErrorText = resId;
+    }
+
+    public void setDefaultLoadingText(@StringRes int resId) {
+        this.defaultLoadingText = resId;
+    }
+
+    public void setDefaultNoDataText(@StringRes int resId) {
+        this.defaultNoDataText = resId;
     }
 
     @Override
     public void setVisibility(int visibility) {
         if (visibility == View.GONE) {
-            mErrorState = HIDE_LAYOUT;
+            currentState = State.HIDE_LAYOUT;
         }
         super.setVisibility(visibility);
+    }
+
+    public interface OnEmptyLayoutClickListener {
+        void onEmptyLayoutClick(View v);
     }
 }

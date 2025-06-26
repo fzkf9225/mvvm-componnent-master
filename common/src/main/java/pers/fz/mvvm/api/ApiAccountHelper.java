@@ -196,7 +196,7 @@ public class ApiAccountHelper {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if ("".equals(macSerial)) {
+        if (macSerial.isEmpty()) {
             try {
                 return loadFileAsString("/sys/class/net/eth0/address")
                         .toUpperCase().substring(0, 17);

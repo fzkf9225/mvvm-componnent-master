@@ -36,6 +36,7 @@ import pers.fz.mvvm.adapter.PictureAdapter;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
@@ -137,9 +138,9 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         mPaint.setColor(bgColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
-        drawableResCurrent = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
+        drawableResCurrent = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
                 DensityUtil.dp2px(context, 6));
-        drawableResNormal = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
+        drawableResNormal = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
                 DensityUtil.dp2px(context, 6));
         if (ta == null) {
             dotHeight = DensityUtil.dp2px(context, 30f);
@@ -171,11 +172,11 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         drawableResCurrent = ta.getDrawable(R.styleable.BannerView_iconSelected);
         drawableResNormal = ta.getDrawable(R.styleable.BannerView_iconUnselected);
         if (drawableResCurrent == null) {
-            drawableResCurrent = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
+            drawableResCurrent = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
                     DensityUtil.dp2px(context, 6));
         }
         if (drawableResNormal == null) {
-            drawableResNormal = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
+            drawableResNormal = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
                     DensityUtil.dp2px(context, 6));
         }
         mPaint.setColor(bgColor);

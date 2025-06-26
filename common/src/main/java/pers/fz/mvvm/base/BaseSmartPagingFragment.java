@@ -66,7 +66,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         refreshLayout.setOnRefreshListener(this);
         // 监听加载状态
         adapter.addLoadStateListener(loadStateListener);
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
     }
 
     protected ConcatAdapter createdHeaderFootAdapter(){
@@ -81,9 +81,9 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         } else if (refresh instanceof LoadState.NotLoading) {
             refreshLayout.finishRefresh();
             if (adapter.getItemCount() == 0) {
-                setRecyclerViewVisibility(EmptyLayout.NO_DATA);
+                setRecyclerViewVisibility(EmptyLayout.State.NO_DATA);
             } else {
-                setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
+                setRecyclerViewVisibility(EmptyLayout.State.HIDE_LAYOUT);
             }
         } else if (refresh instanceof LoadState.Error) {
             refreshLayout.finishRefresh(false);
@@ -128,7 +128,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     @Override
     public void onLoginSuccessCallback(Bundle bundle) {
         super.onLoginSuccessCallback(bundle);
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         adapter.refresh();
     }
 
@@ -145,10 +145,10 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     @Override
     public void onErrorCode(BaseResponse model) {
         try {
-            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading;
+            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING ||
+                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading;
             if (refreshError) {
-                setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+                setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
             }
             onRefreshFinish(false);
             if (errorService == null || model == null) {
@@ -166,15 +166,15 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         }
     }
 
-    public int getEmptyType() {
-        return emptyLayout.getErrorState();
+    public EmptyLayout.State getEmptyType() {
+        return emptyLayout.getCurrentState();
     }
 
-    protected void setRecyclerViewVisibility(int emptyType) {
+    protected void setRecyclerViewVisibility(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
-        emptyLayout.setErrorType(emptyType);
+        emptyLayout.setState(emptyType);
     }
 
     protected void onRefreshFinish(boolean isSuccess) {
@@ -186,7 +186,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING_REFRESH);
         mViewModel.refreshData();
         adapter.refresh();
     }

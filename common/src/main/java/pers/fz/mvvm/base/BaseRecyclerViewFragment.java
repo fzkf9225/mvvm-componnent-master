@@ -19,6 +19,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.base.PageBean;
@@ -78,9 +79,9 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         refreshLayout.setOnLoadMoreListener(this);
 
         if (NetworkStateUtil.isConnected(requireContext())) {
-            setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+            setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         } else {
-            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+            setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
         }
     }
     protected RecyclerView.ItemDecoration createDivider() {
@@ -100,8 +101,8 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @SuppressLint("NotifyDataSetChanged")
     protected void setListData(List<T> listData) {
         try {
-            boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing || (emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING && mCurrentPage == 1) ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH;
+            boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing || (emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING && mCurrentPage == 1) ||
+                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH;
             if (isRefresh) {
                 onRefreshFinish(true);
                 adapter.setList(listData);
@@ -115,14 +116,14 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             }
             adapter.notifyDataSetChanged();
             if (adapter == null || adapter.getList() == null || adapter.getList().isEmpty()) {
-                setRecyclerViewVisibility(EmptyLayout.NO_DATA);
+                setRecyclerViewVisibility(EmptyLayout.State.NO_DATA);
             } else {
-                setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
+                setRecyclerViewVisibility(EmptyLayout.State.HIDE_LAYOUT);
             }
         } catch (Exception e) {
             LogUtil.show(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
             e.printStackTrace();
-            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+            setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
             showToast(BaseException.PARSE_ERROR_MSG);
         }
     }
@@ -150,7 +151,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @Override
     public void onLoginSuccessCallback(Bundle bundle) {
         super.onLoginSuccessCallback(bundle);
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
 
@@ -167,9 +168,9 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @Override
     public void onErrorCode(BaseResponse model) {
         try {
-            if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING ||
-                    emptyLayout.getErrorState() == EmptyLayout.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
-                setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+            if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING ||
+                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
+                setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
             }
             onRefreshFinish(false);
             onLoadFinish(false);
@@ -206,43 +207,35 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         return isCanRefresh;
     }
 
-    public int getEmptyType() {
-        return emptyLayout.getErrorState();
+    public EmptyLayout.State getEmptyType() {
+        return emptyLayout.getCurrentState();
     }
 
-    protected void setRecyclerViewVisibility(int emptyType) {
+    protected void setRecyclerViewVisibility(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
-        emptyLayout.setErrorType(emptyType);
-        switch (emptyType) {
-            case EmptyLayout.LOADING_ERROR -> {
-                getRecyclerView().setVisibility(View.GONE);
-                onRefreshFinish(false);
-                onLoadFinish(false);
-            }
-            case EmptyLayout.NETWORK_LOADING -> {
-                emptyLayout.setVisibility(View.VISIBLE);
-                getRecyclerView().setVisibility(View.GONE);
-            }
+        emptyLayout.setState(emptyType);
+        if (Objects.requireNonNull(emptyType) == EmptyLayout.State.LOADING_ERROR) {
+            getRecyclerView().setVisibility(View.GONE);
+            onRefreshFinish(false);
+            onLoadFinish(false);
+        } else if (emptyType == EmptyLayout.State.NETWORK_LOADING) {
+            emptyLayout.setVisibility(View.VISIBLE);
+            getRecyclerView().setVisibility(View.GONE);
             //刷新,加载
-            case EmptyLayout.NETWORK_LOADING_REFRESH -> {
-                emptyLayout.setVisibility(View.GONE);
-                getRecyclerView().setVisibility(View.VISIBLE);
-            }
-            case EmptyLayout.NO_DATA -> {
-                onRefreshFinish(true);
-                onLoadFinish(true);
-                getRecyclerView().setVisibility(View.GONE);
-            }
-            case EmptyLayout.HIDE_LAYOUT -> {
-                onRefreshFinish(true);
-                onLoadFinish(true);
-                emptyLayout.setVisibility(View.GONE);
-                getRecyclerView().setVisibility(View.VISIBLE);
-            }
-            default -> {
-            }
+        } else if (emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
+            emptyLayout.setVisibility(View.GONE);
+            getRecyclerView().setVisibility(View.VISIBLE);
+        } else if (emptyType == EmptyLayout.State.NO_DATA) {
+            onRefreshFinish(true);
+            onLoadFinish(true);
+            getRecyclerView().setVisibility(View.GONE);
+        } else if (emptyType == EmptyLayout.State.HIDE_LAYOUT) {
+            onRefreshFinish(true);
+            onLoadFinish(true);
+            emptyLayout.setVisibility(View.GONE);
+            getRecyclerView().setVisibility(View.VISIBLE);
         }
     }
 
@@ -266,7 +259,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING_REFRESH);
         onRefresh();
     }
 
@@ -283,7 +276,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     public void onRefresh() {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         onRefresh(refreshLayout);
     }
 

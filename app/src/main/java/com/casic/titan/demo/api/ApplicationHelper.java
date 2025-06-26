@@ -2,7 +2,6 @@ package com.casic.titan.demo.api;
 
 import com.casic.titan.commonui.helper.CalendarDataSource;
 import com.casic.titan.demo.BuildConfig;
-import com.casic.titan.googlegps.common.AppSettings;
 
 import javax.inject.Inject;
 
@@ -31,7 +30,6 @@ public class ApplicationHelper extends BaseApplication {
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
         }
-        AppSettings.getInstance().onCreate(this);
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()
                 .subscribe(CalendarDataSource.calendarObservableField::set,

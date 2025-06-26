@@ -7,21 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
@@ -30,9 +22,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.util.common.DrawableUtil;
 
 /**
  * created by fz 2024/12/20
@@ -60,9 +51,9 @@ public class PreviewPhotoDialog extends Dialog {
     public PreviewPhotoDialog(Context context, int themeResId) {
         super(context, themeResId);
         this.context = context;
-        drawableResCurrent = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
+        drawableResCurrent = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
                 DensityUtil.dp2px(context, 6));
-        drawableResNormal = CommonUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
+        drawableResNormal = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
                 DensityUtil.dp2px(context, 6));
     }
 

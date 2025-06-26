@@ -16,6 +16,12 @@
         <include
             android:id="@+id/search_view"
             layout="@layout/search_view"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
             app:layout_constraintBottom_toTopOf="@+id/search_view_container"
             app:layout_constraintTop_toTopOf="parent"/>
 

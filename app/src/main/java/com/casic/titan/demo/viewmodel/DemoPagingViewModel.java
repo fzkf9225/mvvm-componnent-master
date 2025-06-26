@@ -7,16 +7,13 @@ import androidx.annotation.NonNull;
 import com.casic.titan.demo.api.ApiServiceHelper;
 import com.casic.titan.demo.bean.NotificationMessageBean;
 import com.casic.titan.demo.repository.KtDemoPagingRepositoryImpl;
-import com.google.gson.reflect.TypeToken;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.RepositoryFactory;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 
 /**

@@ -10,7 +10,8 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
-import com.casic.titan.googlegps.GpsLoggingService;
+
+import com.casic.titan.googlegps.service.GpsService;
 
 import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
@@ -29,7 +30,7 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, 
     private Intent gpsServiceIntent;
 
     @SuppressLint("StaticFieldLeak")
-    private GpsLoggingService gpsLoggingService;
+    private GpsService getService;
     /**
      * gps连接绑定
      */
@@ -39,12 +40,12 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, 
         super(application);
     }
 
-    public GpsLoggingService getGpsLoggingService() {
-        return gpsLoggingService;
+    public GpsService getGetService() {
+        return getService;
     }
 
-    public void setGpsLoggingService(GpsLoggingService gpsLoggingService) {
-        this.gpsLoggingService = gpsLoggingService;
+    public void setGetService(GpsService getService) {
+        this.getService = getService;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, 
 
     public Intent getGpsServiceIntent(Context context) {
         if (gpsServiceIntent == null) {
-            gpsServiceIntent = new Intent(context, GpsLoggingService.class);
+            gpsServiceIntent = new Intent(context, GpsService.class);
         }
         return gpsServiceIntent;
     }
@@ -74,14 +75,14 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, 
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            LogUtil.show(TAG, "------------GpsLoggingService已连接-------------");
-            gpsLoggingService = ((GpsLoggingService.GpsLoggingBinder) iBinder).getService();
+            LogUtil.show(TAG, "------------GpsService已连接-------------");
+            getService = ((GpsService.GpsBinder) iBinder).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            LogUtil.show(TAG, "------------GpsLoggingService断开连接-------------");
-            gpsLoggingService = null;
+            LogUtil.show(TAG, "------------GpsService断开连接-------------");
+            getService = null;
         }
     }
 

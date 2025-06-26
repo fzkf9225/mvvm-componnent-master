@@ -23,7 +23,7 @@ public class EmptyFragment extends BaseFragment<EmptyViewModel, EmptyFragmentBin
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        binding.mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
+        binding.mEmptyLayout.setState(EmptyLayout.State.NETWORK_LOADING);
     }
 
     @Override

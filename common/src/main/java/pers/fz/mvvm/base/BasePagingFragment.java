@@ -62,7 +62,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         refreshLayout.setOnRefreshListener(this);
         // 监听加载状态
         adapter.addLoadStateListener(loadStateListener);
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
     }
 
     protected ConcatAdapter createdHeaderFootAdapter(){
@@ -74,9 +74,9 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
             refreshLayout.setRefreshing(false);
             if (adapter.getItemCount() == 0) {
-                setRecyclerViewVisibility(EmptyLayout.NO_DATA);
+                setRecyclerViewVisibility(EmptyLayout.State.NO_DATA);
             } else {
-                setRecyclerViewVisibility(EmptyLayout.HIDE_LAYOUT);
+                setRecyclerViewVisibility(EmptyLayout.State.HIDE_LAYOUT);
             }
         } else if (loadStates.getRefresh() instanceof LoadState.Loading) {
 //            refreshLayout.setRefreshing(true);
@@ -112,7 +112,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     @Override
     public void onLoginSuccessCallback(@Nullable Bundle data) {
         super.onLoginSuccessCallback(data);
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
 
@@ -130,7 +130,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     public void onErrorCode(BaseResponse model) {
         try {
             if (mViewModel != null) {
-                setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+                setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
             }
             if (errorService == null || model == null) {
                 return;
@@ -147,20 +147,20 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         }
     }
 
-    public int getEmptyType() {
-        return emptyLayout.getErrorState();
+    public EmptyLayout.State getEmptyType() {
+        return emptyLayout.getCurrentState();
     }
 
-    protected void setRecyclerViewVisibility(int emptyType) {
+    protected void setRecyclerViewVisibility(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
-        emptyLayout.setErrorType(emptyType);
+        emptyLayout.setState(emptyType);
     }
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.NETWORK_LOADING_REFRESH);
+        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING_REFRESH);
         mViewModel.refreshData();
         adapter.refresh();
     }

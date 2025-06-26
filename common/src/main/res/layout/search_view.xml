@@ -6,29 +6,31 @@
 
     </data>
 
-    <LinearLayout
-        android:id="@+id/ll_search"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/default_background"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/horizontal_margin_xl"
-        android:paddingEnd="@dimen/horizontal_margin_xl">
+        android:focusableInTouchMode="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_search"
             android:layout_width="0dp"
-            android:layout_height="@dimen/height_l"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:background="@drawable/rounded_white">
 
             <LinearLayout
                 android:id="@+id/ll_menu"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toStartOf="@+id/input_search"
@@ -56,19 +58,24 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/search"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_l"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/horizontal_margin_l"
-            android:layout_marginTop="@dimen/vertical_margin_xl"
-            android:layout_marginBottom="@dimen/vertical_margin_xl"
+            app:layout_constraintStart_toEndOf="@+id/cl_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cl_search"
+            app:layout_constraintBottom_toBottomOf="@+id/cl_search"
             android:background="@drawable/round_theme_color"
             android:gravity="center"
-            android:paddingStart="@dimen/padding_l"
-            android:paddingEnd="@dimen/padding_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="@dimen/padding_xl"
+            android:paddingEnd="@dimen/padding_xl"
             android:text="@string/search"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_l" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

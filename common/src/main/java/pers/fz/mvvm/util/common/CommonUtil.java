@@ -144,13 +144,4 @@ public class CommonUtil {
     public static <T> boolean isArrayType(T data) {
         return data.getClass().isArray();
     }
-
-    public static ShapeDrawable createCircleDrawable(int color, int size) {
-        ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
-        shapeDrawable.getPaint().setColor(color);
-        shapeDrawable.getPaint().setAntiAlias(true); // 启用抗锯齿
-        shapeDrawable.setIntrinsicWidth(size);
-        shapeDrawable.setIntrinsicHeight(size);
-        return shapeDrawable;
-    }
 }

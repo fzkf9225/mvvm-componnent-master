@@ -7,6 +7,7 @@ import android.view.View;
 import com.casic.titan.demo.adapter.PagingRoomAdapter;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel;
+import com.casic.titan.usercomponent.view.UserView;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import pers.fz.mvvm.wight.dialog.ConfirmDialog;
  * created by fz on 2024/11/6 10:23
  * describe:
  */
-public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPagingViewModel, BaseSmartPagingBinding, Person> {
+public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPagingViewModel, BaseSmartPagingBinding, Person> implements UserView {
 
     @Override
     protected BasePagingAdapter<Person, ?> getRecyclerAdapter() {
@@ -80,5 +81,29 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .show();
     }
 
+    @Override
+    public void toLast() {
+
+    }
+
+    @Override
+    public boolean hasTarget() {
+        return false;
+    }
+
+    @Override
+    public void toTarget() {
+
+    }
+
+    @Override
+    public void toMain() {
+
+    }
+
+    @Override
+    public void hideKeyboard() {
+
+    }
 }
 

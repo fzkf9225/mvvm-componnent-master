@@ -67,7 +67,7 @@
     <string name="mis_error_no_permission">Has no permission</string>
     <string name="mis_permission_dialog_title">Permission Deny</string>
     <string name="mis_permission_dialog_ok">OK</string>
-    <string name="mis_permission_dialog_cancel">CANCEL</string>
+    <string name="mis_permission_dialog_cancel">Refuse</string>
     <string name="mis_permission_rationale">Storage read permission is needed to pick files.</string>
     <string name="mis_permission_rationale_write_storage">Storage write permission is needed to save the image.</string>
     <string name="upgrade">upgrade</string>
@@ -75,7 +75,7 @@
     <string name="please_entry_something">Please enter</string>
     <string name="sure">OK</string>
     <string name="search">Search</string>
-    <string name="please_enter">Please enter</string>
+    <string name="please_enter">Please enter…</string>
     <string name="year">Years</string>
     <string name="month">Month</string>
     <string name="day">Day</string>

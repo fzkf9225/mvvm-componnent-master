@@ -11,7 +11,7 @@ import com.casic.titan.googlegps.utils.DebugUtil;
  */
 
 public class LogUtil {
-    public static final String TAG = "googlegps";
+    public static final String TAG = "GpsService";
     
     public static void show(String str) {
         if (DebugUtil.isEnableDebug()) {

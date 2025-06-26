@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,88 +9,96 @@
             name="toolbarConfig"
             type="pers.fz.mvvm.bean.base.ToolbarConfig" />
 
+        <import type="android.view.View" />
 
         <import type="androidx.core.content.ContextCompat" />
+
+        <import type="androidx.annotation.LayoutRes" />
+
+        <import type="androidx.annotation.ColorRes" />
 
         <variable
             name="context"
             type="android.content.Context" />
 
+        <import type="pers.fz.mvvm.R" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/search_tool_bar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/search_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:theme="@style/ToolBarStyle_black"
-            app:layout_constraintBottom_toTopOf="@+id/searcher_title_container"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
-            app:popupTheme="@style/OverflowMenuStyle">
+            android:layout_height="@dimen/toolbar_height"
+            android:minHeight="@dimen/toolbar_height"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_work_search_title_option"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/search_tool_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/themeColor"
+                android:minHeight="?attr/actionBarSize"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:theme="@style/ToolBarStyle_white"
+                app:navigationIcon="@mipmap/icon_fh_white"
+                app:popupTheme="@style/OverflowMenuStyle">
 
-                <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
-                    android:id="@+id/input_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="33dp"
-                    app:bgColor="@color/white"
-                    app:radius="@dimen/radius_m"
-                    app:strokeColor="@color/white"
-                    app:strokeWidth="0dp"
-                    app:enableBgStyle="true"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:hint="请输入"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:lines="1"
-                    android:paddingStart="@dimen/padding_m"
-                    android:paddingTop="0dp"
-                    android:paddingEnd="@dimen/padding_m"
-                    android:paddingBottom="0dp"
-                    android:textColorHint="@color/nv_bg_color"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_search"
-                    app:layout_constraintHorizontal_weight="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_management_search_title_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:paddingStart="@dimen/padding_l"
-                    android:paddingEnd="@dimen/padding_l"
-                    android:text="搜索"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/input_edit" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
+                        android:id="@+id/input_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="33dp"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_search"
+                        android:background="@drawable/rounded_white"
+                        android:ellipsize="end"
+                        android:textColorHint="@color/nv_bg_color"
+                        android:imeOptions="actionSearch"
+                        android:gravity="center_vertical"
+                        android:hint="@string/please_enter"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:paddingStart="@dimen/padding_m"
+                        android:paddingTop="0dp"
+                        android:paddingEnd="@dimen/padding_m"
+                        android:paddingBottom="0dp" />
 
-        </androidx.appcompat.widget.Toolbar>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_search"
+                        app:layout_constraintStart_toEndOf="@+id/input_edit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/padding_l"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingEnd="@dimen/padding_l"
+                        android:text="@string/search"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
             android:id="@+id/searcher_title_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_tool_bar"
-            app:layout_constraintVertical_weight="1" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

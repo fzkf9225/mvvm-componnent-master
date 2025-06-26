@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white_16">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="90dp"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="tel:055165555744" />
+
+        <View
+            android:id="@+id/h_line"
+            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:background="#DDDDDD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="#666666"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:textSize="14sp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintEnd_toStartOf="@id/s_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/h_line" />
+
+        <View
+            android:id="@+id/s_line"
+            android:layout_height="0dp"
+            android:layout_width="1dp"
+            android:background="#666666"
+            app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
+            app:layout_constraintEnd_toStartOf="@id/dialog_sure"
+            app:layout_constraintStart_toEndOf="@id/dialog_cancel"
+            app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_sure"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="确定"
+            app:layout_constraintHorizontal_weight="1"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/s_line"
+            app:layout_constraintTop_toBottomOf="@id/h_line" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

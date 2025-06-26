@@ -2,7 +2,7 @@
 compileSdkVersion = "34"
 minSdkVersion = "26"
 targetSdkVersion = "34"
-agp = "8.12.0-alpha04"
+agp = "8.12.0-alpha06"
 kotlin = "2.1.20"
 kspVersion = "2.1.20-1.0.31"
 

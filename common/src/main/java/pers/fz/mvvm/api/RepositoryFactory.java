@@ -1,11 +1,18 @@
 package pers.fz.mvvm.api;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
@@ -207,7 +214,7 @@ public class RepositoryFactory {
             @NonNull DB roomDao,
             @Nullable V baseView) {
         try {
-            return repositoryClass.getConstructor(BaseRoomDao.class, BaseView.class)
+            return repositoryClass.getConstructor(roomDao.getClass().getSuperclass(), BaseView.class)
                     .newInstance(roomDao, baseView);
         } catch (Exception e) {
             throw new RuntimeException("创建RoomRepositoryImpl失败: " + e.getMessage());

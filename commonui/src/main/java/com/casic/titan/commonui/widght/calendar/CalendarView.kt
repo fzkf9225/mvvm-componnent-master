@@ -333,7 +333,7 @@ class CalendarView : ConstraintLayout {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    binding?.emptyLayout?.setErrorType(EmptyLayout.HIDE_LAYOUT)
+                    binding?.emptyLayout?.setState(EmptyLayout.State.HIDE_LAYOUT)
                     calendarPagerAdapter = MonthViewPagerAdapter(
                         fragmentManager,
                         lifecycle,
@@ -345,7 +345,7 @@ class CalendarView : ConstraintLayout {
                         CalendarDataSource.currentMonthPosField.get() ?: 0, false
                     )
                 }, {
-                    binding?.emptyLayout?.setErrorType(EmptyLayout.LOADING_ERROR)
+                    binding?.emptyLayout?.setState(EmptyLayout.State.LOADING_ERROR)
                     binding?.emptyLayout?.setErrorMessage("日历信息加载错误")
                 })
         } else {
@@ -363,7 +363,7 @@ class CalendarView : ConstraintLayout {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    binding?.emptyLayout?.setErrorType(EmptyLayout.HIDE_LAYOUT)
+                    binding?.emptyLayout?.setState(EmptyLayout.State.HIDE_LAYOUT)
                     calendarPagerAdapter = MonthViewPagerAdapter(
                         fragmentManager,
                         lifecycle,
@@ -376,7 +376,7 @@ class CalendarView : ConstraintLayout {
                     )
                 }, {
                     LogUtil.show("CalendarView", "日历信息加载错误:" + it)
-                    binding?.emptyLayout?.setErrorType(EmptyLayout.LOADING_ERROR)
+                    binding?.emptyLayout?.setState(EmptyLayout.State.LOADING_ERROR)
                     binding?.emptyLayout?.setErrorMessage("日历信息加载错误")
                 })
         }

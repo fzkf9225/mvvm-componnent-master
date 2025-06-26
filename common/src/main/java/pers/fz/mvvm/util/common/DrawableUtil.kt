@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.util.TypedValue
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -15,6 +17,17 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 
 object DrawableUtil {
+
+    @JvmStatic
+    public fun createCircleDrawable(color: Int, size: Int): ShapeDrawable {
+        val shapeDrawable = ShapeDrawable(OvalShape())
+        shapeDrawable.paint.setColor(color)
+        shapeDrawable.paint.isAntiAlias = true // 启用抗锯齿
+        shapeDrawable.setIntrinsicWidth(size)
+        shapeDrawable.setIntrinsicHeight(size)
+        return shapeDrawable
+    }
+
     @JvmStatic
     public fun createShapeDrawable(
         context: Context,

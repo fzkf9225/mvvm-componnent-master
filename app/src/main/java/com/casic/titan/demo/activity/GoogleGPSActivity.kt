@@ -1,148 +1,143 @@
-package com.casic.titan.demo.activity;
+package com.casic.titan.demo.activity
 
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
-
-import com.casic.titan.demo.R;
-import com.casic.titan.demo.bean.UseCase;
-import com.casic.titan.demo.databinding.ActivityGoogleGpsBinding;
-import com.casic.titan.demo.viewmodel.GoogleGpsViewModel;
-import com.casic.titan.googlegps.GpsLoggingService;
-import com.casic.titan.googlegps.common.Session;
-import com.casic.titan.googlegps.common.events.CommandEvents;
-import com.casic.titan.googlegps.common.events.ServiceEvents;
-import com.casic.titan.googlegps.socket.GPSSocketServer;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import android.content.Intent
+import android.location.Location
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import com.casic.titan.demo.R
+import com.casic.titan.demo.bean.UseCase
+import com.casic.titan.demo.databinding.ActivityGoogleGpsBinding
+import com.casic.titan.demo.viewmodel.GoogleGpsViewModel
+import com.casic.titan.googlegps.helper.GpsLifecycleObserver
+import com.casic.titan.googlegps.service.GpsService
+import dagger.hilt.android.AndroidEntryPoint
+import pers.fz.mvvm.base.BaseActivity
+import pers.fz.mvvm.util.common.DateUtil
 
 @AndroidEntryPoint
-public class GoogleGPSActivity extends BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding> {
-    private UseCase useCase;
-    private final Session session = Session.getInstance();
+class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {
+    private var useCase: UseCase? = null
+    private var gpsLifecycleObserver: GpsLifecycleObserver? = null
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_google_gps;
+    /**
+     * 是否仅执行一次
+     */
+    private var once = false
+
+    private val gpsIntent by lazy {
+        Intent(this, GpsService::class.java)
     }
 
-    @Override
-    public String setTitleBar() {
-        return "GPS工具类";
+    override fun getLayoutId(): Int {
+        return R.layout.activity_google_gps
     }
 
-    @Override
-    public void initView(Bundle savedInstanceState) {
-        binding.setGoogleGPSViewModel(mViewModel);
-        binding.startService.setOnClickListener(v -> {
-            binding.tvMessage.setText("正在开启service服务");
-            ContextCompat.startForegroundService(this, mViewModel.getGpsServiceIntent(this));
-            this.bindService(mViewModel.getGpsServiceIntent(this), mViewModel.gpsServiceConnection, Context.BIND_AUTO_CREATE);
-            session.setBoundToService(true);
-        });
-        binding.endService.setOnClickListener(v -> {
-            if (mViewModel.getGpsLoggingService() == null) {
-                binding.tvMessage.setText("服务已关闭");
-                return;
-            }
-            binding.tvMessage.setText("正在关闭service服务");
-            mViewModel.getGpsLoggingService().stopLogging();
-            this.unbindService(mViewModel.gpsServiceConnection);
-            this.stopService(mViewModel.getGpsServiceIntent(this));
-            session.setBoundToService(false);
-            mViewModel.setGpsLoggingService(null);
-        });
-        binding.startServiceOnce.setOnClickListener(v -> {
-            if (mViewModel.getGpsLoggingService() == null) {
-                binding.tvMessage.setText("请先开启定位服务");
-                return;
-            }
-            binding.tvMessage.setText("正在开启监听，等待结果返回");
-            mViewModel.getGpsLoggingService().logOnce();
-        });
-        binding.startServiceAlways.setOnClickListener(v -> {
-            if (mViewModel.getGpsLoggingService() == null) {
-                binding.tvMessage.setText("请先开启定位服务");
-                return;
-            }
-            binding.tvMessage.setText("正在开启监听，等待结果返回");
-            mViewModel.getGpsLoggingService().logAlways();
-        });
-        binding.startSocket.setOnClickListener(v -> {
-            if (mViewModel.getGpsLoggingService() == null) {
-                binding.tvMessage.setText("请先开启定位服务");
-                return;
-            }
-            GPSSocketServer.getInstance().connect((isConnect, errorMsg) -> {
-                binding.tvMessage.setText("Socket连接：" + isConnect + "，" + errorMsg);
-                LogUtil.show(TAG, "Socket连接：" + isConnect + "，" + errorMsg);
-            });
-        });
-        binding.endSocket.setOnClickListener(v -> {
-            if (mViewModel.getGpsLoggingService() == null) {
-                binding.tvMessage.setText("请先开启定位服务");
-                return;
-            }
-            GPSSocketServer.getInstance().disconnect((isConnect, errorMsg) -> {
-                binding.tvMessage.setText("Socket断开连接：" + isConnect + "，" + errorMsg);
-                LogUtil.show(TAG, "Socket断开连接：" + isConnect + "，" + errorMsg);
-            });
-        });
+    override fun setTitleBar(): String {
+        return "GPS工具类"
     }
 
-    @Override
-    public void initData(Bundle bundle) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            useCase = bundle.getParcelable("args", UseCase.class);
-        } else {
-            useCase = bundle.getParcelable("args");
+    override fun initView(savedInstanceState: Bundle?) {
+        binding.setGoogleGPSViewModel(mViewModel)
+        binding.startService.setOnClickListener { v: View? ->
+            binding.tvMessage.text = "正在开启service服务..."
+            gpsLifecycleObserver?.startCheck(gpsCallback)
         }
-        toolbarBind.getToolbarConfig().setTitle(useCase.getName());
-        GpsLoggingService.addLocationObserver(observerLocation);
-        GpsLoggingService.addStatusObserver(observerStatus);
+        binding.endService.setOnClickListener { v: View? ->
+            if (mViewModel.getService == null) {
+                binding.tvMessage.text = "GPS服务已经停止，请勿重复点击!"
+                return@setOnClickListener
+            }
+            binding.tvMessage.text = "GPS服务已经停止!"
+            stopService(gpsIntent)
+            unbindService(mViewModel.gpsServiceConnection)
+            GpsService.removeLocationObserver(observer)
+        }
+        binding.startServiceOnce.setOnClickListener(View.OnClickListener { v: View? ->
+            binding.tvMessage.text = "正在开启监听，等待结果返回"
+            once = true
+            gpsLifecycleObserver?.startCheck(gpsCallback)
+        })
+        binding.startServiceAlways.setOnClickListener(View.OnClickListener { v: View? ->
+            binding.tvMessage.text = "正在开启监听，等待结果返回"
+            once = false
+            gpsLifecycleObserver?.startCheck(gpsCallback)
+        })
     }
 
-    Observer<ServiceEvents.LocationUpdate> observerLocation = locationUpdate -> {
-        String stringBuilder = "定位信息：" +
-                "\n" +
-                "时间：" +
-                DateUtil.getDateTimeFromMillis(System.currentTimeMillis()) +
-                "\n" +
-                "经度：" +
-                locationUpdate.location.getLongitude() +
-                "\n" +
-                "纬度：" +
-                locationUpdate.location.getLatitude();
-        binding.tvMessage.setText(stringBuilder);
-    };
-    Observer<CommandEvents.RequestStartStop> observerStatus = requestStartStop -> {
-        binding.tvMessage.setText("状态：" + requestStartStop.start);
-    };
+    override fun initData(bundle: Bundle) {
+        useCase = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle.getParcelable<UseCase?>("args", UseCase::class.java)
+        } else {
+            bundle.getParcelable<UseCase?>("args")
+        }
+        toolbarBind.getToolbarConfig()?.setTitle(useCase?.name)
+        gpsLifecycleObserver = GpsLifecycleObserver(this, gpsCallback)
+        lifecycle.addObserver(gpsLifecycleObserver!!)
+    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        GPSSocketServer.getInstance().disconnect((isConnect, errorMsg) -> {
-            LogUtil.show(TAG, "GPSSocket连接已断开：" + isConnect + "，" + errorMsg);
-        });
+    private val gpsCallback: (Boolean, String) -> Unit = { isGranted, message ->
+        if (!isGranted) {
+            showToast(message)
+        } else {
+            GpsService.addLocationObserver(observer)
+            ContextCompat.startForegroundService(this@GoogleGPSActivity, gpsIntent)
+            bindService(
+                mViewModel.getGpsServiceIntent(this),
+                mViewModel.gpsServiceConnection,
+                BIND_AUTO_CREATE
+            )
+        }
+    }
+
+    private val observer = object : Observer<Location> {
+        override fun onChanged(value: Location) {
+            val stringBuilder = StringBuilder().apply {
+                append("GPS信息:\n")
+                append("纬度: ${value.latitude}\n")
+                append("经度: ${value.longitude}\n")
+                append("海拔: ${value.altitude} meters\n")
+                append(
+                    "时间: ${
+                        DateUtil.longToString(value.time, DateUtil.DEFAULT_DATE_TIME_FORMAT)
+                    }\n"
+                )
+                append("精度: ${value.accuracy} meters\n")
+                // 检查 API 级别（垂直精度需要 API 26+）
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    append("垂直精度: ${value.verticalAccuracyMeters} meters\n")
+                }
+                append("速度: ${value.speed} m/s\n")
+                append("方位角: ${value.bearing}°\n")
+                // 尝试获取卫星数量（某些 GNSS 提供商会返回）
+                val satellites = value.extras?.getInt("satellites", 0) ?: 0
+                append("卫星数量: $satellites\n")
+            }
+            if (value.longitude != 0.0 && value.latitude != 0.0 && once) {
+                stopService(gpsIntent)
+                unbindService(mViewModel.gpsServiceConnection)
+                GpsService.removeLocationObserver(this)
+                stringBuilder.append("仅定位一次，定位已结束！")
+            } else {
+                stringBuilder.append("正在持续监听GPS信息...")
+            }
+            binding.tvMessage.text = stringBuilder.toString()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         try {
-            if (session.isBoundToService()) {
-                this.unbindService(mViewModel.gpsServiceConnection);
-                session.setBoundToService(false);
+            if (mViewModel.getService == null) {
+                return
             }
-            if(mViewModel.getGpsLoggingService()!=null){
-                mViewModel.getGpsLoggingService().stopLogging();
-            }
-            LogUtil.show(TAG, "关闭GpsLoggingService服务绑定");
-            getApplication().stopService(mViewModel.getGpsServiceIntent(this));
-        } catch (Exception e) {
-            LogUtil.e(TAG, "停止GpsLoggingService异常：" + e);
+            stopService(gpsIntent)
+            unbindService(mViewModel.gpsServiceConnection)
+            GpsService.removeLocationObserver(observer)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
