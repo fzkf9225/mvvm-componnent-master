@@ -246,7 +246,6 @@
     <public name="setting_qrcode" type="string"/>
     <public name="setting_about" type="string"/>
     <public name="setting_ITSupport" type="string"/>
-    <public name="setting_customes" type="string"/>
     <public name="setting_feedBack" type="string"/>
     <public name="setting_exit" type="string"/>
     <public name="manageapplications_settings_title" type="string"/>
@@ -260,5 +259,6 @@
     <public name="loosenToRefresh" type="string"/>
     <public name="refreshing" type="string"/>
     <public name="upgrade" type="string"/>
+    <public name="please_choose_count" type="string"/>
 
 </resources>

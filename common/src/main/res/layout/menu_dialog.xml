@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_white" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_cancel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxl"

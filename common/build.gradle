@@ -155,6 +155,7 @@ dependencies {
     implementation libs.room.paging
 
     implementation libs.bouncycastle.bcprov
+    implementation libs.androidx.webkit
 }
 
 apply plugin: 'maven-publish'

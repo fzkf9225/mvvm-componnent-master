@@ -6,7 +6,9 @@ import android.os.Bundle;
 
 import androidx.core.splashscreen.SplashScreen;
 
-import java.util.Map;
+import com.casic.titan.demo.R;
+import com.casic.titan.demo.databinding.ActivityLaunchBinding;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,9 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.databinding.LaunchLayoutBinding;
 import pers.fz.mvvm.util.permission.PermissionManager;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
@@ -27,7 +27,7 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
  * 启动页
  */
 @AndroidEntryPoint
-public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBinding> {
+public class LaunchActivity extends BaseActivity<EmptyViewModel, ActivityLaunchBinding> {
     private Disposable disposable;
     private int countDown = 3;
     private final String[] PERMISSIONS = new String[]{
@@ -62,7 +62,7 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, LaunchLayoutBin
 
     @Override
     protected int getLayoutId() {
-        return R.layout.launch_layout;
+        return R.layout.activity_launch;
     }
 
     @Override

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="imageHeight" format="dimension"/>
-    <attr name="imageWidth" format="dimension"/>
-    <attr name="imageSrc" format="reference"/>
-    <attr name="label" format="reference|string"/>
+    <attr name="imageHeight" format="dimension" />
+    <attr name="imageWidth" format="dimension" />
+    <attr name="imageSrc" format="reference" />
+    <attr name="label" format="reference|string" />
     <attr name="borderWidth" format="dimension" />
     <attr name="borderColor" format="reference|color" />
     <attr name="borderFocusColor" format="reference|color" />
@@ -26,18 +26,18 @@
     <attr name="leftBottomRadius" format="dimension" />
 
     <declare-styleable name="CircleImageView">
-        <attr name="borderWidth"/>
-        <attr name="borderColor"/>
-        <attr name="borderFocusColor"/>
-        <attr name="enableSelected"/>
-        <attr name="enablePressed"/>
+        <attr name="borderWidth" />
+        <attr name="borderColor" />
+        <attr name="borderFocusColor" />
+        <attr name="enableSelected" />
+        <attr name="enablePressed" />
     </declare-styleable>
 
     <declare-styleable name="scaling_text_view">
-        <attr name="text"/>
-        <attr name="defaultLine" format="integer"/>
-        <attr name="textColor"/>
-        <attr name="defaultCollapsed" format="boolean"/>
+        <attr name="text" />
+        <attr name="defaultLine" format="integer" />
+        <attr name="textColor" />
+        <attr name="defaultCollapsed" format="boolean" />
     </declare-styleable>
     <declare-styleable name="RatingBar">
         <!--星星间距-->
@@ -54,18 +54,18 @@
     <!--自动换行-->
     <declare-styleable name="WarpLinearLayout">
         <attr name="gravity" format="enum"><!--对齐方式 !-->
-            <enum name="right" value="0"/>
-            <enum name="left" value="1"/>
-            <enum name="center" value="2"/>
+            <enum name="right" value="0" />
+            <enum name="left" value="1" />
+            <enum name="center" value="2" />
         </attr>
-        <attr name="horizontalSpace" format="dimension"/>
-        <attr name="verticalSpace" format="dimension"/>
-        <attr name="isFull" format="boolean"/>
+        <attr name="horizontalSpace" format="dimension" />
+        <attr name="verticalSpace" format="dimension" />
+        <attr name="isFull" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="auto3d">
-        <attr name="textSize"/>
-        <attr name="textColor"/>
+        <attr name="textSize" />
+        <attr name="textColor" />
         <attr name="text" />
         <attr name="bgSelected" format="boolean" />
     </declare-styleable>
@@ -75,22 +75,22 @@
         <attr name="textColor" />
         <attr name="imageHeight" />
         <attr name="imageWidth" />
-        <attr name="imageSrc"/>
-        <attr name="label"/>
+        <attr name="imageSrc" />
+        <attr name="label" />
     </declare-styleable>
     <declare-styleable name="CircleTextView">
         <attr name="strokeColor" />
-        <attr name="bgColor"/>
-        <attr name="strokeWidth"/>
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
     </declare-styleable>
 
     <declare-styleable name="Custom_Progress_Bar">
-        <attr name="bgColor"/>
+        <attr name="bgColor" />
         <attr name="textColor" />
         <attr name="progressColor" format="reference|color" />
-        <attr name="strokeWidth"/>
+        <attr name="strokeWidth" />
         <attr name="showText" format="boolean" />
-        <attr name="textSize"/>
+        <attr name="textSize" />
         <attr name="fontPercent" format="integer" />
         <attr name="bgRadius" format="dimension" />
         <attr name="maxProgress" format="float" />
@@ -113,7 +113,7 @@
 
     <declare-styleable name="BannerView">
         <!--是否可以点击浏览大图-->
-        <attr name="bgColor"/>
+        <attr name="bgColor" />
         <!--是否可以点击浏览大图-->
         <attr name="previewLarger" format="boolean" />
         <!--自动轮播间隔时间，默认为3000毫秒，单位为毫秒-->
@@ -130,48 +130,48 @@
             <enum name="outer_bottom_right" value="5" />
         </attr>
         <!--指针总高度，主要是是在dot_position为outer时使用-->
-        <attr name="dotHeight" format="dimension"/>
+        <attr name="dotHeight" format="dimension" />
         <!--指针距离底部距离，并不是点之间的距离-->
-        <attr name="dotBottomMargin" format="dimension"/>
+        <attr name="dotBottomMargin" format="dimension" />
         <!--指针距离左边距离，并不是点之间的距离-->
-        <attr name="dotLeftMargin" format="dimension"/>
+        <attr name="dotLeftMargin" format="dimension" />
         <!--指针距离右边距离，并不是点之间的距离-->
-        <attr name="dotRightMargin" format="dimension"/>
+        <attr name="dotRightMargin" format="dimension" />
         <!--指针点之间的距离-->
-        <attr name="dotPadding" format="dimension"/>
+        <attr name="dotPadding" format="dimension" />
         <!--占位图-->
-        <attr name="bannerPlaceholderImage" format="reference"/>
-        <attr name="leftTopRadius"/>
-        <attr name="rightTopRadius"/>
-        <attr name="rightBottomRadius"/>
-        <attr name="leftBottomRadius"/>
+        <attr name="bannerPlaceholderImage" format="reference" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
         <attr name="iconSelected" format="reference" />
         <attr name="iconUnselected" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CornerTextView">
         <attr name="strokeColor" />
-        <attr name="bgColor"/>
-        <attr name="strokeWidth"/>
-        <attr name="radius"/>
-</declare-styleable>
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+    </declare-styleable>
 
     <declare-styleable name="Custom_Round_Image_View">
-        <attr name="radius"/>
-        <attr name="leftTopRadius"/>
-        <attr name="rightTopRadius"/>
-        <attr name="rightBottomRadius"/>
-        <attr name="leftBottomRadius"/>
-        <attr name="bgColor"/>
+        <attr name="radius" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
+        <attr name="bgColor" />
     </declare-styleable>
 
     <declare-styleable name="CornerLabelView">
         <attr name="sideLength" format="dimension" />
         <attr name="marginLeanSide" format="dimension" />
-        <attr name="bgColor"/>
-        <attr name="text"/>
+        <attr name="bgColor" />
+        <attr name="text" />
         <attr name="textSize" />
-        <attr name="textColor"/>
+        <attr name="textColor" />
         <attr name="position">
             <enum name="rightTop" value="0" />
             <enum name="rightBottom" value="1" />
@@ -181,12 +181,12 @@
     </declare-styleable>
     <declare-styleable name="verification_code">
         <!--验证码框大小-->
-        <attr name="strokeWidth"/>
-        <attr name="strokeHeight"/>
+        <attr name="strokeWidth" />
+        <attr name="strokeHeight" />
         <!--验证码两个框之间边距-->
         <attr name="codeStrokePadding" format="dimension" />
         <!--验证码框圆角-->
-        <attr name="radius"/>
+        <attr name="radius" />
         <!--验证码边框粗细-->
         <attr name="codeStrokeBorderWidth" format="dimension" />
         <!--验证码框有焦点时边框颜色-->
@@ -226,9 +226,9 @@
         <attr name="clearIcon" format="reference" />
         <attr name="enableBgStyle" format="boolean" />
         <attr name="strokeColor" />
-        <attr name="bgColor"/>
-        <attr name="strokeWidth"/>
-        <attr name="radius"/>
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
     </declare-styleable>
 
     <declare-styleable name="MaterialRipple">
@@ -301,17 +301,17 @@
     <!-- 垂直方向的虚线 -->
     <declare-styleable name="DividerView">
         <!-- 虚线颜色 -->
-        <attr name="dividerLineColor" format="color"/>
+        <attr name="dividerLineColor" format="color" />
         <!-- 虚线宽度 -->
-        <attr name="dashThickness" format="dimension"/>
+        <attr name="dashThickness" format="dimension" />
         <!-- 虚线dash宽度 -->
-        <attr name="dashLength" format="dimension"/>
+        <attr name="dashLength" format="dimension" />
         <!-- 虚线dash间隔 -->
-        <attr name="dashGap" format="dimension"/>
+        <attr name="dashGap" format="dimension" />
         <!-- 虚线朝向 -->
         <attr name="dividerOrientation" format="enum">
-            <enum name="horizontal" value="0"/>
-            <enum name="vertical" value="1"/>
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
         </attr>
     </declare-styleable>
 </resources>

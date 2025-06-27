@@ -28,7 +28,7 @@
             android:indeterminateDuration="1500"
             android:indeterminateTint="@color/white" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tipTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

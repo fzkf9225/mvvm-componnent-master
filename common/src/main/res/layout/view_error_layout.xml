@@ -25,12 +25,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/vertical_margin_l"
-            android:gravity="center"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
-            android:textSize="15sp"
-            android:text="@string/loading_now" />
+            android:gravity="center"
+            android:text="@string/loading_now"
+            android:textSize="15sp" />
 
     </merge>
 </layout>

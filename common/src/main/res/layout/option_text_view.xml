@@ -7,7 +7,7 @@
             type="pers.fz.mvvm.bean.PopupWindowBean" />
     </data>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

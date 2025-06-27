@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_option_menu"
             android:layout_width="80dp"
             android:layout_height="@dimen/height_xxxl"

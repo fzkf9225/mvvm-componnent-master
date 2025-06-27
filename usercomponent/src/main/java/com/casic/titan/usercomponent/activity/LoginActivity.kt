@@ -66,9 +66,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         binding.loginViewModel = mViewModel
         binding.loginBean = RequestLoginBean(userService.account)
         binding.password = password
-        Glide.with(this)
-            .load(R.mipmap.user_login_bg)
-            .into(binding.imageLoginBg)
 
         // 设置CheckBox的文本和点击事件
         binding.cbAgreement.text = mViewModel.agreementSpannableString()

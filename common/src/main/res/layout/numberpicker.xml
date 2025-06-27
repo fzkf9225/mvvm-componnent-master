@@ -11,17 +11,17 @@
         android:layout_height="@dimen/height_xxxl"
         android:orientation="horizontal">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/Main_tvSelected"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:hint="请选择数量"
+            android:hint="@string/please_choose_count"
             android:textSize="@dimen/font_size_xl"
             android:visibility="visible" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/submitBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -31,7 +31,7 @@
             android:gravity="center"
             android:textSize="@dimen/font_size_xl"
             android:background="@color/themeColor"
-            android:text="确定"
+            android:text="@string/sure"
             android:textColor="@color/white" />
     </FrameLayout>
     <View style="@style/h_line"/>

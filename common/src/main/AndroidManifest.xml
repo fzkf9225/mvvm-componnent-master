@@ -84,12 +84,11 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 此处适配android 7.0 -->
-        <activity
-            android:name="com.casic.titan.usercomponent.TechnicalSupportActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activity.WebViewActivity"
             android:exported="false" />
+
         <activity
             android:name=".activity.VideoPlayerActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -100,7 +99,7 @@
             android:name=".autosize.InitProvider"
             android:authorities="${applicationId}.autosize-init-provider"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

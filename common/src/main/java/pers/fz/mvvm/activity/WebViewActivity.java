@@ -11,10 +11,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 
@@ -22,24 +18,34 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.WebViewBinding;
+import pers.fz.mvvm.enums.WebViewUrlTypeEnum;
 import pers.fz.mvvm.util.common.CordovaDialogsHelper;
 import pers.fz.mvvm.util.common.SystemWebChromeClient;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.common.WebViewUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**
- * Created by fz on 2020/2/18
- * describe：基础的webView控件封装
+ * 基于ConfigurableWebView的WebViewActivity
+ * 功能：
+ * 1. 支持加载网络/本地/自动判断URL类型
+ * 2. 支持自定义Toolbar显示
+ * 3. 提供复制链接和浏览器打开功能
+ * 4. 支持返回键控制网页后退
  */
 @AndroidEntryPoint
 public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding> {
+    // Intent参数Key
+    public final static String TITLE = "titleText";          // 页面标题
+    public final static String URL_TYPE = "urlType";        // URL类型(0:网络,1:本地,2:自动)
+    public final static String LOAD_URL = "loadUrl";        // 加载的URL
+    public final static String TOOLBAR = "toolbar";         // 是否显示Toolbar
+    public final static String HAS_MENU = "hasMenu";        // 是否显示右上角菜单
+    public final static String DOMAIN = "domain";           // 自定义域名(用于加载本地资源)
 
-    public final static String TITLE = "titleText";
-    public final static String LOAD_URL = "loadUrl";
-    public final static String TOOLBAR = "toolbar";
-    private String url;
-    private boolean hasToolbar;
+    private String url;             // 当前加载的URL
+    private int urlType;            // URL类型
+    private boolean hasToolbar;      // 是否显示Toolbar
+    private boolean hasMenu;         // 是否显示菜单
+    private String domain;           // 自定义域名
 
     @Override
     protected int getLayoutId() {
@@ -63,15 +69,19 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initView(Bundle savedInstanceState) {
-        WebViewUtil.setDefaultSetting(binding.webView);
-        binding.webView.setWebViewClient(new MyWebViewClient());
-        binding.webView.setWebChromeClient(new SystemWebChromeClient(this, new CordovaDialogsHelper(this), binding.progressBar, toolbarBind == null ? null : toolbarBind.tvTitle));
-    }
 
+        // 设置WebChromeClient显示进度条和标题
+        binding.webView.setWebChromeClient(new SystemWebChromeClient(
+                this,
+                new CordovaDialogsHelper(this),
+                binding.progressBar,
+                toolbarBind == null ? null : toolbarBind.tvTitle
+        ));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!hasToolbar) {
+        if (!hasToolbar || !hasMenu) {
             return super.onCreateOptionsMenu(menu);
         }
         getMenuInflater().inflate(R.menu.menu_browser, menu);
@@ -80,85 +90,147 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!hasToolbar) {
+        if (!hasToolbar || !hasMenu) {
             return super.onOptionsItemSelected(item);
         }
-        if (StringUtil.isEmpty(url)) {
+
+        if (TextUtils.isEmpty(url)) {
             showToast("目标地址为空！");
             return super.onOptionsItemSelected(item);
         }
+
         int itemId = item.getItemId();
         if (itemId == R.id.toolbar_browser) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-        } else if (itemId == R.id.toolbar_copy) {// 获取系统剪贴板
-            ClipboardManager clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-            // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
-            ClipData clipData = ClipData.newPlainText("文件链接", url);
-            // 把数据集设置（复制）到剪贴板
-            clipboard.setPrimaryClip(clipData);
-            showToast("复制成功");
+            // 在浏览器中打开
+            openInBrowser();
+        } else if (itemId == R.id.toolbar_copy) {
+            // 复制链接
+            copyUrlToClipboard();
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void initData(Bundle bundle) {
+        // 初始化参数
+        urlType = bundle.getInt(URL_TYPE, WebViewUrlTypeEnum.AUTO.type);
+        url = bundle.getString(LOAD_URL);
+        hasMenu = bundle.getBoolean(HAS_MENU, true);
+        domain = bundle.getString(DOMAIN);
+        if (TextUtils.isEmpty(url)) {
+            showToast("目标地址不存在！");
+            return;
+        }
+        // 设置标题
         if (hasToolbar) {
             toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
         }
-        url = bundle.getString(LOAD_URL);
+
+        // 检查URL有效性
         if (TextUtils.isEmpty(url)) {
             showToast("目标地址为空！");
             return;
         }
-        binding.webView.loadUrl(url);
+
+        // 获取ConfigurableWebView实例并配置
+        binding.webView.setUrlType(urlType);
+        if (!TextUtils.isEmpty(domain)) {
+            binding.webView.setDomain(domain);
+        }
+        binding.webView.loadConfiguredUrl(url);
     }
 
     /**
-     * show the MainActivity
-     * 本地测试地址："file:///android_asset/protocol.html"
-     *
-     * @param context context
+     * 在浏览器中打开当前URL
      */
-    public static void show(Context context, String loadUrl, String titleText) {
-        Intent intent = new Intent(context, WebViewActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(LOAD_URL, loadUrl);
-        bundle.putString(TITLE, titleText);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+    private void openInBrowser() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
-    public static void show(Context context, String loadUrl, String titleText,boolean hasToolbar) {
+    /**
+     * 复制当前URL到剪贴板
+     */
+    private void copyUrlToClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("网页链接", url);
+        clipboard.setPrimaryClip(clipData);
+        showToast("复制成功");
+    }
+
+    /**
+     * 显示WebView页面
+     *
+     * @param context   上下文
+     * @param loadUrl   要加载的URL
+     * @param titleText 页面标题
+     */
+    public static void show(Context context, String loadUrl, String titleText) {
+        show(context, loadUrl, titleText, true, true);
+    }
+
+    /**
+     * 显示WebView页面（带Toolbar配置）
+     *
+     * @param context    上下文
+     * @param loadUrl    要加载的URL
+     * @param titleText  页面标题
+     * @param hasToolbar 是否显示Toolbar
+     */
+    public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar) {
+        show(context, loadUrl, titleText, hasToolbar, true);
+    }
+
+    /**
+     * 显示WebView页面（完整配置）
+     *
+     * @param context    上下文
+     * @param loadUrl    要加载的URL
+     * @param titleText  页面标题
+     * @param hasToolbar 是否显示Toolbar
+     * @param hasMenu    是否显示菜单
+     */
+    public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar, boolean hasMenu) {
         Intent intent = new Intent(context, WebViewActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(LOAD_URL, loadUrl);
         bundle.putString(TITLE, titleText);
         bundle.putBoolean(TOOLBAR, hasToolbar);
+        bundle.putBoolean(HAS_MENU, hasMenu);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
+    /**
+     * 显示WebView页面（完整配置+自定义域名）
+     */
+    public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar,
+                            boolean hasMenu, String domain, int urlType) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(LOAD_URL, loadUrl);
+        bundle.putString(TITLE, titleText);
+        bundle.putBoolean(TOOLBAR, hasToolbar);
+        bundle.putBoolean(HAS_MENU, hasMenu);
+        bundle.putString(DOMAIN, domain);
+        bundle.putInt(URL_TYPE, urlType);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 显示WebView页面（使用Bundle传递参数）
+     */
     public static void show(Context context, Bundle bundle) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
-    private static class MyWebViewClient extends WebViewClient {
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            view.loadUrl(request.getUrl().toString());
-            return true;
-        }
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // 处理返回键，优先网页后退
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.webView.canGoBack()) {
                 binding.webView.goBack();

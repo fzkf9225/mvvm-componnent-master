@@ -35,7 +35,6 @@
     <string name="setting_qrcode">扫描二维码</string>
     <string name="setting_about">关于我们</string>
     <string name="setting_ITSupport">技术支持</string>
-    <string name="setting_customes">智能管家</string>
     <string name="setting_feedBack">问题反馈</string>
 
     <string name="setting_exit">退出账号</string>
@@ -81,4 +80,5 @@
     <string name="minute">分</string>
     <string name="second">秒</string>
     <string name="save_to_local">保存至本地</string>
+    <string name="please_choose_count">请选择数量</string>
 </resources>

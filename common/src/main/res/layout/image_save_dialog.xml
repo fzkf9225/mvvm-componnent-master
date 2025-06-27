@@ -21,7 +21,7 @@
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xxl" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_cancel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xl"

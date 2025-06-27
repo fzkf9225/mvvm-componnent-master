@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_white">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

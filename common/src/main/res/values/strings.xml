@@ -34,7 +34,6 @@
     <string name="setting_qrcode">sweep qr code</string>
     <string name="setting_about">about us</string>
     <string name="setting_ITSupport">technical support</string>
-    <string name="setting_customes">ai manager</string>
     <string name="setting_feedBack">feedback</string>
 
 
@@ -84,6 +83,7 @@
     <string name="minute">Minute</string>
     <string name="second">Second</string>
     <string name="save_to_local">Save to local</string>
+    <string name="please_choose_count">Please select the quantity</string>
 
 
 </resources>
