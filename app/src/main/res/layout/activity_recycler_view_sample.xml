@@ -7,13 +7,57 @@
 
     </data>
 
-    <androidx.fragment.app.FragmentContainerView
-        android:background="@color/default_background"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:id="@+id/recyclerview_sample_fragment_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/recyclerview_sample_navigation"
         android:layout_height="match_parent"
-        tools:context=".activity.RecyclerViewSampleActivity"/>
+        android:background="@color/default_background"
+        tools:context=".activity.RecyclerViewSampleActivity">
+
+        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+            android:id="@+id/tv_sex"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            app:endDrawable="@mipmap/icon_down"
+            app:hiltText="请选择性别"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerview_sample_fragment_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_city"
+            app:layout_constraintStart_toStartOf="parent"
+            app:hiltTextColor="@color/hint_text_color" />
+
+        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+            android:id="@+id/tv_city"
+            app:startDrawable="@mipmap/icon_ewm"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            app:endDrawable="@mipmap/icon_down"
+            app:hiltText="请选择城市"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_sex"
+            app:layout_constraintEnd_toStartOf="@+id/tv_quality"
+            app:hiltTextColor="@color/hint_text_color" />
+
+        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+            android:id="@+id/tv_quality"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            app:endDrawable="@mipmap/icon_down"
+            app:hiltText="请选择材质"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_city"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:hiltTextColor="@color/hint_text_color" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/recyclerview_sample_fragment_view"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/default_background"
+            app:defaultNavHost="true"
+            app:layout_constraintVertical_weight="1"
+            app:navGraph="@navigation/recyclerview_sample_navigation" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

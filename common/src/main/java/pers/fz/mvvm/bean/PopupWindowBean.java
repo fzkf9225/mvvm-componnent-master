@@ -49,6 +49,12 @@ public class PopupWindowBean<T> extends BaseObservable {
         this.isSingleSelected = isSingleSelected;
     }
 
+    public PopupWindowBean(String popupId, String popupName, List<T> childList) {
+        this.popupId = popupId;
+        this.popupName = popupName;
+        this.childList = childList;
+    }
+
     public String getPopupId() {
         return popupId;
     }

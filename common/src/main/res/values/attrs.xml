@@ -314,4 +314,34 @@
             <enum name="vertical" value="1" />
         </attr>
     </declare-styleable>
+
+
+    <declare-styleable name="PopupView">
+        <!--左侧图标与文字距离-->
+        <attr name="startPadding" format="dimension" />
+        <!--右侧图标与文字距离-->
+        <attr name="endPadding" format="dimension" />
+        <!--左侧图标-->
+        <attr name="startDrawable" format="reference" />
+        <!--右侧图标-->
+        <attr name="endDrawable" format="reference" />
+        <!--提示文字-->
+        <attr name="hiltText" format="string" />
+        <!--提示文字颜色-->
+        <attr name="hiltTextColor" format="reference|color" />
+        <!--文字颜色-->
+        <attr name="labelTextColor" format="reference|color" />
+        <!--文字大小-->
+        <attr name="textSize"/>
+        <!--左侧图标宽度-->
+        <attr name="startDrawableWidth" format="dimension" />
+        <!--左侧图标高度-->
+        <attr name="startDrawableHeight" format="dimension" />
+        <!--右侧图标宽度-->
+        <attr name="endDrawableWidth" format="dimension" />
+        <!--右侧图标高度-->
+        <attr name="endDrawableHeight" format="dimension" />
+        <!--是否加粗-->
+        <attr name="isBold" format="boolean" />
+    </declare-styleable>
 </resources>

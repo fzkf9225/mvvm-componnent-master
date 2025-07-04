@@ -43,6 +43,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/user_account_login_label"
             android:textSize="25sp"
+            android:ellipsize="end"
             android:textStyle="bold"
             android:layout_marginStart="26dp"
             android:textColor="@color/themeColor"

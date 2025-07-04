@@ -139,4 +139,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_l</item>
     </style>
+
+    <style name="PopupWindowAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
 </resources>

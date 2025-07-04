@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ResourceName">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/multi_cl_view"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/multi_recycler_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_xxxl"
+                android:cacheColorHint="@android:color/transparent"
+                android:scrollbars="none"
+                android:layout_marginStart="@dimen/horizontal_margin_xl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xl"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <pers.fz.mvvm.wight.customlayout.CornerButton
+                android:id="@+id/button_clear"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="@dimen/horizontal_margin_xxxxl"
+                android:text="@string/clear"
+                android:textColor="@color/nv_bg_color"
+                android:textSize="13sp"
+                app:bgColor="#F2F1F6"
+                app:layout_constraintBottom_toBottomOf="@+id/button_submit"
+                app:layout_constraintEnd_toStartOf="@+id/button_submit"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_submit"
+                app:radius="@dimen/radius_s"/>
+
+            <pers.fz.mvvm.wight.customlayout.CornerButton
+                android:id="@+id/button_submit"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="@dimen/horizontal_margin_xxxl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
+                android:text="@string/sure"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:bgColor="@color/themeColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                android:layout_marginBottom="@dimen/vertical_margin_xl"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                app:layout_constraintStart_toEndOf="@+id/button_clear"
+                app:layout_constraintTop_toBottomOf="@+id/multi_recycler_category"
+                app:radius="@dimen/radius_s"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 遮罩层 -->
+        <View
+            android:id="@+id/maskView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#80000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/multi_cl_view" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
