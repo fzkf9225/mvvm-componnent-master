@@ -1,5 +1,6 @@
 package com.casic.titan.demo.viewmodel;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -9,21 +10,38 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.PopupWindowCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
 import com.casic.titan.commonui.dialog.TickViewMessageDialog;
 import com.casic.titan.commonui.widght.calendar.DateRangePickDialog;
 import com.casic.titan.demo.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
@@ -35,6 +53,7 @@ import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.BottomSheetDialog;
@@ -48,6 +67,8 @@ import pers.fz.mvvm.wight.dialog.MessageDialog;
 import pers.fz.mvvm.wight.dialog.ProgressBarDialog;
 import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
 import pers.fz.mvvm.wight.dialog.bean.ProgressBarSetting;
+import pers.fz.mvvm.wight.popupwindow.CascadeMultiPopupWindow;
+import pers.fz.mvvm.wight.popupwindow.CascadeSinglePopupWindow;
 
 /**
  * Created by fz on 2023/8/14 10:56
@@ -313,7 +334,120 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
+        } else if (R.id.popupSingleDialog == view.getId()) {
+            String json = loadJSONFromAsset(view.getContext(), "aor.json");
+            List<PopupWindowBean> dataList = new GsonBuilder()
+                    .registerTypeAdapter(PopupWindowBean.class, new PopupWindowDeserializer())
+                    .create()
+                    .fromJson(json, new TypeToken<List<PopupWindowBean>>() {
+                    }.getType());
+            CascadeSinglePopupWindow<?> cascadeSinglePopupWindow = new CascadeSinglePopupWindow(
+                    (Activity) view.getContext(),
+                    dataList,
+                    new CascadeSinglePopupWindow.Callback() {
+                        @Override
+                        public <T extends PopupWindowBean> void selectCategory(PopupWindow popupWindow, List<T> dataList) {
+                            baseView.showToast("选中：" + dataList.get(dataList.size() - 1).getPopupName());
+                        }
+                    }
+            );
+            cascadeSinglePopupWindow.setSelectedStyle(
+                    ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green),
+                    ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.white),
+                    DensityUtil.dp2px(view.getContext(), 6f)
+            );
+            cascadeSinglePopupWindow.setConfirmTextColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green));
+            PopupWindowCompat.showAsDropDown(
+                    cascadeSinglePopupWindow, view, 0, 0, Gravity.CENTER
+            );
+        } else if (R.id.popupMultiDialog == view.getId()) {
+            String json = loadJSONFromAsset(view.getContext(), "aor.json");
+            List<PopupWindowBean<?>> dataList = new GsonBuilder()
+                    .registerTypeAdapter(PopupWindowBean.class, new PopupWindowDeserializer())
+                    .create()
+                    .fromJson(json, new TypeToken<List<PopupWindowBean<?>>>() {
+                    }.getType());
+            CascadeMultiPopupWindow<PopupWindowBean<?>> cascadeMultiPopupWindow = new CascadeMultiPopupWindow<>(
+                    (Activity) view.getContext(),
+                    dataList,
+                    new CascadeMultiPopupWindow.Callback() {
+                        @Override
+                        public <T extends PopupWindowBean> void selectCategory(PopupWindow popupWindow, List<T> dataList) {
+                            baseView.showToast("选中：" + new Gson().toJson(dataList.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())));
+                        }
+                    }
+            );
+            cascadeMultiPopupWindow.setCheckedDrawable(
+                    DrawableUtil.createCheckedDrawable(view.getContext(),
+                            ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green),
+                            DensityUtil.dp2px(view.getContext(), 16f))
+            );
+            cascadeMultiPopupWindow.setUncheckedDrawable(
+                    DrawableUtil.createUncheckedDrawable(
+                            DensityUtil.dp2px(view.getContext(), 1),
+                            ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green),
+                            DensityUtil.dp2px(view.getContext(), 16))
+            );
+            cascadeMultiPopupWindow.setSelectedBgStyle(
+                    ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green),
+                    ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.white),
+                    DensityUtil.dp2px(view.getContext(), 6f)
+                    );
+            cascadeMultiPopupWindow.setConfirmTextColor(ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green));
+            PopupWindowCompat.showAsDropDown(
+                    cascadeMultiPopupWindow, view, 0, 0, Gravity.CENTER
+            );
         }
+    }
+
+    public class PopupWindowDeserializer implements JsonDeserializer<PopupWindowBean<?>> {
+        @Override
+        public PopupWindowBean<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            PopupWindowBean<PopupWindowBean<?>> item = new PopupWindowBean<>();
+
+            if (jsonObject.has("popupId") && !jsonObject.get("popupId").isJsonNull()) {
+                item.setPopupId(jsonObject.get("popupId").getAsString());
+            }
+
+            if (jsonObject.has("popupName") && !jsonObject.get("popupName").isJsonNull()) {
+                item.setPopupName(jsonObject.get("popupName").getAsString());
+            }
+
+            if (jsonObject.has("parentPopupId") && !jsonObject.get("parentPopupId").isJsonNull()) {
+                item.setParentPopupId(jsonObject.get("parentPopupId").getAsString());
+            }
+
+            // 递归解析子列表（添加空值和类型检查）
+            if (jsonObject.has("childList") && !jsonObject.get("childList").isJsonNull()) {
+                JsonElement childElement = jsonObject.get("childList");
+                if (childElement.isJsonArray()) {
+                    JsonArray childArray = childElement.getAsJsonArray();
+                    List<PopupWindowBean<?>> children = new ArrayList<>();
+                    for (JsonElement child : childArray) {
+                        children.add(context.deserialize(child, PopupWindowBean.class));
+                    }
+                    item.setChildList(children);
+                }
+            }
+
+            return item;
+        }
+    }
+
+    public static String loadJSONFromAsset(Context context, String fileName) {
+        String json;
+        try {
+            InputStream is = context.getAssets().open(fileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            return null;
+        }
+        return json;
     }
 
     private ProgressBarDialog circleProgressBarDialog;

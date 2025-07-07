@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ResourceName">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_white">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_clear_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_l"
+            android:paddingEnd="@dimen/padding_l"
+            android:text="@string/clear"
+            android:textColor="@color/theme_red"
+            android:textSize="@dimen/font_size_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toStartOf="@+id/tv_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/please_choose"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            android:lines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toTopOf="@+id/v_top"
+            app:layout_constraintEnd_toStartOf="@+id/tv_confirm"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/tv_clear_selected"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/padding_l"
+            android:paddingEnd="@dimen/padding_l"
+            android:text="@string/sure"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_l"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_title" />
+
+        <View
+            android:id="@+id/v_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/h_line_color"
+            app:layout_constraintBottom_toTopOf="@+id/mRecyclerview_selected"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerview_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            app:layout_constraintBottom_toTopOf="@+id/v_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_top" />
+
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/h_line_color"
+            app:layout_constraintBottom_toTopOf="@+id/mRecyclerview_options"
+            app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_selected" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerview_options"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_line"
+            app:layout_constraintVertical_weight="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

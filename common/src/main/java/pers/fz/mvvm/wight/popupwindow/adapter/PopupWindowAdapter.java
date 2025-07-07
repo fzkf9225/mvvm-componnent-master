@@ -1,11 +1,9 @@
-package pers.fz.mvvm.wight.popupwindow;
+package pers.fz.mvvm.wight.popupwindow.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 

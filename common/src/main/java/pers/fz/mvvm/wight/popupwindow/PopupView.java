@@ -17,12 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
-import pers.fz.mvvm.databinding.PopupCascadeViewBinding;
 import pers.fz.mvvm.databinding.PopupViewBinding;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.wight.popupwindow.adapter.PopupWindowAdapter;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
@@ -52,7 +51,7 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow implements
 
     private PopupViewBinding binding;
 
-    public PopupView(Context context,List<T> dataList, SelectCategory<T> selectCategory) {
+    public PopupView(Context context, List<T> dataList, SelectCategory<T> selectCategory) {
         this.selectCategory = selectCategory;
         this.dataList = dataList;
         this.context = context;
@@ -120,21 +119,39 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow implements
         popupWindowAdapter.setItemHeight(itemHeight);
     }
 
+    /**
+     * 设置列表未选中时的背景颜色
+     *
+     * @param unSelectBgColor 颜色
+     */
     public void setUnSelectBgColor(@ColorInt int unSelectBgColor) {
         this.unSelectBgColor = unSelectBgColor;
         popupWindowAdapter.setUnSelectBgColor(unSelectBgColor);
     }
 
+    /**
+     * 列表选中时的背景颜色
+     *
+     * @param selectBgColor 颜色
+     */
     public void setSelectBgColor(@ColorInt int selectBgColor) {
         this.selectBgColor = selectBgColor;
         popupWindowAdapter.setSelectBgColor(selectBgColor);
     }
 
+    /**
+     * 列表未选中时的文字颜色
+     * @param unSelectTextColor 颜色
+     */
     public void setUnSelectTextColor(@ColorInt int unSelectTextColor) {
         this.unSelectTextColor = unSelectTextColor;
         popupWindowAdapter.setUnSelectTextColor(unSelectTextColor);
     }
 
+    /**
+     * 列表选中时的文字颜色
+     * @param selectTextColor 颜色
+     */
     public void setSelectTextColor(@ColorInt int selectTextColor) {
         this.selectTextColor = selectTextColor;
         popupWindowAdapter.setSelectTextColor(selectTextColor);

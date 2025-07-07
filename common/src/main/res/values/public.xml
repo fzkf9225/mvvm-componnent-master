@@ -199,6 +199,7 @@
     <public name="RoundedShapeAppearanceL" type="style"/>
 
     <!--字符串资源-->
+    <public name="please_choose" type="string"/>
     <public name="clear" type="string"/>
     <public name="today" type="string"/>
     <public name="hour" type="string"/>

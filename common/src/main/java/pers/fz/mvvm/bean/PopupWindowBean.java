@@ -1,8 +1,12 @@
 package pers.fz.mvvm.bean;
 
+import android.text.TextUtils;
+
 import androidx.databinding.BaseObservable;
 
 import java.util.List;
+
+import pers.fz.mvvm.util.common.CollectionUtil;
 
 
 /**
@@ -18,6 +22,10 @@ public class PopupWindowBean<T> extends BaseObservable {
      * 名称
      */
     private String popupName;
+    /**
+     * id
+     */
+    private String parentPopupId;
     /**
      * 是否选中
      */
@@ -71,6 +79,14 @@ public class PopupWindowBean<T> extends BaseObservable {
         this.popupName = popupName;
     }
 
+    public String getParentPopupId() {
+        return parentPopupId;
+    }
+
+    public void setParentPopupId(String parentPopupId) {
+        this.parentPopupId = parentPopupId;
+    }
+
     public Boolean getSelected() {
         return isSelected;
     }
@@ -94,4 +110,12 @@ public class PopupWindowBean<T> extends BaseObservable {
     public void setChildList(List<T> childList) {
         this.childList = childList;
     }
+
+    public static <T extends PopupWindowBean<?>> boolean containsById(List<T> list, String popupId) {
+        if (CollectionUtil.isEmpty(list) || TextUtils.isEmpty(popupId)) {
+            return false;
+        }
+        return list.stream().anyMatch(item -> item.getPopupId() != null && item.getPopupId().equals(popupId));
+    }
+
 }

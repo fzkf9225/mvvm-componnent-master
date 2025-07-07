@@ -160,7 +160,7 @@ public class TextPopupView extends ConstraintLayout {
         addView(tvLabel, params);
     }
 
-    public void layoutLabel() {
+    protected void layoutLabel() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
         constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
@@ -185,7 +185,7 @@ public class TextPopupView extends ConstraintLayout {
         addView(ivStartDrawable, params);
     }
 
-    public void layoutStartDrawable() {
+    protected void layoutStartDrawable() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
         constraintSet.connect(ivStartDrawable.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
@@ -209,7 +209,7 @@ public class TextPopupView extends ConstraintLayout {
         addView(ivEndDrawable, params);
     }
 
-    public void layoutEndDrawable() {
+    protected void layoutEndDrawable() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
         constraintSet.connect(ivEndDrawable.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);

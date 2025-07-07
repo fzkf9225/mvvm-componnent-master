@@ -6,9 +6,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.util.TypedValue
+import android.view.Gravity
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -26,23 +28,6 @@ object DrawableUtil {
         shapeDrawable.setIntrinsicWidth(size)
         shapeDrawable.setIntrinsicHeight(size)
         return shapeDrawable
-    }
-
-    @JvmStatic
-    public fun createShapeDrawable(
-        context: Context,
-        @ColorRes colorRes: Int,
-        cornerRadius: Float
-    ): GradientDrawable {
-        // 创建一个 GradientDrawable 对象
-        val drawable = GradientDrawable()
-
-        // 设置填充颜色
-        val themeColor = ContextCompat.getColor(context, colorRes)
-        drawable.setColor(themeColor)
-        // 设置圆角半径
-        drawable.cornerRadius = cornerRadius
-        return drawable
     }
 
     @JvmStatic
@@ -96,6 +81,33 @@ object DrawableUtil {
                 return android.graphics.PixelFormat.TRANSLUCENT
             }
         }
+    }
+
+    @JvmStatic
+    public fun createCheckedDrawable(context: Context,@ColorInt colorRes : Int,size : Int): Drawable {
+        // 创建背景矩形
+        val background = GradientDrawable()
+        background.setShape(GradientDrawable.OVAL)
+        background.setColor(colorRes) // 使用你的主题色
+        background.setSize(size, size)
+        // 获取勾选图标
+        val checkIcon = ContextCompat.getDrawable(context, pers.fz.mvvm.R.drawable.common_ic_check)
+
+        // 创建LayerDrawable
+        val layers = arrayOf(background, checkIcon)
+        val layerDrawable = LayerDrawable(layers)
+        // 设置勾选图标居中
+        layerDrawable.setLayerGravity(1, Gravity.CENTER)
+        return layerDrawable
+    }
+
+    @JvmStatic
+    public fun createUncheckedDrawable(stroke :Int,@ColorInt colorRes : Int,size : Int): Drawable {
+        val uncheckedDrawable = GradientDrawable()
+        uncheckedDrawable.setShape(GradientDrawable.OVAL)
+        uncheckedDrawable.setStroke(stroke,colorRes)
+        uncheckedDrawable.setSize(size, size)
+        return uncheckedDrawable
     }
 }
 

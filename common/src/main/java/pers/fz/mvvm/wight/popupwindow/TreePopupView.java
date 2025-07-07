@@ -22,13 +22,14 @@ import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.PopupCascadeViewBinding;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.wight.popupwindow.adapter.PopupWindowAdapter;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
  * updated by fz on 2025/2/13 14:17
  * describe：PopupWindow 下拉框
  */
-public class PopupCascadeView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
+public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
     private final SelectCategory<T> selectCategory;
     private final List<T> dataList;
 
@@ -55,7 +56,7 @@ public class PopupCascadeView<T extends PopupWindowBean> extends PopupWindow imp
 
     private PopupCascadeViewBinding binding;
 
-    public PopupCascadeView(Context activity,List<T> dataList, boolean hasRight, SelectCategory<T> selectCategory) {
+    public TreePopupView(Context activity, List<T> dataList, boolean hasRight, SelectCategory<T> selectCategory) {
         this.selectCategory = selectCategory;
         this.dataList = dataList;
         this.activity = activity;
@@ -214,7 +215,7 @@ public class PopupCascadeView<T extends PopupWindowBean> extends PopupWindow imp
         if ((parentPosition != null && parentPosition == position) || !hasRight) {
             dismiss();
             if (selectCategory != null) {
-                selectCategory.selectCategory(PopupCascadeView.this, dataList, position, childPosition);
+                selectCategory.selectCategory(TreePopupView.this, dataList, position, childPosition);
             }
         }
         parentPosition = position;
@@ -235,7 +236,7 @@ public class PopupCascadeView<T extends PopupWindowBean> extends PopupWindow imp
             childAdapter.setSelectedPosition(position);
             dismiss();
             if (selectCategory != null) {
-                selectCategory.selectCategory(PopupCascadeView.this, dataList, parentPosition, childPosition);
+                selectCategory.selectCategory(TreePopupView.this, dataList, parentPosition, childPosition);
             }
         }
     };

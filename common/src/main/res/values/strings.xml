@@ -84,7 +84,8 @@
     <string name="second">Second</string>
     <string name="save_to_local">Save to local</string>
     <string name="please_choose_count">Please select the quantity</string>
-    <string name="clear">清除</string>
+    <string name="clear">Clear</string>
+    <string name="please_choose">Please select</string>
 
 
 </resources>

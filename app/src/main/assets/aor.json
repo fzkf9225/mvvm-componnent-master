@@ -1,0 +1,952 @@
+[
+  {
+    "popupId": "10",
+    "popupName": "湖北省",
+    "parentPopupId": null,
+    "isSelected": null,
+    "isSingleSelected": null,
+    "childList": [
+      {
+        "popupId": "1009",
+        "popupName": "荆州市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100905",
+            "popupName": "石首市",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100907",
+            "popupName": "松滋市",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100901",
+            "popupName": "沙市区",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100903",
+            "popupName": "公安县",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100908",
+            "popupName": "监利市",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100906",
+            "popupName": "洪湖市",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100904",
+            "popupName": "江陵县",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100902",
+            "popupName": "荆州区",
+            "parentPopupId": "1009",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1001",
+        "popupName": "武汉市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100110",
+            "popupName": "蔡甸区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100112",
+            "popupName": "黄陂区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100102",
+            "popupName": "江汉区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100103",
+            "popupName": "硚口区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100108",
+            "popupName": "东西湖区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100101",
+            "popupName": "江岸区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100109",
+            "popupName": "汉南区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100104",
+            "popupName": "汉阳区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100107",
+            "popupName": "洪山区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100111",
+            "popupName": "江夏区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100106",
+            "popupName": "青山区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100105",
+            "popupName": "武昌区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100113",
+            "popupName": "新洲区",
+            "parentPopupId": "1001",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1005",
+        "popupName": "襄阳市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100506",
+            "popupName": "保康县",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100505",
+            "popupName": "谷城县",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100507",
+            "popupName": "老河口市",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100504",
+            "popupName": "南漳县",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100502",
+            "popupName": "樊城区",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100501",
+            "popupName": "襄城区",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100503",
+            "popupName": "襄州区",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100509",
+            "popupName": "宜城市",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100508",
+            "popupName": "枣阳市",
+            "parentPopupId": "1005",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1011",
+        "popupName": "咸宁市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "101103",
+            "popupName": "通城县",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101105",
+            "popupName": "通山县",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101106",
+            "popupName": "赤壁市",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101104",
+            "popupName": "崇阳县",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101102",
+            "popupName": "嘉鱼县",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101101",
+            "popupName": "咸安区",
+            "parentPopupId": "1011",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1015",
+        "popupName": "潜江市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": []
+      },
+      {
+        "popupId": "1017",
+        "popupName": "神农架林区",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": []
+      },
+      {
+        "popupId": "1016",
+        "popupName": "天门市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": []
+      },
+      {
+        "popupId": "1013",
+        "popupName": "恩施土家族苗族自治州",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "101304",
+            "popupName": "巴东县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101306",
+            "popupName": "咸丰县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101301",
+            "popupName": "恩施市",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101302",
+            "popupName": "利川市",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101308",
+            "popupName": "鹤峰县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101303",
+            "popupName": "建始县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101307",
+            "popupName": "来凤县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101305",
+            "popupName": "宣恩县",
+            "parentPopupId": "1013",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1006",
+        "popupName": "鄂州市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100602",
+            "popupName": "华容区",
+            "parentPopupId": "1006",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100603",
+            "popupName": "鄂城区",
+            "parentPopupId": "1006",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100601",
+            "popupName": "梁子湖区",
+            "parentPopupId": "1006",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1012",
+        "popupName": "随州市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "101202",
+            "popupName": "随县",
+            "parentPopupId": "1012",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101201",
+            "popupName": "曾都区",
+            "parentPopupId": "1012",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101203",
+            "popupName": "广水市",
+            "parentPopupId": "1012",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1002",
+        "popupName": "黄石市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100206",
+            "popupName": "大冶市",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100204",
+            "popupName": "铁山区",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100201",
+            "popupName": "黄石港区",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100203",
+            "popupName": "下陆区",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100202",
+            "popupName": "西塞山区",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100205",
+            "popupName": "阳新县",
+            "parentPopupId": "1002",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1004",
+        "popupName": "宜昌市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100412",
+            "popupName": "当阳市",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100401",
+            "popupName": "西陵区",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100410",
+            "popupName": "五峰土家族自治县",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100403",
+            "popupName": "点军区",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100408",
+            "popupName": "秭归县",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100402",
+            "popupName": "伍家岗区",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100404",
+            "popupName": "猇亭区",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100407",
+            "popupName": "兴山县",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100405",
+            "popupName": "夷陵区",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100411",
+            "popupName": "宜都市",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100406",
+            "popupName": "远安县",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100409",
+            "popupName": "长阳土家族自治县",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100413",
+            "popupName": "枝江市",
+            "parentPopupId": "1004",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1007",
+        "popupName": "荆门市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100703",
+            "popupName": "沙洋县",
+            "parentPopupId": "1007",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100702",
+            "popupName": "掇刀区",
+            "parentPopupId": "1007",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100701",
+            "popupName": "东宝区",
+            "parentPopupId": "1007",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100705",
+            "popupName": "京山市",
+            "parentPopupId": "1007",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100704",
+            "popupName": "钟祥市",
+            "parentPopupId": "1007",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1008",
+        "popupName": "孝感市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100806",
+            "popupName": "安陆市",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100803",
+            "popupName": "大悟县",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100807",
+            "popupName": "汉川市",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100802",
+            "popupName": "孝昌县",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100801",
+            "popupName": "孝南区",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100805",
+            "popupName": "应城市",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100804",
+            "popupName": "云梦县",
+            "parentPopupId": "1008",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1010",
+        "popupName": "黄冈市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "101006",
+            "popupName": "浠水县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101004",
+            "popupName": "罗田县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101009",
+            "popupName": "麻城市",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101007",
+            "popupName": "蕲春县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101001",
+            "popupName": "黄州区",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101003",
+            "popupName": "红安县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101008",
+            "popupName": "黄梅县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101002",
+            "popupName": "团风县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101010",
+            "popupName": "武穴市",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "101005",
+            "popupName": "英山县",
+            "parentPopupId": "1010",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1003",
+        "popupName": "十堰市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": [
+          {
+            "popupId": "100308",
+            "popupName": "丹江口市",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100307",
+            "popupName": "房县",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100305",
+            "popupName": "竹山县",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100306",
+            "popupName": "竹溪县",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100301",
+            "popupName": "茅箭区",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100304",
+            "popupName": "郧西县",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100303",
+            "popupName": "郧阳区",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          },
+          {
+            "popupId": "100302",
+            "popupName": "张湾区",
+            "parentPopupId": "1003",
+            "isSelected": null,
+            "isSingleSelected": null,
+            "childList": null
+          }
+        ]
+      },
+      {
+        "popupId": "1014",
+        "popupName": "仙桃市",
+        "parentPopupId": "10",
+        "isSelected": null,
+        "isSingleSelected": null,
+        "childList": []
+      }
+    ]
+  }
+]

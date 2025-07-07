@@ -82,4 +82,5 @@
     <string name="save_to_local">保存至本地</string>
     <string name="please_choose_count">请选择数量</string>
     <string name="clear">清除</string>
+    <string name="please_choose">请选择</string>
 </resources>

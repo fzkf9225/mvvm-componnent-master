@@ -1,4 +1,4 @@
-package pers.fz.mvvm.wight.popupwindow;
+package pers.fz.mvvm.wight.popupwindow.adapter;
 
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;

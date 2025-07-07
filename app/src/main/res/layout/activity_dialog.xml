@@ -260,6 +260,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateRangePickDialog" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupSingleDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="单选的级联PopupWindow"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customDateRangePickDialog" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupMultiDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="多选的级联PopupWindow"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/popupSingleDialog" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

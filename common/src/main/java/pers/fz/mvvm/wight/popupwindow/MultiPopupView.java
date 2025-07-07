@@ -14,7 +14,6 @@ import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -22,40 +21,52 @@ import java.util.List;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.PopupMultiViewBinding;
-import pers.fz.mvvm.databinding.PopupViewBinding;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.wight.popupwindow.adapter.PopupWindowAdapter;
+import pers.fz.mvvm.wight.popupwindow.adapter.PopupWindowMultiAdapter;
 import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
-import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
 /**
  * updated by fz on 2025/2/13 14:17
- * describe：PopupWindow 下拉框
+ * describe：PopupWindow 多选下拉框（不是级联）
  */
-public class PopupMultiView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
+public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
     private final SelectCategory<T> selectCategory;
     private final List<T> dataList;
 
     private PopupWindowMultiAdapter<T> popupWindowAdapter = null;
 
     private final Context context;
-
+    /**
+     * 网格每行显示的列数
+     */
     private int columnCount = 2;
-
-    private float columnPadding;
-
+    /**
+     * 列表间距
+     */
+    private float columnPadding = 0f;
+    /**
+     * 选中文字颜色
+     */
     private @ColorInt int selectTextColor;
-
+    /**
+     * 未选中文字颜色
+     */
     private @ColorInt int unSelectTextColor;
 
+    /**
+     * 选择按钮背景样式
+     */
     private Drawable selectBgDrawable;
-
+    /**
+     * 未选中按钮背景样式
+     */
     private Drawable unSelectBgDrawable;
-
 
     private PopupMultiViewBinding binding;
 
-    public PopupMultiView(Context context, List<T> dataList, SelectCategory<T> selectCategory) {
+    public MultiPopupView(Context context, List<T> dataList, SelectCategory<T> selectCategory) {
         this.selectCategory = selectCategory;
         this.dataList = dataList;
         this.context = context;
@@ -83,7 +94,7 @@ public class PopupMultiView<T extends PopupWindowBean> extends PopupWindow imple
             if (selectCategory == null) {
                 return;
             }
-            selectCategory.selectCategory(PopupMultiView.this, popupWindowAdapter.getSelected());
+            selectCategory.selectCategory(MultiPopupView.this, popupWindowAdapter.getSelected());
         });
 
         this.setContentView(binding.getRoot());
@@ -136,31 +147,55 @@ public class PopupMultiView<T extends PopupWindowBean> extends PopupWindow imple
     }
 
 
+    /**
+     * 设置未选中文字颜色
+     * @param unSelectTextColor 未选文字颜色
+     */
     public void setUnSelectTextColor(@ColorInt int unSelectTextColor) {
         this.unSelectTextColor = unSelectTextColor;
         popupWindowAdapter.setUnSelectTextColor(unSelectTextColor);
     }
 
+    /**
+     * 设置选中文字颜色
+     * @param selectTextColor 选中文字颜色
+     */
     public void setSelectTextColor(@ColorInt int selectTextColor) {
         this.selectTextColor = selectTextColor;
         popupWindowAdapter.setSelectTextColor(selectTextColor);
     }
 
+    /**
+     * 设置提交按钮文字颜色
+     * @param textColor 颜色
+     */
     public void setSubmitTextColor(@ColorInt int textColor) {
         binding.buttonSubmit.setBackColor(textColor);
     }
 
+    /**
+     * 设置每行显示列数
+     * @param columnCount 每行显示列数
+     */
     public void setColumnCount(int columnCount) {
         this.columnCount = columnCount;
         binding.multiRecyclerCategory.setLayoutManager(new GridLayoutManager(context, columnCount));
         measureLayout();
     }
 
+    /**
+     * 设置未选中背景
+     * @param unSelectBgDrawable 未选中背景
+     */
     public void setUnSelectBgDrawable(Drawable unSelectBgDrawable) {
         this.unSelectBgDrawable = unSelectBgDrawable;
         popupWindowAdapter.setUnSelectBgDrawable(unSelectBgDrawable);
     }
 
+    /**
+     * 获取选中背景
+     * @param selectBgDrawable 选中背景
+     */
     public void setSelectBgDrawable(Drawable selectBgDrawable) {
         this.selectBgDrawable = selectBgDrawable;
         popupWindowAdapter.setSelectBgDrawable(selectBgDrawable);
