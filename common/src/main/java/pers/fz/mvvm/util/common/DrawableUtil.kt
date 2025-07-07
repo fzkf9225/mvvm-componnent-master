@@ -13,7 +13,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat

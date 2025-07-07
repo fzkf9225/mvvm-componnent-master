@@ -1,13 +1,11 @@
 package pers.fz.mvvm.wight.popupwindow.adapter;
 
-import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.jetbrains.annotations.NotNull;
 
