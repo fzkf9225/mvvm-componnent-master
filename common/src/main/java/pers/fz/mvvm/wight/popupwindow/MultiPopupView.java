@@ -32,7 +32,7 @@ import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
  * describe：PopupWindow 多选下拉框（不是级联）
  */
 public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
-    private final SelectCategory<T> selectCategory;
+    private final SelectedListener<T> selectedListener;
     private final List<T> dataList;
 
     private PopupWindowMultiAdapter<T> popupWindowAdapter = null;
@@ -66,8 +66,8 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
 
     private PopupMultiViewBinding binding;
 
-    public MultiPopupView(Context context, List<T> dataList, SelectCategory<T> selectCategory) {
-        this.selectCategory = selectCategory;
+    public MultiPopupView(Context context, List<T> dataList, SelectedListener<T> selectedListener) {
+        this.selectedListener = selectedListener;
         this.dataList = dataList;
         this.context = context;
         selectTextColor = ContextCompat.getColor(context, R.color.white);
@@ -91,10 +91,10 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
         });
         binding.buttonSubmit.setOnClickListener(v -> {
             dismiss();
-            if (selectCategory == null) {
+            if (selectedListener == null) {
                 return;
             }
-            selectCategory.selectCategory(MultiPopupView.this, popupWindowAdapter.getSelected());
+            selectedListener.onSelectedResult(MultiPopupView.this, popupWindowAdapter.getSelected());
         });
 
         this.setContentView(binding.getRoot());
@@ -266,8 +266,8 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
      * 选择成功回调
      * 把选中的下标通过方法回调回来
      */
-    public interface SelectCategory<T> {
-        void selectCategory(PopupWindow popupWindow, List<T> dataList);
+    public interface SelectedListener<T> {
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
     }
 
 }

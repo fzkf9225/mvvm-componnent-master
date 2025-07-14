@@ -344,12 +344,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             CascadeSinglePopupWindow<?> cascadeSinglePopupWindow = new CascadeSinglePopupWindow(
                     (Activity) view.getContext(),
                     dataList,
-                    new CascadeSinglePopupWindow.Callback() {
-                        @Override
-                        public <T extends PopupWindowBean> void selectCategory(PopupWindow popupWindow, List<T> dataList) {
-                            baseView.showToast("选中：" + dataList.get(dataList.size() - 1).getPopupName());
-                        }
-                    }
+                    (CascadeSinglePopupWindow.SelectedListener<PopupWindowBean>) (popupWindow, dataList1) -> baseView.showToast("选中：" + dataList1.get(dataList1.size() - 1).getPopupName())
             );
             cascadeSinglePopupWindow.setSelectedStyle(
                     ContextCompat.getColor(view.getContext(), pers.fz.mvvm.R.color.theme_green),
@@ -370,12 +365,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             CascadeMultiPopupWindow<PopupWindowBean<?>> cascadeMultiPopupWindow = new CascadeMultiPopupWindow<>(
                     (Activity) view.getContext(),
                     dataList,
-                    new CascadeMultiPopupWindow.Callback() {
-                        @Override
-                        public <T extends PopupWindowBean> void selectCategory(PopupWindow popupWindow, List<T> dataList) {
-                            baseView.showToast("选中：" + new Gson().toJson(dataList.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())));
-                        }
-                    }
+                    (popupWindow, dataList2) -> baseView.showToast("选中：" + new Gson().toJson(dataList2.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())))
             );
             cascadeMultiPopupWindow.setCheckedDrawable(
                     DrawableUtil.createCheckedDrawable(view.getContext(),

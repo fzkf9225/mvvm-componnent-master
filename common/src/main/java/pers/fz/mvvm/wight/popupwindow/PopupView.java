@@ -29,7 +29,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * describe：PopupWindow 下拉框
  */
 public class PopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
-    private final SelectCategory<T> selectCategory;
+    private final SelectedListener<T> selectedListener;
     private final List<T> dataList;
 
     private PopupWindowAdapter<T> popupWindowAdapter = null;
@@ -51,8 +51,8 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow implements
 
     private PopupViewBinding binding;
 
-    public PopupView(Context context, List<T> dataList, SelectCategory<T> selectCategory) {
-        this.selectCategory = selectCategory;
+    public PopupView(Context context, List<T> dataList, SelectedListener<T> selectedListener) {
+        this.selectedListener = selectedListener;
         this.dataList = dataList;
         this.context = context;
         itemHeight = DensityUtil.dp2px(context, 40f);
@@ -210,8 +210,8 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow implements
             return;
         }
         dismiss();
-        if (selectCategory != null) {
-            selectCategory.selectCategory(PopupView.this, dataList, position);
+        if (selectedListener != null) {
+            selectedListener.onSelectedResult(PopupView.this, dataList, position);
         }
     }
 
@@ -220,8 +220,8 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow implements
      * 选择成功回调
      * 把选中的下标通过方法回调回来
      */
-    public interface SelectCategory<T> {
-        void selectCategory(PopupWindow popupWindow, List<T> dataList, Integer selectedPosition);
+    public interface SelectedListener<T> {
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList, Integer selectedPosition);
     }
 
 }

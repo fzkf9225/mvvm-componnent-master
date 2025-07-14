@@ -27,11 +27,11 @@ import pers.fz.mvvm.wight.popupwindow.PopupView;
 public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, ActivityRecyclerViewSampleBinding> {
     private UseCase useCase;
 
-    private TreePopupView<PopupWindowBean<PopupWindowBean>> sexPopupWindow;
+    private TreePopupView<PopupWindowBean<PopupWindowBean<?>>> sexPopupWindow;
 
-    private PopupView<PopupWindowBean> cityPopupWindow;
+    private PopupView<PopupWindowBean<?>> cityPopupWindow;
 
-    private MultiPopupView<PopupWindowBean> qualityPopupWindow;
+    private MultiPopupView<PopupWindowBean<?>> qualityPopupWindow;
 
     @Override
     protected int getLayoutId() {
@@ -45,7 +45,7 @@ public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, Act
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        sexPopupWindow = new TreePopupView<PopupWindowBean<PopupWindowBean>>(this, Arrays.asList(
+        sexPopupWindow = new TreePopupView<PopupWindowBean<PopupWindowBean<?>>>(this, Arrays.asList(
                 new PopupWindowBean("", "不限", List.of(
                         new PopupWindowBean("", "不限")
                 )),
@@ -64,7 +64,7 @@ public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, Act
         ), true, sexSelectCategory);
         binding.tvSex.setOnClickListener(v -> sexPopupWindow.showAsDropDown(v, 0, 0, Gravity.TOP));
 
-        cityPopupWindow = new PopupView<PopupWindowBean>(this, Arrays.asList(
+        cityPopupWindow = new PopupView<PopupWindowBean<?>>(this, Arrays.asList(
                 new PopupWindowBean("", "不限"),
                 new PopupWindowBean("1", "北京"),
                 new PopupWindowBean("2", "上海"),
@@ -84,7 +84,7 @@ public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, Act
         ), citySelectCategory);
         binding.tvCity.setOnClickListener(v -> cityPopupWindow.showAsDropDown(v, 0, 0, Gravity.TOP));
 
-        qualityPopupWindow = new MultiPopupView<PopupWindowBean>(this, Arrays.asList(
+        qualityPopupWindow = new MultiPopupView<PopupWindowBean<?>>(this, Arrays.asList(
                 new PopupWindowBean("", "不限"),
                 new PopupWindowBean("1", "316不锈钢"),
                 new PopupWindowBean("2", "塑料"),
@@ -110,13 +110,13 @@ public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, Act
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
     }
 
-    private TreePopupView.SelectCategory sexSelectCategory = (TreePopupView.SelectCategory<PopupWindowBean<PopupWindowBean>>) (popupWindow, dataList, parentSelectPosition, childrenSelectPosition) ->
+    private final TreePopupView.SelectedListener<PopupWindowBean<PopupWindowBean<?>>> sexSelectCategory = (popupWindow, dataList, parentSelectPosition, childrenSelectPosition) ->
             binding.tvSex.setText(dataList.get(parentSelectPosition).getChildList().get(childrenSelectPosition).getPopupName());
 
 
-    private PopupView.SelectCategory citySelectCategory = (PopupView.SelectCategory<PopupWindowBean>) (popupWindow, dataList, selectPosition) ->
+    private final PopupView.SelectedListener<PopupWindowBean<?>> citySelectCategory = (popupWindow, dataList, selectPosition) ->
             binding.tvCity.setText(dataList.get(selectPosition).getPopupName());
 
-    private MultiPopupView.SelectCategory qualitySelectCategory = (MultiPopupView.SelectCategory<PopupWindowBean>) (popupWindow, dataList) ->
+    private final MultiPopupView.SelectedListener<PopupWindowBean<?>> qualitySelectCategory = (popupWindow, dataList) ->
             binding.tvQuality.setText("已选" + dataList.size() + "项");
 }

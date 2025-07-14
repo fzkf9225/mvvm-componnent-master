@@ -30,7 +30,7 @@ import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
  * describe：PopupWindow 下拉框
  */
 public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
-    private final SelectCategory<T> selectCategory;
+    private final SelectedListener<T> selectedListener;
     private final List<T> dataList;
 
     private PopupWindowAdapter<T> popupWindowAdapter = null;
@@ -56,8 +56,8 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
 
     private PopupCascadeViewBinding binding;
 
-    public TreePopupView(Context activity, List<T> dataList, boolean hasRight, SelectCategory<T> selectCategory) {
-        this.selectCategory = selectCategory;
+    public TreePopupView(Context activity, List<T> dataList, boolean hasRight, SelectedListener<T> selectedListener) {
+        this.selectedListener = selectedListener;
         this.dataList = dataList;
         this.activity = activity;
         this.hasRight = hasRight;
@@ -214,8 +214,8 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
         }
         if ((parentPosition != null && parentPosition == position) || !hasRight) {
             dismiss();
-            if (selectCategory != null) {
-                selectCategory.selectCategory(TreePopupView.this, dataList, position, childPosition);
+            if (selectedListener != null) {
+                selectedListener.onSelectedResult(TreePopupView.this, dataList, position, childPosition);
             }
         }
         parentPosition = position;
@@ -235,8 +235,8 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
             childPosition = position;
             childAdapter.setSelectedPosition(position);
             dismiss();
-            if (selectCategory != null) {
-                selectCategory.selectCategory(TreePopupView.this, dataList, parentPosition, childPosition);
+            if (selectedListener != null) {
+                selectedListener.onSelectedResult(TreePopupView.this, dataList, parentPosition, childPosition);
             }
         }
     };
@@ -245,8 +245,8 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
      * 选择成功回调
      * 把选中的下标通过方法回调回来
      */
-    public interface SelectCategory<T> {
-        void selectCategory(PopupWindow popupWindow, List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
+    public interface SelectedListener<T> {
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
     }
 
 }

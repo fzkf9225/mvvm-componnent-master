@@ -38,7 +38,7 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
     private PopupWindowSelectedAdapter<T> popupWindowSelectedAdapter;
     private PopupMultiCascadeBinding binding;
     private final List<T> dataList;
-    private final Callback callback;
+    private final SelectedListener<T> selectedListener;
     /**
      * 顶部选中文字颜色
      */
@@ -76,10 +76,10 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
      */
     private float itemHeight = 0;
 
-    public CascadeSinglePopupWindow(Activity context, List<T> dataList, Callback callback) {
+    public CascadeSinglePopupWindow(Activity context, List<T> dataList, SelectedListener<T> selectedListener) {
         super(context);
         this.dataList = dataList;
-        this.callback = callback;
+        this.selectedListener = selectedListener;
         //默认参数
         itemHeight = DensityUtil.dp2px(context, 40f);
         selectionTextColor = ContextCompat.getColor(context, R.color.autoColor);
@@ -170,7 +170,7 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
                 Toast.makeText(context, "请至少选择一项", Toast.LENGTH_SHORT).show();
                 return;
             }
-            callback.selectCategory(this, popupWindowSelectedAdapter.getList());
+            selectedListener.onSelectedResult(this, popupWindowSelectedAdapter.getList());
             dismiss();
         });
 
@@ -376,8 +376,8 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
         popupWindowSelectedAdapter.notifyDataSetChanged();
     }
 
-    public interface Callback {
-        <T extends PopupWindowBean> void selectCategory(PopupWindow popupWindow, List<T> dataList);
+    public interface SelectedListener<T> {
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
     }
 }
 
