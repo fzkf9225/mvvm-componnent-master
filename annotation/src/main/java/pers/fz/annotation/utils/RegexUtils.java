@@ -15,11 +15,11 @@ public class RegexUtils {
     /**
      * 正整数正则表达式 >=0 ^[1-9]\d*|0$
      */
-    public static final String INTEGER_NEGATIVE = "^[1-9]\\d*|0$";
+    public static final String INTEGER_POSITIVE = "^[1-9]\\d*|0$";
     /**
      * 负整数正则表达式 <=0 ^-[1-9]\d*|0$
      */
-    public static final String INTEGER_POSITIVE = "^-[1-9]\\d*|0$";
+    public static final String INTEGER_NEGATIVE = "^-[1-9]\\d*|0$";
     /**
      * Double正则表达式 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
      */
@@ -31,17 +31,17 @@ public class RegexUtils {
     /**
      * 正Double正则表达式 >=0 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
      */
-    public static final String DOUBLE_NEGATIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
+    public static final String DOUBLE_POSITIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
     /**
      * 负Double正则表达式 <= 0 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
      */
-    public static final String DOUBLE_POSITIVE = "^-[0-9]+(\\.[0-9]+)?$";
+    public static final String DOUBLE_NEGATIVE = "^-[0-9]+(\\.[0-9]+)?$";
 
     /**
      * Email正则表达式="^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
      */
     //public static final String EMAIL = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";;
-    public static final String EMAIL = "\\w+(\\.\\w+)*@\\w+(\\.\\w+)+";
+    public static final String EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     /**
      * 电话号码正则表达式= (^(\d{2,4}[-_－—]?)?\d{3,8}([-_－—]?\d{3,8})?([-_－—]?\d{1,7})?$)|(^0?1[35]\d{9}$)
      */
@@ -49,7 +49,7 @@ public class RegexUtils {
     /**
      * 手机号码正则表达式=^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$
      */
-    public static final String MOBILE = "^((13[0-9])|(15[0-9])|(18[0,1,2,3,5-9])|(17[0-9])|(19[0,2,6,7,8,9])|(147)|(145))\\d{8}$";
+    public static final String MOBILE = "^((13[0-9])|(14[0-4,5-9])|(15[0-3,5-9])|(16[0-4,5-6,7-9])|(17[0-8])|(18[0-9])|(19[0-9]))\\d{8}$";
 
 
     /**
@@ -60,7 +60,7 @@ public class RegexUtils {
      * @return boolean
      */
     private static boolean Regular(String str, String pattern) {
-        if (null == str || str.trim().length() <= 0) {
+        if (null == str || str.trim().isEmpty()) {
             return false;
         }
         Pattern p = Pattern.compile(pattern);
@@ -95,8 +95,8 @@ public class RegexUtils {
      * @param str
      * @return boolean
      */
-    public static boolean isINTEGER_NEGATIVE(String str) {
-        return Regular(str, INTEGER_NEGATIVE);
+    public static boolean isIntegerPositive(String str) {
+        return Regular(str, INTEGER_POSITIVE);
     }
 
     /**
@@ -105,8 +105,8 @@ public class RegexUtils {
      * @param str
      * @return boolean
      */
-    public static boolean isINTEGER_POSITIVE(String str) {
-        return Regular(str, INTEGER_POSITIVE);
+    public static boolean isIntegerNegative(String str) {
+        return Regular(str, INTEGER_NEGATIVE);
     }
 
     /**
@@ -135,8 +135,8 @@ public class RegexUtils {
      * @param str
      * @return boolean
      */
-    public static boolean isDOUBLE_NEGATIVE(String str) {
-        return Regular(str, DOUBLE_NEGATIVE);
+    public static boolean isDoublePositive(String str) {
+        return Regular(str, DOUBLE_POSITIVE);
     }
 
     /**
@@ -145,8 +145,8 @@ public class RegexUtils {
      * @param str
      * @return boolean
      */
-    public static boolean isDOUBLE_POSITIVE(String str) {
-        return Regular(str, DOUBLE_POSITIVE);
+    public static boolean isDoubleNegative(String str) {
+        return Regular(str, DOUBLE_NEGATIVE);
     }
 
     /**

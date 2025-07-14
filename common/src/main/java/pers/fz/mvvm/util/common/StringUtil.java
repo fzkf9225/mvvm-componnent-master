@@ -1,7 +1,5 @@
 package pers.fz.mvvm.util.common;
 
-import android.text.TextUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;

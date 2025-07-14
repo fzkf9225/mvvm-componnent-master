@@ -19387,7 +19387,7 @@ pers.fz.mvvm.activity.WebViewActivity:
 pers.fz.mvvm.adapter.ImageShowAdapter
 pers.fz.mvvm.adapter.VideoShowAdapter$OnVideoPlayerClickListener
 pers.fz.mvvm.adapter.VideoShowAdapter
-pers.fz.mvvm.api.ApiAccountHelper
+pers.fz.mvvm.api.MobileHelper
 pers.fz.mvvm.api.AppSettingHelper:
     private static final java.lang.String APP_IS_FIRST_RUN
     private static final java.lang.String NOTIFY_REQUEST_STATE

@@ -136,24 +136,4 @@ public class ScreenUtil {
         return bp;
 
     }
-
-    public int getStatusBarHeight(Application application) {
-        int statusBarHeight = DensityUtil.dp2px(application, 25);
-
-        // 获取资源标识符的名称
-        String statusBarHeightResName = "status_bar_height";
-
-        try {
-            // 获取资源标识符的 ID
-            int resourceId = application.getResources().getIdentifier(statusBarHeightResName, "dimen", "android");
-            if (resourceId > 0) {
-                // 获取实际的高度值
-                statusBarHeight = application.getResources().getDimensionPixelSize(resourceId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return statusBarHeight;
-    }
 }

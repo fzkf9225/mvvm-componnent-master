@@ -2,10 +2,8 @@ package pers.fz.mvvm.util.common;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import pers.fz.mvvm.bean.Gps;
 
 /**

@@ -16,6 +16,7 @@ import com.casic.titan.googlegps.service.GpsService
 import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.base.BaseActivity
 import pers.fz.mvvm.util.common.DateUtil
+import pers.fz.mvvm.util.log.LogUtil
 
 @AndroidEntryPoint
 class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {
@@ -55,16 +56,16 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
             unbindService(mViewModel.gpsServiceConnection)
             GpsService.removeLocationObserver(observer)
         }
-        binding.startServiceOnce.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.startServiceOnce.setOnClickListener { v: View? ->
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             once = true
             gpsLifecycleObserver?.startCheck(gpsCallback)
-        })
-        binding.startServiceAlways.setOnClickListener(View.OnClickListener { v: View? ->
+        }
+        binding.startServiceAlways.setOnClickListener { v: View? ->
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             once = false
             gpsLifecycleObserver?.startCheck(gpsCallback)
-        })
+        }
     }
 
     override fun initData(bundle: Bundle) {
@@ -106,7 +107,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
                 )
                 append("精度: ${value.accuracy} meters\n")
                 // 检查 API 级别（垂直精度需要 API 26+）
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     append("垂直精度: ${value.verticalAccuracyMeters} meters\n")
                 }
                 append("速度: ${value.speed} m/s\n")

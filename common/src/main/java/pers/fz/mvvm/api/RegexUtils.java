@@ -24,7 +24,7 @@ public class RegexUtils {
     /**
      * 手机号码正则表达式
      */
-    public static final String MOBILE = "^((13[0-9])|(14[5-9])|(15[0-3,5-9])|(16[5-6])|(17[0-8])|(18[0-9])|(19[1,8,9]))\\d{8}$";
+    public static final String MOBILE = "^((13[0-9])|(14[0-4,5-9])|(15[0-3,5-9])|(16[0-4,5-6,7-9])|(17[0-8])|(18[0-9])|(19[0-9]))\\d{8}$";
 
     /**
      * Integer正则表达式
@@ -34,12 +34,12 @@ public class RegexUtils {
     /**
      * 正整数正则表达式 >=0
      */
-    public static final String INTEGER_NEGATIVE = "^[1-9]\\d*|0$";
+    public static final String INTEGER_POSITIVE = "^[1-9]\\d*|0$";
 
     /**
      * 负整数正则表达式 <=0
      */
-    public static final String INTEGER_POSITIVE = "^-[1-9]\\d*|0$";
+    public static final String INTEGER_NEGATIVE = "^-[1-9]\\d*|0$";
 
     /**
      * Double正则表达式
@@ -54,12 +54,12 @@ public class RegexUtils {
     /**
      * 正Double正则表达式 >=0
      */
-    public static final String DOUBLE_NEGATIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
+    public static final String DOUBLE_POSITIVE = "^[+]?[0-9]+(\\.[0-9]+)?$";
 
     /**
      * 负Double正则表达式 <= 0
      */
-    public static final String DOUBLE_POSITIVE = "^-[0-9]+(\\.[0-9]+)?$";
+    public static final String DOUBLE_NEGATIVE = "^-[0-9]+(\\.[0-9]+)?$";
 
     /**
      * 年龄正则表达式 匹配0-120岁
@@ -245,8 +245,8 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isINTEGER_NEGATIVE(String str) {
-        return Regular(str, INTEGER_NEGATIVE);
+    public static boolean isIntegerPositive(String str) {
+        return Regular(str, INTEGER_POSITIVE);
     }
 
     /**
@@ -255,8 +255,8 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isINTEGER_POSITIVE(String str) {
-        return Regular(str, INTEGER_POSITIVE);
+    public static boolean isIntegerNegative(String str) {
+        return Regular(str, INTEGER_NEGATIVE);
     }
 
     /**
@@ -285,8 +285,8 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isDOUBLE_NEGATIVE(String str) {
-        return Regular(str, DOUBLE_NEGATIVE);
+    public static boolean isDoublePositive(String str) {
+        return Regular(str, DOUBLE_POSITIVE);
     }
 
     /**
@@ -295,8 +295,8 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isDOUBLE_POSITIVE(String str) {
-        return Regular(str, DOUBLE_POSITIVE);
+    public static boolean isDoubleNegative(String str) {
+        return Regular(str, DOUBLE_NEGATIVE);
     }
 
     /**
@@ -425,7 +425,7 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isSTR_NUM(String str) {
+    public static boolean isStringNumber(String str) {
         return Regular(str, STR_NUM);
     }
 

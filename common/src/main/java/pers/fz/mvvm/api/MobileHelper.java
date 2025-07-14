@@ -40,8 +40,8 @@ import pers.fz.mvvm.util.network.NetworkStateUtil;
  * Created by fz on 2017/8/18.
  * describe:存放应用相关常见
  */
-public class ApiAccountHelper {
-    private final static String TAG = ApiAccountHelper.class.getSimpleName();
+public class MobileHelper {
+    private final static String TAG = MobileHelper.class.getSimpleName();
 
     /**
      * 获取IP
@@ -119,7 +119,7 @@ public class ApiAccountHelper {
             hashMap.put("mac",getMacAddress(context));
             hashMap.put("versionCode",AppManager.getAppManager().getVersionCode(context));
             hashMap.put("versionName",AppManager.getAppManager().getVersion(context));
-            hashMap.put("ip",ApiAccountHelper.getIp(context));
+            hashMap.put("ip", MobileHelper.getIp(context));
             hashMap.put("brand",Build.BRAND);
             hashMap.put("product",Build.PRODUCT);
             hashMap.put("systemVersion",Build.VERSION.RELEASE);

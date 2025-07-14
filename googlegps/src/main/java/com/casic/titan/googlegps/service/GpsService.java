@@ -56,7 +56,7 @@ import java.util.List;
 
 @SuppressLint("MissingPermission")
 public class GpsService extends Service {
-    private final String TAG = this.getClass().getSimpleName();
+    public final static String TAG = GpsService.class.getSimpleName();
     private static NotificationManager notificationManager;
     private final IBinder binder = new GpsBinder();
     AlarmManager nextPointAlarmManager;

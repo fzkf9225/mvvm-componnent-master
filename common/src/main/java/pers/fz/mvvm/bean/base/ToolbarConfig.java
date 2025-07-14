@@ -1,9 +1,7 @@
 package pers.fz.mvvm.bean.base;
 
-import android.graphics.Color;
 
 import androidx.activity.ComponentActivity;
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
@@ -14,7 +12,6 @@ import java.util.Objects;
 
 import pers.fz.mvvm.BR;
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 
 /**

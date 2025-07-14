@@ -41,11 +41,11 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     public final static String HAS_MENU = "hasMenu";        // 是否显示右上角菜单
     public final static String DOMAIN = "domain";           // 自定义域名(用于加载本地资源)
 
-    private String url;             // 当前加载的URL
-    private int urlType;            // URL类型
-    private boolean hasToolbar;      // 是否显示Toolbar
-    private boolean hasMenu;         // 是否显示菜单
-    private String domain;           // 自定义域名
+    protected String url;             // 当前加载的URL
+    protected int urlType;            // URL类型
+    protected boolean hasToolbar;      // 是否显示Toolbar
+    protected boolean hasMenu;         // 是否显示菜单
+    protected String domain;           // 自定义域名
 
     @Override
     protected int getLayoutId() {
