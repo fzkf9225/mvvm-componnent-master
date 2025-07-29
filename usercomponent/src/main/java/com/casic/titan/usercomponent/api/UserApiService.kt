@@ -33,20 +33,17 @@ interface UserApiService : BaseApiService {
     /**
      * 获取token
      */
-    @POST("blade-auth/oauth/token")
+    @POST("auth/refresh-token")
+    @FormUrlEncoded
     fun refreshToken(
-        @Field("refresh_token") refreshToken: String?, @Field("tenantld") tenantld: String?,
-        @Field("grant_type") grant_type: String?, @Field("scope") scope: String?,
-        @Field("type") type: String?
+        @Field("refreshToken") refreshToken: String?
     ): Observable<TokenBean>
     /**
      * 获取token
      */
-    @POST("blade-auth/oauth/token")
+    @POST("auth/refresh-token")
     fun refreshTokenFlow(
-        @Field("refresh_token") refreshToken: String?, @Field("tenantld") tenantld: String?,
-        @Field("grant_type") grant_type: String?, @Field("scope") scope: String?,
-        @Field("type") type: String?
+        @Field("refreshToken") refreshToken: String?
     ): Flowable<TokenBean>
 
     @GET("user/getLoginUserInfo")

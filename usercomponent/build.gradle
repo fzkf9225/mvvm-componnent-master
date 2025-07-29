@@ -6,7 +6,7 @@ plugins {
 }
 android {
     namespace 'com.casic.titan.usercomponent'
-    compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         if (userComponentIsApplication.toBoolean()) {
             applicationId "com.casic.titan.usercomponent"

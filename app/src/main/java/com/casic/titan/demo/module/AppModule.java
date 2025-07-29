@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.util.common.PropertiesUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 
@@ -22,13 +23,14 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class AppModule {
 
     @Provides
-    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService) {
+    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService, RetryService retryService) {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
         LogUtil.show(ApiRetrofit.TAG, "App模块baseUrl:" + baseUrl);
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
+                .setRetryService(retryService)
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(ApiServiceHelper.class);

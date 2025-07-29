@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.casic.titan.commonui'
-    compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }

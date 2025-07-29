@@ -19,10 +19,13 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
     protected final List<Subscription> subscriptionList = new ArrayList<>();
     protected BV baseView;
+    /**
+     * 请求错误时重试服务，这个优先级最高，这里的 > ApiRetrofit中设置的retryService（这里的相当于默认配置，大家共用一个retryService）  > 不设置
+     * 这个相当于单独的retryService配置只在当前中生效
+     */
     protected RetryService retryService;
 
     public BaseRepository() {
-
     }
 
     public BaseRepository(RetryService retryService) {
@@ -48,6 +51,11 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
         this.baseView = baseView;
     }
 
+    /**
+     * 这个可以不设置，在创建ApiRetrofit的时候设置，ApiRetrofit中的setRetryService事通用的逻辑
+     * 这里针对单个需要定制的才需要调用这个方法，
+     * @param retryService 重试服务
+     */
     public void setRetryService(RetryService retryService) {
         this.retryService = retryService;
     }

@@ -23,11 +23,12 @@ import pers.fz.mvvm.inter.RetryService;
  * Created by fz on 2023/12/1 10:19
  * describe :
  */
-public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseView> extends BaseRepository<BV> {
+public abstract class RepositoryImpl<API extends BaseApiService, BV extends BaseView> extends BaseRepository<BV> {
 
     protected API apiService;
 
     public RepositoryImpl() {
+        super();
     }
 
     public RepositoryImpl(RetryService retryService) {
@@ -65,44 +66,6 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         this.apiService = apiService;
     }
 
-    public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
-        if (retryService != null) {
-            return observable.subscribeOn(Schedulers.io())
-                    .retryWhen(throwableObservable ->
-                            retryService.handleObservableError(throwableObservable.cast(Throwable.class)))
-                    .doOnSubscribe(disposable -> {
-                        addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        } else {
-            return observable.subscribeOn(Schedulers.io())
-                    .doOnSubscribe(disposable -> {
-                        addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        }
-    }
-
     public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData, Consumer<Throwable> throwableConsumer) {
         return sendRequest(observable, apiRequestOptions, liveData, null, throwableConsumer);
     }
@@ -127,11 +90,18 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         return sendRequest(observable, ApiRequestOptions.getDefault(), null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
     }
 
+    public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
+        return sendRequest(observable, apiRequestOptions)
+                .subscribe(consumer == null ? (liveData::setValue) : consumer,
+                        throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+    }
+
     public <T> Observable<T> sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null) {
+        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
             return observable.subscribeOn(Schedulers.io())
-                    .retryWhen(throwableObservable ->
-                            retryService.handleObservableError(throwableObservable.cast(Throwable.class)))
+                    .retryWhen(throwableObservable -> retryService != null ?
+                            retryService.handleObservableError(throwableObservable.cast(Throwable.class)) :
+                            apiService.getRetrofit().getBuilder().getRetryService().handleObservableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
@@ -161,44 +131,6 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         }
     }
 
-
-    public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
-        if (retryService != null) {
-            return flowable.subscribeOn(Schedulers.io())
-                    .retryWhen(throwableObservable ->
-                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
-                    .doOnSubscribe(disposable -> {
-                        addSubscription(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        } else {
-            return flowable.subscribeOn(Schedulers.io())
-                    .doOnSubscribe(disposable -> {
-                        addSubscription(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        }
-    }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData, Consumer<Throwable> throwableConsumer) {
         return sendRequest(flowable, apiRequestOptions, liveData, null, throwableConsumer);
@@ -224,11 +156,19 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         return sendRequest(flowable, ApiRequestOptions.getDefault(), null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
     }
 
+    public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
+        return sendRequest(flowable, apiRequestOptions)
+                .subscribe(consumer == null ? (liveData::setValue) : consumer,
+                        throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+    }
+
     public <T> Flowable<T> sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null) {
+        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
             return flowable.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
-                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
+                            retryService != null ?
+                                    retryService.handleFlowableError(throwableObservable.cast(Throwable.class)) :
+                                    apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
@@ -258,43 +198,6 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         }
     }
 
-    public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
-        if (retryService != null) {
-            return single.subscribeOn(Schedulers.io())
-                    .retryWhen(throwableObservable ->
-                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
-                    .doOnSubscribe(disposable -> {
-                        addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        } else {
-            return single.subscribeOn(Schedulers.io())
-                    .doOnSubscribe(disposable -> {
-                        addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
-                        }
-                    })
-                    .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
-        }
-    }
 
     public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData, Consumer<Throwable> throwableConsumer) {
         return sendRequest(single, apiRequestOptions, liveData, null, throwableConsumer);
@@ -320,11 +223,19 @@ public abstract class RepositoryImpl<API extends BaseApiService,BV extends BaseV
         return sendRequest(single, ApiRequestOptions.getDefault(), null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
     }
 
+    public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
+        return sendRequest(single, apiRequestOptions)
+                .subscribe(consumer == null ? (liveData::setValue) : consumer,
+                        throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+    }
+
     public <T> Single<T> sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null) {
+        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
             return single.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
-                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
+                            retryService != null ?
+                                    retryService.handleFlowableError(throwableObservable.cast(Throwable.class)) :
+                                    apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {

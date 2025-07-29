@@ -19,7 +19,10 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import pers.fz.mvvm.base.BaseConverterFactory;
+import pers.fz.mvvm.impl.ApiServiceWrapper;
+import pers.fz.mvvm.inter.ApiRetrofitService;
 import pers.fz.mvvm.inter.ErrorService;
+import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.PropertiesUtil;
 import pers.fz.mvvm.util.encode.MD5Util;
@@ -111,14 +114,42 @@ public class ApiRetrofit {
          * 请求头
          */
         private final Map<String, String> headerMap = new HashMap<>();
+        /**
+         * mContext对象
+         */
         private final Context mContext;
+        /**
+         * retrofit对象
+         */
         private Retrofit retrofit = null;
+        /**
+         * okhttp对象
+         */
         private OkHttpClient client = null;
+        /**
+         * 请求和返回转换器
+         */
         private Converter.Factory converterFactory = null;
+        /**
+         * 拦截器
+         */
         private final List<Interceptor> interceptorList = new ArrayList<>();
+        /**
+         * 请求超时时间
+         */
         private long timeOut = 15;
+        /**
+         * 是否使用默认的加密签名的方式
+         */
         private boolean useDefaultSign = false;
+        /**
+         * 请求头、等等错误路由跳转等服务配置
+         */
         private ErrorService errorService = null;
+        /**
+         * 请求接口重试服务
+         */
+        private RetryService retryService = null;
         /**
          * 请求成功版本号，如果自定义converterFactory情况下不生效
          */
@@ -149,6 +180,11 @@ public class ApiRetrofit {
 
         public Builder setSingleInstance(boolean singleInstance) {
             this.singleInstance = singleInstance;
+            return this;
+        }
+
+        public Builder setRetryService(RetryService retryService) {
+            this.retryService = retryService;
             return this;
         }
 
@@ -248,8 +284,10 @@ public class ApiRetrofit {
                             if (errorService != null) {
                                 headerMap.putAll(errorService.defaultRequestHeader(system));
                             }
+
                             //添加默认请求头
                             requestBuilder.headers(Headers.of(headerMap));
+
                             if (useDefaultSign) {
                                 requestBuilder.addHeader("x-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
                             }
@@ -279,8 +317,7 @@ public class ApiRetrofit {
                         .baseUrl(baseUrl)
                         .addConverterFactory(converterFactory)
                         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                        .client(this.client)
-                        .build();
+                        .client(this.client).build();
             }
             if (singleInstance) {
                 if (apiRetrofit == null) {
@@ -295,10 +332,83 @@ public class ApiRetrofit {
                 return new ApiRetrofit(this);
             }
         }
+
+        public String getBaseUrl() {
+            return baseUrl;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public String getAppSecret() {
+            return appSecret;
+        }
+
+        public String getSystem() {
+            return system;
+        }
+
+        public String getProtocolVersion() {
+            return protocolVersion;
+        }
+
+        public Map<String, String> getHeaderMap() {
+            return headerMap;
+        }
+
+        public Context getmContext() {
+            return mContext;
+        }
+
+        public Retrofit getRetrofit() {
+            return retrofit;
+        }
+
+        public OkHttpClient getClient() {
+            return client;
+        }
+
+        public Converter.Factory getConverterFactory() {
+            return converterFactory;
+        }
+
+        public List<Interceptor> getInterceptorList() {
+            return interceptorList;
+        }
+
+        public long getTimeOut() {
+            return timeOut;
+        }
+
+        public boolean isUseDefaultSign() {
+            return useDefaultSign;
+        }
+
+        public ErrorService getErrorService() {
+            return errorService;
+        }
+
+        public RetryService getRetryService() {
+            return retryService;
+        }
+
+        public String getSuccessCode() {
+            return successCode;
+        }
+
+        public boolean isSingleInstance() {
+            return singleInstance;
+        }
     }
 
     public <T> T getApiService(final Class<T> service) {
-        return getBuilder().retrofit.create(service);
+        T apiService = getBuilder().retrofit.create(service);
+        // 如果接口继承自 ApiRetrofitService，则返回装饰后的对象
+        if (ApiRetrofitService.class.isAssignableFrom(service)) {
+            return ApiServiceWrapper.wrap(apiService, this, service);
+        }
+        return apiService;
     }
 
     /**
@@ -312,12 +422,12 @@ public class ApiRetrofit {
     private static String encodeSign(String appSecret, String postJson, String timeStamp) {
         try {
             String signOld = ("x-appsecret" + appSecret + postJson + "x-timestamp" + timeStamp).toUpperCase();
-            LogUtil.show("ApiRetrofit", "加密前：" + signOld);
+            LogUtil.show(TAG, "加密前：" + signOld);
 
             return MD5Util.md5Encode(signOld).toUpperCase();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show("ApiRetrofit", "签名计算异常：" + e);
+            LogUtil.show(TAG, "签名计算异常：" + e);
         }
         return "";
     }

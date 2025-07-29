@@ -8,8 +8,7 @@ plugins {
 
 android {
     namespace 'com.casic.titan.demo'
-
-    compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
@@ -22,8 +21,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
-            // On x86 devices that run Android API 23 or above, if the application is targeted with API 23 or
-            // above, FFmpeg lib might lead to runtime crashes or warnings.
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
         ksp {

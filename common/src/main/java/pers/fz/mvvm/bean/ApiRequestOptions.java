@@ -127,7 +127,7 @@ public class ApiRequestOptions {
     @NonNull
     @Override
     public String toString() {
-        return "RequestConfigEntity{" +
+        return "ApiRequestOptions{" +
                 "isShowDialog=" + isShowDialog +
                 ", isShowToast=" + isShowToast +
                 ", toastMsg='" + toastMsg + '\'' +

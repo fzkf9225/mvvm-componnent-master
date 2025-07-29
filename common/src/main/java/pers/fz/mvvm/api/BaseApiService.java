@@ -3,6 +3,7 @@ package pers.fz.mvvm.api;
 
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
+import pers.fz.mvvm.inter.ApiRetrofitService;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Streaming;
@@ -15,7 +16,8 @@ import retrofit2.http.Url;
  * 来源：
  */
 
-public abstract interface BaseApiService {
+public interface BaseApiService extends ApiRetrofitService {
+
     /**
      * 大文件官方建议用 @Streaming 来进行注解，不然会出现IO异常，小文件可以忽略不注入
      *

@@ -106,6 +106,7 @@ public class DownloadManger {
      */
     public Single<List<File>> download(Activity mContext, List<String> urlString, String saveBasePath) {
         return Observable.fromIterable(urlString)
+                .distinct()
                 .flatMap((Function<String, ObservableSource<File>>) filePath -> download(mContext, filePath, saveBasePath))
                 .toList()
                 .subscribeOn(Schedulers.io());

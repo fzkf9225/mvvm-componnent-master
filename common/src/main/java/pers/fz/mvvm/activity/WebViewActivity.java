@@ -69,7 +69,6 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initView(Bundle savedInstanceState) {
-
         // 设置WebChromeClient显示进度条和标题
         binding.webView.setWebChromeClient(new SystemWebChromeClient(
                 this,

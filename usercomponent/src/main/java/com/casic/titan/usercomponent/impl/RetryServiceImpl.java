@@ -90,8 +90,7 @@ public class RetryServiceImpl implements RetryService {
 
     private Observable<UserInfo> refresh(UserApiService userApiService) {
         UserAccountHelper.saveLoginPast(false);
-        return userApiService.refreshToken(UserAccountHelper.getRefreshToken(), "000000",
-                        GrantType.REFRESH_TOKEN.getValue(), "all", "account")
+        return userApiService.refreshToken(UserAccountHelper.getRefreshToken())
                 .flatMap(tokenBean -> {
                     UserAccountHelper.setToken(tokenBean.getAccess_token());
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
@@ -102,8 +101,7 @@ public class RetryServiceImpl implements RetryService {
 
     private Flowable<UserInfo> refreshFlow(UserApiService userApiService) {
         UserAccountHelper.saveLoginPast(false);
-        return userApiService.refreshTokenFlow(UserAccountHelper.getRefreshToken(), "000000",
-                        GrantType.REFRESH_TOKEN.getValue(), "all", "account")
+        return userApiService.refreshTokenFlow(UserAccountHelper.getRefreshToken())
                 .flatMap(tokenBean -> {
                     UserAccountHelper.setToken(tokenBean.getAccess_token());
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());

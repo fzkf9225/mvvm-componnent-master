@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.cache.ExternalCacheDiskCacheFactory;
+import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 
 import java.io.File;
@@ -63,7 +64,7 @@ public class CacheUtil {
     public void clearImageAllCache(Context context) {
         clearImageDiskCache(context);
         clearImageMemoryCache(context);
-        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
+        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalPreferredCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
         deleteFolderFile(ImageExternalCatchDir, true);
     }
 
@@ -73,7 +74,7 @@ public class CacheUtil {
      */
     public String getCacheSize(Context context) {
         try {
-            return getFormatSize(getFolderSize(new File(context.getCacheDir() + "/" + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
+            return getFormatSize(getFolderSize(new File(context.getCacheDir() + File.separator + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
         } catch (Exception e) {
             e.printStackTrace();
         }

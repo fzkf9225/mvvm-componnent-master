@@ -26,16 +26,13 @@ public class DemoPagingViewModel extends PagingViewModel<KtDemoPagingRepositoryI
     ApiServiceHelper apiServiceHelper;
 
     @Inject
-    public RetryService retryService;
-
-    @Inject
     public DemoPagingViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
     protected KtDemoPagingRepositoryImpl createRepository() {
-        return RepositoryFactory.create(KtDemoPagingRepositoryImpl.class,retryService,baseView,apiServiceHelper);
+        return RepositoryFactory.create(KtDemoPagingRepositoryImpl.class,baseView,apiServiceHelper);
     }
 
 }

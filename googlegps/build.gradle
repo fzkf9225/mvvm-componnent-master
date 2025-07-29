@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.casic.titan.googlegps'
-    compileSdk libs.versions.compileSdkVersion.get().toInteger()
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
