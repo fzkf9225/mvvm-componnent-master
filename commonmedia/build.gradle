@@ -21,10 +21,6 @@ android {
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
         }
-        //加载项目build.gradle的anroid标签下
-        dataBinding {
-            enabled = true
-        }
     }
 
     buildTypes {
@@ -53,8 +49,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    dataBinding{
-        enabled = true
+    buildFeatures {
+        dataBinding true
+        buildConfig true
     }
     compileOptions {
         encoding "UTF-8"

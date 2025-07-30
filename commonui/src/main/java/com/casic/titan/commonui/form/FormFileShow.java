@@ -105,10 +105,7 @@ public class FormFileShow extends FormMedia {
             isShowFileDrawable = true;
         }
         if (fileDrawable == null) {
-            LogUtil.show(TAG,"fileDrawable不为null");
             fileDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.icon_file);
-        }else{
-            LogUtil.show(TAG,"fileDrawable为null");
         }
     }
 

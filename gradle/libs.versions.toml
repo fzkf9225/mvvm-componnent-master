@@ -90,7 +90,7 @@ androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version
 com-birbit-android-priority-jobqueue = { module = "com.birbit:android-priority-jobqueue", version.ref = "birbitAndroidPriorityJobqueue" }
 com-squareup-picasso-picasso = { module = "com.squareup.picasso:picasso", version.ref = "squareupPicasso" }
 com-trello-rxlifecycle2-rxlifecycle-components = { module = "com.trello.rxlifecycle2:rxlifecycle-components", version.ref = "rxlifecycleVersion" }
-core = { module = "com.google.zxing:core", version.ref = "zxingCoreVersion" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCoreVersion" }
 github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
 github-gsyvideoplayer-x64 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64", version.ref = "gsyVersion" }

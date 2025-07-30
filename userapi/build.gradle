@@ -27,8 +27,9 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
+        buildConfig true
     }
     kotlinOptions {
         jvmTarget = '17'

@@ -21,10 +21,6 @@ android {
             }
         }
     }
-    //加载项目build.gradle的anroid标签下
-    dataBinding {
-        enabled = true
-    }
     buildTypes {
         release {
             resValue "string", "user_config_file", "user_prod.properties"
@@ -55,6 +51,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    buildFeatures {
+        dataBinding true
+        buildConfig true
     }
 }
 

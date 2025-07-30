@@ -26,10 +26,6 @@ android {
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
-        //加载项目build.gradle的android标签下
-        dataBinding {
-            enabled = true
-        }
     }
 
     buildTypes {
@@ -61,8 +57,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    dataBinding{
-        enabled = true
+    buildFeatures {
+        dataBinding true
+        buildConfig true
     }
     compileOptions {
         encoding "UTF-8"

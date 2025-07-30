@@ -23,9 +23,6 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
 
     buildTypes {
@@ -51,22 +48,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    dataBinding {
-        //noinspection DataBindingWithoutKapt
-        enabled = true
-    }
     dexOptions {
         javaMaxHeapSize "4g"
     }
     ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
         arg("jvmTarget", "17")
     }
     kotlinOptions {
         jvmTarget = '17'
     }
     buildFeatures {
+        dataBinding true
         buildConfig true
-        aidl true
     }
 }
 
@@ -113,12 +107,10 @@ dependencies {
     implementation libs.scwang90.refresh.layout.kernel
     implementation libs.refresh.header.classics
     implementation libs.refresh.footer.classics
-
     implementation libs.okhttp
     implementation libs.retrofit
-    implementation libs.reactivex.rxandroid
-    implementation libs.rxjava3.rxjava
-    implementation libs.core
+
+    implementation libs.zxing.core
     implementation libs.zxing.android.embedded
     //paging3
     implementation libs.androidx.paging.runtime
