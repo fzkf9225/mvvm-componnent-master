@@ -3,6 +3,7 @@ package com.casic.titan.commonui.form;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -26,6 +27,7 @@ import java.util.List;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
 
@@ -59,6 +61,14 @@ public class FormFileShow extends FormMedia {
      * 列表中文字颜色
      */
     protected int itemTextColor;
+    /**
+     * 文件图标
+     */
+    protected Drawable fileDrawable;
+    /**
+     * 是否展示文件图标
+     */
+    protected boolean isShowFileDrawable = true;
 
     public FormFileShow(@NonNull Context context) {
         super(context);
@@ -79,8 +89,10 @@ public class FormFileShow extends FormMedia {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            fileDrawable = typedArray.getDrawable(R.styleable.FormUI_fileDrawable);
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
+            isShowFileDrawable = typedArray.getBoolean(R.styleable.FormUI_isShowFileDrawable, true);
             if (TextUtils.isEmpty(emptyText)) {
                 emptyText = "暂无附件";
             }
@@ -90,6 +102,13 @@ public class FormFileShow extends FormMedia {
             emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件";
+            isShowFileDrawable = true;
+        }
+        if (fileDrawable == null) {
+            LogUtil.show(TAG,"fileDrawable不为null");
+            fileDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.icon_file);
+        }else{
+            LogUtil.show(TAG,"fileDrawable为null");
         }
     }
 
@@ -105,6 +124,8 @@ public class FormFileShow extends FormMedia {
             fileShowAdapter.setRadius(radius);
             fileShowAdapter.setBgColor(bgColor);
             fileShowAdapter.setTextColor(itemTextColor);
+            fileShowAdapter.setFileDrawable(fileDrawable);
+            fileShowAdapter.setShowFileDrawable(isShowFileDrawable);
         }
         mediaRecyclerView.addItemDecoration(
                 new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, (int) columnMargin,
@@ -126,7 +147,7 @@ public class FormFileShow extends FormMedia {
         tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, emptyTextSize);
         tvEmpty.setText(emptyText);
         tvEmpty.setGravity(Gravity.CENTER);
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, DensityUtil.dp2px(getContext(),60f));
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, DensityUtil.dp2px(getContext(), 60f));
         params.setMarginStart((int) textEndMargin);
         params.setMarginEnd((int) textEndMargin);
         params.topMargin = (int) defaultTextMargin;

@@ -71,6 +71,10 @@
     <declare-styleable name="FormUI">
         <!--默认的添加图标资源-->
         <attr name="fileAddSrc" format="reference"/>
+        <!--文件前面的图标-->
+        <attr name="fileDrawable" format="reference"/>
+        <!--是否展示文件前面的图标-->
+        <attr name="isShowFileDrawable" format="boolean"/>
         <!--空白内容时，占用的文字颜色-->
         <attr name="emptyTextColor"/>
         <!--矩形框圆角大小-->

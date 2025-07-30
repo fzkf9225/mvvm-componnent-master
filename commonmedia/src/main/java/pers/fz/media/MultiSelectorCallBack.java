@@ -28,7 +28,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
         if (MediaTypeEnum.IMAGE == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getImageMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedImageCount()) {
-                    mediaHelper.showToast("您最多还可选" + (mediaHelper.getMediaBuilder().getImageMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedImageCount())
+                    mediaHelper.getUIController().showToast("您最多还可选" + (mediaHelper.getMediaBuilder().getImageMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedImageCount())
                             + "张图片");
                     return;
                 }
@@ -37,7 +37,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
         } else if (MediaTypeEnum.VIDEO == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()) {
-                    mediaHelper.showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()
+                    mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()
                     ) + "条视频");
                     return;
                 }
@@ -46,7 +46,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
         } else if (MediaTypeEnum.AUDIO == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()) {
-                    mediaHelper.showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()
+                    mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()
                     ) + "条音频");
                     return;
                 }
@@ -55,7 +55,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
         } else if (MediaTypeEnum.FILE == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()) {
-                    mediaHelper.showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()
+                    mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()
                     ) + "个文件");
                     return;
                 }

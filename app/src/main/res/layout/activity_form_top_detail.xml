@@ -123,6 +123,7 @@
                 android:layout_height="wrap_content"
                 app:bgColor="@color/default_background"
                 app:bottomBorder="false"
+                app:fileDrawable="@mipmap/icon_file"
                 app:formImeOptions="actionNext"
                 app:label="其他附件"
                 app:layout_constraintEnd_toEndOf="parent"
