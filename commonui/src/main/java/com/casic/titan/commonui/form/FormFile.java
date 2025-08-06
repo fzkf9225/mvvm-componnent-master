@@ -31,6 +31,7 @@ import java.util.List;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenFileDialog;
+import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
@@ -82,6 +83,10 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
      * 空白文字内容
      */
     protected String emptyText = "暂无附件，请点击右上角添加附件";
+    /**
+     * 文件限定格式，英文逗号分割
+     */
+    protected String[] fileType = null;
 
     /**
      * 列表中item文字颜色
@@ -115,6 +120,11 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             if (TextUtils.isEmpty(emptyText)) {
                 emptyText = "暂无附件，请点击右上角添加附件";
             }
+
+            String fileTypeStr = typedArray.getString(R.styleable.FormUI_fileType);
+            if (!TextUtils.isEmpty(fileTypeStr)) {
+                fileType = fileTypeStr.split(",");
+            }
             itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             typedArray.recycle();
         } else {
@@ -123,6 +133,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件，请点击右上角添加附件";
+            fileType = null;
         }
     }
 
@@ -196,7 +207,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         tvEmpty.setGravity(Gravity.CENTER);
         tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, emptyTextSize);
         tvEmpty.setText(emptyText);
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, DensityUtil.dp2px(getContext(),60f));
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, DensityUtil.dp2px(getContext(), 60f));
         params.setMarginStart((int) textEndMargin);
         params.setMarginEnd((int) textEndMargin);
         params.topMargin = (int) defaultTextMargin;
@@ -252,7 +263,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
                 .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                .setChooseType(MediaHelper.PICK_TYPE)
+                .setChooseType(MediaPickerTypeEnum.PICK)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -273,6 +284,11 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
                     public int onSelectedVideoCount() {
                         return fileAddAdapter.getList().size();
                     }
+
+                    @Override
+                    public int onSelectedMediaCount() {
+                        return fileAddAdapter.getList().size();
+                    }
                 })
                 .builder();
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
@@ -283,4 +299,16 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         });
     }
 
+    /**
+     * 设置文件格式类型
+     * @param fileType 数组格式：image/* video/* audio/*
+     */
+    public void setFileType(String[] fileType) {
+        this.fileType = fileType;
+        if (mediaHelper == null) {
+            Toast.makeText(getContext(), "请先调用bindLifecycle方法", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mediaHelper.getMediaBuilder().setFileType(fileType);
+    }
 }

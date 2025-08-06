@@ -33,7 +33,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaPickerTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
@@ -63,10 +64,10 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
         mediaHelper = new MediaBuilder(this)
                 .bindLifeCycle(this)
                 .setImageMaxSelectedCount(1)
-                .setChooseType(MediaHelper.DEFAULT_TYPE)
+                .setChooseType(MediaPickerTypeEnum.PICK)
                 .builder();
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 identifyUri(mediaBean.getMediaList().get(0).toString(),callbackContext);
 //                base64Image = uriToBase64(mediaBean.getMediaList().get(0));
 //                binding.editBase64.setText(base64Image);

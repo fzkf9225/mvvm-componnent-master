@@ -11,11 +11,11 @@ import com.casic.titan.demo.viewmodel.MediaCompressViewModel;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.base.BaseActivity;
 
@@ -57,21 +57,21 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
 
         mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(1)
-                .setVideoQuality(MediaHelper.VIDEO_MEDIUM);
+                .setVideoQuality(VideoQualityEnum.LOW);
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 mediaHelper.startCompressImage(mediaBean.getMediaList());
-            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 binding.setSourceVideoPath(mediaBean.getMediaList().get(0));
                 mediaHelper.startCompressVideo(mediaBean.getMediaList());
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 binding.setCompressImagePath(mediaBean.getMediaList().get(0));
-            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 binding.setCompressVideoPath(mediaBean.getMediaList().get(0));
             }
         });

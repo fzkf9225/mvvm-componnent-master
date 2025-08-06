@@ -70,6 +70,9 @@ dependencies {
     implementation libs.com.squareup.picasso.picasso
     implementation libs.constraintlayout
 
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+
     implementation libs.google.hilt.android
     annotationProcessor libs.google.hilt.android.compiler
     kapt libs.google.hilt.android.compiler

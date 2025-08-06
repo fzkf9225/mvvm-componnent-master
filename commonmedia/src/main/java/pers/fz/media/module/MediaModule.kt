@@ -10,6 +10,7 @@ import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.FragmentComponent
 import pers.fz.media.MediaBuilder
 import pers.fz.media.MediaHelper
+import pers.fz.media.enums.MediaPickerTypeEnum
 import javax.inject.Qualifier
 
 /**
@@ -28,9 +29,9 @@ class MediaModule {
             .setVideoMaxSelectedCount(MediaHelper.DEFAULT_VIDEO_MAX_COUNT)
             .setFileMaxSelectedCount(MediaHelper.DEFAULT_FILE_MAX_COUNT)
             .setAudioMaxSelectedCount(MediaHelper.DEFAULT_AUDIO_MAX_COUNT)
-            .setChooseType(MediaHelper.PICK_TYPE)
+            .setMediaMaxSelectedCount(MediaHelper.DEFAULT_MEDIA_MAX_COUNT)
+            .setChooseType(MediaPickerTypeEnum.PICK)
             .builder()
-
     }
 
     @Provides
@@ -42,7 +43,8 @@ class MediaModule {
             .setVideoMaxSelectedCount(MediaHelper.DEFAULT_VIDEO_MAX_COUNT)
             .setFileMaxSelectedCount(MediaHelper.DEFAULT_FILE_MAX_COUNT)
             .setAudioMaxSelectedCount(MediaHelper.DEFAULT_AUDIO_MAX_COUNT)
-            .setChooseType(MediaHelper.PICK_TYPE)
+            .setMediaMaxSelectedCount(MediaHelper.DEFAULT_MEDIA_MAX_COUNT)
+            .setChooseType(MediaPickerTypeEnum.PICK)
             .builder()
     }
 

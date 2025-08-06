@@ -24,9 +24,11 @@ import java.util.List;
 import pers.fz.media.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaPickerTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
@@ -43,7 +45,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 压缩质量，默认为低质量
      */
-    protected int compressVideo = MediaHelper.VIDEO_LOW;
+    protected int compressVideo = VideoQualityEnum.MEDIUM.value;
     /**
      * 适配器
      */
@@ -105,7 +107,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, compress);
-            compressVideo = typedArray.getInt(R.styleable.FormUI_compressImageSize, MediaHelper.VIDEO_LOW);
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compressImageSize, VideoQualityEnum.LOW.value);
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
@@ -117,7 +119,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);
             compress = true;
-            compressVideo = MediaHelper.VIDEO_LOW;
+            compressVideo = VideoQualityEnum.LOW.value;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
         }
     }
@@ -268,8 +270,8 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                .setChooseType(MediaHelper.PICK_TYPE)
-                .setVideoQuality(compressVideo)
+                .setChooseType(MediaPickerTypeEnum.PICK)
+                .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -290,12 +292,17 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                     public int onSelectedVideoCount() {
                         return videoAddAdapter.getList().size();
                     }
+
+                    @Override
+                    public int onSelectedMediaCount() {
+                        return 0;
+                    }
                 })
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
             LogUtil.show(MediaHelper.TAG,"FormVideo");
-            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 if (compress) {
                     mediaHelper.startCompressVideo(mediaBean.getMediaList());
                 } else {
@@ -308,7 +315,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());

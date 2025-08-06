@@ -3,6 +3,7 @@
     <color name="hint_text_color">#c4c4c4</color>
     <color name="h_line_color">#dddddd</color>
     <color name="dark_light">#5d5d5d</color>
+    <color name="gray">#666666</color>
     <color name="autoColor">#333333</color>
 
 </resources>

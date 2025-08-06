@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.exifinterface.media.ExifInterface;
@@ -26,6 +27,36 @@ import java.util.Random;
 public class MediaUtil {
     private final String TAG = this.getClass().getSimpleName();
 
+    public static boolean isImage(Uri uri, Context context) {
+        try {
+            String mimeType = context.getContentResolver().getType(uri);
+            return mimeType != null && mimeType.startsWith("image/");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isVideo(Uri uri, Context context) {
+        try {
+            String mimeType = context.getContentResolver().getType(uri);
+            return mimeType != null && mimeType.startsWith("video/");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isAudio(Uri uri, Context context) {
+        try {
+            String mimeType = context.getContentResolver().getType(uri);
+            return mimeType != null && mimeType.startsWith("audio/");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static String getPictureLongitude(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return null;
@@ -38,6 +69,7 @@ public class MediaUtil {
         }
         return null;
     }
+
     public static String getPictureLatitude(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return null;
@@ -56,7 +88,7 @@ public class MediaUtil {
             return null;
         }
         try {
-            String[] strings =  new String[2];
+            String[] strings = new String[2];
             ExifInterface exif = new ExifInterface(filePath);
             strings[0] = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             strings[1] = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
@@ -66,6 +98,7 @@ public class MediaUtil {
         }
         return null;
     }
+
     public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText) {
         return createWatermark(originalBitmap, watermarkText, 100);
     }

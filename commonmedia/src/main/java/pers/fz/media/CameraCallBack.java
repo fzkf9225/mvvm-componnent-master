@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import pers.fz.media.enums.MediaTypeEnum;
+
 
 /**
  * Created by fz on 2023/11/20 15:00
  * describe :
  */
 public class CameraCallBack implements ActivityResultCallback<Uri> {
-    private MediaBuilder mediaBuilder;
-    private MediaTypeEnum mediaType;
-    private MutableLiveData<MediaBean> mutableLiveData;
+    private final MediaBuilder mediaBuilder;
+    private final MediaTypeEnum mediaType;
+    private final MutableLiveData<MediaBean> mutableLiveData;
 
     public CameraCallBack(MediaBuilder mediaBuilder, MediaTypeEnum mediaType, MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaBuilder = mediaBuilder;
@@ -36,12 +38,17 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
             if (!isFileUriExists(result)) {
                 return;
             }
-            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE.getMediaType()));
+            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == mediaType) {
             if (!isFileUriExists(result)) {
                 return;
             }
-            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.VIDEO.getMediaType()));
+            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.VIDEO));
+        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == mediaType) {
+            if (!isFileUriExists(result)) {
+                return;
+            }
+            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
         }
 
     }
@@ -51,9 +58,9 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
      * 判断uri是否存在，因为新版打开拍照后不拍照也会返回uri因此需要判断一下
      *
      * @param uri 文件uri路径
-     * @return
+     * @return true存在，false不存在
      */
-    public boolean isFileUriExists(Uri uri) {
+    private boolean isFileUriExists(Uri uri) {
         ContentResolver contentResolver = mediaBuilder.getContext().getContentResolver();
         InputStream inputStream = null;
         try {

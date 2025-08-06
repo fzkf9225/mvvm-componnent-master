@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultCallback;
 
 import java.util.List;
 
+import pers.fz.media.enums.MediaTypeEnum;
+
 /**
  * Created by fz on 2023/11/20 15:00
  * describe :
@@ -33,7 +35,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE.getMediaType()));
+            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()) {
@@ -42,7 +44,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.VIDEO.getMediaType()));
+            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.VIDEO));
         } else if (MediaTypeEnum.AUDIO == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()) {
@@ -51,7 +53,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.AUDIO.getMediaType()));
+            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.AUDIO));
         } else if (MediaTypeEnum.FILE == mediaType) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()) {
@@ -60,7 +62,16 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.FILE.getMediaType()));
+            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.FILE));
+        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == mediaType) {
+            if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
+                if (result.size() > mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedMediaCount()) {
+                    mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedMediaCount()
+                    ) + "个文件");
+                    return;
+                }
+            }
+            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE_AND_VIDEO));
         }
     }
 }

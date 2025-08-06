@@ -144,6 +144,8 @@
         <attr name="emptyTextSize" format="dimension"/>
         <!--暂无数据占位布局的文字内容-->
         <attr name="emptyText" format="string"/>
+        <!--FormFile中的限定文件格式，英文逗号分割-->
+        <attr name="fileType" format="string"/>
         <!--input输入框，最大输入长度，默认不限制-->
         <attr name="maxLength"/>
         <!--*号文字大小-->

@@ -1,9 +1,10 @@
 package pers.fz.media;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,38 +15,39 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.OpenableColumns;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-import pers.fz.media.dialog.MediaProgressDialog;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenMediaDialog;
 import pers.fz.media.dialog.OpenShootDialog;
-import pers.fz.media.dialog.TipDialog;
+import pers.fz.media.dialog.PermissionReminderDialog;
+import pers.fz.media.enums.MediaPickerTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.enums.VideoQualityEnum;
+import pers.fz.media.handler.ImageCompressHandler;
+import pers.fz.media.handler.VideoCompressHandler;
+import pers.fz.media.handler.WaterMarkHandler;
+import pers.fz.media.handler.WaterMarkHandlerCallback;
 import pers.fz.media.helper.UIController;
 import pers.fz.media.imgcompressor.ImgCompressor;
+import pers.fz.media.listener.OnDialogInterfaceClickListener;
 import pers.fz.media.videocompressor.CompressListener;
 import pers.fz.media.videocompressor.VideoCompress;
 
@@ -54,27 +56,21 @@ import pers.fz.media.videocompressor.VideoCompress;
  * describe:拍照、拍摄视频、图片视频压缩工具类
  */
 public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, OpenShootDialog.OnOpenVideoClickListener,
-        OpenFileDialog.OnOpenFileClickListener {
+        OpenFileDialog.OnOpenFileClickListener, OpenMediaDialog.OnOpenMediaClickListener {
     public final static String TAG = MediaHelper.class.getSimpleName();
+    /**
+     * 选择、拍照、拍摄、文件选择等结果
+     */
     private final MutableLiveData<MediaBean> mutableLiveData = new MutableLiveData<>();
+    /**
+     * 压缩结果
+     */
     private final MutableLiveData<MediaBean> mutableLiveDataCompress = new MutableLiveData<>();
 
     /**
      * 添加照片水印回调
      */
     private final MutableLiveData<MediaBean> mutableLiveDataWaterMark = new MutableLiveData<>();
-    /**
-     * 低质量
-     */
-    public final static int VIDEO_HIGH = 1;
-    /**
-     * 中等质量
-     */
-    public final static int VIDEO_MEDIUM = 2;
-    /**
-     * 高质量
-     */
-    public final static int VIDEO_LOW = 3;
 
     /**
      * 最大可选的图片数量，默认9张
@@ -93,13 +89,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      */
     public final static int DEFAULT_FILE_MAX_COUNT = 9;
     /**
-     * 新版Pick选择框
+     * 最大可选的图片、视频数量，同时选择图片视频时使用
      */
-    public final static int PICK_TYPE = 1;
-    /**
-     * 默认的选择
-     */
-    public final static int DEFAULT_TYPE = 0;
+    public final static int DEFAULT_MEDIA_MAX_COUNT = 9;
 
     private final MediaBuilder mediaBuilder;
 
@@ -159,6 +151,14 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 .show();
     }
 
+    public void openMediaDialog(View v, int mediaType) {
+        new OpenMediaDialog(v.getContext())
+                .setMediaType(mediaType)
+                .setOnOpenMediaClickListener(this)
+                .builder()
+                .show();
+    }
+
     /**
      * 判断权限集合
      */
@@ -185,7 +185,24 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * @param permissions 权限
      */
     private void checkPermission(String[] permissions) {
-        mediaLifecycleObserver.getPermissionLauncher().launch(permissions);
+        if (!mediaBuilder.isShowPermissionDialog()) {
+            mediaLifecycleObserver.getPermissionLauncher().launch(permissions);
+            return;
+        }
+        new PermissionReminderDialog(mediaBuilder.getContext())
+                .setMessage(mediaBuilder.getPermissionMessage())
+                .setSpannableContent(mediaBuilder.getPermissionSpannableContent())
+                .setNegativeText(mediaBuilder.getPermissionNegativeText())
+                .setPositiveText(mediaBuilder.getPermissionPositiveText())
+                .setNegativeTextColor(mediaBuilder.getPermissionNegativeTextColor())
+                .setPositiveTextColor(mediaBuilder.getPermissionPositiveTextColor())
+                .setOnPositiveClickListener(mediaBuilder.getOnPermissionPositiveClickListener() == null ? dialog -> {
+                    dialog.dismiss();
+                    mediaLifecycleObserver.getPermissionLauncher().launch(permissions);
+                } : mediaBuilder.getOnPermissionPositiveClickListener())
+                .setOnNegativeClickListener(mediaBuilder.getOnPermissionNegativeClickListener() == null ? Dialog::dismiss : mediaBuilder.getOnPermissionNegativeClickListener())
+                .builder()
+                .show();
     }
 
     /**
@@ -194,11 +211,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public void startCompressImage(List<Uri> images) {
         Message message = new Message();
         message.what = 0;
-        imageCompressHandler = new ImageCompressHandler(handlerLooper(), images);
-        imageCompressHandler.sendMessage(message);
+        new ImageCompressHandler(this,handlerLooper(), images).sendMessage(message);
     }
-
-    private ImageCompressHandler imageCompressHandler = null;
 
     @Override
     public void fileClick(int chooseType) {
@@ -209,10 +223,14 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     }
 
+    public void openAudio() {
+        openAudio(null);
+    }
+
     /**
      * 打开音频选择页面
      */
-    public void openAudio() {
+    public void openAudio(String[] customAudioType) {
         if (isMoreThanMaxAudio()) {
             return;
         }
@@ -227,17 +245,31 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 return;
             }
         }
-        if (mediaBuilder.getAudioMaxSelectedCount() == 1) {
-            mediaLifecycleObserver.getAudioSingleSelectorLauncher().launch(new String[]{"audio/*"});
+        String[] audioType;
+        if (customAudioType == null || customAudioType.length == 0) {
+            if (mediaBuilder.getAudioType() == null || mediaBuilder.getAudioType().length == 0) {
+                audioType = new String[]{"audio/*"};
+            } else {
+                audioType = mediaBuilder.getAudioType();
+            }
         } else {
-            mediaLifecycleObserver.getAudioMuLtiSelectorLauncher().launch(new String[]{"audio/*"});
+            audioType = customAudioType;
         }
+        if (mediaBuilder.getAudioMaxSelectedCount() == 1) {
+            mediaLifecycleObserver.getAudioSingleSelectorLauncher().launch(audioType);
+        } else {
+            mediaLifecycleObserver.getAudioMuLtiSelectorLauncher().launch(audioType);
+        }
+    }
+
+    public void openFile() {
+        openFile(null);
     }
 
     /**
      * 打开文件管理器
      */
-    public void openFile() {
+    public void openFile(String[] customFileType) {
         if (isMoreThanMaxFile()) {
             return;
         }
@@ -247,76 +279,20 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 return;
             }
         }
-
-        if (mediaBuilder.getFileMaxSelectedCount() == 1) {
-            mediaLifecycleObserver.getFileSingleSelectorLauncher().launch(new String[]{"*/*"});
+        String[] fileType;
+        if (customFileType == null || customFileType.length == 0) {
+            if (mediaBuilder.getFileType() == null || mediaBuilder.getFileType().length == 0) {
+                fileType = new String[]{"*/*"};
+            } else {
+                fileType = mediaBuilder.getFileType();
+            }
         } else {
-            mediaLifecycleObserver.getFileMuLtiSelectorLauncher().launch(new String[]{"*/*"});
+            fileType = customFileType;
         }
-    }
-
-    /**
-     * 图片压缩handler
-     */
-    private class ImageCompressHandler extends Handler {
-        private final List<Uri> imagesCompressList;
-        private final List<Uri> srcUriList;
-
-        public ImageCompressHandler(@NonNull Looper looper, List<Uri> srcUriList) {
-            super(looper);
-            this.srcUriList = srcUriList;
-            imagesCompressList = new ArrayList<>();
-            if (mediaBuilder.isShowLoading()) {
-                uiController.showLoading("正在处理图片...");
-            }
-        }
-
-        @SuppressLint("Range")
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            try {
-                LogUtil.show(TAG, "压缩图片msg.what：" + msg.what);
-                LogUtil.show(TAG, "压缩图片msg.obj：" + msg.obj);
-                if (msg.what > 0 && msg.obj != null) {
-                    boolean isSuccess = imagesCompressList.add((Uri) msg.obj);
-                }
-                if (srcUriList == null || srcUriList.isEmpty() ||
-                        msg.what >= srcUriList.size()) {
-                    uiController.showToast("图片压缩成功！");
-                    if (mediaBuilder.isShowLoading()) {
-                        uiController.hideLoading();
-                    }
-                    mutableLiveDataCompress.postValue(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE.getMediaType()));
-                } else {
-                    ContentResolver contentResolver = mediaBuilder.getContext().getContentResolver();
-                    Cursor cursor = contentResolver.query(srcUriList.get(msg.what), null, null, null, null);
-                    double size = -1;
-                    if (cursor != null && cursor.moveToFirst()) {
-                        size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-                        cursor.close();
-                    }
-                    if (size != -1 && size < mediaBuilder.getImageQualityCompress() * 1024) {
-                        LogUtil.show(TAG, "该图片小于" + mediaBuilder.getImageQualityCompress() + "kb不压缩");
-                        Message message = new Message();
-                        message.obj = srcUriList.get(msg.what);
-                        message.what = msg.what + 1;
-                        imageCompressHandler.sendMessage(message);
-                    } else {
-                        ImgCompressor.getInstance(mediaBuilder.getContext())
-                                .withListener(new ImageCompressListener(msg.what, srcUriList.size())).
-                                starCompress(srcUriList.get(msg.what), mediaBuilder.getImageOutPutPath(), 720, 1280,
-                                        mediaBuilder.getImageQualityCompress());
-                    }
-                }
-            } catch (Exception e) {
-                LogUtil.show(TAG, "图片压缩出现错误:" + e);
-                e.printStackTrace();
-                uiController.showToast("图片压缩出现错误");
-                if (mediaBuilder.isShowLoading()) {
-                    uiController.hideLoading();
-                }
-            }
+        if (mediaBuilder.getFileMaxSelectedCount() == 1) {
+            mediaLifecycleObserver.getFileSingleSelectorLauncher().launch(fileType);
+        } else {
+            mediaLifecycleObserver.getFileMuLtiSelectorLauncher().launch(fileType);
         }
     }
 
@@ -337,10 +313,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         Message message = new Message();
         message.obj = bitmap;
         message.arg1 = 100;
-        handlerWaterMark.sendMessage(message);
         if (mediaBuilder.isShowLoading()) {
             uiController.showLoading("正在为图片添加水印...");
         }
+        new WaterMarkHandler(this, handlerLooper()).sendMessage(message);
     }
 
     /**
@@ -353,94 +329,14 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         Message message = new Message();
         message.obj = bitmap;
         message.arg1 = alpha;
-        handlerWaterMark.sendMessage(message);
         if (mediaBuilder.isShowLoading()) {
             uiController.showLoading("正在为图片添加水印...");
         }
+        new WaterMarkHandler(this, handlerLooper()).sendMessage(message);
     }
-
-    /**
-     * 给图片添加水印handler
-     */
-    public Handler handlerWaterMark = new Handler(handlerLooper(), new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            if (msg.obj == null) {
-                if (mediaBuilder.isShowLoading()) {
-                    uiController.hideLoading();
-                }
-                mutableLiveDataWaterMark.postValue(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE.getMediaType()));
-                return true;
-            }
-            Bitmap bitmapOld = (Bitmap) msg.obj;
-            int alpha = msg.arg1;
-            Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaBuilder.getWaterMark(), alpha);
-            String outputPath = MediaUtil.getNoRepeatFileName(mediaBuilder.getImageOutPutPath(), "IMAGE_WM_", ".jpg");
-            File outputFile = new File(mediaBuilder.getImageOutPutPath(), outputPath + ".jpg");
-            MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
-            if (mediaBuilder.isShowLoading()) {
-                uiController.hideLoading();
-            }
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                // 从文件中创建uri
-                mutableLiveDataWaterMark.postValue(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
-            } else { //兼容android7.0 使用共享文件的形式
-                mutableLiveDataWaterMark.postValue(new MediaBean(List.of(FileProvider.getUriForFile(mediaBuilder.getContext(),
-                        mediaBuilder.getContext().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE.getMediaType()));
-            }
-            if (bitmapNew.isRecycled()) {
-                bitmapNew.recycle();
-            }
-            if (bitmapOld.isRecycled()) {
-                bitmapOld.recycle();
-            }
-            return false;
-        }
-    });
 
     public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
         return mutableLiveDataWaterMark;
-    }
-
-    private class ImageCompressListener implements ImgCompressor.CompressListener {
-        private final int index;
-        private final int totalCount;
-
-        public ImageCompressListener(int index, int totalCount) {
-            this.index = index;
-            this.totalCount = totalCount;
-        }
-
-        @Override
-        public void onCompressStart() {
-            if (mediaBuilder.isShowLoading()) {
-                uiController.refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
-            }
-        }
-
-        @Override
-        public void onCompressEnd(ImgCompressor.CompressResult imageOutPath) {
-            if (imageOutPath.getStatus() == ImgCompressor.CompressResult.RESULT_ERROR || imageOutPath.getOutPath() == null) {
-                if (mediaBuilder.isShowLoading()) {
-                    uiController.hideLoading();
-                }
-                uiController.showToast("图片压缩错误");
-                return;
-            }
-            Message message = new Message();
-            message.what = index + 1;
-            message.obj = imageOutPath.getOutPath();
-            imageCompressHandler.sendMessage(message);
-        }
-
-        @Override
-        public void onCompressFail(Exception exception) {
-            LogUtil.show(TAG, "图片压缩异常：" + exception);
-            if (mediaBuilder.isShowLoading()) {
-                uiController.hideLoading();
-            }
-            uiController.showToast("图片压缩错误");
-        }
     }
 
     private boolean isMoreThanMaxImage() {
@@ -483,11 +379,15 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         return false;
     }
 
+    public void openImg() {
+        openImg(null);
+    }
+
     /**
      * 打开相册选择页面
      */
-    public void openImg() {
-        if (mediaBuilder.getChooseType() == PICK_TYPE) {
+    public void openImg(String[] customImageType) {
+        if (mediaBuilder.getChooseType() == MediaPickerTypeEnum.PICK) {
             if (mediaBuilder.getImageMaxSelectedCount() == 1) {
                 mediaLifecycleObserver.getPickImageSelectorLauncher().launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
@@ -514,10 +414,73 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     return;
                 }
             }
-            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
-                mediaLifecycleObserver.getImageSingleSelectorLauncher().launch(new String[]{"image/*"});
+            String[] imageType;
+            if (customImageType == null || customImageType.length == 0) {
+                if (mediaBuilder.getImageType() == null || mediaBuilder.getImageType().length == 0) {
+                    imageType = new String[]{"image/*"};
+                } else {
+                    imageType = mediaBuilder.getImageType();
+                }
             } else {
-                mediaLifecycleObserver.getImageMuLtiSelectorLauncher().launch(new String[]{"image/*"});
+                imageType = customImageType;
+            }
+            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
+                mediaLifecycleObserver.getImageSingleSelectorLauncher().launch(imageType);
+            } else {
+                mediaLifecycleObserver.getImageMuLtiSelectorLauncher().launch(imageType);
+            }
+        }
+    }
+
+    public void openMedia() {
+        openMedia(null);
+    }
+
+    /**
+     * 打开相册选择页面，包含视频、图片一起
+     */
+    public void openMedia(String[] customMediaType) {
+        if (mediaBuilder.getChooseType() == MediaPickerTypeEnum.PICK) {
+            if (mediaBuilder.getMediaMaxSelectedCount() == 1) {
+                mediaLifecycleObserver.getPickMediaSelectorLauncher().launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageAndVideo.INSTANCE)
+                        .build());
+            } else {
+                mediaLifecycleObserver.getPickMuLtiMediaSelectorLauncher().launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageAndVideo.INSTANCE)
+                        .build());
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE)) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE);
+                    return;
+                }
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU)) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU);
+                    return;
+                }
+            } else {
+                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_READ);
+                    return;
+                }
+            }
+            String[] mediaType;
+            if (customMediaType == null || customMediaType.length == 0) {
+                if (mediaBuilder.getMediaType() == null || mediaBuilder.getMediaType().length == 0) {
+                    mediaType = new String[]{"image/*", "video/*"};
+                } else {
+                    mediaType = mediaBuilder.getMediaType();
+                }
+            } else {
+                mediaType = customMediaType;
+            }
+            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
+                mediaLifecycleObserver.getMediaSingleSelectorLauncher().launch(mediaType);
+            } else {
+                mediaLifecycleObserver.getMediaMuLtiSelectorLauncher().launch(mediaType);
             }
         }
     }
@@ -540,8 +503,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         mediaLifecycleObserver.getCameraLauncher().launch(null);
     }
 
-    private VideoCompressHandler videoCompressHandler = null;
-
     /**
      * 开始压缩
      */
@@ -549,109 +510,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         Message message = new Message();
         message.obj = videos;
         message.what = 0;
-        videoCompressHandler = new VideoCompressHandler(handlerLooper(), videos);
-        videoCompressHandler.sendMessage(message);
-    }
-
-    private class VideoCompressListener implements CompressListener {
-        private final File outPath;
-        private final int index;
-        private final int totalCount;
-
-        public VideoCompressListener(File outPath, int index, int totalCount) {
-            this.outPath = outPath;
-            this.index = index;
-            this.totalCount = totalCount;
-        }
-
-        @Override
-        public void onStart() {
-        }
-
-        @Override
-        public void onResult(boolean isSuccess, String message) {
-            if (!isSuccess) {
-                uiController.showToast(TextUtils.isEmpty(message) ? "视频压缩异常" : message);
-                if (mediaBuilder.isShowLoading()) {
-                    uiController.hideLoading();
-                }
-                return;
-            }
-            Uri resultUri;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                resultUri = FileProvider.getUriForFile(mediaBuilder.getContext(),
-                        mediaBuilder.getContext().getPackageName() + ".FileProvider", outPath);
-            } else {
-                resultUri = Uri.fromFile(outPath);
-            }
-            Message msg = new Message();
-            msg.what = index + 1;
-            msg.obj = resultUri;
-            videoCompressHandler.sendMessage(msg);
-        }
-
-
-        @Override
-        public void onProgress(float percent) {
-            if (mediaBuilder.isShowLoading()) {
-                if (percent == 100) {
-                    uiController.refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
-                } else {
-                    uiController.refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
-                }
-            }
-        }
-    }
-
-    private class VideoCompressHandler extends Handler {
-        private final List<Uri> uriList;
-        private final List<Uri> compressUriList;
-
-        public VideoCompressHandler(@NonNull Looper looper, List<Uri> videos) {
-            super(looper);
-            this.uriList = videos;
-            compressUriList = new ArrayList<>();
-            if (mediaBuilder.isShowLoading()) {
-                uiController.showLoading("正在处理视频...");
-            }
-        }
-
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            try {
-                if (msg.what > 0 && msg.obj != null) {
-                    compressUriList.add((Uri) msg.obj);
-                }
-                if (uriList.isEmpty() || msg.what >= uriList.size()) {
-                    uiController.showToast("压缩成功！");
-                    if (mediaBuilder.isShowLoading()) {
-                        uiController.hideLoading();
-                    }
-                    mutableLiveDataCompress.postValue(new MediaBean(compressUriList, MediaTypeEnum.VIDEO.getMediaType()));
-                } else {
-                    String fileName = MediaUtil.getNoRepeatFileName(mediaBuilder.getVideoOutPutPath(), "VIDEO_", ".mp4");
-                    File outputFile = new File(mediaBuilder.getVideoOutPutPath(), fileName + ".mp4");
-                    if (mediaBuilder.getVideoQuality() == VIDEO_HIGH) {
-                        VideoCompress.compressVideoHigh(mediaBuilder.getContext(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
-                    } else if (mediaBuilder.getVideoQuality() == VIDEO_MEDIUM) {
-                        VideoCompress.compressVideoMedium(mediaBuilder.getContext(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
-                    } else {
-                        VideoCompress.compressVideoLow(mediaBuilder.getContext(),
-                                uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
-                    }
-                }
-            } catch (Exception e) {
-                LogUtil.show(TAG, "视频加载出现错误：" + e);
-                e.printStackTrace();
-                uiController.showToast("视频加载出现错误");
-                if (mediaBuilder.isShowLoading()) {
-                    uiController.hideLoading();
-                }
-            }
-        }
+        new VideoCompressHandler(this,handlerLooper(), videos).sendMessage(message);
     }
 
     @Override
@@ -684,11 +543,15 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         mediaLifecycleObserver.getShootLauncher().launch(null);
     }
 
+    public void openShoot() {
+        openShoot(null);
+    }
+
     /**
      * 打开视频资源选择库
      */
-    public void openShoot() {
-        if (mediaBuilder.getChooseType() == PICK_TYPE) {
+    public void openShoot(String[] customVideoType) {
+        if (mediaBuilder.getChooseType() == MediaPickerTypeEnum.PICK) {
             if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
                 mediaLifecycleObserver.getPickVideoSelectorLauncher().launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
@@ -715,10 +578,20 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                     return;
                 }
             }
-            if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
-                mediaLifecycleObserver.getVideoLauncher().launch(new String[]{"video/*"});
+            String[] videoType;
+            if (customVideoType == null || customVideoType.length == 0) {
+                if (mediaBuilder.getVideoType() == null || mediaBuilder.getVideoType().length == 0) {
+                    videoType = new String[]{"video/*"};
+                } else {
+                    videoType = mediaBuilder.getVideoType();
+                }
             } else {
-                mediaLifecycleObserver.getVideoMultiLauncher().launch(new String[]{"video/*"});
+                videoType = customVideoType;
+            }
+            if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
+                mediaLifecycleObserver.getVideoLauncher().launch(videoType);
+            } else {
+                mediaLifecycleObserver.getVideoMultiLauncher().launch(videoType);
             }
         }
     }

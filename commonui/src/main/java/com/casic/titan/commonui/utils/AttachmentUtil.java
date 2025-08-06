@@ -27,9 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
+import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.util.download.DownloadManger;
+import pers.fz.mvvm.wight.dialog.MenuDialog;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
@@ -394,13 +398,22 @@ public class AttachmentUtil {
                 bundleVideo.putString("videoPath", url);
                 VideoPlayerActivity.show(mContext, bundleVideo);
             } else {
-                // 进一步使用 Uri 类验证
-                Uri uri = Uri.parse(url);
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                i.setDataAndType(uri, type);
-                mContext.startActivity(i);
+                new MenuDialog<>(mContext)
+                        .setData("下载", "下载并预览")
+                        .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
+                            dialog.dismiss();
+                            if (AppManager.getAppManager().currentActivity() == null || AppManager.getAppManager().currentActivity().isFinishing()) {
+                                return;
+                            }
+                            Disposable disposable = DownloadManger.getInstance().download(AppManager.getAppManager().currentActivity(), url)
+                                    .subscribe(file -> {
+                                        if (pos == 1) {
+                                            viewAbsoluteFile(mContext, file.getAbsolutePath());
+                                        }
+                                    }, throwable -> Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show());
+                        })
+                        .builder()
+                        .show();
             }
         } catch (Exception e) {
             e.printStackTrace();

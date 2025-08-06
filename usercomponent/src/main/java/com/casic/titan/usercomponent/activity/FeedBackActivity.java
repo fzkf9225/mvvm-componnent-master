@@ -8,9 +8,8 @@ import com.casic.titan.usercomponent.databinding.FeedbackBinding;
 
 import javax.inject.Inject;
 
-import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
@@ -42,7 +41,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
     public void initView(Bundle savedInstanceState) {
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
             }

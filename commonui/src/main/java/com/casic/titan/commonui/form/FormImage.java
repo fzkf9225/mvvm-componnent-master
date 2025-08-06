@@ -23,7 +23,8 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaPickerTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
@@ -266,7 +267,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
                 .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
-                .setChooseType(MediaHelper.PICK_TYPE)
+                .setChooseType(MediaPickerTypeEnum.PICK)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -287,12 +288,17 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                     public int onSelectedVideoCount() {
                         return 0;
                     }
+
+                    @Override
+                    public int onSelectedMediaCount() {
+                        return 0;
+                    }
                 })
                 .setImageQualityCompress(compressImageSize)
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());
                 } else {
@@ -304,7 +310,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());

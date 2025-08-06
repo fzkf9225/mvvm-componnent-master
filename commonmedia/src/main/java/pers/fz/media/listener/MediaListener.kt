@@ -9,4 +9,5 @@ interface MediaListener {
     fun onSelectedVideoCount(): Int = 0
     fun onSelectedAudioCount(): Int = 0
     fun onSelectedFileCount(): Int = 0
+    fun onSelectedMediaCount(): Int = 0
 }

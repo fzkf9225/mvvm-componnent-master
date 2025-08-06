@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.enums;
 
 /**
  * Created by fz on 2023/9/2.
@@ -20,7 +20,16 @@ public enum MediaTypeEnum {
     /*
      * 文件、包含所有可选类型的文件，具体那些可选会根据系统api有一定的区别
      */
-    FILE(0);
+    FILE(0),
+    /*
+     * 未知类型
+     */
+    OTHER(4),
+    /*
+     * 图片和视频混合一起的
+     */
+    IMAGE_AND_VIDEO(5);
+
     private final int mediaType;
 
     MediaTypeEnum(int mediaType) {

@@ -23,7 +23,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaTypeEnum;
+import pers.fz.media.enums.MediaPickerTypeEnum;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
@@ -67,7 +68,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
-                .setChooseType(MediaHelper.PICK_TYPE)
+                .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWaterMark("仅测试使用")
                 .setMediaListener(new MediaListener() {
                     @Override
@@ -89,6 +90,11 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                     public int onSelectedVideoCount() {
                         return videoAddAdapter.getList().size();
                     }
+
+                    @Override
+                    public int onSelectedMediaCount() {
+                        return 0;
+                    }
                 })
                 .setImageQualityCompress(200);
         binding.buttonImage.setOnClickListener(v -> {
@@ -107,22 +113,22 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 if (mediaBean.getMediaList() != null && mediaBean.getMediaList().size() > 0) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 }
                 imageAddAdapter.getList().addAll(mediaBean.getMediaList());
                 imageAddAdapter.notifyDataSetChanged();
                 binding.tvImage.setText("图片选择（" + imageAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getImageMaxSelectedCount() + "）");
-            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO.getMediaType()) {
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 videoAddAdapter.getList().addAll(mediaBean.getMediaList());
                 videoAddAdapter.notifyDataSetChanged();
                 binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
-            } else if (mediaBean.getMediaType() == MediaTypeEnum.AUDIO.getMediaType()) {
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.AUDIO) {
                 audioList.clear();
                 audioList.addAll(coverUriToString(mediaBean.getMediaList()));
                 binding.chooseAudioResult.setText("音频选择结果：" + new Gson().toJson(audioList));
-            } else if (mediaBean.getMediaType() == MediaTypeEnum.FILE.getMediaType()) {
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.FILE) {
                 fileList.clear();
                 fileList.addAll(coverUriToString(mediaBean.getMediaList()));
                 binding.chooseFileResult.setText("文件选择结果：" + new Gson().toJson(fileList));
