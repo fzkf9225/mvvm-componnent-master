@@ -99,6 +99,11 @@ public class FormVideoShow extends FormMedia {
         mediaRecyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public String[] defaultFileType() {
+        return new String[]{"*/*"};
+    }
+
     public AppCompatTextView getTvEmpty() {
         return tvEmpty;
     }

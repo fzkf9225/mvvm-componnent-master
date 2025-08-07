@@ -85,6 +85,8 @@
         <attr name="compressImageSize" format="integer" />
         <!--最大可选数量-->
         <attr name="maxCount" format="integer"/>
+        <!--拍摄视频最大时长，单位：秒，默认为30秒-->
+        <attr name="maxVideoDuration" format="integer"/>
         <!--一列显示几个-->
         <attr name="columnCount" format="integer"/>
         <!--列之间间距-->
@@ -97,10 +99,20 @@
         <attr name="mediaType">
             <!--相册、拍照兼具-->
             <enum name="camera_album" value="3" />
-            <!--仅拍照-->
+            <!--仅拍照或录像-->
             <enum name="camera" value="1" />
             <!--仅相册-->
             <enum name="album" value="2" />
+            <!--图片、视频同时选择时的参数，仅拍照-->
+            <enum name="media_camera" value="1" />
+            <!--图片、视频同时选择时的参数，仅摄像-->
+            <enum name="media_shoot" value="2" />
+            <!--图片、视频同时选择时的参数，仅相册-->
+            <enum name="media_album" value="3" />
+            <!--图片、视频同时选择时的参数，仅拍照摄像-->
+            <enum name="media_camera_shoot" value="4" />
+            <!--图片、视频同时选择时的参数，相册、拍照、录像都显示-->
+            <enum name="media_camera_shoot_album" value="5" />
         </attr>
         <!--视频压缩质量-->
         <attr name="compress_video" format="enum">
@@ -130,6 +142,10 @@
         <attr name="errorImage" format="reference"/>
         <!--是否必填，也就是是否显示必填的*号-->
         <attr name="required" />
+        <!--是否调用uri的持久化权限takeUriPermission，默认为true-->
+        <attr name="requireUriPermission" format="boolean" />
+        <!--是否显示协议dialog-->
+        <attr name="protocolDialog" format="boolean" />
         <!--媒体选择总数显示提示文字的大小-->
         <attr name="formCountLabelTextSize" format="dimension"/>
         <!--媒体选择总数显示提示文字颜色-->

@@ -83,7 +83,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_rich_text" />
 
             <!--现场图片-->
-            <com.casic.titan.commonui.form.FormImageShow
+            <com.casic.titan.commonui.form.FormImage
                 android:id="@+id/form_screen_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 app:required="false" />
 
             <!--现场视频-->
-            <com.casic.titan.commonui.form.FormVideoShow
+            <com.casic.titan.commonui.form.FormVideo
                 android:id="@+id/form_screen_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,8 +110,22 @@
                 app:layout_constraintTop_toBottomOf="@+id/form_screen_image"
                 app:required="false" />
 
+            <!--现场视频-->
+            <com.casic.titan.commonui.form.FormImageAndVideo
+                android:id="@+id/form_image_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:bgColor="@color/default_background"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:label="图片视频混合"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_screen_video"
+                app:required="false" />
+
             <!--其他附件-->
-            <com.casic.titan.commonui.form.FormFileShow
+            <com.casic.titan.commonui.form.FormFile
                 android:id="@+id/form_screen_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,9 +135,8 @@
                 app:label="其他附件"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/form_screen_video"
+                app:layout_constraintTop_toBottomOf="@+id/form_image_video"
                 app:required="false" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

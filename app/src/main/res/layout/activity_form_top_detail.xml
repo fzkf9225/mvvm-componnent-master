@@ -116,6 +116,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_screen_image"
                 app:required="false" />
+
+            <!--现场视频-->
+            <com.casic.titan.commonui.form.FormImageAndVideoShow
+                android:id="@+id/form_image_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:bgColor="@color/default_background"
+                app:bottomBorder="true"
+                app:formImeOptions="actionNext"
+                app:label="图片视频混合"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_screen_video"
+                app:required="false" />
             <!--其他附件-->
             <com.casic.titan.commonui.form.FormFileShow
                 android:id="@+id/form_screen_file"
@@ -128,7 +142,7 @@
                 app:label="其他附件"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/form_screen_video"
+                app:layout_constraintTop_toBottomOf="@+id/form_image_video"
                 app:required="false" />
 
 

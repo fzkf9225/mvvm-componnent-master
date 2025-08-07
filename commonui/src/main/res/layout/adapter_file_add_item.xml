@@ -13,13 +13,13 @@
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_file"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:lines="1"
-            android:textColor="#333333"
+            android:textColor="@color/autoColor"
             android:textSize="14sp"
             android:paddingTop="@dimen/padding_s"
             android:paddingBottom="@dimen/padding_s"

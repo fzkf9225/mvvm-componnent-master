@@ -301,6 +301,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_image"
                 app:required="false" />
+            <!--家庭照片视频-->
+            <com.casic.titan.commonui.form.FormImageAndVideo
+                android:id="@+id/form_image_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mediaType="camera_album"
+                app:bottomBorder="true"
+                app:compress="true"
+                app:labelTextStyle="bold"
+                app:compress_video="low"
+                app:bgColor="@color/themeColor"
+                app:mediaItemRadius="@dimen/radius_m"
+                app:formImeOptions="actionNext"
+                app:label="家庭照片视频"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_video"
+                app:required="false" />
             <!--荣誉证书-->
             <com.casic.titan.commonui.form.FormFile
                 android:id="@+id/form_file"
@@ -317,7 +335,7 @@
                 app:label="荣誉证书"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/form_video"
+                app:layout_constraintTop_toBottomOf="@+id/form_image_video"
                 app:required="false" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/verify_submit"

@@ -93,7 +93,6 @@ public class MediaBuilder {
      * 是否显示加载dialog
      */
     private boolean showLoading = true;
-
     /**
      * 图片子目录
      */

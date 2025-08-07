@@ -17,26 +17,28 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
 
-import pers.fz.mvvm.bean.AttachmentBean;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenMediaDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
-import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
+import pers.fz.mvvm.adapter.MediaAddAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener {
+public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.MediaAddListener, MediaAddAdapter.MediaClearListener {
     /**
      * 是否压缩，默认为true：启用压缩
      */
@@ -46,9 +48,13 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
      */
     protected int compressImageSize = 300;
     /**
+     * 压缩质量，默认为低质量
+     */
+    protected int compressVideo = VideoQualityEnum.MEDIUM.value;
+    /**
      * 适配器
      */
-    protected ImageAddAdapter imageAddAdapter;
+    protected MediaAddAdapter mediaAddAdapter;
     /**
      * 媒体管理器
      */
@@ -56,19 +62,19 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     /**
      * 媒体选择类型，默认：相机和相册
      */
-    protected int mediaType = OpenImageDialog.CAMERA_ALBUM;
+    protected int mediaType = OpenMediaDialog.CAMERA_SHOOT_ALBUM;
     /**
      * 添加图片监听器
      */
-    protected ImageAddAdapter.ImageViewAddListener onImageAddListener;
+    protected MediaAddAdapter.MediaAddListener onMediaAddListener;
     /**
      * 删除图片监听器
      */
-    protected ImageAddAdapter.ImageViewClearListener onImageClearListener;
+    protected MediaAddAdapter.MediaClearListener onMediaClearListener;
     /**
      * 最大可选数量
      */
-    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    protected int maxCount = MediaHelper.DEFAULT_MEDIA_MAX_COUNT;
     /**
      * 显示数量标签文字大小
      */
@@ -85,16 +91,20 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
      * 数量标签控件
      */
     protected AppCompatTextView tvCountLabel;
+    /**
+     * 拍摄视频最大时长，单位：秒，默认为30秒
+     */
+    protected int maxVideoDuration = 30;
 
-    public FormImage(@NonNull Context context) {
+    public FormImageAndVideo(@NonNull Context context) {
         super(context);
     }
 
-    public FormImage(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FormImageAndVideo(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FormImage(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormImageAndVideo(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -104,7 +114,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, true);
+            maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
             countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             compressImageSize = typedArray.getInt(R.styleable.FormUI_compressImageSize, 300);
@@ -117,6 +129,8 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);
             compress = true;
             compressImageSize = 300;
+            maxVideoDuration = 30;
+            compressVideo = VideoQualityEnum.LOW.value;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
         }
     }
@@ -146,14 +160,14 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             createCountLabel();
             layoutCountLabel();
         }
-        imageAddAdapter = new ImageAddAdapter(maxCount);
-        imageAddAdapter.setBgColor(bgColor);
-        imageAddAdapter.setRadius(radius);
-        imageAddAdapter.setErrorImage(errorImage);
-        imageAddAdapter.setPlaceholderImage(placeholderImage);
-        imageAddAdapter.setImageViewAddListener(this);
-        imageAddAdapter.setImageViewClearListener(this);
-        mediaRecyclerView.setAdapter(imageAddAdapter);
+        mediaAddAdapter = new MediaAddAdapter(maxCount);
+        mediaAddAdapter.setBgColor(bgColor);
+        mediaAddAdapter.setRadius(radius);
+        mediaAddAdapter.setErrorImage(errorImage);
+        mediaAddAdapter.setPlaceholderImage(placeholderImage);
+        mediaAddAdapter.setMediaAddListener(this);
+        mediaAddAdapter.setMediaClearListener(this);
+        mediaRecyclerView.setAdapter(mediaAddAdapter);
     }
 
     public void createCountLabel() {
@@ -179,40 +193,40 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         constraintSet.applyTo(this);
     }
 
-    public void setOnImageAddListener(ImageAddAdapter.ImageViewAddListener onImageAddListener) {
-        this.onImageAddListener = onImageAddListener;
+    public void setOnMediaClearListener(MediaAddAdapter.MediaClearListener onMediaClearListener) {
+        this.onMediaClearListener = onMediaClearListener;
     }
 
-    public void setOnImageClearListener(ImageAddAdapter.ImageViewClearListener onImageClearListener) {
-        this.onImageClearListener = onImageClearListener;
+    public void setOnMediaAddListener(MediaAddAdapter.MediaAddListener onMediaAddListener) {
+        this.onMediaAddListener = onMediaAddListener;
     }
 
     public int getMaxCount() {
         return maxCount;
     }
 
-    public List<AttachmentBean> getImages() {
-        return imageAddAdapter.getList();
+    public List<AttachmentBean> getMedia() {
+        return mediaAddAdapter.getList();
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    public void setUriImages(List<Uri> images) {
-        if (images == null) {
-            imageAddAdapter.setList(new ArrayList<>());
-            imageAddAdapter.notifyDataSetChanged();
+    public void setUriMedia(List<Uri> mediaList) {
+        if (mediaList == null) {
+            mediaAddAdapter.setList(new ArrayList<>());
+            mediaAddAdapter.notifyDataSetChanged();
             return;
         }
-        imageAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(images));
-        imageAddAdapter.notifyDataSetChanged();
+        mediaAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(mediaList));
+        mediaAddAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    public void setImages(List<AttachmentBean> images) {
-        if (images == null) {
-            images = new ArrayList<>();
+    public void setMedia(List<AttachmentBean> mediaList) {
+        if (mediaList == null) {
+            mediaList = new ArrayList<>();
         }
-        imageAddAdapter.setList(images);
-        imageAddAdapter.notifyDataSetChanged();
+        mediaAddAdapter.setList(mediaList);
+        mediaAddAdapter.notifyDataSetChanged();
         refreshCountLabel();
     }
 
@@ -221,16 +235,28 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         if (tvCountLabel == null) {
             return;
         }
-        tvCountLabel.setText((imageAddAdapter.getList() == null ? 0 : imageAddAdapter.getList().size()) + "/" + maxCount);
+        tvCountLabel.setText((mediaAddAdapter.getList() == null ? 0 : mediaAddAdapter.getList().size()) + "/" + maxCount);
+    }
+
+
+    @Override
+    public void mediaAdd(View view) {
+        if (onMediaAddListener != null) {
+            onMediaAddListener.mediaAdd(view);
+            return;
+        }
+        mediaHelper.openMediaDialog(view, mediaType);
     }
 
     @Override
-    public void imgAdd(View view) {
-        if (onImageAddListener != null) {
-            onImageAddListener.imgAdd(view);
+    public void mediaClear(View view, int position) {
+        if (onMediaClearListener != null) {
+            onMediaClearListener.mediaClear(view, position);
             return;
         }
-        mediaHelper.openImageDialog(view, mediaType);
+        mediaAddAdapter.getList().remove(position);
+        mediaAddAdapter.notifyDataSetChanged();
+        refreshCountLabel();
     }
 
     public MediaHelper getMediaHelper() {
@@ -242,25 +268,16 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    @Override
-    public void imgClear(View view, int position) {
-        if (onImageClearListener != null) {
-            onImageClearListener.imgClear(view, position);
-            return;
-        }
-        imageAddAdapter.getList().remove(position);
-        imageAddAdapter.notifyDataSetChanged();
-        refreshCountLabel();
-    }
-
-    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     public void bindLifecycle(LifecycleOwner lifecycleOwner) {
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
-                .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
+                .setMediaMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
+                .setImageQualityCompress(compressImageSize)
+                .setMaxVideoTime(maxVideoDuration)
+                .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setShowPermissionDialog(protocolDialog)
-                .setImageType(fileType)
+                .setMediaType(fileType)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -274,7 +291,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
 
                     @Override
                     public int onSelectedImageCount() {
-                        return imageAddAdapter.getList().size();
+                        return 0;
                     }
 
                     @Override
@@ -284,19 +301,18 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
 
                     @Override
                     public int onSelectedMediaCount() {
-                        return 0;
+                        return mediaAddAdapter.getList().size();
                     }
                 })
-                .setImageQualityCompress(compressImageSize)
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE_AND_VIDEO) {
                 if (compress) {
-                    mediaHelper.startCompressImage(mediaBean.getMediaList());
+                    mediaHelper.startCompressMedia(mediaBean.getMediaList());
                 } else {
-                    imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
-                    imageAddAdapter.notifyDataSetChanged();
+                    mediaAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                    mediaAddAdapter.notifyDataSetChanged();
                     if(requireUriPermission){
                         AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                     }
@@ -305,9 +321,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
-                imageAddAdapter.notifyDataSetChanged();
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE_AND_VIDEO) {
+                mediaAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                mediaAddAdapter.notifyDataSetChanged();
                 if(requireUriPermission){
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }

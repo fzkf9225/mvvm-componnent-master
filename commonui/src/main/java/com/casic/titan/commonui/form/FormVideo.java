@@ -84,6 +84,10 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
      * 是否显示数量标签
      */
     protected boolean showCountLabel;
+    /**
+     * 拍摄视频最大时长，单位：秒，默认为30秒
+     */
+    protected int maxVideoDuration = 30;
 
     /**
      * 显示数量标签控件
@@ -109,7 +113,8 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, compress);
-            compressVideo = typedArray.getInt(R.styleable.FormUI_compressImageSize, VideoQualityEnum.LOW.value);
+            maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
@@ -118,6 +123,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             typedArray.recycle();
         } else {
             showCountLabel = true;
+            maxVideoDuration = 30;
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);
             compress = true;
@@ -128,6 +134,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
 
     /**
      * 修改mediaType值，传 OpenImageDialog.ALBUM/ OpenImageDialog.CAMERA/ OpenImageDialog.CAMERA_ALBUM
+     *
      * @param mediaType
      */
     public void setMediaType(int mediaType) {
@@ -153,6 +160,11 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
         mediaRecyclerView.setAdapter(videoAddAdapter);
+    }
+
+    @Override
+    public String[] defaultFileType() {
+        return new String[]{"video/*"};
     }
 
     public void createCountLabel() {
@@ -209,11 +221,11 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setImages(List<AttachmentBean> images) {
-        if (images == null) {
-            images = new ArrayList<>();
+    public void setVideos(List<AttachmentBean> videos) {
+        if (videos == null) {
+            videos = new ArrayList<>();
         }
-        videoAddAdapter.setList(images);
+        videoAddAdapter.setList(videos);
         videoAddAdapter.notifyDataSetChanged();
         refreshCountLabel();
     }
@@ -247,19 +259,23 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         refreshCountLabel();
     }
 
-    public void refreshCountLabel(){
+    public void refreshCountLabel() {
         if (tvCountLabel == null) {
             return;
         }
         tvCountLabel.setText((videoAddAdapter.getList() == null ? 0 : videoAddAdapter.getList().size()) + "/" + maxCount);
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    public void bindLifecycle(LifecycleOwner lifecycleOwner){
+    public void bindLifecycle(LifecycleOwner lifecycleOwner) {
         mediaHelper = new MediaBuilder(getContext())
                 .bindLifeCycle(lifecycleOwner)
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
+                .setVideoType(fileType)
+                .setMaxVideoTime(maxVideoDuration)
+                .setShowPermissionDialog(protocolDialog)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -289,15 +305,16 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            LogUtil.show(MediaHelper.TAG,"FormVideo");
+            LogUtil.show(MediaHelper.TAG, "FormVideo");
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 if (compress) {
                     mediaHelper.startCompressVideo(mediaBean.getMediaList());
                 } else {
                     videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                     videoAddAdapter.notifyDataSetChanged();
-                    AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
-
+                    if(requireUriPermission){
+                        AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                    }
                     refreshCountLabel();
                 }
             }
@@ -306,7 +323,9 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 videoAddAdapter.notifyDataSetChanged();
-                AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                if(requireUriPermission){
+                    AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+                }
                 refreshCountLabel();
             }
         });

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -24,7 +25,7 @@ import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
 
-public class FormMedia extends ConstraintLayout {
+public abstract class FormMedia extends ConstraintLayout {
     public static final String TAG = "FormUi";
     /**
      * 主要用于适配器中图片item、视频item等背景颜色
@@ -123,6 +124,18 @@ public class FormMedia extends ConstraintLayout {
      */
     protected float radius = 8;
     /**
+     * 文件类型
+     */
+    protected String[] fileType = null;
+    /**
+     * 是否显示协议dialog
+     */
+    protected boolean protocolDialog = true;
+    /**
+     * 是否调用uri的持久化权限takeUriPermission，默认为true
+     */
+    protected boolean requireUriPermission = true;
+    /**
      * label文字样式，默认不加粗
      */
     protected int labelTextStyle = LabelTextStyleEnum.NORMAL.value;
@@ -152,6 +165,8 @@ public class FormMedia extends ConstraintLayout {
             bgColor = typedArray.getColor(R.styleable.FormUI_bgColor, 0xFFF1F3F2);
             labelString = typedArray.getString(R.styleable.FormUI_label);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+            requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
+            protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
             labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
@@ -185,12 +200,20 @@ public class FormMedia extends ConstraintLayout {
             if (errorImage == null) {
                 errorImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
             }
+
+            String fileTypeStr = typedArray.getString(R.styleable.FormUI_fileType);
+            if (!TextUtils.isEmpty(fileTypeStr)) {
+                fileType = fileTypeStr.split(",");
+            } else {
+                fileType = defaultFileType();
+            }
             typedArray.recycle();
         } else {
-
             bgColor = 0xFFF1F3F2;
             radius = DensityUtil.dp2px(getContext(), 8);
-
+            fileType = defaultFileType();
+            protocolDialog = true;
+            requireUriPermission = true;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
@@ -205,11 +228,13 @@ public class FormMedia extends ConstraintLayout {
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
             columnCount = 4;
             borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
-            columnMargin =  DensityUtil.dp2px(getContext(), 8f);
+            columnMargin = DensityUtil.dp2px(getContext(), 8f);
             placeholderImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
             errorImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
         }
     }
+
+    public abstract String[] defaultFileType();
 
     protected void init() {
         createLabel();

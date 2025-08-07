@@ -136,6 +136,11 @@ public class FormFileShow extends FormMedia {
         mediaRecyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public String[] defaultFileType() {
+        return new String[]{"*/*"};
+    }
+
     public void createEmptyLayout() {
         tvEmpty = new AppCompatTextView(getContext());
         tvEmpty.setId(View.generateViewId());

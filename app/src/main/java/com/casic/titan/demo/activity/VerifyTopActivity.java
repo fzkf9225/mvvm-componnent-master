@@ -44,6 +44,7 @@ public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVer
     public void initView(Bundle savedInstanceState) {
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);
+        binding.formImageVideo.bindLifecycle(this);
         binding.formFile.bindLifecycle(this);
         binding.editHobby.addTextChangedListener(new TextWatcher() {
             @Override

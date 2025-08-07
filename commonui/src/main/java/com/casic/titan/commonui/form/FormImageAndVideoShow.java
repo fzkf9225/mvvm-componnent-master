@@ -12,18 +12,17 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
 
-import pers.fz.mvvm.adapter.ImageShowAdapter;
-import pers.fz.mvvm.bean.AttachmentBean;
-
 import java.util.List;
 
+import pers.fz.mvvm.adapter.ImageShowAdapter;
+import pers.fz.mvvm.adapter.MediaShowAdapter;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 
@@ -31,7 +30,7 @@ import pers.fz.mvvm.util.common.DensityUtil;
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImageShow extends FormMedia {
+public class FormImageAndVideoShow extends FormMedia {
     /**
      * 适配器你
      */
@@ -55,15 +54,15 @@ public class FormImageShow extends FormMedia {
      */
     protected String emptyText = "暂无附件";
 
-    public FormImageShow(@NonNull Context context) {
+    public FormImageAndVideoShow(@NonNull Context context) {
         super(context);
     }
 
-    public FormImageShow(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FormImageAndVideoShow(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FormImageShow(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FormImageAndVideoShow(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -92,10 +91,10 @@ public class FormImageShow extends FormMedia {
         layoutEmptyLayout();
         mediaRecyclerView.setVisibility(View.GONE);
         if (adapter == null) {
-            adapter = new ImageShowAdapter();
-            ((ImageShowAdapter) adapter).setRadius(radius);
-            ((ImageShowAdapter) adapter).setErrorImage(errorImage);
-            ((ImageShowAdapter) adapter).setPlaceholderImage(placeholderImage);
+            adapter = new MediaShowAdapter();
+            ((MediaShowAdapter) adapter).setRadius(radius);
+            ((MediaShowAdapter) adapter).setErrorImage(errorImage);
+            ((MediaShowAdapter) adapter).setPlaceholderImage(placeholderImage);
         }
         mediaRecyclerView.setAdapter(adapter);
     }
@@ -116,7 +115,7 @@ public class FormImageShow extends FormMedia {
         tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, emptyTextSize);
         tvEmpty.setText(emptyText);
         tvEmpty.setGravity(Gravity.CENTER);
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, DensityUtil.dp2px(getContext(), 60f));
+        LayoutParams params = new LayoutParams(0, DensityUtil.dp2px(getContext(), 60f));
         params.setMarginStart((int) textEndMargin);
         params.setMarginEnd((int) textEndMargin);
         params.topMargin = (int) defaultTextMargin;
@@ -144,12 +143,12 @@ public class FormImageShow extends FormMedia {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public <T extends AttachmentBean> void setImages(List<T> images) {
-        if (adapter instanceof ImageShowAdapter imageShowAdapter) {
-            imageShowAdapter.setList((List<AttachmentBean>) images);
-            imageShowAdapter.notifyDataSetChanged();
-            mediaRecyclerView.setVisibility((CollectionUtil.isEmpty(images)) ? View.GONE : View.VISIBLE);
-            tvEmpty.setVisibility((CollectionUtil.isEmpty(images)) ? View.VISIBLE : View.GONE);
+    public <T extends AttachmentBean> void setMedia(List<T> mediaList) {
+        if (adapter instanceof MediaShowAdapter mediaShowAdapter) {
+            mediaShowAdapter.setList((List<AttachmentBean>) mediaList);
+            mediaShowAdapter.notifyDataSetChanged();
+            mediaRecyclerView.setVisibility((CollectionUtil.isEmpty(mediaList)) ? View.GONE : View.VISIBLE);
+            tvEmpty.setVisibility((CollectionUtil.isEmpty(mediaList)) ? View.VISIBLE : View.GONE);
         }
     }
 

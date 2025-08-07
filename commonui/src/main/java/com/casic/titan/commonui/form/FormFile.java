@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileAddAdapter;
+
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.util.common.AttachmentUtil;
 
@@ -175,6 +176,11 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         }
     }
 
+    @Override
+    public String[] defaultFileType() {
+        return new String[]{"*/*"};
+    }
+
     public AppCompatImageView getImageAdd() {
         return imageAdd;
     }
@@ -264,6 +270,8 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
                 .bindLifeCycle(lifecycleOwner)
                 .setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
+                .setShowPermissionDialog(protocolDialog)
+                .setFileType(fileType)
                 .setMediaListener(new MediaListener() {
                     @Override
                     public int onSelectedFileCount() {
@@ -292,7 +300,9 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
                 })
                 .builder();
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+            if(requireUriPermission){
+                AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
+            }
             fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
             fileAddAdapter.notifyDataSetChanged();
             refreshCount();
@@ -301,6 +311,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
 
     /**
      * 设置文件格式类型
+     *
      * @param fileType 数组格式：image/* video/* audio/*
      */
     public void setFileType(String[] fileType) {

@@ -115,9 +115,11 @@
 
     <!--layout资源-->
     <public name="dialog_confirm" type="layout"/>
+    <public name="dialog_date_pick" type="layout"/>
+    <public name="dialog_message" type="layout"/>
+    <public name="image_save_dialog" type="layout"/>
     <public name="dialog_edit_area" type="layout"/>
     <public name="dialog_input" type="layout"/>
-    <public name="dialog_message" type="layout"/>
     <public name="base_activity_constraint" type="layout"/>
     <public name="base_activity_coordinator" type="layout"/>
     <public name="base_activity_title_search" type="layout"/>
@@ -129,13 +131,35 @@
     <public name="base_tablayout_viewpager" type="layout"/>
     <public name="custom_textview" type="layout"/>
     <public name="empty_fragment" type="layout"/>
-    <public name="option_item" type="layout"/>
-    <public name="option_text_view" type="layout"/>
     <public name="paging_footer" type="layout"/>
     <public name="paging_recycler_view" type="layout"/>
     <public name="search_smartrecyclerview" type="layout"/>
     <public name="smartrecyclerview" type="layout"/>
     <public name="web_view" type="layout"/>
+    <public name="adapter_home_menu_item" type="layout"/>
+    <public name="adapter_image_add_item" type="layout"/>
+    <public name="adapter_image_show_item" type="layout"/>
+    <public name="adapter_media_add_item" type="layout"/>
+    <public name="adapter_media_show_item" type="layout"/>
+    <public name="adapter_video_add_item" type="layout"/>
+    <public name="adapter_video_show_item" type="layout"/>
+    <public name="option_bottom_menu_dialog" type="layout"/>
+    <public name="option_checkbox_view" type="layout"/>
+    <public name="option_item" type="layout"/>
+    <public name="option_selected_view" type="layout"/>
+    <public name="option_text_view" type="layout"/>
+    <public name="fragment_home_menu" type="layout"/>
+    <public name="loading_dialog" type="layout"/>
+    <public name="popup_cascade_view" type="layout"/>
+    <public name="popup_multi_cascade" type="layout"/>
+    <public name="popup_multi_view" type="layout"/>
+    <public name="popup_view" type="layout"/>
+    <public name="view_error_layout" type="layout"/>
+    <public name="texture_view_player_activity" type="layout"/>
+    <public name="process_bar_dialog" type="layout"/>
+    <public name="picktime_view" type="layout"/>
+    <public name="image_save_dialog" type="layout"/>
+    <public name="tab_text_view" type="layout"/>
 
     <!--navigation资源-->
     <public name="nav_empty_layout" type="navigation"/>
