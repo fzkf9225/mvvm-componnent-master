@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,7 +30,7 @@ public class MediaUtil {
     public static boolean isImage(Uri uri, Context context) {
         try {
             String mimeType = context.getContentResolver().getType(uri);
-            return mimeType != null && mimeType.startsWith("image/");
+            return mimeType != null && (mimeType.startsWith("image/") || mimeType.startsWith("IMAGE/"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class MediaUtil {
     public static boolean isVideo(Uri uri, Context context) {
         try {
             String mimeType = context.getContentResolver().getType(uri);
-            return mimeType != null && mimeType.startsWith("video/");
+            return mimeType != null && (mimeType.startsWith("video/") || mimeType.startsWith("VIDEO/"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class MediaUtil {
     public static boolean isAudio(Uri uri, Context context) {
         try {
             String mimeType = context.getContentResolver().getType(uri);
-            return mimeType != null && mimeType.startsWith("audio/");
+            return mimeType != null && (mimeType.startsWith("audio/") || mimeType.startsWith("AUDIO/"));
         } catch (Exception e) {
             e.printStackTrace();
         }

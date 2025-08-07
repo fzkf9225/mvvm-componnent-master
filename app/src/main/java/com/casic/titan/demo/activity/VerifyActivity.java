@@ -7,9 +7,6 @@ import android.text.TextWatcher;
 
 import androidx.core.content.ContextCompat;
 
-import com.casic.titan.commonui.database.AttachmentDatabase;
-import com.casic.titan.commonui.repository.AttachmentRepositoryImpl;
-import com.casic.titan.commonui.utils.AttachmentUtil;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
@@ -20,11 +17,10 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.functions.Action;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.verify.VerifyResult;
-import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
@@ -77,7 +73,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
         binding.verifySubmit.setOnClickListener(v -> {
             LogUtil.show("FormUi","数据："+new Gson().toJson(binding.getData()));
             showLoading("验证中...");
-            binding.getData().setImageList(binding.formImage.getImages());
+            binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
             hideLoading();
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));

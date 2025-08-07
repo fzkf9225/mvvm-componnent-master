@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,25 +16,38 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.utils.MediaUtil;
+
 
 /**
  * Created by fz on 2023/4/25 17:23
  * describe :
  */
-public class TakeCameraUri extends ActivityResultContract<Object, Uri> {
+public class TakeCameraUri extends ActivityResultContract<MediaTypeEnum, Uri> {
     /**
      * 拍照返回的uri
      */
     private Uri uri;
     private final MediaBuilder mediaBuilder;
 
+    private MediaTypeEnum mediaTypeEnum;
+
     public TakeCameraUri(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
     }
 
+    public MediaTypeEnum getMediaType() {
+        return mediaTypeEnum;
+    }
+
     @NonNull
     @Override
-    public Intent createIntent(@NonNull Context context, Object input) {
+    public Intent createIntent(@NonNull Context context, MediaTypeEnum input) {
+        this.mediaTypeEnum = input;
         String mimeType = "image/jpeg";
         String fileName = "IMAGE_" + System.currentTimeMillis() + ".jpg";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

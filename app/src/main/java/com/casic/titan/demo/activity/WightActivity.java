@@ -17,6 +17,7 @@ import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
 import com.casic.titan.demo.viewmodel.WightViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.adapter.ImageShowAdapter;
 import pers.fz.mvvm.adapter.VideoShowAdapter;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.util.common.DateUtil;
@@ -73,13 +75,34 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
 
         binding.circleProgressBar.setProgress(80);
         binding.horizontalProgressBar.setProgress(80);
+        List<AttachmentBean> attachmentBeanList = new ArrayList<>();
+        AttachmentBean attachmentBean1 = new AttachmentBean();
+        attachmentBean1.setPath("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+        attachmentBean1.setFileName("1.jpg");
+        AttachmentBean attachmentBean2 = new AttachmentBean();
+        attachmentBean2.setPath("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg");
+        attachmentBean2.setFileName("2.jpg");
+        AttachmentBean attachmentBean3 = new AttachmentBean();
+        attachmentBean3.setPath("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42");
+        attachmentBean3.setFileName("3.jpg");
+        AttachmentBean attachmentBean4 = new AttachmentBean();
+        attachmentBean4.setPath("https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg");
+        attachmentBean4.setFileName("4.jpg");
+        AttachmentBean attachmentBean5 = new AttachmentBean();
+        attachmentBean5.setPath("https://ww1.sinaimg.cn/mw690/008vmhs1ly1hrhly2i2jtj30j616nq9v.jpg");
+        attachmentBean5.setFileName("5.jpg");
+        AttachmentBean attachmentBean6 = new AttachmentBean();
+        attachmentBean6.setPath("https://img2.baidu.com/it/u=2380808412,3135171519&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1199");
+        attachmentBean6.setFileName("6.jpg");
+        attachmentBeanList.add(attachmentBean1);
+        attachmentBeanList.add(attachmentBean2);
+        attachmentBeanList.add(attachmentBean3);
+        attachmentBeanList.add(attachmentBean4);
+        attachmentBeanList.add(attachmentBean5);
+        attachmentBeanList.add(attachmentBean6);
 
         imageShowAdapter = new ImageShowAdapter();
-        imageShowAdapter.setList(Arrays.asList(
-                "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800",
-                "https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg",
-                "https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"
-        ));
+        imageShowAdapter.setList(attachmentBeanList);
         binding.mRecyclerviewImage.setAdapter(imageShowAdapter);
         binding.mRecyclerviewImage.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
@@ -89,12 +112,13 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         });
         binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
 
+        List<AttachmentBean> videoList = new ArrayList<>();
+        AttachmentBean attachmentBean7 = new AttachmentBean();
+        attachmentBean6.setPath("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
+        attachmentBean6.setFileName("7.mp4");
+        videoList.add(attachmentBean7);
         videoShowAdapter = new VideoShowAdapter();
-        videoShowAdapter.setList(Arrays.asList(
-                "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800",
-                "https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg",
-                "https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"
-        ));
+        videoShowAdapter.setList(videoList);
         binding.mRecyclerviewVideo.setAdapter(videoShowAdapter);
         binding.mRecyclerviewVideo.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override

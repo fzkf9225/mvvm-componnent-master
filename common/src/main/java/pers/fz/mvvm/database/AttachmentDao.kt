@@ -1,14 +1,13 @@
-package com.casic.titan.commonui.database
+package pers.fz.mvvm.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.casic.titan.commonui.bean.AttachmentBean
+import pers.fz.mvvm.bean.AttachmentBean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import pers.fz.mvvm.database.BaseRoomDao
 
 /**
  * created by fz on 2024/11/6 10:31
@@ -36,11 +35,20 @@ abstract class AttachmentDao : BaseRoomDao<AttachmentBean>() {
     @Query("Select * FROM AttachmentBean")
     abstract fun queryAll(): List<AttachmentBean>
 
+    @Query("Select * FROM AttachmentBean where createUser = :createUser")
+    abstract fun queryAllByUser(createUser:String?): List<AttachmentBean>
+
     @Query("Select * FROM AttachmentBean WHERE mainId = :mainId")
     abstract fun queryByMainId(mainId: String): List<AttachmentBean>
 
     @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName")
     abstract fun queryList(mainId: String, fieldName: String): List<AttachmentBean>
+
+    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and createUser = :createUser")
+    abstract fun queryByMainId(mainId: String,createUser:String?): List<AttachmentBean>
+
+    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName and createUser = :createUser")
+    abstract fun queryList(mainId: String, fieldName: String,createUser:String?): List<AttachmentBean>
 
     /**
      * 下面这几个可以看情况重写，主要是observedEntities得用法观察数据，在base中已经使用了占位符

@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,11 +16,17 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.utils.MediaUtil;
+
 /**
  * Created by fz on 2023/4/25 17:23
  * describe :
  */
-public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
+public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
     /**
      * 拍照返回的uri
      */
@@ -31,6 +37,8 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
      */
     private int durationLimit = 30;
 
+    private MediaTypeEnum mediaType;
+
     public TakeVideoUri(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
     }
@@ -40,9 +48,14 @@ public class TakeVideoUri extends ActivityResultContract<Object, Uri> {
         this.durationLimit = durationLimit;
     }
 
+    public MediaTypeEnum getMediaType() {
+        return mediaType;
+    }
+
     @NonNull
     @Override
-    public Intent createIntent(@NonNull Context context, Object input) {
+    public Intent createIntent(@NonNull Context context, MediaTypeEnum input) {
+        this.mediaType = input;
         String mimeType = "video/mp4";
         String fileName = "VIDEO_" + System.currentTimeMillis() + ".mp4";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

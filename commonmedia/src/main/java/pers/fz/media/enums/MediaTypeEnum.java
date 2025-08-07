@@ -1,5 +1,9 @@
 package pers.fz.media.enums;
 
+import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
+
 /**
  * Created by fz on 2023/9/2.
  * describe：媒体类型
@@ -38,5 +42,41 @@ public enum MediaTypeEnum {
 
     public int getMediaType() {
         return mediaType;
+    }
+
+    /**
+     * 根据文件类型、文件地址获取文件类型
+     *
+     * @param context 上下文
+     * @param uri     uri地址
+     * @return 文件类型枚举
+     */
+    public static MediaTypeEnum getMediaType(Context context, Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        if (context == null || context.getContentResolver() == null) {
+            return null;
+        }
+        String type = context.getContentResolver().getType(uri);
+        if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+            return MediaTypeEnum.IMAGE;
+        } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+            return MediaTypeEnum.VIDEO;
+        } else {
+            return MediaTypeEnum.FILE;
+        }
+    }
+
+    public static MediaTypeEnum getMediaType(Integer type) {
+        if (type == null) {
+            return OTHER;
+        }
+        for (MediaTypeEnum value : values()) {
+            if (value.mediaType == type) {
+                return value;
+            }
+        }
+        return OTHER;
     }
 }

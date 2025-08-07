@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.callback;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.bean.MediaBean;
+import pers.fz.media.MediaBuilder;
+import pers.fz.media.MediaHelper;
+import pers.fz.media.helper.TakeCameraUri;
+import pers.fz.media.helper.TakeVideoUri;
 import pers.fz.media.enums.MediaTypeEnum;
 
 
@@ -20,12 +26,21 @@ import pers.fz.media.enums.MediaTypeEnum;
  */
 public class CameraCallBack implements ActivityResultCallback<Uri> {
     private final MediaBuilder mediaBuilder;
-    private final MediaTypeEnum mediaType;
     private final MutableLiveData<MediaBean> mutableLiveData;
 
-    public CameraCallBack(MediaBuilder mediaBuilder, MediaTypeEnum mediaType, MutableLiveData<MediaBean> mutableLiveData) {
+    private TakeCameraUri takeCameraUri;
+
+    private TakeVideoUri takeVideoUri;
+
+    public CameraCallBack(MediaBuilder mediaBuilder, TakeCameraUri takeCameraUri, MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaBuilder = mediaBuilder;
-        this.mediaType = mediaType;
+        this.takeCameraUri = takeCameraUri;
+        this.mutableLiveData = mutableLiveData;
+    }
+
+    public CameraCallBack(MediaBuilder mediaBuilder, TakeVideoUri takeVideoUri, MutableLiveData<MediaBean> mutableLiveData) {
+        this.mediaBuilder = mediaBuilder;
+        this.takeVideoUri = takeVideoUri;
         this.mutableLiveData = mutableLiveData;
     }
 
@@ -34,23 +49,33 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
         if (result == null) {
             return;
         }
-        if (MediaTypeEnum.IMAGE == mediaType) {
+        LogUtil.show(MediaHelper.TAG, "拍照录像：" + getMediaType() + "，回调：" + result.toString());
+        if (MediaTypeEnum.IMAGE == getMediaType()) {
             if (!isFileUriExists(result)) {
                 return;
             }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
-        } else if (MediaTypeEnum.VIDEO == mediaType) {
+        } else if (MediaTypeEnum.VIDEO == getMediaType()) {
             if (!isFileUriExists(result)) {
                 return;
             }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.VIDEO));
-        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == mediaType) {
+        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == getMediaType()) {
             if (!isFileUriExists(result)) {
                 return;
             }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
         }
+    }
 
+    public MediaTypeEnum getMediaType() {
+        if (takeCameraUri != null) {
+            return takeCameraUri.getMediaType();
+        } else if (takeVideoUri != null) {
+            return takeVideoUri.getMediaType();
+        } else {
+            return MediaTypeEnum.IMAGE_AND_VIDEO;
+        }
     }
 
 

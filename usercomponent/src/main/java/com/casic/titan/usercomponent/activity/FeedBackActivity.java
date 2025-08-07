@@ -13,6 +13,7 @@ import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
@@ -42,7 +43,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                imageAddAdapter.getList().addAll(mediaBean.getMediaList());
+                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
             }
         });
@@ -57,7 +58,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
         });
         binding.feedBackRecyclerView.setAdapter(imageAddAdapter);
         binding.feedBackBtn.setOnClickListener(v -> {
-            mediaHelper.startCompressImage(imageAddAdapter.getList());
+            mediaHelper.startCompressImage(AttachmentUtil.toUriList(imageAddAdapter.getList()));
         });
 
     }

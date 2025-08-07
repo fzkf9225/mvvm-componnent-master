@@ -17,8 +17,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.adapter.FormImageShowAdapter;
-import com.casic.titan.commonui.bean.AttachmentBean;
+
+import pers.fz.mvvm.adapter.ImageShowAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
 
 import java.util.List;
 
@@ -91,10 +92,10 @@ public class FormImageShow extends FormMedia {
         layoutEmptyLayout();
         mediaRecyclerView.setVisibility(View.GONE);
         if (adapter == null) {
-            adapter = new FormImageShowAdapter();
-            ((FormImageShowAdapter) adapter).setRadius(radius);
-            ((FormImageShowAdapter) adapter).setErrorImage(errorImage);
-            ((FormImageShowAdapter) adapter).setPlaceholderImage(placeholderImage);
+            adapter = new ImageShowAdapter();
+            ((ImageShowAdapter) adapter).setRadius(radius);
+            ((ImageShowAdapter) adapter).setErrorImage(errorImage);
+            ((ImageShowAdapter) adapter).setPlaceholderImage(placeholderImage);
         }
         mediaRecyclerView.setAdapter(adapter);
     }
@@ -139,7 +140,7 @@ public class FormImageShow extends FormMedia {
 
     @SuppressLint("NotifyDataSetChanged")
     public <T extends AttachmentBean> void setImages(List<T> images) {
-        if (adapter instanceof FormImageShowAdapter imageShowAdapter) {
+        if (adapter instanceof ImageShowAdapter imageShowAdapter) {
             imageShowAdapter.setList((List<AttachmentBean>) images);
             imageShowAdapter.notifyDataSetChanged();
             mediaRecyclerView.setVisibility((CollectionUtil.isEmpty(images)) ? View.GONE : View.VISIBLE);

@@ -16,12 +16,14 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.utils.AttachmentUtil;
+
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.media.LogUtil;
+import pers.fz.media.utils.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaPickerTypeEnum;
@@ -189,39 +191,25 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         return maxCount;
     }
 
-    public List<Uri> getImages() {
+    public List<AttachmentBean> getImages() {
         return videoAddAdapter.getList();
     }
 
-    public List<String> getStringImages() {
-        if (videoAddAdapter.getList() == null) {
-            return null;
-        }
-        List<String> uriStringList = new ArrayList<>();
-        for (Uri uri : videoAddAdapter.getList()) {
-            uriStringList.add(uri.toString());
-        }
-        return uriStringList;
-    }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setStringImages(List<String> images) {
+    public void setUriImages(List<Uri> images) {
         if (images == null) {
             videoAddAdapter.setList(new ArrayList<>());
             videoAddAdapter.notifyDataSetChanged();
             return;
         }
-        List<Uri> uriList = new ArrayList<>();
-        for (String img : images) {
-            uriList.add(Uri.parse(img));
-        }
-        videoAddAdapter.setList(uriList);
+        videoAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(images));
         videoAddAdapter.notifyDataSetChanged();
         refreshCountLabel();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setImages(List<Uri> images) {
+    public void setImages(List<AttachmentBean> images) {
         if (images == null) {
             images = new ArrayList<>();
         }
@@ -306,7 +294,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 if (compress) {
                     mediaHelper.startCompressVideo(mediaBean.getMediaList());
                 } else {
-                    videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                    videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                     videoAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
 
@@ -316,7 +304,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
-                videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 videoAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 refreshCountLabel();

@@ -1,4 +1,4 @@
-package com.casic.titan.commonui.utils;
+package pers.fz.mvvm.util.common;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
@@ -13,12 +13,13 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.casic.titan.commonui.api.ConstantsHelper;
-import com.casic.titan.commonui.bean.AttachmentBean;
+import pers.fz.mvvm.api.ConstantsHelper;
+import pers.fz.mvvm.bean.AttachmentBean;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +32,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.download.DownloadManger;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
@@ -132,6 +133,7 @@ public class AttachmentUtil {
             }
             //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
             try {
+                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
                 Cursor cursor = contentResolver.query(uri, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
@@ -168,6 +170,7 @@ public class AttachmentUtil {
             }
             //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
             try {
+                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
                 Cursor cursor = contentResolver.query(uri, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
@@ -242,6 +245,7 @@ public class AttachmentUtil {
             }
             //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
             try {
+                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
                 Cursor cursor = contentResolver.query(uri, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
@@ -254,6 +258,39 @@ public class AttachmentUtil {
             attachmentList.add(attachment);
         }
         return attachmentList;
+    }
+
+    /**
+     * 根据uri获取文件类型
+     *
+     * @param context 上下文
+     * @param uri     文件uri
+     * @return 文件类型
+     */
+    public static AttachmentTypeEnum getAttachmentTypeByUri(Context context, Uri uri) {
+        if (context == null) {
+            return AttachmentTypeEnum.FILE;
+        }
+        ContentResolver contentResolver = context.getContentResolver();
+        if (contentResolver == null) {
+            return AttachmentTypeEnum.FILE;
+        }
+        // 获取文件MIME类型
+        String mimeType = contentResolver.getType(uri);
+        // 根据MIME类型判断文件类别
+        if (mimeType != null) {
+            if (mimeType.startsWith("image/") || mimeType.startsWith("IMAGE/")) {
+                return AttachmentTypeEnum.IMAGE;
+            } else if (mimeType.startsWith("video/") || mimeType.startsWith("video/")) {
+                return AttachmentTypeEnum.VIDEO;
+            } else if (mimeType.startsWith("audio/") || mimeType.startsWith("AUDIO/")) {
+                return AttachmentTypeEnum.AUDIO;
+            } else {
+                return AttachmentTypeEnum.FILE;
+            }
+        } else {
+            return AttachmentTypeEnum.FILE;
+        }
     }
 
     /**
@@ -345,7 +382,7 @@ public class AttachmentUtil {
         }
         try {
             List<UriPermission> uriPermissionList = contentResolver.getPersistedUriPermissions();
-            if (uriPermissionList == null || uriPermissionList.isEmpty()) {
+            if (CollectionUtil.isEmpty(uriPermissionList)) {
                 return;
             }
             for (UriPermission uriPermission : uriPermissionList) {
@@ -358,13 +395,76 @@ public class AttachmentUtil {
         }
     }
 
+    public static AttachmentTypeEnum getMediaType(Context context, String path) {
+        return getMediaType(context, null, path);
+    }
+
+    /**
+     * 根据文件类型、文件地址获取文件类型
+     *
+     * @param context  上下文
+     * @param fileType 文件类型 获取对应的枚举
+     * @param path     文件地址，可能是网络地址，可能是uri可能是绝对地址
+     * @return 文件类型枚举
+     */
+    public static AttachmentTypeEnum getMediaType(Context context, String fileType, String path) {
+        if (!TextUtils.isEmpty(fileType)) {
+            return AttachmentTypeEnum.getMediaType(fileType);
+        }
+
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
+
+        if (isHttp(path)) {
+            String type = getMimeType(path);
+            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+                return AttachmentTypeEnum.IMAGE;
+            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+                return AttachmentTypeEnum.VIDEO;
+            } else {
+                return AttachmentTypeEnum.FILE;
+            }
+        } else if (isContentUri(path)) {
+            if (context == null || context.getContentResolver() == null) {
+                return null;
+            }
+            Uri uri = null;
+            try {
+                uri = Uri.parse(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (uri == null) {
+                return null;
+            }
+            String type = context.getContentResolver().getType(uri);
+            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+                return AttachmentTypeEnum.IMAGE;
+            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+                return AttachmentTypeEnum.VIDEO;
+            } else {
+                return AttachmentTypeEnum.FILE;
+            }
+        } else {
+            String extension = FileUtil.getUrlFileExtensionName(path);
+            if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
+                return AttachmentTypeEnum.IMAGE;
+            } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
+                return AttachmentTypeEnum.VIDEO;
+            } else {
+                return AttachmentTypeEnum.FILE;
+            }
+        }
+    }
+
     public static void viewFile(Context mContext, String path) {
         try {
             if (TextUtils.isEmpty(path)) {
                 Toast.makeText(mContext, "文件地址不存在或已删除！", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (path.startsWith("http") || path.startsWith("HTTP")) {
+            if (isHttp(path)) {
                 viewUrlFile(mContext, path);
             } else if (isContentUri(path)) {
                 viewUriFile(mContext, path);
@@ -377,14 +477,23 @@ public class AttachmentUtil {
         }
     }
 
-    private static boolean isContentUri(String uriString) {
+    public static boolean isHttp(String path) {
+        return URLUtil.isHttpUrl(path) || URLUtil.isHttpsUrl(path) || URLUtil.isNetworkUrl(path);
+    }
+
+    public static boolean isContentUri(String uriString) {
         String regex = "^content://.*$";
         if (uriString.matches(regex)) {
             return true;
         }
-        // 进一步使用 Uri 类验证
-        Uri uri = Uri.parse(uriString);
-        return uri != null && Objects.equals(uri.getScheme(), "content");
+        try {
+            // 进一步使用 Uri 类验证
+            Uri uri = Uri.parse(uriString);
+            return uri != null && Objects.equals(uri.getScheme(), "content");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static void viewUrlFile(Context mContext, String url) {
@@ -427,7 +536,6 @@ public class AttachmentUtil {
         if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
             new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(absolutePath), 0).show();
         } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
-//            Toast.makeText(mContext, "暂不支持视频播放！", Toast.LENGTH_SHORT).show();
             Bundle bundleVideo = new Bundle();
             bundleVideo.putString("videoName", fileName);
             bundleVideo.putString("videoPath", absolutePath);
@@ -442,7 +550,7 @@ public class AttachmentUtil {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                Uri apkFileUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileProvider", file);
+                Uri apkFileUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".FileProvider", file);
                 i.setDataAndType(apkFileUri, getMimeType(absolutePath));
                 mContext.startActivity(i);
             } catch (Exception e) {

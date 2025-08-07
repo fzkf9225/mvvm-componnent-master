@@ -139,6 +139,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_video_compress" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_image_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="图片、视频混合压缩"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_video" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/image_video_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tv_image_video" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

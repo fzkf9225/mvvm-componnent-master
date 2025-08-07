@@ -1,21 +1,37 @@
 package pers.fz.mvvm.adapter;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
+
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.databinding.ImageShowItemBinding;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.databinding.AdapterImageShowItemBinding;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2017/10/20.
- * 视频列表
+ * Created by fz on 2025/10/20.
+ * describe:展示图片适配器
  */
-public class ImageShowAdapter extends BaseRecyclerViewAdapter<String, ImageShowItemBinding> {
+public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterImageShowItemBinding> {
+    private @ColorInt int bgColor = Color.WHITE;
+    private float radius = 8;
+
+    protected Drawable placeholderImage;
+    protected Drawable errorImage;
 
     public ImageShowAdapter() {
         super();
@@ -23,22 +39,55 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<String, ImageShowI
 
     @Override
     protected int getLayoutId() {
-        return R.layout.image_show_item;
+        return R.layout.adapter_image_show_item;
+    }
+
+
+    public void setBgColor( @ColorInt int bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public void setPlaceholderImage(Drawable placeholderImage) {
+        this.placeholderImage = placeholderImage;
+    }
+
+    public void setErrorImage(Drawable errorImage) {
+        this.errorImage = errorImage;
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder<ImageShowItemBinding> viewHolder, int pos) {
-        Glide.with(viewHolder.getBinding().cornerImage.getContext())
-                .load(mList.get(pos))
-                .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
-                .into(viewHolder.getBinding().cornerImage);
-        viewHolder.getBinding().cornerImage.setOnClickListener(v -> {
-            try {
-                new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(mList), pos).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void onBindHolder(BaseViewHolder<AdapterImageShowItemBinding> holder, int pos) {
+        Glide.with(holder.getBinding().cornerImage.getContext())
+                .load(mList.get(pos).getPath())
+                .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
+                        .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                .into(holder.getBinding().cornerImage);
+    }
+
+    @Override
+    protected BaseViewHolder<AdapterImageShowItemBinding> createViewHold(AdapterImageShowItemBinding binding) {
+        return new ViewHolder(binding, this);
+    }
+
+    private static class ViewHolder extends BaseViewHolder<AdapterImageShowItemBinding> {
+
+        public <T> ViewHolder(@NotNull AdapterImageShowItemBinding binding, ImageShowAdapter adapter) {
+            super(binding, adapter);
+            binding.cornerImage.setRadius((int) adapter.radius);
+            binding.cornerImage.setBackgroundColor(adapter.bgColor);
+            binding.cornerImage.setOnClickListener(v -> {
+                try {
+                    List<String> stringList = AttachmentUtil.toStringList(adapter.getList());
+                    new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

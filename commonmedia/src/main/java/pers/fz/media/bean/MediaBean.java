@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.bean;
 
 import android.net.Uri;
 

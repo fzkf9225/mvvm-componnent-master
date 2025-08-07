@@ -16,7 +16,9 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.utils.AttachmentUtil;
+
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,38 +187,23 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         return maxCount;
     }
 
-    public List<Uri> getImages() {
+    public List<AttachmentBean> getImages() {
         return imageAddAdapter.getList();
     }
 
-    public List<String> getStringImages() {
-        if (imageAddAdapter.getList() == null) {
-            return null;
-        }
-        List<String> uriStringList = new ArrayList<>();
-        for (Uri uri : imageAddAdapter.getList()) {
-            uriStringList.add(uri.toString());
-        }
-        return uriStringList;
-    }
-
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    public void setStringImages(List<String> images) {
+    public void setUriImages(List<Uri> images) {
         if (images == null) {
             imageAddAdapter.setList(new ArrayList<>());
             imageAddAdapter.notifyDataSetChanged();
             return;
         }
-        List<Uri> uriList = new ArrayList<>();
-        for (String img : images) {
-            uriList.add(Uri.parse(img));
-        }
-        imageAddAdapter.setList(uriList);
+        imageAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(images));
         imageAddAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    public void setImages(List<Uri> images) {
+    public void setImages(List<AttachmentBean> images) {
         if (images == null) {
             images = new ArrayList<>();
         }
@@ -302,7 +289,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());
                 } else {
-                    imageAddAdapter.getList().addAll(mediaBean.getMediaList());
+                    imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                     imageAddAdapter.notifyDataSetChanged();
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                     refreshCountLabel();
@@ -311,7 +298,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                imageAddAdapter.getList().addAll(mediaBean.getMediaList());
+                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 refreshCountLabel();

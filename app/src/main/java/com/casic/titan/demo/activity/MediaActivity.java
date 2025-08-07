@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.dialog.OpenMediaDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenFileDialog;
@@ -31,17 +32,21 @@ import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
+import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint
-public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener {
+public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener,
+        VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener, MediaAddAdapter.MediaClearListener, MediaAddAdapter.MediaAddListener {
 
     private UseCase useCase;
     private ImageAddAdapter imageAddAdapter;
     private VideoAddAdapter videoAddAdapter;
+    private MediaAddAdapter mediaAddAdapter;
 
     @Inject
     @MediaModule.ActivityMediaHelper
@@ -68,6 +73,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(5)
                 .setVideoMaxSelectedCount(2)
+                .setMediaMaxSelectedCount(6)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWaterMark("仅测试使用")
                 .setMediaListener(new MediaListener() {
@@ -93,7 +99,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
                     @Override
                     public int onSelectedMediaCount() {
-                        return 0;
+                        return mediaAddAdapter.getList().size();
                     }
                 })
                 .setImageQualityCompress(200);
@@ -117,13 +123,17 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 if (mediaBean.getMediaList() != null && mediaBean.getMediaList().size() > 0) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 }
-                imageAddAdapter.getList().addAll(mediaBean.getMediaList());
+                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
                 binding.tvImage.setText("图片选择（" + imageAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getImageMaxSelectedCount() + "）");
             } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
-                videoAddAdapter.getList().addAll(mediaBean.getMediaList());
+                videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 videoAddAdapter.notifyDataSetChanged();
                 binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
+            } else if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE_AND_VIDEO) {
+                mediaAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                mediaAddAdapter.notifyDataSetChanged();
+                binding.tvImageVideo.setText("图片、视频混合选择（" + mediaAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() + "）");
             } else if (mediaBean.getMediaType() == MediaTypeEnum.AUDIO) {
                 audioList.clear();
                 audioList.addAll(coverUriToString(mediaBean.getMediaList()));
@@ -135,7 +145,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
         });
         mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
-        imageAddAdapter = new ImageAddAdapter(MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
+        imageAddAdapter = new ImageAddAdapter(mediaHelper.getMediaBuilder().imageMaxSelectedCount);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -146,7 +156,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         binding.imageRecyclerView.setAdapter(imageAddAdapter);
 
-        videoAddAdapter = new VideoAddAdapter();
+        videoAddAdapter = new VideoAddAdapter(mediaHelper.getMediaBuilder().videoMaxSelectedCount);
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
         binding.videoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -156,8 +166,21 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             }
         });
         binding.videoRecyclerView.setAdapter(videoAddAdapter);
+
+        mediaAddAdapter = new MediaAddAdapter(mediaHelper.getMediaBuilder().mediaMaxSelectedCount);
+        mediaAddAdapter.setMediaClearListener(this);
+        mediaAddAdapter.setMediaAddListener(this);
+        binding.imageVideoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        binding.imageVideoRecyclerView.setAdapter(mediaAddAdapter);
+
         binding.tvImage.setText("图片选择（" + imageAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getImageMaxSelectedCount() + "）");
         binding.tvVideo.setText("视频选择（" + videoAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() + "）");
+        binding.tvImageVideo.setText("图片、视频混合选择（" + mediaAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() + "）");
         binding.chooseAudio.setOnClickListener(v -> mediaHelper.openFileDialog(v, null, OpenFileDialog.AUDIO));
         binding.chooseFile.setOnClickListener(v -> mediaHelper.openFileDialog(v, null, OpenFileDialog.FILE));
         binding.waterMarkImage.setOnClickListener(v -> {
@@ -214,5 +237,18 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     @Override
     public void videoAdd(View view) {
         mediaHelper.openShootDialog(view, OpenShootDialog.CAMERA_ALBUM);
+    }
+
+    @Override
+    public void mediaAdd(View view) {
+        mediaHelper.openMediaDialog(view, OpenMediaDialog.CAMERA_SHOOT_ALBUM);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void mediaClear(View view, int position) {
+        mediaAddAdapter.getList().remove(position);
+        mediaAddAdapter.notifyDataSetChanged();
+        binding.tvImageVideo.setText("图片、视频混合选择（" + mediaAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() + "）");
     }
 }

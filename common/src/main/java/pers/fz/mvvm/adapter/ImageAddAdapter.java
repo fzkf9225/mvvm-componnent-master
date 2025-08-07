@@ -2,12 +2,9 @@ package pers.fz.mvvm.adapter;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
@@ -15,11 +12,15 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.databinding.ImgAddItemBinding;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.databinding.AdapterImageAddItemBinding;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
@@ -27,7 +28,7 @@ import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
  * Created by fz on 2017/10/20.
  * 添加圖片
  */
-public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBinding> {
+public class ImageAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterImageAddItemBinding> {
     public ImageViewClearListener imageViewClearListener;
     public ImageViewAddListener imageViewAddListener;
     //最大上传数量
@@ -46,7 +47,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     }
 
     public ImageAddAdapter(int maxCount) {
-        super();
+        this();
         this.defaultMaxCount = maxCount;
     }
 
@@ -68,33 +69,13 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
 
     @Override
     protected int getLayoutId() {
-        return R.layout.img_add_item;
+        return R.layout.adapter_image_add_item;
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder<ImgAddItemBinding> holder, int pos) {
+    public void onBindHolder(BaseViewHolder<AdapterImageAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility(mList.size() == defaultMaxCount ? View.GONE : View.VISIBLE);
-        holder.getBinding().ivClearImg.setOnClickListener(v -> {
-            if (imageViewClearListener != null) {
-                imageViewClearListener.imgClear(v, pos);
-            }
-        });
-        holder.getBinding().ivImageShow.setRadius((int) this.radius);
-        holder.getBinding().ivAdd.setBgColorAndRadius(this.bgColor, this.radius);
-        holder.getBinding().ivImageShow.setOnClickListener(v -> {
-            try {
-                new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createUriImageInfo(mList), pos).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
-            }
-        });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
-            holder.getBinding().ivAdd.setOnClickListener(v -> {
-                if (imageViewAddListener != null) {
-                    imageViewAddListener.imgAdd(v);
-                }
-            });
             holder.getBinding().ivAdd.setVisibility(View.VISIBLE);
             holder.getBinding().ivImageShow.setVisibility(View.GONE);
             holder.getBinding().ivClearImg.setVisibility(View.GONE);
@@ -103,9 +84,9 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
             holder.getBinding().ivImageShow.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivImageShow.getContext())
-                    .load(mList.get(pos))
-                    .apply(new RequestOptions().placeholder(placeholderImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :placeholderImage)
-                            .error(errorImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :errorImage))
+                    .load(mList.get(pos).getPath())
+                    .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
+                            .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
                     .into(holder.getBinding().ivImageShow);
         }
     }
@@ -117,6 +98,11 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
     @Override
     public int getItemCount() {
         return (super.getItemCount() == defaultMaxCount && defaultMaxCount != -1) ? super.getItemCount() : super.getItemCount() + 1;
+    }
+
+    @Override
+    protected BaseViewHolder<AdapterImageAddItemBinding> createViewHold(AdapterImageAddItemBinding binding) {
+        return new ViewHolder(binding, this);
     }
 
     public void setImageViewClearListener(ImageViewClearListener imageViewClearListener) {
@@ -133,5 +119,43 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<Uri, ImgAddItemBind
 
     public interface ImageViewAddListener {
         void imgAdd(View view);
+    }
+
+    public ImageViewClearListener getImageViewClearListener() {
+        return imageViewClearListener;
+    }
+
+    public ImageViewAddListener getImageViewAddListener() {
+        return imageViewAddListener;
+    }
+
+    private static class ViewHolder extends BaseViewHolder<AdapterImageAddItemBinding> {
+        public ViewHolder(@NotNull AdapterImageAddItemBinding binding, ImageAddAdapter adapter) {
+            super(binding, adapter);
+            binding.ivImageShow.setRadius((int) adapter.radius);
+            binding.ivAdd.setBgColorAndRadius(adapter.bgColor, adapter.radius);
+            binding.ivImageShow.setOnClickListener(v -> {
+                try {
+                    List<String> stringList = AttachmentUtil.toStringList(adapter.getList());
+                    new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+            binding.ivAdd.setOnClickListener(v -> {
+                if (adapter.getImageViewAddListener() == null) {
+                    return;
+                }
+                adapter.getImageViewAddListener().imgAdd(v);
+            });
+            binding.ivClearImg.setOnClickListener(v -> {
+                if (adapter.getImageViewClearListener() == null) {
+                    return;
+                }
+                adapter.getImageViewClearListener().imgClear(v, getAbsoluteAdapterPosition());
+            });
+        }
+
     }
 }

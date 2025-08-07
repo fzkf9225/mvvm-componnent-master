@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
@@ -14,9 +13,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.media.MediaBean;
+import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaUtil;
+import pers.fz.media.utils.MediaUtil;
 import pers.fz.media.enums.MediaTypeEnum;
 
 /**

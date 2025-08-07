@@ -1,17 +1,13 @@
-package com.casic.titan.commonui.database;
+package pers.fz.mvvm.database;
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import androidx.core.content.ContextCompat;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.bean.AttachmentBean;
-
-import pers.fz.mvvm.util.common.PropertiesUtil;
+import pers.fz.mvvm.bean.AttachmentBean;
 
 /**
  * created by fz on 2024/11/6 10:44
@@ -23,7 +19,7 @@ public abstract class AttachmentDatabase extends RoomDatabase {
     // Java编码规范中的约定
     public abstract AttachmentDao getAttachmentDao();
 
-    private static volatile AttachmentDatabase attachmentDatabase;
+    protected static volatile AttachmentDatabase attachmentDatabase;
 
     // 获得UserInfoDatabase的实例
 

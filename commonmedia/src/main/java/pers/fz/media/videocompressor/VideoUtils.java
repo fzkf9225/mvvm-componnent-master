@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pers.fz.media.MediaUtil;
+import pers.fz.media.utils.MediaUtil;
 
 /**
  * created by fz on 2024/11/14 9:15

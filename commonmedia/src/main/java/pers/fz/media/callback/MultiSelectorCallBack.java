@@ -1,4 +1,4 @@
-package pers.fz.media;
+package pers.fz.media.callback;
 
 import android.net.Uri;
 
@@ -6,7 +6,12 @@ import androidx.activity.result.ActivityResultCallback;
 
 import java.util.List;
 
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.bean.MediaBean;
+import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.helper.OpenMultiSelector;
+import pers.fz.media.helper.OpenPickMultipleMediaSelector;
 
 /**
  * Created by fz on 2023/11/20 15:00
@@ -14,12 +19,19 @@ import pers.fz.media.enums.MediaTypeEnum;
  */
 public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> {
     private final MediaHelper mediaHelper;
-    private final MediaTypeEnum mediaType;
+    private OpenMultiSelector multiSelector;
+    private OpenPickMultipleMediaSelector pickMultipleMediaSelector;
 
-    public MultiSelectorCallBack(MediaHelper mediaHelper, MediaTypeEnum mediaType) {
+    public MultiSelectorCallBack(MediaHelper mediaHelper, OpenMultiSelector multiSelector) {
         this.mediaHelper = mediaHelper;
-        this.mediaType = mediaType;
+        this.multiSelector = multiSelector;
     }
+
+    public MultiSelectorCallBack(MediaHelper mediaHelper, OpenPickMultipleMediaSelector pickMultipleMediaSelector) {
+        this.mediaHelper = mediaHelper;
+        this.pickMultipleMediaSelector = pickMultipleMediaSelector;
+    }
+
 
     @Override
     public void onActivityResult(List<Uri> result) {
@@ -27,7 +39,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
         if (result == null || result.isEmpty()) {
             return;
         }
-        if (MediaTypeEnum.IMAGE == mediaType) {
+        if (MediaTypeEnum.IMAGE == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getImageMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedImageCount()) {
                     mediaHelper.getUIController().showToast("您最多还可选" + (mediaHelper.getMediaBuilder().getImageMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedImageCount())
@@ -36,7 +48,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                 }
             }
             mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE));
-        } else if (MediaTypeEnum.VIDEO == mediaType) {
+        } else if (MediaTypeEnum.VIDEO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()) {
                     mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedVideoCount()
@@ -45,7 +57,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                 }
             }
             mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.VIDEO));
-        } else if (MediaTypeEnum.AUDIO == mediaType) {
+        } else if (MediaTypeEnum.AUDIO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()) {
                     mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedAudioCount()
@@ -54,7 +66,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                 }
             }
             mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.AUDIO));
-        } else if (MediaTypeEnum.FILE == mediaType) {
+        } else if (MediaTypeEnum.FILE == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()) {
                     mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedFileCount()
@@ -63,7 +75,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                 }
             }
             mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.FILE));
-        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == mediaType) {
+        } else if (MediaTypeEnum.IMAGE_AND_VIDEO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getMediaListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedMediaCount()) {
                     mediaHelper.getUIController().showToast("您最多还可再选" + (mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() - mediaHelper.getMediaBuilder().getMediaListener().onSelectedMediaCount()
@@ -73,5 +85,14 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
             }
             mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE_AND_VIDEO));
         }
+    }
+
+    public MediaTypeEnum getMediaType() {
+        if (multiSelector != null) {
+            return multiSelector.getMediaType();
+        } else if (pickMultipleMediaSelector != null) {
+            return pickMultipleMediaSelector.getMediaType();
+        }
+        return MediaTypeEnum.IMAGE_AND_VIDEO;
     }
 }

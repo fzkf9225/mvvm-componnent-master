@@ -1,38 +1,25 @@
 package pers.fz.media;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.OpenableColumns;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import pers.fz.media.bean.MediaBean;
+import pers.fz.media.bean.SelectorOptions;
 import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenMediaDialog;
@@ -40,16 +27,13 @@ import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.dialog.PermissionReminderDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
-import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.handler.ImageCompressHandler;
+import pers.fz.media.handler.MediaCompressHandler;
 import pers.fz.media.handler.VideoCompressHandler;
 import pers.fz.media.handler.WaterMarkHandler;
-import pers.fz.media.handler.WaterMarkHandlerCallback;
+import pers.fz.media.helper.ConstantsHelper;
+import pers.fz.media.helper.MediaLifecycleObserver;
 import pers.fz.media.helper.UIController;
-import pers.fz.media.imgcompressor.ImgCompressor;
-import pers.fz.media.listener.OnDialogInterfaceClickListener;
-import pers.fz.media.videocompressor.CompressListener;
-import pers.fz.media.videocompressor.VideoCompress;
 
 /**
  * Created by fz on 2021/2/5 14:19
@@ -256,9 +240,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             audioType = customAudioType;
         }
         if (mediaBuilder.getAudioMaxSelectedCount() == 1) {
-            mediaLifecycleObserver.getAudioSingleSelectorLauncher().launch(audioType);
+            mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(audioType,MediaTypeEnum.AUDIO));
         } else {
-            mediaLifecycleObserver.getAudioMuLtiSelectorLauncher().launch(audioType);
+            mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(audioType,MediaTypeEnum.AUDIO));
         }
     }
 
@@ -290,9 +274,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             fileType = customFileType;
         }
         if (mediaBuilder.getFileMaxSelectedCount() == 1) {
-            mediaLifecycleObserver.getFileSingleSelectorLauncher().launch(fileType);
+            mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(fileType,MediaTypeEnum.FILE));
         } else {
-            mediaLifecycleObserver.getFileMuLtiSelectorLauncher().launch(fileType);
+            mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(fileType,MediaTypeEnum.FILE));
         }
     }
 
@@ -337,6 +321,15 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
         return mutableLiveDataWaterMark;
+    }
+    private boolean isMoreThanMaxMedia() {
+        if (mediaBuilder.getMediaListener() != null) {
+            if (mediaBuilder.getMediaMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedMediaCount()) {
+                uiController.showToast("最多只可选" + mediaBuilder.getMediaMaxSelectedCount() + "个附件");
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isMoreThanMaxImage() {
@@ -425,9 +418,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 imageType = customImageType;
             }
             if (mediaBuilder.getImageMaxSelectedCount() == 1) {
-                mediaLifecycleObserver.getImageSingleSelectorLauncher().launch(imageType);
+                mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(imageType,MediaTypeEnum.IMAGE));
             } else {
-                mediaLifecycleObserver.getImageMuLtiSelectorLauncher().launch(imageType);
+                mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(imageType,MediaTypeEnum.IMAGE));
             }
         }
     }
@@ -478,9 +471,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 mediaType = customMediaType;
             }
             if (mediaBuilder.getImageMaxSelectedCount() == 1) {
-                mediaLifecycleObserver.getMediaSingleSelectorLauncher().launch(mediaType);
+                mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(mediaType,MediaTypeEnum.IMAGE_AND_VIDEO));
             } else {
-                mediaLifecycleObserver.getMediaMuLtiSelectorLauncher().launch(mediaType);
+                mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(mediaType,MediaTypeEnum.IMAGE_AND_VIDEO));
             }
         }
     }
@@ -500,9 +493,26 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 return;
             }
         }
-        mediaLifecycleObserver.getCameraLauncher().launch(null);
+        mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE);
     }
 
+    /**
+     * 打开摄像机
+     */
+    public void mediaCamera() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                return;
+            }
+        } else {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+                return;
+            }
+        }
+        mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE_AND_VIDEO);
+    }
     /**
      * 开始压缩
      */
@@ -511,6 +521,16 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = videos;
         message.what = 0;
         new VideoCompressHandler(this,handlerLooper(), videos).sendMessage(message);
+    }
+
+    /**
+     * 开始压缩
+     */
+    public void startCompressMedia(List<Uri> mediaList) {
+        Message message = new Message();
+        message.obj = mediaList;
+        message.what = 0;
+        new MediaCompressHandler(this,handlerLooper(), mediaList).sendMessage(message);
     }
 
     @Override
@@ -540,7 +560,24 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 return;
             }
         }
-        mediaLifecycleObserver.getShootLauncher().launch(null);
+        mediaLifecycleObserver.getShootLauncher().launch(MediaTypeEnum.VIDEO);
+    }
+    /**
+     * 打开拍摄
+     */
+    public void mediaShoot() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                return;
+            }
+        } else {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+                return;
+            }
+        }
+        mediaLifecycleObserver.getShootLauncher().launch(MediaTypeEnum.IMAGE_AND_VIDEO);
     }
 
     public void openShoot() {
@@ -589,15 +626,29 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 videoType = customVideoType;
             }
             if (mediaBuilder.getVideoMaxSelectedCount() == 1) {
-                mediaLifecycleObserver.getVideoLauncher().launch(videoType);
+                mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(videoType,MediaTypeEnum.VIDEO));
             } else {
-                mediaLifecycleObserver.getVideoMultiLauncher().launch(videoType);
+                mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(videoType,MediaTypeEnum.VIDEO));
             }
         }
     }
 
     @Override
     public void mediaClick(int mediaType) {
+        if (isMoreThanMaxMedia()) {
+            return;
+        }
+        if (OpenMediaDialog.ALBUM == mediaType) {
+            openMedia();
+        } else if (OpenMediaDialog.CAMERA == mediaType) {
+            mediaCamera();
+        } else if (OpenMediaDialog.SHOOT == mediaType) {
+            mediaShoot();
+        }
+    }
+
+    @Override
+    public void imageClick(int mediaType) {
         if (isMoreThanMaxImage()) {
             return;
         }
@@ -607,5 +658,4 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             camera();
         }
     }
-
 }

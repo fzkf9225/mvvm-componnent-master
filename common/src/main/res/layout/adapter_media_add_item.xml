@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+            android:id="@+id/media_add"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/vertical_margin_l"
+            android:scaleType="centerCrop"
+            app:radius="@dimen/radius_s"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <!-- 左侧百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.33" />
+
+            <!-- 右侧百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.67" />
+            <!-- 顶部百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.33" />
+
+            <!-- 底部百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.67" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@mipmap/ic_tweet_add"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+                app:layout_constraintEnd_toEndOf="@id/guideline_right"
+                app:layout_constraintStart_toStartOf="@id/guideline_left"
+                app:layout_constraintTop_toTopOf="@id/guideline_top" />
+        </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
+
+        <pers.fz.mvvm.wight.customlayout.CornerImageView
+            android:id="@+id/iv_media_show"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/vertical_margin_l"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:radius="@dimen/radius_s"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_play"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_media_show"
+            app:layout_constraintEnd_toEndOf="@+id/iv_media_show"
+            app:layout_constraintStart_toStartOf="@+id/iv_media_show"
+            app:layout_constraintTop_toTopOf="@+id/iv_media_show" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_clear_media"
+            android:layout_width="@dimen/image_m"
+            android:layout_height="@dimen/image_m"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/vertical_margin_s"
+            android:layout_marginEnd="@dimen/vertical_margin_s"
+            android:background="@drawable/ib_clear_image_selector"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

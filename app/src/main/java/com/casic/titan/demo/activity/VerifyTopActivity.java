@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.verify.VerifyResult;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
@@ -73,7 +74,7 @@ public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVer
         binding.verifySubmit.setOnClickListener(v -> {
             LogUtil.show("FormUi","数据："+new Gson().toJson(binding.getData()));
             showLoading("验证中...");
-            binding.getData().setImageList(binding.formImage.getImages());
+            binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
             hideLoading();
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));

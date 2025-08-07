@@ -98,7 +98,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
                 return;
             }
             if (onOpenImageClickListener != null) {
-                onOpenImageClickListener.mediaClick(ALBUM);
+                onOpenImageClickListener.imageClick(ALBUM);
             }
         } else if (id == R.id.takePhoto) {
             if (mediaType == ALBUM) {
@@ -106,7 +106,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
                 return;
             }
             if (onOpenImageClickListener != null) {
-                onOpenImageClickListener.mediaClick(CAMERA);
+                onOpenImageClickListener.imageClick(CAMERA);
             }
         }
     }
@@ -117,7 +117,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface OnOpenImageClickListener {
-        void mediaClick(int mediaType);
+        void imageClick(int mediaType);
     }
 
 }

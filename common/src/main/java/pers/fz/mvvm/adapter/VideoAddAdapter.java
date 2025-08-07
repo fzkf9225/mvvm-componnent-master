@@ -2,7 +2,6 @@ package pers.fz.mvvm.adapter;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,12 +11,15 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.jetbrains.annotations.NotNull;
+
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.databinding.VideoAddItemBinding;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.databinding.AdapterVideoAddItemBinding;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
@@ -26,8 +28,8 @@ import pers.fz.mvvm.util.log.LogUtil;
  * Created by fz on 2021/4/2
  * describe:添加视频
  */
-public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBinding> {
-    private final String TAG = this.getClass().getSimpleName();
+public class VideoAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterVideoAddItemBinding> {
+    public final String TAG = this.getClass().getSimpleName();
 
     public VideoClearListener videoClearListener;
     public VideoAddListener videoAddListener;
@@ -47,12 +49,13 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
     }
 
     public VideoAddAdapter(int maxCount) {
+        this();
         this.defaultMaxCount = maxCount;
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.video_add_item;
+        return R.layout.adapter_video_add_item;
     }
 
     public void setPlaceholderImage(Drawable placeholderImage) {
@@ -72,33 +75,9 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
     }
 
     @Override
-    public void onBindHolder(BaseViewHolder<VideoAddItemBinding> holder, int pos) {
+    public void onBindHolder(BaseViewHolder<AdapterVideoAddItemBinding> holder, int pos) {
         holder.getBinding().ivClearImg.setVisibility((mList.size() == defaultMaxCount) ? View.GONE : View.VISIBLE);
-        holder.getBinding().ivClearImg.setOnClickListener(v -> {
-            if (videoClearListener != null) {
-                videoClearListener.videoClear(v, pos);
-            }
-        });
-        holder.getBinding().ivVideoShow.setRadius((int) this.radius);
-        holder.getBinding().videoAdd.setBgColorAndRadius(this.bgColor,this.radius);
-        holder.getBinding().ivVideoShow.setOnClickListener(v -> {
-            try {
-                Bundle bundleVideo = new Bundle();
-                bundleVideo.putString("videoName", FileUtil.getFileName(mList.get(pos).toString()));
-                bundleVideo.putString("videoPath", mList.get(pos).toString());
-                VideoPlayerActivity.show(v.getContext(), bundleVideo);
-            } catch (Exception e) {
-                e.printStackTrace();
-                LogUtil.e(TAG,"视频播放失败:" + e);
-                Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
-            }
-        });
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
-            holder.getBinding().videoAdd.setOnClickListener(v -> {
-                if (videoAddListener != null) {
-                    videoAddListener.videoAdd(v);
-                }
-            });
             holder.getBinding().ivPlayer.setVisibility(View.GONE);
             holder.getBinding().videoAdd.setVisibility(View.VISIBLE);
             holder.getBinding().ivVideoShow.setVisibility(View.GONE);
@@ -109,9 +88,9 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
             holder.getBinding().videoAdd.setVisibility(View.GONE);
             holder.getBinding().ivVideoShow.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivVideoShow.getContext())
-                    .load(mList.get(pos))
-                    .apply(new RequestOptions().placeholder(placeholderImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :placeholderImage)
-                            .error(errorImage ==null? ContextCompat.getDrawable(holder.itemView.getContext(),R.mipmap.ic_default_image) :errorImage))
+                    .load(mList.get(pos).getPath())
+                    .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
+                            .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
                     .into(holder.getBinding().ivVideoShow);
         }
     }
@@ -123,6 +102,14 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
     @Override
     public int getItemCount() {
         return (super.getItemCount() == defaultMaxCount && defaultMaxCount != -1) ? super.getItemCount() : super.getItemCount() + 1;
+    }
+
+    public VideoAddListener getVideoAddListener() {
+        return videoAddListener;
+    }
+
+    public VideoClearListener getVideoClearListener() {
+        return videoClearListener;
     }
 
     public void setVideoClearListener(VideoClearListener videoClearListener) {
@@ -139,5 +126,43 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<Uri, VideoAddItemBi
 
     public interface VideoAddListener {
         void videoAdd(View view);
+    }
+
+    @Override
+    protected BaseViewHolder<AdapterVideoAddItemBinding> createViewHold(AdapterVideoAddItemBinding binding) {
+        return new ViewHolder(binding, this);
+    }
+
+    private static class ViewHolder extends BaseViewHolder<AdapterVideoAddItemBinding> {
+
+        public <T> ViewHolder(@NotNull AdapterVideoAddItemBinding binding, VideoAddAdapter adapter) {
+            super(binding, adapter);
+            binding.ivVideoShow.setRadius((int) adapter.radius);
+            binding.videoAdd.setBgColorAndRadius(adapter.bgColor, adapter.radius);
+            binding.ivVideoShow.setOnClickListener(v -> {
+                try {
+                    Bundle bundleVideo = new Bundle();
+                    bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath()));
+                    bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());
+                    VideoPlayerActivity.show(v.getContext(), bundleVideo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtil.e(VideoAddAdapter.class.getSimpleName(), "视频播放失败:" + e);
+                    Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+            binding.ivClearImg.setOnClickListener(v -> {
+                if (adapter.getVideoClearListener() == null) {
+                    return;
+                }
+                adapter.getVideoClearListener().videoClear(v, getAbsoluteAdapterPosition());
+            });
+            binding.videoAdd.setOnClickListener(v -> {
+                if (adapter.getVideoAddListener() == null) {
+                    return;
+                }
+                adapter.getVideoAddListener().videoAdd(v);
+            });
+        }
     }
 }

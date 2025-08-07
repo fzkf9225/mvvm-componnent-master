@@ -24,7 +24,7 @@ import java.nio.channels.FileChannel;
 import java.util.LinkedList;
 import java.util.List;
 
-import pers.fz.media.LogUtil;
+import pers.fz.media.utils.LogUtil;
 
 public class VideoController {
     private static final String TAG = "VideoController";

@@ -64,6 +64,10 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
         notifyItemInserted(0);
     }
 
+    public T getItem(int position) {
+        return mList.get(position);
+    }
+
     public View getHeaderView() {
         return headerView;
     }

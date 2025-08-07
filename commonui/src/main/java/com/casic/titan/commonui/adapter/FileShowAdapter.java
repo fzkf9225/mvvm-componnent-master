@@ -5,13 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.bean.AttachmentBean;
+import pers.fz.mvvm.bean.AttachmentBean;
 import com.casic.titan.commonui.databinding.ItemFileShowBinding;
-import com.casic.titan.commonui.utils.AttachmentUtil;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;

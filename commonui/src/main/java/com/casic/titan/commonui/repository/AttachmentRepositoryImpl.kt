@@ -1,8 +1,8 @@
 package com.casic.titan.commonui.repository
 
 import androidx.lifecycle.LiveData
-import com.casic.titan.commonui.bean.AttachmentBean
-import com.casic.titan.commonui.database.AttachmentDao
+import pers.fz.mvvm.bean.AttachmentBean
+import pers.fz.mvvm.database.AttachmentDao
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import kotlinx.coroutines.Dispatchers

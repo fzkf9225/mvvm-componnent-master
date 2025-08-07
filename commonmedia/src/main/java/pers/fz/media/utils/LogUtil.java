@@ -1,6 +1,8 @@
-package pers.fz.media;
+package pers.fz.media.utils;
 
 import android.util.Log;
+
+import pers.fz.media.BuildConfig;
 
 
 /**

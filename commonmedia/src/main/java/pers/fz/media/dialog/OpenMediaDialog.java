@@ -104,6 +104,7 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
         binding.buttonCancel.setOnClickListener(view -> dismiss());
         binding.choosePhoto.setOnClickListener(this);
         binding.takePhoto.setOnClickListener(this);
+        binding.shoot.setOnClickListener(this);
         setContentView(binding.getRoot());
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {

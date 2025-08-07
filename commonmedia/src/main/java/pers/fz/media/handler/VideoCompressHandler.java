@@ -14,10 +14,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.media.LogUtil;
-import pers.fz.media.MediaBean;
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.MediaUtil;
+import pers.fz.media.utils.MediaUtil;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.videocompressor.CompressListener;

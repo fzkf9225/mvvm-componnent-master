@@ -5,9 +5,9 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.bean.AttachmentBean;
+import pers.fz.mvvm.bean.AttachmentBean;
 import com.casic.titan.commonui.databinding.FileAddItemBinding;
-import com.casic.titan.commonui.utils.AttachmentUtil;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;

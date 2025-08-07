@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.media.LogUtil;
-import pers.fz.media.MediaBean;
+import pers.fz.media.utils.LogUtil;
+import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.imgcompressor.ImgCompressor;

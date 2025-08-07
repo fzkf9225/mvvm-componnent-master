@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileAddAdapter;
-import com.casic.titan.commonui.bean.AttachmentBean;
-import com.casic.titan.commonui.utils.AttachmentUtil;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 
 import java.util.ArrayList;
 import java.util.List;

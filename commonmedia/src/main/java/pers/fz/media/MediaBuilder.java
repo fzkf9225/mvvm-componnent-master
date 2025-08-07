@@ -1,15 +1,11 @@
 package pers.fz.media;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Environment;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.ColorInt;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +16,7 @@ import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.media.listener.OnDialogInterfaceClickListener;
+import pers.fz.media.utils.MediaUtil;
 
 /**
  * Created by fz on 2021/2/7 9:10

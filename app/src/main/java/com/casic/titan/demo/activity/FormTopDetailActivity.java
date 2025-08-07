@@ -1,13 +1,10 @@
 package com.casic.titan.demo.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
-import com.casic.titan.commonui.bean.AttachmentBean;
+import pers.fz.mvvm.bean.AttachmentBean;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.FormBean;
-import com.casic.titan.demo.databinding.ActivityFormDetailBinding;
 import com.casic.titan.demo.databinding.ActivityFormTopDetailBinding;
 
 import java.util.ArrayList;
@@ -35,22 +32,22 @@ public class FormTopDetailActivity extends BaseActivity<EmptyViewModel, Activity
     @Override
     public void initView(Bundle savedInstanceState) {
         AttachmentBean attachmentBean1 = new AttachmentBean();
-        attachmentBean1.setUrl("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+        attachmentBean1.setPath("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
         attachmentBean1.setFileName("1.jpg");
         AttachmentBean attachmentBean2 = new AttachmentBean();
-        attachmentBean2.setUrl("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg");
+        attachmentBean2.setPath("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg");
         attachmentBean2.setFileName("2.jpg");
         AttachmentBean attachmentBean3 = new AttachmentBean();
-        attachmentBean3.setUrl("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42");
+        attachmentBean3.setPath("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42");
         attachmentBean3.setFileName("3.jpg");
         AttachmentBean attachmentBean4 = new AttachmentBean();
-        attachmentBean4.setUrl("https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg");
+        attachmentBean4.setPath("https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg");
         attachmentBean4.setFileName("4.jpg");
         AttachmentBean attachmentBean5 = new AttachmentBean();
-        attachmentBean5.setUrl("https://ww1.sinaimg.cn/mw690/008vmhs1ly1hrhly2i2jtj30j616nq9v.jpg");
+        attachmentBean5.setPath("https://ww1.sinaimg.cn/mw690/008vmhs1ly1hrhly2i2jtj30j616nq9v.jpg");
         attachmentBean5.setFileName("5.jpg");
         AttachmentBean attachmentBean6 = new AttachmentBean();
-        attachmentBean6.setUrl("https://img2.baidu.com/it/u=2380808412,3135171519&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1199");
+        attachmentBean6.setPath("https://img2.baidu.com/it/u=2380808412,3135171519&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1199");
         attachmentBean6.setFileName("6.jpg");
         imageList.add(attachmentBean1);
         imageList.add(attachmentBean2);
@@ -60,7 +57,7 @@ public class FormTopDetailActivity extends BaseActivity<EmptyViewModel, Activity
         imageList.add(attachmentBean6);
 
         AttachmentBean formDemoFileBean = new AttachmentBean();
-        formDemoFileBean.setUrl("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
+        formDemoFileBean.setPath("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
         formDemoFileBean.setFileName("1.mp4");
         videoList.add(formDemoFileBean);
         binding.setData(new FormBean("1", "我是测试标题", "2024-11-12 14:53:07",

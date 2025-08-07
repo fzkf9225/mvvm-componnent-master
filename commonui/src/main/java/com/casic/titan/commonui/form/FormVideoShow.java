@@ -17,8 +17,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.adapter.FormVideoShowAdapter;
-import com.casic.titan.commonui.bean.AttachmentBean;
+
+import pers.fz.mvvm.adapter.VideoShowAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
 
 import java.util.List;
 
@@ -90,10 +91,10 @@ public class FormVideoShow extends FormMedia {
         layoutEmptyLayout();
         mediaRecyclerView.setVisibility(View.GONE);
         if (adapter == null) {
-            adapter = new FormVideoShowAdapter();
-            ((FormVideoShowAdapter) adapter).setRadius(radius);
-            ((FormVideoShowAdapter) adapter).setErrorImage(errorImage);
-            ((FormVideoShowAdapter) adapter).setPlaceholderImage(placeholderImage);
+            adapter = new VideoShowAdapter();
+            ((VideoShowAdapter) adapter).setRadius(radius);
+            ((VideoShowAdapter) adapter).setErrorImage(errorImage);
+            ((VideoShowAdapter) adapter).setPlaceholderImage(placeholderImage);
         }
         mediaRecyclerView.setAdapter(adapter);
     }
@@ -138,7 +139,7 @@ public class FormVideoShow extends FormMedia {
 
     @SuppressLint("NotifyDataSetChanged")
     public <T extends AttachmentBean> void setVideos(List<T> images) {
-        if (adapter instanceof FormVideoShowAdapter formVideoShowAdapter) {
+        if (adapter instanceof VideoShowAdapter formVideoShowAdapter) {
             formVideoShowAdapter.setList((List<AttachmentBean>) images);
             formVideoShowAdapter.notifyDataSetChanged();
             mediaRecyclerView.setVisibility((CollectionUtil.isEmpty(images))?View.GONE:View.VISIBLE);
