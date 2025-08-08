@@ -16,7 +16,6 @@
 package pers.fz.mvvm.autosize;
 
 import static pers.fz.mvvm.autosize.AutoSizeConfig.DEPENDENCY_ANDROIDX;
-import static pers.fz.mvvm.autosize.AutoSizeConfig.DEPENDENCY_SUPPORT;
 
 import android.app.Activity;
 import android.app.Application;
@@ -47,8 +46,6 @@ public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifec
     public ActivityLifecycleCallbacksImpl(AutoAdaptStrategy autoAdaptStrategy) {
         if (DEPENDENCY_ANDROIDX) {
             mFragmentLifecycleCallbacksToAndroidx = new FragmentLifecycleCallbacksImplToAndroidx(autoAdaptStrategy);
-        } else if (DEPENDENCY_SUPPORT){
-            mFragmentLifecycleCallbacks = new FragmentLifecycleCallbacksImpl(autoAdaptStrategy);
         }
         mAutoAdaptStrategy = autoAdaptStrategy;
     }

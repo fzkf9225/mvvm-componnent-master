@@ -1,7 +1,9 @@
 package pers.fz.mvvm.bean
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import androidx.databinding.BaseObservable
 
 data class HomeMenuBean(
@@ -23,7 +25,11 @@ data class HomeMenuBean(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readSerializable() as Class<*>
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            parcel.readSerializable(null, Class::class.java) as Class<*>
+        } else {
+            parcel.readSerializable() as Class<*>
+        }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

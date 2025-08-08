@@ -51,7 +51,7 @@ public class AttachmentBean extends BaseObservable {
     @Bindable
     private String fileSize;
     /**
-     * 附件类型，image-图片，video-视频，audio-音频，file-附件
+     * 附件类型，参考枚举值AttachmentTypeEnum，image-图片，video-视频，audio-音频，file-附件
      */
     @Bindable
     private String fileType;

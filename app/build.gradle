@@ -9,9 +9,6 @@ plugins {
 android {
     namespace 'com.casic.titan.demo'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
     defaultConfig {
         applicationId "com.casic.titan.demo"
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -86,7 +83,7 @@ dependencies {
     implementation project(':wscomponent')
 
     implementation project(':annotation')
-    annotationProcessor project(':annotation')
+    kapt project(':annotation')
 
     implementation libs.github.glide
 

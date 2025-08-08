@@ -56,9 +56,6 @@
 ### 忽略警告
 #-ignorewarning
 
-#如果引用了v4或者v7包
--dontwarn android.support.**
-
 -keepattributes EnclosingMethod
 
  #如果有其它包有warning，在报出warning的包加入下面类似的-dontwarn 报名

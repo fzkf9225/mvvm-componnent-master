@@ -9,17 +9,11 @@ plugins {
 android {
     namespace 'pers.fz.mvvm'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
         ndk {
             //选择要添加的对应cpu类型的.so库。
             abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86'
@@ -55,6 +49,7 @@ android {
         jvmTarget = '17'
     }
     ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
         arg("jvmTarget", "17")
     }
 

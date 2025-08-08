@@ -8,9 +8,6 @@ plugins {
 android {
     namespace 'com.casic.titan.commonui'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
@@ -22,9 +19,6 @@ android {
             abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86'
 //            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
-        }
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -52,6 +46,7 @@ android {
         baseline = file("lint-baseline.xml")
     }
     ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
         arg("jvmTarget", "17")
     }
     kotlinOptions {
@@ -68,9 +63,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     implementation libs.androidx.core.ktx
     implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat

@@ -51,115 +51,75 @@ public class Track {
 
     public Track(int id, MediaFormat format) throws Exception {
         trackId = id;
-            sampleDurations.add((long)3015);
-            duration = 3015;
-            width = format.getInteger(MediaFormat.KEY_WIDTH);
-            height = format.getInteger(MediaFormat.KEY_HEIGHT);
-            timeScale = 90000;
-            syncSamples = new LinkedList<Integer>();
-            handler = "vide";
-            headerBox = new VideoMediaHeaderBox();
-            sampleDescriptionBox = new SampleDescriptionBox();
-            String mime = format.getString(MediaFormat.KEY_MIME);
-            if (mime.equals("video/avc")) {
-                VisualSampleEntry visualSampleEntry = new VisualSampleEntry("avc1");
-                visualSampleEntry.setDataReferenceIndex(1);
-                visualSampleEntry.setDepth(24);
-                visualSampleEntry.setFrameCount(1);
-                visualSampleEntry.setHorizresolution(72);
-                visualSampleEntry.setVertresolution(72);
-                visualSampleEntry.setWidth(width);
-                visualSampleEntry.setHeight(height);
+        sampleDurations.add(3015L);
+        duration = 3015;
+        width = format.getInteger(MediaFormat.KEY_WIDTH);
+        height = format.getInteger(MediaFormat.KEY_HEIGHT);
+        timeScale = 90000;
+        syncSamples = new LinkedList<Integer>();
+        handler = "vide";
+        headerBox = new VideoMediaHeaderBox();
+        sampleDescriptionBox = new SampleDescriptionBox();
+        String mime = format.getString(MediaFormat.KEY_MIME);
+        if ("video/avc".equals(mime)) {
+            VisualSampleEntry visualSampleEntry = new VisualSampleEntry("avc1");
+            visualSampleEntry.setDataReferenceIndex(1);
+            visualSampleEntry.setDepth(24);
+            visualSampleEntry.setFrameCount(1);
+            visualSampleEntry.setHorizresolution(72);
+            visualSampleEntry.setVertresolution(72);
+            visualSampleEntry.setWidth(width);
+            visualSampleEntry.setHeight(height);
 
-                AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox();
+            AvcConfigurationBox avcConfigurationBox = new AvcConfigurationBox();
 
-                if (format.getByteBuffer("csd-0") != null) {
-                    ArrayList<byte[]> spsArray = new ArrayList<byte[]>();
-                    ByteBuffer spsBuff = format.getByteBuffer("csd-0");
+            if (format.getByteBuffer("csd-0") != null) {
+                ArrayList<byte[]> spsArray = new ArrayList<byte[]>();
+                ByteBuffer spsBuff = format.getByteBuffer("csd-0");
+                if (spsBuff != null) {
                     spsBuff.position(4);
                     byte[] spsBytes = new byte[spsBuff.remaining()];
                     spsBuff.get(spsBytes);
                     spsArray.add(spsBytes);
+                }
 
-                    ArrayList<byte[]> ppsArray = new ArrayList<byte[]>();
-                    ByteBuffer ppsBuff = format.getByteBuffer("csd-1");
+                ArrayList<byte[]> ppsArray = new ArrayList<byte[]>();
+                ByteBuffer ppsBuff = format.getByteBuffer("csd-1");
+                if (ppsBuff != null) {
                     ppsBuff.position(4);
                     byte[] ppsBytes = new byte[ppsBuff.remaining()];
                     ppsBuff.get(ppsBytes);
                     ppsArray.add(ppsBytes);
-                    avcConfigurationBox.setSequenceParameterSets(spsArray);
-                    avcConfigurationBox.setPictureParameterSets(ppsArray);
                 }
-                //ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(spsBytes);
-                //SeqParameterSet seqParameterSet = SeqParameterSet.read(byteArrayInputStream);
-
-                avcConfigurationBox.setAvcLevelIndication(13);
-                avcConfigurationBox.setAvcProfileIndication(100);
-                avcConfigurationBox.setBitDepthLumaMinus8(-1);
-                avcConfigurationBox.setBitDepthChromaMinus8(-1);
-                avcConfigurationBox.setChromaFormat(-1);
-                avcConfigurationBox.setConfigurationVersion(1);
-                avcConfigurationBox.setLengthSizeMinusOne(3);
-                avcConfigurationBox.setProfileCompatibility(0);
-
-                visualSampleEntry.addBox(avcConfigurationBox);
-                sampleDescriptionBox.addBox(visualSampleEntry);
-            } else if (mime.equals("video/mp4v")) {
-                VisualSampleEntry visualSampleEntry = new VisualSampleEntry("mp4v");
-                visualSampleEntry.setDataReferenceIndex(1);
-                visualSampleEntry.setDepth(24);
-                visualSampleEntry.setFrameCount(1);
-                visualSampleEntry.setHorizresolution(72);
-                visualSampleEntry.setVertresolution(72);
-                visualSampleEntry.setWidth(width);
-                visualSampleEntry.setHeight(height);
-
-                sampleDescriptionBox.addBox(visualSampleEntry);
+                avcConfigurationBox.setSequenceParameterSets(spsArray);
+                avcConfigurationBox.setPictureParameterSets(ppsArray);
             }
-//        } else {
-//            sampleDurations.add((long)1024);
-//            duration = 1024;
-//            isAudio = true;
-//            volume = 1;
-//            timeScale = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-//            handler = "soun";
-//            headerBox = new SoundMediaHeaderBox();
-//            sampleDescriptionBox = new SampleDescriptionBox();
-//            AudioSampleEntry audioSampleEntry = new AudioSampleEntry("mp4a");
-//            audioSampleEntry.setChannelCount(format.getInteger(MediaFormat.KEY_CHANNEL_COUNT));
-//            audioSampleEntry.setSampleRate(format.getInteger(MediaFormat.KEY_SAMPLE_RATE));
-//            audioSampleEntry.setDataReferenceIndex(1);
-//            audioSampleEntry.setSampleSize(16);
-//
-//            ESDescriptorBox esds = new ESDescriptorBox();
-//            ESDescriptor descriptor = new ESDescriptor();
-//            descriptor.setEsId(0);
-//
-//            SLConfigDescriptor slConfigDescriptor = new SLConfigDescriptor();
-//            slConfigDescriptor.setPredefined(2);
-//            descriptor.setSlConfigDescriptor(slConfigDescriptor);
-//
-//            DecoderConfigDescriptor decoderConfigDescriptor = new DecoderConfigDescriptor();
-//            decoderConfigDescriptor.setObjectTypeIndication(0x40);
-//            decoderConfigDescriptor.setStreamType(5);
-//            decoderConfigDescriptor.setBufferSizeDB(1536);
-//            decoderConfigDescriptor.setMaxBitRate(96000);
-//            decoderConfigDescriptor.setAvgBitRate(96000);
-//
-//            AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig();
-//            audioSpecificConfig.setAudioObjectType(2);
-//            audioSpecificConfig.setSamplingFrequencyIndex(samplingFrequencyIndexMap.get((int)audioSampleEntry.getSampleRate()));
-//            audioSpecificConfig.setChannelConfiguration(audioSampleEntry.getChannelCount());
-//            decoderConfigDescriptor.setAudioSpecificInfo(audioSpecificConfig);
-//
-//            descriptor.setDecoderConfigDescriptor(decoderConfigDescriptor);
-//
-//            ByteBuffer data = descriptor.serialize();
-//            esds.setEsDescriptor(descriptor);
-//            esds.setData(data);
-//            audioSampleEntry.addBox(esds);
-//            sampleDescriptionBox.addBox(audioSampleEntry);
-//        }
+            //ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(spsBytes);
+            //SeqParameterSet seqParameterSet = SeqParameterSet.read(byteArrayInputStream);
+
+            avcConfigurationBox.setAvcLevelIndication(13);
+            avcConfigurationBox.setAvcProfileIndication(100);
+            avcConfigurationBox.setBitDepthLumaMinus8(-1);
+            avcConfigurationBox.setBitDepthChromaMinus8(-1);
+            avcConfigurationBox.setChromaFormat(-1);
+            avcConfigurationBox.setConfigurationVersion(1);
+            avcConfigurationBox.setLengthSizeMinusOne(3);
+            avcConfigurationBox.setProfileCompatibility(0);
+
+            visualSampleEntry.addBox(avcConfigurationBox);
+            sampleDescriptionBox.addBox(visualSampleEntry);
+        } else if ("video/mp4v".equals(mime)) {
+            VisualSampleEntry visualSampleEntry = new VisualSampleEntry("mp4v");
+            visualSampleEntry.setDataReferenceIndex(1);
+            visualSampleEntry.setDepth(24);
+            visualSampleEntry.setFrameCount(1);
+            visualSampleEntry.setHorizresolution(72);
+            visualSampleEntry.setVertresolution(72);
+            visualSampleEntry.setWidth(width);
+            visualSampleEntry.setHeight(height);
+
+            sampleDescriptionBox.addBox(visualSampleEntry);
+        }
     }
 
     public long getTrackId() {

@@ -157,14 +157,24 @@ plugins {
     mediaHelper = new MediaBuilder(this, this)
         .setImageMaxSelectedCount(1)
         .builder();
-        mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
+    mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             
-        });
+    });
 ```
 #### 断点续传下载
 普通文件下载示例：
 ```
-    DownloadManger.getInstance().download(mContext,"下载文件url");
+               Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
+                    .subscribe(file -> {
+                        LogUtil.show(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
+                        showToast("下载成功！");
+                    }, throwable -> {
+                        if (throwable instanceof BaseException baseException) {
+                            showToast(baseException.getErrorMsg());
+                            return;
+                        }
+                        showToast(throwable.getMessage());
+                    });
 ```
 版本更新示例：
 ```
@@ -177,7 +187,7 @@ plugins {
 项目中集成了github上的gsy视频播放库，目前是我觉得开源库中兼容性最好的了吧直接调用VideoPlayerActivity这个Activity就行了，基础播放功能，如果你的场景更负责那可能需要自己单独集成了
 #### 大图预览框架
 ```
-    new PicShowDialog(mContext,PicShowDialog.createImageInfo(mList),pos).show();
+     new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
 ```
 #### 关于一些其他的公共库
 base封装、一些dialog框、自定义view封装等等可以自行在源码中查看了解，不一一介绍了

@@ -77,16 +77,57 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/iv_player"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_play"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_media_show"
             app:layout_constraintEnd_toEndOf="@+id/iv_media_show"
             app:layout_constraintStart_toStartOf="@+id/iv_media_show"
-            app:layout_constraintTop_toTopOf="@+id/iv_media_show" />
+            app:layout_constraintTop_toTopOf="@+id/iv_media_show">
+
+            <!-- 左侧百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/media_guideline_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.33" />
+
+            <!-- 右侧百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/media_guideline_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.67" />
+
+            <!-- 顶部百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/media_guideline_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.33" />
+
+            <!-- 底部百分比引导线 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/media_guideline_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.67" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@mipmap/icon_play"
+                app:layout_constraintBottom_toBottomOf="@id/media_guideline_bottom"
+                app:layout_constraintEnd_toEndOf="@id/media_guideline_right"
+                app:layout_constraintStart_toStartOf="@id/media_guideline_left"
+                app:layout_constraintTop_toTopOf="@id/media_guideline_top" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_clear_media"

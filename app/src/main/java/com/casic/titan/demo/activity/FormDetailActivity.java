@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFormDetailBinding> {
@@ -31,24 +32,40 @@ public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFor
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        binding.formScreenImage.bindLifecycle(this);
+        binding.formScreenVideo.bindLifecycle(this);
+        binding.formImageVideo.bindLifecycle(this);
+        binding.formScreenFile.bindLifecycle(this);
         AttachmentBean attachmentBean1 = new AttachmentBean();
         attachmentBean1.setPath("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean1.setFileName("1.jpg");
+
         AttachmentBean attachmentBean2 = new AttachmentBean();
         attachmentBean2.setPath("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg");
+        attachmentBean2.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean2.setFileName("2.jpg");
+
         AttachmentBean attachmentBean3 = new AttachmentBean();
         attachmentBean3.setPath("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42");
+        attachmentBean3.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean3.setFileName("3.jpg");
+
         AttachmentBean attachmentBean4 = new AttachmentBean();
         attachmentBean4.setPath("https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg");
+        attachmentBean4.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean4.setFileName("4.jpg");
+
         AttachmentBean attachmentBean5 = new AttachmentBean();
         attachmentBean5.setPath("https://ww1.sinaimg.cn/mw690/008vmhs1ly1hrhly2i2jtj30j616nq9v.jpg");
+        attachmentBean5.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean5.setFileName("5.jpg");
+
         AttachmentBean attachmentBean6 = new AttachmentBean();
         attachmentBean6.setPath("https://img2.baidu.com/it/u=2380808412,3135171519&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1199");
+        attachmentBean6.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBean6.setFileName("6.jpg");
+
         imageList.add(attachmentBean1);
         imageList.add(attachmentBean2);
         imageList.add(attachmentBean3);
@@ -57,6 +74,7 @@ public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFor
         imageList.add(attachmentBean6);
 
         AttachmentBean formDemoFileBean = new AttachmentBean();
+        formDemoFileBean.setFileType(AttachmentTypeEnum.VIDEO.typeValue);
         formDemoFileBean.setPath("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
         formDemoFileBean.setFileName("1.mp4");
         videoList.add(formDemoFileBean);

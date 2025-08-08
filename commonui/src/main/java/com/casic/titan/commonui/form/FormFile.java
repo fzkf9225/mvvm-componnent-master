@@ -242,11 +242,11 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setFiles(List<AttachmentBean> images) {
-        if (images == null) {
-            images = new ArrayList<>();
+    public void setFiles(List<AttachmentBean> files) {
+        if (files == null) {
+            files = new ArrayList<>();
         }
-        fileAddAdapter.setList(images);
+        fileAddAdapter.setList(files);
         fileAddAdapter.notifyDataSetChanged();
         refreshCount();
     }

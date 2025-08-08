@@ -6,7 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
@@ -103,14 +104,12 @@ public class ImgCompressor {
         //根据原始图片的宽高比和期望的输出图片的宽高比计算最终输出的图片的宽和高
         float srcWidth = options.outWidth;
         float srcHeight = options.outHeight;
-        float maxWidth = outWidth;
-        float maxHeight = outHeight;
         float srcRatio = srcWidth / srcHeight;
-        float outRatio = maxWidth / maxHeight;
+        float outRatio = (float) outWidth / (float) outHeight;
         float actualOutWidth = srcWidth;
         float actualOutHeight = srcHeight;
 
-        if (srcWidth > maxWidth || srcHeight > maxHeight) {
+        if (srcWidth > (float) outWidth || srcHeight > (float) outHeight) {
             //如果输入比率小于输出比率,则最终输出的宽度以maxHeight为准()
             //比如输入比为10:20 输出比是300:10 如果要保证输出图片的宽高比和原始图片的宽高比相同,则最终输出图片的高为10
             //宽度为10/20 * 10 = 5  最终输出图片的比率为5:10 和原始输入的比率相同
@@ -119,14 +118,14 @@ public class ImgCompressor {
             //比如输入比为20:10 输出比是5:100 如果要保证输出图片的宽高比和原始图片的宽高比相同,则最终输出图片的宽为5
             //高度需要根据输入图片的比率计算获得 为5 / 20/10= 2.5  最终输出图片的比率为5:2.5 和原始输入的比率相同
             if (srcRatio < outRatio) {
-                actualOutHeight = maxHeight;
+                actualOutHeight = (float) outHeight;
                 actualOutWidth = actualOutHeight * srcRatio;
             } else if (srcRatio > outRatio) {
-                actualOutWidth = maxWidth;
+                actualOutWidth = (float) outWidth;
                 actualOutHeight = actualOutWidth / srcRatio;
             } else {
-                actualOutWidth = maxWidth;
-                actualOutHeight = maxHeight;
+                actualOutWidth = (float) outWidth;
+                actualOutHeight = (float) outHeight;
             }
         }
         options.inSampleSize = computSampleSize(options, actualOutWidth, actualOutHeight);
@@ -160,7 +159,7 @@ public class ImgCompressor {
         //处理图片旋转问题
         ExifInterface exif;
         try {
-            exif = new ExifInterface(parcelFileDescriptor.getFileDescriptor());
+            exif = new ExifInterface(Objects.requireNonNull(contentResolver.openInputStream(srcImageUri)));
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
             Matrix matrix = new Matrix();

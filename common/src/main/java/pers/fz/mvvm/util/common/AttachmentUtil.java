@@ -34,6 +34,7 @@ import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.download.DownloadManger;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.wight.dialog.MenuDialog;
 import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
 
@@ -42,6 +43,9 @@ import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
  * describe :
  */
 public class AttachmentUtil {
+
+    public static final String TAG = "AttachmentUtil";
+
     public static List<String> toStringList(List<AttachmentBean> attachmentList) {
         if (attachmentList == null) {
             return null;
@@ -278,16 +282,12 @@ public class AttachmentUtil {
         // 获取文件MIME类型
         String mimeType = contentResolver.getType(uri);
         // 根据MIME类型判断文件类别
-        if (mimeType != null) {
-            if (mimeType.startsWith("image/") || mimeType.startsWith("IMAGE/")) {
-                return AttachmentTypeEnum.IMAGE;
-            } else if (mimeType.startsWith("video/") || mimeType.startsWith("video/")) {
-                return AttachmentTypeEnum.VIDEO;
-            } else if (mimeType.startsWith("audio/") || mimeType.startsWith("AUDIO/")) {
-                return AttachmentTypeEnum.AUDIO;
-            } else {
-                return AttachmentTypeEnum.FILE;
-            }
+        if (isImageType(mimeType)) {
+            return AttachmentTypeEnum.IMAGE;
+        } else if (isVideoType(mimeType)) {
+            return AttachmentTypeEnum.VIDEO;
+        } else if (isAudioType(mimeType)) {
+            return AttachmentTypeEnum.AUDIO;
         } else {
             return AttachmentTypeEnum.FILE;
         }
@@ -395,6 +395,27 @@ public class AttachmentUtil {
         }
     }
 
+    public static boolean isImageType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("image/") || mineType.startsWith("IMAGE/");
+    }
+
+    public static boolean isVideoType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("video/") || mineType.startsWith("VIDEO/");
+    }
+
+    public static boolean isAudioType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("audio/") || mineType.startsWith("AUDIO/");
+    }
+
     public static AttachmentTypeEnum getMediaType(Context context, String path) {
         return getMediaType(context, null, path);
     }
@@ -418,9 +439,9 @@ public class AttachmentUtil {
 
         if (isHttp(path)) {
             String type = getMimeType(path);
-            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+            if (isImageType(type)) {
                 return AttachmentTypeEnum.IMAGE;
-            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+            } else if (isVideoType(type)) {
                 return AttachmentTypeEnum.VIDEO;
             } else {
                 return AttachmentTypeEnum.FILE;
@@ -439,9 +460,9 @@ public class AttachmentUtil {
                 return null;
             }
             String type = context.getContentResolver().getType(uri);
-            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+            if (isImageType(type)) {
                 return AttachmentTypeEnum.IMAGE;
-            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+            } else if (isVideoType(type)) {
                 return AttachmentTypeEnum.VIDEO;
             } else {
                 return AttachmentTypeEnum.FILE;
@@ -478,7 +499,10 @@ public class AttachmentUtil {
     }
 
     public static boolean isHttp(String path) {
-        return URLUtil.isHttpUrl(path) || URLUtil.isHttpsUrl(path) || URLUtil.isNetworkUrl(path);
+        if (TextUtils.isEmpty(path)) {
+            return false;
+        }
+        return path.startsWith("http://") || path.startsWith("https://") || path.startsWith("HTTP://") || path.startsWith("HTTPS://");
     }
 
     public static boolean isContentUri(String uriString) {
@@ -499,12 +523,12 @@ public class AttachmentUtil {
     private static void viewUrlFile(Context mContext, String url) {
         try {
             String type = getMimeType(url);
-            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+            if (isImageType(type)) {
                 new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(url), 0).show();
-            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+            } else if (isVideoType(type)) {
                 Bundle bundleVideo = new Bundle();
-                bundleVideo.putString("videoName", url);
-                bundleVideo.putString("videoPath", url);
+                bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, url);
+                bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, url);
                 VideoPlayerActivity.show(mContext, bundleVideo);
             } else {
                 new MenuDialog<>(mContext)
@@ -519,7 +543,10 @@ public class AttachmentUtil {
                                         if (pos == 1) {
                                             viewAbsoluteFile(mContext, file.getAbsolutePath());
                                         }
-                                    }, throwable -> Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show());
+                                    }, throwable -> {
+                                        LogUtil.show(TAG, "下载出现错误：" + throwable);
+                                        Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show();
+                                    });
                         })
                         .builder()
                         .show();
@@ -537,8 +564,8 @@ public class AttachmentUtil {
             new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(absolutePath), 0).show();
         } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
             Bundle bundleVideo = new Bundle();
-            bundleVideo.putString("videoName", fileName);
-            bundleVideo.putString("videoPath", absolutePath);
+            bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, fileName);
+            bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, absolutePath);
             VideoPlayerActivity.show(mContext, bundleVideo);
         } else {
             try {
@@ -564,12 +591,12 @@ public class AttachmentUtil {
         try {
             Uri uri = Uri.parse(uriPath);
             String type = mContext.getContentResolver().getType(uri);
-            if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+            if (isImageType(type)) {
                 new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(uriPath), 0).show();
-            } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+            } else if (isVideoType(type)) {
                 Bundle bundleVideo = new Bundle();
-                bundleVideo.putString("videoName", uriPath);
-                bundleVideo.putString("videoPath", uriPath);
+                bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, uriPath);
+                bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, uriPath);
                 VideoPlayerActivity.show(mContext, bundleVideo);
             } else {
                 Intent i = new Intent(Intent.ACTION_VIEW);
