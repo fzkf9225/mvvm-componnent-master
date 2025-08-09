@@ -33,26 +33,11 @@ import pers.fz.media.enums.MediaTypeEnum;
  */
 public class MediaLifecycleObserver implements DefaultLifecycleObserver {
     private final MediaHelper mediaHelper;
-//    //旧版文件
-//    private ActivityResultLauncher<String[]> imageMuLtiSelectorLauncher = null;
-//    private ActivityResultLauncher<String[]> imageSingleSelectorLauncher = null;
-//    //旧版媒体
-//    private ActivityResultLauncher<String[]> mediaMuLtiSelectorLauncher = null;
-//    private ActivityResultLauncher<String[]> mediaSingleSelectorLauncher = null;
-//
-//    private ActivityResultLauncher<String[]> audioMuLtiSelectorLauncher = null;
-//    private ActivityResultLauncher<String[]> audioSingleSelectorLauncher = null;
-//
-//    private ActivityResultLauncher<String[]> fileMuLtiSelectorLauncher = null;
-//    private ActivityResultLauncher<String[]> fileSingleSelectorLauncher = null;
 
     private ActivityResultLauncher<String[]> permissionLauncher = null;
 
     private ActivityResultLauncher<MediaTypeEnum> cameraLauncher = null;
     private ActivityResultLauncher<MediaTypeEnum> shootLauncher = null;
-//
-//    private ActivityResultLauncher<String[]> videoLauncher = null;
-//    private ActivityResultLauncher<String[]> videoMultiLauncher = null;
 
     private ActivityResultLauncher<SelectorOptions> singleLauncher = null;
     private ActivityResultLauncher<SelectorOptions> multiLauncher = null;

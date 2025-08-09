@@ -2,7 +2,8 @@ package pers.fz.media.enums;
 
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
+
+import pers.fz.media.utils.MediaUtil;
 
 /**
  * Created by fz on 2023/9/2.
@@ -59,9 +60,9 @@ public enum MediaTypeEnum {
             return null;
         }
         String type = context.getContentResolver().getType(uri);
-        if (!TextUtils.isEmpty(type) && (type.startsWith("image") || type.startsWith("IMAGE"))) {
+        if (MediaUtil.isImageType(type)) {
             return MediaTypeEnum.IMAGE;
-        } else if ((!TextUtils.isEmpty(type)) && (type.startsWith("video") || type.startsWith("VIDEO"))) {
+        } else if (MediaUtil.isVideoType(type)) {
             return MediaTypeEnum.VIDEO;
         } else {
             return MediaTypeEnum.FILE;

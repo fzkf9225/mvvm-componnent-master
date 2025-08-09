@@ -463,6 +463,11 @@ public class MediaBuilder {
         return this;
     }
 
+    /**
+     * 绑定生命周期
+     * @param lifecycleOwner LifeCycle对象
+     * @return this
+     */
     public MediaBuilder bindLifeCycle(LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
         return this;
@@ -664,8 +669,8 @@ public class MediaBuilder {
     }
 
     /**
-     * 绑定生命周期
-     * @return this
+     * 获取LifeCycle
+     * @return LifecycleOwner
      */
     public LifecycleOwner getLifecycleOwner() {
         return lifecycleOwner;

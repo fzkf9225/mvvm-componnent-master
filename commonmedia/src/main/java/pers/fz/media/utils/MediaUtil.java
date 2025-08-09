@@ -27,6 +27,27 @@ import java.util.Random;
 public class MediaUtil {
     private final String TAG = this.getClass().getSimpleName();
 
+    public static boolean isImageType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("image/") || mineType.startsWith("IMAGE/");
+    }
+
+    public static boolean isVideoType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("video/") || mineType.startsWith("VIDEO/");
+    }
+
+    public static boolean isAudioType(String mineType) {
+        if (TextUtils.isEmpty(mineType)) {
+            return false;
+        }
+        return mineType.startsWith("audio/") || mineType.startsWith("AUDIO/");
+    }
+
     public static boolean isImage(Uri uri, Context context) {
         try {
             String mimeType = context.getContentResolver().getType(uri);
