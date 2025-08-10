@@ -57,7 +57,7 @@ public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
     public Intent createIntent(@NonNull Context context, MediaTypeEnum input) {
         this.mediaType = input;
         String mimeType = "video/mp4";
-        String fileName = "VIDEO_" + System.currentTimeMillis() + ".mp4";
+        String fileName = "VIDEO_" + MediaUtil.getCurrentTime() + ".mp4";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             //如果保存到公共目录
             if (mediaBuilder.isSavePublicPath()) {

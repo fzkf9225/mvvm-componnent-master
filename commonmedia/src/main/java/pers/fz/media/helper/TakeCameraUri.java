@@ -49,7 +49,7 @@ public class TakeCameraUri extends ActivityResultContract<MediaTypeEnum, Uri> {
     public Intent createIntent(@NonNull Context context, MediaTypeEnum input) {
         this.mediaTypeEnum = input;
         String mimeType = "image/jpeg";
-        String fileName = "IMAGE_" + System.currentTimeMillis() + ".jpg";
+        String fileName = "IMAGE_" + MediaUtil.getCurrentTime() + ".jpg";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             //如果保存到公共目录
             if (mediaBuilder.isSavePublicPath()) {

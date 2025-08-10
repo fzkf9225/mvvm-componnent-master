@@ -1,5 +1,6 @@
 package pers.fz.media.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -76,6 +77,15 @@ public class MediaUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 获取年月日时分秒字符串，用于文件名
+     * @return yyyyMMddHHmmssSSS
+     */
+    public static String getCurrentTime(){
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return sdf.format(new Date());
     }
 
     public static String getPictureLongitude(String filePath) {
