@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.BaseSearchActivityBinding;
-import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
+import pers.fz.mvvm.widget.customview.CustomSearchEditText;
 
 
 public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchActivityBinding> implements View.OnClickListener,

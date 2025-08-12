@@ -23,7 +23,7 @@ import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
+import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> implements MediaAddAdapter.MediaClearListener,MediaAddAdapter.MediaAddListener {

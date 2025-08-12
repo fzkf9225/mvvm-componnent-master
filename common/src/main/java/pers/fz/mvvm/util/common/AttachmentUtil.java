@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
@@ -35,8 +34,8 @@ import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.download.DownloadManger;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.dialog.MenuDialog;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.dialog.MenuDialog;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2024/2/28 10:53

@@ -1,14 +1,12 @@
 package com.casic.titan.demo.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -20,7 +18,7 @@ import com.casic.titan.demo.viewmodel.MainViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppSettingHelper;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 /**
  * created by fz on 2023/4/27 14:51

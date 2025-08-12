@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     id 'kotlin-kapt'
-    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -49,8 +49,10 @@ android {
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("jvmTarget", "17")
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+        }
     }
     buildFeatures {
         dataBinding true

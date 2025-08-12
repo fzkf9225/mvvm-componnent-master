@@ -25,8 +25,8 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PagingFooterAdapter;
 import pers.fz.mvvm.listener.PagingAdapterListener;
 import pers.fz.mvvm.viewmodel.BasePagingViewModel;
-import pers.fz.mvvm.wight.empty.EmptyLayout;
-import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
+import pers.fz.mvvm.widget.empty.EmptyLayout;
+import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**
  * Created by fz on 2017/11/17.

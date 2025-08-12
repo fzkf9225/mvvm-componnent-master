@@ -13,7 +13,7 @@ import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.OptionTextViewBinding;
 import pers.fz.mvvm.databinding.SmartrecyclerviewBinding;
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
-import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 @AndroidEntryPoint
 public class OnViewSampleFragment extends BaseRecyclerViewFragment<RecyclerViewSampleViewModel, SmartrecyclerviewBinding, PopupWindowBean> implements

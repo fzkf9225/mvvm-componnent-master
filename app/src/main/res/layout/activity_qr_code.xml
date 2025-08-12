@@ -101,7 +101,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_uri" />
 
-            <pers.fz.mvvm.wight.customlayout.CornerEditText
+            <pers.fz.mvvm.widget.customview.CornerEditText
                 android:id="@+id/edit_base64"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"

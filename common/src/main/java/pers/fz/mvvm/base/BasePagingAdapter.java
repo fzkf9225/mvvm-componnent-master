@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import org.jetbrains.annotations.NotNull;
 
 import pers.fz.mvvm.listener.PagingAdapterListener;
-import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
+import pers.fz.mvvm.widget.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
  * updated by fz on 2024/10/31

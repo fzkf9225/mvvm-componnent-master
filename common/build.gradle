@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.hilt.android)
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
-    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -45,12 +45,15 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("jvmTarget", "17")
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+        }
     }
 
     buildFeatures {

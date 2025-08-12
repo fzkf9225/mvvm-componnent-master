@@ -19,9 +19,9 @@ import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.mvvm.wight.popupwindow.TreePopupView;
-import pers.fz.mvvm.wight.popupwindow.MultiPopupView;
-import pers.fz.mvvm.wight.popupwindow.PopupView;
+import pers.fz.mvvm.widget.popupwindow.TreePopupView;
+import pers.fz.mvvm.widget.popupwindow.MultiPopupView;
+import pers.fz.mvvm.widget.popupwindow.PopupView;
 
 @AndroidEntryPoint
 public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, ActivityRecyclerViewSampleBinding> {

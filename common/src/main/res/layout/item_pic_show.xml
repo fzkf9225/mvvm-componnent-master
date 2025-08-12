@@ -5,7 +5,7 @@
 
     </data>
 
-    <pers.fz.mvvm.wight.gallery.PhotoView
+    <pers.fz.mvvm.widget.gallery.impl.PhotoView
         android:id="@+id/pic_pv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

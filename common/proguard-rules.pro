@@ -297,9 +297,9 @@
     *** get*() ;
 }
 
--keep class pers.fz.mvvm.wight.dialog.bean.** { *; }
--dontwarn pers.fz.mvvm.wight.dialog.bean.**
--keepclassmembers class pers.fz.mvvm.wight.dialog.bean.** {
+-keep class pers.fz.mvvm.widget.dialog.bean.** { *; }
+-dontwarn pers.fz.mvvm.widget.dialog.bean.**
+-keepclassmembers class pers.fz.mvvm.widget.dialog.bean.** {
     void set*( *** ) ;
     *** get*() ;
 }

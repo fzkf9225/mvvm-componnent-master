@@ -22,7 +22,7 @@ import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.AdapterImageAddItemBinding;
 import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2017/10/20.

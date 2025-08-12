@@ -18,7 +18,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.TextureViewPlayerActivityBinding;
 import pers.fz.mvvm.viewmodel.VideoPlayerViewModel;
-import pers.fz.mvvm.wight.dialog.MessageDialog;
+import pers.fz.mvvm.widget.dialog.MessageDialog;
 
 /**
  * Create by CherishTang on 2019/11/27

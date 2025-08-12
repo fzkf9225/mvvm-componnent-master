@@ -5,7 +5,7 @@ import androidx.room.Dao;
 
 import com.casic.titan.demo.bean.Person;
 
-import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.dao.BaseRoomDao;
 
 /**
  * created by fz on 2024/11/6 10:31

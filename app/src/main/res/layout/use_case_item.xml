@@ -10,7 +10,7 @@
             type="com.casic.titan.demo.bean.UseCase" />
     </data>
 
-    <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+    <pers.fz.mvvm.widget.customview.CornerConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:bgColor="@color/white"
@@ -43,5 +43,5 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_name"
             android:textColor="@color/dark_light"
             android:textSize="@dimen/font_size_m" />
-    </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
+    </pers.fz.mvvm.widget.customview.CornerConstraintLayout>
 </layout>

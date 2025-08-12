@@ -7,7 +7,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.databinding.EmptyFragmentBinding;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.mvvm.wight.empty.EmptyLayout;
+import pers.fz.mvvm.widget.empty.EmptyLayout;
 
 /**
  * Created by fz on 2023/7/13 9:35

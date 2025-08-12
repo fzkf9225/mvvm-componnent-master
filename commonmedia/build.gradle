@@ -1,8 +1,9 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.hilt.android)
+    alias(libs.plugins.ksp)
+    id 'kotlin-kapt'
 }
 
 android {
@@ -46,8 +47,9 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("jvmTarget", "17")
     }
     buildFeatures {
         dataBinding true
@@ -55,6 +57,11 @@ android {
     }
     compileOptions {
         encoding "UTF-8"
+    }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+        }
     }
 }
 

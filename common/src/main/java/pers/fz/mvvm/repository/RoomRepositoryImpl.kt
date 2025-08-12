@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import pers.fz.mvvm.base.BaseException
 import pers.fz.mvvm.base.BaseRepository
 import pers.fz.mvvm.base.BaseView
-import pers.fz.mvvm.database.BaseRoomDao
+import pers.fz.mvvm.dao.BaseRoomDao
 import java.util.concurrent.TimeUnit
 
 /**
@@ -25,30 +25,8 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     /**
      * 添加单个对象
      */
-    fun insert(obj: T, showLoading: Boolean = false): Completable {
+    fun insert( showLoading: Boolean = false,obj: T): Completable {
         return roomDao.insert(obj)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { disposable ->
-                addDisposable(disposable)
-                if (!showLoading) {
-                    return@doOnSubscribe
-                }
-                baseView?.showLoading("正在插入数据,请稍后...")
-            }
-            .doFinally {
-                if (!showLoading) {
-                    return@doFinally
-                }
-                baseView?.hideLoading()
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    /**
-     * 添加数组对象数据
-     */
-    fun insert(vararg objs: T, showLoading: Boolean = false): Completable {
-        return roomDao.insert(*objs)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { disposable ->
                 addDisposable(disposable)
@@ -69,8 +47,8 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     /**
      * 添加对象集合
      */
-    fun insert(objs: List<T>, showLoading: Boolean = false): Completable {
-        return roomDao.insert(objs)
+    fun insert(showLoading: Boolean = false,objs: List<T>): Completable {
+        return roomDao.insert(objs.toList())
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { disposable ->
                 addDisposable(disposable)
@@ -104,12 +82,32 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
-
     /**
      * 根据对象中的主键更新（主键是自动增长的，无需手动赋值）
      */
-    fun update(vararg obj: T, showLoading: Boolean = false): Completable {
-        return roomDao.update(*obj)
+    fun update(showLoading: Boolean = false,obj: T): Completable {
+        return roomDao.update(obj)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { disposable ->
+                addDisposable(disposable)
+                if (!showLoading) {
+                    return@doOnSubscribe
+                }
+                baseView?.showLoading("正在更新数据,请稍后...")
+            }
+            .doFinally {
+                if (!showLoading) {
+                    return@doFinally
+                }
+                baseView?.hideLoading()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+    /**
+     * 根据对象中的主键更新（主键是自动增长的，无需手动赋值）
+     */
+    fun update(showLoading: Boolean = false,obj: List<T>): Completable {
+        return roomDao.update(obj)
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { disposable ->
                 addDisposable(disposable)

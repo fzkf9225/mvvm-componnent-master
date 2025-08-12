@@ -27,7 +27,7 @@ import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2021/4/2

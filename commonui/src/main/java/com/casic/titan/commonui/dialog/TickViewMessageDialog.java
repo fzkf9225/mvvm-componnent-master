@@ -71,12 +71,16 @@ public class TickViewMessageDialog extends Dialog {
         View inflate = LayoutInflater.from(context).inflate(R.layout.tick_message_dialog, null);
         TextView tvMessage = inflate.findViewById(R.id.dialog_textView);
         TickView mTickView = inflate.findViewById(R.id.tick_view);
+        mTickView.getConfig().setOnCheckedChangeListener(onCheckedChangeListener);
         tvMessage.setText(content);
         mTickView.setChecked(true);
         setCancelable(outSide);
         setCanceledOnTouchOutside(outSide);
         setContentView(inflate);
         Window dialogWindow = getWindow();
+        if (dialogWindow == null) {
+            return;
+        }
         DisplayMetrics appDisplayMetrics = context.getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
@@ -85,7 +89,6 @@ public class TickViewMessageDialog extends Dialog {
             dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-
         dialogWindow.setGravity(Gravity.CENTER);
     }
 

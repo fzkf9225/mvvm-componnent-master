@@ -13,8 +13,8 @@ import pers.fz.mvvm.databinding.FragmentHomeMenuBinding
 import pers.fz.mvvm.listener.PagingAdapterListener
 import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager
-import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration
+import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager
+import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration
 import java.util.ArrayList
 
 @AndroidEntryPoint

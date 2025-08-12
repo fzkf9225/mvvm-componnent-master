@@ -31,7 +31,7 @@
                 android:paddingEnd="@dimen/horizontal_margin_xl"
                 android:paddingBottom="79dp">
 
-                <pers.fz.mvvm.wight.customlayout.RoundImageView
+                <pers.fz.mvvm.widget.customview.RoundImageView
                     android:id="@+id/headImg"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

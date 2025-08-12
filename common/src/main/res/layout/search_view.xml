@@ -36,7 +36,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/input_search"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
+            <pers.fz.mvvm.widget.customview.CustomSearchEditText
                 android:id="@+id/input_search"
                 android:layout_width="0dp"
                 android:layout_height="33dp"

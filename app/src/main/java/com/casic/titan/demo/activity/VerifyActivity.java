@@ -23,7 +23,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.dialog.MenuDialog;
+import pers.fz.mvvm.widget.dialog.MenuDialog;
 
 @AndroidEntryPoint
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {

@@ -25,7 +25,7 @@ import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.helper.AuthManager;
 import pers.fz.mvvm.helper.UIController;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.wight.dialog.LoginDialog;
+import pers.fz.mvvm.widget.dialog.LoginDialog;
 
 /**
  * Create by CherishTang on 2019/8/1

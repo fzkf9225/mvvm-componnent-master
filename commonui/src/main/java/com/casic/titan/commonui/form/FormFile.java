@@ -35,8 +35,8 @@ import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
-import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
+import pers.fz.mvvm.widget.recyclerview.FullyLinearLayoutManager;
+import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**
  * Created by fz on 2023/12/26 16:27

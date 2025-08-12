@@ -8,9 +8,6 @@ import com.casic.titan.demo.adapter.PagingRoomAdapter;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel;
 import com.casic.titan.usercomponent.view.UserView;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.api.ApiRetrofit;
@@ -18,7 +15,7 @@ import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 /**
  * created by fz on 2024/11/6 10:23

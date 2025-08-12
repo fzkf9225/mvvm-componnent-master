@@ -42,7 +42,7 @@
             android:textSize="@dimen/font_size_l"
             android:textColor="@color/themeColor" />
     </LinearLayout>
-    <pers.fz.mvvm.wight.pickertime.PickTimeView
+    <pers.fz.mvvm.widget.pickertime.PickTimeView
         android:id="@+id/pickDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

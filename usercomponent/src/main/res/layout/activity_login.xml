@@ -199,7 +199,7 @@
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/image_icon_verification_code" />
 
-            <pers.fz.mvvm.wight.customlayout.CornerImageView
+            <pers.fz.mvvm.widget.customview.CornerImageView
                 android:id="@+id/image_verification_code"
                 android:layout_width="89dp"
                 android:layout_height="match_parent"

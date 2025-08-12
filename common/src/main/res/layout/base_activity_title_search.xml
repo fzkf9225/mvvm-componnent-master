@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
+                    <pers.fz.mvvm.widget.customview.CustomSearchEditText
                         android:id="@+id/input_edit"
                         android:layout_width="0dp"
                         android:layout_height="33dp"

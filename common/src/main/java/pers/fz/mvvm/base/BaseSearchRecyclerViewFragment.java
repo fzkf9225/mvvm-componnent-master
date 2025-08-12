@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.SearchSmartrecyclerviewBinding;
-import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
+import pers.fz.mvvm.widget.customview.CustomSearchEditText;
 
 /**
  * Create by fz 2021-10-27

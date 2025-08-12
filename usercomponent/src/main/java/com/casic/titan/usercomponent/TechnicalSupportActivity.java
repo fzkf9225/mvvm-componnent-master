@@ -9,7 +9,7 @@ import com.casic.titan.usercomponent.databinding.TechnicalSupportActivityBinding
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 
 /**

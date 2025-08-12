@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.hilt.android)
+    alias(libs.plugins.ksp)
     id 'kotlin-kapt'
 }
 
@@ -16,23 +17,42 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "user_config_file", "prod.properties"
+            buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示log
+            minifyEnabled false// 混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
             consumerProguardFiles 'proguard-rules.pro'
         }
+        debug {
+            resValue "string", "user_config_file", "dev.properties"
+            buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
+            minifyEnabled false// 混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
-
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("jvmTarget", "17")
+    }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+        }
+    }
     buildFeatures {
         dataBinding true
         buildConfig true
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    compileOptions {
+        encoding "UTF-8"
     }
 }
 

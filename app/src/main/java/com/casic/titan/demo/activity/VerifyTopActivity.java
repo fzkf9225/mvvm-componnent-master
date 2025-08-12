@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
-import com.casic.titan.demo.databinding.ActivityVerifyBinding;
 import com.casic.titan.demo.databinding.ActivityVerifyTopBinding;
 import com.casic.titan.demo.viewmodel.VerifyViewModel;
 import com.google.gson.Gson;
@@ -24,7 +23,7 @@ import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.wight.dialog.MenuDialog;
+import pers.fz.mvvm.widget.dialog.MenuDialog;
 
 @AndroidEntryPoint
 public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVerifyTopBinding> {

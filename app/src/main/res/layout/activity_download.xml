@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/default_background"
         tools:context=".activity.DownloadActivity">
-        <pers.fz.mvvm.wight.customlayout.CornerEditText
+        <pers.fz.mvvm.widget.customview.CornerEditText
             android:id="@+id/edit_url"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
@@ -42,7 +42,7 @@
             android:layout_marginTop="@dimen/vertical_margin_m"
             app:layout_constraintTop_toBottomOf="@+id/edit_url"
             app:layout_constraintStart_toStartOf="parent"/>
-        <pers.fz.mvvm.wight.customlayout.CornerEditText
+        <pers.fz.mvvm.widget.customview.CornerEditText
             android:id="@+id/edit_apk"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
@@ -73,7 +73,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_apk"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <pers.fz.mvvm.wight.customlayout.CornerEditText
+        <pers.fz.mvvm.widget.customview.CornerEditText
             android:id="@+id/edit_multi"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"

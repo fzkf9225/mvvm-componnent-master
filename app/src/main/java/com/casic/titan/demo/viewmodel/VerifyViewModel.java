@@ -33,7 +33,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
     }
 
     public void add(Person person) {
-        Disposable disposable = iRepository.insert(person,true).subscribe(
+        Disposable disposable = iRepository.insert(true,person).subscribe(
                 () -> {
                     liveData.postValue(true);
                 }, throwable -> {

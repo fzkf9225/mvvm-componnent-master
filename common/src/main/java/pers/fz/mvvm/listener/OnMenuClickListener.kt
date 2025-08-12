@@ -10,4 +10,5 @@ import pers.fz.mvvm.bean.HomeMenuBean
  */
 interface OnMenuClickListener {
     fun onMenuClick(v :View?,fragment: Fragment?, menuBean: HomeMenuBean?)
+    fun onMenuLongClick(v :View?,fragment: Fragment?, menuBean: HomeMenuBean?)
 }

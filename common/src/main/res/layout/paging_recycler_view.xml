@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:overScrollMode="never" />
 
-            <pers.fz.mvvm.wight.empty.EmptyLayout
+            <pers.fz.mvvm.widget.empty.EmptyLayout
                 android:id="@+id/mEmptyLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -25,7 +25,7 @@ import pers.fz.mvvm.api.AppManager
 import pers.fz.mvvm.api.RepositoryFactory
 import pers.fz.mvvm.base.BaseViewModel
 import pers.fz.mvvm.util.encode.SM3Utils
-import pers.fz.mvvm.wight.dialog.ConfirmDialog
+import pers.fz.mvvm.widget.dialog.ConfirmDialog
 import javax.inject.Inject
 import kotlin.getValue
 import kotlin.random.Random

@@ -3,6 +3,7 @@ package pers.fz.mvvm.bean;
 import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -19,56 +20,68 @@ public class AttachmentBean extends BaseObservable {
      */
     @PrimaryKey
     @NonNull
+    @ColumnInfo
     private String mobileId = UUID.randomUUID().toString().replace("-", "");
     /**
      * 文件id
      */
     @Bindable
+    @ColumnInfo
     private String fileId;
     /**
      * 附件绝对路径
      */
     @Bindable
+    @ColumnInfo
     private String path;
     /**
      * 附件相对路径
      */
     @Bindable
+    @ColumnInfo
     private String relativePath;
     /**
      * 关联业务表id
      */
     @Bindable
+    @ColumnInfo
     private String mainId;
     /**
      * 附件名称
      */
     @Bindable
+    @ColumnInfo
     private String fileName;
     /**
      * 附件大小
      */
     @Bindable
+    @ColumnInfo
     private String fileSize;
     /**
      * 附件类型，参考枚举值AttachmentTypeEnum，image-图片，video-视频，audio-音频，file-附件
      */
     @Bindable
+    @ColumnInfo
     private String fileType;
     /**
      * 字段id，对应业务表的字段名，默认为空，也就是这个业务表只有一个类型的附件这个就不用赋值
      * 如果多个的话就赋值这个字段，区分各自的附件
      */
     @Bindable
+    @ColumnInfo
     private String fieldName;
     /**
      * 插入数据的时间
      */
     @Bindable
+    @ColumnInfo
     private long createTime = System.currentTimeMillis();
     /**
      * 插入数据的用户
      */
+    @Bindable
+    @ColumnInfo
     private String createUser;
 
     public AttachmentBean() {

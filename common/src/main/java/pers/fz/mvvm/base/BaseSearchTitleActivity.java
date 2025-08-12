@@ -12,7 +12,7 @@ import java.util.Objects;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.databinding.BaseActivityTitleSearchBinding;
-import pers.fz.mvvm.wight.customlayout.CustomSearchEditText;
+import pers.fz.mvvm.widget.customview.CustomSearchEditText;
 
 /**
  * created by fz on 2024/10/24 14:04

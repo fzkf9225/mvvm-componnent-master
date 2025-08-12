@@ -8,6 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.dao.AttachmentDao;
 
 /**
  * created by fz on 2024/11/6 10:44

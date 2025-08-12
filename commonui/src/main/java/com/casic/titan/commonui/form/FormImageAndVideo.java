@@ -22,13 +22,11 @@ import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenMediaDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
-import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.util.common.AttachmentUtil;
@@ -120,10 +118,11 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             compressImageSize = typedArray.getInt(R.styleable.FormUI_compressImageSize, 300);
-            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
+            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenMediaDialog.CAMERA_SHOOT_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             typedArray.recycle();
         } else {
+            mediaType = OpenMediaDialog.CAMERA_SHOOT_ALBUM;
             showCountLabel = true;
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             countLabelTextColor = ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color);

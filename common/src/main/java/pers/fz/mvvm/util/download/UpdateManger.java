@@ -22,7 +22,7 @@ import pers.fz.mvvm.util.download.core.DownloadRetrofitFactory;
 import pers.fz.mvvm.util.download.listener.ApkUpdateListener;
 import pers.fz.mvvm.util.download.util.DownloadNotificationUtil;
 import pers.fz.mvvm.util.download.util.DownloadUtil;
-import pers.fz.mvvm.wight.dialog.UpdateMessageDialog;
+import pers.fz.mvvm.widget.dialog.UpdateMessageDialog;
 
 /**
  * updated by fz on 2024/11/7.

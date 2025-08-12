@@ -28,7 +28,6 @@ import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
-import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.dialog.OpenShootDialog;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
@@ -115,13 +114,14 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, compress);
             maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
             compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
-            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenImageDialog.CAMERA_ALBUM);
+            mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenShootDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.nv_bg_color));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             typedArray.recycle();
         } else {
+            mediaType = OpenShootDialog.CAMERA_ALBUM;
             showCountLabel = true;
             maxVideoDuration = 30;
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);

@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 
 import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.dao.BaseRoomDao;
 import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.repository.RoomRepositoryImpl;

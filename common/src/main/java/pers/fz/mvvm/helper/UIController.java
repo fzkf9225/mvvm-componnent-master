@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 
-import pers.fz.mvvm.wight.dialog.LoadingProgressDialog;
+import pers.fz.mvvm.widget.dialog.LoadingProgressDialog;
 
 /**
  * created by fz on 2025/6/4 9:56

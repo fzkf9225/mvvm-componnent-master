@@ -42,23 +42,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:orientation="vertical">
-        <pers.fz.mvvm.wight.pickertime.PickTimeView
+        <pers.fz.mvvm.widget.pickertime.PickTimeView
             android:id="@+id/pickDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
-        <pers.fz.mvvm.wight.pickertime.PickValueView
+        <pers.fz.mvvm.widget.pickertime.PickValueView
             android:id="@+id/pickValue2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
-        <pers.fz.mvvm.wight.pickertime.PickValueView
+        <pers.fz.mvvm.widget.pickertime.PickValueView
             android:id="@+id/pickHouseStyleString"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <pers.fz.mvvm.wight.pickertime.PickValueView
+        <pers.fz.mvvm.widget.pickertime.PickValueView
             android:id="@+id/pickString"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

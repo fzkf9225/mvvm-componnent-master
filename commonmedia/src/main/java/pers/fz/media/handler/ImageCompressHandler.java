@@ -18,7 +18,7 @@ import pers.fz.media.utils.LogUtil;
 import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaTypeEnum;
-import pers.fz.media.imgcompressor.ImgCompressor;
+import pers.fz.media.compressor.image.ImgCompressor;
 
 /**
  * created by fz on 2025/8/6 9:09

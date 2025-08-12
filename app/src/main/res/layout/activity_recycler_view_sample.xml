@@ -13,7 +13,7 @@
         android:background="@color/default_background"
         tools:context=".activity.RecyclerViewSampleActivity">
 
-        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+        <pers.fz.mvvm.widget.popupwindow.TextPopupView
             android:id="@+id/tv_sex"
             android:layout_width="0dp"
             android:layout_height="40dp"
@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:hiltTextColor="@color/hint_text_color" />
 
-        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+        <pers.fz.mvvm.widget.popupwindow.TextPopupView
             android:id="@+id/tv_city"
             app:startDrawable="@mipmap/icon_ewm"
             android:layout_width="0dp"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tv_quality"
             app:hiltTextColor="@color/hint_text_color" />
 
-        <pers.fz.mvvm.wight.popupwindow.TextPopupView
+        <pers.fz.mvvm.widget.popupwindow.TextPopupView
             android:id="@+id/tv_quality"
             android:layout_width="0dp"
             android:layout_height="40dp"

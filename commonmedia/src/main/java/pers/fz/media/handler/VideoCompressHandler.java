@@ -20,8 +20,8 @@ import pers.fz.media.MediaHelper;
 import pers.fz.media.utils.MediaUtil;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
-import pers.fz.media.videocompressor.CompressListener;
-import pers.fz.media.videocompressor.VideoCompress;
+import pers.fz.media.compressor.video.CompressListener;
+import pers.fz.media.compressor.video.VideoCompress;
 
 /**
  * created by fz on 2025/8/6 9:16

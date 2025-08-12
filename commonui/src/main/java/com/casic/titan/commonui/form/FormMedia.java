@@ -22,8 +22,8 @@ import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelTextStyleEnum;
 
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
-import pers.fz.mvvm.wight.recyclerview.GridSpacingItemDecoration;
+import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
+import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration;
 
 public abstract class FormMedia extends ConstraintLayout {
     public static final String TAG = "FormUi";

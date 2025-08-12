@@ -17,7 +17,7 @@ import java.util.Date;
 import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
-import pers.fz.mvvm.wight.dialog.DatePickDialog;
+import pers.fz.mvvm.widget.dialog.DatePickDialog;
 
 /**
  * Created by fz on 2023/12/26 16:27

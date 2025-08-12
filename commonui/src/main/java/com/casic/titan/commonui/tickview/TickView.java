@@ -220,14 +220,11 @@ public class TickView extends View {
      * 设置点击事件
      */
     private void setUpEvent() {
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mConfig.isClickable()) {
-                    toggle();
-                    if (mConfig.getOnCheckedChangeListener() != null) {
-                        mConfig.getOnCheckedChangeListener().onCheckedChanged((TickView) view, isChecked);
-                    }
+        setOnClickListener(view -> {
+            if (mConfig.isClickable()) {
+                toggle();
+                if (mConfig.getOnCheckedChangeListener() != null) {
+                    mConfig.getOnCheckedChangeListener().onCheckedChanged((TickView) view, isChecked);
                 }
             }
         });

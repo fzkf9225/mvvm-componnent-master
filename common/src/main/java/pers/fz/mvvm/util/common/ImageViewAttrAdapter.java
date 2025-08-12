@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.wight.customlayout.RoundImageView;
+import pers.fz.mvvm.widget.customview.RoundImageView;
 
 /**
  * Create by fz on 2020/3/27 0027

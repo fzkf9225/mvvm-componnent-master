@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BasePagingFragment;
 import pers.fz.mvvm.databinding.PagingRecyclerViewBinding;
-import pers.fz.mvvm.wight.dialog.ConfirmDialog;
+import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 /**
  * Created by fz on 2023/12/1 16:40

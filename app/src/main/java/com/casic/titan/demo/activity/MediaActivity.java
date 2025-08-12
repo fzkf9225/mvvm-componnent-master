@@ -36,8 +36,8 @@ import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
-import pers.fz.mvvm.wight.recyclerview.FullyGridLayoutManager;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint
 public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener,

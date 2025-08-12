@@ -20,7 +20,7 @@ import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.AdapterImageShowItemBinding;
 import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.wight.gallery.PreviewPhotoDialog;
+import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 /**
  * Created by fz on 2025/10/20.

@@ -27,8 +27,8 @@ import java.util.List;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.wight.recyclerview.FullyLinearLayoutManager;
-import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
+import pers.fz.mvvm.widget.recyclerview.FullyLinearLayoutManager;
+import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**
  * Created by fz on 2023/12/26 16:27

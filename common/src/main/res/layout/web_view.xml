@@ -22,7 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:progressDrawable="@drawable/pg" />
 
-        <pers.fz.mvvm.wight.customlayout.ConfigurableWebView
+        <pers.fz.mvvm.widget.customview.ConfigurableWebView
             android:id="@+id/webView"
             app:layout_constraintTop_toBottomOf="@+id/progressBar"
             app:layout_constraintBottom_toBottomOf="parent"

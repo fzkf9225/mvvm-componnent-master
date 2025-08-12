@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <pers.fz.mvvm.wight.customlayout.CornerTextView
+        <pers.fz.mvvm.widget.customview.CornerTextView
             android:id="@+id/tv_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

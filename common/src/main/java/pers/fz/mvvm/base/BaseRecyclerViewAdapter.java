@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pers.fz.mvvm.listener.OnHeaderViewClickListener;
-import pers.fz.mvvm.wight.recyclerview.SimpleItemTouchHelperCallback;
+import pers.fz.mvvm.widget.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
  * updated by fz on 2024/12/10.

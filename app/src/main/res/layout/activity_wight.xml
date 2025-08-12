@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <pers.fz.mvvm.wight.customlayout.CornerConstraintLayout
+            <pers.fz.mvvm.widget.customview.CornerConstraintLayout
                 android:id="@+id/cornerConstraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -39,9 +39,9 @@
                     android:gravity="center"
                     android:text="CornerConstraintLayout"
                     android:textColor="@color/white" />
-            </pers.fz.mvvm.wight.customlayout.CornerConstraintLayout>
+            </pers.fz.mvvm.widget.customview.CornerConstraintLayout>
 
-            <pers.fz.mvvm.wight.customlayout.CornerTextView
+            <pers.fz.mvvm.widget.customview.CornerTextView
                 android:id="@+id/cornerTextView"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -57,7 +57,7 @@
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <pers.fz.mvvm.wight.customlayout.CornerButton
+            <pers.fz.mvvm.widget.customview.CornerButton
                 android:id="@+id/cornerButton"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -93,7 +93,7 @@
                     android:text="CornerLabelView"
                     android:textColor="@color/white" />
 
-                <pers.fz.mvvm.wight.customlayout.CornerLabelView
+                <pers.fz.mvvm.widget.customview.CornerLabelView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -106,7 +106,7 @@
                     app:textSize="@dimen/font_size_m" />
             </FrameLayout>
 
-            <pers.fz.mvvm.wight.customlayout.AutoTextView
+            <pers.fz.mvvm.widget.customview.AutoTextView
                 android:id="@+id/autoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 android:layout_width="0dp"
                 app:layout_constraintDimensionRatio="h,9:16"
                 android:layout_height="@dimen/height_xxl"/>
-            <pers.fz.mvvm.wight.customlayout.ScalingTextView
+            <pers.fz.mvvm.widget.customview.ScalingTextView
                 android:id="@+id/scalingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_code" />
 
-            <pers.fz.mvvm.wight.customlayout.StarBar
+            <pers.fz.mvvm.widget.customview.StarBar
                 android:id="@+id/starBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                 app:layout_constraintStart_toEndOf="@+id/starBar"
                 app:layout_constraintTop_toTopOf="@+id/starBar" />
 
-            <pers.fz.mvvm.wight.customlayout.GradationRectTextView
+            <pers.fz.mvvm.widget.customview.GradationRectTextView
                 android:id="@+id/roundTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xxl"
@@ -194,7 +194,7 @@
                 android:text="自定义轮播图"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/roundTextView" />
-            <pers.fz.mvvm.wight.customlayout.BannerView
+            <pers.fz.mvvm.widget.customview.BannerView
                 android:id="@+id/customBannerPicture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -215,7 +215,7 @@
                 android:text="自定义ImageView"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
-            <pers.fz.mvvm.wight.customlayout.CornerImageView
+            <pers.fz.mvvm.widget.customview.CornerImageView
                 android:id="@+id/cornersImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -225,7 +225,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image" />
-            <pers.fz.mvvm.wight.customlayout.CustomSearchEditText
+            <pers.fz.mvvm.widget.customview.CustomSearchEditText
                 android:id="@+id/customEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
@@ -242,7 +242,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:layout_constraintTop_toBottomOf="@+id/cornersImageView" />
 
-            <pers.fz.mvvm.wight.customlayout.CornerEditText
+            <pers.fz.mvvm.widget.customview.CornerEditText
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"
                 android:textSize="@dimen/font_size_l"
@@ -272,7 +272,7 @@
                 android:inputType="numberDecimal"
                 android:lines="1"
                 app:layout_constraintTop_toBottomOf="@+id/edit_area"/>
-            <pers.fz.mvvm.wight.customlayout.VerificationCodeInputView
+            <pers.fz.mvvm.widget.customview.VerificationCodeInputView
                 android:id="@+id/verificationCodeInputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -281,7 +281,7 @@
                 android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
                 app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"/>
-            <pers.fz.mvvm.wight.customlayout.CircleProgressBar
+            <pers.fz.mvvm.widget.customview.CircleProgressBar
                 android:id="@+id/circle_progress_bar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -299,7 +299,7 @@
                 android:textColor="@color/themeColor"
                 app:layout_constraintTop_toBottomOf="@+id/verificationCodeInputView"/>
 
-            <pers.fz.mvvm.wight.customlayout.HorizontalProgressBar
+            <pers.fz.mvvm.widget.customview.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
@@ -328,7 +328,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image"
                 android:layout_height="wrap_content"/>
 
-            <pers.fz.mvvm.wight.customlayout.IconDotTextView
+            <pers.fz.mvvm.widget.customview.IconDotTextView
                 android:id="@+id/iconDotTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

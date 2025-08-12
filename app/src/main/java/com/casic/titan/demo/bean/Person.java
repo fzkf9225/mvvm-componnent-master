@@ -16,7 +16,7 @@ import pers.fz.annotation.verify.VerifyFieldSort;
 import pers.fz.annotation.verify.VerifyParams;
 import pers.fz.annotation.verify.VerifyType;
 import pers.fz.mvvm.bean.BaseDaoBean;
-import pers.fz.mvvm.database.RoomListStringConverter;
+import pers.fz.mvvm.converter.RoomListStringConverter;
 
 /**
  * Created by fz on 2023/9/5 18:32

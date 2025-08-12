@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.database.BaseRoomDao;
+import pers.fz.mvvm.dao.BaseRoomDao;
 import pers.fz.mvvm.repository.RoomRepositoryImpl;
 
 /**

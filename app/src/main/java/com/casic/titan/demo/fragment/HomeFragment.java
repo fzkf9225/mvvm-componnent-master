@@ -19,7 +19,7 @@ import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.theme.ThemeUtils;
-import pers.fz.mvvm.wight.recyclerview.RecycleViewDivider;
+import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**
  * created by fz on 2023/4/28
