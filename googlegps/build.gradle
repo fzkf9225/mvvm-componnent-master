@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library'
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
@@ -30,6 +30,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        //noinspection DataBindingWithoutKapt
         dataBinding true
         buildConfig true
     }

@@ -1,4 +1,5 @@
 # mvvm-componnent-master
+全面使用``ksp``，如果不使用``kapt``的话，请使用kotlin的实体类是如何使用@Bindable注解的，Java是没问题的
 ## MVVM架构示例代码，重构版本
 ### 如果想用基础模块的话直接导入common就可以了
 #### 在线引用方式
@@ -31,62 +32,110 @@ TAG值为类名：`ApiRetrofit`
 ## 接入指引：
 ### 导入公共依赖包
 由于集成的aar包有隔离效果因此需要在继承base类时导入他们的包，不然就会找不到引用的第三方库，但是如果你没有以aar引用而是直接module引用的话，可以直接将`implementation` 改成`api`即可
+可参考app模块的demo依赖库
 ```
-//沉浸式通知栏框架最新版本已经去除了这个包，这个包虽然功能很强大，但是我们会用到的功能会很少而且有bug直接影响到我们常用功能，因此去掉了，自己写了个简单的沉浸式通知栏功能
-    implementation "com.geyifeng.immersionbar:immersionbar:3.2.2"
-//RxJava、RxAndroid和Retrofit网络框架
-    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "io.reactivex.rxjava3:rxandroid:3.0.2"
-    implementation "io.reactivex.rxjava3:rxjava:3.1.6"
-    //ConverterFactory的String依赖包
-    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
-    //ConverterFactory的Gson依赖包
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    //CallAdapterFactory的Rx依赖包
-    implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
-//腾讯的mmkv框架
-    implementation "com.tencent:mmkv:1.2.11"
-//刷新加载更多框架
-//下拉刷新
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation "io.github.scwang90:refresh-layout-kernel:2.0.6"
-    implementation "io.github.scwang90:refresh-header-classics:2.0.6"
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation libs.activity
+    implementation libs.androidx.core.ktx
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    implementation libs.constraintlayout
+
+    implementation project(':common')
+    implementation project(':userapi')
+    implementation project(':commonui')
+    implementation project(':googlegps')
+    implementation project(':commonmedia')
+    implementation project(':usercomponent')
+    implementation project(':mqttcomponent')
+    implementation project(':wscomponent')
+
+    implementation project(':annotation')
+    annotationProcessor project(':annotation')
+
+    implementation libs.github.glide
+
+    implementation libs.logger
+
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
+
+    implementation libs.androidx.core.splashscreen
+    implementation libs.androidx.multidex
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.mmkv
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    implementation libs.gson
+    implementation libs.scwang90.refresh.layout.kernel
+    implementation libs.refresh.header.classics
+    implementation libs.refresh.footer.classics
+    implementation libs.okhttp
+    implementation libs.retrofit
+
+    implementation libs.zxing.core
+    implementation libs.zxing.android.embedded
+    //paging3
+    implementation libs.androidx.paging.runtime
+    // 用于测试
+    testImplementation libs.androidx.paging.common// [可选] RxJava 支持
+    implementation libs.paging.rxjava3
+    implementation libs.swiperefreshlayout
+
+    implementation libs.androidx.recyclerview
+    implementation libs.graphics
+    implementation libs.net.res
+    implementation libs.net.ui
+
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    ksp libs.room.compiler
+    // optional - RxJava3 support for Room
+    implementation libs.room.rxjava3
+    // optional - Paging 3 Integration
+    implementation libs.room.paging
 ```
 ### hilt框架依赖
 在项目根目录下build.gradle添加
 ```
 plugins {
-    id 'com.android.application' version '8.0.0' apply false
-    id 'com.android.library' version '8.0.0' apply false
-    id 'com.google.dagger.hilt.android' version '2.46.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.hilt.android)
 }
 ```
 在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
 ```
 plugins {
-    id 'com.android.application'
-    id 'com.google.dagger.hilt.android'
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.hilt.android)
 }
 ```
 在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
 
 ```
-    implementation 'com.google.dagger:hilt-android:2.46.1'
-    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.46.1'
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
 ```
 ### 新建assets目录
 下面新建dev.properties和release.properties，里面有一些基础配置，在common模块里已经配置了，参数key具体参考demo中的的properties配置文件，也可以自定义一些配置
 
 //调用默认配置，注意参数key不能错误，参考demo中的
 ```
-    PropertiesUtil.getInstance().getProperties(mContext).getBaseUrl()
+    PropertiesUtil.getInstance().loadConfig(application).getBaseUrl()
 ```
     
 //调用自定义文件中的自定义配置
 ```
-    PropertiesUtil.getInstance().getProperties(mContext，fileName).getPropertyValue(key,defaultValue)
+    PropertiesUtil.getInstance().loadConfig(application).getPropertyValue(key,defaultValue)
 ```
 上面默认加载的是'prod.properties'配置文件中的配置如果需要加载别的直接再builde.gradle中添加如下resValue配置即可
 ```

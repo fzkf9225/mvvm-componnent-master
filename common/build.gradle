@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.hilt.android)
-    id 'kotlin-kapt'
 }
 
 android {
@@ -39,6 +38,7 @@ android {
         }
     }
     compileOptions {
+        encoding "UTF-8"
         targetCompatibility JavaVersion.VERSION_17
         sourceCompatibility JavaVersion.VERSION_17
     }
@@ -47,7 +47,6 @@ android {
     }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
-        arg("jvmTarget", "17")
     }
 
     java {
@@ -57,12 +56,9 @@ android {
     }
 
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding true
         buildConfig true
-    }
-
-    compileOptions {
-        encoding "UTF-8"
     }
     sourceSets {
         main {
@@ -125,7 +121,7 @@ dependencies {
     implementation libs.androidx.navigation.ui.ktx
     //每个用到的模块都要加这两个，不能使用api
     implementation libs.google.hilt.android
-    kapt libs.google.hilt.android.compiler
+    ksp libs.google.hilt.android.compiler
 
     implementation libs.zxing.core
     //noinspection GradleDependency

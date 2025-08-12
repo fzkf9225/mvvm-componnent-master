@@ -136,11 +136,11 @@ public class MediaBuilder {
     /**
      * 请求权限前的dialog确认按钮文字颜色
      */
-    private @ColorInt int permissionPositiveTextColor = 0x333333;
+    private @ColorInt int permissionPositiveTextColor = 0xFF333333;
     /**
      * 请求权限前的dialog取消按钮文字颜色
      */
-    private @ColorInt int permissionNegativeTextColor = 0x666666;
+    private @ColorInt int permissionNegativeTextColor = 0xFF666666;
     /**
      * 选择器类型，默认为DEFAULT，枚举MediaPickerTypeEnum
      */

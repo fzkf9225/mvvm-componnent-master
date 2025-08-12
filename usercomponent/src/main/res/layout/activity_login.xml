@@ -7,18 +7,6 @@
     <data>
 
         <import type="android.view.View" />
-
-        <variable
-            name="loginBean"
-            type="com.casic.titan.usercomponent.bean.RequestLoginBean" />
-
-        <variable
-            name="loginViewModel"
-            type="com.casic.titan.usercomponent.viewmodel.LoginViewModel" />
-
-        <variable
-            name="password"
-            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,7 +76,6 @@
                 android:maxLength="50"
                 android:paddingStart="@dimen/horizontal_margin_l"
                 android:paddingEnd="@dimen/horizontal_margin_l"
-                android:text="@={loginBean.userName}"
                 android:textAppearance="?android:attr/textAppearanceLargeInverse"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
@@ -190,7 +177,6 @@
                 android:maxLength="6"
                 android:paddingStart="@dimen/horizontal_margin_l"
                 android:paddingEnd="@dimen/horizontal_margin_l"
-                android:text="@={loginBean.code}"
                 android:textAppearance="?android:attr/textAppearanceLargeInverse"
                 android:textColor="@color/autoColor"
                 android:textColorHint="@color/dark_light"
@@ -206,7 +192,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
-                android:onClick="@{(view) ->loginViewModel.imageCodeClick(view,loginBean)}"
                 app:bgColor="@color/white"
                 android:clickable="true"
                 app:radius="2dp"

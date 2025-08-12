@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.hilt.android)
-    id 'kotlin-kapt'
 }
 
 android {
@@ -42,8 +41,9 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
+        encoding "UTF-8"
         targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
     java {
         toolchain {
@@ -52,9 +52,9 @@ android {
     }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
-        arg("jvmTarget", "17")
     }
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding true
         buildConfig true
     }
@@ -82,14 +82,14 @@ dependencies {
     implementation project(':wscomponent')
 
     implementation project(':annotation')
-    kapt project(':annotation')
+    annotationProcessor project(':annotation')
 
     implementation libs.github.glide
 
     implementation libs.logger
 
     implementation libs.google.hilt.android
-    kapt libs.google.hilt.android.compiler
+    ksp libs.google.hilt.android.compiler
 
     implementation libs.androidx.core.splashscreen
     implementation libs.androidx.multidex

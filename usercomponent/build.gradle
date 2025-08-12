@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'com.google.dagger.hilt.android'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.hilt.android)
+    alias(libs.plugins.ksp)
 }
 android {
     namespace 'com.casic.titan.usercomponent'
@@ -13,14 +13,9 @@ android {
         }
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["foo": "bar"]
-            }
-        }
     }
+
     buildTypes {
         release {
             resValue "string", "user_config_file", "user_prod.properties"
@@ -35,10 +30,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
+
     resourcePrefix "user_"
     sourceSets {
         main {
@@ -49,10 +41,27 @@ android {
             }
         }
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    compileOptions {
+        encoding "UTF-8"
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+        }
+    }
+
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding true
         buildConfig true
     }
@@ -83,7 +92,8 @@ dependencies {
     implementation project(":userapi")
     implementation project(":mqttcomponent")
     implementation project(':commonmedia')
+
     implementation libs.google.hilt.android
-    kapt libs.google.hilt.android.compiler
+    ksp libs.google.hilt.android.compiler
 
 }

@@ -1,6 +1,7 @@
 package com.casic.titan.usercomponent.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Color
 import android.text.SpannableString
 import android.text.Spanned
@@ -8,8 +9,10 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.text.style.ClickableSpan
 import android.view.View
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import com.casic.titan.userapi.UserService
 import com.casic.titan.userapi.bean.UserInfo
 import com.casic.titan.usercomponent.api.UserAccountHelper
 import com.casic.titan.usercomponent.api.UserApiService
@@ -19,6 +22,10 @@ import com.casic.titan.usercomponent.databinding.ActivityLoginBinding
 import com.casic.titan.usercomponent.repository.LoginRepositoryImpl
 import com.casic.titan.usercomponent.view.UserView
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import pers.fz.mvvm.R
 import pers.fz.mvvm.activity.WebViewActivity
 import pers.fz.mvvm.api.AppManager
@@ -35,11 +42,23 @@ import kotlin.random.Random
  * describe:loginViewModel
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(application: Application) : BaseViewModel<LoginRepositoryImpl, UserView>(application) {
+class LoginViewModel @Inject constructor(application: Application) :
+    BaseViewModel<LoginRepositoryImpl, UserView>(application) {
+
+    @Inject
+    lateinit var userService: UserService
 
     val liveData: MutableLiveData<UserInfo> by lazy {
         MutableLiveData()
     }
+
+    // 使用 StateFlow 替代 LiveData
+    private val _loginState by lazy {
+        MutableStateFlow(RequestLoginBean(UserAccountHelper.getAccount()))
+    }
+
+    val loginState: StateFlow<RequestLoginBean> = _loginState.asStateFlow()
+
     val imageLiveData: MutableLiveData<GraphicVerificationCodeBean> by lazy {
         MutableLiveData()
     }
@@ -50,33 +69,38 @@ class LoginViewModel @Inject constructor(application: Application) : BaseViewMod
     private val agreement = "登录/注册表示您同意 《用户协议》 和 《隐私政策》"
 
     override fun createRepository(): LoginRepositoryImpl? {
-        return RepositoryFactory.create(LoginRepositoryImpl::class.java,userApiService)
+        return RepositoryFactory.create(LoginRepositoryImpl::class.java, userApiService)
     }
 
-    fun imageCodeClick(v: View, loginBean: RequestLoginBean) {
-        getImageCode(loginBean)
+    // 更新状态的方法
+    fun updateUserName(name: String) {
+        _loginState.value.userName = name
+    }
+
+    fun updateCode(code: String) {
+        _loginState.value.code = code
     }
 
     public
-    fun loginClick(binding: ActivityLoginBinding) {
-        if (binding.loginBean?.userName.isNullOrEmpty()) {
+    fun loginClick(content: Context, password: String?, checkBox: AppCompatCheckBox) {
+        if (loginState.value.userName.isNullOrEmpty()) {
             baseView?.showToast("请填写用户名")
             return
         }
-        if (binding.editPassword.text.isNullOrEmpty()) {
+        if (password.isNullOrEmpty()) {
             baseView?.showToast("请填写密码")
             return
         }
-        if (binding.loginBean?.code.isNullOrEmpty()) {
+        if (loginState.value.code.isNullOrEmpty()) {
             baseView?.showToast("请填写验证码")
             return
         }
-        if (!binding.cbAgreement.isChecked) {
-            ConfirmDialog(binding.root.context)
+        if (!checkBox.isChecked) {
+            ConfirmDialog(content)
                 .setSpannableContent(
                     agreementSpannableString(
                         ContextCompat.getColor(
-                            binding.root.context,
+                            content,
                             R.color.themeColor
                         )
                     )
@@ -86,24 +110,24 @@ class LoginViewModel @Inject constructor(application: Application) : BaseViewMod
                 .setCanOutSide(false)
                 .setPositiveTextColor(
                     ContextCompat.getColor(
-                        binding.root.context,
+                        content,
                         R.color.themeColor
                     )
                 )
                 .setOnPositiveClickListener { _ ->
-                    binding.cbAgreement.isChecked = true
+                    checkBox.isChecked = true
                 }
                 .builder()
                 .show()
             return
         }
-        binding.loginBean?.password =
+        loginState.value.password =
             SM3Utils.hashToHex(
                 SM3Utils.hash(
-                    binding.editPassword.text.toString().toByteArray()
+                    password.toByteArray()
                 )
             )
-        iRepository.login(binding.loginBean!!, liveData)
+        iRepository.login(loginState.value, liveData)
     }
 
     fun loginCallback(userInfo: UserInfo?, userName: String) {
@@ -133,9 +157,9 @@ class LoginViewModel @Inject constructor(application: Application) : BaseViewMod
         baseView?.toLast()
     }
 
-    public fun getImageCode(loginBean: RequestLoginBean) {
-        loginBean.num = Random.nextInt(10000000, 100000000).toString()
-        iRepository.getImageCode(loginBean.num!!, imageLiveData)
+    public fun getImageCode() {
+        _loginState.value.num =  Random.nextInt(10000000, 100000000).toString()
+        iRepository.getImageCode(loginState.value.num!!, imageLiveData)
     }
 
     public fun agreementSpannableString(color: Int = Color.BLACK): SpannableString {
@@ -145,7 +169,11 @@ class LoginViewModel @Inject constructor(application: Application) : BaseViewMod
         val userAgreementClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 // 处理点击事件
-                WebViewActivity.show(widget.context, "file:///android_asset/用户协议.html","用户协议")
+                WebViewActivity.show(
+                    widget.context,
+                    "file:///android_asset/用户协议.html",
+                    "用户协议"
+                )
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -167,7 +195,11 @@ class LoginViewModel @Inject constructor(application: Application) : BaseViewMod
         val privacyPolicyClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 // 处理点击事件
-                WebViewActivity.show(widget.context, "file:///android_asset/隐私政策.html","隐私政策")
+                WebViewActivity.show(
+                    widget.context,
+                    "file:///android_asset/隐私政策.html",
+                    "隐私政策"
+                )
             }
 
             override fun updateDrawState(ds: TextPaint) {

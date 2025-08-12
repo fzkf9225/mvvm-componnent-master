@@ -7,6 +7,11 @@ import android.text.InputType
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.casic.titan.userapi.bean.UserInfo
@@ -18,6 +23,7 @@ import com.casic.titan.usercomponent.databinding.ActivityLoginBinding
 import com.casic.titan.usercomponent.view.UserView
 import com.casic.titan.usercomponent.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import pers.fz.mvvm.api.AppManager
 import pers.fz.mvvm.api.ConstantsHelper
 import pers.fz.mvvm.base.BaseActivity
@@ -35,7 +41,6 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), UserView {
-    private var password: String? = null
     private var bundle: Bundle? = null
 
     companion object {
@@ -44,9 +49,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
 
     @Inject
     lateinit var errorService: ErrorService
-
-    @Inject
-    lateinit var userService: UserService
 
     override fun setTitleBar(): String {
         return "登录"
@@ -63,32 +65,51 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
 
     override fun initView(savedInstanceState: Bundle?) {
         binding.cbAgreement.isChecked = UserAccountHelper.isAgree()
-        binding.loginViewModel = mViewModel
-        binding.loginBean = RequestLoginBean(userService.account)
-        binding.password = password
-
         // 设置CheckBox的文本和点击事件
         binding.cbAgreement.text = mViewModel.agreementSpannableString()
         binding.cbAgreement.movementMethod = LinkMovementMethod.getInstance()
         //防止快速点击
         RxView.setOnClickListener(binding.loginSubmit) {
-            mViewModel.loginClick(binding)
+            mViewModel.loginClick(this, binding.editPassword.text?.toString(), binding.cbAgreement)
         }
         binding.switchPasswordType.setOnClickListener {
-            if(it.isSelected){
+            if (it.isSelected) {
                 it.isSelected = false;
-                binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT;//设置密码不可见
-            }else{
+                binding.editPassword.inputType =
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT;//设置密码不可见
+            } else {
                 it.isSelected = true;
-                binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;//设置密码可见
+                binding.editPassword.inputType =
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;//设置密码可见
             }
+        }
+        // 1. ViewModel → UI：监听状态变化并更新UI
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.loginState.collect { state ->
+                    binding.editAccount.setText(state.userName)
+                    binding.editVerificationCode.setText(state.code)
+                }
+            }
+        }
+
+        // 2. UI → ViewModel：监听用户输入
+        binding.editAccount.doAfterTextChanged  { text ->
+            mViewModel.updateUserName(text.toString())
+        }
+        binding.editVerificationCode.doAfterTextChanged  { text->
+            mViewModel.updateCode(text.toString())
+        }
+        binding.imageVerificationCode.setOnClickListener {
+            mViewModel.getImageCode()
         }
     }
 
     @SuppressLint("SetTextI18n")
     override fun initData(bundle: Bundle?) {
         this.bundle = bundle
-        binding.tvAppVersion.text = "版本 ${AppManager.getAppManager().getVersion(this@LoginActivity)}"
+        binding.tvAppVersion.text =
+            "版本 ${AppManager.getAppManager().getVersion(this@LoginActivity)}"
         mViewModel.liveData.observe(this) { userInfo: UserInfo? ->
             mViewModel.loginCallback(
                 userInfo,
@@ -101,7 +122,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
                     .placeholder(pers.fz.mvvm.R.mipmap.ic_default_image)
             ).into(binding.imageVerificationCode)
         }
-        mViewModel.getImageCode(binding.loginBean!!)
+        mViewModel.getImageCode()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -171,10 +192,10 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
 
     override fun onErrorCode(model: BaseResponse<*>?) {
         super.onErrorCode(model)
-        if(NOT_SUPPORT_LOGIN == model?.code){
+        if (NOT_SUPPORT_LOGIN == model?.code) {
             MessageDialog(this)
                 .setMessage(model.message)
-                .setOnPositiveClickListener{
+                .setOnPositiveClickListener {
                     it.dismiss()
                 }
                 .builder()
