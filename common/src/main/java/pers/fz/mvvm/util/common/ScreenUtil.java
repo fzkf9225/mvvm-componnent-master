@@ -1,23 +1,15 @@
 package pers.fz.mvvm.util.common;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowInsets;
-import android.view.WindowManager;
 
-import androidx.annotation.ColorInt;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 /**
  * Created by fz on 2018/1/11.

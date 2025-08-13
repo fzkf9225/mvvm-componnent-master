@@ -9,22 +9,19 @@ import android.widget.Toast;
 import androidx.annotation.ColorInt;
 
 import com.casic.titan.commonui.R;
-
-import pers.fz.mvvm.activity.VideoPlayerActivity;
-import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.bean.AttachmentBean;
-
 import com.casic.titan.commonui.databinding.AdapterFileAddItemBinding;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-import pers.fz.mvvm.enums.AttachmentTypeEnum;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-
+import pers.fz.mvvm.activity.VideoPlayerActivity;
+import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;

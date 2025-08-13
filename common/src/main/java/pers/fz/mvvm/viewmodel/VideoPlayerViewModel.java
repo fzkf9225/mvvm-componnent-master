@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.repository.RepositoryImpl;
 
 /**
  * Created by fz on 2021/5/26 14:16

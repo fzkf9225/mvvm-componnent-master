@@ -6,12 +6,12 @@ import androidx.activity.result.ActivityResultCallback;
 
 import java.util.List;
 
-import pers.fz.media.utils.LogUtil;
-import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.bean.MediaBean;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.helper.OpenMultiSelector;
 import pers.fz.media.helper.OpenPickMultipleMediaSelector;
+import pers.fz.media.utils.LogUtil;
 
 /**
  * Created by fz on 2023/11/20 15:00

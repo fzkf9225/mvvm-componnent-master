@@ -5,9 +5,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import pers.fz.mvvm.bean.AttachmentBean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
+import pers.fz.mvvm.bean.AttachmentBean
 
 /**
  * created by fz on 2024/11/6 10:31

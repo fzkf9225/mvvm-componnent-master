@@ -2,8 +2,6 @@ package pers.fz.mvvm.base;
 
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
-
 /**
  * Create by CherishTang on 2019/8/1
  * describe:自定义异常封装

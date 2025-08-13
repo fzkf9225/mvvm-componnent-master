@@ -16,6 +16,7 @@ import androidx.core.text.HtmlCompat;
 import androidx.databinding.Observable;
 
 import com.bumptech.glide.Glide;
+
 import pers.fz.mvvm.util.common.ThreadExecutor;
 
 /**

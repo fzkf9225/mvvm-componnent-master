@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import pers.fz.media.R;
-import pers.fz.media.databinding.CameraAlbumDialogBinding;
 import pers.fz.media.databinding.ChooseMediaDialogBinding;
 
 /**

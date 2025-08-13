@@ -19,7 +19,6 @@ import com.casic.titan.commonui.R;
 
 import java.util.List;
 
-import pers.fz.mvvm.adapter.ImageShowAdapter;
 import pers.fz.mvvm.adapter.MediaShowAdapter;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.AttachmentBean;

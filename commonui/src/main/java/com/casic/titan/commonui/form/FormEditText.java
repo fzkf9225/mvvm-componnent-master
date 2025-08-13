@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
 import com.casic.titan.commonui.impl.DecimalDigitsInputFilter;
-import com.casic.titan.commonui.inter.FormTextWatcher;
 
 import java.util.ArrayList;
 import java.util.List;

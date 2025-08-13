@@ -1,15 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    loadVersions:
-    {// 读取versions.properties到ext中，供项目中直接用变量引用版本号
-        def versions_properties_path = 'versions.properties'
-        def versions = new Properties()
-        versions.load(file(versions_properties_path).newReader())
-        versions.forEach { key, value ->
-            ext.set(key, value)
-        }
-    }
-}
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false

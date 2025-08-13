@@ -15,7 +15,6 @@ import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager
 import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration
-import java.util.ArrayList
 
 @AndroidEntryPoint
 class HomeMenuFragment : BaseFragment<EmptyViewModel, FragmentHomeMenuBinding>(){

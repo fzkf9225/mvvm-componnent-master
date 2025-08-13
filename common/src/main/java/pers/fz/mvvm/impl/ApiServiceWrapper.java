@@ -1,9 +1,10 @@
 package pers.fz.mvvm.impl;
 
-import pers.fz.mvvm.api.ApiRetrofit;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+
+import pers.fz.mvvm.api.ApiRetrofit;
 
 /**
  * created by fz on 2025/7/29 14:15

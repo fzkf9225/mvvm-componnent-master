@@ -3,7 +3,6 @@ package pers.fz.mvvm.bean
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
 import androidx.databinding.BaseObservable
 
 data class HomeMenuBean(

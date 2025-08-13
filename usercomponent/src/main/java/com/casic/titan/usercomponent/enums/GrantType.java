@@ -1,4 +1,4 @@
-package com.casic.titan.usercomponent.enumEntity;
+package com.casic.titan.usercomponent.enums;
 
 /**
  * Created by fz on 2023/5/17 10:24

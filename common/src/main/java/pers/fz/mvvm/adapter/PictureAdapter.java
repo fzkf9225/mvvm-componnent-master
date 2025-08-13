@@ -13,7 +13,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.BannerBean;
 
 /**

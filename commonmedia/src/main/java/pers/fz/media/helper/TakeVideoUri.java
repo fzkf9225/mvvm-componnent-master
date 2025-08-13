@@ -16,10 +16,10 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
-import pers.fz.media.utils.LogUtil;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.utils.LogUtil;
 import pers.fz.media.utils.MediaUtil;
 
 /**

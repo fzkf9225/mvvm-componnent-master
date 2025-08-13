@@ -1,8 +1,11 @@
 package pers.fz.mvvm.bean;
 
 import android.text.TextUtils;
+
 import androidx.databinding.BaseObservable;
+
 import java.util.List;
+
 import pers.fz.mvvm.util.common.CollectionUtil;
 
 

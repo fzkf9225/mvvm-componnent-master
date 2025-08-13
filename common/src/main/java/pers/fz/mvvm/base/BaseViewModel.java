@@ -1,13 +1,8 @@
 package pers.fz.mvvm.base;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.AndroidViewModel;
 
 import pers.fz.mvvm.repository.IRepository;
 

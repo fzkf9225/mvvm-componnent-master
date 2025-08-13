@@ -8,9 +8,11 @@ import com.casic.titan.usercomponent.databinding.FeedbackBinding;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
@@ -22,10 +24,12 @@ import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
  * Created by fz on 2018/1/22.
  * describe：问题反馈
  */
+@AndroidEntryPoint
 public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener {
     private ImageAddAdapter imageAddAdapter;
     @Inject
+    @MediaModule.ActivityMediaHelper
     MediaHelper mediaHelper;
 
     @Override

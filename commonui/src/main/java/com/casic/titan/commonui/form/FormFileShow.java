@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.adapter.FileShowAdapter;
-import pers.fz.mvvm.bean.AttachmentBean;
 
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.widget.recyclerview.FullyLinearLayoutManager;

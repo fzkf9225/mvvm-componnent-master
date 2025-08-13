@@ -17,10 +17,10 @@ import java.util.Random;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.util.common.FileUtil;
-import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.util.download.core.DownloadRetrofitFactory;
 import pers.fz.mvvm.util.download.util.DownloadNotificationUtil;
 import pers.fz.mvvm.util.download.util.DownloadUtil;
+import pers.fz.mvvm.util.permission.PermissionsChecker;
 import pers.fz.mvvm.widget.dialog.UpdateMessageDialog;
 
 /**

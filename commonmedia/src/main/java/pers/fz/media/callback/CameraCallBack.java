@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import pers.fz.media.utils.LogUtil;
-import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.bean.MediaBean;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.helper.TakeCameraUri;
 import pers.fz.media.helper.TakeVideoUri;
-import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.utils.LogUtil;
 
 
 /**

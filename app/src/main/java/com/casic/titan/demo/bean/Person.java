@@ -12,7 +12,7 @@ import java.util.List;
 
 import pers.fz.annotation.verify.VerifyEntity;
 import pers.fz.annotation.verify.VerifyField;
-import pers.fz.annotation.verify.VerifyFieldSort;
+import pers.fz.annotation.verify.VerifySort;
 import pers.fz.annotation.verify.VerifyParams;
 import pers.fz.annotation.verify.VerifyType;
 import pers.fz.mvvm.bean.BaseDaoBean;
@@ -26,25 +26,25 @@ import pers.fz.mvvm.converter.RoomListStringConverter;
 @VerifyEntity(sort = true)
 public class Person extends BaseDaoBean {
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "姓名为空！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY,errorMsg = "姓名为空！"),
             @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, minLength = 2, maxLength = 10, errorMsg = "姓名输入错误！"),
 //            @VerifyParams(type = VerifyType.EQUALS, errorMsg = "您只能填张三！", equalStr = "张三")
     })
-    @VerifyFieldSort(1)
+    @VerifySort(1)
     @ColumnInfo
     private String name;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "请选择性别！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY,errorMsg = "请选择性别！"),
     })
-    @VerifyFieldSort(2)
+    @VerifySort(2)
     @ColumnInfo
     private String sex;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "请选择生日！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY,  errorMsg = "请选择生日！"),
     })
-    @VerifyFieldSort(3)
+    @VerifySort(3)
     @ColumnInfo
     private String birthday;
 
@@ -61,7 +61,7 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE, errorMsg = "手机号码格式输入不正确！")
     })
-    @VerifyFieldSort(4)
+    @VerifySort(4)
     @ColumnInfo
     private String mobile;
 
@@ -69,22 +69,22 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "请填写固话号码！"),
             @VerifyParams(type = VerifyType.TEL_PHONE, errorMsg = "固话号码格式输入不正确！")
     })
-    @VerifyFieldSort(5)
+    @VerifySort(5)
     @ColumnInfo
     private String tel;
 
-    @VerifyFieldSort(6)
+    @VerifySort(6)
     @VerifyParams(type = VerifyType.NUMBER_RANGE, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     @ColumnInfo
     private String age;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, notEmpty = true, errorMsg = "体重为空"),
+            @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "体重为空"),
             @VerifyParams(type = VerifyType.NUMBER_00, errorMsg = "体重输入格式不正确"),
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, maxNumber = 200, errorMsg = "你该减肥了！！！"),
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
-    @VerifyFieldSort(7)
+    @VerifySort(7)
     @ColumnInfo
     private String weight;
     @VerifyField({
@@ -93,19 +93,19 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
-    @VerifyFieldSort(8)
+    @VerifySort(8)
     @ColumnInfo
     private String height;
     @VerifyField({
 //            @VerifyParams(type = VerifyType.NOTNULL, errorMsg = "邮箱地址为空！"),
-            @VerifyParams(type = VerifyType.EMAIL, notNull = false, errorMsg = "邮箱地址错误！")
+            @VerifyParams(type = VerifyType.EMAIL, errorMsg = "邮箱地址错误！")
     })
-    @VerifyFieldSort(9)
+    @VerifySort(9)
     @ColumnInfo
     private String email;
 
-    @VerifyFieldSort(10)
-    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的爱好！")
+    @VerifySort(10)
+    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "您填填写您的爱好！")
     @ColumnInfo
     @TypeConverters({RoomListStringConverter.class})
     private List<String> hobby;

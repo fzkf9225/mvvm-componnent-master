@@ -54,7 +54,10 @@ public class CustomBindingAdapter {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    view.dataSource.set(editable.toString());
+                    if (view.formTextWatcherAfter != null) {
+                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                    }
+                    view.dataSource.set(editable == null ? null : editable.toString());
                     textAttrChanged.onChange();
                 }
             });
@@ -96,7 +99,10 @@ public class CustomBindingAdapter {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    view.dataSource.set(editable.toString());
+                    if (view.formTextWatcherAfter != null) {
+                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                    }
+                    view.dataSource.set(editable == null ? null : editable.toString());
                     textAttrChanged.onChange();
                 }
             });
@@ -136,7 +142,10 @@ public class CustomBindingAdapter {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    view.dataSource.set(editable.toString());
+                    if (view.formTextWatcherAfter != null) {
+                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                    }
+                    view.dataSource.set(editable == null ? null : editable.toString());
                     textAttrChanged.onChange();
                 }
             });
@@ -177,7 +186,10 @@ public class CustomBindingAdapter {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    view.dataSource.set(editable.toString());
+                    if (view.formTextWatcherAfter != null) {
+                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                    }
+                    view.dataSource.set(editable == null ? null : editable.toString());
                     textAttrChanged.onChange();
                 }
             });

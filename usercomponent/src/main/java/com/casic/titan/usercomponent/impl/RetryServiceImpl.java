@@ -3,7 +3,6 @@ package com.casic.titan.usercomponent.impl;
 import com.casic.titan.userapi.bean.UserInfo;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 import com.casic.titan.usercomponent.api.UserApiService;
-import com.casic.titan.usercomponent.enumEntity.GrantType;
 
 import org.reactivestreams.Publisher;
 

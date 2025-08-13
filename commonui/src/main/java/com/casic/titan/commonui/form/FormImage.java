@@ -17,19 +17,18 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
 
-import pers.fz.mvvm.bean.AttachmentBean;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
-import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 
 /**

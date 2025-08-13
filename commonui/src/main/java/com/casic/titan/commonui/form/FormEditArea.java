@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
-import com.casic.titan.commonui.inter.FormTextWatcher;
 
 import pers.fz.mvvm.util.common.DensityUtil;
 

@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-
 import java.util.List;
 
 import pers.fz.mvvm.bean.HomeMenuBean;

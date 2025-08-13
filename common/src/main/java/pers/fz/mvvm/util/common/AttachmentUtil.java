@@ -17,9 +17,6 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import pers.fz.mvvm.api.ConstantsHelper;
-import pers.fz.mvvm.bean.AttachmentBean;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -31,6 +28,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.api.Config;
+import pers.fz.mvvm.api.ConstantsHelper;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.download.DownloadManger;
 import pers.fz.mvvm.util.log.LogUtil;

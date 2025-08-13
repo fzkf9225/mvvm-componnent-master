@@ -6,7 +6,7 @@ import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.databinding.SettingBinding;
 import com.casic.titan.usercomponent.viewmodel.SettingViewModel;
 
-import com.casic.titan.usercomponent.TechnicalSupportActivity;
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.api.AppManager;
 import pers.fz.mvvm.base.BaseActivity;
 
@@ -14,6 +14,7 @@ import pers.fz.mvvm.base.BaseActivity;
  * Create by CherishTang on 2019/10/11
  * describe:设置
  */
+@AndroidEntryPoint
 public class SettingActivity extends BaseActivity<SettingViewModel, SettingBinding> {
     private Bundle bundle;
 

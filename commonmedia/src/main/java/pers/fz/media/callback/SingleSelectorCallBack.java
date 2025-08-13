@@ -7,12 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import pers.fz.media.utils.LogUtil;
-import pers.fz.media.bean.MediaBean;
 import pers.fz.media.MediaHelper;
+import pers.fz.media.bean.MediaBean;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.helper.OpenPickMediaSelector;
 import pers.fz.media.helper.OpenSingleSelector;
+import pers.fz.media.utils.LogUtil;
 
 
 /**

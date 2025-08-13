@@ -18,7 +18,6 @@ import androidx.lifecycle.LifecycleOwner;
 import java.util.Map;
 import java.util.UUID;
 
-import pers.fz.media.utils.LogUtil;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.bean.SelectorOptions;
 import pers.fz.media.callback.CameraCallBack;
@@ -26,6 +25,7 @@ import pers.fz.media.callback.MultiSelectorCallBack;
 import pers.fz.media.callback.SingleSelectorCallBack;
 import pers.fz.media.dialog.TipDialog;
 import pers.fz.media.enums.MediaTypeEnum;
+import pers.fz.media.utils.LogUtil;
 
 /**
  * created by fz on 2025/7/30 9:35

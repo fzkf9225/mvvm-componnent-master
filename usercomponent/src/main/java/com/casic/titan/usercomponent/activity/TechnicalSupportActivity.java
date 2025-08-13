@@ -1,9 +1,10 @@
-package com.casic.titan.usercomponent;
+package com.casic.titan.usercomponent.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.databinding.TechnicalSupportActivityBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;

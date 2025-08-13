@@ -22,6 +22,7 @@ import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
 import com.casic.titan.commonui.enums.LabelTextStyleEnum;
 import com.casic.titan.commonui.inter.FormTextWatcher;
+import com.casic.titan.commonui.inter.FormTextWatcherAfter;
 
 import pers.fz.mvvm.util.common.DensityUtil;
 
@@ -63,6 +64,10 @@ public class FormConstraintLayout extends ConstraintLayout {
      * 输入监听
      */
     public FormTextWatcher formTextWatcher;
+    /**
+     * 输入监听
+     */
+    public FormTextWatcherAfter formTextWatcherAfter;
     /**
      * label文字大小
      */
@@ -440,6 +445,13 @@ public class FormConstraintLayout extends ConstraintLayout {
      */
     public void addTextChangedListener(FormTextWatcher formTextWatcher) {
         this.formTextWatcher = formTextWatcher;
+    }
+
+    /**
+     * 推荐使用这个
+     */
+    public void addTextChangedAfterListener(FormTextWatcherAfter formTextWatcherAfter) {
+        this.formTextWatcherAfter = formTextWatcherAfter;
     }
 
 }
