@@ -6,8 +6,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import pers.fz.annotation.annotation.Valid;
+import pers.fz.annotation.annotation.VerifyArray;
+import pers.fz.annotation.annotation.VerifyEntity;
+import pers.fz.annotation.annotation.VerifyField;
+import pers.fz.annotation.annotation.VerifyParams;
+import pers.fz.annotation.annotation.VerifySort;
+import pers.fz.annotation.enums.VerifyType;
 import pers.fz.annotation.bean.VerifyResult;
+import pers.fz.annotation.inter.VerifyGroup;
 import pers.fz.annotation.utils.RegexUtils;
+import pers.fz.annotation.utils.ValidatorUtil;
 
 /**
  * Created by fz on 2023/9/5 16:25
@@ -17,11 +26,14 @@ public class EntityValidator {
     private final static String TAG = EntityValidator.class.getSimpleName();
 
     public static VerifyResult validate(Object entity) {
-        return validate(entity, null);
+        return validate(entity, VerifyGroup.Default.class);
     }
 
-    public static VerifyResult validate(Object entity, String group) {
+    public static VerifyResult validate(Object entity, Class<?> currentGroup) {
         try {
+            if (currentGroup == null) {
+                currentGroup = VerifyGroup.Default.class;
+            }
             Class<?> clazz = entity.getClass();
             VerifyEntity validation = clazz.getAnnotation(VerifyEntity.class);
             if (validation == null) {
@@ -61,8 +73,7 @@ public class EntityValidator {
                         validArray[validArray.length - 1] = valid;
                     }
                     for (Valid validObj : validArray) {
-                        String validGroup = validObj.group();
-                        if (!isEmpty(validGroup) && !validGroup.equals(group)) {
+                        if (!ValidatorUtil.containsGroup(validObj.group(), currentGroup)) {
                             continue;
                         }
                         //判断是否为空即只判断null，但是这里不判断空数据的情况，如果为空的话判断是否强制为空，强制不为空则报错，不限制为空则跳过
@@ -117,8 +128,7 @@ public class EntityValidator {
                         return VerifyResult.ok();
                     }
                     //获取当前分组，判断是不是当前要验证的分组
-                    String validGroup = params.group();
-                    if (!isEmpty(validGroup) && !validGroup.equals(group)) {
+                    if (!ValidatorUtil.containsGroup(params.group(), currentGroup)) {
                         continue;
                     }
                     //当有VerifyType.NOTNULL、notNull为true时不管其他条件只要为空则返回错误

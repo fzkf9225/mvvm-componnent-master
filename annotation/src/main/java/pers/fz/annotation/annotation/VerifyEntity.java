@@ -1,4 +1,4 @@
-package pers.fz.annotation.verify;
+package pers.fz.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

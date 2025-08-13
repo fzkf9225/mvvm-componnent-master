@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.annotation.inter.VerifyGroup;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.mvvm.base.BaseActivity;
@@ -72,17 +73,15 @@ public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVer
             }
         });
         binding.verifySubmit.setOnClickListener(v -> {
-            LogUtil.show("FormUi","数据："+new Gson().toJson(binding.getData()));
+            LogUtil.show("FormUi", "数据：" + new Gson().toJson(binding.getData()));
             showLoading("验证中...");
             binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
-            VerifyResult verifyResult = EntityValidator.validate(binding.getData());
+            VerifyResult verifyResult = EntityValidator.validate(binding.getData(), VerifyGroup.Create.class);
             hideLoading();
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
             if (!verifyResult.isOk()) {
-                binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_red));
                 return;
             }
-            binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
             mViewModel.add(binding.getData());
         });
         binding.tvSex.setOnClickListener(v ->
@@ -104,7 +103,7 @@ public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVer
             useCase = bundle.getParcelable("args");
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
-        binding.setData(new Person("张三","1999-06-05", "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
+        binding.setData(new Person("张三", "1999-06-05", "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
     }
 
 }

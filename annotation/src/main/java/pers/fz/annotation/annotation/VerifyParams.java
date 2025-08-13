@@ -1,9 +1,12 @@
-package pers.fz.annotation.verify;
+package pers.fz.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import pers.fz.annotation.enums.VerifyType;
+import pers.fz.annotation.inter.VerifyGroup;
 
 /**
  * Created by @author fz on 2023/9/5 16:09
@@ -18,7 +21,7 @@ public @interface VerifyParams {
      * 验证分组
      * @return 分组名称
      */
-    String group() default "";
+    Class<?>[] group() default VerifyGroup.Default.class;
 
     String equalStr() default "";
 

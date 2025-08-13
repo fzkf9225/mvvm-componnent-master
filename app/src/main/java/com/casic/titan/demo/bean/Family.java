@@ -1,8 +1,8 @@
 package com.casic.titan.demo.bean;
 
-import pers.fz.annotation.verify.VerifyEntity;
-import pers.fz.annotation.verify.VerifyParams;
-import pers.fz.annotation.verify.VerifyType;
+import pers.fz.annotation.annotation.VerifyEntity;
+import pers.fz.annotation.annotation.VerifyParams;
+import pers.fz.annotation.enums.VerifyType;
 
 /**
  * created by fz on 2024/8/12 17:01
@@ -10,10 +10,10 @@ import pers.fz.annotation.verify.VerifyType;
  */
 @VerifyEntity(sort = true)
 public class Family {
-    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的妻子！")
+    @VerifyParams(type = VerifyType.NOTNULL,  errorMsg = "您填填写您的妻子！")
     private String wife;
 
-    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您填填写您的丈夫！")
+    @VerifyParams(type = VerifyType.NOTNULL,  errorMsg = "您填填写您的丈夫！")
     private String husband;
     private String son;
     private String daughter;

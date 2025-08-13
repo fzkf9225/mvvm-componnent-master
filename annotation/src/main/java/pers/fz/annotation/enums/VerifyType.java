@@ -1,4 +1,4 @@
-package pers.fz.annotation.verify;
+package pers.fz.annotation.enums;
 
 /**
  * Created by fz on 2023/9/5 16:03

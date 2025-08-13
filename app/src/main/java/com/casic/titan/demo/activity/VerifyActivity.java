@@ -79,10 +79,8 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             hideLoading();
             showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
             if (!verifyResult.isOk()) {
-                binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_red));
                 return;
             }
-            binding.tvVerifyResult.setTextColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
             mViewModel.add(binding.getData());
         });
         binding.tvSex.setOnClickListener(v ->
