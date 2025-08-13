@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.annotation.utils.RegexUtils;
+
 /**
  * Created by fz on 2023/9/5 16:25
  * describe :
@@ -15,6 +17,10 @@ public class EntityValidator {
     private final static String TAG = EntityValidator.class.getSimpleName();
 
     public static VerifyResult validate(Object entity) {
+        return validate(entity, null);
+    }
+
+    public static VerifyResult validate(Object entity, String group) {
         try {
             Class<?> clazz = entity.getClass();
             VerifyEntity validation = clazz.getAnnotation(VerifyEntity.class);
@@ -41,32 +47,49 @@ public class EntityValidator {
                 field.setAccessible(true);
                 //先判断是不是实体类或者集合
                 Valid valid = field.getAnnotation(Valid.class);
-                if (valid != null) {
-                    Object value = field.get(entity);
-                    //判断是否为空即只判断null，但是这里不判断空数据的情况，如果为空的话判断是否强制为空，强制不为空则报错，不限制为空则跳过
-                    if (valid.notNull() && field.get(entity) == null) {
-                        return VerifyResult.fail(valid.errorMsg());
-                    } else if (!valid.notNull() && field.get(entity) == null) {
-                        continue;
+                VerifyArray validObject = field.getAnnotation(VerifyArray.class);
+                Object value = field.get(entity);
+
+                if (valid != null || validObject != null) {
+                    Valid[] validArray;
+                    if (validObject == null) {
+                        validArray = new Valid[]{valid};
+                    } else if (valid == null) {
+                        validArray = validObject.value();
+                    } else {
+                        validArray = Arrays.copyOf(validObject.value(), validObject.value().length + 1);
+                        validArray[validArray.length - 1] = valid;
                     }
-                    //判断此对象是否为空对象，非null的空判断
-                    if (valid.notEmpty() && (value instanceof Collection<?> collection && collection.isEmpty())) {
-                        return VerifyResult.fail(valid.errorMsg());
-                    } else if (valid.notEmpty() && (value instanceof Map<?, ?> map && map.isEmpty())) {
-                        return VerifyResult.fail(valid.errorMsg());
-                    }
-                    //如果是集合则遍历验证
-                    if (value instanceof Collection<?> collection) {
-                        for (Object obj : collection) {
-                            VerifyResult verifyResult = validate(obj);
+                    for (Valid validObj : validArray) {
+                        String validGroup = validObj.group();
+                        if (!isEmpty(validGroup) && !validGroup.equals(group)) {
+                            continue;
+                        }
+                        //判断是否为空即只判断null，但是这里不判断空数据的情况，如果为空的话判断是否强制为空，强制不为空则报错，不限制为空则跳过
+                        if (validObj.notNull() && value == null) {
+                            return VerifyResult.fail(validObj.errorMsg());
+                        } else if (!validObj.notNull() && value == null) {
+                            continue;
+                        }
+                        //判断此对象是否为空对象，非null的空判断
+                        if (validObj.notEmpty() && (value instanceof Collection<?> collection && collection.isEmpty())) {
+                            return VerifyResult.fail(validObj.errorMsg());
+                        } else if (validObj.notEmpty() && (value instanceof Map<?, ?> map && map.isEmpty())) {
+                            return VerifyResult.fail(validObj.errorMsg());
+                        }
+                        //如果是集合则遍历验证
+                        if (value instanceof Collection<?> collection) {
+                            for (Object obj : collection) {
+                                VerifyResult verifyResult = validate(obj);
+                                if (!verifyResult.isOk()) {
+                                    return verifyResult;
+                                }
+                            }
+                        } else {
+                            VerifyResult verifyResult = validate(value);
                             if (!verifyResult.isOk()) {
                                 return verifyResult;
                             }
-                        }
-                    } else {
-                        VerifyResult verifyResult = validate(value);
-                        if (!verifyResult.isOk()) {
-                            return verifyResult;
                         }
                     }
                     continue;
@@ -93,15 +116,29 @@ public class EntityValidator {
                     if (verifyType == null) {
                         return VerifyResult.ok();
                     }
-                    //一切的验证都是基于不为空的情况下，所以先验证空
-                    Object value = field.get(entity);
+                    //获取当前分组，判断是不是当前要验证的分组
+                    String validGroup = params.group();
+                    if (!isEmpty(validGroup) && !validGroup.equals(group)) {
+                        continue;
+                    }
                     //当有VerifyType.NOTNULL、notNull为true时不管其他条件只要为空则返回错误
-                    boolean isNullValue = (VerifyType.NOTNULL == verifyType || params.notNull()) && value == null;
-                    if (isNullValue) {
+                    boolean isVerifyNullValue = VerifyType.NOTNULL == verifyType && value == null;
+                    if (isVerifyNullValue) {
                         return VerifyResult.fail(params.errorMsg());
                     }
+                    //不为null切不为空字符串和空集合等
+                    if (VerifyType.NOT_EMPTY == verifyType) {
+                        //是否允许为空实现，空集合、空map等情况
+                        if (value instanceof Collection<?> collection && collection.isEmpty()) {
+                            return VerifyResult.fail(params.errorMsg());
+                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
+                            return VerifyResult.fail(params.errorMsg());
+                        } else if (isEmpty(value)) {
+                            return VerifyResult.fail(params.errorMsg());
+                        }
+                    }
                     //当不是NOTNULL但是又允许为空时，即判断某个条件时，有输入则判断，没有输入值则不判断
-                    if (VerifyType.NOTNULL != verifyType && !params.notNull()) {
+                    if (VerifyType.NOTNULL != verifyType && VerifyType.NOT_EMPTY != verifyType) {
                         if (value == null) {
                             continue;
                         } else if (value instanceof Collection<?> collection && collection.isEmpty()) {
@@ -110,16 +147,6 @@ public class EntityValidator {
                             continue;
                         } else if (isEmpty(value)) {
                             continue;
-                        }
-                    }
-                    //是否允许为空实现，空集合、空map等情况
-                    if (params.notEmpty()) {
-                        if (value instanceof Collection<?> collection && collection.isEmpty()) {
-                            return VerifyResult.fail(params.errorMsg());
-                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
-                            return VerifyResult.fail(params.errorMsg());
-                        } else if (isEmpty(value)) {
-                            return VerifyResult.fail(params.errorMsg());
                         }
                     }
                     VerifyResult verifyResult = verifyParam(params, value);
@@ -135,6 +162,7 @@ public class EntityValidator {
         return VerifyResult.ok();
     }
 
+
     private static Field[] sortField(Field[] fields) {
         // 使用自定义注解的值进行排序
         Arrays.sort(fields, (f1, f2) -> {
@@ -146,9 +174,9 @@ public class EntityValidator {
     }
 
     private static int getFieldOrder(Field field) {
-        VerifyFieldSort verifyFieldSort = field.getAnnotation(VerifyFieldSort.class);
-        if (verifyFieldSort != null) {
-            return verifyFieldSort.value();
+        VerifySort verifySort = field.getAnnotation(VerifySort.class);
+        if (verifySort != null) {
+            return verifySort.value();
         }
         return Integer.MAX_VALUE; // 如果字段没有指定顺序，则将其放在最后
     }
@@ -305,7 +333,7 @@ public class EntityValidator {
         if (obj == null) {
             return true;
         }
-        return FilterNull(obj.toString()).isEmpty();
+        return filterNull(obj.toString()).isEmpty();
     }
 
     /**
@@ -314,7 +342,7 @@ public class EntityValidator {
      * @param o
      * @return
      */
-    private static String FilterNull(Object o) {
+    private static String filterNull(Object o) {
         return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
     }
 }

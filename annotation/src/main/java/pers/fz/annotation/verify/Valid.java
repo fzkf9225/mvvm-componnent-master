@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Valid {
+
+    String group() default "";
+
     boolean notNull() default false;
 
     boolean notEmpty() default false;

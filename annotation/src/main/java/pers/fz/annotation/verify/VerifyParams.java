@@ -15,13 +15,12 @@ public @interface VerifyParams {
     VerifyType type();
 
     /**
-     * 是否允许为空字符串、空集合、空map等
-     * @return 默认可以为空
+     * 验证分组
+     * @return 分组名称
      */
-    boolean notEmpty() default false;
+    String group() default "";
 
     String equalStr() default "";
-    boolean notNull() default false;
 
     int minLength() default -1;
 

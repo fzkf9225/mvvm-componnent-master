@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface VerifyFieldSort {
+public @interface VerifySort {
 
     int value() default Integer.MAX_VALUE;
 

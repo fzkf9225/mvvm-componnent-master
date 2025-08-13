@@ -6,9 +6,13 @@ package pers.fz.annotation.verify;
  */
 public enum VerifyType {
     /**
-     * 验证类型
+     * 验证类型，不为null，这个不判断是否为空字符串
      */
     NOTNULL,
+    /**
+     * 验证类型，不为null切不为空字符串
+     */
+    NOT_EMPTY,
     /**
      * 与目标值是否相等
      */
