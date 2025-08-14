@@ -103,6 +103,10 @@
     <public name="rounded_white_16" type="drawable"/>
     <public name="selector_button" type="drawable"/>
     <public name="selector_image_media_play" type="drawable"/>
+    <public name="ic_camera" type="drawable"/>
+    <public name="ic_flash_auto" type="drawable"/>
+    <public name="ic_flash_off" type="drawable"/>
+    <public name="ic_flash_on" type="drawable"/>
 
     <!--动画资源-->
     <public name="actionsheet_dialog_in" type="anim"/>
@@ -160,6 +164,9 @@
     <public name="picktime_view" type="layout"/>
     <public name="image_save_dialog" type="layout"/>
     <public name="tab_text_view" type="layout"/>
+    <public name="camera_view" type="layout"/>
+    <public name="dialog_record" type="layout"/>
+    <public name="activity_shoot" type="layout"/>
 
     <!--navigation资源-->
     <public name="nav_empty_layout" type="navigation"/>
@@ -189,6 +196,9 @@
     <public name="ic_arrow_bottom" type="mipmap"/>
     <public name="ic_tweet_add" type="mipmap"/>
     <public name="ic_tweet_add_video" type="mipmap"/>
+    <public name="ic_voice_mic" type="mipmap"/>
+    <public name="ic_voice_record_bg" type="mipmap"/>
+    <public name="ic_voice_tip" type="mipmap"/>
 
     <!--样式资源-->
     <public name="h_line" type="style"/>
@@ -221,6 +231,7 @@
     <public name="RoundedShapeAppearanceS" type="style"/>
     <public name="RoundedShapeAppearanceM" type="style"/>
     <public name="RoundedShapeAppearanceL" type="style"/>
+    <public name="like_toast_dialog_style" type="style"/>
 
     <!--字符串资源-->
     <public name="please_choose" type="string"/>

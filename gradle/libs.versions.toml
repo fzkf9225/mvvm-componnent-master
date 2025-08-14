@@ -64,6 +64,7 @@ webkitVersion = "1.13.0"
 autoServiceVersion="1.1.1"
 javapoetVersion="1.13.0"
 javawriterVersion="2.5.1"
+camerax = "1.3.4"
 
 [libraries]
 # AndroidX Core
@@ -191,6 +192,14 @@ auto-service ={ module = "com.google.auto.service:auto-service", version.ref = "
 auto-service-annotation ={ module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceVersion"}
 squareup-javapoet ={ module = "com.squareup:javapoet", version.ref = "javapoetVersion"}
 squareup-javawriter ={ module = "com.squareup:javawriter", version.ref = "javawriterVersion"}
+
+#camera
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

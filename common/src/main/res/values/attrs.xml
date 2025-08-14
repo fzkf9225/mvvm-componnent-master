@@ -7,6 +7,8 @@
     <attr name="borderWidth" format="dimension" />
     <attr name="borderColor" format="reference|color" />
     <attr name="borderFocusColor" format="reference|color" />
+    <attr name="defaultBackgroundColor" format="reference|color" />
+    <attr name="focusBackgroundColor" format="reference|color" />
     <attr name="enableSelected" format="boolean" />
     <attr name="enablePressed" format="boolean" />
     <attr name="expandedText" format="string" />
@@ -25,14 +27,31 @@
     <attr name="rightBottomRadius" format="dimension" />
     <attr name="leftBottomRadius" format="dimension" />
 
+    <attr name="iconSize" format="dimension"/>
+    <attr name="iconMargin" format="dimension"/>
+    <attr name="iconSrc" format="reference"/>
+    <attr name="iconLeft" format="reference"/>
+    <attr name="iconRight" format="reference"/>
+    <attr name="duration_max" format="integer"/>
+
     <declare-styleable name="ConfigurableWebView">
-        <attr name="domain" />
+        <attr name="domain" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomCameraView">
+        <attr name="iconSize"/>
+        <attr name="iconMargin"/>
+        <attr name="iconSrc"/>
+        <attr name="iconLeft"/>
+        <attr name="iconRight"/>
     </declare-styleable>
 
     <declare-styleable name="CircleImageView">
         <attr name="borderWidth" />
         <attr name="borderColor" />
         <attr name="borderFocusColor" />
+        <attr name="defaultBackgroundColor"/>
+        <attr name="focusBackgroundColor"/>
         <attr name="enableSelected" />
         <attr name="enablePressed" />
     </declare-styleable>

@@ -86,6 +86,10 @@
             android:value="2.4" /> <!-- 此处适配android 7.0 -->
 
         <activity
+            android:name=".activity.CameraActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.WebViewActivity"
             android:exported="false" />
 

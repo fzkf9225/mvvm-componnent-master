@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
@@ -17,22 +18,19 @@ import pers.fz.mvvm.R;
  * Created by fz on 2019/5/30.
  * describe:圆形AppCompatTextView
  */
-public class CircleTextView extends AppCompatTextView {
+public class CircleImageView extends AppCompatImageView {
     private final Paint circlePaint;
     private final Paint backPaint;
-    private final Paint textPaint;
     private int strokeColor;
     private int circleBackColor;
     private float strokeWidth;
 
-    public CircleTextView(Context context, AttributeSet attrs) {
+    public CircleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setGravity(Gravity.CENTER);
         circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setStyle(Paint.Style.STROKE);
         backPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         backPaint.setStyle(Paint.Style.FILL);
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         strokeWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
@@ -49,45 +47,19 @@ public class CircleTextView extends AppCompatTextView {
             circlePaint.setColor(strokeColor);
         }
         backPaint.setColor(circleBackColor);
-        textPaint.setColor(getCurrentTextColor());
-        textPaint.setTextSize(getTextSize());
     }
 
-    public CircleTextView(Context context) {
+    public CircleImageView(Context context) {
         this(context, null);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int height = getHeight();
-        int width = getWidth();
-        int radius;
-        int strokeRadius;
-        int textWidth = (int) textPaint.measureText(getText().toString());
-        if (width > height) {
-            if (height > textWidth) {
-                radius = height;
-            } else {
-                setHeight(textWidth + getPaddingTop() + getPaddingBottom());
-                radius = textWidth;
-            }
-        } else {
-            if (width > textWidth) {
-                radius = width;
-            } else {
-                setWidth(textWidth + getPaddingRight() + getPaddingLeft());
-                radius = textWidth;
-            }
-        }
-        strokeRadius = (int) ((float) radius / 2 - strokeWidth);
-        radius = strokeRadius - 1;
         if (strokeWidth != 0) {
-            canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, strokeRadius, circlePaint);
+            canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, (float) getWidth()/2, circlePaint);
         }
-        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, radius, backPaint);
-        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
-        canvas.drawText(getText().toString(), (float) getWidth() / 2 - textPaint.measureText(getText().toString()) / 2, (float) getHeight() / 2 - fontMetrics.descent + (fontMetrics.bottom - fontMetrics.top) / 2, textPaint);
+        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, (float) getWidth()/2, backPaint);
     }
 
     public void setStrokeColor(@ColorInt int color) {
@@ -99,11 +71,6 @@ public class CircleTextView extends AppCompatTextView {
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
         backPaint.setColor(circleBackColor);
-        invalidate();
-    }
-
-    public void setTextPaintColor(@ColorInt int color) {
-        textPaint.setColor(color);
         invalidate();
     }
 }

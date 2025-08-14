@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/horizontal_margin_xl"
+        android:paddingEnd="@dimen/horizontal_margin_xl"
+        tools:context=".activity.CustomCameraActivity">
+        <pers.fz.mvvm.widget.customview.CornerImageView
+            android:id="@+id/image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            app:radius="@dimen/radius_l"
+            android:layout_marginTop="@dimen/vertical_margin_xxxl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/layout_video"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="@dimen/vertical_margin_xxxl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image"
+            layout="@layout/adapter_video_show_item"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:background="@drawable/round_theme_color"
+            android:paddingStart="@dimen/padding_m"
+            android:paddingEnd="@dimen/padding_m"
+            android:text="调用相机"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_video" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

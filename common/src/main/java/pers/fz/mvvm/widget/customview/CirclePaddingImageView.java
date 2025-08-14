@@ -17,6 +17,8 @@ import pers.fz.mvvm.R;
 public class CirclePaddingImageView extends AppCompatImageView {
 
     private int borderColor;
+    private int defaultBackgroundColor;
+    private int focusBackgroundColor;
     private boolean enableSelected;
     private boolean enablePressed;
     private int borderWidth;
@@ -45,6 +47,8 @@ public class CirclePaddingImageView extends AppCompatImageView {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircleImageView);
             borderColor = a.getColor(R.styleable.CircleImageView_borderColor, 0xFFB4B4B4);
             borderFocusColor = a.getColor(R.styleable.CircleImageView_borderFocusColor, 0xFFFFFFFF);
+            defaultBackgroundColor = a.getColor(R.styleable.CircleImageView_defaultBackgroundColor, 0xFF1F1F1F);
+            focusBackgroundColor = a.getColor(R.styleable.CircleImageView_focusBackgroundColor, 0xFF0F0F0F);
             borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_borderWidth, 0);
             enableSelected = a.getBoolean(R.styleable.CircleImageView_enableSelected, false);
             enablePressed = a.getBoolean(R.styleable.CircleImageView_enablePressed, false);
@@ -52,14 +56,18 @@ public class CirclePaddingImageView extends AppCompatImageView {
         } else {
             borderColor = 0xFFB4B4B4;
             borderFocusColor = 0xFFFFFFFF;
+            defaultBackgroundColor = 0xFF1F1F1F;
+            focusBackgroundColor = 0xFF0F0F0F;
         }
 
         bgDefaultDrawable = new GradientDrawable();
         // 设置背景为圆形
+        bgDefaultDrawable.setColor(defaultBackgroundColor);
         bgDefaultDrawable.setShape(GradientDrawable.OVAL);
         bgDefaultDrawable.setStroke(borderWidth, borderColor);
 
         bgFocusedDrawable = new GradientDrawable();
+        bgFocusedDrawable.setColor(focusBackgroundColor);
         bgFocusedDrawable.setShape(GradientDrawable.OVAL);
         bgFocusedDrawable.setStroke(borderWidth, borderFocusColor);
         setBackground(bgDefaultDrawable);

@@ -3,6 +3,7 @@ package com.casic.titan.demo.enums;
 import android.os.Bundle;
 
 import com.casic.titan.demo.activity.CoordinatorActivity;
+import com.casic.titan.demo.activity.CustomCameraActivity;
 import com.casic.titan.demo.activity.DemoPagingActivity;
 import com.casic.titan.demo.activity.DemoSmartPagingActivity;
 import com.casic.titan.demo.activity.DialogActivity;
@@ -58,6 +59,7 @@ public enum UseCaseEnum {
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
     LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
     WEB_VIEW(WebViewActivity.class, "WebView示例", "测试WebView基本功能和toolbar", getWebViewBundle()),
+    CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
 
     ;
 
