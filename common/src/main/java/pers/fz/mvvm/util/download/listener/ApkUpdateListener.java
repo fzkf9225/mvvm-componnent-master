@@ -31,11 +31,13 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     private final String apkUrl;
     private final Activity mContext;
     private final List<String> downloadMap;
+    private final boolean verifyRepeatDownload;
 
-    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap) {
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload) {
         this.mContext = mContext;
         this.apkUrl = apkUrl;
         this.downloadMap = downloadMap;
+        this.verifyRepeatDownload = verifyRepeatDownload;
     }
 
     @Override
@@ -45,14 +47,14 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
             return;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            if (PermissionsChecker.getInstance().lacksPermissions(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (PermissionsChecker.getInstance().lacksPermissions(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //申请WRITE_EXTERNAL_STORAGE权限
                 ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         0x02);
                 return;
             }
         }
-        if (downloadMap.contains(apkUrl)) {
+        if (downloadMap.contains(apkUrl) && verifyRepeatDownload) {
             Toast.makeText(mContext, "新版本正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -64,6 +66,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                     return file;
                 })
                 .subscribe(file -> DownloadUtil.installApk(mContext.getApplicationContext(), file), throwable -> {
+                    downloadMap.remove(apkUrl);
                     if (throwable instanceof BaseException baseException) {
                         downloadNotificationUtils.sendNotificationFullScreen(new Random().nextInt(), "新版本下载失败", baseException.getErrorMsg(), null);
                         return;

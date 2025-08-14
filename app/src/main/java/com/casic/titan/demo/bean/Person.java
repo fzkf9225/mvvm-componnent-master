@@ -59,7 +59,7 @@ public class Person extends BaseDaoBean {
     private String classStartTime;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
     })
     @VerifySort(4)
@@ -67,7 +67,7 @@ public class Person extends BaseDaoBean {
     private String mobile;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
             @VerifyParams(type = VerifyType.TEL_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
     })
     @VerifySort(5)

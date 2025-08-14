@@ -58,20 +58,10 @@ public class EntityValidator {
                 }
                 field.setAccessible(true);
                 //先判断是不是实体类或者集合
-                Valid valid = field.getAnnotation(Valid.class);
-                VerifyArray validObject = field.getAnnotation(VerifyArray.class);
+                Valid[] validArray = getValid(field);
                 Object value = field.get(entity);
 
-                if (valid != null || validObject != null) {
-                    Valid[] validArray;
-                    if (validObject == null) {
-                        validArray = new Valid[]{valid};
-                    } else if (valid == null) {
-                        validArray = validObject.value();
-                    } else {
-                        validArray = Arrays.copyOf(validObject.value(), validObject.value().length + 1);
-                        validArray[validArray.length - 1] = valid;
-                    }
+                if (validArray != null && validArray.length != 0) {
                     for (Valid validObj : validArray) {
                         if (!ValidatorUtil.containsGroup(validObj.group(), currentGroup)) {
                             continue;
@@ -105,23 +95,13 @@ public class EntityValidator {
                     }
                     continue;
                 }
-                //判断普通字段，也就是常用数据类型
-                VerifyField validationField = field.getAnnotation(VerifyField.class);
-                VerifyParams validationParam = field.getAnnotation(VerifyParams.class);
-                //其实这里可以不用判断，因为上面判断过了，算是二次保险吧，但是基本没用
-                if (validationParam == null && validationField == null) {
+
+                VerifyParams[] verifyParamsList = getValidParams(field);
+
+                if (verifyParamsList == null && verifyParamsList.length == 0) {
                     continue;
                 }
 
-                VerifyParams[] verifyParamsList;
-                if (validationField == null) {
-                    verifyParamsList = new VerifyParams[]{validationParam};
-                } else if (validationParam == null) {
-                    verifyParamsList = validationField.value();
-                } else {
-                    verifyParamsList = Arrays.copyOf(validationField.value(), validationField.value().length + 1);
-                    verifyParamsList[verifyParamsList.length - 1] = validationParam;
-                }
                 for (VerifyParams params : verifyParamsList) {
                     VerifyType verifyType = params.type();
                     if (verifyType == null) {
@@ -143,7 +123,7 @@ public class EntityValidator {
                             return VerifyResult.fail(params.errorMsg());
                         } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             return VerifyResult.fail(params.errorMsg());
-                        } else if (isEmpty(value)) {
+                        } else if (ValidatorUtil.isEmpty(value)) {
                             return VerifyResult.fail(params.errorMsg());
                         }
                     }
@@ -155,7 +135,7 @@ public class EntityValidator {
                             continue;
                         } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
                             continue;
-                        } else if (isEmpty(value)) {
+                        } else if (ValidatorUtil.isEmpty(value)) {
                             continue;
                         }
                     }
@@ -172,15 +152,47 @@ public class EntityValidator {
         return VerifyResult.ok();
     }
 
+    public static Valid[] getValid(Field field) {
+        Valid valid = field.getAnnotation(Valid.class);
+        VerifyArray validObject = field.getAnnotation(VerifyArray.class);
+        Valid[] validArray;
+        if (validObject == null && valid != null) {
+            validArray = new Valid[]{valid};
+        } else if (valid == null && validObject != null) {
+            validArray = validObject.value();
+        } else if (valid != null && validObject != null) {
+            validArray = Arrays.copyOf(validObject.value(), validObject.value().length + 1);
+            validArray[validArray.length - 1] = valid;
+        } else {
+            validArray = new Valid[0];
+        }
+        return validArray;
+    }
 
-    private static Field[] sortField(Field[] fields) {
+    public static VerifyParams[] getValidParams(Field field) {
+        VerifyField validationField = field.getAnnotation(VerifyField.class);
+        VerifyParams validationParam = field.getAnnotation(VerifyParams.class);
+        VerifyParams[] validArray;
+        if (validationField == null && validationParam != null) {
+            validArray = new VerifyParams[]{validationParam};
+        } else if (validationParam == null && validationField != null) {
+            validArray = validationField.value();
+        } else if (validationField != null && validationParam != null) {
+            validArray = Arrays.copyOf(validationField.value(), validationField.value().length + 1);
+            validArray[validArray.length - 1] = validationParam;
+        } else {
+            validArray = new VerifyParams[0];
+        }
+        return validArray;
+    }
+
+    private static void sortField(Field[] fields) {
         // 使用自定义注解的值进行排序
         Arrays.sort(fields, (f1, f2) -> {
             int order1 = getFieldOrder(f1);
             int order2 = getFieldOrder(f2);
             return Integer.compare(order1, order2);
         });
-        return fields;
     }
 
     private static int getFieldOrder(Field field) {
@@ -211,7 +223,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isInteger(value.toString())) {
@@ -221,7 +233,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isDouble(value.toString())) {
@@ -231,7 +243,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (!RegexUtils.isDoubleTwoDecimals(value.toString())) {
@@ -269,7 +281,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             double number = Double.parseDouble(value.toString());
@@ -280,7 +292,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             double number = Double.parseDouble(value.toString());
@@ -294,7 +306,7 @@ public class EntityValidator {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (validationParams.minLength() < 0 && value.toString().length() >= validationParams.maxLength()) {
@@ -313,7 +325,7 @@ public class EntityValidator {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (validationParams.minLength() < 0 && value.toString().length() > validationParams.maxLength()) {
@@ -329,7 +341,7 @@ public class EntityValidator {
             if (value == null) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (isEmpty(value)) {
+            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             return RegexUtils.regular(value.toString(), validationParams.regex()) ?
@@ -339,20 +351,4 @@ public class EntityValidator {
         return VerifyResult.ok();
     }
 
-    private static boolean isEmpty(Object obj) {
-        if (obj == null) {
-            return true;
-        }
-        return filterNull(obj.toString()).isEmpty();
-    }
-
-    /**
-     * 过滤空NULL
-     *
-     * @param o
-     * @return
-     */
-    private static String filterNull(Object o) {
-        return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
-    }
 }

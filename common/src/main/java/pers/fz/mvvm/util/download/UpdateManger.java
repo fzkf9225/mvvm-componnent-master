@@ -57,6 +57,10 @@ public class UpdateManger {
     }
 
     public void update(Activity mContext, String apkUrl) {
+        update(mContext, apkUrl, true);
+    }
+
+    public void update(Activity mContext, String apkUrl, boolean verifyRepeatDownload) {
         if (TextUtils.isEmpty(apkUrl)) {
             Toast.makeText(mContext, "下载地址错误", Toast.LENGTH_SHORT).show();
             return;
@@ -67,7 +71,7 @@ public class UpdateManger {
                     0x02);
             return;
         }
-        if (downloadMap.contains(apkUrl)) {
+        if (downloadMap.contains(apkUrl) && verifyRepeatDownload) {
             Toast.makeText(mContext, "新版本正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -79,6 +83,7 @@ public class UpdateManger {
                     return file;
                 })
                 .subscribe(file -> DownloadUtil.installApk(mContext.getApplicationContext(), file), throwable -> {
+                    downloadMap.remove(apkUrl);
                     if (throwable instanceof BaseException baseException) {
                         downloadNotificationUtils.sendNotificationFullScreen(new Random().nextInt(), "新版本下载失败", baseException.getErrorMsg(), null);
                         return;
@@ -87,6 +92,17 @@ public class UpdateManger {
                 });
     }
 
+    /**
+     * 显示更新程序对话框，供主程序调用
+     *
+     * @param mContext            视图
+     * @param apkUrl              apk地址
+     * @param updateMsg           更新提示信息
+     * @param mCurrentVersionName 当前版本名称
+     */
+    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName,boolean verifyRepeatDownload) {
+        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, false,verifyRepeatDownload);
+    }
 
     /**
      * 显示更新程序对话框，供主程序调用
@@ -97,12 +113,12 @@ public class UpdateManger {
      * @param mCurrentVersionName 当前版本名称
      */
     public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName) {
-        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, false);
+        checkUpdateInfo(mContext, apkUrl, updateMsg, mCurrentVersionName, false,true);
     }
 
-    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName, boolean cancelEnable) {
+    public void checkUpdateInfo(Activity mContext, String apkUrl, String updateMsg, String mCurrentVersionName, boolean cancelEnable,boolean verifyRepeatDownload) {
         new UpdateMessageDialog(mContext)
-                .setOnUpdateListener(new ApkUpdateListener(mContext, apkUrl, downloadMap))
+                .setOnUpdateListener(new ApkUpdateListener(mContext, apkUrl, downloadMap,verifyRepeatDownload))
                 .setCanCancel(cancelEnable)
                 .setUpdateMsgString(updateMsg)
                 .setVersionName(mCurrentVersionName)

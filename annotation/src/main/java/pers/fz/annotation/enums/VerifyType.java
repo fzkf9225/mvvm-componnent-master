@@ -38,7 +38,7 @@ public enum VerifyType {
      */
     EMAIL,
     /**
-     * 手机号码、固话校验，不包括区号和固化
+     * 手机号码、固话校验，不包括区号
      */
     PHONE,
     /**

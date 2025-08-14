@@ -19,4 +19,21 @@ public class ValidatorUtil {
         }
         return Arrays.asList(groups).contains(currentGroup);
     }
+
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+        return filterNull(obj.toString()).isEmpty();
+    }
+
+    /**
+     * 过滤空NULL
+     *
+     * @param o
+     * @return
+     */
+    public static String filterNull(Object o) {
+        return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
+    }
 }
