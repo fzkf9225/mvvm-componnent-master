@@ -205,93 +205,67 @@ public class EntityValidator {
 
     private static VerifyResult verifyParam(VerifyParams validationParams, Object value) {
         VerifyType verifyType = validationParams.type();
+        if (value == null) {
+            return VerifyResult.ok();
+        }
         if (verifyType == VerifyType.EQUALS) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (!value.equals(validationParams.equalStr())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-        } else if (verifyType == VerifyType.NUMBER) {
-            if (value == null) {
+        } else if (verifyType == VerifyType.NOT_EQUALS) {
+            if (value.equals(validationParams.equalStr())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
+        } else if (verifyType == VerifyType.NUMBER) {
             if (!RegexUtils.isNumber(value.toString()) && !RegexUtils.isDouble(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_INTEGER) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             if (!RegexUtils.isInteger(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_DOUBLE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             if (!RegexUtils.isDouble(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_00) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             if (!RegexUtils.isDoubleTwoDecimals(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.EMAIL) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (!RegexUtils.isEmail(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.PHONE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (!RegexUtils.isPhone(value.toString()) && !RegexUtils.isMobile(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.MOBILE_PHONE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (!RegexUtils.isMobile(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.TEL_PHONE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (!RegexUtils.isPhone(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_RANGE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             double number = Double.parseDouble(value.toString());
             if (number <= validationParams.minNumber() || number >= validationParams.maxNumber()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_RANGE_EQUAL) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
@@ -300,14 +274,11 @@ public class EntityValidator {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.LENGTH_RANGE) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             if (validationParams.minLength() < 0 && value.toString().length() >= validationParams.maxLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
@@ -319,14 +290,11 @@ public class EntityValidator {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.LENGTH_RANGE_EQUAL) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             if (validationParams.minLength() < 0 && value.toString().length() > validationParams.maxLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
@@ -338,14 +306,26 @@ public class EntityValidator {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.REGEX) {
-            if (value == null) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
+                return VerifyResult.ok();
             }
             return RegexUtils.regular(value.toString(), validationParams.regex()) ?
                     VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+        } else if (verifyType == VerifyType.DATE) {
+            if (ValidatorUtil.isEmpty(value)) {
+                return VerifyResult.ok();
+            }
+            return ValidatorUtil.isValidDate(value.toString(), ValidatorUtil.isEmpty(validationParams.dateFormat()) ? "yyyy-MM-dd" : validationParams.dateFormat()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+        } else if (verifyType == VerifyType.TIME) {
+            if (ValidatorUtil.isEmpty(value)) {
+                return VerifyResult.ok();
+            }
+            return ValidatorUtil.isValidTime(value.toString()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+        } else if (verifyType == VerifyType.DATETIME) {
+            if (ValidatorUtil.isEmpty(value)) {
+                return VerifyResult.ok();
+            }
+            return ValidatorUtil.isValidDateTime(value.toString(), ValidatorUtil.isEmpty(validationParams.dateFormat()) ? "yyyy-MM-dd HH:mm:ss" : validationParams.dateFormat()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
         }
 
         return VerifyResult.ok();

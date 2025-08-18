@@ -18,6 +18,10 @@ public enum VerifyType {
      */
     EQUALS,
     /**
+     * 与目标值是否不相等
+     */
+    NOT_EQUALS,
+    /**
      * 数字
      */
     NUMBER,
@@ -69,7 +73,18 @@ public enum VerifyType {
      * 自定义正则
      */
     REGEX,
-
+    /**
+     * 验证字符串是否符合日期格式（如 yyyy-MM-dd）。
+     */
+    DATE,
+    /**
+     * 验证日期时间格式（如 yyyy-MM-dd HH:mm:ss）。
+     */
+    DATETIME,
+    /**
+     * 验证时间格式（如 HH:mm:ss）。
+     */
+    TIME
     ;
 
 }

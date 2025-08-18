@@ -1,5 +1,10 @@
 package pers.fz.annotation.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 public class ValidatorUtil {
@@ -36,4 +41,33 @@ public class ValidatorUtil {
     public static String filterNull(Object o) {
         return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "";
     }
+
+
+    public static boolean isValidDate(String dateStr, String format) {
+        @SuppressWarnings("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setLenient(false); // 严格模式（避免自动转换如 2023-02-30 → 2023-03-02）
+        try {
+            sdf.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("CheckResult")
+    public static boolean isValidDateTime(String dateTimeStr, String format) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            LocalDateTime localDateTime = LocalDateTime.parse(dateTimeStr, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidTime(String timeStr) {
+        String regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$";
+        return timeStr.matches(regex);
+    }
+
 }

@@ -115,6 +115,11 @@ public class RegexUtils {
      */
     public static final String DATE_FORMAT1 = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
 
+    public static final String DATE = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$";
+
+    public static final String TIME = "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$";
+
+    public static final String DATE_TIME = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
     /**
      * URL正则表达式
      * 匹配 http www ftp
@@ -305,10 +310,37 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isDate(String str) {
+    public static boolean isDateAll(String str) {
         return Regular(str, DATE_ALL);
     }
+    /**
+     * 判断字段是否为日期，年月日 符合返回ture
+     *
+     * @param str 字符串
+     * @return boolean
+     */
+    public static boolean isDate(String str) {
+        return Regular(str, DATE);
+    }
+    /**
+     * 判断字段是否为时间，时分秒 符合返回ture
+     *
+     * @param str 字符串
+     * @return boolean
+     */
+    public static boolean isTime(String str) {
+        return Regular(str, TIME);
+    }
 
+    /**
+     * 判断字段是否为日期，年月日时分秒 符合返回ture
+     *
+     * @param str 字符串
+     * @return boolean
+     */
+    public static boolean isDateTime(String str) {
+        return Regular(str, DATE_TIME);
+    }
     /**
      * 验证2010-12-10
      *

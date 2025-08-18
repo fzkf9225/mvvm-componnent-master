@@ -45,5 +45,9 @@ public @interface VerifyParams {
      */
     String regex() default "";
 
-
+    /**
+     * 时间日期格式
+     * @return 时间日期格式
+     */
+    String dateFormat() default "";
 }
