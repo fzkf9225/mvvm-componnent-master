@@ -1,6 +1,7 @@
 package pers.fz.mvvm.api;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -111,6 +112,10 @@ public class ApiRetrofit {
          */
         private String protocolVersion;
         /**
+         * 是否上传app的基本信息，默认为true
+         */
+        private boolean appInfo = true;
+        /**
          * 请求头
          */
         private final Map<String, String> headerMap = new HashMap<>();
@@ -203,6 +208,11 @@ public class ApiRetrofit {
             return this;
         }
 
+        public Builder setAppInfo(boolean appInfo) {
+            this.appInfo = appInfo;
+            return this;
+        }
+
         public Builder setProtocolVersion(String protocolVersion) {
             this.protocolVersion = protocolVersion;
             return this;
@@ -255,26 +265,53 @@ public class ApiRetrofit {
             if (TextUtils.isEmpty(baseUrl)) {
                 this.baseUrl = PropertiesUtil.getInstance().loadConfig(mContext).getBaseUrl();
             }
+
             if (TextUtils.isEmpty(appId)) {
                 this.appId = PropertiesUtil.getInstance().loadConfig(mContext).getAppId();
                 if (!TextUtils.isEmpty(appId)) {
-                    headerMap.put("x-appId", appId);
+                    headerMap.put("o-appId", appId);
                 }
             }
 
             if (TextUtils.isEmpty(appSecret)) {
                 this.appSecret = PropertiesUtil.getInstance().loadConfig(mContext).getAppSecret();
                 if (!TextUtils.isEmpty(appSecret)) {
-                    headerMap.put("x-appSecret", appSecret);
+                    headerMap.put("o-appSecret", appSecret);
                 }
             }
 
             if (TextUtils.isEmpty(protocolVersion)) {
                 this.protocolVersion = PropertiesUtil.getInstance().loadConfig(mContext).getProtocolVersion();
                 if (!TextUtils.isEmpty(protocolVersion)) {
-                    headerMap.put("x-protocolVersion", protocolVersion);
+                    headerMap.put("o-protocolVersion", protocolVersion);
                 }
             }
+
+            if (appInfo) {
+                //app名称
+                headerMap.put("o-appName", AppManager.getAppManager().getAppName(mContext));
+                //app版本名称
+                headerMap.put("o-appVersionName", AppManager.getAppManager().getVersion(mContext));
+                //app版本号
+                headerMap.put("o-appVersionCode", AppManager.getAppManager().getVersionCode(mContext) + "");
+                //app包名
+                headerMap.put("o-appPackage", mContext.getPackageName());
+                //app的ip
+                headerMap.put("o-appIp", MobileHelper.getIp(mContext));
+                //app的唯一标识，可能为null或找不到
+                headerMap.put("o-appDeviceId", MobileHelper.getDeviceId(mContext));
+                //app的mac地址
+                headerMap.put("o-appMac", MobileHelper.getMacAddress(mContext));
+                // 设备的硬件型号（例如："Pixel 6"、"SM-G988B" 等）
+                headerMap.put("o-appModel", Build.MODEL);
+                // 设备的品牌/制造商（例如："Google"、"samsung"、"HUAWEI" 等）
+                headerMap.put("o-appBrand", Build.BRAND);
+                // 设备的完整产品名称（通常是内部代号，例如："blueline" 对应 Pixel 3）
+                headerMap.put("o-appProduct", Build.PRODUCT);
+                //Android版本
+                headerMap.put("o-appMobileVersion", Build.VERSION.RELEASE);
+            }
+
             if (client == null) {
                 OkHttpClient.Builder build = new OkHttpClient.Builder()
                         .addInterceptor(chain -> {
@@ -289,7 +326,7 @@ public class ApiRetrofit {
                             requestBuilder.headers(Headers.of(headerMap));
 
                             if (useDefaultSign) {
-                                requestBuilder.addHeader("x-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
+                                requestBuilder.addHeader("o-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
                             }
 
                             Request request = requestBuilder.build();
@@ -393,6 +430,10 @@ public class ApiRetrofit {
             return retryService;
         }
 
+        public boolean isAppInfo() {
+            return appInfo;
+        }
+
         public String getSuccessCode() {
             return successCode;
         }
@@ -421,7 +462,7 @@ public class ApiRetrofit {
      */
     private static String encodeSign(String appSecret, String postJson, String timeStamp) {
         try {
-            String signOld = ("x-appsecret" + appSecret + postJson + "x-timestamp" + timeStamp).toUpperCase();
+            String signOld = ("o-appsecret" + appSecret + postJson + "o-timestamp" + timeStamp).toUpperCase();
             LogUtil.show(TAG, "加密前：" + signOld);
 
             return MD5Util.md5Encode(signOld).toUpperCase();
