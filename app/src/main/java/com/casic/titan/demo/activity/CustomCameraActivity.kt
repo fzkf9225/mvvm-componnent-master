@@ -29,17 +29,17 @@ class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBi
                 return@registerForActivityResult
             }
             val bundle = it.data?.extras
-            when(bundle?.getString(CameraActivity.MEDIA_TYPE)){
-                CameraView.IMAGE ->{
+            when(bundle?.getString(CameraActivity.Companion.Result.MEDIA_TYPE)){
+                CameraView.Companion.Result.IMAGE ->{
                     Glide.with(this)
-                        .load(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) bundle.getParcelable(CameraActivity.PATH, Uri::class.java)
-                        else bundle.getParcelable(CameraActivity.PATH))
+                        .load(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) bundle.getParcelable(CameraActivity.Companion.Result.PATH, Uri::class.java)
+                        else bundle.getParcelable(CameraActivity.Companion.Result.PATH))
                         .into(binding.image)
                 }
-                CameraView.VIDEO ->{
+                CameraView.Companion.Result.VIDEO ->{
                     Glide.with(this)
-                        .load(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) bundle.getParcelable(CameraActivity.PATH, Uri::class.java)
-                        else bundle.getParcelable(CameraActivity.PATH))
+                        .load(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) bundle.getParcelable(CameraActivity.Companion.Result.PATH, Uri::class.java)
+                        else bundle.getParcelable(CameraActivity.Companion.Result.PATH))
                         .into(binding.layoutVideo.imageVideo)
                 }
             }

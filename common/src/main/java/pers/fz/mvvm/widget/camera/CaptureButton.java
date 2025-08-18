@@ -1,8 +1,8 @@
 package pers.fz.mvvm.widget.camera;
 
-import static pers.fz.mvvm.widget.camera.CameraView.BUTTON_STATE_BOTH;
-import static pers.fz.mvvm.widget.camera.CameraView.BUTTON_STATE_ONLY_CAPTURE;
-import static pers.fz.mvvm.widget.camera.CameraView.BUTTON_STATE_ONLY_RECORDER;
+import static pers.fz.mvvm.widget.camera.CameraView.Companion.Mode.BUTTON_STATE_BOTH;
+import static pers.fz.mvvm.widget.camera.CameraView.Companion.Mode.BUTTON_STATE_ONLY_CAPTURE;
+import static pers.fz.mvvm.widget.camera.CameraView.Companion.Mode.BUTTON_STATE_ONLY_RECORDER;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

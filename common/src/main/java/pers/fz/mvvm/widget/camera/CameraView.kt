@@ -37,7 +37,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import pers.fz.mvvm.R
 import pers.fz.mvvm.databinding.CameraViewBinding
-import pers.fz.mvvm.listener.BackgroundCameraListener
+import pers.fz.mvvm.listener.CameraResultListener
 import pers.fz.mvvm.listener.CaptureListener
 import pers.fz.mvvm.listener.TypeListener
 import pers.fz.mvvm.util.common.DateUtil
@@ -58,7 +58,11 @@ class CameraView @JvmOverloads constructor(
 ) :
     ConstraintLayout(context, attrs, defStyleAttr),
     DefaultLifecycleObserver {
-    private var backgroundCameraListener: BackgroundCameraListener? = null
+    private var cameraResultListener: CameraResultListener? = null
+
+    /**
+     * 返回按钮点击事件
+     */
     private var leftClickListener: OnClickListener? = null
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageCapture: ImageCapture? = null
@@ -80,16 +84,71 @@ class CameraView @JvmOverloads constructor(
      * 底部按钮图片资源
      */
     private var iconSrc: Int
+
+    /**
+     * 左侧按钮图片资源
+     */
     private var iconLeft: Int
+
+    /**
+     * 右侧按钮图片资源
+     */
     private var iconRight: Int
+
+    /**
+     * 相机
+     */
     private var camera: Camera? = null
 
     /**
-     * 图片或视频
+     * 图片或视频路径
      */
     private var uri: Uri? = null
 
+    /**
+     * 图片或视频保存类型
+     */
     private var mediaType: String? = null
+
+    /**
+     * 图片或视频保存路径
+     */
+    var imageOutPutPath: String? = null
+
+    /**
+     * 视频保存文件名
+     */
+    var videoOutPutPath: String? = null
+
+    /**
+     * 图片或视频保存文件名
+     */
+    var imageOutPutFileName: String? = null
+
+    /**
+     * 视频保存文件名
+     */
+    var videoOutPutFileName: String? = null
+
+    /**
+     * 图片或视频保存文件类型
+     */
+    var imageOutPutFileMineType: String? = null
+
+    /**
+     * 视频保存文件类型
+     */
+    var videoOutPutFileMineType: String? = null
+
+    /**
+     * 视频最大录制时长
+     */
+    private var maxDuration: Int = 30
+
+    /**
+     * 相机模式
+     */
+    var buttonFeatures: Int = Mode.BUTTON_STATE_BOTH
 
     init {
         if (attrs == null) {
@@ -111,9 +170,6 @@ class CameraView @JvmOverloads constructor(
         }
         initView()
     }
-
-    private var maxDuration: Int = 30
-
 
     /**
      * 设置录制视频最大时长
@@ -139,14 +195,14 @@ class CameraView @JvmOverloads constructor(
             switchFlash()
         }
 
-        binding?.captureLayout?.setButtonFeatures(BUTTON_STATE_BOTH)
+        binding?.captureLayout?.setButtonFeatures(buttonFeatures)
         binding?.captureLayout?.setIconSrc(iconLeft, iconRight)
         //切换摄像头
         binding?.imageSwitch?.setOnClickListener { _: View? -> flipCamera() }
         binding?.captureLayout?.setCaptureListener(object : CaptureListener {
             override fun takePictures() {
-                binding!!.imageSwitch.visibility = GONE
-                binding!!.imageFlash.visibility = GONE
+                binding?.imageSwitch?.visibility = GONE
+                binding?.imageFlash?.visibility = GONE
                 this@CameraView.takePictures()
             }
 
@@ -156,8 +212,8 @@ class CameraView @JvmOverloads constructor(
             }
 
             override fun recordStart() {
-                binding!!.imageSwitch.visibility = GONE
-                binding!!.imageFlash.visibility = GONE
+                binding?.imageSwitch?.visibility = GONE
+                binding?.imageFlash?.visibility = GONE
                 captureVideo()
             }
 
@@ -185,7 +241,7 @@ class CameraView @JvmOverloads constructor(
                     binding?.videoPlayer?.visibility = GONE
                     binding?.mCameraView?.visibility = VISIBLE
                     GSYVideoManager.releaseAllVideos()
-                    backgroundCameraListener?.captureSuccess(uri, mediaType)
+                    cameraResultListener?.captureSuccess(uri, mediaType)
                     //                    scanPhotoAlbum(photoFile);
                     resetState(false)
                 }
@@ -197,17 +253,26 @@ class CameraView @JvmOverloads constructor(
         }
     }
 
+
+    /**
+     * 录像
+     */
     private fun captureVideo() {
-        val videoCapture = this.videoCapture ?: return
+        if (this.videoCapture == null) {
+            return
+        }
         val contentValues = ContentValues().apply {
             put(
                 MediaStore.MediaColumns.DISPLAY_NAME,
-                "VIDEO_" + DateUtil.getCurrentTime() + ".mp4"
+                videoOutPutFileName ?: ("VIDEO_" + DateUtil.getCurrentTime() + ".mp4")
             )
-            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+            put(MediaStore.MediaColumns.MIME_TYPE, videoOutPutFileMineType ?: "video/mp4")
             put(
                 MediaStore.MediaColumns.RELATIVE_PATH,
-                Environment.DIRECTORY_DCIM + File.separator + FileUtil.getDefaultBasePath(context) + File.separator + "video"
+                videoOutPutPath
+                    ?: (Environment.DIRECTORY_DCIM + File.separator + FileUtil.getDefaultBasePath(
+                        context
+                    ) + File.separator + "video")
             )
         }
         val mediaStoreOutputOptions = MediaStoreOutputOptions
@@ -216,8 +281,8 @@ class CameraView @JvmOverloads constructor(
             .setContentValues(contentValues)
             .build()
         // 开始录像
-        recording = videoCapture.output.prepareRecording(context, mediaStoreOutputOptions)
-            .start(ContextCompat.getMainExecutor(context)) { recordEvent ->
+        recording = this.videoCapture?.output?.prepareRecording(context, mediaStoreOutputOptions)
+            ?.start(ContextCompat.getMainExecutor(context)) { recordEvent ->
                 when (recordEvent) {
                     is VideoRecordEvent.Finalize -> {
                         // 录制结束
@@ -227,7 +292,7 @@ class CameraView @JvmOverloads constructor(
                                 TAG,
                                 "onError:${recordEvent.cause},${recordEvent.cause?.message}"
                             )
-                            backgroundCameraListener?.onError(
+                            cameraResultListener?.onError(
                                 recordEvent.error,
                                 recordEvent.cause?.message ?: "录制失败",
                                 recordEvent.cause
@@ -239,8 +304,8 @@ class CameraView @JvmOverloads constructor(
                                 binding?.photoView?.visibility = GONE
                                 binding?.videoPlayer?.visibility = VISIBLE
                                 uri = recordEvent.outputResults.outputUri
-                                mediaType = VIDEO
-                                binding!!.videoPlayer.setUp(uri.toString(), false, "")
+                                mediaType = Result.VIDEO
+                                binding?.videoPlayer?.setUp(uri.toString(), false, "")
 
                                 //增加封面
                                 val imageView = ImageView(context)
@@ -252,18 +317,18 @@ class CameraView @JvmOverloads constructor(
                                             .error(pers.fz.mvvm.R.mipmap.ic_default_image)
                                     )
                                     .into(imageView)
-                                binding!!.videoPlayer.thumbImageView = imageView
+                                binding?.videoPlayer?.thumbImageView = imageView
                                 //增加title
-                                binding!!.videoPlayer.titleTextView.visibility = GONE
+                                binding?.videoPlayer?.titleTextView?.visibility = GONE
                                 //设置返回键
-                                binding!!.videoPlayer.backButton.visibility = GONE
+                                binding?.videoPlayer?.backButton?.visibility = GONE
                                 //设置全屏按钮不可见，则不可以修改全屏和竖屏
-                                binding!!.videoPlayer.fullscreenButton.visibility = GONE
+                                binding?.videoPlayer?.fullscreenButton?.visibility = GONE
                                 //是否可以滑动调整
-                                binding!!.videoPlayer.setIsTouchWiget(true)
+                                binding?.videoPlayer?.setIsTouchWiget(true)
                                 //设置返回按键功能
-                                binding!!.videoPlayer.startPlayLogic()
-                                binding!!.captureLayout.startTypeBtnAnimator()
+                                binding?.videoPlayer?.startPlayLogic()
+                                binding?.captureLayout?.startTypeBtnAnimator()
                             }
                         }
                     }
@@ -275,14 +340,17 @@ class CameraView @JvmOverloads constructor(
      * 拍照
      */
     private fun takePictures() {
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(initTakePicPath()).build()
+        val outputOptions = ImageCapture
+            .OutputFileOptions
+            .Builder(initTakePicPath())
+            .build()
         imageCapture?.takePicture(
             outputOptions,
             cameraExecutor,
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     LogUtil.e(TAG, "Photo capture failed: ${exc.message}")
-                    backgroundCameraListener?.onError(
+                    cameraResultListener?.onError(
                         exc.imageCaptureError,
                         Objects.requireNonNull<String>(exc.message),
                         exc.cause
@@ -291,12 +359,14 @@ class CameraView @JvmOverloads constructor(
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     uri = output.savedUri
-                    mediaType = IMAGE
+                    mediaType = Result.IMAGE
                     //显示拍照获得的图片，并且隐藏相机
                     handler.post {
-                        Glide.with(context)
-                            .load(uri)
-                            .into(binding!!.photoView)
+                        binding?.photoView?.let {
+                            Glide.with(context)
+                                .load(uri)
+                                .into(it)
+                        }
                         binding?.mCameraView?.visibility = GONE
                         binding?.videoPlayer?.visibility = GONE
                         binding?.photoView?.visibility = VISIBLE
@@ -424,18 +494,25 @@ class CameraView @JvmOverloads constructor(
      * 初始化图片保存路径，当前保存在本地文件中：android---->media------->包名----->图片
      * @return file文件
      */
-    private fun initTakePicPath() = File(
-        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-        "IMAGE_" + DateUtil.getCurrentTime() + ".jpg"
-    )
+    private fun initTakePicPath(): File =
+        if (imageOutPutPath.isNullOrEmpty())
+            File(
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                imageOutPutFileName ?: ("IMAGE_" + DateUtil.getCurrentTime() + ".jpg")
+            )
+        else
+            File(
+                imageOutPutPath + File.separator + (imageOutPutFileName
+                    ?: ("IMAGE_" + DateUtil.getCurrentTime() + ".jpg"))
+            )
 
     /**
      * 设置点击事件，监听拍照成功错误等时间
      *
-     * @param backgroundCameraListener 回调接口
+     * @param cameraResultListener 回调接口
      */
-    fun setBackgroundCameraListener(backgroundCameraListener: BackgroundCameraListener?) {
-        this.backgroundCameraListener = backgroundCameraListener
+    fun setCameraResultListener(cameraResultListener: CameraResultListener?) {
+        this.cameraResultListener = cameraResultListener
     }
 
     /**
@@ -461,8 +538,8 @@ class CameraView @JvmOverloads constructor(
         binding?.imageFlash?.visibility = VISIBLE
         binding?.mCameraView?.visibility = VISIBLE
         binding?.captureLayout?.resetCaptureLayout()
-        if (binding!!.videoPlayer.isInPlayingState) {
-            binding!!.videoPlayer.onVideoPause()
+        if (binding?.videoPlayer?.isInPlayingState == true) {
+            binding?.videoPlayer?.onVideoPause()
         }
     }
 
@@ -490,10 +567,10 @@ class CameraView @JvmOverloads constructor(
      */
     private fun inRangeOfView(pointX: Int, pointY: Int): Boolean {
         val location = IntArray(2)
-        binding!!.mCameraView.getLocationOnScreen(location)
+        binding?.mCameraView?.getLocationOnScreen(location)
         val x = location[0]
         val y = location[1]
-        return pointX >= x && pointX <= (x + binding!!.mCameraView.width) && pointY >= y && pointY <= (y + binding!!.mCameraView.height)
+        return pointX >= x && pointX <= (x + (binding?.mCameraView?.width?:0)) && pointY >= y && pointY <= (y + (binding?.mCameraView?.height?:0))
     }
 
     /**
@@ -511,7 +588,7 @@ class CameraView @JvmOverloads constructor(
             pointX - FOCUS_RECT_SIZE_WIDTH, pointY - FOCUS_RECT_SIZE_WIDTH,
             pointX + FOCUS_RECT_SIZE_WIDTH, pointY + FOCUS_RECT_SIZE_WIDTH
         )
-        binding!!.mCameraView.requestFocus(FOCUS_DOWN, rect)
+        binding?.mCameraView?.requestFocus(FOCUS_DOWN, rect)
     }
 
 
@@ -526,12 +603,12 @@ class CameraView @JvmOverloads constructor(
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        binding!!.videoPlayer.onVideoPause()
+        binding?.videoPlayer?.onVideoPause()
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        binding!!.videoPlayer.onVideoResume()
+        binding?.videoPlayer?.onVideoResume()
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -540,37 +617,60 @@ class CameraView @JvmOverloads constructor(
         startCamera(owner, false)
     }
 
+    /**
+     * 拍照模式
+     */
+    public fun captureOnly() {
+        buttonFeatures = Mode.BUTTON_STATE_ONLY_CAPTURE
+    }
+
+    /**
+     * 录像模式
+     */
+    public fun recordOnly() {
+        buttonFeatures = Mode.BUTTON_STATE_ONLY_RECORDER
+    }
+
+    /**
+     * 设置模式
+     * @param mode 参考mode
+     */
+    public fun setMode(mode: Int) {
+        buttonFeatures = mode
+    }
+
+    /**
+     * 拍照和录像
+     */
+    public fun cameraBoth() {
+        buttonFeatures = Mode.BUTTON_STATE_BOTH
+    }
+
     companion object {
-
-        /**
-         * 返回的时候用，用于判断是拍照
-         */
-        const val IMAGE = "image"
-
-        /**
-         * 返回的时候用，用于判断是视频
-         */
-        const val VIDEO = "video"
-
         const val TAG: String = "CameraView"
 
-        //自动
-        private const val TYPE_FLASH_AUTO = 0x021
+        object Result {
+            /**
+             * 返回的时候用，用于判断是拍照
+             */
+            const val IMAGE = "image"
 
-        //打开
-        private const val TYPE_FLASH_ON = 0x022
+            /**
+             * 返回的时候用，用于判断是视频
+             */
+            const val VIDEO = "video"
+        }
 
-        //闪关灯关闭
-        private const val TYPE_FLASH_OFF = 0x023
+        object Mode {
+            //只能拍照
+            const val BUTTON_STATE_ONLY_CAPTURE: Int = 0x101
 
-        //只能拍照
-        const val BUTTON_STATE_ONLY_CAPTURE: Int = 0x101
+            //只能录像
+            const val BUTTON_STATE_ONLY_RECORDER: Int = 0x102
 
-        //只能录像
-        const val BUTTON_STATE_ONLY_RECORDER: Int = 0x102
-
-        // 选择拍照 拍视频 或者都有
-        const val BUTTON_STATE_BOTH: Int = 0x103
+            // 选择拍照 拍视频 或者都有
+            const val BUTTON_STATE_BOTH: Int = 0x103
+        }
 
         /**
          * 轻触屏幕的范围，即聚焦点的范围大小
