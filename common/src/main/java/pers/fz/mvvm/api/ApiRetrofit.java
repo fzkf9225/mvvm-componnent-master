@@ -112,9 +112,13 @@ public class ApiRetrofit {
          */
         private String protocolVersion;
         /**
-         * 是否上传app的基本信息，默认为true
+         * 是否上传app的基本信息作为请求头，默认为true
          */
         private boolean appInfo = true;
+        /**
+         * 是否上传手机的基本信息作为请求头，默认为false
+         */
+        private boolean mobileInfo = false;
         /**
          * 请求头
          */
@@ -213,6 +217,11 @@ public class ApiRetrofit {
             return this;
         }
 
+        public Builder setMobileInfo(boolean mobileInfo) {
+            this.mobileInfo = mobileInfo;
+            return this;
+        }
+
         public Builder setProtocolVersion(String protocolVersion) {
             this.protocolVersion = protocolVersion;
             return this;
@@ -296,6 +305,9 @@ public class ApiRetrofit {
                 headerMap.put("o-appVersionCode", AppManager.getAppManager().getVersionCode(mContext) + "");
                 //app包名
                 headerMap.put("o-appPackage", mContext.getPackageName());
+            }
+
+            if(mobileInfo){
                 //app的ip
                 headerMap.put("o-appIp", MobileHelper.getIp(mContext));
                 //app的唯一标识，可能为null或找不到
@@ -432,6 +444,10 @@ public class ApiRetrofit {
 
         public boolean isAppInfo() {
             return appInfo;
+        }
+
+        public boolean isMobileInfo() {
+            return mobileInfo;
         }
 
         public String getSuccessCode() {
