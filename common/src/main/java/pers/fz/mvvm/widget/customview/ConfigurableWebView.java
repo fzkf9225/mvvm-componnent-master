@@ -17,6 +17,7 @@ import androidx.webkit.WebViewAssetLoader;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.enums.WebViewUrlTypeEnum;
+import pers.fz.mvvm.helper.JavaScriptAssetsPathHandler;
 import pers.fz.mvvm.util.common.WebViewUtil;
 
 /**
@@ -71,20 +72,18 @@ public class ConfigurableWebView extends WebView {
         assetLoader = new WebViewAssetLoader.Builder()
                 .setHttpAllowed(true)
                 .setDomain(domain)
-                .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(getContext()))
+                .addPathHandler("/assets/", new JavaScriptAssetsPathHandler(getContext()))
                 .build();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, true);
         }
 
+        setWebViewClient(new Api29WebViewClient());
         // 根据Android版本设置不同的WebViewClient
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            setWebViewClient(new Api29WebViewClient());
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             getSettings().setAllowUniversalAccessFromFileURLs(true);
             getSettings().setAllowFileAccessFromFileURLs(true);
             getSettings().setEnableSmoothTransition(true);
-            setWebViewClient(new OldWebViewClient());
         }
 
         setInitialScale(1);
@@ -111,12 +110,16 @@ public class ConfigurableWebView extends WebView {
         assetLoader = new WebViewAssetLoader.Builder()
                 .setHttpAllowed(true)
                 .setDomain(domain)
-                .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(getContext()))
+                .addPathHandler("/assets/", new JavaScriptAssetsPathHandler(getContext()))
                 .build();
     }
 
+    public void setAssetLoader(WebViewAssetLoader assetLoader) {
+        this.assetLoader = assetLoader;
+    }
+
     /**
-     * 加载URL
+     * 加载URL，如果是本地的地址的话，只需要写asset后面的路径即可，如果没有子目录，那就是文件名
      *
      * @param url 要加载的URL
      */
@@ -130,20 +133,12 @@ public class ConfigurableWebView extends WebView {
         if (urlType == WebViewUrlTypeEnum.INTERNET.type) {// 直接加载网络URL
             loadUrl(url);
         } else if (urlType == WebViewUrlTypeEnum.ASSETS.type) {// 加载本地assets文件
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                loadUrl("http://" + domain + "/assets/" + url);
-            } else {
-                loadUrl("file:///android_asset/" + url);
-            }
+            loadUrl("http://" + domain + "/assets/" + url);
         } else if (urlType == WebViewUrlTypeEnum.AUTO.type) {// 自动判断URL类型
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 loadUrl(url);
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    loadUrl("http://" + domain + "/assets/" + url);
-                } else {
-                    loadUrl("file:///android_asset/" + url);
-                }
+                loadUrl("http://" + domain + "/assets/" + url);
             }
         }
     }
@@ -173,23 +168,6 @@ public class ConfigurableWebView extends WebView {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             return assetLoader.shouldInterceptRequest(request.getUrl());
-        }
-
-        @SuppressLint("WebViewClientOnReceivedSslError")
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed(); // 忽略SSL错误
-        }
-    }
-
-    /**
-     * 用于API 29以下的WebViewClient
-     */
-    private static class OldWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            view.loadUrl(request.getUrl().toString());
-            return true;
         }
 
         @SuppressLint("WebViewClientOnReceivedSslError")
