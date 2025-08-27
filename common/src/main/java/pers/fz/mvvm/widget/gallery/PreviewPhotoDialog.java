@@ -15,6 +15,7 @@ import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,8 @@ import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.util.encode.Base64Util;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.widget.gallery.adapter.PreviewViewPagerAdapter;
 
 /**

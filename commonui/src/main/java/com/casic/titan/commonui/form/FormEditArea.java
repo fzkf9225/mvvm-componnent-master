@@ -131,10 +131,9 @@ public class FormEditArea extends FormConstraintLayout {
         AppCompatEditText editText = new AppCompatEditText(getContext());
         editText.setId(View.generateViewId());
         editText.setHint(hintString);
-        editText.setTextColor(rightTextColor);
         editText.setBackground(inputDrawable);
         editText.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        editText.setTextColor(rightTextColor);
+        editText.setTextColor(formTextColor);
         editText.setHintTextColor(ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.hint_text_color));
         editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
         editText.setImeOptions(imeOptions);

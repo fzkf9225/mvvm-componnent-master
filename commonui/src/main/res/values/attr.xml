@@ -29,8 +29,6 @@
     <attr name="endYear" format="integer" />
     <!--是否展示表单底部边框-->
     <attr name="bottomBorder" format="boolean" />
-    <!--输入框、选择框、文本内容文字颜色-->
-    <attr name="rightTextColor" format="reference|color" />
     <!--底部边框颜色-->
     <attr name="borderBottomColor" format="reference|color" />
     <!--底部边框左侧margin-->
@@ -59,6 +57,8 @@
     <attr name="confirmTextColor" format="reference|color" />
     <!--label文字大小-->
     <attr name="formLabelTextSize" format="dimension" />
+    <!--输入框、选择框、文本内容文字颜色-->
+    <attr name="formTextColor" format="reference|color" />
     <!--输入框、选择框、文本内容文字大小-->
     <attr name="formTextSize" format="dimension" />
     <!--*号大小-->
@@ -123,9 +123,15 @@
             <!--低质量，即压缩比例最大-->
             <enum name="low" value="3" />
         </attr>
+        <!--label文字对齐方式，默认为左侧-->
         <attr name="labelAlign" format="enum">
             <enum name="left" value="0" />
             <enum name="top" value="1" />
+        </attr>
+        <!--正文文字对齐方式，默认为右侧，只有labelAlign在左侧时才有效-->
+        <attr name="textAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
         </attr>
         <!-- Default text typeface style. -->
         <attr name="labelTextStyle">
@@ -171,7 +177,7 @@
         <!--label文字颜色-->
         <attr name="labelTextColor" />
         <!--正文文字颜色-->
-        <attr name="rightTextColor" />
+        <attr name="formTextColor" />
         <!--FormFile中列表中文字颜色-->
         <attr name="itemTextColor" />
         <!--正文默认的边距，防止跟边框重合-->

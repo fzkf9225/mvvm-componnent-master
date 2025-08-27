@@ -6,20 +6,20 @@ import android.text.TextUtils;
  * Created by fz on 2024/2/28 10:46
  * describe :表单中label文字对齐方式，默认为左侧
  */
-public enum LabelAlignEnum {
+public enum TextAlignEnum {
     /**
-     * label文字在左侧
+     * 正文文字在左侧
      */
     LEFT("left", 0),
     /**
-     * label文字在顶部
+     * 正文文字在右侧
      */
-    TOP("top", 1),
+    RIGHT("right", 1),
     ;
     public final String align;
     public final int value;
 
-    LabelAlignEnum(String align, int value) {
+    TextAlignEnum(String align, int value) {
         this.align = align;
         this.value = value;
     }
@@ -28,7 +28,7 @@ public enum LabelAlignEnum {
         if(TextUtils.isEmpty(align)){
             return LEFT.value;
         }
-        for (LabelAlignEnum value : values()){
+        for (TextAlignEnum value : values()){
             if(value.align.equalsIgnoreCase(align)){
                 return value.value;
             }
@@ -37,7 +37,7 @@ public enum LabelAlignEnum {
     }
 
     public static String getAlign(int value){
-        for (LabelAlignEnum alignEnum : values()){
+        for (TextAlignEnum alignEnum : values()){
             if(alignEnum.value == value){
                 return alignEnum.align;
             }

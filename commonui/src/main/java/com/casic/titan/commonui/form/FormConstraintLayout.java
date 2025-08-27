@@ -21,6 +21,7 @@ import androidx.databinding.ObservableField;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
 import com.casic.titan.commonui.enums.LabelTextStyleEnum;
+import com.casic.titan.commonui.enums.TextAlignEnum;
 import com.casic.titan.commonui.inter.FormTextWatcher;
 import com.casic.titan.commonui.inter.FormTextWatcherAfter;
 
@@ -47,7 +48,7 @@ public class FormConstraintLayout extends ConstraintLayout {
     /**
      * 右侧或者正文也就是输入框、选择框正文文字颜色
      */
-    protected int rightTextColor;
+    protected int formTextColor;
     /**
      * 底部边框颜色
      */
@@ -113,6 +114,10 @@ public class FormConstraintLayout extends ConstraintLayout {
      */
     protected int labelAlign = LabelAlignEnum.LEFT.value;
     /**
+     * 文本对齐方式 是左侧还是右侧，默认为右侧
+     */
+    protected int textAlign = TextAlignEnum.RIGHT.value;
+    /**
      * label是否加粗，默认不加粗
      */
     protected int labelTextStyle = LabelTextStyleEnum.NORMAL.value;
@@ -175,17 +180,18 @@ public class FormConstraintLayout extends ConstraintLayout {
             defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
 
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
-            rightTextColor = typedArray.getColor(R.styleable.FormUI_rightTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), R.color.line));
             labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormUI_line, 1);
             labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
+            textAlign = typedArray.getInt(R.styleable.FormUI_textAlign, TextAlignEnum.RIGHT.value);
             labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
             typedArray.recycle();
         } else {
-            rightTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            formTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -199,6 +205,7 @@ public class FormConstraintLayout extends ConstraintLayout {
             defaultTextMargin = DensityUtil.dp2px(getContext(), 12f);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
             labelAlign = LabelAlignEnum.LEFT.value;
+            textAlign = TextAlignEnum.RIGHT.value;
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
         }
     }
@@ -290,10 +297,10 @@ public class FormConstraintLayout extends ConstraintLayout {
         AppCompatTextView tvText = new AppCompatTextView(getContext());
         tvText.setId(View.generateViewId());
         tvText.setHint(hintString);
-        tvText.setTextColor(rightTextColor);
+        tvText.setTextColor(formTextColor);
 
         tvText.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        tvText.setTextColor(rightTextColor);
+        tvText.setTextColor(formTextColor);
         tvText.setHintTextColor(ContextCompat.getColor(getContext(), pers.fz.mvvm.R.color.hint_text_color));
         tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
 
@@ -306,7 +313,11 @@ public class FormConstraintLayout extends ConstraintLayout {
             params.setMarginStart((int) textEndMargin);
             params.setMarginEnd((int) textEndMargin);
         } else if (LabelAlignEnum.LEFT.value == labelAlign) {
-            tvText.setGravity(android.view.Gravity.END | android.view.Gravity.CENTER_VERTICAL);
+            if (TextAlignEnum.LEFT.value == textAlign) {
+                tvText.setGravity(Gravity.START | android.view.Gravity.CENTER_VERTICAL);
+            } else {
+                tvText.setGravity(Gravity.END | android.view.Gravity.CENTER_VERTICAL);
+            }
             params = new ConstraintLayout.LayoutParams(
                     0, LayoutParams.WRAP_CONTENT);
             params.setMarginStart((int) textStartMargin);

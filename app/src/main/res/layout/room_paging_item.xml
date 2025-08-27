@@ -13,13 +13,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:paddingStart="16dp"
         android:paddingTop="12dp"
-        android:background="@color/white"
         android:paddingEnd="16dp"
         android:paddingBottom="12dp">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,37 +28,93 @@
             android:text="@{item.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            tools:text="这是标题哦！！！！"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="这是标题哦！！！！" />
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="@{item.mobile}"
-            android:textColor="#999999"
-            android:textSize="12sp"
-            tools:text="2023-12-01"
-            android:lines="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_detail"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_detail"/>
-
-        <TextView
-            android:id="@+id/tv_detail"
+        <com.casic.titan.commonui.form.FormTextView
+            android:id="@+id/tv_age"
             android:layout_width="0dp"
-            app:layout_constraintHorizontal_weight="1"
             android:layout_height="wrap_content"
-            android:text="@{item.email}"
-            android:textColor="#444444"
-            android:layout_marginTop="8dp"
-            tools:text="这是很长很长的内容哦！！！"
-            android:textSize="14sp"
-            android:lines="1"
-            android:ellipsize="end"
+            app:bottomBorder="false"
+            app:formTextColor="@color/autoColor"
+            app:label="年龄:"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            app:labelStartMargin="0dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:textStartMargin="0dp"
+            app:textEndMargin="0dp"
+            app:defaultTextMargin="0dp"
+            app:labelTextColor="#999999"
+            app:layout_constraintEnd_toStartOf="@+id/tv_sex"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tv_date"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:line="1"
+            app:required="false"
+            app:text="@{item.age}"
+            app:textAlign="left" />
+
+        <com.casic.titan.commonui.form.FormTextView
+            android:id="@+id/tv_sex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:bottomBorder="false"
+            app:formTextColor="@color/autoColor"
+            app:label="性别:"
+            app:labelTextColor="#999999"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_age"
+            app:layout_constraintTop_toTopOf="@+id/tv_age"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_age"
+            app:line="1"
+            app:labelStartMargin="0dp"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            app:textStartMargin="0dp"
+            app:textEndMargin="0dp"
+            app:defaultTextMargin="0dp"
+            app:required="false"
+            app:text="@{item.sex}"
+            app:textAlign="left" />
+
+        <com.casic.titan.commonui.form.FormTextView
+            android:id="@+id/tv_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:bottomBorder="false"
+            app:formTextColor="@color/autoColor"
+            app:label="生日:"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:labelTextColor="#999999"
+            app:labelStartMargin="0dp"
+            app:textStartMargin="0dp"
+            app:textEndMargin="0dp"
+            app:defaultTextMargin="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+            app:line="1"
+            app:required="false"
+            app:text="@{item.birthday}"
+            app:textAlign="left" />
+        <com.casic.titan.commonui.form.FormTextView
+            android:id="@+id/tv_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:bottomBorder="false"
+            app:formTextColor="@color/autoColor"
+            app:label="身高/体重/邮箱/电话:"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            app:labelTextColor="#999999"
+            app:labelStartMargin="0dp"
+            app:textStartMargin="0dp"
+            app:textEndMargin="0dp"
+            app:defaultTextMargin="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_birthday"
+            app:line="1"
+            app:required="false"
+            app:text="@{item.height +`/`+item.weight +`/`+item.email+`/`+item.tel}"
+            app:textAlign="left" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
