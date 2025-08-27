@@ -39,7 +39,7 @@ public class PreviewPhotoDialog extends Dialog {
     /**
      * 图片集合
      */
-    private List<AttachmentBean> imageInfos;
+    private List<AttachmentBean> imageInfos = new ArrayList<>();
     /**
      * 大图预览空间
      */
@@ -86,7 +86,7 @@ public class PreviewPhotoDialog extends Dialog {
     protected Drawable errorImage;
 
     public PreviewPhotoDialog(Context context) {
-        super(context, R.style.Pic_Dialog);
+        this(context, R.style.Pic_Dialog);
     }
 
     public PreviewPhotoDialog(Context context, int themeResId) {
@@ -98,7 +98,7 @@ public class PreviewPhotoDialog extends Dialog {
     }
 
     public PreviewPhotoDialog(Context context, boolean canSaveImage) {
-        super(context, R.style.Pic_Dialog);
+        this(context, R.style.Pic_Dialog);
         this.canSaveImage = canSaveImage;
     }
 
