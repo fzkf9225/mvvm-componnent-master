@@ -3,7 +3,6 @@ package pers.fz.mvvm.widget.gallery;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,41 +16,81 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
+import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.widget.gallery.adapter.PreviewViewPagerAdapter;
 
 /**
  * created by fz 2024/12/20
- * describe：大图预览dialog
+ * describe：大图预览dialog，支持视频预览，但是默认为图片，如果希望是视频的话必须提前指定AttachmentBean的type
  */
 public class PreviewPhotoDialog extends Dialog {
     public final static String TAG = PreviewPhotoDialog.class.getSimpleName();
-    private final Context context;
-    private List<Object> imageInfos;
+    /**
+     * 图片集合
+     */
+    private List<AttachmentBean> imageInfos;
+    /**
+     * 大图预览空间
+     */
     private ViewPager2 viewPager;
+    /**
+     * 下面的点
+     */
     private LinearLayout llPoint;
+    /**
+     * 适配器
+     */
     private PreviewViewPagerAdapter pageAdapter;
-    private int position = -1;
+    /**
+     * 当前位置
+     */
+    private int position = 0;
+    /**
+     * 是否可以保存图片，默认为true
+     */
     private boolean canSaveImage = true;
+    /**
+     * 选中原点样式
+     */
     private Drawable drawableResCurrent = null;
+    /**
+     * 未选原点样式
+     */
     private Drawable drawableResNormal = null;
-    private float startX,startY;
+    /**
+     * 触摸事件
+     */
+    private float startX, startY;
+    /**
+     * 触摸时间
+     */
     private long downTime;
+    /**
+     * 占位图
+     */
+    protected Drawable placeholderImage;
+    /**
+     * 错误图
+     */
+    protected Drawable errorImage;
 
     public PreviewPhotoDialog(Context context) {
         super(context, R.style.Pic_Dialog);
-        this.context = context;
     }
 
     public PreviewPhotoDialog(Context context, int themeResId) {
         super(context, themeResId);
-        this.context = context;
         drawableResCurrent = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
                 DensityUtil.dp2px(context, 6));
         drawableResNormal = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.gray),
@@ -60,11 +99,10 @@ public class PreviewPhotoDialog extends Dialog {
 
     public PreviewPhotoDialog(Context context, boolean canSaveImage) {
         super(context, R.style.Pic_Dialog);
-        this.context = context;
         this.canSaveImage = canSaveImage;
     }
 
-    public PreviewPhotoDialog(Context context, List<Object> imageInfos, int position) {
+    public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, int position) {
         this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
         if (this.imageInfos == null) {
@@ -73,7 +111,7 @@ public class PreviewPhotoDialog extends Dialog {
         this.position = position;
     }
 
-    public PreviewPhotoDialog(Context context, List<Object> imageInfos, boolean canSaveImage, int position) {
+    public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, boolean canSaveImage, int position) {
         this(context, R.style.Pic_Dialog);
         this.imageInfos = imageInfos;
         if (this.imageInfos == null) {
@@ -83,7 +121,12 @@ public class PreviewPhotoDialog extends Dialog {
         this.position = position;
     }
 
-    public PreviewPhotoDialog setImages(List<Object> imageInfoList) {
+    public PreviewPhotoDialog currentPosition(int position) {
+        this.position = position;
+        return this;
+    }
+
+    public PreviewPhotoDialog setImages(List<AttachmentBean> imageInfoList) {
         this.imageInfos = imageInfoList;
         if (this.imageInfos == null) {
             this.imageInfos = new ArrayList<>();
@@ -95,56 +138,90 @@ public class PreviewPhotoDialog extends Dialog {
         return canSaveImage;
     }
 
-    public static List<Object> createImageInfo(String image) {
-        return List.of(image);
+    public Drawable getErrorImage() {
+        return errorImage;
     }
 
-    public static List<Object> createImageInfo(@DrawableRes int imageRes) {
-        return List.of(imageRes);
+    public Drawable getPlaceholderImage() {
+        return placeholderImage;
     }
 
-    public static List<Object> createImageInfo(Bitmap bitmap) {
-        return List.of(bitmap);
+    public PreviewPhotoDialog createImageInfo(String image) {
+        AttachmentBean attachmentBean = new AttachmentBean();
+        attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+        attachmentBean.setPath(image);
+        attachmentBean.setRelativePath(image);
+        attachmentBean.setFileName(FileUtil.getFileName(image));
+        imageInfos = List.of(attachmentBean);
+        return this;
     }
 
-    public static List<Object> createImageInfo(String... image) {
+    public PreviewPhotoDialog createImageResInfo(@DrawableRes int imageRes) {
+        return createImageResInfo(List.of(imageRes));
+    }
+
+    public PreviewPhotoDialog createImageResInfo(@DrawableRes List<Integer> imageResList) {
+        imageInfos = AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList,null,null);
+        return this;
+    }
+
+    public PreviewPhotoDialog createImageInfo(String... image) {
         if (image == null) {
             return null;
         }
-        List<Object> imageInfos = new ArrayList<>();
-        Collections.addAll(imageInfos, image);
-        return imageInfos;
+        return createImageInfo(Arrays.asList(image));
     }
 
-    public static List<Object> createUriImageInfo(Uri... uri) {
+    @SuppressLint("Range")
+    public PreviewPhotoDialog createUriImageInfo(Uri... uri) {
         if (uri == null) {
             return null;
         }
-        List<Object> imageInfos = new ArrayList<>();
-        Collections.addAll(imageInfos, uri);
-        return imageInfos;
+        return createUriImageInfo(Arrays.asList(uri));
     }
 
-    public static List<Object> createImageInfo(List<String> images) {
+    public PreviewPhotoDialog createImageInfo(List<String> images) {
         if (images == null) {
             return null;
         }
-        return new ArrayList<>(images);
+        imageInfos = images.stream().map(item -> {
+            AttachmentBean attachmentBean = new AttachmentBean();
+            attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+            attachmentBean.setPath(item);
+            attachmentBean.setRelativePath(item);
+            attachmentBean.setFileName(FileUtil.getFileName(item));
+            return attachmentBean;
+        }).collect(Collectors.toList());
+        return this;
     }
 
-    public static List<Object> createUriImageInfo(List<Uri> images) {
+    @SuppressLint("Range")
+    public PreviewPhotoDialog createUriImageInfo(List<Uri> images) {
         if (images == null) {
             return null;
         }
-        return new ArrayList<>(images);
+        imageInfos = AttachmentUtil.uriListToAttachmentList(images);
+        return this;
     }
 
-    public void setDrawableResCurrent(Drawable drawableResCurrent) {
+    public PreviewPhotoDialog setDrawableResCurrent(Drawable drawableResCurrent) {
         this.drawableResCurrent = drawableResCurrent;
+        return this;
     }
 
-    public void setDrawableResNormal(Drawable drawableResNormal) {
+    public PreviewPhotoDialog setDrawableResNormal(Drawable drawableResNormal) {
         this.drawableResNormal = drawableResNormal;
+        return this;
+    }
+
+    public PreviewPhotoDialog setPlaceholderImage(Drawable placeholderImage) {
+        this.placeholderImage = placeholderImage;
+        return this;
+    }
+
+    public PreviewPhotoDialog setErrorImage(Drawable errorImage) {
+        this.errorImage = errorImage;
+        return this;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -216,6 +293,7 @@ public class PreviewPhotoDialog extends Dialog {
             return false;
         }
     };
+
     /***
      * 初始化viewpager适配器
      */
@@ -248,7 +326,7 @@ public class PreviewPhotoDialog extends Dialog {
                 round.setBackground(drawableResNormal);
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2);
-            params.leftMargin = DensityUtil.dp2px(context, 8f);
+            params.leftMargin = DensityUtil.dp2px(getContext(), 8f);
             llPoint.addView(round, params);
         });
     }

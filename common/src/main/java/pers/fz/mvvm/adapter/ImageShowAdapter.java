@@ -81,8 +81,7 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
             binding.cornerImage.setBackgroundColor(adapter.bgColor);
             binding.cornerImage.setOnClickListener(v -> {
                 try {
-                    List<String> stringList = AttachmentUtil.toStringList(adapter.getList());
-                    new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
+                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

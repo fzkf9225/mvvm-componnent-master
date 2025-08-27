@@ -2,12 +2,14 @@ package pers.fz.mvvm.widget.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,14 +31,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.adapter.PictureAdapter;
+import pers.fz.mvvm.api.Config;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.bean.BannerBean;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.common.StringUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
@@ -345,8 +352,26 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
             return;
         }
         if (previewLarger) {
-            List<Object> list = new ArrayList<>();
-            this.bannerList.forEach(item -> list.add(item.getBannerUrl()));
+            List<AttachmentBean> list = this.bannerList.stream().map(item -> {
+                AttachmentBean attachmentBean = new AttachmentBean();
+                attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+                if (item.getBannerUrl() instanceof Integer resId) {
+                    attachmentBean.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(),resId));
+                    attachmentBean.setRelativePath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(),resId));
+                    if (Config.getInstance().getApplication() != null) {
+                        attachmentBean.setFileName(getContext().getResources().getResourceEntryName(resId));
+                    }
+                } else if (item.getBannerUrl() instanceof Uri uri) {
+                    attachmentBean.setPath(uri == null ? null : uri.toString());
+                    attachmentBean.setRelativePath(uri == null ? null : uri.toString());
+                    attachmentBean.setFileName(FileUtil.getFileName(uri == null ? null : uri.toString()));
+                } else {
+                    attachmentBean.setPath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
+                    attachmentBean.setRelativePath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
+                    attachmentBean.setFileName(FileUtil.getFileName(item.getBannerUrl() == null ? null : item.getBannerUrl().toString()));
+                }
+                return attachmentBean;
+            }).collect(Collectors.toList());
             new PreviewPhotoDialog(getContext(), list, position).show();
         }
     };

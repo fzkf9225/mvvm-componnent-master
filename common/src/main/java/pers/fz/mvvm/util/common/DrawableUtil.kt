@@ -1,14 +1,18 @@
 package pers.fz.mvvm.util.common
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
+import android.util.Base64
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
@@ -16,6 +20,10 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import java.io.ByteArrayOutputStream
+import androidx.core.graphics.createBitmap
+import pers.fz.mvvm.util.log.LogUtil
+
 
 object DrawableUtil {
 
@@ -42,7 +50,12 @@ object DrawableUtil {
     }
 
     @JvmStatic
-    fun charToDrawable(context: Context, char: String, textColor: Int = Color.WHITE, backgroundColor: Int = Color.TRANSPARENT): Drawable {
+    fun charToDrawable(
+        context: Context,
+        char: String,
+        textColor: Int = Color.WHITE,
+        backgroundColor: Int = Color.TRANSPARENT
+    ): Drawable {
         return object : Drawable() {
             private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = textColor
@@ -83,7 +96,11 @@ object DrawableUtil {
     }
 
     @JvmStatic
-    public fun createCheckedDrawable(context: Context,@ColorInt colorRes : Int,size : Int): Drawable {
+    public fun createCheckedDrawable(
+        context: Context,
+        @ColorInt colorRes: Int,
+        size: Int
+    ): Drawable {
         // 创建背景矩形
         val background = GradientDrawable()
         background.setShape(GradientDrawable.OVAL)
@@ -101,14 +118,109 @@ object DrawableUtil {
     }
 
     @JvmStatic
-    public fun createUncheckedDrawable(stroke :Int,@ColorInt colorRes : Int,size : Int): Drawable {
+    public fun createUncheckedDrawable(stroke: Int, @ColorInt colorRes: Int, size: Int): Drawable {
         val uncheckedDrawable = GradientDrawable()
         uncheckedDrawable.setShape(GradientDrawable.OVAL)
-        uncheckedDrawable.setStroke(stroke,colorRes)
+        uncheckedDrawable.setStroke(stroke, colorRes)
         uncheckedDrawable.setSize(size, size)
         return uncheckedDrawable
     }
+
+    /**
+     * 将 Drawable 转换为 Base64 字符串，目前只支持图片
+     * @param drawable Drawable 对象
+     * @param format 图片格式
+     * @return Base64 字符串
+     */
+    @JvmStatic
+    public fun drawableToBase64(
+        drawable: Drawable?,
+        suffixName: String?,
+        format: CompressFormat
+    ): String? {
+        if (drawable == null) {
+            return null
+        }
+
+        var bitmap: Bitmap? = null
+        try {
+            if (drawable is BitmapDrawable) {
+                // 如果是 BitmapDrawable，直接获取 Bitmap
+                bitmap = drawable.bitmap
+            } else {
+                // 其他类型的 Drawable，创建 Bitmap 并绘制
+                var width = drawable.intrinsicWidth
+                var height = drawable.intrinsicHeight
+
+                // 处理矢量图或没有固有尺寸的Drawable
+                if (width <= 0) width = 1
+                if (height <= 0) height = 1
+
+                bitmap = createBitmap(width, height)
+                val canvas = Canvas(bitmap)
+                drawable.setBounds(0, 0, width, height)
+                drawable.draw(canvas)
+            }
+
+            // 转换为字节数组
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap?.compress(format, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+
+            // 转换为 Base64
+            val base64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
+            return "data:image/${suffixName ?: "png"};base64,$base64"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        } finally {
+            // 只回收自己创建的Bitmap，避免回收来自BitmapDrawable的共享Bitmap
+            if (drawable !is BitmapDrawable && bitmap != null) {
+                bitmap.recycle()
+            }
+        }
+    }
+
+    /**
+     * 通过资源ID获取 Base64
+     * @param context 上下文
+     * @param resourceId 资源ID
+     * @param format 图片格式
+     * @return Base64 字符串
+     */
+    @JvmStatic
+    public fun resourceToBase64(
+        context: Context,
+        resourceId: Int,
+        format: CompressFormat
+    ): String? {
+        val drawable = ContextCompat.getDrawable(context, resourceId)
+        val resourceName = context.resources.getResourceEntryName(resourceId)
+        return drawableToBase64(drawable, resourceName.substringAfterLast("."),format)
+    }
+
+    /**
+     * 通过资源ID获取 Base64
+     * @param context 上下文
+     * @param resourceId 资源ID
+     * @param format 图片格式
+     * @return Base64 字符串
+     */
+    @JvmStatic
+    fun resourceToBase64(context: Context, resourceId: Int): String? {
+        val resourceName = context.resources.getResourceEntryName(resourceId)
+        val format = when (resourceName.substringAfterLast(".")) {
+            "png","PNG" -> Bitmap.CompressFormat.PNG
+            "jpg", "jpeg","JPG", "JPEG" -> Bitmap.CompressFormat.JPEG
+            "webp","WEBP" -> Bitmap.CompressFormat.WEBP
+            else -> Bitmap.CompressFormat.PNG // 默认
+        }
+
+        return resourceToBase64(context, resourceId, format)
+    }
+
 }
+
 
 /**
  * 动态设置drawableStart

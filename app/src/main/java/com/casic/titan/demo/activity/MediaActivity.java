@@ -187,7 +187,9 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
             if (binding.getWaterMarkImagePath() == null) {
                 return;
             }
-            new PreviewPhotoDialog(MediaActivity.this, PreviewPhotoDialog.createUriImageInfo(binding.getWaterMarkImagePath()), 0)
+            new PreviewPhotoDialog(MediaActivity.this)
+                    .createUriImageInfo(binding.getWaterMarkImagePath())
+                    .currentPosition(0)
                     .show();
         });
     }

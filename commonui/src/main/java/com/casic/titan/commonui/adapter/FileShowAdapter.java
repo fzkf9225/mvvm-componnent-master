@@ -15,7 +15,9 @@ import com.casic.titan.commonui.databinding.AdapterFileShowItemBinding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;
@@ -95,7 +97,7 @@ public class FileShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
                     return;
                 }
                 if (AttachmentTypeEnum.IMAGE.typeValue.equals(item.getFileType())) {
-                    new PreviewPhotoDialog(v.getContext(), Collections.singletonList(item.getPath()), getAbsoluteAdapterPosition()).show();
+                    new PreviewPhotoDialog(v.getContext(), List.of(item), getAbsoluteAdapterPosition()).show();
                 } else if (AttachmentTypeEnum.VIDEO.typeValue.equals(item.getFileType())) {
                     Bundle bundleVideo = new Bundle();
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(item.getPath()));

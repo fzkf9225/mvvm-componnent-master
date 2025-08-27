@@ -3,6 +3,7 @@ package pers.fz.mvvm.adapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -99,8 +100,7 @@ public class MediaShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
             binding.imageVideo.setRadius((int) adapter.radius);
             binding.imageVideo.setOnClickListener(v -> {
                 try {
-                    List<String> stringList = AttachmentUtil.toStringList(adapter.getList());
-                    new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
+                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();
@@ -109,7 +109,10 @@ public class MediaShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
             binding.mediaPlay.setOnClickListener(v -> {
                 try {
                     Bundle bundleVideo = new Bundle();
-                    bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath()));
+                    bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE,
+                            TextUtils.isEmpty(adapter.getList().get(getAbsoluteAdapterPosition()).getFileName()) ?
+                                    FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath())
+                                    : adapter.getList().get(getAbsoluteAdapterPosition()).getFileName());
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());
                     VideoPlayerActivity.show(v.getContext(), bundleVideo);
                 } catch (Exception e) {

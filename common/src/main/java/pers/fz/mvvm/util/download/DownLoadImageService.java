@@ -29,9 +29,18 @@ public class DownLoadImageService implements Runnable {
     private final Object url;
     private final Context context;
     private final ImageDownLoadCallBack callBack;
+    /**
+     * 保存路径
+     */
     private final String filePath;
 
-    public DownLoadImageService(Context context, Object url, String filePath, ImageDownLoadCallBack callBack) {
+    /**
+     * @param context  上下文
+     * @param url      地址
+     * @param fileType 文件类型，子路径，默认为图片，也就是image
+     * @param callBack 回调
+     */
+    public DownLoadImageService(Context context, Object url, String fileType, ImageDownLoadCallBack callBack) {
         this.url = url;
         this.callBack = callBack;
         this.context = context;
@@ -44,10 +53,14 @@ public class DownLoadImageService implements Runnable {
             LogUtil.e(TAG, "获取后缀名失败：" + e);
         }
         if (TextUtils.isEmpty(extension)) {
-            extension = "jpg";
+            if (!TextUtils.isEmpty(fileType) && "video".equalsIgnoreCase(fileType)) {
+                extension = "mp4";
+            } else {
+                extension = "jpg";
+            }
         }
-        String name = FileUtil.getNoRepeatFileName(filePath, "IMG_", "." + extension);
-        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + filePath + File.separator + name + "." + extension;
+        String name = FileUtil.getNoRepeatFileName(fileType, !TextUtils.isEmpty(fileType) && "video".equalsIgnoreCase(fileType) ? "VIDEO_" : "IMG_", "." + extension);
+        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + fileType + File.separator + name + "." + extension;
     }
 
     @Override

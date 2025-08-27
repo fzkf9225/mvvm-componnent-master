@@ -1,15 +1,23 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+
+import pers.fz.mvvm.api.Config;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
+import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.widget.customview.Code;
+
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
@@ -63,10 +71,12 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         binding.customBannerPicture.initView(Arrays.asList(
                 new BannerBean("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"),
                 new BannerBean("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg"),
-                new BannerBean("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42")));
-        binding.cornersImageView.setOnClickListener(v -> new PreviewPhotoDialog(this, List.of(
-                imageUrl
-        ), 0).show());
+                new BannerBean("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"),
+                new BannerBean(R.mipmap.ic_launcher)));
+        binding.cornersImageView.setOnClickListener(v -> new PreviewPhotoDialog(this)
+                .createImageInfo(imageUrl)
+                .currentPosition(0)
+                .show());
         binding.imageCode.setImageBitmap(Code.getInstance().createBitmap());
         binding.imageCode.setOnClickListener(v -> binding.imageCode.setImageBitmap(Code.getInstance().createBitmap()));
         RxView.setOnClickListener(binding.cornerButton, 3000, "你点的太快了", view -> showToast(DateUtil.getDateTimeFromMillis(System.currentTimeMillis())));
@@ -78,27 +88,38 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         AttachmentBean attachmentBean1 = new AttachmentBean();
         attachmentBean1.setPath("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
         attachmentBean1.setFileName("1.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean2 = new AttachmentBean();
         attachmentBean2.setPath("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg");
         attachmentBean2.setFileName("2.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean3 = new AttachmentBean();
         attachmentBean3.setPath("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42");
         attachmentBean3.setFileName("3.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean4 = new AttachmentBean();
         attachmentBean4.setPath("https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg");
         attachmentBean4.setFileName("4.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean5 = new AttachmentBean();
         attachmentBean5.setPath("https://ww1.sinaimg.cn/mw690/008vmhs1ly1hrhly2i2jtj30j616nq9v.jpg");
         attachmentBean5.setFileName("5.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean6 = new AttachmentBean();
         attachmentBean6.setPath("https://img2.baidu.com/it/u=2380808412,3135171519&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1199");
         attachmentBean6.setFileName("6.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+        AttachmentBean attachmentBean7 = new AttachmentBean();
+        attachmentBean7.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(),R.mipmap.ic_launcher));
+        attachmentBean6.setFileName("7.jpg");
+        attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBeanList.add(attachmentBean1);
         attachmentBeanList.add(attachmentBean2);
         attachmentBeanList.add(attachmentBean3);
         attachmentBeanList.add(attachmentBean4);
         attachmentBeanList.add(attachmentBean5);
         attachmentBeanList.add(attachmentBean6);
+        attachmentBeanList.add(attachmentBean7);
 
         imageShowAdapter = new ImageShowAdapter();
         imageShowAdapter.setList(attachmentBeanList);
@@ -112,10 +133,11 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
 
         List<AttachmentBean> videoList = new ArrayList<>();
-        AttachmentBean attachmentBean7 = new AttachmentBean();
-        attachmentBean6.setPath("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
-        attachmentBean6.setFileName("7.mp4");
-        videoList.add(attachmentBean7);
+        AttachmentBean attachmentBean8 = new AttachmentBean();
+        attachmentBean8.setPath("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
+        attachmentBean8.setFileName("8.mp4");
+        attachmentBean8.setFileType(AttachmentTypeEnum.VIDEO.typeValue);
+        videoList.add(attachmentBean8);
         videoShowAdapter = new VideoShowAdapter();
         videoShowAdapter.setList(videoList);
         binding.mRecyclerviewVideo.setAdapter(videoShowAdapter);

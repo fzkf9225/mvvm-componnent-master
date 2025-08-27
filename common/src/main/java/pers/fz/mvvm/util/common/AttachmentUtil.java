@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.core.content.FileProvider;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
@@ -48,143 +50,57 @@ public class AttachmentUtil {
         if (attachmentList == null) {
             return null;
         }
-        List<String> stringList = new ArrayList<>();
-        for (AttachmentBean attachmentBean : attachmentList) {
-            stringList.add(attachmentBean.getPath());
-        }
-        return stringList;
+        return attachmentList.stream().map(AttachmentBean::getPath).collect(Collectors.toList());
     }
 
     public static List<Uri> toUriList(List<AttachmentBean> attachmentList) {
         if (attachmentList == null) {
             return null;
         }
-        List<Uri> stringList = new ArrayList<>();
-        for (AttachmentBean attachmentBean : attachmentList) {
-            stringList.add(Uri.parse(attachmentBean.getPath()));
-        }
-        return stringList;
+
+        return attachmentList.stream().map(attachmentBean -> Uri.parse(attachmentBean.getPath())).collect(Collectors.toList());
     }
 
     public static List<String> toUriStringList(List<AttachmentBean> attachmentList) {
         if (attachmentList == null) {
             return null;
         }
-        List<String> stringList = new ArrayList<>();
-        for (AttachmentBean attachmentBean : attachmentList) {
-            stringList.add(attachmentBean.getPath());
-        }
-        return stringList;
+        return attachmentList.stream().map(AttachmentBean::getPath).collect(Collectors.toList());
     }
 
     public static List<String> uriListToUriStringList(List<Uri> uriList) {
         if (uriList == null) {
             return null;
         }
-        List<String> stringList = new ArrayList<>();
-        for (Uri uri : uriList) {
-            stringList.add(uri.toString());
-        }
-        return stringList;
+        return uriList.stream().map(Uri::toString).collect(Collectors.toList());
     }
 
     public static List<Uri> uriStringListToUriList(List<String> uriStringList) {
         if (uriStringList == null) {
             return null;
         }
-        List<Uri> uriList = new ArrayList<>();
-        for (String uri : uriStringList) {
-            uriList.add(Uri.parse(uri));
-        }
-        return uriList;
+        return uriStringList.stream().map(Uri::parse).collect(Collectors.toList());
     }
 
+    /**
+     * 本地文件绝对地址转  List<AttachmentBean>
+     *
+     * @param stringList 本地绝对地址集合
+     * @return
+     */
+    public static List<AttachmentBean> toAttachmentList(List<String> stringList) {
+        return toAttachmentList(stringList, null, null);
+    }
+
+    /**
+     * 本地文件绝对地址转  List<AttachmentBean>
+     *
+     * @param stringList 本地绝对地址集合
+     * @param mainId     主键Id
+     * @return
+     */
     public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId) {
-        if (stringList == null) {
-            return null;
-        }
-        List<AttachmentBean> attachmentList = new ArrayList<>();
-        for (String str : stringList) {
-            AttachmentBean attachment = new AttachmentBean();
-            attachment.setMainId(mainId);
-            attachment.setPath(str);
-            attachment.setFileName(FileUtil.getFileNameByUrl(str));
-            attachmentList.add(attachment);
-        }
-        return attachmentList;
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList) {
-        if (uriList == null) {
-            return null;
-        }
-        ContentResolver contentResolver = null;
-
-        if (Config.getInstance() != null && Config.getInstance().getApplication() != null) {
-            contentResolver = Config.getInstance().getApplication().getContentResolver();
-        }
-
-        List<AttachmentBean> attachmentList = new ArrayList<>();
-        for (Uri uri : uriList) {
-            AttachmentBean attachment = new AttachmentBean();
-            attachment.setPath(uri.toString());
-            if (contentResolver == null) {
-                attachmentList.add(attachment);
-                continue;
-            }
-            //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
-            try {
-                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
-                Cursor cursor = contentResolver.query(uri, null, null, null, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
-                    attachment.setFileSize(cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) + "");
-                    cursor.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            attachmentList.add(attachment);
-        }
-        return attachmentList;
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId) {
-        if (uriList == null) {
-            return null;
-        }
-        ContentResolver contentResolver = null;
-
-        if (Config.getInstance() != null && Config.getInstance().getApplication() != null) {
-            contentResolver = Config.getInstance().getApplication().getContentResolver();
-        }
-        List<AttachmentBean> attachmentList = new ArrayList<>();
-        for (Uri uri : uriList) {
-            AttachmentBean attachment = new AttachmentBean();
-            attachment.setMainId(mainId);
-            attachment.setPath(uri.toString());
-
-            if (contentResolver == null) {
-                attachmentList.add(attachment);
-                continue;
-            }
-            //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
-            try {
-                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
-                Cursor cursor = contentResolver.query(uri, null, null, null, null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
-                    attachment.setFileSize(cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) + "");
-                    cursor.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            attachmentList.add(attachment);
-        }
-        return attachmentList;
+        return toAttachmentList(stringList, mainId, null);
     }
 
     /**
@@ -195,20 +111,18 @@ public class AttachmentUtil {
      * @param field      字段名称
      * @return
      */
-    public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId, @NotNull String field) {
+    public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId, String field) {
         if (stringList == null) {
             return null;
         }
-        List<AttachmentBean> attachmentList = new ArrayList<>();
-        for (String str : stringList) {
+        return stringList.stream().map(str -> {
             AttachmentBean attachment = new AttachmentBean();
             attachment.setMainId(mainId);
             attachment.setPath(str);
             attachment.setFieldName(field);
             attachment.setFileName(FileUtil.getFileName(str));
-            attachmentList.add(attachment);
-        }
-        return attachmentList;
+            return attachment;
+        }).collect(Collectors.toList());
     }
 
     public static List<AttachmentBean> coverAttachmentList(List<AttachmentBean> attachmentBeanList, String mainId, @NotNull String field) {
@@ -223,31 +137,53 @@ public class AttachmentUtil {
     }
 
     @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId, @NotNull String field) {
+    public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList) {
+        return uriListToAttachmentList(context, uriList, null, null);
+    }
+
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList) {
+        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, null, null);
+    }
+
+
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList, String mainId) {
+        return uriListToAttachmentList(context, uriList, mainId, null);
+    }
+
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId) {
+        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, mainId, null);
+    }
+
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId, String field) {
+        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, mainId, field);
+    }
+
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList, String mainId, String field) {
         if (uriList == null) {
             return null;
         }
-        ContentResolver contentResolver = null;
+        if (context == null) {
+            return null;
+        }
+        ContentResolver contentResolver = context.getContentResolver();
 
-        if (Config.getInstance() != null && Config.getInstance().getApplication() != null) {
-            contentResolver = Config.getInstance().getApplication().getContentResolver();
+        if (contentResolver == null) {
+            return null;
         }
 
-        List<AttachmentBean> attachmentList = new ArrayList<>();
-
-        for (Uri uri : uriList) {
+        return uriList.stream().map(uri -> {
             AttachmentBean attachment = new AttachmentBean();
             attachment.setMainId(mainId);
             attachment.setPath(uri.toString());
             attachment.setFieldName(field);
-
-            if (contentResolver == null) {
-                attachmentList.add(attachment);
-                continue;
-            }
             //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
             try {
-                attachment.setFileType(getAttachmentTypeByUri(Config.getInstance().getApplication(), uri).typeValue);
+                attachment.setFileType(getAttachmentTypeByUri(context, uri).typeValue);
                 Cursor cursor = contentResolver.query(uri, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
                     attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
@@ -257,9 +193,43 @@ public class AttachmentUtil {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            attachmentList.add(attachment);
+            return attachment;
+        }).collect(Collectors.toList());
+    }
+
+    public static List<AttachmentBean> drawableResToAttachmentList(Context context, @DrawableRes List<Integer> drawableResList, String mainId, String field) {
+        if (CollectionUtil.isEmpty(drawableResList)) {
+            return null;
         }
-        return attachmentList;
+        if (context == null) {
+            return null;
+        }
+        return drawableResList.stream().map(resId -> {
+            AttachmentBean attachment = new AttachmentBean();
+            attachment.setMainId(mainId);
+            attachment.setPath(DrawableUtil.resourceToBase64(context, resId));
+            attachment.setFieldName(field);
+            try {
+                attachment.setFileName(context.getResources().getResourceEntryName(resId));
+                String extension = FileUtil.getUrlFileExtensionName(attachment.getFileName());
+                if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
+                    attachment.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+                } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
+                    attachment.setFileType(AttachmentTypeEnum.VIDEO.typeValue);
+                } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.AUDIO_TYPE.contains(extension)) {
+                    attachment.setFileType(AttachmentTypeEnum.AUDIO.typeValue);
+                } else {
+                    attachment.setFileType(AttachmentTypeEnum.FILE.typeValue);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return attachment;
+        }).collect(Collectors.toList());
+    }
+
+    public static List<AttachmentBean> drawableResToAttachmentList(@DrawableRes List<Integer> drawableResList, String mainId, String field) {
+        return drawableResToAttachmentList(Config.getInstance().getApplication(), drawableResList, mainId, field);
     }
 
     /**
@@ -522,7 +492,10 @@ public class AttachmentUtil {
         try {
             String type = getMimeType(url);
             if (isImageType(type)) {
-                new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(url), 0).show();
+                new PreviewPhotoDialog(mContext)
+                        .createImageInfo(url)
+                        .currentPosition(0)
+                        .show();
             } else if (isVideoType(type)) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, url);
@@ -559,7 +532,10 @@ public class AttachmentUtil {
         String extension = FileUtil.getUrlFileExtensionName(absolutePath);
         String fileName = FileUtil.getFileNameByUrl(absolutePath);
         if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
-            new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(absolutePath), 0).show();
+            new PreviewPhotoDialog(mContext)
+                    .createImageInfo(absolutePath)
+                    .currentPosition(0)
+                    .show();
         } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
             Bundle bundleVideo = new Bundle();
             bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, fileName);
@@ -590,7 +566,10 @@ public class AttachmentUtil {
             Uri uri = Uri.parse(uriPath);
             String type = mContext.getContentResolver().getType(uri);
             if (isImageType(type)) {
-                new PreviewPhotoDialog(mContext, PreviewPhotoDialog.createImageInfo(uriPath), 0).show();
+                new PreviewPhotoDialog(mContext)
+                        .createUriImageInfo(uri)
+                        .currentPosition(0)
+                        .show();
             } else if (isVideoType(type)) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, uriPath);

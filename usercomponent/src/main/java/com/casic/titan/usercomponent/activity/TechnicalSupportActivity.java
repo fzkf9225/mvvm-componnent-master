@@ -32,7 +32,10 @@ public class TechnicalSupportActivity extends BaseActivity<EmptyViewModel, Techn
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        binding.imageQrCode.setOnClickListener(v -> new PreviewPhotoDialog(this, PreviewPhotoDialog.createImageInfo(R.mipmap.icon_wechat), 0).show());
+        binding.imageQrCode.setOnClickListener(v -> new PreviewPhotoDialog(this)
+                .createImageResInfo(R.mipmap.icon_wechat)
+                .currentPosition(0)
+                .show());
     }
 
     @Override
