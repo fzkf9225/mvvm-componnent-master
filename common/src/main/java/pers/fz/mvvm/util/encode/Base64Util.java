@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class Base64Util {
@@ -27,13 +28,20 @@ public class Base64Util {
     private Base64Util() {
     }
 
+    public static void main(String[] args) {
+        String encode = encode("hello world".getBytes());
+        System.out.println("加密："+encode);
+        System.out.println("解密："+new String(decode(encode), Charset.defaultCharset()));
+        System.out.println("智能解码："+new String(smartDecode(encode), Charset.defaultCharset()));
+    }
+
     /**
      * 将字节数组编码为字符串
      *
      * @param data
      */
     public static String encode(byte[] data) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int len = data.length;
         int i = 0;
         int b1, b2, b3;
@@ -47,18 +55,18 @@ public class Base64Util {
                 break;
             }
             b2 = data[i++] & 0xff;
+            int i1 = ((b1 & 0x03) << 4)
+                    | ((b2 & 0xf0) >>> 4);
             if (i == len) {
                 sb.append(BASE64_ENCODE_CHARS[b1 >>> 2]);
-                sb.append(BASE64_ENCODE_CHARS[((b1 & 0x03) << 4)
-                        | ((b2 & 0xf0) >>> 4)]);
+                sb.append(BASE64_ENCODE_CHARS[i1]);
                 sb.append(BASE64_ENCODE_CHARS[(b2 & 0x0f) << 2]);
                 sb.append("=");
                 break;
             }
             b3 = data[i++] & 0xff;
             sb.append(BASE64_ENCODE_CHARS[b1 >>> 2]);
-            sb.append(BASE64_ENCODE_CHARS[((b1 & 0x03) << 4)
-                    | ((b2 & 0xf0) >>> 4)]);
+            sb.append(BASE64_ENCODE_CHARS[i1]);
             sb.append(BASE64_ENCODE_CHARS[((b2 & 0x0f) << 2)
                     | ((b3 & 0xc0) >>> 6)]);
             sb.append(BASE64_ENCODE_CHARS[b3 & 0x3f]);
@@ -108,7 +116,7 @@ public class Base64Util {
             if (b3 == -1) {
                 break;
             }
-            buf.write((int) (((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2)));
+            buf.write(((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2));
 
 			/* b4 */
             do {
@@ -121,7 +129,7 @@ public class Base64Util {
             if (b4 == -1) {
                 break;
             }
-            buf.write((int) (((b3 & 0x03) << 6) | b4));
+            buf.write(((b3 & 0x03) << 6) | b4);
         }
         return buf.toByteArray();
     }
