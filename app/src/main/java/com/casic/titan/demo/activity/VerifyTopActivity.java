@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import androidx.core.content.ContextCompat;
-
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
@@ -17,9 +15,9 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.annotation.inter.VerifyGroup;
 import pers.fz.annotation.verify.EntityValidator;
-import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.util.common.StringUtil;

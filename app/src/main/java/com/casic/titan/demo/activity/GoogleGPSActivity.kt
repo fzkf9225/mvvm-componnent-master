@@ -16,7 +16,6 @@ import com.casic.titan.googlegps.service.GpsService
 import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.base.BaseActivity
 import pers.fz.mvvm.util.common.DateUtil
-import pers.fz.mvvm.util.log.LogUtil
 
 @AndroidEntryPoint
 class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {
@@ -59,12 +58,12 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         binding.startServiceOnce.setOnClickListener { v: View? ->
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             once = true
-            gpsLifecycleObserver?.startCheck(gpsCallback)
+            gpsLifecycleObserver?.startCheck(false,gpsCallback)
         }
         binding.startServiceAlways.setOnClickListener { v: View? ->
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             once = false
-            gpsLifecycleObserver?.startCheck(gpsCallback)
+            gpsLifecycleObserver?.startCheck(true,gpsCallback)
         }
     }
 
@@ -75,7 +74,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
             bundle.getParcelable<UseCase?>("args")
         }
         toolbarBind.getToolbarConfig()?.setTitle(useCase?.name)
-        gpsLifecycleObserver = GpsLifecycleObserver(this, gpsCallback)
+        gpsLifecycleObserver = GpsLifecycleObserver(this,true, gpsCallback)
         lifecycle.addObserver(gpsLifecycleObserver!!)
     }
 

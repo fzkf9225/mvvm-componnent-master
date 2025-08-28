@@ -10,8 +10,8 @@ import com.casic.titan.usercomponent.bean.TokenBean
 import com.casic.titan.usercomponent.view.UserView
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
-import pers.fz.mvvm.repository.RepositoryImpl
 import pers.fz.mvvm.bean.ApiRequestOptions
+import pers.fz.mvvm.repository.RepositoryImpl
 
 /**
  * Created by fz on 2023/12/1 10:47

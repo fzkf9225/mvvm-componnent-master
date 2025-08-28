@@ -13,8 +13,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.activity.VideoPlayerActivity;
 import pers.fz.mvvm.api.Config;

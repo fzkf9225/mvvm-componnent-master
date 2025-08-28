@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.activity.FeedBackActivity;
 import com.casic.titan.usercomponent.activity.LoginActivity;
+import com.casic.titan.usercomponent.activity.TechnicalSupportActivity;
 import com.casic.titan.usercomponent.api.UserAccountHelper;
 
-import com.casic.titan.usercomponent.activity.TechnicalSupportActivity;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;

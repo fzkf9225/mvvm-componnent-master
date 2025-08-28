@@ -10,7 +10,6 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
-
 import com.casic.titan.googlegps.service.GpsService;
 
 import pers.fz.mvvm.base.BaseRepository;

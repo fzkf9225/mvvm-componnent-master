@@ -121,7 +121,6 @@
     <public name="dialog_confirm" type="layout"/>
     <public name="dialog_date_pick" type="layout"/>
     <public name="dialog_message" type="layout"/>
-    <public name="image_save_dialog" type="layout"/>
     <public name="dialog_edit_area" type="layout"/>
     <public name="dialog_input" type="layout"/>
     <public name="base_activity_constraint" type="layout"/>
@@ -234,6 +233,9 @@
     <public name="like_toast_dialog_style" type="style"/>
 
     <!--字符串资源-->
+    <public name="protection_guidelines" type="string"/>
+    <public name="create" type="string"/>
+    <public name="modify" type="string"/>
     <public name="please_choose" type="string"/>
     <public name="clear" type="string"/>
     <public name="today" type="string"/>

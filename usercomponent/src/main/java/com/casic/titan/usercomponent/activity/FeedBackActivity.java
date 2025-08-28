@@ -10,8 +10,8 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;

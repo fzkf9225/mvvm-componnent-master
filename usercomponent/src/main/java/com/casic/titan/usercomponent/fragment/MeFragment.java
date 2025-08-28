@@ -19,7 +19,6 @@ import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenImageDialog;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.base.BaseFragment;
-import pers.fz.mvvm.util.common.ScreenUtil;
 import pers.fz.mvvm.util.theme.ThemeUtils;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

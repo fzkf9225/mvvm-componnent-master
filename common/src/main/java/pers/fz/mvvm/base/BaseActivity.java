@@ -2,7 +2,6 @@ package pers.fz.mvvm.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
@@ -25,13 +24,12 @@ import pers.fz.mvvm.databinding.BaseActivityConstraintBinding;
 import pers.fz.mvvm.helper.AuthManager;
 import pers.fz.mvvm.helper.UIController;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.widget.dialog.LoginDialog;
 
 /**
  * Create by CherishTang on 2019/8/1
  * describe:BaseActivity封装
  */
-public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, LoginDialog.OnLoginClickListener, AuthManager.AuthCallback {
+public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
     /**
      * viewModel
@@ -174,14 +172,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (authManager != null) {
             authManager.unregister();
         }
-    }
-
-    @Override
-    public void onLoginClick(View v, int code) {
-        if (errorService == null) {
-            return;
-        }
-        errorService.toLogin(this, authManager.getLauncher());
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.casic.titan.demo.adapter;
 
-import android.content.Context;
-
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.UseCaseItemBinding;

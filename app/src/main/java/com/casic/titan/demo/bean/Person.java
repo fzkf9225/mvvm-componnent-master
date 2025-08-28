@@ -12,8 +12,8 @@ import java.util.List;
 
 import pers.fz.annotation.annotation.VerifyEntity;
 import pers.fz.annotation.annotation.VerifyField;
-import pers.fz.annotation.annotation.VerifySort;
 import pers.fz.annotation.annotation.VerifyParams;
+import pers.fz.annotation.annotation.VerifySort;
 import pers.fz.annotation.enums.VerifyType;
 import pers.fz.annotation.inter.VerifyGroup;
 import pers.fz.mvvm.bean.BaseDaoBean;

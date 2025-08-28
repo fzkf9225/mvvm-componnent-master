@@ -86,6 +86,9 @@
     <string name="please_choose_count">Please select the quantity</string>
     <string name="clear">Clear</string>
     <string name="please_choose">Please select</string>
+    <string name="modify">Modify</string>
+    <string name="create">Create</string>
+    <string name="protection_guidelines">Personal Information Protection Guidelines</string>
 
 
 </resources>

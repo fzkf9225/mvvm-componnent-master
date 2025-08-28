@@ -7,14 +7,11 @@ import androidx.core.content.ContextCompat;
 import com.casic.titan.usercomponent.R;
 import com.casic.titan.usercomponent.api.UserApiService;
 
-import javax.inject.Inject;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.api.ApiRetrofit;
-import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.common.PropertiesUtil;
 import pers.fz.mvvm.util.log.LogUtil;

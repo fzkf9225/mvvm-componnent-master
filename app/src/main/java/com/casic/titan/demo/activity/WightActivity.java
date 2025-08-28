@@ -1,23 +1,14 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-
-import pers.fz.mvvm.api.Config;
-import pers.fz.mvvm.enums.AttachmentTypeEnum;
-import pers.fz.mvvm.util.common.DrawableUtil;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.widget.customview.Code;
-
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
@@ -31,14 +22,18 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.adapter.ImageShowAdapter;
 import pers.fz.mvvm.adapter.VideoShowAdapter;
+import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
+import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.util.common.NumberUtils;
 import pers.fz.mvvm.util.common.RxView;
+import pers.fz.mvvm.widget.customview.Code;
 import pers.fz.mvvm.widget.customview.utils.NumberTextWatcher;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;

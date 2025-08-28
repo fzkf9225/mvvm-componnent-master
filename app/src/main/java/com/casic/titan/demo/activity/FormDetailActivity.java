@@ -2,7 +2,6 @@ package com.casic.titan.demo.activity;
 
 import android.os.Bundle;
 
-import pers.fz.mvvm.bean.AttachmentBean;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.FormBean;
 import com.casic.titan.demo.databinding.ActivityFormDetailBinding;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

@@ -9,7 +9,6 @@ import com.casic.titan.demo.databinding.ActivityCoordinatorBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**

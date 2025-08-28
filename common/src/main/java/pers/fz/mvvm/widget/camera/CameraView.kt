@@ -1,5 +1,6 @@
 package pers.fz.mvvm.widget.camera;
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.res.TypedArray
@@ -11,6 +12,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -183,6 +185,7 @@ class CameraView @JvmOverloads constructor(
     /**
      * 初始化控件和相关设置
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
         setWillNotDraw(false)
         binding = CameraViewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -250,6 +253,17 @@ class CameraView @JvmOverloads constructor(
         //未拍照模式下的返回按钮点击事件
         binding?.captureLayout?.setLeftClickListener {
             leftClickListener?.onClick(it)
+        }
+        // 设置触摸监听
+        binding?.flCamera?.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val rawX = event.rawX.toInt()
+                val rawY = event.rawY.toInt()
+                focusCamera(rawX, rawY)
+                true
+            } else {
+                false
+            }
         }
     }
 
@@ -541,6 +555,7 @@ class CameraView @JvmOverloads constructor(
         if (binding?.videoPlayer?.isInPlayingState == true) {
             binding?.videoPlayer?.onVideoPause()
         }
+        binding?.focusView?.visibility = GONE
     }
 
     private fun deleteImage(imageUri: Uri?) {
@@ -567,10 +582,11 @@ class CameraView @JvmOverloads constructor(
      */
     private fun inRangeOfView(pointX: Int, pointY: Int): Boolean {
         val location = IntArray(2)
-        binding?.mCameraView?.getLocationOnScreen(location)
+        binding?.flCamera?.getLocationOnScreen(location)
         val x = location[0]
         val y = location[1]
-        return pointX >= x && pointX <= (x + (binding?.mCameraView?.width?:0)) && pointY >= y && pointY <= (y + (binding?.mCameraView?.height?:0))
+        return pointX >= x && pointX <= (x + (binding?.flCamera?.width ?: 0)) &&
+                pointY >= y && pointY <= (y + (binding?.flCamera?.height ?: 0))
     }
 
     /**
@@ -581,14 +597,33 @@ class CameraView @JvmOverloads constructor(
      * @param pointY Y轴坐标
      */
     fun focusCamera(pointX: Int, pointY: Int) {
+        // 转换屏幕坐标到 View 内的相对坐标
+        val location = IntArray(2)
+        binding?.flCamera?.getLocationOnScreen(location)
+        val viewX = pointX - location[0]
+        val viewY = pointY - location[1]
+
         if (!inRangeOfView(pointX, pointY)) {
             return
         }
+
         val rect = Rect(
-            pointX - FOCUS_RECT_SIZE_WIDTH, pointY - FOCUS_RECT_SIZE_WIDTH,
-            pointX + FOCUS_RECT_SIZE_WIDTH, pointY + FOCUS_RECT_SIZE_WIDTH
+            viewX - FOCUS_RECT_SIZE_WIDTH, viewY - FOCUS_RECT_SIZE_WIDTH,
+            viewX + FOCUS_RECT_SIZE_WIDTH, viewY + FOCUS_RECT_SIZE_WIDTH
         )
-        binding?.mCameraView?.requestFocus(FOCUS_DOWN, rect)
+
+        // 显示对焦框
+        binding?.focusView?.visibility = VISIBLE
+        binding?.focusView?.setFocusRect(rect)
+
+        // 请求相机对焦（需要将相对坐标转换为相机所需的坐标系统）
+        val cameraRect = Rect(
+            (viewX - FOCUS_RECT_SIZE_WIDTH) * 2000 / width,
+            (viewY - FOCUS_RECT_SIZE_WIDTH) * 2000 / height,
+            (viewX + FOCUS_RECT_SIZE_WIDTH) * 2000 / width,
+            (viewY + FOCUS_RECT_SIZE_WIDTH) * 2000 / height
+        )
+        binding?.mCameraView?.requestFocus(FOCUS_DOWN, cameraRect)
     }
 
 

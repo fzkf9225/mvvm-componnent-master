@@ -14,10 +14,10 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.media.MediaHelper;
-import pers.fz.media.dialog.OpenMediaDialog;
-import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.dialog.OpenImageDialog;
+import pers.fz.media.dialog.OpenMediaDialog;
 import pers.fz.media.dialog.OpenShootDialog;
+import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.MediaAddAdapter;

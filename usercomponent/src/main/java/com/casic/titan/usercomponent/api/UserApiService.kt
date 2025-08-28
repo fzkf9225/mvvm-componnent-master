@@ -7,7 +7,6 @@ import com.casic.titan.usercomponent.bean.TokenBean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import pers.fz.mvvm.api.BaseApiService
-import pers.fz.mvvm.bean.base.PageBean
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

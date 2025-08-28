@@ -31,7 +31,7 @@ public class EditAreaDialog extends Dialog {
     private DialogEditAreaBinding binding;
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String strSureText = "确定", strCancelText = "取消";
+    private String positiveText = "确定", negativeText = "取消";
     private String tipsStr, hintStr, defaultStr;
     private int inputType = InputType.TYPE_CLASS_TEXT;
     private int maxWords = 30;
@@ -114,13 +114,13 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
-    public EditAreaDialog setSureText(String strSureText) {
-        this.strSureText = strSureText;
+    public EditAreaDialog setPositive(String positiveText) {
+        this.positiveText = positiveText;
         return this;
     }
 
-    public EditAreaDialog setCancelText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public EditAreaDialog setNegativeText(String negativeText) {
+        this.negativeText = negativeText;
         return this;
     }
 
@@ -155,8 +155,8 @@ public class EditAreaDialog extends Dialog {
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
         binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
-        binding.dialogSure.setText(strSureText);
-        binding.dialogCancel.setText(strCancelText);
+        binding.dialogSure.setText(positiveText);
+        binding.dialogCancel.setText(negativeText);
         if (TextUtils.isEmpty(tipsStr)) {
             binding.dialogTips.setVisibility(View.GONE);
         } else {

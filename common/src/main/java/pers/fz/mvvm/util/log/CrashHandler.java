@@ -180,7 +180,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
             if (Config.getInstance().getErrorService() == null) {
                 return;
             }
-            Config.getInstance().getErrorService().uploadErrorInfo(sb.toString());
+            //TODO上传错误日志
+            Config.getInstance().getErrorService().uploadErrorInfo(fileName);
         } catch (Exception e) {
             sb.append("an error occured while writing file...\r\n");
             writeFile(sb.toString());

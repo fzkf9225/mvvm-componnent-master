@@ -18,14 +18,12 @@ import com.casic.titan.usercomponent.api.UserAccountHelper
 import com.casic.titan.usercomponent.api.UserApiService
 import com.casic.titan.usercomponent.bean.GraphicVerificationCodeBean
 import com.casic.titan.usercomponent.bean.RequestLoginBean
-import com.casic.titan.usercomponent.databinding.ActivityLoginBinding
 import com.casic.titan.usercomponent.repository.LoginRepositoryImpl
 import com.casic.titan.usercomponent.view.UserView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import pers.fz.mvvm.R
 import pers.fz.mvvm.activity.WebViewActivity
 import pers.fz.mvvm.api.AppManager
@@ -34,7 +32,6 @@ import pers.fz.mvvm.base.BaseViewModel
 import pers.fz.mvvm.util.encode.SM3Utils
 import pers.fz.mvvm.widget.dialog.ConfirmDialog
 import javax.inject.Inject
-import kotlin.getValue
 import kotlin.random.Random
 
 /**

@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.casic.titan.demo.bean.UseCase
 import com.casic.titan.demo.fragment.RoomSmartPagingFragment
-import com.casic.titan.demo.viewmodel.DemoRoomPagingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.base.BaseSearchActivity
 import pers.fz.mvvm.util.common.DensityUtil

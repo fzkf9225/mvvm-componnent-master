@@ -9,7 +9,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
@@ -17,22 +16,21 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.databinding.DialogConfirmBinding;
+import pers.fz.mvvm.databinding.DialogProtectionGuidelinesBinding;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 
 
 /**
- * updated by fz on 2024/12/2.
- * describe：确认弹框
+ * updated by fz on 2025/8/5 17:53
+ * describe：请求权限提示弹框
  */
-public class ConfirmDialog extends Dialog {
-    private String content;
+public class ProtectionGuidelinesDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String positiveText = "确定", negativeText = "取消";
-    private boolean isShowSureView = true, isShowCancelView = true, isShowLineView = true;
+    private String agreeText = "同意并继续", strCancelText = "再想想";
 
+    private ColorStateList positiveBackgroundColor = null;
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
     private ColorStateList textColor = null;
@@ -40,134 +38,114 @@ public class ConfirmDialog extends Dialog {
     private Drawable bgDrawable;
     private final LayoutInflater layoutInflater;
 
-    private DialogConfirmBinding binding;
+    private DialogProtectionGuidelinesBinding binding;
 
-    public ConfirmDialog(@NonNull Context context) {
+    public ProtectionGuidelinesDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
         layoutInflater = LayoutInflater.from(context);
     }
 
-    public ConfirmDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
+    public ProtectionGuidelinesDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;
     }
 
-    public ConfirmDialog setCanOutSide(boolean outSide) {
+    public ProtectionGuidelinesDialog setCanOutSide(boolean outSide) {
         this.outSide = outSide;
         return this;
     }
 
-    public ConfirmDialog setOnNegativeClickListener(OnDialogInterfaceClickListener onNegativeClickListener) {
+    public ProtectionGuidelinesDialog setOnNegativeClickListener(OnDialogInterfaceClickListener onNegativeClickListener) {
         this.onNegativeClickListener = onNegativeClickListener;
         return this;
     }
 
-    public ConfirmDialog setMessage(String message) {
-        this.content = message;
-        return this;
-    }
-
-    public ConfirmDialog setSpannableContent(SpannableString spannableContent) {
+    public ProtectionGuidelinesDialog setSpannableContent(SpannableString spannableContent) {
         this.spannableContent = spannableContent;
         return this;
     }
 
-    public ConfirmDialog setBgDrawable(Drawable bgDrawable) {
+    public ProtectionGuidelinesDialog setBgDrawable(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
         return this;
     }
 
-    public ConfirmDialog setPositiveTextColor(@ColorInt int color) {
+    public ProtectionGuidelinesDialog setPositiveBackgroundColor(@ColorInt int color) {
+        this.positiveBackgroundColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public ProtectionGuidelinesDialog setPositiveTextColor(@ColorInt int color) {
         positiveTextColor = ColorStateList.valueOf(color);
         return this;
     }
 
-    public ConfirmDialog setNegativeTextColor(@ColorInt int color) {
+    public ProtectionGuidelinesDialog setNegativeTextColor(@ColorInt int color) {
         negativeTextColor = ColorStateList.valueOf(color);
         return this;
     }
 
-    public ConfirmDialog setTextColor(@ColorInt int color) {
+    public ProtectionGuidelinesDialog setTextColor(@ColorInt int color) {
         textColor = ColorStateList.valueOf(color);
         return this;
     }
 
-    public ConfirmDialog setPositiveText(String positiveText) {
-        this.positiveText = positiveText;
+    public ProtectionGuidelinesDialog setPositiveText(String agreeText) {
+        this.agreeText = agreeText;
         return this;
     }
 
-    public ConfirmDialog setNegativeText(String strCancelText) {
-        this.negativeText = negativeText;
+    public ProtectionGuidelinesDialog setNegativeText(String strCancelText) {
+        this.strCancelText = strCancelText;
         return this;
     }
 
-    public ConfirmDialog setShowPositiveView(boolean isShowSureView) {
-        this.isShowSureView = isShowSureView;
-        this.isShowLineView = this.isShowSureView;
-        return this;
-    }
-
-    public ConfirmDialog setShowNegativeView(boolean isShowCancelView) {
-        this.isShowCancelView = isShowCancelView;
-        this.isShowLineView = this.isShowCancelView;
-        return this;
-    }
-
-    public ConfirmDialog builder() {
+    public ProtectionGuidelinesDialog builder() {
         initView();
         return this;
     }
 
-    public DialogConfirmBinding getBinding() {
+    public DialogProtectionGuidelinesBinding getBinding() {
         return binding;
     }
 
     private void initView() {
-        binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
-        binding.dialogSure.setText(positiveText);
-        binding.dialogCancel.setText(negativeText);
+        binding = DialogProtectionGuidelinesBinding.inflate(layoutInflater, null, false);
+        binding.dialogAgree.setText(agreeText);
+        binding.dialogRefuse.setText(strCancelText);
         if (positiveTextColor != null) {
-            binding.dialogSure.setTextColor(positiveTextColor);
+            binding.dialogAgree.setTextColor(positiveTextColor);
         }
         if (bgDrawable != null) {
-            binding.clConfirm.setBackground(bgDrawable);
+            binding.clPermissionReminder.setBackground(bgDrawable);
         }
+
+        if (positiveBackgroundColor != null) {
+            binding.dialogAgree.setBackColor(positiveBackgroundColor);
+        }
+
         if (negativeTextColor != null) {
-            binding.dialogCancel.setTextColor(negativeTextColor);
+            binding.dialogRefuse.setTextColor(negativeTextColor);
         }
 
         if (textColor != null) {
             binding.dialogTextView.setTextColor(textColor);
         }
 
-        if (!isShowLineView) {
-            binding.sLine.setVisibility(View.GONE);
-        }
-        if (!isShowCancelView) {
-            binding.dialogCancel.setVisibility(View.GONE);
-        }
-        if (!isShowSureView) {
-            binding.dialogSure.setVisibility(View.GONE);
-        }
-        binding.dialogSure.setOnClickListener(v -> {
+        binding.dialogAgree.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);
             }
         });
-        binding.dialogCancel.setOnClickListener(v -> {
+        binding.dialogRefuse.setOnClickListener(v -> {
             dismiss();
             if (onNegativeClickListener != null) {
                 onNegativeClickListener.onDialogClick(this);
             }
         });
-        if (spannableContent == null) {
-            binding.dialogTextView.setText(content);
-        } else {
-            binding.dialogTextView.setText(spannableContent);
-            binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        }
+        binding.dialogTextView.setText(spannableContent);
+        binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
@@ -178,7 +156,7 @@ public class ConfirmDialog extends Dialog {
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+                    appDisplayMetrics.heightPixels * 3 / 5);
         } else {
             dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);

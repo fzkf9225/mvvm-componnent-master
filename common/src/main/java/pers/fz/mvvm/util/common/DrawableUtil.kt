@@ -20,9 +20,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import java.io.ByteArrayOutputStream
 import androidx.core.graphics.createBitmap
-import pers.fz.mvvm.util.log.LogUtil
+import java.io.ByteArrayOutputStream
 
 
 object DrawableUtil {

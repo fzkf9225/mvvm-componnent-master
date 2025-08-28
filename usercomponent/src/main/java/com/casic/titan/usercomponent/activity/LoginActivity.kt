@@ -8,17 +8,14 @@ import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.casic.titan.userapi.bean.UserInfo
-import com.casic.titan.userapi.UserService
 import com.casic.titan.usercomponent.R
 import com.casic.titan.usercomponent.api.UserAccountHelper
-import com.casic.titan.usercomponent.bean.RequestLoginBean
 import com.casic.titan.usercomponent.databinding.ActivityLoginBinding
 import com.casic.titan.usercomponent.view.UserView
 import com.casic.titan.usercomponent.viewmodel.LoginViewModel

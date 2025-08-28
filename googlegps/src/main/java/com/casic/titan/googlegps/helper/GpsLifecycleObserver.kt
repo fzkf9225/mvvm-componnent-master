@@ -26,16 +26,40 @@ import com.casic.titan.googlegps.helper.permission.PermissionsChecker
 class GpsLifecycleObserver constructor(
     private val fragment: Fragment? = null,
     private val activity: ComponentActivity? = null,
+    private var checkBackPermission: Boolean = true,
     private val callback: ((Boolean, String) -> Unit)?
 ) : DefaultLifecycleObserver {
 
     // 主构造器（通过Fragment）
-    constructor(fragment: Fragment, callback: ((Boolean, String) -> Unit)?)
-            : this(fragment = fragment, activity = null, callback = callback)
+    constructor(
+        fragment: Fragment,
+        checkBackPermission: Boolean = true,
+        callback: ((Boolean, String) -> Unit)?
+    )
+            : this(fragment = fragment, activity = null, checkBackPermission, callback = callback)
 
     // 次构造器（通过Activity）
-    constructor(activity: ComponentActivity, callback: ((Boolean, String) -> Unit)?)
-            : this(fragment = null, activity = activity, callback = callback)
+    constructor(
+        activity: ComponentActivity,
+        checkBackPermission: Boolean = true,
+        callback: ((Boolean, String) -> Unit)?
+    )
+            : this(fragment = null, activity = activity, checkBackPermission, callback = callback)
+
+    // 主构造器（通过Fragment）
+    constructor(
+        fragment: Fragment,
+        callback: ((Boolean, String) -> Unit)?
+    )
+            : this(fragment = fragment, activity = null, true, callback = callback)
+
+    // 次构造器（通过Activity）
+    constructor(
+        activity: ComponentActivity,
+        callback: ((Boolean, String) -> Unit)?
+    )
+            : this(fragment = null, activity = activity, true, callback = callback)
+
 
     private var context: Context? = null
 
@@ -81,10 +105,20 @@ class GpsLifecycleObserver constructor(
         callback?.let { startCheck(it) }
     }
 
+    public fun startCheck(
+        callback: (Boolean, String) -> Unit
+    ) {
+        startCheck(checkBackPermission, callback)
+    }
+
     /**
      * 开始检测定位各种权限，先检测gps是否打开，未打开则前往设置打开，打开则检测前台定位权限，未打开则前往设置打开，打开则检测后台定位权限，未打开则前往设置打开，打开则返回true，否则返回false
      */
-    public fun startCheck(callback: (Boolean, String) -> Unit) {
+    public fun startCheck(
+        checkBackPermission: Boolean = true,
+        callback: (Boolean, String) -> Unit
+    ) {
+        this.checkBackPermission = checkBackPermission
         //检查gps 是否打开
         val isOpenGps: Boolean = isOpen(context!!)
         if (!isOpenGps) {
@@ -101,7 +135,7 @@ class GpsLifecycleObserver constructor(
                 .show()
             return
         }
-        checkForegroundPermission(callback)
+        checkForegroundPermission(checkBackPermission, callback)
     }
 
     /**
@@ -114,13 +148,16 @@ class GpsLifecycleObserver constructor(
                 callback?.let { it(false, "请先打开GPS") }
                 return@ActivityResultCallback
             }
-            callback?.let { checkForegroundPermission(it) }
+            callback?.let { checkForegroundPermission(checkBackPermission, it) }
         }
 
     /**
      * 检测前台定位权限
      */
-    private fun checkForegroundPermission(callback: (Boolean, String) -> Unit) {
+    private fun checkForegroundPermission(
+        checkBackPermission: Boolean = true,
+        callback: (Boolean, String) -> Unit
+    ) {
         if (PermissionsChecker.getInstance()
                 .lacksPermissions(
                     context!!,
@@ -128,7 +165,7 @@ class GpsLifecycleObserver constructor(
                 )
         ) {
             GPSConfirmDialog(context!!)
-                .setMessage("使用该功能需要您同意授权定位权限,请设置为“始终允许”,若定位失败可以前往设置中手动开启")
+                .setMessage("使用该功能需要您同意授权定位权限,并建议到系统设置中将“位置信息”修改为“始终允许”,若定位失败可以前往设置中手动开启")
                 .setPositiveText("授权")
                 .setCanOutSide(false)
                 .setOnNegativeClickListener {
@@ -141,7 +178,11 @@ class GpsLifecycleObserver constructor(
                 .show()
             return
         }
-        checkBackgroundPermission(callback)
+        if (!checkBackPermission) {
+            callback(true, "不请求后台定位权限")
+            return
+        }
+        checkBackgroundPermission(true, callback)
     }
 
 
@@ -156,13 +197,20 @@ class GpsLifecycleObserver constructor(
                     return@ActivityResultCallback
                 }
             }
-            callback?.let { checkBackgroundPermission(it) }
+            callback?.let { checkBackgroundPermission(checkBackPermission, it) }
         }
 
     /**
      * 检测后台定位权限
      */
-    private fun checkBackgroundPermission(callback: (Boolean, String) -> Unit) {
+    private fun checkBackgroundPermission(
+        checkBackPermission: Boolean = true,
+        callback: (Boolean, String) -> Unit
+    ) {
+        if (!checkBackPermission) {
+            callback(true, "不请求后台定位权限")
+            return
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (PermissionsChecker.getInstance()
                     .lacksPermissions(
@@ -173,6 +221,7 @@ class GpsLifecycleObserver constructor(
                 GPSConfirmDialog(context!!)
                     .setMessage("为了您更好的体验需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”")
                     .setPositiveText("前往设置")
+                    .setNegativeText("稍后再说")
                     .setCanOutSide(false)
                     .setOnNegativeClickListener {
                         callback(true, "后台定位权限被拒绝")

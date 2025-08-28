@@ -43,11 +43,10 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Observer;
 
+import com.casic.titan.googlegps.helper.AppUtil;
+import com.casic.titan.googlegps.helper.GPSConstantsHelper;
 import com.casic.titan.googlegps.listener.GnssLocationListener;
 import com.casic.titan.googlegps.listener.NmeaLocationListener;
-import com.casic.titan.googlegps.helper.GPSConstantsHelper;
-
-import com.casic.titan.googlegps.helper.AppUtil;
 import com.casic.titan.googlegps.socket.LogUtil;
 
 import java.util.ArrayList;

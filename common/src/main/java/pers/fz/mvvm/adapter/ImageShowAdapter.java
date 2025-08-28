@@ -12,14 +12,11 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.AdapterImageShowItemBinding;
-import pers.fz.mvvm.util.common.AttachmentUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 /**

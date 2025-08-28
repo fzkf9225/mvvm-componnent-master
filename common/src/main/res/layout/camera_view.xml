@@ -77,5 +77,10 @@
             app:layout_constraintEnd_toEndOf="@+id/capture_layout"
             app:layout_constraintTop_toTopOf="@id/capture_layout"
             app:layout_constraintBottom_toBottomOf="@id/capture_layout"  />
+        <pers.fz.mvvm.widget.camera.FocusView
+            android:id="@+id/focusView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
     </merge>
 </layout>

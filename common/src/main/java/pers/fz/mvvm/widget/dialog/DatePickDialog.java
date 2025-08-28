@@ -36,7 +36,7 @@ public class DatePickDialog extends Dialog {
     private OnDialogInterfaceClickListener onNegativeClickListener;
     private boolean outSide = true;
     private DateMode dateMode = DateMode.YEAR_MONTH_DAY;
-    private String strSureText = "确定", strCancelText = "取消";
+    private String positiveText = "确定", negativeText = "取消";
     private boolean isShowSureView = true, isShowCancelView = true;
     private DialogDatePickBinding binding;
     private ColorStateList positiveTextColor = null;
@@ -171,13 +171,13 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
-    public DatePickDialog setPositiveText(String strSureText) {
-        this.strSureText = strSureText;
+    public DatePickDialog setPositiveText(String positiveText) {
+        this.positiveText = positiveText;
         return this;
     }
 
-    public DatePickDialog setNegativeText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public DatePickDialog setNegativeText(String negativeText) {
+        this.negativeText = negativeText;
         return this;
     }
 
@@ -211,8 +211,8 @@ public class DatePickDialog extends Dialog {
 
     private void initView() {
         binding = DialogDatePickBinding.inflate(LayoutInflater.from(context), null, false);
-        binding.dialogConfirm.setText(strSureText);
-        binding.dialogCancel.setText(strCancelText);
+        binding.dialogConfirm.setText(positiveText);
+        binding.dialogCancel.setText(negativeText);
 
         if (positiveTextColor != null) {
             binding.dialogConfirm.setBackColor(positiveTextColor);

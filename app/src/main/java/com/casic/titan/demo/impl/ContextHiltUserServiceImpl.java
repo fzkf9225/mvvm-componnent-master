@@ -1,7 +1,6 @@
 package com.casic.titan.demo.impl;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.casic.titan.demo.inter.HiltUserService;
 

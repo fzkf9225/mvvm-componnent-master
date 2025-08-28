@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 

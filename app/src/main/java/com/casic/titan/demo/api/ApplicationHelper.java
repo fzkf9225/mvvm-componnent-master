@@ -7,9 +7,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.HiltAndroidApp;
 import io.reactivex.rxjava3.disposables.Disposable;
-import pers.fz.mvvm.api.DefaultActivityLifecycleCallback;
 import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.api.Config;
+import pers.fz.mvvm.api.DefaultActivityLifecycleCallback;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.util.log.LogUtil;
 

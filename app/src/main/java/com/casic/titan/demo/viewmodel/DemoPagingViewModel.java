@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pers.fz.mvvm.api.RepositoryFactory;
 import pers.fz.mvvm.base.BaseView;
-import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.viewmodel.PagingViewModel;
 
 /**
