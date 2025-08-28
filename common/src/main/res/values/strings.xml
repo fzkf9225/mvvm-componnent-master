@@ -1,11 +1,7 @@
 <resources>
 
-    <string name="nv_index">Index</string>
-    <string name="nv_info">Message</string>
-    <string name="nv_me">Mine</string>
-    <string name="nv_setting">Setting</string>
     <string name="loginClick">login</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="login_user_hint">please input username</string>
     <string name="login_tel_hint">please input tel</string>
     <string name="login_pwd_hint">please input password</string>
@@ -18,10 +14,8 @@
     <string name="login_way_code">verification code login</string>
     <string name="login_way_password">account password login</string>
     <string name="forget_password">forgot password</string>
-
     <string name="version_unknown">request error</string>
     <string name="noData">no data</string>
-
     <string name="state_network_error">network error</string>
     <string name="state_loading">loading…</string>
     <string name="state_not_more">no more data</string>
@@ -35,40 +29,31 @@
     <string name="setting_about">about us</string>
     <string name="setting_ITSupport">technical support</string>
     <string name="setting_feedBack">feedback</string>
-
-
     <string name="setting_exit">exit</string>
-    <string name="manageapplications_settings_title">application marketplace</string>
-    <string name="manageapplications_settings_summary">application marketplace</string>
+    <string name="manage_applications_settings_summary">application marketplace</string>
     <string name="settings">settiong</string>
     <string name="string_help_text">Permissions are missing, please check the Settings</string>
-
     <string name="lockViewTips">This password is used for security verification when the app is unlocked and used again after the screen is locked</string>
     <string name="set_lockView">Please set a gesture password</string>
-
-
     <string name="searchview_query_hint">please input keywords</string>
-
-
     <string name="pullToRefresh">pull down refresh</string>
     <string name="loosenToRefresh">loosen to refresh</string>
     <string name="refreshing">refreshing</string>
-
-    <string name="mis_folder_all">All Images</string>
-    <string name="mis_preview">Preview</string>
-    <string name="mis_msg_no_camera">No system camera found</string>
-    <string name="mis_msg_amount_limit">Select images amount is limit</string>
-    <string name="mis_action_done">Done</string>
-    <string name="mis_action_button_string" translatable="false">%1$s(%2$d/%3$d)</string>
-    <string name="mis_photo_unit">Shot</string>
-    <string name="mis_tip_take_photo">Take photo</string>
-    <string name="mis_error_image_not_exist">Image error</string>
-    <string name="mis_error_no_permission">Has no permission</string>
-    <string name="mis_permission_dialog_title">Permission Deny</string>
-    <string name="mis_permission_dialog_ok">OK</string>
-    <string name="mis_permission_dialog_cancel">Refuse</string>
-    <string name="mis_permission_rationale">Storage read permission is needed to pick files.</string>
-    <string name="mis_permission_rationale_write_storage">Storage write permission is needed to save the image.</string>
+    <string name="folder_all">All Images</string>
+    <string name="preview">Preview</string>
+    <string name="msg_no_camera">No system camera found</string>
+    <string name="msg_amount_limit">Select images amount is limit</string>
+    <string name="action_done">Done</string>
+    <string name="action_button_string" translatable="false">%1$s(%2$d/%3$d)</string>
+    <string name="photo_unit">Shot</string>
+    <string name="tip_take_photo">Take photo</string>
+    <string name="error_image_not_exist">Image error</string>
+    <string name="error_no_permission">Has no permission</string>
+    <string name="permission_dialog_title">Permission Deny</string>
+    <string name="permission_dialog_ok">OK</string>
+    <string name="permission_dialog_cancel">Refuse</string>
+    <string name="permission_rationale">Storage read permission is needed to pick files.</string>
+    <string name="permission_rationale_write_storage">Storage write permission is needed to save the image.</string>
     <string name="upgrade">upgrade</string>
     <string name="loading_now">Loading…</string>
     <string name="please_entry_something">Please enter</string>
@@ -89,6 +74,5 @@
     <string name="modify">Modify</string>
     <string name="create">Create</string>
     <string name="protection_guidelines">Personal Information Protection Guidelines</string>
-
 
 </resources>

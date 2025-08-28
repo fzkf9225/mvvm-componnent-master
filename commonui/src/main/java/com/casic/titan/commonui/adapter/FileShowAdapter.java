@@ -1,5 +1,6 @@
 package com.casic.titan.commonui.adapter;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -100,7 +101,9 @@ public class FileShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
                     Bundle bundleVideo = new Bundle();
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(item.getPath()));
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, item.getPath());
-                    VideoPlayerActivity.show(v.getContext(), bundleVideo);
+                    Intent intent = new Intent(v.getContext(),VideoPlayerActivity.class);
+                    intent.putExtras(bundleVideo);
+                    v.getContext().startActivity(intent);
                 } else {
                     AttachmentUtil.viewFile(v.getContext(), adapter.getItem(getAbsoluteAdapterPosition()).getPath());
                 }

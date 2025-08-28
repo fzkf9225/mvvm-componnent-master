@@ -5,9 +5,14 @@
     <external-path
         name="files_root"
         path="." />
-
     <!--应用的外部私有文件目录,如 /sdcard/Android/data/<包名>/files/-->
     <external-files-path
         name="external-files-root"
+        path="." />
+    <external-path
+        name="external_storage_root"
+        path="." />
+    <external-path
+        name="external_path"
         path="." />
 </paths>

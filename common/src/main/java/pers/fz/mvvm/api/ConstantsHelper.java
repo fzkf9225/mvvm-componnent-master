@@ -22,13 +22,25 @@ public class ConstantsHelper {
 
     public static boolean hasNewAppVersion = false;//是否有新版本
 
+
+    /**
+     * 常用的intent参数的key
+     */
+    public static class IntentParams {
+        public static String ITEM_ID = "itemId";
+        public static String ITEM_DATA = "itemData";
+        public static String ITEM_POSITION = "itemPosition";
+        public static String IS_MODIFY = "isModify";
+        public static String IS_CREATE = "isCreate";
+    }
+
     public static final String DOWNLOAD_CHANNEL_ID = Config.getInstance().getApplication().getPackageName() + "._app_download";
     public static final String DOWNLOAD_CHANNEL_NAME = "文件下载";
 
     public static final String NOTICE_CHANNEL_ID = Config.getInstance().getApplication().getPackageName() + "._app_info_notice";
     public static final String NOTICE_CHANNEL_NAME = "消息通知";
 
-    public  final static List<String> IMAGE_TYPE = Arrays.asList(
+    public final static List<String> IMAGE_TYPE = Arrays.asList(
             "png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "pcx", "tga", "exif", "fpx", "svg", "svgz",
             "psd", "cdr", "pcd", "dxf", "ufo", "eps", "ai", "raw", "wmf", "webp", "avif", "apng", "jfif",
             "ico", "icns", "heic", "heif", "jp2", "j2k", "jpx", "jpm", "mj2", "dng", "cr2", "nef", "arw",
@@ -39,7 +51,7 @@ public class ConstantsHelper {
             "SR2", "RAF", "ORF", "RW2", "PEF", "X3F", "BPG", "HDR", "EXR", "PBM", "PGM", "PPM", "PAM"
     );
 
-    public  final static List<String> VIDEO_TYPE = Arrays.asList(
+    public final static List<String> VIDEO_TYPE = Arrays.asList(
             "mp4", "m2v", "mkv", "avi", "mpeg", "mpg", "wmv", "mov", "rm", "ram", "swf", "flv", "rmvb",
             "asf", "m4v", "3gp", "3g2", "dat", "vob", "asx", "ts", "mts", "m2ts", "divx", "f4v", "ogv",
             "webm", "mxf", "wtv", "dv", "mod", "tod", "m4p", "m4b", "ismv", "isma", "avchd", "hdv", "ogm",

@@ -2,75 +2,118 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.casic.titan.demo">
+    <!-- Android 13+ 通知权限 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Android 13及以上版本发送通知必须申请的运行时权限，用户需要明确授权 -->
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 13的通知权限 -->
+    <!-- 读取设备上的图片文件 -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
-        android:minSdkVersion="33" /> <!-- 如果你想开发音乐播放器之类需要获取音频的app，加上这个权限 -->
+        android:minSdkVersion="33" /> <!-- Android 13+ 专用的图片读取权限，用于相册选择、头像设置、图片编辑等需要访问图片的功能 -->
+
+    <!-- 读取设备上的音频文件 -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_AUDIO"
-        android:minSdkVersion="33" /> <!-- 如果你想开发视频编辑器之类需要获取视频的app，加上这个权限 -->
+        android:minSdkVersion="33" /> <!-- Android 13+ 专用的音频读取权限，用于音乐播放器、铃声设置、音频编辑等需要访问音频文件的功能 -->
+
+    <!-- 读取设备上的视频文件 -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_VIDEO"
-        android:minSdkVersion="33" /> <!-- 向前兼容 -->
+        android:minSdkVersion="33" /> <!-- Android 13+ 专用的视频读取权限，用于视频播放器、视频编辑、视频分享等需要访问视频文件的功能 -->
+
+    <!-- 兼容旧版本的存储读取权限 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" /> <!-- To handle the reselection within the app on Android 14 (API level 34) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
-    <uses-permission
-        android:name="android.permission.MANAGE_DOCUMENTS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许应用读写用户的外部存储器 -->
+        android:maxSdkVersion="32" /> <!-- Android 12及以下版本使用的通用读取存储权限，在Android 13+上被上述细分权限替代 -->
+
+    <!-- Android 14+ 用户选择的媒体访问权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" /> <!-- Android 14+ 允许应用访问用户明确选择的媒体文件，支持部分访问而非整个媒体库 -->
+
+    <!-- 网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许应用进行网络连接，访问互联网数据，几乎所有需要网络的app都需要此权限 -->
+
+    <!-- 获取本地MAC地址（系统级权限） -->
     <uses-permission
         android:name="android.permission.LOCAL_MAC_ADDRESS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+        tools:ignore="ProtectedPermissions" /> <!-- 获取设备的MAC地址，这是一个系统级权限，普通应用通常无法使用 -->
 
-    <permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ReservedSystemPermission" />
+    <!-- 写入外部存储权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 向共享存储空间写入文件，如保存文件、导出数据等，在Android 10+中受到严格限制 -->
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 极光推送权限end -->
+    <!-- 访问网络状态信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检测网络连接类型（WiFi/移动数据）和状态，用于判断网络是否可用 -->
+
+    <!-- 接收用户解锁设备广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> <!-- 当用户解锁设备并开始交互时接收广播，可用于在用户使用设备时执行某些操作 -->
+
+    <!-- 唤醒锁定权限 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 防止设备休眠，保持屏幕或CPU运行，用于需要长时间执行任务的应用 -->
+
+    <!-- 读取手机状态信息 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 获取设备标识信息、SIM卡状态、来电状态等，在Android 10+中受到限制 -->
+
+    <!-- 控制振动器 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 允许应用使设备振动，用于通知提醒、触觉反馈、游戏效果等场景 -->
+
+    <!-- 悬浮窗权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 显示系统级悬浮窗口，需要用户手动授权，用于调试工具、浮动按钮等 -->
+
+    <!-- 粗略定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 访问粗略位置信息，通过WiFi和移动网络基站获取，精度较低 -->
+
+    <!-- 改变WiFi状态 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 开启/关闭WiFi、扫描网络、修改WiFi配置等操作 -->
+
+    <!-- 精确定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 访问精确位置信息，主要通过GPS获取高精度定位 -->
+
+    <!-- 访问额外的位置命令 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 访问位置提供程序的额外命令，用于高级定位功能 -->
+
+    <!-- 改变网络状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 切换移动数据、配置网络连接等操作 -->
+
+    <!-- 管理所有外部存储访问 -->
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" /> <!-- 百度地图strat -->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 打电话的权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" /> <!-- 百度地图end -->
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+        tools:ignore="ScopedStorage" /> <!-- 允许访问所有外部存储文件，需要用户手动授权，Google Play审核严格 -->
 
-    <permission
-        android:name="android.permission.STATUS_BAR_SERVICE"
-        android:protectionLevel="signature"
-        tools:ignore="ReservedSystemPermission" /> <!-- 用于扫描二维码 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 适配android 8.0 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 百度地图相关权限开始 -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" /> <!-- 读取系统设置，可能用于检测设备配置（百度地图使用） -->
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取WiFi连接信息，用于网络定位和地图服务优化 -->
+
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" /> <!-- 百度地图特有的定位服务权限 -->
+
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- 修改音频设置，如通话音量、媒体音量等 -->
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 使用麦克风录制音频，可能用于语音搜索、语音导航 -->
+    <!-- 百度地图相关权限结束 -->
+
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" /> <!-- 使用全屏Intent显示通知，用于来电显示、重要提醒等 -->
+
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" /> <!-- 结束后台进程，用于内存清理和性能优化 -->
+
+    <!-- 相机访问权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 访问相机设备，用于扫码、拍照、人脸识别等功能 -->
+
+    <!-- 闪光灯控制权限 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 控制相机闪光灯作为手电筒使用 -->
+
+    <!-- 请求安装包权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 允许应用安装其他APK文件，用于应用更新、插件安装等 -->
+
+    <!-- 声明相机硬件非必需 -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false" /> <!-- 表明应用可以使用相机但不是必须的，在没有相机的设备上也可安装 -->
+
+    <!-- 声明自动对焦功能非必需 -->
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" /> <!-- 12及以下的通知权限 -->
-    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY" />
+        android:required="false" /> <!-- 表明应用可以使用相机自动对焦功能但不是必须的 -->
+
+    <!-- 请求通知策略权限 -->
+    <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY" /> <!-- 允许应用访问和修改通知策略，如设置勿扰模式等 -->
 
     <application
         android:name=".api.ApplicationHelper"
@@ -86,6 +129,36 @@
         android:theme="@style/AppBaseTheme"
         tools:replace="android:theme"
         tools:targetApi="31">
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
+
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="360" />
+
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="640" />
+
         <activity
             android:name=".activity.CustomCameraActivity"
             android:exported="false" />
@@ -123,13 +196,6 @@
             android:name=".activity.VerifyTopActivity"
             android:exported="false" />
 
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
-
         <activity
             android:name=".activity.ViewPagerSampleActivity"
             android:exported="false" />
@@ -158,27 +224,6 @@
             android:name=".activity.GoogleGPSActivity"
             android:exported="false" />
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" />
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.FileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
-        <meta-data
-            android:name="design_width_in_dp"
-            android:value="360" />
-        <meta-data
-            android:name="design_height_in_dp"
-            android:value="640" />
-
         <activity
             android:name=".activity.LaunchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -190,11 +235,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask" />
+
     </application>
 
 </manifest>

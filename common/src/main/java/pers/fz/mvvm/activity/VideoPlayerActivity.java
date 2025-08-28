@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
@@ -24,6 +25,7 @@ import pers.fz.mvvm.widget.dialog.MessageDialog;
  * Create by CherishTang on 2019/11/27
  * describe:视频播放，仿腾讯视频,Oppo R11上播放会偶尔闪退返回，几率时间，原因未知
  */
+@AndroidEntryPoint
 public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, TextureViewPlayerActivityBinding> {
     public final static String VIDEO_PATH = "videoPath";
     public final static String VIDEO_TITLE = "videoTitle";
@@ -78,7 +80,6 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(this)
                 .load(videoPath)
-                .apply(new RequestOptions().placeholder(R.mipmap.ic_default_image).error(R.mipmap.ic_default_image))
                 .into(imageView);
         binding.videoPlayer.setThumbImageView(imageView);
         //增加title

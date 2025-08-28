@@ -3,36 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Satellite and network location services -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- 精确定位权限（GPS和网络） -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 访问精确位置信息，主要通过GPS获取高精度定位，用于导航、运动追踪等需要米级精度的场景 -->
+
+    <!-- 粗略定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 访问粗略位置信息，通过WiFi和移动网络基站获取，精度较低（几百米到几公里），用于天气、附近服务等 -->
+
+    <!-- 后台定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 允许应用在后台（应用不在运行时）访问设备位置，用于持续追踪、地理围栏等场景，需要向用户明确说明用途 -->
+
     <!-- Writing log files to storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- 写入外部存储权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 向共享存储空间写入文件，如保存日志、导出数据、下载文件等，在Android 10+中受到严格限制 -->
+
+    <!-- 管理所有文件访问权限 -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> <!-- 允许访问所有外部存储文件（Scoped Storage之外），需要用户手动授权，Google Play审核严格，仅用于文件管理器、备份工具等特殊场景 -->
+
     <!-- If the user wants the app to start on boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 接收启动完成广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- 允许应用在设备启动完成后自动重启服务，用于需要常驻后台的应用如安全软件、自动化工具 -->
+
     <!-- If the user needs to send to external services like Custom URL, Dropbox, OSM -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许应用建立网络连接，访问互联网服务，如上传数据到云服务、访问在线地图等 -->
+
     <!-- To check if an internet connection exists before communicating  -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 访问网络状态信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检测网络连接状态和类型，用于判断是否联网、是WiFi还是移动数据，避免在无网络时进行通信 -->
+
     <!-- If the user needs to use external GPS receiver eg over bluetooth -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" /> <!-- Writing log files to storage -->
-    <uses-permission
-        android:name="android.permission.ACCESS_MOCK_LOCATION"
-        tools:ignore="MockLocation,ProtectedPermissions" /> <!-- To let the user disable battery optimization from within the app -->
+    <!-- 前台位置服务权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" /> <!-- 允许在前台服务中访问位置信息，用于需要持续获取位置的前台应用如导航软件 -->
+
+    <!-- 模拟位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" tools:ignore="MockLocation,ProtectedPermissions" /> <!-- 检测或提供模拟位置信息，主要用于开发测试，普通用户应用通常不需要 -->
+
     <!-- To let the user disable battery optimization from within the app -->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- 请求忽略电池优化 -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- 允许应用请求用户将其加入电池优化白名单，避免后台服务被系统限制，需要用户手动确认 -->
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- Android 6.0+ 的兼容声明 -->
 
     <!-- allow this to run as a foreground service -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
-        tools:ignore="ForegroundServicesPolicy" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"
-        tools:ignore="ExactAlarmPolicy" />
-    <uses-permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
+    <!-- 前台服务权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:ignore="ForegroundServicesPolicy" /> <!-- 允许应用启动前台服务（在通知栏显示持续通知），用于需要长时间运行的任务如音乐播放、文件下载 -->
+
+    <!-- 精确闹钟权限 -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- 允许应用安排精确的闹钟（触发时间偏差很小），用于日历提醒、定时任务等需要准确定时的功能 -->
+
+    <!-- 使用精确闹钟权限 -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" tools:ignore="ExactAlarmPolicy" /> <!-- Android 12+ 的精确闹钟权限，默认授予系统应用，普通应用需要用户手动授权或符合特定用例 -->
 
     <application>
         <service

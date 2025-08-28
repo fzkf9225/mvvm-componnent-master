@@ -86,7 +86,7 @@ public class PreviewPhotoDialog extends Dialog {
     protected Drawable errorImage;
 
     public PreviewPhotoDialog(Context context) {
-        this(context, R.style.Pic_Dialog);
+        this(context, R.style.PreviewPhotoDialog);
     }
 
     public PreviewPhotoDialog(Context context, int themeResId) {
@@ -98,12 +98,12 @@ public class PreviewPhotoDialog extends Dialog {
     }
 
     public PreviewPhotoDialog(Context context, boolean canSaveImage) {
-        this(context, R.style.Pic_Dialog);
+        this(context, R.style.PreviewPhotoDialog);
         this.canSaveImage = canSaveImage;
     }
 
     public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, int position) {
-        this(context, R.style.Pic_Dialog);
+        this(context, R.style.PreviewPhotoDialog);
         this.imageInfos = imageInfos;
         if (this.imageInfos == null) {
             this.imageInfos = new ArrayList<>();
@@ -112,7 +112,7 @@ public class PreviewPhotoDialog extends Dialog {
     }
 
     public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, boolean canSaveImage, int position) {
-        this(context, R.style.Pic_Dialog);
+        this(context, R.style.PreviewPhotoDialog);
         this.imageInfos = imageInfos;
         if (this.imageInfos == null) {
             this.imageInfos = new ArrayList<>();
@@ -224,7 +224,6 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,7 +231,7 @@ public class PreviewPhotoDialog extends Dialog {
         if (getWindow() != null) {
             getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         }
-        viewPager = findViewById(R.id.vp);
+        viewPager = findViewById(R.id.preview_viewPager);
         llPoint = findViewById(R.id.ll_point);
         initPageAdapter();
         viewPager.setCurrentItem(position);

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <public name="mis_asv" type="dimen" />
     <!--dimen资源文件-->
     <public name="horizontal_margin_xxxxl" type="dimen" />
     <public name="vertical_margin_xxxxl" type="dimen" />
@@ -217,7 +216,7 @@
     <public name="MyCustomTabLayout" type="style"/>
     <public name="ActionSheetDialogStyle" type="style"/>
     <public name="ActionSheetDialogAnimation" type="style"/>
-    <public name="Pic_Dialog" type="style"/>
+    <public name="PreviewPhotoDialog" type="style"/>
     <public name="ShowImageDialogAnimation" type="style"/>
     <public name="dialog" type="style"/>
     <public name="ToolBarStyle_black" type="style"/>
@@ -247,10 +246,6 @@
     <public name="day" type="string"/>
     <public name="please_enter" type="string"/>
     <public name="search" type="string"/>
-    <public name="nv_index" type="string"/>
-    <public name="nv_info" type="string"/>
-    <public name="nv_me" type="string"/>
-    <public name="nv_setting" type="string"/>
     <public name="loginClick" type="string"/>
     <public name="cancel" type="string"/>
     <public name="sure" type="string"/>
@@ -287,8 +282,7 @@
     <public name="setting_ITSupport" type="string"/>
     <public name="setting_feedBack" type="string"/>
     <public name="setting_exit" type="string"/>
-    <public name="manageapplications_settings_title" type="string"/>
-    <public name="manageapplications_settings_summary" type="string"/>
+    <public name="manage_applications_settings_summary" type="string"/>
     <public name="settings" type="string"/>
     <public name="string_help_text" type="string"/>
     <public name="lockViewTips" type="string"/>
@@ -299,5 +293,21 @@
     <public name="refreshing" type="string"/>
     <public name="upgrade" type="string"/>
     <public name="please_choose_count" type="string"/>
+    <public name="folder_all" type="string"/>
+    <public name="preview" type="string"/>
+    <public name="msg_no_camera" type="string"/>
+    <public name="msg_amount_limit" type="string"/>
+    <public name="action_done" type="string"/>
+    <public name="photo_unit" type="string"/>
+    <public name="tip_take_photo" type="string"/>
+    <public name="error_image_not_exist" type="string"/>
+    <public name="error_no_permission" type="string"/>
+    <public name="permission_dialog_title" type="string"/>
+    <public name="permission_dialog_ok" type="string"/>
+    <public name="permission_dialog_cancel" type="string"/>
+    <public name="permission_rationale" type="string"/>
+    <public name="permission_rationale_write_storage" type="string"/>
+    <public name="loading_now" type="string"/>
+    <public name="save_to_local" type="string"/>
 
 </resources>

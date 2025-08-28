@@ -1,53 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- 一般来说，允许用户自定义头像的app都需要这个权限 -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_IMAGES"
-        android:minSdkVersion="33" /> <!-- 如果你想开发音乐播放器之类需要获取音频的app，加上这个权限 -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_AUDIO"
-        android:minSdkVersion="33" /> <!-- 如果你想开发视频编辑器之类需要获取视频的app，加上这个权限 -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_VIDEO"
-        android:minSdkVersion="33" /> <!-- 向前兼容 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <!-- To handle the reselection within the app on Android 14 (API level 34) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
-    <uses-permission
-        android:name="android.permission.MANAGE_DOCUMENTS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许应用读写用户的外部存储器 -->
-    <uses-permission
-        android:name="android.permission.LOCAL_MAC_ADDRESS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 读取设备上的图片和照片 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" android:minSdkVersion="33" /> <!-- Android 13+ 专用的图片读取权限，用于相册选择、头像设置等需要访问图片的功能 -->
 
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-feature android:name="android.hardware.telephony"  android:required="false"/>
-    <permission
-        android:name="android.permission.STATUS_BAR_SERVICE"
-        android:protectionLevel="signature"
-        tools:ignore="ReservedSystemPermission" /> <!-- 用于扫描二维码 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 适配android 8.0 -->
+    <!-- 读取设备上的音频文件 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" android:minSdkVersion="33" /> <!-- Android 13+ 专用的音频读取权限，用于音乐播放器、铃声设置等需要访问音频文件的功能 -->
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+    <!-- 读取设备上的视频文件 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" android:minSdkVersion="33" /> <!-- Android 13+ 专用的视频读取权限，用于视频播放器、视频编辑等需要访问视频文件的功能 -->
+
+    <!-- 接收系统启动完成广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> <!-- 允许应用在设备重启后自动启动服务或接收广播，用于需要常驻后台的应用 -->
+
+    <!-- 读取外部存储权限（兼容旧版本） -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" /> <!-- Android 12及以下版本使用的通用读取存储权限，在Android 13+上被上述细分权限替代 -->
+
+    <!-- 处理Android 14中的用户选择媒体访问 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" /> <!-- Android 14+ 允许应用访问用户明确选择的媒体文件，支持部分访问而非整个媒体库 -->
+
+    <!-- 网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许应用进行网络连接，访问互联网数据，几乎所有需要网络的app都需要此权限 -->
+
+    <!-- 写入外部存储权限（兼容旧版本） -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" tools:ignore="ScopedStorage" /> <!-- Android 12及以下版本使用的写入存储权限，高版本中受到严格限制，需要改用MediaStore API -->
+
+    <!-- 访问网络状态信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检测网络连接类型（WiFi/移动数据）和状态，用于判断网络是否可用 -->
+
+    <!-- 接收用户解锁设备广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> <!-- 当用户解锁设备并开始交互时接收广播，可用于在用户使用设备时执行某些操作 -->
+
+    <!-- 读取手机状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 获取设备标识信息（IMEI、IMSI）、SIM卡状态、来电状态等，在Android 10+中受到限制 -->
+
+    <!-- 控制振动器 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 允许应用使设备振动，用于通知、反馈、游戏效果等场景 -->
+
+    <!-- 修改音频设置 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- 调整通话音量、媒体音量等全局音频设置，用于音视频类应用 -->
+
+    <!-- 录音权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 使用麦克风进行录音，用于语音通话、语音识别、录音笔记等功能 -->
+
+    <!-- 使用全屏Intent权限 -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" /> <!-- 允许应用显示全屏通知，如来电显示、闹钟提醒等需要立即关注的内容 -->
+
+    <!-- 声明电话功能非必需 -->
+    <uses-feature android:name="android.hardware.telephony"  android:required="false"/> <!-- 表明应用可以使用电话功能但不是必须的，在没有电话功能的设备（如平板）上也可安装 -->
+
+    <!-- 相机访问权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 访问相机设备，用于扫描二维码、拍照、视频通话、人脸识别等功能 -->
+
+    <!-- 闪光灯控制权限 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 控制相机闪光灯作为手电筒使用 -->
+
+    <!-- 声明相机硬件非必需 -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" /> <!-- 表明应用可以使用相机但不是必须的，在没有相机的设备上也可安装 -->
+
+    <!-- 声明自动对焦功能非必需 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" /> <!-- 表明应用可以使用相机自动对焦功能但不是必须的 -->
 
     <application>
 

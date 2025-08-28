@@ -3,9 +3,11 @@ package pers.fz.mvvm.util.common
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -218,6 +220,41 @@ object DrawableUtil {
         return resourceToBase64(context, resourceId, format)
     }
 
+    @Synchronized
+    fun drawableToByte(drawable: Drawable?): ByteArray? {
+        if (drawable != null) {
+            val bitmap = createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                if (drawable.opacity != PixelFormat.OPAQUE)
+                    Bitmap.Config.ARGB_8888
+                else
+                    Bitmap.Config.RGB_565
+            )
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(
+                0, 0, drawable.intrinsicWidth,
+                drawable.intrinsicHeight
+            )
+            drawable.draw(canvas)
+            val size = bitmap.getWidth() * bitmap.getHeight() * 4
+            // 创建一个字节数组输出流,流的大小为size
+            val bas = ByteArrayOutputStream(size)
+            // 设置位图的压缩格式，质量为100%，并放入字节数组输出流中
+            bitmap.compress(CompressFormat.PNG, 100, bas)
+            // 将字节数组输出流转化为字节数组byte[]
+            return bas.toByteArray()
+        }
+        return null
+    }
+
+    @Synchronized
+    fun byteToDrawable(img: ByteArray?): Bitmap? {
+        if (img != null) {
+            return BitmapFactory.decodeByteArray(img, 0, img.size)
+        }
+        return null
+    }
 }
 
 

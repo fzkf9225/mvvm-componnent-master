@@ -12,7 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import pers.fz.mvvm.api.BaseApiService;
 import pers.fz.mvvm.api.BaseApplication;
-import pers.fz.mvvm.util.common.CommonUtil;
+import pers.fz.mvvm.util.common.FileUtil;
 import pers.fz.mvvm.util.common.PropertiesUtil;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
@@ -67,7 +67,7 @@ public class DownloadRetrofitFactory {
     }
 
     public static Observable<File> enqueue(String url,String saveBasePath) {
-        File tempFile = CommonUtil.getTempFile(url, saveBasePath);
+        File tempFile = FileUtil.getTempFile(url, saveBasePath);
         DownloadInterceptor interceptor = new DownloadInterceptor();
         return getDownloadRetrofit(interceptor)
                 .create(BaseApiService.class)

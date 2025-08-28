@@ -34,7 +34,7 @@ public class AppSettingHelper {
     }
 
     public static void setPermissionNotTipEnable(Context context, boolean enable, long nowDate) {
-        MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, false);
+        MMKVHelper.getInstance().put(NOTIFY_REQUEST_STATE, enable);
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_VERSION_NAME, AppManager.getAppManager().getVersion(context));
         MMKVHelper.getInstance().put(NOTIFY_REQUEST_TIME, nowDate);
     }
@@ -50,7 +50,7 @@ public class AppSettingHelper {
     /**
      * 不提醒的时间长度，默认为7天，这里单位为小时
      */
-    public static boolean getPermissionNotTipEnable(Context context,long hours) {
+    public static boolean getPermissionNotTipEnable(Context context, long hours) {
         boolean enable = MMKVHelper.getInstance().getBoolean(NOTIFY_REQUEST_TIME, false);
         long lastDate = MMKVHelper.getInstance().getLong(NOTIFY_REQUEST_TIME, System.currentTimeMillis());
         String versionName = MMKVHelper.getInstance().getString(NOTIFY_REQUEST_VERSION_NAME);

@@ -1,6 +1,8 @@
 package pers.fz.mvvm.util.common;
 
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -34,6 +36,47 @@ public class ClassUtil {
 
         // 处理父类
         getAllInterfaces(clazz.getSuperclass(), result);
+    }
+
+
+    public static <T> boolean isStringType(T data) {
+        return String.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isObjectType(T data) {
+        return Object.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isBooleanType(T data) {
+        return Boolean.class.isAssignableFrom(data.getClass()) || boolean.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isIntegerType(T data) {
+        return Integer.class.isAssignableFrom(data.getClass()) || int.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isLongType(T data) {
+        return Long.class.isAssignableFrom(data.getClass()) || long.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isDoubleType(T data) {
+        return Double.class.isAssignableFrom(data.getClass()) || double.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isFloatType(T data) {
+        return Float.class.isAssignableFrom(data.getClass()) || float.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isListType(T data) {
+        return List.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isMapType(T data) {
+        return Map.class.isAssignableFrom(data.getClass());
+    }
+
+    public static <T> boolean isArrayType(T data) {
+        return data.getClass().isArray();
     }
 }
 

@@ -66,6 +66,11 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, ActivityLaunchB
     }
 
     @Override
+    protected boolean enableImmersionBar() {
+        return true;
+    }
+
+    @Override
     protected boolean hasToolBar() {
         return false;
     }

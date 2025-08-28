@@ -33,19 +33,51 @@ import pers.fz.mvvm.viewmodel.EmptyViewModel;
  */
 @AndroidEntryPoint
 public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding> {
-    // Intent参数Key
-    public final static String TITLE = "titleText";          // 页面标题
-    public final static String URL_TYPE = "urlType";        // URL类型(0:网络,1:本地,2:自动)
-    public final static String LOAD_URL = "loadUrl";        // 加载的URL
-    public final static String TOOLBAR = "toolbar";         // 是否显示Toolbar
-    public final static String HAS_MENU = "hasMenu";        // 是否显示右上角菜单
-    public final static String DOMAIN = "domain";           // 自定义域名(用于加载本地资源)
+    /**
+     * 页面标题,Intent参数Key
+     */
+    public final static String TITLE = "titleText";
+    /**
+     * URL类型(0:网络,1:本地,2:自动)
+      */
+    public final static String URL_TYPE = "urlType";
+    /**
+     * 加载的URL
+     */
+    public final static String LOAD_URL = "loadUrl";
+    /**
+     * 是否显示Toolbar
+     */
+    public final static String TOOLBAR = "toolbar";
+    /**
+     * 是否显示右上角菜单
+     */
+    public final static String HAS_MENU = "hasMenu";
+    /**
+     * 自定义域名(用于加载本地资源)
+     */
+    public final static String DOMAIN = "domain";
 
-    protected String url;             // 当前加载的URL
-    protected int urlType;            // URL类型
-    protected boolean hasToolbar;      // 是否显示Toolbar
-    protected boolean hasMenu;         // 是否显示菜单
-    protected String domain;           // 自定义域名
+    /**
+     * 当前加载的URL
+     */
+    protected String url;
+    /**
+     * URL类型
+     */
+    protected int urlType;
+    /**
+     * 是否显示Toolbar
+     */
+    protected boolean hasToolbar;
+    /**
+     * 是否显示菜单
+     */
+    protected boolean hasMenu;
+    /**
+     * 自定义域名
+     */
+    protected String domain;
 
     @Override
     protected int getLayoutId() {

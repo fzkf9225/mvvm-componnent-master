@@ -1,6 +1,7 @@
 package pers.fz.mvvm.widget.customview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -33,12 +34,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import pers.fz.mvvm.R;
+import pers.fz.mvvm.activity.WebViewActivity;
 import pers.fz.mvvm.adapter.PictureAdapter;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.bean.BannerBean;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
-import pers.fz.mvvm.util.common.CommonUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
 import pers.fz.mvvm.util.common.FileUtil;
@@ -346,7 +347,16 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
             if ("#".equals(bannerList.get(position).getLinkUrl())) {
                 return;
             }
-            CommonUtil.toBrowser(getContext(), bannerList.get(position).getLinkUrl(), bannerList.get(position).isLinkInside());
+            if (bannerList.get(position).getLinkUrl() == null) {
+                return;
+            }
+            if ( bannerList.get(position).isLinkInside()) {
+                WebViewActivity.show(getContext(), bannerList.get(position).getLinkUrl(), "");
+            } else {
+                Uri uri = Uri.parse(bannerList.get(position).getLinkUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                getContext().startActivity(intent);
+            }
             return;
         }
         if (previewLarger) {

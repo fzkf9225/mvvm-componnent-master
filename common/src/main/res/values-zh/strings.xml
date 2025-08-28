@@ -1,9 +1,5 @@
 <resources>
 
-    <string name="nv_index">首页</string>
-    <string name="nv_info">消息</string>
-    <string name="nv_me">我的</string>
-    <string name="nv_setting">设置</string>
     <string name="loginClick">点击登录</string>
     <string name="cancel">取消</string>
     <string name="login_user_hint">请输入用户名</string>
@@ -18,10 +14,8 @@
     <string name="login_way_code">验证码登录</string>
     <string name="login_way_password">账号密码登录</string>
     <string name="forget_password">忘记密码</string>
-
     <string name="version_unknown">请求异常</string>
     <string name="noData">暂无数据</string>
-
     <string name="state_network_error">网络错误</string>
     <string name="state_loading">正在加载…</string>
     <string name="state_not_more">没有更多数据</string>
@@ -30,42 +24,35 @@
     <string name="state_loading_error">数据加载中&#8230;</string>
     <string name="state_submit">正在提交中&#8230;</string>
     <string name="state_loading_again">点击图标,重新加载</string>
-
     <string name="setting_update">检查更新</string>
     <string name="setting_qrcode">扫描二维码</string>
     <string name="setting_about">关于我们</string>
     <string name="setting_ITSupport">技术支持</string>
     <string name="setting_feedBack">问题反馈</string>
-
     <string name="setting_exit">退出账号</string>
-    <string name="manageapplications_settings_title">应用中心</string>
-    <string name="manageapplications_settings_summary">应用中心</string>
+    <string name="manage_applications_settings_summary">应用中心</string>
     <string name="settings">设置</string>
     <string name="string_help_text">缺少权限，请检查设置</string>
-
     <string name="lockViewTips">该密码用于应用解锁和锁屏后再次使用时的安全验证</string>
     <string name="set_lockView">请设置手势密码</string>
-
-    <string name="searchview_query_hint">请输入关键字、标签</string>
-
+    <string name="searchview_query_hint">请输入关键字</string>
     <string name="pullToRefresh">下拉刷新</string>
     <string name="loosenToRefresh">松开刷新</string>
     <string name="refreshing">正在刷新</string>
-
-    <string name="mis_folder_all">所有照片</string>
-    <string name="mis_preview">预览</string>
-    <string name="mis_msg_no_camera">没有系统相机</string>
-    <string name="mis_msg_amount_limit">已经达到最高选择数量</string>
-    <string name="mis_action_done">完成</string>
-    <string name="mis_photo_unit">张</string>
-    <string name="mis_tip_take_photo">拍摄照片</string>
-    <string name="mis_error_image_not_exist">图片错误</string>
-    <string name="mis_error_no_permission">无权限</string>
-    <string name="mis_permission_dialog_title">权限拒绝</string>
-    <string name="mis_permission_dialog_ok">好</string>
-    <string name="mis_permission_dialog_cancel">拒绝</string>
-    <string name="mis_permission_rationale">浏览图片需要您提供浏览存储的权限</string>
-    <string name="mis_permission_rationale_write_storage">保存拍照图片需要您提供写存储权限</string>
+    <string name="folder_all">所有照片</string>
+    <string name="preview">预览</string>
+    <string name="msg_no_camera">没有系统相机</string>
+    <string name="msg_amount_limit">已经达到最高选择数量</string>
+    <string name="action_done">完成</string>
+    <string name="photo_unit">张</string>
+    <string name="tip_take_photo">拍摄照片</string>
+    <string name="error_image_not_exist">图片错误</string>
+    <string name="error_no_permission">无权限</string>
+    <string name="permission_dialog_title">权限拒绝</string>
+    <string name="permission_dialog_ok">好</string>
+    <string name="permission_dialog_cancel">拒绝</string>
+    <string name="permission_rationale">浏览图片需要您提供浏览存储的权限</string>
+    <string name="permission_rationale_write_storage">保存拍照图片需要您提供写存储权限</string>
     <string name="upgrade">更新</string>
     <string name="loading_now">正在加载…</string>
     <string name="please_entry_something">请输入</string>

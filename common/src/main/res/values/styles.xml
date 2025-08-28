@@ -51,7 +51,7 @@
     </style>
 
     <!--朋友圈图片全屏样式-->
-    <style name="Pic_Dialog">
+    <style name="PreviewPhotoDialog">
         <!-- 边框 -->
         <item name="android:windowFrame">@null</item>
         <!-- 是否浮现在activity之上 -->

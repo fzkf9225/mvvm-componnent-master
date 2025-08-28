@@ -151,6 +151,24 @@ public class AppManager {
         return null;
     }
 
+    public static boolean isServiceRunning(Context mContext, Class<?> clx) {
+        if (clx == null) {
+            return false;
+        }
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+        for (ActivityManager.RunningServiceInfo serviceInfo : runningServices) {
+            ComponentName componentName = serviceInfo.service;
+            if (componentName.getClassName().equals(clx.getName()) && componentName.getPackageName().equals(mContext.getPackageName())) {
+                // Service已经注册和启动
+                return true;
+            }
+        }
+        // 执行相应的操作
+        return false;
+    }
+
     /**
      * 检查手机上是否安装了指定的软件
      *
@@ -166,7 +184,7 @@ public class AppManager {
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
         //用于存储所有已安装程序的包名
         List<String> packageNames = new ArrayList<String>();
-        //从pinfo中将包名字逐一取出，压入pName list中
+        //从packageInfos中将包名字逐一取出，压入pName list中
         for (int i = 0; i < packageInfos.size(); i++) {
             String packName = packageInfos.get(i).packageName;
             packageNames.add(packName);

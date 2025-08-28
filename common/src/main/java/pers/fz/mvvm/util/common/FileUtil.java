@@ -46,6 +46,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import pers.fz.mvvm.listener.FileUploadProgressListener;
+import pers.fz.mvvm.util.encode.MD5Util;
 import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.util.upload.ProgressRequestBody;
 
@@ -61,6 +62,22 @@ public final class FileUtil {
      * 分隔符.
      */
     public final static String FILE_EXTENSION_SEPARATOR = ".";
+
+    /**
+     * 获取临时文件
+     * @param url 文件地址
+     * @param saveBasePath 保存基础路径
+     * @return 临时文件
+     */
+    public static File getTempFile(String url, String saveBasePath) {
+        String tempFileName = null;
+        try {
+            tempFileName = "TEMP" + MD5Util.md5Encode(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new File(saveBasePath, tempFileName + ".temp.download");
+    }
 
     public static String getUrlFileExtensionName(String url) {
         if (url == null || url.isEmpty()) {
@@ -1328,5 +1345,6 @@ public final class FileUtil {
 
         return tempFile;
     }
+
 }
 

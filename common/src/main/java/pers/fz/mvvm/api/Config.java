@@ -1,6 +1,5 @@
 package pers.fz.mvvm.api;
 
-
 import android.app.Application;
 
 import com.tencent.mmkv.MMKV;
