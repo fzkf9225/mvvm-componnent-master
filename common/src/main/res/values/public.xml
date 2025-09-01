@@ -203,14 +203,6 @@
     <public name="s_line" type="style"/>
     <public name="h_area" type="style"/>
     <public name="WarpLinearLayoutDefault" type="style"/>
-    <public name="setting_item" type="style"/>
-    <public name="login_edit" type="style"/>
-    <public name="user_label" type="style"/>
-    <public name="user_content" type="style"/>
-    <public name="modify_password_edit" type="style"/>
-    <public name="list_linear_layout_min_height" type="style"/>
-    <public name="list_text_left" type="style"/>
-    <public name="list_text_right_show_all" type="style"/>
     <public name="AppBaseTheme" type="style"/>
     <public name="loading_dialog" type="style"/>
     <public name="MyCustomTabLayout" type="style"/>

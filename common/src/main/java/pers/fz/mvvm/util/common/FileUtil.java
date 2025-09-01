@@ -160,7 +160,6 @@ public final class FileUtil {
             if (!file.exists()) {
                 boolean result = file.createNewFile();
             }
-            long fileSize = body.contentLength();
             long fileSizeDownloaded = 0;
             byte[] fileReader = new byte[4096];
 
@@ -178,7 +177,6 @@ public final class FileUtil {
             }
 
             outputStream.flush();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -230,8 +228,6 @@ public final class FileUtil {
             }
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -267,13 +263,12 @@ public final class FileUtil {
         //设置图片路径
         String fileName = FileUtil.getNoRepeatFileName(appDir, "IMG_", ".jpg");
         File imageDir = new File(appDir, fileName + ".jpg");
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         try {
             fos = new FileOutputStream(imageDir);
             image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-            System.out.println(imageDir.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

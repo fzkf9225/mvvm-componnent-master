@@ -19,7 +19,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.WebViewBinding;
 import pers.fz.mvvm.enums.WebViewUrlTypeEnum;
-import pers.fz.mvvm.util.common.CordovaDialogsHelper;
+import pers.fz.mvvm.helper.CordovaDialogsHelper;
 import pers.fz.mvvm.util.common.SystemWebChromeClient;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 

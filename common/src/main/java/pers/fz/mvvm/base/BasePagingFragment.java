@@ -140,7 +140,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
                 return;
             }
             if (!errorService.hasPermission(model.getCode())) {
-                errorService.toNoPermission(requireContext());
+                errorService.toNoPermission(requireContext(), authManager.getLauncher());
             }
         } catch (Exception e) {
             e.printStackTrace();

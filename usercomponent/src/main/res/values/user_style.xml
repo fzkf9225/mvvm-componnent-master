@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="user_label">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/height_xxxxl</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/horizontal_margin_l</item>
+        <item name="android:paddingRight">@dimen/horizontal_margin_l</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="user_content">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/height_xxxxl</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_margin_l</item>
+        <item name="android:paddingLeft">@dimen/padding_l</item>
+        <item name="android:paddingRight">@dimen/padding_l</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/dark_light</item>
+    </style>
+
+    <style name="login_edit" tools:ignore="ResourceName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/height_xxxxl</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColorHint">@color/dark_light</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/autoColor</item>
+    </style>
+
+    <style name="modify_password_edit" tools:ignore="ResourceName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">top</item>
+        <item name="android:maxLength">16</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_marginTop">@dimen/vertical_margin_l</item>
+        <item name="android:textColorHint">@color/nv_bg_color</item>
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="list_linear_layout_min_height" tools:ignore="ResourceName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingTop">@dimen/padding_xl</item>
+        <item name="android:paddingBottom">@dimen/padding_xl</item>
+        <item name="android:layout_marginStart">@dimen/horizontal_margin_xl</item>
+        <item name="android:layout_marginEnd">@dimen/horizontal_margin_xl</item>
+    </style>
+
+    <style name="list_text_left" tools:ignore="ResourceName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/dark_light</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="list_text_right_show_all" tools:ignore="ResourceName">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/autoColor</item>
+    </style>
+</resources>

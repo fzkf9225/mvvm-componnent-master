@@ -4,6 +4,8 @@
     <attr name="imageWidth" format="dimension" />
     <attr name="imageSrc" format="reference" />
     <attr name="label" format="reference|string" />
+    <!-- value文字内容 -->
+    <attr name="value" format="string"/>
     <attr name="borderWidth" format="dimension" />
     <attr name="borderColor" format="reference|color" />
     <attr name="borderFocusColor" format="reference|color" />
@@ -26,7 +28,10 @@
     <attr name="rightTopRadius" format="dimension" />
     <attr name="rightBottomRadius" format="dimension" />
     <attr name="leftBottomRadius" format="dimension" />
-
+    <!--文字颜色-->
+    <attr name="labelTextColor" format="reference|color" />
+    <!-- label文字大小 -->
+    <attr name="labelTextSize" format="dimension"/>
     <attr name="iconSize" format="dimension"/>
     <attr name="iconMargin" format="dimension"/>
     <attr name="iconSrc" format="reference"/>
@@ -340,7 +345,6 @@
         </attr>
     </declare-styleable>
 
-
     <declare-styleable name="PopupView">
         <!--左侧图标与文字距离-->
         <attr name="startPadding" format="dimension" />
@@ -355,7 +359,7 @@
         <!--提示文字颜色-->
         <attr name="hiltTextColor" format="reference|color" />
         <!--文字颜色-->
-        <attr name="labelTextColor" format="reference|color" />
+        <attr name="labelTextColor"/>
         <!--文字大小-->
         <attr name="textSize"/>
         <!--左侧图标宽度-->
@@ -374,5 +378,87 @@
         <attr name="lineColor"/>
         <attr name="lineWidth"/>
         <attr name="cornerLength" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="IconLabelValueView">
+        <!-- label文字内容 -->
+        <attr name="label"/>
+        <!-- value文字内容 -->
+        <attr name="value"/>
+        <!-- 是否显示左侧图标 -->
+        <attr name="showLeftIcon" format="boolean"/>
+        <!-- 是否显示右侧图标 -->
+        <attr name="showRightIcon" format="boolean"/>
+        <!-- 是否展示底部边框 -->
+        <attr name="bottomBorder" format="boolean"/>
+        <!-- 正文文字颜色 -->
+        <attr name="valueTextColor" format="color"/>
+        <!-- 底部边框颜色 -->
+        <attr name="borderBottomColor" format="color"/>
+        <!-- label文字颜色 -->
+        <attr name="labelTextColor"/>
+        <!-- label文字大小 -->
+        <attr name="labelTextSize"/>
+        <!-- 正文文字大小 -->
+        <attr name="valueTextSize" format="dimension"/>
+        <!-- 底部边框与左侧的距离 -->
+        <attr name="borderBottomStartMargin" format="dimension"/>
+        <!-- 底部边框与右侧的距离 -->
+        <attr name="borderBottomEndMargin" format="dimension"/>
+        <!-- 左侧图标的左侧margin，默认16dp -->
+        <attr name="leftIconMarginStart" format="dimension"/>
+        <!-- 右侧图标的右侧margin，默认16dp -->
+        <attr name="rightIconMarginStart" format="dimension"/>
+        <!-- label左侧margin -->
+        <attr name="labelStartMargin" format="dimension"/>
+        <!-- label右侧margin -->
+        <attr name="labelEndMargin" format="dimension"/>
+        <!-- 正文文字与左侧的距离 -->
+        <attr name="textStartMargin" format="dimension"/>
+        <!-- 正文文字与右侧的距离 -->
+        <attr name="textEndMargin" format="dimension"/>
+        <!-- 左侧图标资源 -->
+        <attr name="leftIconSrc" format="reference"/>
+        <!-- 右侧图标资源 -->
+        <attr name="rightIconSrc" format="reference"/>
+        <!-- 左侧图标宽度 -->
+        <attr name="leftIconWidth" format="dimension"/>
+        <!-- 左侧图标高度 -->
+        <attr name="leftIconHeight" format="dimension"/>
+        <!-- 右侧图标宽度 -->
+        <attr name="rightIconWidth" format="dimension"/>
+        <!-- 右侧图标高度 -->
+        <attr name="rightIconHeight" format="dimension"/>
+        <!-- 右侧文字对齐方式 -->
+        <attr name="valueGravity" format="enum">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SquareLabelView">
+        <!-- 方块颜色 -->
+        <attr name="squareColor" format="color|reference" />
+        <!-- 方块宽度 -->
+        <attr name="squareWidth" format="dimension|reference" />
+        <!-- 方块高度 -->
+        <attr name="squareHeight" format="dimension|reference" />
+        <!-- 方块形状 -->
+        <attr name="squareShape" format="enum">
+            <enum name="rectangle" value="0" />
+            <enum name="oval" value="1" />
+            <enum name="round_rectangle" value="2" />
+        </attr>
+        <!-- 圆角半径（仅对round_rectangle有效） -->
+        <attr name="squareCornerRadius" format="dimension|reference" />
+        <!-- 方块位置 -->
+        <attr name="squarePosition" format="enum">
+            <enum name="start" value="0" />
+            <enum name="top" value="1" />
+            <enum name="end" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+        <!-- 方块与文本间距 -->
+        <attr name="squareSpacing" format="dimension|reference" />
     </declare-styleable>
 </resources>

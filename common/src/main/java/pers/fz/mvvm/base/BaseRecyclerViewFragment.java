@@ -182,7 +182,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
                 return;
             }
             if (!errorService.hasPermission(model.getCode())) {
-                errorService.toNoPermission(requireContext());
+                errorService.toNoPermission(requireContext(),authManager.getLauncher());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,13 +5,27 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.databinding.BaseObservable
 
-data class HomeMenuBean(
-    var id: Int,
-    var icon: Int,
-    var title: String,
-    var describe: String,
+open class HomeMenuBean : BaseObservable, Parcelable {
+    var id: Int
+    var icon: Int
+    var title: String
+    var describe: String
     var clx: Class<*>?
-) : BaseObservable(), Parcelable {
+
+    constructor(
+        id: Int,
+        icon: Int,
+        title: String,
+        describe: String,
+        clx: Class<*>?
+    ) {
+        this.id = id
+        this.icon = icon
+        this.title = title
+        this.describe = describe
+        this.clx = clx
+    }
+
     constructor(
         id: Int,
         icon: Int,
@@ -43,6 +57,27 @@ data class HomeMenuBean(
         return 0
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as HomeMenuBean
+
+        if (id != other.id) return false
+        if (icon != other.icon) return false
+        if (title != other.title) return false
+        if (describe != other.describe) return false
+        if (clx != other.clx) return false
+
+        return true
+    }
+
+
+    override fun toString(): String {
+        return "HomeMenuBean(id=$id, icon=$icon, title='$title', describe='$describe', clx=$clx)"
+    }
+
+
     companion object CREATOR : Parcelable.Creator<HomeMenuBean> {
         override fun createFromParcel(parcel: Parcel): HomeMenuBean {
             return HomeMenuBean(parcel)
@@ -51,5 +86,14 @@ data class HomeMenuBean(
         override fun newArray(size: Int): Array<HomeMenuBean?> {
             return arrayOfNulls(size)
         }
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + icon
+        result = 31 * result + title.hashCode()
+        result = 31 * result + describe.hashCode()
+        result = 31 * result + (clx?.hashCode() ?: 0)
+        return result
     }
 }

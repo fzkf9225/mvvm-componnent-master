@@ -136,7 +136,7 @@ public class StringUtil {
      * @param o 对象
      * @return 截取后的字符串
      */
-    public static String holdMaxlength(Object o) {
+    public static String holdMaxLength(Object o) {
         int maxLength = 50;
         if (o == null) {
             return "";
@@ -369,7 +369,7 @@ public class StringUtil {
      * @return HTML显示字符
      */
     public static String string2HTML(String strData) {
-        if (strData == null || "".equals(strData)) {
+        if (strData == null || strData.isEmpty()) {
             return "";
         }
         strData = replace(strData, "&", "&amp;");
@@ -421,7 +421,7 @@ public class StringUtil {
         } else if (index < 0) {
             index = 0;
         }
-        return commaExpress.substring(0, index) + newElement + commaExpress.substring(index, commaExpress.length());
+        return commaExpress.substring(0, index) + newElement + commaExpress.substring(index);
     }
 
     /**

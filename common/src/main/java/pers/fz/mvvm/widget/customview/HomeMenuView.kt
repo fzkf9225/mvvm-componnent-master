@@ -19,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2
 import pers.fz.mvvm.R
 import pers.fz.mvvm.adapter.Viewpager2MenuAdapter
 import pers.fz.mvvm.bean.HomeMenuBean
+import pers.fz.mvvm.listener.HomeMenuAdapterListener
 import pers.fz.mvvm.listener.OnMenuClickListener
 import pers.fz.mvvm.listener.PagingAdapterListener
 import pers.fz.mvvm.util.common.DensityUtil
@@ -30,7 +31,7 @@ import java.util.stream.IntStream
  * created by fz on 2025/4/27 15:59
  * describe:
  */
-open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
+open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleObserver {
     private var lifecycleOwner: LifecycleOwner? = null
     private var fragmentManager: FragmentManager? = null
 
@@ -78,6 +79,7 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
     }
 
     var onMenuClickListener: OnMenuClickListener? = null
+    var homeMenuAdapterListener : HomeMenuAdapterListener? = null
 
     private val menuViewPager by lazy {
         ViewPager2(context).apply {
@@ -103,9 +105,10 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
         Viewpager2MenuAdapter(
             fragmentManager!!,
             lifecycleOwner?.lifecycle!!,
-            menuList,
+            menuList as List<List<T>>,
             COLUMN,
-            adapterListener
+            adapterListener,
+            homeMenuAdapterListener
         )
     }
 
@@ -142,7 +145,7 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
     /**
      * 菜单数据
      */
-    private var menuList: MutableList<MutableList<HomeMenuBean>>? = null
+    private var menuList: MutableList<MutableList<T>>? = null
 
 
     constructor(context: Context) : super(context)
@@ -193,10 +196,8 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
         background = ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
     }
 
-    fun initData(
-        menuList: MutableList<HomeMenuBean>
-    ) {
-        this.menuList = menuList.chunked(COLUMN * ROW) as MutableList<MutableList<HomeMenuBean>>?
+   fun initData(menuList: MutableList<T>) {
+        this.menuList = menuList.chunked(COLUMN * ROW) as MutableList<MutableList<T>>?
         if (this.menuList.isNullOrEmpty()) {
             return
         }

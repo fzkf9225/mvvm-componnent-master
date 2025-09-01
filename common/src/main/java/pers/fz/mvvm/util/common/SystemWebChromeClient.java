@@ -22,6 +22,7 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import pers.fz.mvvm.helper.CordovaDialogsHelper;
 import pers.fz.mvvm.util.log.LogUtil;
 
 /**
@@ -32,7 +33,6 @@ public class SystemWebChromeClient extends WebChromeClient {
     public final static String TAG = "SystemWebChromeClient";
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
     private final static int MAX_PROGRESS = 100;
-    private final long MAX_QUOTA = 100 * 1024 * 1024;
     private final CordovaDialogsHelper dialogsHelper;
     private final ProgressBar progressBar;
     private final Context mContext;
@@ -132,6 +132,7 @@ public class SystemWebChromeClient extends WebChromeClient {
     @SuppressWarnings("deprecation")
     public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize,
                                         long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
+        long MAX_QUOTA = 100 * 1024 * 1024;
         quotaUpdater.updateQuota(MAX_QUOTA);
     }
 

@@ -25,6 +25,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Vector;
 
 import pers.fz.mvvm.util.zxing.BitmapLuminanceSource;
@@ -137,24 +138,12 @@ public class QRCodeUtil {
         try {
             /* 2.设置二维码相关配置,生成BitMatrix(位矩阵)对象  */
             Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-            if (characterSet != null) {
-                hints.put(EncodeHintType.CHARACTER_SET, characterSet);
-                // 字符转码格式设置
-            } else {
-                hints.put(EncodeHintType.CHARACTER_SET, CharacterSetECI.UTF8);
-            }
-            if (errorCorrection != null) {
-                hints.put(EncodeHintType.ERROR_CORRECTION, errorCorrection);
-                // 容错级别设置
-            } else {
-                hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            }
-            if (!TextUtils.isEmpty(margin)) {
-                hints.put(EncodeHintType.MARGIN, margin);
-                // 空白边距设置
-            } else {
-                hints.put(EncodeHintType.MARGIN, 0);
-            }
+            // 字符转码格式设置
+            hints.put(EncodeHintType.CHARACTER_SET, Objects.requireNonNullElse(characterSet, CharacterSetECI.UTF8));
+            // 容错级别设置
+            hints.put(EncodeHintType.ERROR_CORRECTION, Objects.requireNonNullElse(errorCorrection, ErrorCorrectionLevel.H));
+            // 空白边距设置
+            hints.put(EncodeHintType.MARGIN, !TextUtils.isEmpty(margin) ? margin : Integer.valueOf(0));
             BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints);
             /*3.创建像素数组,并根据BitMatrix(位矩阵)对象为数组元素赋颜色值  */
             int[] pixels = new int[width * height];
@@ -205,7 +194,7 @@ public class QRCodeUtil {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(srcBitmap, 0f, 0f, null);
         canvas.scale(scaleWidth, scaleHeight, (srcWidth / 2f), (srcHeight / 2f));
-        canvas.drawBitmap(logoBitmap, srcWidth * 1f / 2 - logoWidth / 2, srcHeight * 1f / 2 - logoHeight / 2, null);
+        canvas.drawBitmap(logoBitmap, srcWidth * 1f / 2 - (float) logoWidth / 2, srcHeight * 1f / 2 - (float) logoHeight / 2, null);
         return bitmap;
     }
 

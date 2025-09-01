@@ -23,6 +23,7 @@ import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.util.common.CacheUtil;
 import pers.fz.mvvm.util.download.UpdateManger;
+import pers.fz.mvvm.widget.customview.IconLabelValueView;
 import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 /**
@@ -45,11 +46,11 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
         if (id == R.id.setting_exit) {
             UserAccountHelper.exit();
             startActivity(view.getContext(), LoginActivity.class, null);
-        } else if (id == R.id.feedBack) {
+        } else if (id == R.id.tv_feedback) {
             startActivity(view.getContext(), FeedBackActivity.class);
         } else if (id == R.id.versionName) {
             baseView.showLoading("正在检测新版本...");
-            new Handler(Looper.myLooper()).postDelayed(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
                 UpdateManger.getInstance().checkUpdateInfo((Activity) view.getContext(),
                         "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk",
@@ -58,13 +59,14 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
                 baseView.hideLoading();
             }, 2000);
         } else if (id == R.id.cleanUp) {
-            TextView tvCleanUp = (TextView) view;
+            IconLabelValueView tvCleanUp = (IconLabelValueView) view;
             new ConfirmDialog(view.getContext())
                     .setMessage("是否确定清理缓存？")
                     .setOnPositiveClickListener(dialog -> {
                         try {
-                            clearCache();
-                            tvCleanUp.setText(getCacheSize());
+                            // 清理所有缓存
+                            CacheUtil.getInstance().clearAllCache(view.getContext());
+                            tvCleanUp.setValue(getCacheSize());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -80,27 +82,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
      * 计算缓存大小
      */
     public String getCacheSize() {
-        String size = null;
-        try {
-            long cacheSize = CacheUtil.getInstance().getFolderSize(getApplication().getCacheDir());
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                cacheSize += CacheUtil.getInstance().getFolderSize(getApplication().getExternalCacheDir());
-            }
-            size = CacheUtil.getFormatSize(cacheSize);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return size;
-    }
-
-    /**
-     * 清理缓存
-     */
-    public void clearCache() {
-        CacheUtil.getInstance().deleteFolderFile(getApplication().getCacheDir().getAbsolutePath(), false);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            CacheUtil.getInstance().deleteFolderFile(getApplication().getExternalCacheDir().getAbsolutePath(), false);
-        }
+        return CacheUtil.getInstance().getTotalCacheSize(getApplication());
     }
 
 }

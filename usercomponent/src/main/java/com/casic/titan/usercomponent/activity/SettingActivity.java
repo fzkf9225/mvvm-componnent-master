@@ -30,7 +30,7 @@ public class SettingActivity extends BaseActivity<SettingViewModel, SettingBindi
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        binding.versionName.setText("v" + AppManager.getAppManager().getVersion(this));
+        binding.versionName.setValue("v" + AppManager.getAppManager().getVersion(this));
         binding.setSetViewModel(mViewModel);
         binding.tvSupport.setOnClickListener(v->startActivity(TechnicalSupportActivity.class));
     }
