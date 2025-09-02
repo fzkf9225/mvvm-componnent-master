@@ -5,59 +5,54 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagingData
-import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.R
 import pers.fz.mvvm.adapter.HomeMenuAdapter
 import pers.fz.mvvm.base.BaseFragment
 import pers.fz.mvvm.base.BasePagingAdapter
 import pers.fz.mvvm.bean.HomeMenuBean
 import pers.fz.mvvm.databinding.FragmentHomeMenuBinding
-import pers.fz.mvvm.listener.HomeMenuAdapterListener
 import pers.fz.mvvm.listener.PagingAdapterListener
 import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
+import pers.fz.mvvm.widget.customview.HomeMenuView
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager
 import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration
 
-@AndroidEntryPoint
 class HomeMenuFragment<T : HomeMenuBean> : BaseFragment<EmptyViewModel, FragmentHomeMenuBinding>() {
     private var menuList: List<HomeMenuBean>? = null
     private var adapter: BasePagingAdapter<HomeMenuBean, ViewDataBinding>? = null
     private val defaultAdapter by lazy {
-        HomeMenuAdapter().apply {
-            setOnAdapterListener(adapterListener as PagingAdapterListener<HomeMenuBean?>?)
+        HomeMenuAdapter(homeMenuView).apply {
+            setOnAdapterListener(homeMenuView?.getAdapterListener() as PagingAdapterListener<HomeMenuBean?>?)
         }
     }
-    private var column: Int = 4
-    private var adapterListener: PagingAdapterListener<T>? = null
-
-    private var homeMenuAdapterListener: HomeMenuAdapterListener? = null
+    private var homeMenuView: HomeMenuView? = null
     override fun getLayoutId() = R.layout.fragment_home_menu
 
     override fun initView(savedInstanceState: Bundle?) {
         binding.mRecyclerviewMenu.layoutManager =
-            object : FullyGridLayoutManager(requireContext(), column) {
+            object : FullyGridLayoutManager(requireContext(), homeMenuView?.getColumnCount()?:4) {
                 override fun canScrollVertically(): Boolean {
                     return false
                 }
             }
         binding.mRecyclerviewMenu.addItemDecoration(
             GridSpacingItemDecoration(
-                DensityUtil.dp2px(
+                homeMenuView?.startMargin?:DensityUtil.dp2px(
                     requireContext(),
-                    21f
+                    8f
                 ), 0x00000000
             )
         )
         adapter =
-            (homeMenuAdapterListener?.getAdapter<HomeMenuBean, ViewDataBinding>()
+            (homeMenuView?.customHomeMenuAdapterCallback?.getAdapter<HomeMenuBean, ViewDataBinding>()
                 ?: defaultAdapter) as BasePagingAdapter<HomeMenuBean, ViewDataBinding>?
         binding.mRecyclerviewMenu.adapter = adapter
 
         binding.mRecyclerviewMenu.setPadding(
-            DensityUtil.dp2px(requireContext(), 12f),
+            homeMenuView?.startMargin?:DensityUtil.dp2px(requireContext(), 12f),
             0,
-            DensityUtil.dp2px(requireContext(), 12f),
+            homeMenuView?.endMargin?:DensityUtil.dp2px(requireContext(), 12f),
             0
         )
     }
@@ -76,17 +71,13 @@ class HomeMenuFragment<T : HomeMenuBean> : BaseFragment<EmptyViewModel, Fragment
 
         @JvmStatic
         fun <T : HomeMenuBean> newInstance(
-            menuList: List<T>?,
-            column: Int = 4,
-            adapterListener: PagingAdapterListener<T>?,
-            homeMenuAdapterListener: HomeMenuAdapterListener?
+            menuList:List<T>?,
+            homeMenuView: HomeMenuView? = null
         ) = HomeMenuFragment<T>().apply {
             arguments = Bundle().apply {
                 putParcelableArrayList(DATA, menuList as ArrayList<out Parcelable>?)
             }
-            this.homeMenuAdapterListener = homeMenuAdapterListener;
-            this.column = column
-            this.adapterListener = adapterListener
+            this.homeMenuView = homeMenuView;
         }
     }
 }

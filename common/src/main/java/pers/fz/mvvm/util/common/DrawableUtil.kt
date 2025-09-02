@@ -14,6 +14,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.shapes.RoundRectShape
 import android.util.Base64
 import android.util.TypedValue
 import android.view.Gravity
@@ -27,7 +28,12 @@ import java.io.ByteArrayOutputStream
 
 
 object DrawableUtil {
-
+    /**
+     * 创建一个圆形Drawable
+     * @param color 填充颜色
+     * @param size 圆形直径大小
+     * @return 圆形ShapeDrawable
+     */
     @JvmStatic
     public fun createCircleDrawable(color: Int, size: Int): ShapeDrawable {
         val shapeDrawable = ShapeDrawable(OvalShape())
@@ -37,7 +43,43 @@ object DrawableUtil {
         shapeDrawable.setIntrinsicHeight(size)
         return shapeDrawable
     }
+    /**
+     * 创建一个圆角矩形Drawable
+     * @param color 填充颜色
+     * @param width 宽度
+     * @param height 高度
+     * @param cornerRadius 圆角半径
+     * @return 圆角矩形ShapeDrawable
+     */
+    @JvmStatic
+    fun createRectDrawable(
+        color: Int,
+        width: Int,
+        height: Int,
+        cornerRadius: Float
+    ): ShapeDrawable {
+        val shape = RoundRectShape(
+            floatArrayOf(
+                cornerRadius, cornerRadius, // 左上角
+                cornerRadius, cornerRadius, // 右上角
+                cornerRadius, cornerRadius, // 右下角
+                cornerRadius, cornerRadius  // 左下角
+            ), null, null
+        )
+        val shapeDrawable = ShapeDrawable(shape)
+        shapeDrawable.paint.setColor(color)
+        shapeDrawable.paint.isAntiAlias = true // 启用抗锯齿
+        shapeDrawable.setIntrinsicWidth(width)
+        shapeDrawable.setIntrinsicHeight(height)
+        return shapeDrawable
+    }
 
+    /**
+     * 创建GradientDrawable形状Drawable
+     * @param colorRes 颜色资源
+     * @param cornerRadius 圆角半径
+     * @return GradientDrawable对象
+     */
     @JvmStatic
     public fun createShapeDrawable(@ColorInt colorRes: Int, cornerRadius: Float): GradientDrawable {
         // 创建一个 GradientDrawable 对象
@@ -50,6 +92,14 @@ object DrawableUtil {
         return drawable
     }
 
+    /**
+     * 将字符转换为Drawable
+     * @param context 上下文
+     * @param char 要显示的字符
+     * @param textColor 文字颜色，默认为白色
+     * @param backgroundColor 背景颜色，默认为透明
+     * @return 包含字符的自定义Drawable
+     */
     @JvmStatic
     fun charToDrawable(
         context: Context,
@@ -95,7 +145,13 @@ object DrawableUtil {
             }
         }
     }
-
+    /**
+     * 创建选中状态的Drawable（圆形背景+勾选图标）
+     * @param context 上下文
+     * @param colorRes 背景颜色
+     * @param size 大小
+     * @return 组合的LayerDrawable
+     */
     @JvmStatic
     public fun createCheckedDrawable(
         context: Context,
@@ -117,7 +173,13 @@ object DrawableUtil {
         layerDrawable.setLayerGravity(1, Gravity.CENTER)
         return layerDrawable
     }
-
+    /**
+     * 创建未选中状态的Drawable（圆形边框）
+     * @param stroke 边框宽度
+     * @param colorRes 边框颜色
+     * @param size 大小
+     * @return 圆形边框Drawable
+     */
     @JvmStatic
     public fun createUncheckedDrawable(stroke: Int, @ColorInt colorRes: Int, size: Int): Drawable {
         val uncheckedDrawable = GradientDrawable()

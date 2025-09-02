@@ -26,6 +26,7 @@
             android:includeFontPadding="false"
             tools:text="菜单名称"
             android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
             app:layout_constraintTop_toBottomOf="@+id/image_menu_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

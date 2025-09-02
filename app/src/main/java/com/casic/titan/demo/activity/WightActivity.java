@@ -1,23 +1,31 @@
 package com.casic.titan.demo.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.casic.titan.commonui.fragment.CalendarMonthFragment;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.UseCase;
 import com.casic.titan.demo.databinding.ActivityWightBinding;
+import com.casic.titan.demo.enums.UseCaseEnum;
 import com.casic.titan.demo.viewmodel.WightViewModel;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.adapter.ImageShowAdapter;
@@ -26,8 +34,10 @@ import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.bean.BannerBean;
+import pers.fz.mvvm.bean.HomeMenuBean;
 import pers.fz.mvvm.bean.base.ToolbarConfig;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
+import pers.fz.mvvm.listener.OnMenuClickListener;
 import pers.fz.mvvm.util.common.DateUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.util.common.DrawableUtil;
@@ -105,7 +115,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         attachmentBean6.setFileName("6.jpg");
         attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         AttachmentBean attachmentBean7 = new AttachmentBean();
-        attachmentBean7.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(),R.mipmap.ic_launcher));
+        attachmentBean7.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(), R.mipmap.ic_launcher));
         attachmentBean6.setFileName("7.jpg");
         attachmentBean1.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
         attachmentBeanList.add(attachmentBean1);
@@ -176,7 +186,37 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 .load("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg")
                 .into(binding.roundedShapeableImageView);
 //        binding.customBannerPicture.setOnViewPagerSelectedListener(position -> LogUtil.show(TAG, "当前选中页：" + position));
+        binding.homeMenuView.bindLifecycle(this);
+        binding.homeMenuView.setFragmentManager(getSupportFragmentManager());
+        binding.homeMenuView.setDrawableResCurrent(DrawableUtil.createCircleDrawable(
+                ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green),
+                DensityUtil.dp2px(this, 5f)
+        ));
+        binding.homeMenuView.setOnMenuClickListener(menuClickListener);
     }
+
+    OnMenuClickListener menuClickListener = new OnMenuClickListener() {
+        @Override
+        public void onMenuLongClick(@Nullable View v, @Nullable Fragment fragment, @Nullable HomeMenuBean menuBean) {
+
+        }
+
+        @Override
+        public void onMenuClick(@Nullable View v, @Nullable Fragment fragment, @Nullable HomeMenuBean menuBean) {
+            if (menuBean == null || TextUtils.isEmpty(menuBean.getComponentName())) {
+                showToast("此页面正在研发中请稍后再试！");
+                return;
+            }
+            Bundle bundle = new Bundle();
+            UseCase useCase = new UseCase();
+            useCase.setName(menuBean.getTitle());
+            bundle.putParcelable("args", useCase);
+            Intent intent = new Intent();
+            intent.putExtras(bundle);
+            intent.setClassName(getPackageName(), menuBean.getComponentName());
+            startActivity(intent);
+        }
+    };
 
     public ToolbarConfig createdToolbarConfig() {
         return new ToolbarConfig(this)
@@ -188,7 +228,6 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 .applyStatusBar();
     }
 
-
     @Override
     public void initData(Bundle bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -197,6 +236,15 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             useCase = bundle.getParcelable("args");
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
+        List<UseCase> useCaseList = UseCaseEnum.toUseCaseList();
+        List<HomeMenuBean> homeMenuBeanList = useCaseList.stream().map(item -> {
+            HomeMenuBean homeMenuBean = new HomeMenuBean(0, R.mipmap.ic_launcher, item.getName(), item.getDescribe(), item.getClx().getName());
+            if ("自定义组件".equalsIgnoreCase(item.getName())) {
+                homeMenuBean.setGray(true);
+            }
+            return homeMenuBean;
+        }).collect(Collectors.toList());
+        binding.homeMenuView.initData(homeMenuBeanList);
     }
 
 

@@ -5,7 +5,7 @@
     <attr name="imageSrc" format="reference" />
     <attr name="label" format="reference|string" />
     <!-- value文字内容 -->
-    <attr name="value" format="string"/>
+    <attr name="value" format="string" />
     <attr name="borderWidth" format="dimension" />
     <attr name="borderColor" format="reference|color" />
     <attr name="borderFocusColor" format="reference|color" />
@@ -31,32 +31,48 @@
     <!--文字颜色-->
     <attr name="labelTextColor" format="reference|color" />
     <!-- label文字大小 -->
-    <attr name="labelTextSize" format="dimension"/>
-    <attr name="iconSize" format="dimension"/>
-    <attr name="iconMargin" format="dimension"/>
-    <attr name="iconSrc" format="reference"/>
-    <attr name="iconLeft" format="reference"/>
-    <attr name="iconRight" format="reference"/>
-    <attr name="duration_max" format="integer"/>
-
+    <attr name="labelTextSize" format="dimension" />
+    <attr name="iconSize" format="dimension" />
+    <attr name="iconMargin" format="dimension" />
+    <attr name="iconSrc" format="reference" />
+    <attr name="iconLeft" format="reference" />
+    <attr name="iconRight" format="reference" />
+    <attr name="duration_max" format="integer" />
+    <attr name="columnCount" format="integer" />
+    <attr name="rowCount" format="integer" />
+    <attr name="topMargin" format="dimension" />
+    <attr name="startMargin" format="dimension" />
+    <attr name="endMargin" format="dimension" />
+    <attr name="columnMargin" format="dimension" />
+    <attr name="bottomMargin" format="dimension" />
+    <attr name="cornerRadius" format="dimension" />
+    <attr name="backgroundDrawable" format="reference" />
+    <attr name="backgroundColor" format="color" />
+    <attr name="backgroundCornerRadius" format="dimension" />
+    <attr name="dotHeight" format="dimension" />
+    <attr name="dotBottomMargin" format="dimension" />
+    <attr name="dotLeftMargin" format="dimension" />
+    <attr name="dotRightMargin" format="dimension" />
+    <attr name="dotPadding" format="dimension" />
     <declare-styleable name="ConfigurableWebView">
-        <attr name="domain" format="string"/>
+
+        <attr name="domain" format="string" />
     </declare-styleable>
 
     <declare-styleable name="CustomCameraView">
-        <attr name="iconSize"/>
-        <attr name="iconMargin"/>
-        <attr name="iconSrc"/>
-        <attr name="iconLeft"/>
-        <attr name="iconRight"/>
+        <attr name="iconSize" />
+        <attr name="iconMargin" />
+        <attr name="iconSrc" />
+        <attr name="iconLeft" />
+        <attr name="iconRight" />
     </declare-styleable>
 
     <declare-styleable name="CircleImageView">
         <attr name="borderWidth" />
         <attr name="borderColor" />
         <attr name="borderFocusColor" />
-        <attr name="defaultBackgroundColor"/>
-        <attr name="focusBackgroundColor"/>
+        <attr name="defaultBackgroundColor" />
+        <attr name="focusBackgroundColor" />
         <attr name="enableSelected" />
         <attr name="enablePressed" />
     </declare-styleable>
@@ -158,15 +174,15 @@
             <enum name="outer_bottom_right" value="5" />
         </attr>
         <!--指针总高度，主要是是在dot_position为outer时使用-->
-        <attr name="dotHeight" format="dimension" />
+        <attr name="dotHeight" />
         <!--指针距离底部距离，并不是点之间的距离-->
-        <attr name="dotBottomMargin" format="dimension" />
+        <attr name="dotBottomMargin" />
         <!--指针距离左边距离，并不是点之间的距离-->
-        <attr name="dotLeftMargin" format="dimension" />
+        <attr name="dotLeftMargin" />
         <!--指针距离右边距离，并不是点之间的距离-->
-        <attr name="dotRightMargin" format="dimension" />
+        <attr name="dotRightMargin" />
         <!--指针点之间的距离-->
-        <attr name="dotPadding" format="dimension" />
+        <attr name="dotPadding" />
         <!--占位图-->
         <attr name="bannerPlaceholderImage" format="reference" />
         <attr name="leftTopRadius" />
@@ -322,7 +338,7 @@
     <attr name="lineColor" format="color" /><!--扫描线的颜色-->
     <attr name="lineWidth" format="dimension" /><!--扫描线的长度-->
     <declare-styleable name="CustomViewfinderView">
-        <attr name="lineColor"/><!--扫描线的颜色-->
+        <attr name="lineColor" /><!--扫描线的颜色-->
         <attr name="cornerColor" format="color" /><!--四边角的颜色-->
         <attr name="scanFrameWidth" format="dimension" /><!--扫描框的宽度-->
         <attr name="scanFrameHeight" format="dimension" /><!--扫描框的高度-->
@@ -359,9 +375,9 @@
         <!--提示文字颜色-->
         <attr name="hiltTextColor" format="reference|color" />
         <!--文字颜色-->
-        <attr name="labelTextColor"/>
+        <attr name="labelTextColor" />
         <!--文字大小-->
-        <attr name="textSize"/>
+        <attr name="textSize" />
         <!--左侧图标宽度-->
         <attr name="startDrawableWidth" format="dimension" />
         <!--左侧图标高度-->
@@ -375,59 +391,59 @@
     </declare-styleable>
 
     <declare-styleable name="FocusView">
-        <attr name="lineColor"/>
-        <attr name="lineWidth"/>
+        <attr name="lineColor" />
+        <attr name="lineWidth" />
         <attr name="cornerLength" format="dimension" />
     </declare-styleable>
     <declare-styleable name="IconLabelValueView">
         <!-- label文字内容 -->
-        <attr name="label"/>
+        <attr name="label" />
         <!-- value文字内容 -->
-        <attr name="value"/>
+        <attr name="value" />
         <!-- 是否显示左侧图标 -->
-        <attr name="showLeftIcon" format="boolean"/>
+        <attr name="showLeftIcon" format="boolean" />
         <!-- 是否显示右侧图标 -->
-        <attr name="showRightIcon" format="boolean"/>
+        <attr name="showRightIcon" format="boolean" />
         <!-- 是否展示底部边框 -->
-        <attr name="bottomBorder" format="boolean"/>
+        <attr name="bottomBorder" format="boolean" />
         <!-- 正文文字颜色 -->
-        <attr name="valueTextColor" format="color"/>
+        <attr name="valueTextColor" format="color" />
         <!-- 底部边框颜色 -->
-        <attr name="borderBottomColor" format="color"/>
+        <attr name="borderBottomColor" format="color" />
         <!-- label文字颜色 -->
-        <attr name="labelTextColor"/>
+        <attr name="labelTextColor" />
         <!-- label文字大小 -->
-        <attr name="labelTextSize"/>
+        <attr name="labelTextSize" />
         <!-- 正文文字大小 -->
-        <attr name="valueTextSize" format="dimension"/>
+        <attr name="valueTextSize" format="dimension" />
         <!-- 底部边框与左侧的距离 -->
-        <attr name="borderBottomStartMargin" format="dimension"/>
+        <attr name="borderBottomStartMargin" format="dimension" />
         <!-- 底部边框与右侧的距离 -->
-        <attr name="borderBottomEndMargin" format="dimension"/>
+        <attr name="borderBottomEndMargin" format="dimension" />
         <!-- 左侧图标的左侧margin，默认16dp -->
-        <attr name="leftIconMarginStart" format="dimension"/>
+        <attr name="leftIconMarginStart" format="dimension" />
         <!-- 右侧图标的右侧margin，默认16dp -->
-        <attr name="rightIconMarginStart" format="dimension"/>
+        <attr name="rightIconMarginStart" format="dimension" />
         <!-- label左侧margin -->
-        <attr name="labelStartMargin" format="dimension"/>
+        <attr name="labelStartMargin" format="dimension" />
         <!-- label右侧margin -->
-        <attr name="labelEndMargin" format="dimension"/>
+        <attr name="labelEndMargin" format="dimension" />
         <!-- 正文文字与左侧的距离 -->
-        <attr name="textStartMargin" format="dimension"/>
+        <attr name="textStartMargin" format="dimension" />
         <!-- 正文文字与右侧的距离 -->
-        <attr name="textEndMargin" format="dimension"/>
+        <attr name="textEndMargin" format="dimension" />
         <!-- 左侧图标资源 -->
-        <attr name="leftIconSrc" format="reference"/>
+        <attr name="leftIconSrc" format="reference" />
         <!-- 右侧图标资源 -->
-        <attr name="rightIconSrc" format="reference"/>
+        <attr name="rightIconSrc" format="reference" />
         <!-- 左侧图标宽度 -->
-        <attr name="leftIconWidth" format="dimension"/>
+        <attr name="leftIconWidth" format="dimension" />
         <!-- 左侧图标高度 -->
-        <attr name="leftIconHeight" format="dimension"/>
+        <attr name="leftIconHeight" format="dimension" />
         <!-- 右侧图标宽度 -->
-        <attr name="rightIconWidth" format="dimension"/>
+        <attr name="rightIconWidth" format="dimension" />
         <!-- 右侧图标高度 -->
-        <attr name="rightIconHeight" format="dimension"/>
+        <attr name="rightIconHeight" format="dimension" />
         <!-- 右侧文字对齐方式 -->
         <attr name="valueGravity" format="enum">
             <enum name="start" value="0" />
@@ -461,4 +477,38 @@
         <!-- 方块与文本间距 -->
         <attr name="squareSpacing" format="dimension|reference" />
     </declare-styleable>
+
+    <declare-styleable name="HomeMenuView">
+        <attr name="dotHeight" />
+        <attr name="dotBottomMargin" />
+        <attr name="dotLeftMargin" />
+        <attr name="dotRightMargin" />
+        <attr name="dotPadding" />
+        <attr name="columnCount" />
+        <attr name="rowCount" />
+        <attr name="topMargin" />
+        <!--是否自适应高度，默认为true-->
+        <attr name="isWrap" format="boolean"/>
+        <!--label显示行数-->
+        <attr name="labelLines" format="integer"/>
+        <attr name="startMargin" />
+        <attr name="endMargin" />
+        <attr name="bottomMargin" />
+        <attr name="columnMargin" />
+        <attr name="cornerRadius" />
+        <attr name="backgroundDrawable" />
+        <attr name="backgroundColor" />
+        <attr name="backgroundCornerRadius" />
+        <!-- 左侧图标宽度 -->
+        <attr name="iconWidth" format="dimension" />
+        <!-- 左侧图标高度 -->
+        <attr name="iconHeight" format="dimension" />
+        <!-- label文字颜色 -->
+        <attr name="labelTextColor" />
+        <!-- label文字大小 -->
+        <attr name="labelTextSize" />
+        <!-- label文字大小 -->
+        <attr name="labelIconMargin" format="dimension" />
+    </declare-styleable>
+
 </resources>

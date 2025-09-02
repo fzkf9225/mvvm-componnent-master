@@ -57,7 +57,7 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
     /**
      * 上一次索引位置
      */
-    private int lastPos = -1;
+    private int lastPos = 0;
     /**
      * 预览大图
      */

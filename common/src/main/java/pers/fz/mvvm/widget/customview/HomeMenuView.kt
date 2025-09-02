@@ -1,9 +1,8 @@
 package pers.fz.mvvm.widget.customview
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -17,9 +16,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import pers.fz.mvvm.R
-import pers.fz.mvvm.adapter.Viewpager2MenuAdapter
+import pers.fz.mvvm.adapter.HomeMenuViewPager2Adapter
 import pers.fz.mvvm.bean.HomeMenuBean
-import pers.fz.mvvm.listener.HomeMenuAdapterListener
+import pers.fz.mvvm.listener.CustomHomeMenuAdapterCallback
 import pers.fz.mvvm.listener.OnMenuClickListener
 import pers.fz.mvvm.listener.PagingAdapterListener
 import pers.fz.mvvm.util.common.DensityUtil
@@ -31,23 +30,101 @@ import java.util.stream.IntStream
  * created by fz on 2025/4/27 15:59
  * describe:
  */
-open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleObserver {
+open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
     private var lifecycleOwner: LifecycleOwner? = null
     private var fragmentManager: FragmentManager? = null
 
-    private var dotHeight = DensityUtil.dp2px(context, 26f)
+    /**
+     * 指示器高度
+     */
+    private var dotHeight: Int? = null
+
+    /**
+     * 指示器与底部距离
+     */
     private var dotBottomMargin = 0
-    private var dotLeftMargin = DensityUtil.dp2px(context, 12f)
-    private var dotRightMargin = DensityUtil.dp2px(context, 12f)
-    private var dotPadding = DensityUtil.dp2px(context, 4f)
+
+    /**
+     * 指示器与左侧边距
+     */
+    private var dotLeftMargin: Int = 0
+
+    /**
+     * 指示器与右侧边距
+     */
+    private var dotRightMargin: Int = 0
+
+    /**
+     * 指示器内部margin，点与点之间的间距
+     */
+    private var dotPadding: Int = 0
+
+    /**
+     * 每行显示几个
+     */
+    private var columnCount = 4
+
+    /**
+     * 一共几行
+     */
+    private var rowCount = 2
+
+    /**
+     * viewPager的topMargin
+     */
+    private var topMargin = 0
+
+    /**
+     * label显示行数
+     */
+    var labelLines = Int.MAX_VALUE
+
+    /**
+     * 是否自适应高度
+     */
+    private var isWrap = true
+
+    /**
+     * viewPager的leftMargin
+     */
+    var startMargin = 0
+
+    /**
+     * viewPager的rightMargin
+     */
+    var endMargin = 0
+
+    /**
+     * 指示器与viewPager的间隔
+     */
+    private var bottomMargin = 0
+
+    /**
+     * 列间距
+     */
+    private var columnMargin = 0
+
+    /**
+     * 背景样式资源，与下面二选一
+     */
+    private var backgroundDrawableRes: Drawable? = null
+
+    /**
+     * 背景颜色，与上面二选一
+     */
+    private var backgroundColor: Int? = null
+
+    /**
+     * 背景圆角，与上面二选一
+     */
+    private var backgroundCornerRadius: Float? = 0f
 
     /**
      * 选中时圆点样式
      */
     private val defaultDrawableResCurrent: Drawable by lazy {
-        createDrawable(
+        DrawableUtil.createCircleDrawable(
             ContextCompat.getColor(context, R.color.white),
-            DensityUtil.dp2px(context, 10f),
             DensityUtil.dp2px(context, 5f)
         )
     }
@@ -62,60 +139,59 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
         )
     }
 
+    /**
+     * 选中原点样式
+     */
     var drawableResCurrent: Drawable? = null
 
+    /**
+     * 未选中原点样式
+     */
     var drawableResNormal: Drawable? = null
 
-    companion object {
-        /**
-         * 一行有多少列
-         */
-        const val COLUMN = 4
-
-        /**
-         * 一共多少航
-         */
-        const val ROW = 2
-    }
-
+    /**
+     * 菜单item点击事件
+     */
     var onMenuClickListener: OnMenuClickListener? = null
-    var homeMenuAdapterListener : HomeMenuAdapterListener? = null
+
+    /**
+     * 自定义item回调
+     */
+    var customHomeMenuAdapterCallback: CustomHomeMenuAdapterCallback? = null
+
 
     private val menuViewPager by lazy {
         ViewPager2(context).apply {
-            setId(generateViewId())
+            id = generateViewId()
             registerOnPageChangeCallback(onPageChangeCallback)
         }
     }
 
     private val viewPagerLayoutParams by lazy {
         LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.WRAP_CONTENT
+            0,
+            if (isWrap) {
+                LayoutParams.WRAP_CONTENT
+            } else 0
         ).apply {
-            //viewPager的定位
+            // viewPager的定位
             topToTop = LayoutParams.PARENT_ID
             startToStart = LayoutParams.PARENT_ID
             endToEnd = LayoutParams.PARENT_ID
-            topMargin = DensityUtil.dp2px(context, 18f)
+            bottomToTop = dotsLayout.id
+            if (!isWrap) {
+                verticalWeight = 1f
+            }
+            topMargin = this@HomeMenuView.topMargin
         }
     }
 
-    private val adapter by lazy {
-        Viewpager2MenuAdapter(
-            fragmentManager!!,
-            lifecycleOwner?.lifecycle!!,
-            menuList as List<List<T>>,
-            COLUMN,
-            adapterListener,
-            homeMenuAdapterListener
-        )
-    }
+    private var adapter: HomeMenuViewPager2Adapter<HomeMenuBean>? = null
 
     private val dotsLayout by lazy {
-        //初始化指针
+        // 初始化指针
         LinearLayout(context).apply {
-            setId(generateViewId())
+            id = generateViewId()
             setVerticalGravity(Gravity.CENTER)
             setHorizontalGravity(Gravity.CENTER)
             orientation = LinearLayout.HORIZONTAL
@@ -125,36 +201,143 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
     private val dotLayoutParams by lazy {
         LayoutParams(
             LayoutParams.WRAP_CONTENT,
-            dotHeight.toInt()
+            dotHeight ?: LayoutParams.WRAP_CONTENT,
         ).apply {
-            leftMargin = dotLeftMargin.toInt()
-            rightMargin = dotRightMargin.toInt()
-            bottomMargin = dotBottomMargin.toInt()
+            leftMargin = dotLeftMargin
+            rightMargin = dotRightMargin
+            bottomMargin = dotBottomMargin
             topToBottom = menuViewPager.id
-            endToEnd = LayoutParams.PARENT_ID;
-            startToStart = LayoutParams.PARENT_ID;
+            topMargin = this@HomeMenuView.bottomMargin
+            endToEnd = LayoutParams.PARENT_ID
+            startToStart = LayoutParams.PARENT_ID
+            bottomToBottom = LayoutParams.PARENT_ID
         }
     }
-
 
     /**
      * 上一次索引位置
      */
-    private var lastPos = -1
+    private var lastPos = 0
 
-    /**
-     * 菜单数据
-     */
-    private var menuList: MutableList<MutableList<T>>? = null
+    constructor(context: Context) : super(context) {
+        init(context, null)
+    }
 
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(context, attrs)
+    }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context, attrs, defStyleAttr
-    )
+    ) {
+        init(context, attrs)
+    }
+
+    private fun init(context: Context, attrs: AttributeSet?) {
+        if (attrs == null) {
+            setDefaultValues()
+            return
+        }
+        parseAttributes(context, attrs)
+    }
+
+    private fun setDefaultValues() {
+        // 设置代码创建时的默认值
+        dotLeftMargin = DensityUtil.dp2px(context, 12f)
+        dotRightMargin = DensityUtil.dp2px(context, 12f)
+        dotBottomMargin = DensityUtil.dp2px(context, 12f)
+        dotPadding = DensityUtil.dp2px(context, 4f)
+        columnCount = 4
+        rowCount = 2
+        columnMargin = DensityUtil.dp2px(context, 8f)
+        backgroundCornerRadius = DensityUtil.dp2px(context, 16f).toFloat()
+        // 新增的margin属性默认值
+        topMargin = DensityUtil.dp2px(context, 18f)
+        startMargin = DensityUtil.dp2px(context, 12f)
+        endMargin = DensityUtil.dp2px(context, 12f)
+        bottomMargin = DensityUtil.dp2px(context, 12f)
+        isWrap = true
+    }
+
+    private fun parseAttributes(context: Context, attrs: AttributeSet) {
+        val typedArray: TypedArray = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.HomeMenuView,
+            0,
+            0
+        )
+
+        try {
+            dotHeight = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_dotHeight,
+                0
+            )
+            if (dotHeight == 0) {
+                dotHeight = null;
+            }
+            isWrap = typedArray.getBoolean(R.styleable.HomeMenuView_isWrap, true)
+            labelLines = typedArray.getInt(R.styleable.HomeMenuView_labelLines, Int.MAX_VALUE)
+            dotBottomMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_dotBottomMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            dotLeftMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_dotLeftMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            dotRightMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_dotRightMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            dotPadding = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_dotPadding,
+                DensityUtil.dp2px(context, 4f)
+            )
+            columnCount = typedArray.getInt(R.styleable.HomeMenuView_columnCount, 4)
+            rowCount = typedArray.getInt(R.styleable.HomeMenuView_rowCount, 2)
+            topMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_topMargin,
+                DensityUtil.dp2px(context, 18f)
+            )
+            // 解析新增的margin属性
+            startMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_startMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            endMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_endMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            bottomMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_bottomMargin,
+                DensityUtil.dp2px(context, 12f)
+            )
+            columnMargin = typedArray.getDimensionPixelSize(
+                R.styleable.HomeMenuView_columnMargin,
+                DensityUtil.dp2px(context, 8f)
+            )
+            // 其他属性解析...
+            backgroundCornerRadius = typedArray.getDimension(
+                R.styleable.HomeMenuView_backgroundCornerRadius,
+                DensityUtil.dp2px(context, 16f).toFloat()
+            )
+
+            // 解析背景颜色
+            if (typedArray.hasValue(R.styleable.HomeMenuView_backgroundColor)) {
+                backgroundColor = typedArray.getColor(R.styleable.HomeMenuView_backgroundColor, 0)
+            }
+
+            // 解析背景drawable
+            if (typedArray.hasValue(R.styleable.HomeMenuView_backgroundDrawable)) {
+                backgroundDrawableRes = ContextCompat.getDrawable(
+                    context,
+                    typedArray.getResourceId(R.styleable.HomeMenuView_backgroundDrawable, 0)
+                )
+            }
+        } finally {
+            typedArray.recycle()
+        }
+    }
 
     public fun bindLifecycle(lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
@@ -165,56 +348,56 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
         this.fragmentManager = fragmentManager
     }
 
-    fun createDrawable(
-        color: Int,
-        width: Int,
-        height: Int,
-        cornerRadius: Float = DensityUtil.dp2px(context, 10f).toFloat()
-    ): ShapeDrawable {
-        val shape = RoundRectShape(
-            floatArrayOf(
-                cornerRadius, cornerRadius, // 左上角
-                cornerRadius, cornerRadius, // 右上角
-                cornerRadius, cornerRadius, // 右下角
-                cornerRadius, cornerRadius  // 左下角
-            ), null, null
-        )
-        val shapeDrawable = ShapeDrawable(shape)
-        shapeDrawable.paint.setColor(color)
-        shapeDrawable.paint.isAntiAlias = true // 启用抗锯齿
-        shapeDrawable.setIntrinsicWidth(width)
-        shapeDrawable.setIntrinsicHeight(height)
-        return shapeDrawable
-    }
-
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-        //设置指针和ViewPager定位
+        // 设置指针和ViewPager定位
         removeAllViews()
         addView(menuViewPager, viewPagerLayoutParams)
         addView(dotsLayout, dotLayoutParams)
-        background = ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
+        // 设置背景（优先级：drawable > 颜色 > 默认）
+        background = when {
+            backgroundDrawableRes != null -> backgroundDrawableRes
+            backgroundColor != null -> {
+                DrawableUtil.createRectDrawable(
+                    backgroundColor!!,
+                    0, 0, backgroundCornerRadius ?: 0f
+                )
+            }
+
+            else -> ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
+        }
     }
 
-   fun initData(menuList: MutableList<T>) {
-        this.menuList = menuList.chunked(COLUMN * ROW) as MutableList<MutableList<T>>?
-        if (this.menuList.isNullOrEmpty()) {
+    fun <T : HomeMenuBean> initData(menuList: List<T>?) {
+        if (menuList.isNullOrEmpty()) {
             return
         }
-        initImageRounds()
-        menuViewPager.setAdapter(adapter)
+        if (fragmentManager == null) {
+            throw IllegalArgumentException("fragmentManager is null")
+        }
+
+        if (lifecycleOwner == null) {
+            throw IllegalArgumentException("lifecycleOwner is null")
+        }
+        val newList = menuList.chunked(columnCount * rowCount)
+        initImageRounds(newList)
+        adapter = HomeMenuViewPager2Adapter(
+            this,
+            newList
+        )
+        menuViewPager.adapter = adapter
         menuViewPager.setCurrentItem(0, false)
     }
 
     /**
      * 计算viewPager小底部小圆点的大小
      */
-    private fun initImageRounds() {
+    private fun <T : HomeMenuBean> initImageRounds(menuList: List<List<T>>?) {
         dotsLayout.removeAllViews()
         /*
          *当轮播图大于1张时小圆点显示
          */
-        if ((this.menuList?.size ?: 0) > 1) {
+        if ((menuList?.size ?: 0) > 1) {
             dotsLayout.visibility = VISIBLE
         } else {
             dotsLayout.visibility = INVISIBLE
@@ -223,7 +406,7 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
         /*
          * 默认让第一张图片显示深颜色的圆点
          */
-        IntStream.range(0, (this.menuList?.size ?: 0)).forEach(IntConsumer { i: Int ->
+        IntStream.range(0, (menuList?.size ?: 0)).forEach(IntConsumer { i: Int ->
             val round = AppCompatImageView(context)
             if (i == 0) {
                 round.background = drawableResCurrent ?: defaultDrawableResCurrent
@@ -231,7 +414,7 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
                 round.background = drawableResNormal ?: defaultDrawableResNormal
             }
             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2)
-            params.leftMargin = dotPadding.toInt()
+            params.leftMargin = dotPadding
             dotsLayout.addView(round, params)
         })
     }
@@ -243,7 +426,7 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
         object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val realPos: Int = position % (menuList?.size ?: 1)
+                val realPos: Int = position % (adapter?.pagerInfo?.size ?: 1)
                 dotsLayout.getChildAt(realPos).background =
                     drawableResCurrent ?: defaultDrawableResCurrent
                 if (lastPos >= 0 && lastPos < dotsLayout.size && lastPos != realPos) {
@@ -263,7 +446,7 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
             ) {
                 onMenuClickListener?.onMenuClick(
                     view,
-                    adapter.getItem(menuViewPager.currentItem),
+                    adapter?.getItem(menuViewPager.currentItem),
                     item
                 )
             }
@@ -275,12 +458,49 @@ open class HomeMenuView<T : HomeMenuBean> : ConstraintLayout, DefaultLifecycleOb
             ) {
                 onMenuClickListener?.onMenuLongClick(
                     view,
-                    adapter.getItem(menuViewPager.currentItem),
+                    adapter?.getItem(menuViewPager.currentItem),
                     item
                 )
             }
-
         }
+
+    // 提供设置背景的方法
+    fun setMenuBackground(drawable: Drawable?) {
+        backgroundDrawableRes = drawable
+        background = drawable
+    }
+
+    fun setMenuBackgroundColor(color: Int) {
+        backgroundColor = color
+        background = DrawableUtil.createRectDrawable(color, 0, 0, backgroundCornerRadius ?: 0f)
+    }
+
+    fun setMenuBackgroundCornerRadius(radius: Float) {
+        backgroundCornerRadius = radius
+        if (backgroundColor != null) {
+            background = DrawableUtil.createRectDrawable(backgroundColor!!, 0, 0, radius)
+        }
+    }
+
+    fun getFragmentManager(): FragmentManager? {
+        return fragmentManager
+    }
+
+    fun getLifecycleOwner(): LifecycleOwner? {
+        return lifecycleOwner
+    }
+
+    fun getMenuListener(): OnMenuClickListener? {
+        return onMenuClickListener
+    }
+
+    fun getColumnCount(): Int {
+        return columnCount
+    }
+
+    fun getAdapterListener(): PagingAdapterListener<HomeMenuBean>? {
+        return adapterListener
+    }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()

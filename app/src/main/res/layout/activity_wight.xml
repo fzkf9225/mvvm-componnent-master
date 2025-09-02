@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="imageUrl"
             type="java.lang.String" />
@@ -15,8 +16,8 @@
         android:background="@color/default_background"
         android:paddingStart="@dimen/padding_l"
         android:paddingTop="@dimen/padding_m"
-        android:paddingBottom="@dimen/padding_xl"
         android:paddingEnd="@dimen/padding_l"
+        android:paddingBottom="@dimen/padding_xl"
         tools:context=".activity.WightActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,10 +29,10 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
                 app:bgColor="@color/themeColor"
-                app:radius="@dimen/radius_m"
                 app:layout_constraintEnd_toStartOf="@+id/cornerTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:radius="@dimen/radius_m">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
@@ -46,16 +47,16 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:gravity="center"
                 android:text="CornerTextView"
                 android:textColor="@color/white"
                 app:bgColor="@color/themeColor"
-                app:radius="@dimen/radius_m"
-                android:gravity="center"
-                app:strokeColor="@color/theme_red"
-                app:strokeWidth="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:radius="@dimen/radius_m"
+                app:strokeColor="@color/theme_red"
+                app:strokeWidth="2dp" />
 
             <pers.fz.mvvm.widget.customview.CornerButton
                 android:id="@+id/cornerButton"
@@ -66,13 +67,13 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 app:bgColor="@color/themeColor"
-                app:radius="@dimen/radius_xxl"
-                app:strokeColor="@color/theme_red"
-                app:strokeWidth="2dp"
                 app:layout_constraintEnd_toStartOf="@+id/cornerLabelView"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout"
+                app:radius="@dimen/radius_xxl"
+                app:strokeColor="@color/theme_red"
+                app:strokeWidth="2dp" />
 
             <FrameLayout
                 android:id="@+id/cornerLabelView"
@@ -97,12 +98,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
+                    app:bgColor="@color/theme_red"
+                    app:marginLeanSide="4dp"
                     app:position="rightTop"
                     app:sideLength="28dp"
-                    app:marginLeanSide="4dp"
                     app:text="标签"
                     app:textColor="@color/white"
-                    app:bgColor="@color/theme_red"
                     app:textSize="@dimen/font_size_m" />
             </FrameLayout>
 
@@ -111,31 +112,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cornerButton"
                 app:text="这是AutoTextView测试文字"
                 app:textColor="@color/themeColor"
-                app:textSize="@dimen/font_size_l"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cornerButton" />
+                app:textSize="@dimen/font_size_l" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image_code"
-                app:layout_constraintTop_toBottomOf="@+id/autoTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="0dp"
+                android:layout_height="@dimen/height_xxl"
                 app:layout_constraintDimensionRatio="h,9:16"
-                android:layout_height="@dimen/height_xxl"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/autoTextView" />
+
             <pers.fz.mvvm.widget.customview.ScalingTextView
                 android:id="@+id/scalingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                app:text="@string/scaling_str"
-                app:textColor="@color/themeColor"
                 app:defaultCollapsed="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_code" />
+                app:layout_constraintTop_toBottomOf="@+id/image_code"
+                app:text="@string/scaling_str"
+                app:textColor="@color/themeColor" />
 
             <pers.fz.mvvm.widget.customview.StarBar
                 android:id="@+id/starBar"
@@ -187,117 +190,125 @@
                 app:textRightSize="@dimen/font_size_m"
                 app:textRightStyle="italic"
                 app:totalRadius="@dimen/radius_l" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="自定义轮播图"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="自定义轮播图"
                 app:layout_constraintTop_toBottomOf="@+id/roundTextView" />
+
             <pers.fz.mvvm.widget.customview.BannerView
                 android:id="@+id/customBannerPicture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:autoLoop="true"
-                app:previewLarger="true"
-                app:dotPosition="inner_bottom_center"
-                app:leftTopRadius="@dimen/radius_l"
-                app:rightTopRadius="@dimen/radius_l"
-                app:leftBottomRadius="@dimen/radius_l"
-                app:rightBottomRadius="@dimen/radius_l"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                app:autoLoop="true"
+                app:dotPosition="inner_bottom_center"
                 app:layout_constraintDimensionRatio="h,16:9"
-                app:layout_constraintTop_toBottomOf="@+id/tv_banner" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_banner"
+                app:leftBottomRadius="@dimen/radius_l"
+                app:leftTopRadius="@dimen/radius_l"
+                app:previewLarger="true"
+                app:rightBottomRadius="@dimen/radius_l"
+                app:rightTopRadius="@dimen/radius_l" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="自定义ImageView"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="自定义ImageView"
                 app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
+
             <pers.fz.mvvm.widget.customview.CornerImageView
                 android:id="@+id/cornersImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:imageUrl="@{imageUrl}"
-                android:scaleType="centerCrop"
-                app:radius="@dimen/radius_l"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{imageUrl}"
                 app:layout_constraintDimensionRatio="h,16:9"
-                app:layout_constraintTop_toBottomOf="@+id/tv_image" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_image"
+                app:radius="@dimen/radius_l" />
+
             <pers.fz.mvvm.widget.customview.CustomSearchEditText
                 android:id="@+id/customEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:hint="这是一个自定义输入框CustomSearchEditText"
                 android:inputType="text"
                 android:textColor="@color/white"
                 android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
                 app:bgColor="@color/white"
+                app:enableBgStyle="true"
+                app:layout_constraintTop_toBottomOf="@+id/cornersImageView"
                 app:radius="@dimen/radius_m"
                 app:strokeColor="@color/themeColor"
-                app:strokeWidth="1dp"
-                app:enableBgStyle="true"
-                android:textSize="@dimen/font_size_l"
-                android:hint="这是一个自定义输入框CustomSearchEditText"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                app:layout_constraintTop_toBottomOf="@+id/cornersImageView" />
+                app:strokeWidth="1dp" />
 
             <pers.fz.mvvm.widget.customview.CornerEditText
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"
-                android:textSize="@dimen/font_size_l"
-                android:layout_marginTop="@dimen/vertical_margin_l"
-                android:textColorHint="@color/nv_bg_color"
-                android:hint="请输入..."
-                android:gravity="top"
-                android:padding="@dimen/padding_m"
-                android:layout_marginStart="@dimen/horizontal_margin_l"
-                android:layout_marginEnd="@dimen/horizontal_margin_l"
-                app:bgColor="@color/white"
-                app:radius="@dimen/radius_l"
-                app:strokeColor="@color/h_line_color"
-                app:strokeWidth="1dp"
                 android:layout_height="120dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:gravity="top"
+                android:hint="请输入..."
+                android:padding="@dimen/padding_m"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
+                app:bgColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/customEditText"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/numberFormatEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
                 android:hint="请输入数字，自动格式化金额，并保留两位有效数字"
-                android:textSize="@dimen/font_size_l"
-                android:textColorHint="@color/nv_bg_color"
-                android:textColor="@color/autoColor"
                 android:inputType="numberDecimal"
                 android:lines="1"
-                app:layout_constraintTop_toBottomOf="@+id/edit_area"/>
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintTop_toBottomOf="@+id/edit_area" />
+
             <pers.fz.mvvm.widget.customview.VerificationCodeInputView
                 android:id="@+id/verificationCodeInputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_size_xl"
-                app:radius="@dimen/radius_m"
-                android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
-                app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"/>
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_xl"
+                app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"
+                app:radius="@dimen/radius_m" />
+
             <pers.fz.mvvm.widget.customview.CircleProgressBar
                 android:id="@+id/circle_progress_bar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/themeColor"
+                android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_xl"
                 app:bgColor="@color/themeColor"
-                app:textColor="@color/themeColor"
-                app:progressColor="@color/theme_green"
-                app:strokeWidth="10dp"
                 app:fontPercent="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/verificationCodeInputView"
+                app:progressColor="@color/theme_green"
                 app:showText="true"
-                app:textSize="16sp"
-                android:textColorHint="@color/nv_bg_color"
-                android:textColor="@color/themeColor"
-                app:layout_constraintTop_toBottomOf="@+id/verificationCodeInputView"/>
+                app:strokeWidth="10dp"
+                app:textColor="@color/themeColor"
+                app:textSize="16sp" />
 
             <pers.fz.mvvm.widget.customview.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
@@ -307,116 +318,138 @@
                 android:textColorHint="@color/nv_bg_color"
                 app:bgColor="@color/themeColor"
                 app:bgRadius="@dimen/radius_l"
-                app:textColor="@color/white"
                 app:fontPercent="2"
-                app:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"
                 app:progressColor="@color/theme_green"
-                app:showText="true" />
+                app:showText="true"
+                app:textColor="@color/white"
+                app:textSize="12sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecyclerview_image"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
-                app:layout_constraintTop_toBottomOf="@+id/horizontal_progress_bar"
-                android:layout_height="wrap_content"/>
+                app:layout_constraintTop_toBottomOf="@+id/horizontal_progress_bar" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecyclerview_video"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
-                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image"
-                android:layout_height="wrap_content"/>
+                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image" />
 
             <pers.fz.mvvm.widget.customview.IconDotTextView
                 android:id="@+id/iconDotTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:textSize="@dimen/font_size_xl"
-                app:textColor="@color/themeColor"
-                app:imageWidth="60dp"
-                app:imageHeight="60dp"
-                app:label="测试"
-                app:imageSrc="@drawable/ic_launcher_background"
-                android:textColorHint="@color/nv_bg_color"
                 android:textColor="@color/themeColor"
-                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"/>
+                android:textColorHint="@color/nv_bg_color"
+                app:imageHeight="60dp"
+                app:imageSrc="@drawable/ic_launcher_background"
+                app:imageWidth="60dp"
+                app:label="测试"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"
+                app:textColor="@color/themeColor"
+                app:textSize="@dimen/font_size_xl" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:gravity="center"
                 android:textSize="@dimen/font_size_xl"
-                android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/iconDotTextView" />
+
             <com.casic.titan.commonui.widght.calendar.CalendarView
                 android:id="@+id/calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:workingDayTextColor="@color/autoColor"
-                app:weekTextColor="@color/theme_red"
-                app:selectedBg="@drawable/calendar_day_bg_focused"
-                app:normalBg="@drawable/calendar_day_bg_normal"
-                app:selectedTextColor="@color/white"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                app:startDate="2023-01-01"
                 app:calendarMode="single"
                 app:endDate="2025-12-31"
+                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_single"
+                app:normalBg="@drawable/calendar_day_bg_normal"
+                app:selectedBg="@drawable/calendar_day_bg_focused"
+                app:selectedTextColor="@color/white"
                 app:showDot="true"
-                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_single"/>
+                app:startDate="2023-01-01"
+                app:weekTextColor="@color/theme_red"
+                app:workingDayTextColor="@color/autoColor" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_calendarView_multi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:gravity="center"
                 android:textSize="@dimen/font_size_xl"
-                android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/calendarView_single" />
+
             <com.casic.titan.commonui.widght.calendar.CalendarView
                 android:id="@+id/calendarView_multi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:workingDayTextColor="@color/autoColor"
-                app:weekTextColor="@color/theme_red"
-                app:selectedBg="@drawable/calendar_day_bg_focused"
-                app:normalBg="@drawable/calendar_day_bg_normal"
-                app:selectedTextColor="@color/white"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                app:startDate="2023-01-01"
                 app:calendarMode="range"
                 app:endDate="2025-12-31"
+                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_multi"
+                app:normalBg="@drawable/calendar_day_bg_normal"
+                app:selectedBg="@drawable/calendar_day_bg_focused"
+                app:selectedTextColor="@color/white"
                 app:showDot="false"
-                app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_multi"/>
+                app:startDate="2023-01-01"
+                app:weekTextColor="@color/theme_red"
+                app:workingDayTextColor="@color/autoColor" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/circleShapeableImageView"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginTop="@dimen/vertical_margin_l"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
-                app:layout_constraintStart_toStartOf="parent"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
                 app:shapeAppearanceOverlay="@style/CircleShapeAppearance"
                 app:strokeColor="@color/theme_green"
-                android:scaleType="centerCrop"
                 app:strokeWidth="3dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/roundedShapeableImageView"
                 android:layout_width="0dp"
-                app:layout_constraintDimensionRatio="w,9:16"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/vertical_margin_l"
-                app:layout_constraintTop_toBottomOf="@+id/circleShapeableImageView"
-                app:layout_constraintStart_toStartOf="parent"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="w,9:16"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/circleShapeableImageView"
                 app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
                 app:strokeColor="@color/theme_green"
-                android:scaleType="centerCrop"
                 app:strokeWidth="3dp" />
+
+            <pers.fz.mvvm.widget.customview.HomeMenuView
+                android:id="@+id/homeMenuView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_xl"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:layout_marginEnd="@dimen/horizontal_margin_xl"
+                app:backgroundColor="@color/white"
+                app:backgroundCornerRadius="16dp"
+                app:columnCount="3"
+                app:dotHeight="20dp"
+                app:dotPadding="6dp"
+                app:labelLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/roundedShapeableImageView"
+                app:rowCount="2"
+                app:topMargin="16dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
