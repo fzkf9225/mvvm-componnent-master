@@ -46,5 +46,4 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
     implementation libs.paho.org.eclipse.paho.mqttv5.client
     implementation libs.mmkv
-    implementation libs.github.live.event.bus.x
 }

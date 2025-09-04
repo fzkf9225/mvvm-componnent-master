@@ -43,6 +43,4 @@ dependencies {
     implementation libs.gson
     implementation libs.netty.all
     implementation libs.google.guava
-    implementation libs.github.live.event.bus.x
-
 }

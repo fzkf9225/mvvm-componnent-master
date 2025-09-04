@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.jeremyliao.liveeventbus.LiveEventBus;
-
 import org.eclipse.paho.mqttv5.client.IMqttToken;
 import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
@@ -96,8 +94,6 @@ public class MQTTServer implements org.eclipse.paho.mqttv5.client.MqttCallback {
         LogUtil.show(TAG, "messageArrived:" + msg);
         //观察者模式
         notifyObservers(new ServerMessage(topic, msg));
-        //LiveEventBus直接推送消息
-        LiveEventBus.get(MQTTServer.class.getSimpleName()).post(new ServerMessage(topic, msg));
     }
 
     @Override

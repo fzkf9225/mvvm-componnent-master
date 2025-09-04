@@ -20,7 +20,6 @@ mp4parser = "1.9.56"
 guava = "33.4.8-jre"
 lifecycleRuntimeKtxVersion = "2.8.3"
 lifecycleVersion = "2.2.0"
-liveEventBusVersion = "1.8.0"
 nettyVersion = "4.1.9.Final"
 orgEclipsePahoMqttv5Client = "1.2.5"
 playServicesLocationVersion = "21.3.0"
@@ -92,7 +91,6 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 androidx-lifecycle-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleVersion" }
 androidx-lifecycle-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
-github-live-event-bus-x = { module = "io.github.jeremyliao:live-event-bus-x", version.ref = "liveEventBusVersion" }
 
 # Room Database
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }

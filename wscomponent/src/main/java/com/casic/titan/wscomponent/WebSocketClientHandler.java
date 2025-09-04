@@ -1,6 +1,5 @@
 package com.casic.titan.wscomponent;
 
-import com.jeremyliao.liveeventbus.LiveEventBus;
 
 import java.util.Date;
 
@@ -86,8 +85,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             }
             //观察者模式
             webSocketServer.notifyObservers(new WebSocketEvent<String>(PushEnum.PUSH, textFrame.text()));
-            //LiveEventBus推送消息模式，其实原理都差不多
-            LiveEventBus.get(WebSocketServer.class.getSimpleName()).post(new WebSocketEvent<String>(PushEnum.PUSH, textFrame.text()));
         }
         //二进制信息
         if (frame instanceof BinaryWebSocketFrame) {
