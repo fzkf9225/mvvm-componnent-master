@@ -30,6 +30,7 @@ import java.util.stream.IntStream
  * describe:
  */
 open class HomeMenuView : ConstraintLayout {
+    private var lifecycleOwner: LifecycleOwner? = null
     private var fragmentManager: FragmentManager? = null
 
     /**
@@ -273,9 +274,6 @@ open class HomeMenuView : ConstraintLayout {
         isWrap = true
     }
 
-    /**
-     * 获取资源配置
-     */
     private fun parseAttributes(context: Context, attrs: AttributeSet) {
         val typedArray: TypedArray = context.obtainStyledAttributes(
             attrs,
@@ -357,9 +355,10 @@ open class HomeMenuView : ConstraintLayout {
     }
 
     /**
-     * 绑定FragmentManager
+     * 绑定生命周期和FragmentManager
      */
-    public fun setFragmentManager(fragmentManager: FragmentManager) {
+    public fun bindLifecycle(lifecycleOwner: LifecycleOwner,fragmentManager: FragmentManager) {
+        this.lifecycleOwner = lifecycleOwner
         this.fragmentManager = fragmentManager
     }
 
@@ -369,6 +368,10 @@ open class HomeMenuView : ConstraintLayout {
         }
         if (fragmentManager == null) {
             throw IllegalArgumentException("fragmentManager is null")
+        }
+
+        if (lifecycleOwner == null) {
+            throw IllegalArgumentException("lifecycleOwner is null")
         }
         val newList = menuList.chunked(columnCount * rowCount)
         initImageRounds(newList)
@@ -475,6 +478,10 @@ open class HomeMenuView : ConstraintLayout {
 
     fun getFragmentManager(): FragmentManager? {
         return fragmentManager
+    }
+
+    fun getLifecycleOwner(): LifecycleOwner? {
+        return lifecycleOwner
     }
 
     fun getMenuListener(): OnMenuClickListener? {
