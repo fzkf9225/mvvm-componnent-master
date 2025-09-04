@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.size
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import pers.fz.mvvm.R
@@ -30,8 +29,7 @@ import java.util.stream.IntStream
  * created by fz on 2025/4/27 15:59
  * describe:
  */
-open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
-    private var lifecycleOwner: LifecycleOwner? = null
+open class HomeMenuView : ConstraintLayout {
     private var fragmentManager: FragmentManager? = null
 
     /**
@@ -236,9 +234,25 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
     private fun init(context: Context, attrs: AttributeSet?) {
         if (attrs == null) {
             setDefaultValues()
-            return
+        } else {
+            parseAttributes(context, attrs)
         }
-        parseAttributes(context, attrs)
+        // 设置指针和ViewPager定位
+        removeAllViews()
+        addView(menuViewPager, viewPagerLayoutParams)
+        addView(dotsLayout, dotLayoutParams)
+        // 设置背景（优先级：drawable > 颜色 > 默认）
+        background = when {
+            backgroundDrawableRes != null -> backgroundDrawableRes
+            backgroundColor != null -> {
+                DrawableUtil.createRectDrawable(
+                    backgroundColor!!,
+                    0, 0, backgroundCornerRadius ?: 0f
+                )
+            }
+
+            else -> ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
+        }
     }
 
     private fun setDefaultValues() {
@@ -259,6 +273,9 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
         isWrap = true
     }
 
+    /**
+     * 获取资源配置
+     */
     private fun parseAttributes(context: Context, attrs: AttributeSet) {
         val typedArray: TypedArray = context.obtainStyledAttributes(
             attrs,
@@ -339,33 +356,11 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
         }
     }
 
-    public fun bindLifecycle(lifecycleOwner: LifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
-
+    /**
+     * 绑定FragmentManager
+     */
     public fun setFragmentManager(fragmentManager: FragmentManager) {
         this.fragmentManager = fragmentManager
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-        // 设置指针和ViewPager定位
-        removeAllViews()
-        addView(menuViewPager, viewPagerLayoutParams)
-        addView(dotsLayout, dotLayoutParams)
-        // 设置背景（优先级：drawable > 颜色 > 默认）
-        background = when {
-            backgroundDrawableRes != null -> backgroundDrawableRes
-            backgroundColor != null -> {
-                DrawableUtil.createRectDrawable(
-                    backgroundColor!!,
-                    0, 0, backgroundCornerRadius ?: 0f
-                )
-            }
-
-            else -> ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
-        }
     }
 
     fun <T : HomeMenuBean> initData(menuList: List<T>?) {
@@ -374,10 +369,6 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
         }
         if (fragmentManager == null) {
             throw IllegalArgumentException("fragmentManager is null")
-        }
-
-        if (lifecycleOwner == null) {
-            throw IllegalArgumentException("lifecycleOwner is null")
         }
         val newList = menuList.chunked(columnCount * rowCount)
         initImageRounds(newList)
@@ -484,10 +475,6 @@ open class HomeMenuView : ConstraintLayout, DefaultLifecycleObserver {
 
     fun getFragmentManager(): FragmentManager? {
         return fragmentManager
-    }
-
-    fun getLifecycleOwner(): LifecycleOwner? {
-        return lifecycleOwner
     }
 
     fun getMenuListener(): OnMenuClickListener? {

@@ -186,7 +186,6 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 .load("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg")
                 .into(binding.roundedShapeableImageView);
 //        binding.customBannerPicture.setOnViewPagerSelectedListener(position -> LogUtil.show(TAG, "当前选中页：" + position));
-        binding.homeMenuView.bindLifecycle(this);
         binding.homeMenuView.setFragmentManager(getSupportFragmentManager());
         binding.homeMenuView.setDrawableResCurrent(DrawableUtil.createCircleDrawable(
                 ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green),
