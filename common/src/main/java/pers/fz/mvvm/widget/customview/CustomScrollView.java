@@ -40,6 +40,7 @@ public class CustomScrollView extends ScrollView {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (inner == null) {
@@ -105,9 +106,6 @@ public class CustomScrollView extends ScrollView {
     public boolean isNeedMove() {
         int offset = inner.getMeasuredHeight() - getHeight();
         int scrollY = getScrollY();
-        if (scrollY == 0 || scrollY == offset) {
-            return true;
-        }
-        return false;
+        return scrollY == 0 || scrollY == offset;
     }
 }

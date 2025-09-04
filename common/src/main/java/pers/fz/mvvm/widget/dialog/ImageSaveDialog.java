@@ -17,7 +17,6 @@ import pers.fz.mvvm.databinding.ImageSaveDialogBinding;
  * describe:选择照片和拍照弹框
  */
 public class ImageSaveDialog extends Dialog {
-    private final Context mContext;
     private OnImageSaveListener onImageSaveListener;
     private ImageSaveDialogBinding binding;
 
@@ -28,12 +27,10 @@ public class ImageSaveDialog extends Dialog {
 
     public ImageSaveDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle_No_Bg);
-        this.mContext = context;
     }
 
     public ImageSaveDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        this.mContext = context;
     }
 
     public ImageSaveDialogBinding getBinding() {

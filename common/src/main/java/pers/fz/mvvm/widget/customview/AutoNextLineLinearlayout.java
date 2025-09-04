@@ -16,10 +16,13 @@ import pers.fz.mvvm.R;
  * Created by fz on 2017/10/30.
  * describe：自动换行
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
 public class AutoNextLineLinearlayout extends ViewGroup  {
     private final Type mType;
-    private List<WarpLine> mWarpLineGroup;
+    private final List<WarpLine> mWarpLineGroup = new ArrayList<>();
+    /*
+     * 根据计算出的宽度，计算出所需要的行数
+     */
+    private final WarpLine warpLine = new WarpLine();
 
     public AutoNextLineLinearlayout(Context context) {
         this(context, null);
@@ -34,7 +37,6 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         mType = new Type(context, attrs);
     }
 
-    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int withMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -52,9 +54,6 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
          * 计算宽度
          */
         switch (withMode) {
-            case MeasureSpec.EXACTLY:
-                with = withSize;
-                break;
             case MeasureSpec.AT_MOST:
                 for (int i = 0; i < childCount; i++) {
                     if (i != 0) {
@@ -80,22 +79,18 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
 
         }
         /*
-         * 根据计算出的宽度，计算出所需要的行数
-         */
-        WarpLine warpLine = new WarpLine();
-        /*
          * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
          */
-        mWarpLineGroup = new ArrayList<>();
+        mWarpLineGroup.clear();
         for (int i = 0; i < childCount; i++) {
             if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontalSpace > with) {
                 if (warpLine.lineView.isEmpty()) {
                     warpLine.addView(getChildAt(i));
                     mWarpLineGroup.add(warpLine);
-                    warpLine = new WarpLine();
+                    warpLine.lineView.clear();
                 } else {
                     mWarpLineGroup.add(warpLine);
-                    warpLine = new WarpLine();
+                    warpLine.lineView.clear();
                     warpLine.addView(getChildAt(i));
                 }
             } else {
@@ -124,8 +119,6 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
                 break;
             case MeasureSpec.AT_MOST:
                 height = Math.min(height, heightSize);
-                break;
-            case MeasureSpec.UNSPECIFIED:
                 break;
             default:
                 break;
@@ -168,7 +161,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
      * 用于存放一行子View
      */
     private final class WarpLine {
-        private List<View> lineView = new ArrayList<View>();
+        private final List<View> lineView = new ArrayList<View>();
         /**
          * 当前行中所需要占用的宽度
          */
@@ -185,6 +178,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             height = Math.max(height, view.getMeasuredHeight());
             lineWidth += view.getMeasuredWidth();
             lineView.add(view);
+        }
+
+        public List<View> getLineView() {
+            return lineView;
         }
     }
 

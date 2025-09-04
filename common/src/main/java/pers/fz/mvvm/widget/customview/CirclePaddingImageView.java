@@ -12,17 +12,40 @@ import pers.fz.mvvm.R;
 
 /**
  * Created by fz on 2023/11/10 8:57
- * describe :
+ * describe :自带内边距的ImageView，有选中样式、取消样式等
  */
 public class CirclePaddingImageView extends AppCompatImageView {
-
+    /**
+     * 边框颜色
+     */
     private int borderColor;
+    /**
+     * 默认背景色
+     */
     private int defaultBackgroundColor;
+    /**
+     * 选中或按下时的北背景颜色
+     */
     private int focusBackgroundColor;
+    /**
+     * 是否启用选中样式
+     */
     private boolean enableSelected;
+    /**
+     * 是否启用按下样式
+     */
     private boolean enablePressed;
+    /**
+     * 边框粗细
+     */
     private int borderWidth;
+    /**
+     * 按下时的背景样式资源
+     */
     private GradientDrawable bgFocusedDrawable;
+    /**
+     * 默认的背景样式资源
+     */
     private GradientDrawable bgDefaultDrawable;
 
     public CirclePaddingImageView(Context context) {

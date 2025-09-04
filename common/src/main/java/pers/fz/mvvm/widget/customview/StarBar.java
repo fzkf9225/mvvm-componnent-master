@@ -1,5 +1,6 @@
 package pers.fz.mvvm.widget.customview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import pers.fz.mvvm.R;
 
@@ -125,7 +128,7 @@ public class StarBar extends View {
 
     //绘制星星
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         if (starFillBitmap == null || starEmptyDrawable == null) {
             return;
@@ -155,6 +158,7 @@ public class StarBar extends View {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isClickAble) {
@@ -168,9 +172,7 @@ public class StarBar extends View {
             x = getMeasuredWidth();
         }
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN -> setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
-            case MotionEvent.ACTION_MOVE -> setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
-            case MotionEvent.ACTION_UP -> {}
+            case MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> setStarMark(x * 1.0f / (getMeasuredWidth() * 1.0f / starCount));
             default -> {}
         }
         invalidate();
