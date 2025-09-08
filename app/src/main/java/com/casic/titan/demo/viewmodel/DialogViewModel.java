@@ -130,7 +130,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .show();
         } else if (R.id.customProgressDialog == view.getId()) {
             new LoadingProgressDialog(view.getContext())
-                    .setMessage("加载中...")
+                    .setEnableDynamicEllipsis(true)
+                    .setMessage("正在加载，请稍后...")
                     .setCanCancel(true)
                     .builder()
                     .show();
