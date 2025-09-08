@@ -29,6 +29,10 @@ public class ApiRequestOptions {
      * 默认加载提示内容
      */
     private String dialogMessage = "正在加载，请稍后...";
+    /**
+     * 是否启用动态省略号效果
+     */
+    private boolean enableDynamicEllipsis = false;
 
     private ApiRequestOptions() {
     }
@@ -73,6 +77,14 @@ public class ApiRequestOptions {
         this.dialogMessage = dialogMessage;
     }
 
+    public boolean isEnableDynamicEllipsis() {
+        return enableDynamicEllipsis;
+    }
+
+    public void setEnableDynamicEllipsis(boolean enableDynamicEllipsis) {
+        this.enableDynamicEllipsis = enableDynamicEllipsis;
+    }
+
     public static class Builder {
         private volatile ApiRequestOptions apiRequestOptions;
 
@@ -101,6 +113,10 @@ public class ApiRequestOptions {
             return this;
         }
 
+        public Builder enableDynamicEllipsis(boolean enableDynamicEllipsis) {
+            apiRequestOptions.setEnableDynamicEllipsis(enableDynamicEllipsis);
+            return this;
+        }
         public Builder setRequestParams(Map<String,?> requestParams) {
             apiRequestOptions.setRequestParams(requestParams);
             return this;
@@ -130,6 +146,7 @@ public class ApiRequestOptions {
         return "ApiRequestOptions{" +
                 "isShowDialog=" + isShowDialog +
                 ", isShowToast=" + isShowToast +
+                ", enableDynamicEllipsis=" + enableDynamicEllipsis +
                 ", toastMsg='" + toastMsg + '\'' +
                 ", requestParams=" + requestParams +
                 ", dialogMessage='" + dialogMessage + '\'' +

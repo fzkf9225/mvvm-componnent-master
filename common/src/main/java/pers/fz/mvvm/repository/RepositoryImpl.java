@@ -105,7 +105,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
@@ -119,7 +119,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
@@ -172,7 +172,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
@@ -186,7 +186,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
@@ -239,7 +239,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
@@ -253,7 +253,7 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage());
+                            baseView.showLoading(apiRequestOptions.getDialogMessage(),apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {

@@ -20,6 +20,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     private val roomDao: DB,
     baseView: BV
 ) : BaseRepository<BV>(baseView) {
+    var enableDynamicEllipsis : Boolean = false
 
     fun getRoomDao() = roomDao
     /**
@@ -33,7 +34,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在插入数据,请稍后...")
+                baseView?.showLoading("正在插入数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -55,7 +56,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在插入数据,请稍后...")
+                baseView?.showLoading("正在插入数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally { baseView?.hideLoading() }
             .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +73,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...")
+                baseView?.showLoading("正在删除数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -93,7 +94,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在更新数据,请稍后...")
+                baseView?.showLoading("正在更新数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -114,7 +115,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在更新数据,请稍后...")
+                baseView?.showLoading("正在更新数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -151,7 +152,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...")
+                baseView?.showLoading("正在删除数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -191,7 +192,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...")
+                baseView?.showLoading("正在删除数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -231,7 +232,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...")
+                baseView?.showLoading("正在删除数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -266,7 +267,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -292,7 +293,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -318,7 +319,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -344,7 +345,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -371,7 +372,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -410,7 +411,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -452,7 +453,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -491,7 +492,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
@@ -584,7 +585,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...")
+                baseView?.showLoading("正在查询数据,请稍后...",enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {

@@ -49,7 +49,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
         } else if (id == R.id.tv_feedback) {
             startActivity(view.getContext(), FeedBackActivity.class);
         } else if (id == R.id.versionName) {
-            baseView.showLoading("正在检测新版本...");
+            baseView.showLoading("正在检测新版本...",true);
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
                 UpdateManger.getInstance().checkUpdateInfo((Activity) view.getContext(),

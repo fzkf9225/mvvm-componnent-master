@@ -175,8 +175,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     @Override
-    public void showLoading(String dialogMessage) {
-        uiController.showLoading(dialogMessage, false);
+    public void showLoading(String dialogMessage,boolean enableDynamicEllipsis) {
+        uiController.showLoading(dialogMessage,enableDynamicEllipsis, false);
     }
 
     @Override

@@ -36,20 +36,22 @@ public class UIController implements LifecycleObserver {
         });
     }
 
-    public void showLoading(String message,boolean isCancelable) {
+    public void showLoading(String message,boolean enableDynamicEllipsis,boolean isCancelable) {
         mainHandler.post(() -> {
             loadingDialog = LoadingProgressDialog.getInstance(context)
                     .setCanCancel(isCancelable)
+                    .setEnableDynamicEllipsis(enableDynamicEllipsis)
                     .setMessage(message)
                     .builder();
             loadingDialog.show();
         });
     }
 
-    public void showLoading(Context context,String message,boolean isCancelable) {
+    public void showLoading(Context context,String message,boolean enableDynamicEllipsis,boolean isCancelable) {
         mainHandler.post(() -> {
             loadingDialog = LoadingProgressDialog.getInstance(context)
                     .setCanCancel(isCancelable)
+                    .setEnableDynamicEllipsis(enableDynamicEllipsis)
                     .setMessage(message)
                     .builder();
             loadingDialog.show();

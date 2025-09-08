@@ -136,11 +136,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
 
     @Override
-    public void showLoading(String dialogMessage) {
+    public void showLoading(String dialogMessage,boolean enableDynamicEllipsis) {
         if (requireActivity().isFinishing()) {
             return;
         }
-        uiController.showLoading(requireActivity(),dialogMessage,false);
+        uiController.showLoading(requireActivity(),dialogMessage,enableDynamicEllipsis,false);
     }
 
     @Override
