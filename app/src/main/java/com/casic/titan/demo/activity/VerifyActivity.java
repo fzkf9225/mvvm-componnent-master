@@ -46,6 +46,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
     public void initView(Bundle savedInstanceState) {
         binding.formImage.setFileApiService(fileApiService);
         binding.formImage.setUploadUrl("minioc/upload");
+        binding.formImage.setBaseView(this);
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);
         binding.formImageVideo.bindLifecycle(this);
