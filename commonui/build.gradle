@@ -83,6 +83,18 @@ dependencies {
     implementation libs.room.rxjava3
     // optional - Paging 3 Integration
     implementation libs.room.paging
+
+    //上传文件使用
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    //ConverterFactory的String依赖包
+    implementation libs.retrofit2.converter.scalars
+    //ConverterFactory的Gson依赖包
+    implementation libs.retrofit2.converter.gson
+    //CallAdapterFactory的Rx依赖包
+    implementation libs.retrofit2.adapter.rxjava3
 }
 
 //执行以下命令完成制品推送

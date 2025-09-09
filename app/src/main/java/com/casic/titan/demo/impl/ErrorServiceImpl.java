@@ -108,9 +108,10 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public Map<String, String> defaultRequestHeader(String system) {
         Map<String, String> headerMap = new HashMap<>();
-        if(!TextUtils.isEmpty(userService.getToken())){
-            headerMap.put("authorization", userService.getToken());
-        }
+//        if(!TextUtils.isEmpty(userService.getToken())){
+            headerMap.put("authorization", "67f487be-13b0-473a-801f-d00243a73c5e");
+        headerMap.put("otitan-sso-token-1003", "AT-dc83a2f009714d30b98efcdb48845f81");
+//        }
         return headerMap;
     }
 

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,9 +19,17 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenMediaDialog;
@@ -28,15 +38,21 @@ import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.MediaAddAdapter;
+import pers.fz.mvvm.api.ErrorConsumer;
+import pers.fz.mvvm.bean.ApiRequestOptions;
 import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.enums.UploadStatusEnum;
+import pers.fz.mvvm.listener.OnUploadRetryClickListener;
 import pers.fz.mvvm.util.common.AttachmentUtil;
+import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.FileUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.MediaAddListener, MediaAddAdapter.MediaClearListener {
+public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.MediaAddListener, MediaAddAdapter.MediaClearListener , OnUploadRetryClickListener {
     /**
      * 是否压缩，默认为true：启用压缩
      */
@@ -151,6 +167,50 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     public void setMediaType(int mediaType) {
         this.mediaType = mediaType;
     }
+    public void upload(String url, List<AttachmentBean> attachmentList) {
+        if (CollectionUtil.isEmpty(attachmentList)) {
+            return;
+        }
+
+        Disposable disposable = Observable.fromIterable(attachmentList)
+                .flatMap(attachmentBean -> {
+                    // 创建文件部分并处理上传进度
+                    MultipartBody.Part filePart = FileUtil.createTempFilePart(getContext(),
+                            Uri.parse(attachmentBean.getPath()),
+                            (uri, currentPos, totalCount, percent) -> handler.post(() ->
+                                    mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            percent == 100 ? UploadStatusEnum.SUCCESS : UploadStatusEnum.UPLOADING,
+                                            percent + "")
+                            ));
+                    // 执行上传请求
+                    return fileApiService.performUpload(url, filePart)
+                            .doOnNext(responseBody -> {
+                                attachmentBean.setUploadInfo(responseBody);
+                                handler.post(() ->
+                                        mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                                UploadStatusEnum.SUCCESS, "上传成功")
+                                );
+                            })
+                            .doOnError(throwable -> handler.post(() ->
+                                    mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            UploadStatusEnum.FAILURE, "点击重试")
+                            ));
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    // 处理成功响应
+                }, baseView == null ? error -> {
+                    // 处理错误
+                } : new ErrorConsumer(baseView, new ApiRequestOptions.Builder()
+                        .setShowDialog(false)
+                        .setShowToast(true)
+                        .build()));
+    }
+
+    public MediaAddAdapter getAdapter() {
+        return mediaAddAdapter;
+    }
 
     @Override
     protected void init() {
@@ -166,6 +226,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         mediaAddAdapter.setPlaceholderImage(placeholderImage);
         mediaAddAdapter.setMediaAddListener(this);
         mediaAddAdapter.setMediaClearListener(this);
+        mediaAddAdapter.setOnUploadRetryClickListener(this);
         mediaRecyclerView.setAdapter(mediaAddAdapter);
     }
 
@@ -310,25 +371,48 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 if (compress) {
                     mediaHelper.startCompressMedia(mediaBean.getMediaList());
                 } else {
-                    mediaAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                    List<AttachmentBean> attachmentList = AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList());
+
+                    mediaAddAdapter.getList().addAll(attachmentList);
                     mediaAddAdapter.notifyDataSetChanged();
                     if(requireUriPermission){
                         AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                     }
                     refreshCountLabel();
+                    if (!autoUpload) {
+                        return;
+                    }
+                    if (handler == null) {
+                        handler = new Handler(Looper.getMainLooper());
+                    }
+                    upload(uploadUrl, attachmentList);
                 }
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE_AND_VIDEO) {
-                mediaAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                List<AttachmentBean> attachmentList = AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList());
+
+                mediaAddAdapter.getList().addAll(attachmentList);
                 mediaAddAdapter.notifyDataSetChanged();
                 if(requireUriPermission){
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }
                 refreshCountLabel();
+                if (!autoUpload) {
+                    return;
+                }
+                if (handler == null) {
+                    handler = new Handler(Looper.getMainLooper());
+                }
+                upload(uploadUrl, attachmentList);
             }
         });
+    }
+
+    @Override
+    public void onRetryClick(@NotNull View v, int pos) {
+        upload(uploadUrl, Collections.singletonList(mediaAddAdapter.getList().get(pos)));
     }
 
 }

@@ -70,11 +70,11 @@
             android:layout_marginEnd="@dimen/vertical_margin_l"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            app:radius="@dimen/radius_s"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:radius="@dimen/radius_s" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_clear_img"
@@ -87,5 +87,28 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <pers.fz.mvvm.widget.customview.CornerTextView
+            android:id="@+id/upload_mark"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_image_show"
+            app:layout_constraintEnd_toEndOf="@+id/iv_image_show"
+            app:layout_constraintStart_toStartOf="@+id/iv_image_show"
+            app:layout_constraintTop_toTopOf="@+id/iv_image_show" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/upload_process"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/upload_mark"
+            app:layout_constraintEnd_toEndOf="@+id/upload_mark"
+            app:layout_constraintStart_toStartOf="@+id/upload_mark"
+            app:layout_constraintTop_toTopOf="@+id/upload_mark"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_l" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -288,6 +288,7 @@
                     app:compressImageSize="300"
                     app:formImeOptions="actionNext"
                     app:label="本人照片"
+                    app:autoUpload="true"
                     app:labelTextStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

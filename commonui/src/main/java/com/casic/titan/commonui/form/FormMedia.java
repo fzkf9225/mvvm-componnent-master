@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -19,8 +20,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
+import com.casic.titan.commonui.api.FileApiService;
 import com.casic.titan.commonui.enums.LabelTextStyleEnum;
 
+import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.util.common.DensityUtil;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration;
@@ -139,6 +142,26 @@ public abstract class FormMedia extends ConstraintLayout {
      * label文字样式，默认不加粗
      */
     protected int labelTextStyle = LabelTextStyleEnum.NORMAL.value;
+    /**
+     * 文件上传服务
+     */
+    protected FileApiService fileApiService;
+    /**
+     * 数量标签控件
+     */
+    protected String uploadUrl = null;
+    /**
+     * 是否自动上传
+     */
+    protected boolean autoUpload = false;
+    /**
+     * 是否自动上传成功后的回调
+     */
+    protected Handler handler = null;
+    /**
+     * 回调
+     */
+    protected BaseView baseView;
 
     public FormMedia(@NonNull Context context) {
         super(context);
@@ -200,7 +223,7 @@ public abstract class FormMedia extends ConstraintLayout {
             if (errorImage == null) {
                 errorImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
             }
-
+            autoUpload = typedArray.getBoolean(R.styleable.FormUI_autoUpload, false);
             String fileTypeStr = typedArray.getString(R.styleable.FormUI_fileType);
             if (!TextUtils.isEmpty(fileTypeStr)) {
                 fileType = fileTypeStr.split(",");
@@ -231,10 +254,35 @@ public abstract class FormMedia extends ConstraintLayout {
             columnMargin = DensityUtil.dp2px(getContext(), 8f);
             placeholderImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
             errorImage = ContextCompat.getDrawable(getContext(), pers.fz.mvvm.R.mipmap.ic_default_image);
+            autoUpload = false;
         }
     }
 
     public abstract String[] defaultFileType();
+
+    /**
+     * 设置视频自动上传接口地址
+     * @param uploadUrl 上传接口地址，相对地址
+     */
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
+    /**
+     * 回调
+     * @param baseView 回调
+     */
+    public void setBaseView(BaseView baseView) {
+        this.baseView = baseView;
+    }
+
+    /**
+     * 设置文件上传接口服务
+     * @param fileApiService 代理
+     */
+    public void setFileApiService(FileApiService fileApiService) {
+        this.fileApiService = fileApiService;
+    }
 
     protected void init() {
         createLabel();
@@ -245,7 +293,6 @@ public abstract class FormMedia extends ConstraintLayout {
         layoutRequired();
         layoutRecyclerView();
     }
-
 
     public AppCompatTextView getTvLabel() {
         return tvLabel;

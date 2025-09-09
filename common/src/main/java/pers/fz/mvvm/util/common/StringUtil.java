@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -570,5 +571,9 @@ public class StringUtil {
         } else {
             return stringWithoutNumbers.substring(stringWithoutNumbers.length() - 2);
         }
+    }
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }

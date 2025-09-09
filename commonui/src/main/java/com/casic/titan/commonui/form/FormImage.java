@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,9 +19,17 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.casic.titan.commonui.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 import pers.fz.media.MediaBuilder;
 import pers.fz.media.MediaHelper;
 import pers.fz.media.dialog.OpenImageDialog;
@@ -27,15 +37,21 @@ import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
+import pers.fz.mvvm.api.ErrorConsumer;
+import pers.fz.mvvm.bean.ApiRequestOptions;
 import pers.fz.mvvm.bean.AttachmentBean;
+import pers.fz.mvvm.enums.UploadStatusEnum;
+import pers.fz.mvvm.listener.OnUploadRetryClickListener;
 import pers.fz.mvvm.util.common.AttachmentUtil;
+import pers.fz.mvvm.util.common.CollectionUtil;
 import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.util.common.FileUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27
  * describe :
  */
-public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener {
+public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener, OnUploadRetryClickListener {
     /**
      * 是否压缩，默认为true：启用压缩
      */
@@ -152,6 +168,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         imageAddAdapter.setPlaceholderImage(placeholderImage);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
+        imageAddAdapter.setOnUploadRetryClickListener(this);
         mediaRecyclerView.setAdapter(imageAddAdapter);
     }
 
@@ -194,6 +211,10 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         return imageAddAdapter.getList();
     }
 
+    public ImageAddAdapter getAdapter() {
+        return imageAddAdapter;
+    }
+
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     public void setUriImages(List<Uri> images) {
         if (images == null) {
@@ -203,6 +224,53 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         }
         imageAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(images));
         imageAddAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 自动上传图片
+     *
+     * @param url            相对地址
+     * @param attachmentList 文件
+     */
+    public void upload(String url, List<AttachmentBean> attachmentList) {
+        if (CollectionUtil.isEmpty(attachmentList)) {
+            return;
+        }
+
+        Disposable disposable = Observable.fromIterable(attachmentList)
+                .flatMap(attachmentBean -> {
+                    // 创建文件部分并处理上传进度
+                    MultipartBody.Part filePart = FileUtil.createTempFilePart(getContext(),
+                            Uri.parse(attachmentBean.getPath()),
+                            (uri, currentPos, totalCount, percent) -> handler.post(() ->
+                                    imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            percent == 100 ? UploadStatusEnum.SUCCESS : UploadStatusEnum.UPLOADING,
+                                            percent + "")
+                            ));
+                    // 执行上传请求
+                    return fileApiService.performUpload(url, filePart)
+                            .doOnNext(responseBody -> {
+                                attachmentBean.setUploadInfo(responseBody);
+                                handler.post(() ->
+                                        imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                                UploadStatusEnum.SUCCESS, "上传成功")
+                                );
+                            })
+                            .doOnError(throwable -> handler.post(() ->
+                                    imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            UploadStatusEnum.FAILURE, "点击重试")
+                            ));
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    // 处理成功响应
+                }, baseView == null ? error -> {
+                    // 处理错误
+                } : new ErrorConsumer(baseView, new ApiRequestOptions.Builder()
+                        .setShowDialog(false)
+                        .setShowToast(true)
+                        .build()));
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
@@ -294,25 +362,45 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());
                 } else {
-                    imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                    List<AttachmentBean> attachmentList = AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList());
+                    imageAddAdapter.getList().addAll(attachmentList);
                     imageAddAdapter.notifyDataSetChanged();
-                    if(requireUriPermission){
+                    if (requireUriPermission) {
                         AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                     }
                     refreshCountLabel();
+                    if (!autoUpload) {
+                        return;
+                    }
+                    if (handler == null) {
+                        handler = new Handler(Looper.getMainLooper());
+                    }
+                    upload(uploadUrl, attachmentList);
                 }
             }
         });
         mediaHelper.getMutableLiveDataCompress().observe(lifecycleOwner, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
+                List<AttachmentBean> attachmentList = AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList());
+                imageAddAdapter.getList().addAll(attachmentList);
                 imageAddAdapter.notifyDataSetChanged();
-                if(requireUriPermission){
+                if (requireUriPermission) {
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }
                 refreshCountLabel();
+                if (!autoUpload) {
+                    return;
+                }
+                if (handler == null) {
+                    handler = new Handler(Looper.getMainLooper());
+                }
+                upload(uploadUrl, attachmentList);
             }
         });
     }
 
+    @Override
+    public void onRetryClick(@NotNull View v, int pos) {
+        upload(uploadUrl, Collections.singletonList(imageAddAdapter.getList().get(pos)));
+    }
 }

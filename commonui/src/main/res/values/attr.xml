@@ -146,6 +146,8 @@
         <attr name="placeholderImage" format="reference"/>
         <!--加载错误图片-->
         <attr name="errorImage" format="reference"/>
+        <!--是否自动上传-->
+        <attr name="autoUpload" format="boolean"/>
         <!--是否必填，也就是是否显示必填的*号-->
         <attr name="required" />
         <!--是否调用uri的持久化权限takeUriPermission，默认为true-->

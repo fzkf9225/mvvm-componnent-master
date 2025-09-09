@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import com.casic.titan.commonui.api.FileApiService;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
@@ -13,6 +14,8 @@ import com.casic.titan.demo.viewmodel.VerifyViewModel;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.annotation.bean.VerifyResult;
@@ -27,6 +30,8 @@ import pers.fz.mvvm.widget.dialog.MenuDialog;
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 
+    @Inject
+    FileApiService fileApiService;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_verify;
@@ -39,6 +44,8 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        binding.formImage.setFileApiService(fileApiService);
+        binding.formImage.setUploadUrl("minioc/upload");
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);
         binding.formImageVideo.bindLifecycle(this);
@@ -70,6 +77,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             }
         });
         binding.verifySubmit.setOnClickListener(v -> {
+            LogUtil.show("FormUi","图片上传是否成功："+binding.formImage.getAdapter().isUploadingSuccess());
             LogUtil.show("FormUi","数据："+new Gson().toJson(binding.getData()));
             showLoading("验证中...",true);
             binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));

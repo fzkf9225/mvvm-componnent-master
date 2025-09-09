@@ -2,6 +2,10 @@ package com.casic.titan.demo.module;
 
 import android.app.Application;
 
+import androidx.core.content.ContextCompat;
+
+import com.casic.titan.commonui.api.FileApiService;
+import com.casic.titan.demo.R;
 import com.casic.titan.demo.api.ApiServiceHelper;
 
 import dagger.Module;
@@ -34,6 +38,24 @@ public class AppModule {
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(ApiServiceHelper.class);
+    }
+
+    @Provides
+    public FileApiService provideFileApiService(
+            Application application, ErrorService errorService
+    ) {
+        String baseUrl = PropertiesUtil.getInstance().loadConfig(
+                application,
+                ContextCompat.getString(application, R.string.app_config_file)
+        ).getBaseUrl();
+        return new ApiRetrofit
+                .Builder(application)
+                .setSingleInstance(false)
+                .setBaseUrl(baseUrl)
+                .setTimeOut(30)
+                .setErrorService(errorService)
+                .builder()
+                .getApiService(FileApiService.class);
     }
 }
 

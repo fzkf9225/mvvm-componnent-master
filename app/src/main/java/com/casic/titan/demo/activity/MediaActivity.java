@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import com.casic.titan.demo.R;
@@ -35,7 +37,9 @@ import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
+import pers.fz.mvvm.enums.UploadStatusEnum;
 import pers.fz.mvvm.util.common.AttachmentUtil;
+import pers.fz.mvvm.util.log.LogUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 
@@ -125,6 +129,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 }
                 imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
+                percentage = 0;
+                handler.post(runnable);
                 binding.tvImage.setText("图片选择（" + imageAddAdapter.getList().size() + "/" + mediaHelper.getMediaBuilder().getImageMaxSelectedCount() + "）");
             } else if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 videoAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
@@ -194,6 +200,23 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
     }
 
+    private double percentage = 0;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    public Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (percentage >= 100) {
+                imageAddAdapter.updateUploadStatus(0, UploadStatusEnum.SUCCESS, "上传成功！");
+                handler.removeCallbacks(runnable);
+                return;
+            }
+            percentage++;
+            imageAddAdapter.updateUploadStatus(0, UploadStatusEnum.UPLOADING, percentage + "%");
+            handler.postDelayed(runnable, 300);
+        }
+    };
+
     private List<String> coverUriToString(List<Uri> uriList) {
         if (uriList == null) {
             return null;
@@ -225,6 +248,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void imgAdd(View view) {
+        LogUtil.show(TAG,"上传是否成功："+imageAddAdapter.isUploadingSuccess());
         mediaHelper.openImageDialog(view, OpenImageDialog.CAMERA_ALBUM);
     }
 
