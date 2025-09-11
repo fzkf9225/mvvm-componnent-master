@@ -1,5 +1,7 @@
 package com.casic.titan.demo.api;
 
+import com.casic.titan.commonui.api.FileApiService;
+import com.casic.titan.commonui.api.MediaUploadConfig;
 import com.casic.titan.commonui.helper.CalendarDataSource;
 import com.casic.titan.demo.BuildConfig;
 
@@ -21,7 +23,8 @@ import pers.fz.mvvm.util.log.LogUtil;
 public class ApplicationHelper extends BaseApplication {
     @Inject
     ErrorService errorService;
-
+    @Inject
+    FileApiService fileApiService;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +38,9 @@ public class ApplicationHelper extends BaseApplication {
                 .subscribe(CalendarDataSource.calendarObservableField::set,
                         throwable -> LogUtil.show("CalendarView", "日历异常：" + throwable)
                 );
+        MediaUploadConfig.getInstance()
+                .setFileApiService(fileApiService)
+                .setUploadUrl("minioc/upload");
     }
 
 }

@@ -237,6 +237,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             return;
         }
 
+        if (fileApiService == null) {
+            throw new NullPointerException("fileApiService is null");
+        }
         Disposable disposable = Observable.fromIterable(attachmentList)
                 .flatMap(attachmentBean -> {
                     // 创建文件部分并处理上传进度
@@ -249,6 +252,10 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                             ));
                     // 执行上传请求
                     return fileApiService.performUpload(url, filePart)
+                            .doOnSubscribe(dis-> handler.post(() ->
+                                    imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            UploadStatusEnum.UPLOADING, "开始上传")
+                            ))
                             .doOnNext(responseBody -> {
                                 attachmentBean.setUploadInfo(responseBody);
                                 handler.post(() ->
@@ -256,10 +263,14 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                                                 UploadStatusEnum.SUCCESS, "上传成功")
                                 );
                             })
-                            .doOnError(throwable -> handler.post(() ->
-                                    imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
-                                            UploadStatusEnum.FAILURE, "点击重试")
-                            ));
+                            .onErrorResumeNext(throwable -> {
+                                // 单个上传失败时，发送一个空响应并继续
+                                handler.post(() ->
+                                        imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                                UploadStatusEnum.FAILURE, "点击重试")
+                                );
+                                return Observable.empty(); // 返回空Observable继续执行
+                            });
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

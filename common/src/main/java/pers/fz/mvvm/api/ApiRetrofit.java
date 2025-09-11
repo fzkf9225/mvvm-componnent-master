@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -54,7 +55,16 @@ public class ApiRetrofit {
         LogUtil.show(TAG, "--------------------Request Start--------------------");
         LogUtil.show(TAG, "Request Method：" + request.method());
         LogUtil.show(TAG, "Request Url：" + request.url());
-        LogUtil.show(TAG, "Request Headers：" + request.headers());
+
+        // 格式化请求头
+        Headers requestHeaders = request.headers();
+        if (requestHeaders.size() > 0) {
+            LogUtil.show(TAG, "Request Headers：");
+            IntStream.range(0, requestHeaders.size()).forEach(i -> LogUtil.show(TAG, "  " + requestHeaders.name(i) + ": " + requestHeaders.value(i)));
+        } else {
+            LogUtil.show(TAG, "Request Headers：{}");
+        }
+
         try {
             String contentType = request.header("Content-Type");
             if (contentType == null || !contentType.contains("multipart/form-data")) {
@@ -63,8 +73,17 @@ public class ApiRetrofit {
         } catch (IOException e) {
             LogUtil.show(TAG, "Request parse error");
         }
+
+        // 格式化响应头
+        Headers responseHeaders = response.headers();
+        if (responseHeaders.size() > 0) {
+            LogUtil.show(TAG, "Response Headers：");
+            IntStream.range(0, responseHeaders.size()).forEach(i -> LogUtil.show(TAG, "  " + responseHeaders.name(i) + ": " + responseHeaders.value(i)));
+        } else {
+            LogUtil.show(TAG, "Response Headers：{}");
+        }
+
         try {
-            LogUtil.show(TAG, "Response Headers：" + response.headers());
             ResponseBody responseBody = response.peekBody(1024 * 1024);
             LogUtil.show(TAG, "Response Body：" + responseBody.string());
         } catch (Exception e) {

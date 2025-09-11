@@ -30,8 +30,6 @@ import pers.fz.mvvm.widget.dialog.MenuDialog;
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
 
-    @Inject
-    FileApiService fileApiService;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_verify;
@@ -44,8 +42,6 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        binding.formImage.setFileApiService(fileApiService);
-        binding.formImage.setUploadUrl("minioc/upload");
         binding.formImage.setBaseView(this);
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);

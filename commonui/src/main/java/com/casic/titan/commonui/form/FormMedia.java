@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.api.FileApiService;
+import com.casic.titan.commonui.api.MediaUploadConfig;
 import com.casic.titan.commonui.enums.LabelTextStyleEnum;
 
 import pers.fz.mvvm.base.BaseView;
@@ -145,11 +146,11 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 文件上传服务
      */
-    protected FileApiService fileApiService;
+    protected FileApiService fileApiService = MediaUploadConfig.getInstance().getFileApiService();
     /**
      * 数量标签控件
      */
-    protected String uploadUrl = null;
+    protected String uploadUrl = MediaUploadConfig.getInstance().getUploadUrl();
     /**
      * 是否自动上传
      */

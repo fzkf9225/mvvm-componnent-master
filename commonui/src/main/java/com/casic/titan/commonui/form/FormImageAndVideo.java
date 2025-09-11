@@ -172,6 +172,9 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             return;
         }
 
+        if (fileApiService == null) {
+            throw new NullPointerException("fileApiService is null");
+        }
         Disposable disposable = Observable.fromIterable(attachmentList)
                 .flatMap(attachmentBean -> {
                     // 创建文件部分并处理上传进度
@@ -184,6 +187,10 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                             ));
                     // 执行上传请求
                     return fileApiService.performUpload(url, filePart)
+                            .doOnSubscribe(dis-> handler.post(() ->
+                                    mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                            UploadStatusEnum.UPLOADING, "开始上传")
+                            ))
                             .doOnNext(responseBody -> {
                                 attachmentBean.setUploadInfo(responseBody);
                                 handler.post(() ->
@@ -191,10 +198,13 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                                                 UploadStatusEnum.SUCCESS, "上传成功")
                                 );
                             })
-                            .doOnError(throwable -> handler.post(() ->
-                                    mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
-                                            UploadStatusEnum.FAILURE, "点击重试")
-                            ));
+                            .onErrorResumeNext(throwable -> {
+                                handler.post(() ->
+                                        mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
+                                                UploadStatusEnum.FAILURE, "点击重试")
+                                );
+                                return Observable.empty();
+                            });
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

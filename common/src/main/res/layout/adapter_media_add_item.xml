@@ -129,18 +129,6 @@
                 app:layout_constraintTop_toTopOf="@id/media_guideline_top" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_clear_media"
-            android:layout_width="@dimen/image_m"
-            android:layout_height="@dimen/image_m"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/vertical_margin_s"
-            android:layout_marginEnd="@dimen/vertical_margin_s"
-            android:background="@drawable/ib_clear_image_selector"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <pers.fz.mvvm.widget.customview.CornerTextView
             android:id="@+id/upload_mark"
             android:layout_width="0dp"
@@ -162,5 +150,17 @@
             app:layout_constraintTop_toTopOf="@+id/upload_mark"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_l" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_clear_media"
+            android:layout_width="@dimen/image_m"
+            android:layout_height="@dimen/image_m"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/vertical_margin_s"
+            android:layout_marginEnd="@dimen/vertical_margin_s"
+            android:background="@drawable/ib_clear_image_selector"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
