@@ -1,4 +1,4 @@
-package com.casic.titan.commonui.tickview;
+package com.casic.titan.commonui.widght.tickview;
 
 /**
  * Created by fz on 2019/10/22.

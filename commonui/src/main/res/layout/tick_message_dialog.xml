@@ -11,7 +11,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="16dp">
 
-    <com.casic.titan.commonui.tickview.TickView
+    <com.casic.titan.commonui.widght.tickview.TickView
         android:id="@+id/tick_view"
         android:layout_width="75dp"
         android:layout_height="75dp"

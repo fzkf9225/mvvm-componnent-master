@@ -1,4 +1,4 @@
-package com.casic.titan.commonui.tickview;
+package com.casic.titan.commonui.widght.tickview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

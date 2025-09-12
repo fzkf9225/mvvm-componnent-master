@@ -1,4 +1,4 @@
-package com.casic.titan.commonui.tickview;
+package com.casic.titan.commonui.widght.tickview;
 
 import android.content.Context;
 import android.graphics.Color;

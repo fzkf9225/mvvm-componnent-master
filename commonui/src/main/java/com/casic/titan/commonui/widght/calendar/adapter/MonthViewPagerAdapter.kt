@@ -23,7 +23,7 @@ class MonthViewPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         return CalendarMonthFragment.newInstance(
             calendarView,
-            dateList?.get(position)?.calendarDataList!!
+            dateList?.get(position)?.calendarDataList?: emptyList()
         )
     }
 

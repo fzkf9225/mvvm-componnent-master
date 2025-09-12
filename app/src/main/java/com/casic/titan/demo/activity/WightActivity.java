@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -162,7 +163,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, pers.fz.mvvm.R.color.theme_green));
         binding.calendarViewSingle.registerOnPageChangeCallback((calendarData, pos) -> {
             calendarData.getCalendarDataList().forEach(item -> item.setDrawable(shapeDrawable));
-            CalendarMonthFragment fragment = binding.calendarViewSingle.getCalendarPagerAdapter().getItem(pos);
+            CalendarMonthFragment fragment = Objects.requireNonNull(binding.calendarViewSingle.getCalendarPagerAdapter()).getItem(pos);
             if (fragment != null) {
                 fragment.getAdapter().notifyDataSetChanged();
             }
@@ -172,7 +173,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
         //多选日历
         binding.calendarViewMulti.initData(getLifecycle(), getSupportFragmentManager());
         binding.calendarViewMulti.registerOnPageChangeCallback((calendarData, pos) -> {
-            CalendarMonthFragment fragmentMulti = binding.calendarViewMulti.getCalendarPagerAdapter().getItem(pos);
+            CalendarMonthFragment fragmentMulti = Objects.requireNonNull(binding.calendarViewMulti.getCalendarPagerAdapter()).getItem(pos);
             if (fragmentMulti != null) {
                 fragmentMulti.getAdapter().notifyDataSetChanged();
             }

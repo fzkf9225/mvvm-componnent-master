@@ -14,7 +14,13 @@ public class CalendarData extends BaseObservable {
     private int year;
     private int month;
     private int day = -1;
+    /**
+     * 是否是周末
+     */
     private boolean weekend = false;
+    /**
+     * 圆点样式
+     */
     private Drawable drawable;
     public CalendarData() {
     }

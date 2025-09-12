@@ -19,7 +19,7 @@ import androidx.core.widget.PopupWindowCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
-import com.casic.titan.commonui.dialog.TickViewMessageDialog;
+import com.casic.titan.commonui.widght.dialog.TickViewMessageDialog;
 import com.casic.titan.commonui.widght.calendar.DateRangePickDialog;
 import com.casic.titan.demo.R;
 import com.google.gson.Gson;

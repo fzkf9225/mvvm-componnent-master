@@ -57,11 +57,11 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     /**
      * 周末的颜色
      */
-    private int weekTextColor = 0x333333;
+    private @ColorInt int weekTextColor = 0x333333;
     /**
      * 工作日的颜色
      */
-    private int workingDayTextColor = 0x333333;
+    private @ColorInt int workingDayTextColor = 0x333333;
     /**
      * 选中背景
      */
@@ -100,7 +100,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     /**
      * 选中文字颜色
      */
-    private int selectedTextColor = 0xFFFFFFFF;
+    private @ColorInt int selectedTextColor = 0xFFFFFFFF;
 
     private int gravity = Gravity.BOTTOM;
 
@@ -405,6 +405,5 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onDestroy(owner);
-
     }
 }

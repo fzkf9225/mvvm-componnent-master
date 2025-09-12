@@ -12,6 +12,8 @@ import com.casic.titan.commonui.bean.CalendarData;
 import com.casic.titan.commonui.databinding.ItemCalendarDayBinding;
 import com.casic.titan.commonui.widght.calendar.CalendarView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.ParseException;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
@@ -39,38 +41,6 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
                 + NumberUtils.formatMonthOrDay(getList().get(pos).getDay());
         boolean isSelected = false;
         /*
-         * 设置文字大小
-         */
-        if (calendarView.getTextSize() == null) {
-            holder.getBinding().dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.sp2px(calendarView.getContext(), 12));
-        } else {
-            holder.getBinding().dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, calendarView.getTextSize());
-        }
-        /*
-         * 设置item大小，也就是可点击范围
-         */
-        ConstraintLayout.LayoutParams itemLayoutParams = (ConstraintLayout.LayoutParams) holder.getBinding().dayNumber.getLayoutParams();
-        if (calendarView.getItemWidth() == null || calendarView.getItemHeight() == null) {
-            itemLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 36f);
-            itemLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 36f);
-        } else {
-            itemLayoutParams.width = calendarView.getItemWidth();
-            itemLayoutParams.height = calendarView.getItemHeight();
-        }
-        holder.getBinding().dayNumber.setLayoutParams(itemLayoutParams);
-        /*
-         * 设置圆点大小
-         */
-        ConstraintLayout.LayoutParams dotLayoutParams = (ConstraintLayout.LayoutParams) holder.getBinding().vCircle.getLayoutParams();
-        if (calendarView.getDotWidth() == null || calendarView.getDotHeight() == null) {
-            dotLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 4f);
-            dotLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 4f);
-        } else {
-            dotLayoutParams.width = calendarView.getDotWidth();
-            dotLayoutParams.height = calendarView.getDotHeight();
-        }
-        holder.getBinding().vCircle.setLayoutParams(dotLayoutParams);
-        /*
          * 设置不可点击,主要是区别是否有占位符
          */
         if (mList.get(pos).getDay() < 0) {
@@ -86,14 +56,14 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         if (isEnable(day)) {
             if (isSelected) {
-                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor());
+                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.white) : calendarView.getSelectedTextColor());
                 holder.getBinding().dayNumber.setBackground(calendarView.getSelectedBg());
             } else {
                 if (mList.get(pos).isWeekend()) {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.auto_color) : calendarView.getWeekTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 } else {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.auto_color) : calendarView.getWorkingDayTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 }
             }
@@ -170,6 +140,51 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
     @Override
     protected int getLayoutId() {
         return R.layout.item_calendar_day;
+    }
+
+
+    @Override
+    protected BaseViewHolder<ItemCalendarDayBinding> createViewHold(ItemCalendarDayBinding binding) {
+        return new CalendarViewHolder(binding, this);
+    }
+
+    public class CalendarViewHolder extends BaseViewHolder<ItemCalendarDayBinding> {
+        public CalendarViewHolder(@NotNull ItemCalendarDayBinding binding, CalendarPagerAdapter adapter) {
+            super(binding, adapter);
+            /*
+             * 设置文字大小
+             */
+            if (calendarView.getTextSize() == null) {
+                binding.dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.sp2px(calendarView.getContext(), 12));
+            } else {
+                binding.dayNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, calendarView.getTextSize());
+            }
+            /*
+             * 设置item大小，也就是可点击范围
+             */
+            ConstraintLayout.LayoutParams itemLayoutParams = (ConstraintLayout.LayoutParams) binding.dayNumber.getLayoutParams();
+            if (calendarView.getItemWidth() == null || calendarView.getItemHeight() == null) {
+                itemLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 36f);
+                itemLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 36f);
+            } else {
+                itemLayoutParams.width = calendarView.getItemWidth();
+                itemLayoutParams.height = calendarView.getItemHeight();
+            }
+            binding.dayNumber.setLayoutParams(itemLayoutParams);
+            /*
+             * 设置圆点大小
+             */
+            ConstraintLayout.LayoutParams dotLayoutParams = (ConstraintLayout.LayoutParams) binding.vCircle.getLayoutParams();
+            if (calendarView.getDotWidth() == null || calendarView.getDotHeight() == null) {
+                dotLayoutParams.width = DensityUtil.dp2px(calendarView.getContext(), 4f);
+                dotLayoutParams.height = DensityUtil.dp2px(calendarView.getContext(), 4f);
+            } else {
+                dotLayoutParams.width = calendarView.getDotWidth();
+                dotLayoutParams.height = calendarView.getDotHeight();
+            }
+            binding.vCircle.setLayoutParams(dotLayoutParams);
+
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.casic.titan.commonui.dialog;
+package com.casic.titan.commonui.widght.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.casic.titan.commonui.R;
-import com.casic.titan.commonui.tickview.OnCheckedChangeListener;
-import com.casic.titan.commonui.tickview.OnTickViewHideListener;
-import com.casic.titan.commonui.tickview.TickView;
+import com.casic.titan.commonui.widght.tickview.OnCheckedChangeListener;
+import com.casic.titan.commonui.widght.tickview.OnTickViewHideListener;
+import com.casic.titan.commonui.widght.tickview.TickView;
 
 
 /**

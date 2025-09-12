@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.GridLayout
+import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -31,6 +32,7 @@ import pers.fz.mvvm.util.common.DateUtil
 import pers.fz.mvvm.util.common.DensityUtil
 import pers.fz.mvvm.util.log.LogUtil
 import pers.fz.mvvm.widget.empty.EmptyLayout
+import androidx.core.content.withStyledAttributes
 
 
 /**
@@ -43,13 +45,23 @@ class CalendarView : ConstraintLayout {
     /**
      * 周末的颜色
      */
+    @ColorInt
     var weekTextColor: Int? = null
 
     /**
      * 工作日的颜色
      */
+    @ColorInt
     var workingDayTextColor: Int? = null
+
+    /**
+     * 可选时间范围开始时间，默认为365天前
+     */
     var startDate: String? = null
+
+    /**
+     * 可选时间范围结束时间，默认为365天后
+     */
     var endDate: String? = null
 
     /**
@@ -112,6 +124,7 @@ class CalendarView : ConstraintLayout {
     /**
      * 选中文字颜色
      */
+    @ColorInt
     var selectedTextColor: Int? = null
 
     private var onViewPagerChangedListener: OnViewPagerChangedListener? = null
@@ -159,56 +172,56 @@ class CalendarView : ConstraintLayout {
 
     private fun initAttrs(attrs: AttributeSet?) {
         attrs?.let {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarView)
-            workingDayTextColor = typedArray.getColor(
-                R.styleable.CalendarView_workingDayTextColor,
-                ContextCompat.getColor(context, R.color.auto_color)
-            )
-            //如果没设置默认为工作日文字颜色
-            weekTextColor = typedArray.getColor(
-                R.styleable.CalendarView_weekTextColor,
-                ContextCompat.getColor(context, R.color.auto_color)
-            )
-            startDate = typedArray.getString(R.styleable.CalendarView_startDate)
-            endDate = typedArray.getString(R.styleable.CalendarView_endDate)
-            if (startDate.isNullOrBlank()) {
-                startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
-            }
-            if (endDate.isNullOrBlank()) {
-                endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
-            }
-            mode = typedArray.getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
-            showDot = typedArray.getBoolean(R.styleable.CalendarView_showDot, false)
-            selectedTextColor =
-                typedArray.getColor(
-                    R.styleable.CalendarView_selectedTextColor,
-                    ContextCompat.getColor(context, R.color.white)
+            context.withStyledAttributes(attrs, R.styleable.CalendarView) {
+                workingDayTextColor = getColor(
+                    R.styleable.CalendarView_workingDayTextColor,
+                    ContextCompat.getColor(context, R.color.auto_color)
                 )
-            selectedBg = typedArray.getDrawable(R.styleable.CalendarView_selectedBg)
-            normalBg = typedArray.getDrawable(R.styleable.CalendarView_normalBg)
-            textSize = typedArray.getDimension(
-                R.styleable.CalendarView_textSize,
-                DensityUtil.sp2px(context, 14f).toFloat()
-            )
+                //如果没设置默认为工作日文字颜色
+                weekTextColor = getColor(
+                    R.styleable.CalendarView_weekTextColor,
+                    ContextCompat.getColor(context, R.color.auto_color)
+                )
+                startDate = getString(R.styleable.CalendarView_startDate)
+                endDate = getString(R.styleable.CalendarView_endDate)
+                if (startDate.isNullOrBlank()) {
+                    startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
+                }
+                if (endDate.isNullOrBlank()) {
+                    endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
+                }
+                mode = getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
+                showDot = getBoolean(R.styleable.CalendarView_showDot, false)
+                selectedTextColor =
+                    getColor(
+                        R.styleable.CalendarView_selectedTextColor,
+                        ContextCompat.getColor(context, R.color.white)
+                    )
+                selectedBg = getDrawable(R.styleable.CalendarView_selectedBg)
+                normalBg = getDrawable(R.styleable.CalendarView_normalBg)
+                textSize = getDimension(
+                    R.styleable.CalendarView_textSize,
+                    DensityUtil.sp2px(context, 14f).toFloat()
+                )
 
-            itemWidth = typedArray.getDimensionPixelOffset(
-                R.styleable.CalendarView_itemWidth,
-                DensityUtil.dp2px(context, 36f)
-            )
-            itemHeight = typedArray.getDimensionPixelOffset(
-                R.styleable.CalendarView_itemHeight,
-                DensityUtil.dp2px(context, 36f)
-            )
+                itemWidth = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemWidth,
+                    DensityUtil.dp2px(context, 36f)
+                )
+                itemHeight = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemHeight,
+                    DensityUtil.dp2px(context, 36f)
+                )
 
-            dotWidth = typedArray.getDimensionPixelOffset(
-                R.styleable.CalendarView_itemWidth,
-                DensityUtil.dp2px(context, 4f)
-            )
-            dotHeight = typedArray.getDimensionPixelOffset(
-                R.styleable.CalendarView_itemHeight,
-                DensityUtil.dp2px(context, 4f)
-            )
-            typedArray.recycle()
+                dotWidth = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemWidth,
+                    DensityUtil.dp2px(context, 4f)
+                )
+                dotHeight = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemHeight,
+                    DensityUtil.dp2px(context, 4f)
+                )
+            }
         } ?: run {
             workingDayTextColor = ContextCompat.getColor(context, R.color.auto_color)
             weekTextColor = ContextCompat.getColor(context, R.color.auto_color)
@@ -272,6 +285,9 @@ class CalendarView : ConstraintLayout {
         return binding?.emptyLayout
     }
 
+    /**
+     * 刷新顶部星期标题
+     */
     public fun refreshTitle() {
         binding?.calendarTitle?.removeAllViews()
         for (week in arrayOf("日", "一", "二", "三", "四", "五", "六")) {
@@ -320,7 +336,7 @@ class CalendarView : ConstraintLayout {
         if (CalendarDataSource.calendarObservableField.get().isNullOrEmpty()) {
             val disposable = CalendarDataSource.observableCalendarData()
                 .toList()
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .map {
                     CalendarDataSource.calendarObservableField.set(it)
                     val gson = Gson()
@@ -405,6 +421,9 @@ class CalendarView : ConstraintLayout {
 
     public fun getOnSelectedChangedListener() = mOnSelectedChangedListener
 
+    /**
+     * 选中的时间范围改变监听，单个日期选择的话为startDate，endDate为空
+     */
     public fun setOnSelectedChangedListener(listener: OnSelectedChangedListener?) {
         this.mOnSelectedChangedListener = listener;
     }
@@ -413,6 +432,9 @@ class CalendarView : ConstraintLayout {
         fun onPagerChanged(itemData: CalendarData, pos: Int)
     }
 
+    /**
+     * 侧滑监听
+     */
     public fun setOnViewPagerChangedListener(listener: OnViewPagerChangedListener?) {
         this.onViewPagerChangedListener = listener
     }

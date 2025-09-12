@@ -19,7 +19,13 @@ import pers.fz.mvvm.util.common.DateUtil;
  */
 public class CalendarDataSource {
 
+    /**
+     * 日历数据
+     */
     public final static ObservableField<List<CalendarData>> calendarObservableField = new ObservableField<>();
+    /**
+     * 当前月份索引，因为可能月份比较多，并且不在第一个月，所以需要一个索引
+     */
     public final static ObservableField<Integer> currentMonthPosField = new ObservableField<>(0);
 
     public static Observable<CalendarData> observableCalendarData() {
