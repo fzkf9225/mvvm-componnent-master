@@ -27,6 +27,7 @@ public class RecyclerViewSampleAdapter extends BaseRecyclerViewAdapter<PopupWind
     @Override
     public void onBindHolder(BaseViewHolder<OptionTextViewBinding> holder, int pos) {
         holder.getBinding().setItem(mList.get(pos));
+        holder.getBinding().executePendingBindings();
     }
 
     @Override

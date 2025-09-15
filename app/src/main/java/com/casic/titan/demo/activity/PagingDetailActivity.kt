@@ -1,34 +1,30 @@
-package com.casic.titan.demo.activity;
+package com.casic.titan.demo.activity
 
-import android.os.Bundle;
+import android.os.Bundle
+import com.casic.titan.demo.R
+import com.casic.titan.demo.databinding.ActivityPagingDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
+import pers.fz.mvvm.base.BaseActivity
+import pers.fz.mvvm.viewmodel.EmptyViewModel
 
-import com.casic.titan.demo.R;
-import com.casic.titan.demo.databinding.ActivityPagingDetailBinding;
-
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.viewmodel.EmptyViewModel;
-
-public class PagingDetailActivity extends BaseActivity<EmptyViewModel, ActivityPagingDetailBinding> {
-    public final static String ARGS = "args";
-    public final static String LINE = "line";
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_paging_detail;
+@AndroidEntryPoint
+class PagingDetailActivity : BaseActivity<EmptyViewModel, ActivityPagingDetailBinding>() {
+    override fun getLayoutId(): Int {
+        return R.layout.activity_paging_detail
     }
 
-    @Override
-    public String setTitleBar() {
-        return "详情";
+    override fun setTitleBar(): String {
+        return "详情"
     }
 
-    @Override
-    public void initView(Bundle savedInstanceState) {
-
+    override fun initView(savedInstanceState: Bundle?) {
     }
 
-    @Override
-    public void initData(Bundle bundle) {
-        binding.tvArgs.setText("这是第" + bundle.getInt(LINE) + "个页面传递过来的参数：" + bundle.getString(ARGS));
+    override fun initData(bundle: Bundle?) {
+        val args = PagingDetailActivityArgs.fromBundle(intent.extras ?: Bundle())
+        val title: String = args.args
+        val position: Int = args.line
+        binding.tvArgs.text = "这是第${position}个页面传递过来的参数：$title"
     }
+
 }

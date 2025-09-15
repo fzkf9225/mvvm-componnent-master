@@ -1,42 +1,38 @@
-package com.casic.titan.demo.activity;
+package com.casic.titan.demo.activity
 
-import android.os.Build;
-import android.os.Bundle;
-
-import com.casic.titan.demo.R;
-import com.casic.titan.demo.bean.UseCase;
-import com.casic.titan.demo.databinding.ActivityDemoPagingBinding;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.viewmodel.EmptyViewModel;
+import android.os.Build
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import com.casic.titan.demo.R
+import com.casic.titan.demo.bean.UseCase
+import com.casic.titan.demo.databinding.ActivityDemoPagingBinding
+import com.casic.titan.demo.fragment.DemoPagingFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
+import pers.fz.mvvm.base.BaseActivity
+import pers.fz.mvvm.viewmodel.EmptyViewModel
 
 @AndroidEntryPoint
-public class DemoPagingActivity extends BaseActivity<EmptyViewModel, ActivityDemoPagingBinding> {
-    private UseCase useCase;
+class DemoPagingActivity : BaseActivity<EmptyViewModel?, ActivityDemoPagingBinding?>() {
+    private var useCase: UseCase? = null
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_demo_paging;
+    override fun getLayoutId(): Int {
+        return R.layout.activity_demo_paging
     }
 
-    @Override
-    public String setTitleBar() {
-        return null;
+    override fun setTitleBar(): String? {
+        return null
     }
 
-    @Override
-    public void initView(Bundle savedInstanceState) {
+    override fun initView(savedInstanceState: Bundle?) {
     }
 
-    @Override
-    public void initData(Bundle bundle) {
+    override fun initData(bundle: Bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            useCase = bundle.getParcelable("args", UseCase.class);
+            useCase = bundle.getParcelable("args", UseCase::class.java)
         } else {
-            useCase = bundle.getParcelable("args");
+            useCase = bundle.getParcelable("args")
         }
-        toolbarBind.getToolbarConfig().setTitle(useCase.getName());
-
+        toolbarBind.toolbarConfig?.title = useCase?.name
     }
 }
