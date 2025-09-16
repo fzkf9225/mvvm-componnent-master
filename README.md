@@ -1,6 +1,6 @@
 # mvvm-componnent-master
 
-全面使用``ksp``，如果不使用``kapt``的话，使用kotlin的实体类是如何使用@Bindable注解的，Java是没问题的，这个问题后面会有更新，
+全面使用``ksp``，如果不使用``kapt``的话，使用kotlin的实体类时@Bindable注解是有问题的，Java是没问题的，这个问题后面会有更新，
 
 ## MVVM架构示例代码，重构版本
 
