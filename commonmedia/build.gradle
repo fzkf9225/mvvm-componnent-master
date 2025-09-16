@@ -15,11 +15,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
-            //选择要添加的对应cpu类型的.so库。
-            //noinspection ChromeOsAbiSupport
-            abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86'
-//            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
-//                    'x86', 'x86_64', 'mips', 'mips64'
+            //armeabi-v7a 较旧的 Android 设备（大约 2016年前），逐渐淘汰，32位架构
+            //armeabi-v8a 绝大多数现代 Android 手机和平板,主流和未来,64位架构
+            //x86 旧的 Android 模拟器和极少数平板，基本淘汰，32位架构
+            //x86_64 少数 Android 平板、Chromebook 和模拟器，小众但重要，64位架构
+            abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64'
         }
     }
 
