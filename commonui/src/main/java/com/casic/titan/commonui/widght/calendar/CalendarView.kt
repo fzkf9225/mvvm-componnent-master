@@ -28,9 +28,9 @@ import com.google.gson.reflect.TypeToken
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import pers.fz.mvvm.util.common.DateUtil
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.common.DateUtil
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.log.LogUtil
 import pers.fz.mvvm.widget.empty.EmptyLayout
 import androidx.core.content.withStyledAttributes
 

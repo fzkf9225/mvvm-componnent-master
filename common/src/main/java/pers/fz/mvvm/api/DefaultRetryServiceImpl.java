@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * Created by fz on 2023/5/18 9:48

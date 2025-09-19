@@ -11,9 +11,9 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.encode.Base64Util
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.encode.Base64Util
+import pers.fz.mvvm.utils.log.LogUtil
 import java.io.File
 import java.io.FileOutputStream
 

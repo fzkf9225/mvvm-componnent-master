@@ -28,10 +28,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.databinding.ActivityCaptureBinding;
-import pers.fz.mvvm.util.common.QRCodeUtil;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.permission.PermissionManager;
-import pers.fz.mvvm.util.zxing.CustomViewfinderView;
+import pers.fz.mvvm.utils.common.QRCodeUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
+import pers.fz.mvvm.utils.permission.PermissionManager;
+import pers.fz.mvvm.utils.zxing.CustomViewfinderView;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 
 /**

@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.media.helper.ConstantsHelper
 import pers.fz.mvvm.activity.CameraActivity
 import pers.fz.mvvm.base.BaseActivity
-import pers.fz.mvvm.util.permission.PermissionManager
+import pers.fz.mvvm.utils.permission.PermissionManager
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.camera.CameraView
 

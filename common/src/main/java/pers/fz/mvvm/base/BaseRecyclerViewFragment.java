@@ -23,8 +23,8 @@ import java.util.Objects;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.base.PageBean;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.network.NetworkStateUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
+import pers.fz.mvvm.utils.network.NetworkStateUtil;
 import pers.fz.mvvm.widget.empty.EmptyLayout;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 

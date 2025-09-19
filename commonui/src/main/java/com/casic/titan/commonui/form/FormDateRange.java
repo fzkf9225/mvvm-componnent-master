@@ -21,8 +21,8 @@ import androidx.lifecycle.Lifecycle;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.widght.calendar.DateRangePickDialog;
 
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DateUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27

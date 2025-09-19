@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import pers.fz.mvvm.api.ApiRetrofit
 import pers.fz.mvvm.bean.BaseDaoBean
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.log.LogUtil
 
 /**
  * created by fz on 2024/11/1 16:28

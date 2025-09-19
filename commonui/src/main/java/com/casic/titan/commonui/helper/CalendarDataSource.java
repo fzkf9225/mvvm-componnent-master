@@ -11,7 +11,7 @@ import java.util.List;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pers.fz.mvvm.util.common.DateUtil;
+import pers.fz.mvvm.utils.common.DateUtil;
 
 /**
  * created by fz on 2024/12/2 15:40

@@ -19,8 +19,8 @@ import java.util.List;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.PopupViewBinding;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.DrawableUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DrawableUtil;
 import pers.fz.mvvm.widget.popupwindow.adapter.PopupWindowAdapter;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 

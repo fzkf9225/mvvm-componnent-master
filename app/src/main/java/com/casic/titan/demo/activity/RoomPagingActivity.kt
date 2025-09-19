@@ -7,8 +7,8 @@ import com.casic.titan.demo.bean.UseCase
 import com.casic.titan.demo.fragment.RoomSmartPagingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.base.BaseSearchActivity
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.common.DrawableUtil
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.common.DrawableUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 
 @AndroidEntryPoint

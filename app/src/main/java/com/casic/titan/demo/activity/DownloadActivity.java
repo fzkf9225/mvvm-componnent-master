@@ -22,9 +22,9 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.download.DownloadManger;
-import pers.fz.mvvm.util.download.UpdateManger;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.download.DownloadManger;
+import pers.fz.mvvm.utils.download.UpdateManger;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 @AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {

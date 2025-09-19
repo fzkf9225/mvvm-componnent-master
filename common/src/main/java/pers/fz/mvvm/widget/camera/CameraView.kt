@@ -42,9 +42,9 @@ import pers.fz.mvvm.databinding.CameraViewBinding
 import pers.fz.mvvm.listener.CameraResultListener
 import pers.fz.mvvm.listener.CaptureListener
 import pers.fz.mvvm.listener.TypeListener
-import pers.fz.mvvm.util.common.DateUtil
-import pers.fz.mvvm.util.common.FileUtil
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.common.DateUtil
+import pers.fz.mvvm.utils.common.FileUtil
+import pers.fz.mvvm.utils.log.LogUtil
 import java.io.File
 import java.util.Objects
 import java.util.concurrent.Executors

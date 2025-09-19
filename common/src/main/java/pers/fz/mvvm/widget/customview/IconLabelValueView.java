@@ -2,7 +2,6 @@ package pers.fz.mvvm.widget.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -19,7 +18,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * created by fz on 2025/9/1 11:15

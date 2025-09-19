@@ -26,8 +26,8 @@ import pers.fz.mvvm.api.ConstantsHelper
 import pers.fz.mvvm.base.BaseActivity
 import pers.fz.mvvm.base.BaseResponse
 import pers.fz.mvvm.inter.ErrorService
-import pers.fz.mvvm.util.common.KeyBoardUtil
-import pers.fz.mvvm.util.common.RxView
+import pers.fz.mvvm.utils.common.KeyBoardUtil
+import pers.fz.mvvm.utils.common.RxView
 import pers.fz.mvvm.widget.dialog.MessageDialog
 import javax.inject.Inject
 

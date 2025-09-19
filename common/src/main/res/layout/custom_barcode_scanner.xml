@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:id="@+id/zxing_barcode_surface"/>
 
-    <pers.fz.mvvm.util.zxing.CustomViewfinderView
+    <pers.fz.mvvm.utils.zxing.CustomViewfinderView
         android:layout_width="match_parent"
         app:lineColor="@color/themeColor"
         app:cornerColor="@color/themeColor"

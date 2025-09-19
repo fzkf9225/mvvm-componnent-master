@@ -18,7 +18,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * created by fz on 2025/7/4 8:54

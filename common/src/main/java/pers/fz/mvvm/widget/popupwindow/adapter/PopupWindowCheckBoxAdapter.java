@@ -15,7 +15,7 @@ import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.OptionCheckboxViewBinding;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 
 /**

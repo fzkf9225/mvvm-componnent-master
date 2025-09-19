@@ -10,7 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import pers.fz.mvvm.R
-import pers.fz.mvvm.util.common.DensityUtil
+import pers.fz.mvvm.utils.common.DensityUtil
 
 /**
  * created by fz on 2025/8/28 9:01

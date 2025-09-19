@@ -16,7 +16,7 @@ import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * Created by fz on 2024/3/26 10:56

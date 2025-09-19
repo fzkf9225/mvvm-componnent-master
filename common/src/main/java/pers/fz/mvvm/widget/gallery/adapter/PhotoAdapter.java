@@ -19,9 +19,9 @@ import java.io.File;
 import java.util.List;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.ThreadExecutorBounded;
-import pers.fz.mvvm.util.download.DownLoadImageService;
-import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
+import pers.fz.mvvm.utils.common.ThreadExecutorBounded;
+import pers.fz.mvvm.utils.download.DownLoadImageService;
+import pers.fz.mvvm.utils.download.ImageDownLoadCallBack;
 import pers.fz.mvvm.widget.dialog.ImageSaveDialog;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.widget.gallery.impl.PhotoView;

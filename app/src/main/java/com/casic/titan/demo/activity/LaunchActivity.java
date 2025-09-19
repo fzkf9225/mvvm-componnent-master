@@ -27,8 +27,8 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.permission.PermissionManager;
+import pers.fz.mvvm.utils.log.LogUtil;
+import pers.fz.mvvm.utils.permission.PermissionManager;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.widget.dialog.ProtectionGuidelinesDialog;
 

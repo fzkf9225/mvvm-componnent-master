@@ -24,10 +24,10 @@ import java.util.stream.IntStream;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.DrawableUtil;
-import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DrawableUtil;
+import pers.fz.mvvm.utils.common.FileUtil;
 import pers.fz.mvvm.widget.gallery.adapter.PreviewViewPagerAdapter;
 
 /**

@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.inter.RetryService;
 import pers.fz.mvvm.repository.IRepository;
-import pers.fz.mvvm.util.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
 
 /**
  * created by fz on 2025/6/24 15:38

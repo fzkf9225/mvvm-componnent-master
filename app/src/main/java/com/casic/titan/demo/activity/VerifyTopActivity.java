@@ -19,9 +19,9 @@ import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.annotation.inter.VerifyGroup;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.StringUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.dialog.MenuDialog;
 
 @AndroidEntryPoint

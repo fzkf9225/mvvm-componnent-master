@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.ObservableSource;
 import pers.fz.mvvm.api.ConstantsHelper;
 import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import retrofit2.HttpException;
 
 /**

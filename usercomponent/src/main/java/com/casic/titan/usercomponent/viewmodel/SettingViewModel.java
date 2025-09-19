@@ -2,11 +2,9 @@ package com.casic.titan.usercomponent.viewmodel;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -21,8 +19,8 @@ import pers.fz.mvvm.base.BaseRepository;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
 import pers.fz.mvvm.repository.RepositoryImpl;
-import pers.fz.mvvm.util.common.CacheUtil;
-import pers.fz.mvvm.util.download.UpdateManger;
+import pers.fz.mvvm.utils.common.CacheUtil;
+import pers.fz.mvvm.utils.download.UpdateManger;
 import pers.fz.mvvm.widget.customview.IconLabelValueView;
 import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 

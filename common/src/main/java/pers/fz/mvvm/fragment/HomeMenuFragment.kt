@@ -12,7 +12,7 @@ import pers.fz.mvvm.base.BasePagingAdapter
 import pers.fz.mvvm.bean.HomeMenuBean
 import pers.fz.mvvm.databinding.FragmentHomeMenuBinding
 import pers.fz.mvvm.listener.PagingAdapterListener
-import pers.fz.mvvm.util.common.DensityUtil
+import pers.fz.mvvm.utils.common.DensityUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.customview.HomeMenuView
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager

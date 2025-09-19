@@ -29,11 +29,11 @@ import pers.fz.mvvm.databinding.AdapterMediaAddItemBinding;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
 import pers.fz.mvvm.enums.UploadStatusEnum;
 import pers.fz.mvvm.listener.OnUploadRetryClickListener;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.CollectionUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.FileUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.FileUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.customview.CornerTextView;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 

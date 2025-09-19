@@ -18,9 +18,9 @@ import java.text.ParseException;
 
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
-import pers.fz.mvvm.util.common.DateUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.NumberUtils;
+import pers.fz.mvvm.utils.common.DateUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.NumberUtils;
 
 /**
  * created by fz on 2024/11/20 15:10

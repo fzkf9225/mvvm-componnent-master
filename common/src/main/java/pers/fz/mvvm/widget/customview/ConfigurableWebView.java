@@ -18,7 +18,7 @@ import androidx.webkit.WebViewAssetLoader;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.enums.WebViewUrlTypeEnum;
 import pers.fz.mvvm.helper.JavaScriptAssetsPathHandler;
-import pers.fz.mvvm.util.common.WebViewUtil;
+import pers.fz.mvvm.utils.common.WebViewUtil;
 
 /**
  * created by fz on 2025/6/27 9:33

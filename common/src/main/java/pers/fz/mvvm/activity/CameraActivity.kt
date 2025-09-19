@@ -8,7 +8,7 @@ import pers.fz.mvvm.R
 import pers.fz.mvvm.base.BaseActivity
 import pers.fz.mvvm.databinding.ActivityShootBinding
 import pers.fz.mvvm.listener.CameraResultListener
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.log.LogUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.camera.CameraView
 

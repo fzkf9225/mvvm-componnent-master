@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pers.fz.mvvm.util.encode.Base64Util;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.network.NetworkStateUtil;
+import pers.fz.mvvm.utils.encode.Base64Util;
+import pers.fz.mvvm.utils.log.LogUtil;
+import pers.fz.mvvm.utils.network.NetworkStateUtil;
 
 /**
  * Created by fz on 2017/8/18.

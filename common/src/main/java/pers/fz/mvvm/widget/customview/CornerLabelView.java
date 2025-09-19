@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * Create by CherishTang on 2019/11/5

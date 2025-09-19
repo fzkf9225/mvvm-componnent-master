@@ -16,7 +16,7 @@ import pers.fz.mvvm.base.BaseException;
 import pers.fz.mvvm.base.BaseResponse;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.bean.ApiRequestOptions;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import retrofit2.HttpException;
 
 /**

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.casic.titan.commonui.api.FileApiService;
 import com.casic.titan.demo.R;
 import com.casic.titan.demo.bean.Person;
 import com.casic.titan.demo.bean.UseCase;
@@ -15,15 +14,13 @@ import com.google.gson.Gson;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.annotation.bean.VerifyResult;
 import pers.fz.annotation.verify.EntityValidator;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.StringUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.dialog.MenuDialog;
 
 @AndroidEntryPoint

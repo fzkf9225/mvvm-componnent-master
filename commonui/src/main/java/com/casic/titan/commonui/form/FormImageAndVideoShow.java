@@ -22,8 +22,8 @@ import java.util.List;
 import pers.fz.mvvm.adapter.MediaShowAdapter;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.bean.AttachmentBean;
-import pers.fz.mvvm.util.common.CollectionUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27

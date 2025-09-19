@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import pers.fz.mvvm.BR;
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.theme.ThemeUtils;
+import pers.fz.mvvm.utils.theme.ThemeUtils;
 
 /**
  * Create by CherishTang on 2020/3/25 0025

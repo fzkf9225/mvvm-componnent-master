@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.base.BaseViewModel;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * created by fz on 2024/11/6 10:57

@@ -7,13 +7,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextPaint;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.LoadingDialogBinding;
-import pers.fz.mvvm.util.common.ScreenUtil;
+import pers.fz.mvvm.utils.common.ScreenUtil;
 
 /**
  * updated by fz on 2025/9/8.

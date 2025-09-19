@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat;
 import com.casic.titan.commonui.R;
 import com.casic.titan.commonui.enums.LabelAlignEnum;
 
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 
 /**

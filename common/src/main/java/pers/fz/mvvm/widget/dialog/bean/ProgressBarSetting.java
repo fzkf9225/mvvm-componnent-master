@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * Created by fz on 2023/11/2 16:30

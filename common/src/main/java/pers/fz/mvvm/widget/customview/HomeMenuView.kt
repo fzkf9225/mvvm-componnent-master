@@ -20,8 +20,8 @@ import pers.fz.mvvm.bean.HomeMenuBean
 import pers.fz.mvvm.listener.CustomHomeMenuAdapterCallback
 import pers.fz.mvvm.listener.OnMenuClickListener
 import pers.fz.mvvm.listener.PagingAdapterListener
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.common.DrawableUtil
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.common.DrawableUtil
 import java.util.function.IntConsumer
 import java.util.stream.IntStream
 

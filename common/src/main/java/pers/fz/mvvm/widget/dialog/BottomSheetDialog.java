@@ -16,7 +16,7 @@ import pers.fz.mvvm.adapter.OptionBottomMenuListAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.OptionBottomMenuDialogBinding;
 import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**

@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import pers.fz.mvvm.R;
 import pers.fz.mvvm.databinding.DialogMessageBinding;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
-import pers.fz.mvvm.util.common.StringUtil;
+import pers.fz.mvvm.utils.common.StringUtil;
 
 
 /**

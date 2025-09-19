@@ -22,7 +22,7 @@ import pers.fz.mvvm.adapter.MenuListAdapter;
 import pers.fz.mvvm.bean.PopupWindowBean;
 import pers.fz.mvvm.databinding.MenuDialogBinding;
 import pers.fz.mvvm.listener.OnOptionBottomMenuClickListener;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 

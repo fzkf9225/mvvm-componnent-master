@@ -25,7 +25,7 @@ import com.casic.titan.commonui.enums.TextAlignEnum;
 import com.casic.titan.commonui.inter.FormTextWatcher;
 import com.casic.titan.commonui.inter.FormTextWatcherAfter;
 
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 public class FormConstraintLayout extends ConstraintLayout {
     public static final String TAG = "FormUi";

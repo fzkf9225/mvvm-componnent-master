@@ -39,8 +39,8 @@ import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.mvvm.activity.CaptureActivity;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.base.BaseException;
-import pers.fz.mvvm.util.common.QRCodeUtil;
-import pers.fz.mvvm.util.download.DownloadManger;
+import pers.fz.mvvm.utils.common.QRCodeUtil;
+import pers.fz.mvvm.utils.download.DownloadManger;
 
 
 @AndroidEntryPoint

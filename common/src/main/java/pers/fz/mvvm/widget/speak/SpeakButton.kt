@@ -17,9 +17,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import pers.fz.mvvm.R
-import pers.fz.mvvm.util.common.DateUtil
-import pers.fz.mvvm.util.common.FileUtil
-import pers.fz.mvvm.util.log.LogUtil
+import pers.fz.mvvm.utils.common.DateUtil
+import pers.fz.mvvm.utils.common.FileUtil
+import pers.fz.mvvm.utils.log.LogUtil
 import java.io.File
 import kotlin.concurrent.Volatile
 import kotlin.math.min

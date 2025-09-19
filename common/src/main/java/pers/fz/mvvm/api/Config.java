@@ -8,9 +8,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import pers.fz.mvvm.autosize.AutoSize;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.log.CrashHandler;
-import pers.fz.mvvm.util.log.LogUtil;
-import pers.fz.mvvm.util.log.LogcatHelper;
+import pers.fz.mvvm.utils.log.CrashHandler;
+import pers.fz.mvvm.utils.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogcatHelper;
 
 /**
  * Created by fz on 2023/8/8 13:54

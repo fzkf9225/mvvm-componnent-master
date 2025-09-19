@@ -20,7 +20,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 
 public class CupcakeGestureDetector {

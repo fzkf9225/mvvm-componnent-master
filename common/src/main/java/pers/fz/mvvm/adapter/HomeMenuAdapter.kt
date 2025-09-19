@@ -7,13 +7,12 @@ import android.util.TypedValue
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import com.bumptech.glide.Glide
 import pers.fz.mvvm.R
 import pers.fz.mvvm.base.BasePagingAdapter
 import pers.fz.mvvm.base.BaseViewHolder
 import pers.fz.mvvm.bean.HomeMenuBean
 import pers.fz.mvvm.databinding.AdapterHomeMenuItemBinding
-import pers.fz.mvvm.util.common.DensityUtil
+import pers.fz.mvvm.utils.common.DensityUtil
 import pers.fz.mvvm.widget.customview.HomeMenuView
 
 /**

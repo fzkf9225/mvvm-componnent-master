@@ -15,7 +15,7 @@ import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.api.BaseApiService;
 import pers.fz.mvvm.base.BaseView;
 import pers.fz.mvvm.repository.PagingRepositoryImpl;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * Created by fz on 2023/8/7 9:17

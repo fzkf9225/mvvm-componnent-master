@@ -38,8 +38,8 @@ import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.adapter.VideoAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
 import pers.fz.mvvm.enums.UploadStatusEnum;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 

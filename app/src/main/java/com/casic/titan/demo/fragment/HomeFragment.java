@@ -17,8 +17,8 @@ import com.casic.titan.usercomponent.api.UserAccountHelper;
 import dagger.hilt.android.AndroidEntryPoint;
 import pers.fz.mvvm.base.BaseFragment;
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.theme.ThemeUtils;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.theme.ThemeUtils;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 
 /**

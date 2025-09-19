@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import pers.fz.mvvm.annotations.interrupte.NeedLogin;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * created by fz on 2024/12/18 11:24

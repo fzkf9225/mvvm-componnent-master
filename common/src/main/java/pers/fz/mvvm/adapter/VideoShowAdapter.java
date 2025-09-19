@@ -20,8 +20,8 @@ import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.AdapterVideoShowItemBinding;
-import pers.fz.mvvm.util.common.FileUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.FileUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * Created by fz on 2024/10/20.

@@ -27,9 +27,9 @@ import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.AdapterImageAddItemBinding;
 import pers.fz.mvvm.enums.UploadStatusEnum;
 import pers.fz.mvvm.listener.OnUploadRetryClickListener;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.CollectionUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.widget.customview.CornerTextView;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 

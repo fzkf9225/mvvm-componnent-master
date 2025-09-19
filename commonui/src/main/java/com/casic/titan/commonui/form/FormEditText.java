@@ -26,7 +26,7 @@ import com.casic.titan.commonui.impl.DecimalDigitsInputFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27

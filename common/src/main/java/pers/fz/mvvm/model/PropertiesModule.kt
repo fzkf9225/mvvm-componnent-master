@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import pers.fz.mvvm.R
-import pers.fz.mvvm.util.common.PropertiesUtil
+import pers.fz.mvvm.utils.common.PropertiesUtil
 
 @Module
 @InstallIn(SingletonComponent::class)

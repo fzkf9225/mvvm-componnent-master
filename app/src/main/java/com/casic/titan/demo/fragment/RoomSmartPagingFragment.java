@@ -14,7 +14,7 @@ import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.base.BasePagingAdapter;
 import pers.fz.mvvm.base.BaseSmartPagingFragment;
 import pers.fz.mvvm.databinding.BaseSmartPagingBinding;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.dialog.ConfirmDialog;
 
 /**

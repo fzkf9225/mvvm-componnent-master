@@ -20,10 +20,10 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.KeyBoardUtil;
-import pers.fz.mvvm.util.common.StringUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.KeyBoardUtil;
+import pers.fz.mvvm.utils.common.StringUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 
 /**

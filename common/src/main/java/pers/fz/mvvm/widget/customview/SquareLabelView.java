@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import pers.fz.mvvm.R;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 
 /**
  * created by fz on 2025/9/1 14:35

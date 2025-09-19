@@ -7,7 +7,7 @@
         <variable
             name="user"
             type="com.casic.titan.userapi.bean.UserInfo" />
-        <import type="pers.fz.mvvm.util.common.StringUtil"/>
+        <import type="pers.fz.mvvm.utils.common.StringUtil"/>
     </data>
 
     <ScrollView android:layout_width="match_parent"

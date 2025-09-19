@@ -32,8 +32,8 @@ import pers.fz.media.dialog.OpenFileDialog;
 import pers.fz.media.enums.MediaPickerTypeEnum;
 import pers.fz.media.listener.MediaListener;
 import pers.fz.mvvm.bean.AttachmentBean;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.widget.recyclerview.FullyLinearLayoutManager;
 import pers.fz.mvvm.widget.recyclerview.RecycleViewDivider;
 

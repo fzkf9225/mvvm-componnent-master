@@ -25,12 +25,12 @@ import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.databinding.ItemPicShowBinding;
 import pers.fz.mvvm.enums.AttachmentTypeEnum;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.FileUtil;
-import pers.fz.mvvm.util.common.ThreadExecutorBounded;
-import pers.fz.mvvm.util.download.DownLoadImageService;
-import pers.fz.mvvm.util.download.ImageDownLoadCallBack;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.FileUtil;
+import pers.fz.mvvm.utils.common.ThreadExecutorBounded;
+import pers.fz.mvvm.utils.download.DownLoadImageService;
+import pers.fz.mvvm.utils.download.ImageDownLoadCallBack;
+import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.dialog.ImageSaveDialog;
 import pers.fz.mvvm.widget.gallery.PreviewPhotoDialog;
 

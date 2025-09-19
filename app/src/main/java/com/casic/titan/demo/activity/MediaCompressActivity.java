@@ -22,7 +22,7 @@ import pers.fz.media.enums.VideoQualityEnum;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.MediaAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint

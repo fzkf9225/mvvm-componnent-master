@@ -11,8 +11,8 @@ import com.casic.titan.commonui.widght.calendar.CalendarView
 import com.casic.titan.commonui.widght.calendar.adapter.CalendarPagerAdapter
 import pers.fz.mvvm.base.BaseFragment
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.common.NumberUtils
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.common.NumberUtils
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager
 import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration

@@ -13,8 +13,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.BounceInterpolator
 import android.view.animation.Interpolator
-import pers.fz.mvvm.util.common.DensityUtil
-import pers.fz.mvvm.util.common.ThreadExecutor
+import pers.fz.mvvm.utils.common.DensityUtil
+import pers.fz.mvvm.utils.common.ThreadExecutor
 import java.util.Random
 import kotlin.concurrent.Volatile
 import kotlin.math.max

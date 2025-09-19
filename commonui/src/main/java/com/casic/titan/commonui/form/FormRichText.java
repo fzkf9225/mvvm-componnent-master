@@ -17,7 +17,7 @@ import androidx.databinding.Observable;
 
 import com.bumptech.glide.Glide;
 
-import pers.fz.mvvm.util.common.ThreadExecutor;
+import pers.fz.mvvm.utils.common.ThreadExecutor;
 
 /**
  * Created by fz on 2024/11/13 14:21

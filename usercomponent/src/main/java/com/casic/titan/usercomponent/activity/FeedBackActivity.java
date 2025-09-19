@@ -15,7 +15,7 @@ import pers.fz.media.enums.MediaTypeEnum;
 import pers.fz.media.module.MediaModule;
 import pers.fz.mvvm.adapter.ImageAddAdapter;
 import pers.fz.mvvm.base.BaseActivity;
-import pers.fz.mvvm.util.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
 import pers.fz.mvvm.viewmodel.EmptyViewModel;
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager;
 

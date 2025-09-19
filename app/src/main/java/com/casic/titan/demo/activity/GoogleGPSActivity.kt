@@ -15,7 +15,7 @@ import com.casic.titan.googlegps.helper.GpsLifecycleObserver
 import com.casic.titan.googlegps.service.GpsService
 import dagger.hilt.android.AndroidEntryPoint
 import pers.fz.mvvm.base.BaseActivity
-import pers.fz.mvvm.util.common.DateUtil
+import pers.fz.mvvm.utils.common.DateUtil
 
 @AndroidEntryPoint
 class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {

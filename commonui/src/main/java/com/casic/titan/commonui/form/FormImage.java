@@ -42,10 +42,10 @@ import pers.fz.mvvm.bean.ApiRequestOptions;
 import pers.fz.mvvm.bean.AttachmentBean;
 import pers.fz.mvvm.enums.UploadStatusEnum;
 import pers.fz.mvvm.listener.OnUploadRetryClickListener;
-import pers.fz.mvvm.util.common.AttachmentUtil;
-import pers.fz.mvvm.util.common.CollectionUtil;
-import pers.fz.mvvm.util.common.DensityUtil;
-import pers.fz.mvvm.util.common.FileUtil;
+import pers.fz.mvvm.utils.common.AttachmentUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.DensityUtil;
+import pers.fz.mvvm.utils.common.FileUtil;
 
 /**
  * Created by fz on 2023/12/26 16:27

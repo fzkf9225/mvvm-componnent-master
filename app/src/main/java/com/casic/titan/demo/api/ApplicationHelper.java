@@ -13,7 +13,7 @@ import pers.fz.mvvm.api.BaseApplication;
 import pers.fz.mvvm.api.Config;
 import pers.fz.mvvm.api.DefaultActivityLifecycleCallback;
 import pers.fz.mvvm.inter.ErrorService;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * Created by fz on 2023/5/7 15:03

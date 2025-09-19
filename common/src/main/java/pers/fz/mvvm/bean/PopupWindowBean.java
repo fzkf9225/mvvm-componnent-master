@@ -6,7 +6,7 @@ import androidx.databinding.BaseObservable;
 
 import java.util.List;
 
-import pers.fz.mvvm.util.common.CollectionUtil;
+import pers.fz.mvvm.utils.common.CollectionUtil;
 
 
 /**

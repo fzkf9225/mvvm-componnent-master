@@ -15,8 +15,8 @@ import dagger.hilt.components.SingletonComponent;
 import pers.fz.mvvm.api.ApiRetrofit;
 import pers.fz.mvvm.inter.ErrorService;
 import pers.fz.mvvm.inter.RetryService;
-import pers.fz.mvvm.util.common.PropertiesUtil;
-import pers.fz.mvvm.util.log.LogUtil;
+import pers.fz.mvvm.utils.common.PropertiesUtil;
+import pers.fz.mvvm.utils.log.LogUtil;
 
 /**
  * created by fz on 2024/9/26 14:53
