@@ -255,7 +255,7 @@ public class MathUtil {
      * @return 结果
      */
     public static BigDecimal div(String v1, String v2) {
-        if (NumberUtils.isNullOrZero(v2)) {
+        if (NumberUtil.isNullOrZero(v2)) {
             return BigDecimal.ZERO;
         }
         BigDecimal b1 = TextUtils.isEmpty(v1) ? BigDecimal.ZERO : new BigDecimal(v1);
@@ -273,7 +273,7 @@ public class MathUtil {
      * @return 结果
      */
     public static BigDecimal div(String v1, String v2, int scale) {
-        if (NumberUtils.isNullOrZero(v2)) {
+        if (NumberUtil.isNullOrZero(v2)) {
             return BigDecimal.ZERO;
         }
         if (scale < 0) {
@@ -340,13 +340,13 @@ public class MathUtil {
         if (numbers == null || numbers.length == 0) {
             return BigDecimal.ZERO;
         }
-        if (TextUtils.isEmpty(numbers[0]) || NumberUtils.isNullOrZero(numbers[0])) {
+        if (TextUtils.isEmpty(numbers[0]) || NumberUtil.isNullOrZero(numbers[0])) {
             return BigDecimal.ZERO;
         }
         BigDecimal result = TextUtils.isEmpty(numbers[0]) ? BigDecimal.ZERO : new BigDecimal(numbers[0]);
         // 从第二个参数开始处理减数
         for (int i = 1; i < numbers.length; i++) {
-            if (TextUtils.isEmpty(numbers[i]) || NumberUtils.isNullOrZero(numbers[i])) {
+            if (TextUtils.isEmpty(numbers[i]) || NumberUtil.isNullOrZero(numbers[i])) {
                 throw new IllegalArgumentException("除数不能为0");
             }
             BigDecimal arg = new BigDecimal(numbers[i]);

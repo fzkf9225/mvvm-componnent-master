@@ -30,7 +30,7 @@ import pers.fz.mvvm.R;
 import pers.fz.mvvm.listener.OnDialogInterfaceClickListener;
 import pers.fz.mvvm.utils.common.DateUtil;
 import pers.fz.mvvm.utils.common.DensityUtil;
-import pers.fz.mvvm.utils.common.NumberUtils;
+import pers.fz.mvvm.utils.common.NumberUtil;
 
 
 /**
@@ -381,7 +381,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     private final CalendarView.OnViewPagerChangedListener onViewPagerChangedListener = (calendarData, pos) -> {
         String stringBuilder = calendarData.getYear() +
                 "-" +
-                NumberUtils.formatMonthOrDay(calendarData.getMonth());
+                NumberUtil.formatMonthOrDay(calendarData.getMonth());
         binding.tvMonth.setText(stringBuilder);
         CalendarMonthFragment fragment = binding.calendarViewRange.getCalendarPagerAdapter().getItem(pos);
         if (fragment == null) {

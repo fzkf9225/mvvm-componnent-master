@@ -12,7 +12,7 @@ import com.casic.titan.commonui.widght.calendar.adapter.CalendarPagerAdapter
 import pers.fz.mvvm.base.BaseFragment
 import pers.fz.mvvm.base.BaseRecyclerViewAdapter
 import pers.fz.mvvm.utils.common.DensityUtil
-import pers.fz.mvvm.utils.common.NumberUtils
+import pers.fz.mvvm.utils.common.NumberUtil
 import pers.fz.mvvm.viewmodel.EmptyViewModel
 import pers.fz.mvvm.widget.recyclerview.FullyGridLayoutManager
 import pers.fz.mvvm.widget.recyclerview.GridSpacingItemDecoration
@@ -66,8 +66,8 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
     override fun onItemClick(view: View, position: Int) {
         val selectedDay =
             "${adapter.list[position].year}-" +
-                    "${NumberUtils.formatMonthOrDay(adapter.list[position].month)}-" +
-                    NumberUtils.formatMonthOrDay(adapter.list[position].day)
+                    "${NumberUtil.formatMonthOrDay(adapter.list[position].month)}-" +
+                    NumberUtil.formatMonthOrDay(adapter.list[position].day)
         if (!adapter.isEnable(selectedDay)) {
             Toast.makeText(requireContext(), "抱歉，超出可选日期范围", Toast.LENGTH_SHORT).show()
             return

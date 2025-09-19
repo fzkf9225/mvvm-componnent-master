@@ -12,7 +12,7 @@ import pers.fz.mvvm.api.RegexUtils;
  * 有关数字工具类
  */
 
-public class NumberUtils {
+public class NumberUtil {
     // 默认小数位数
     private static final int DEFAULT_DECIMAL_PLACES = 2;
 
@@ -20,8 +20,12 @@ public class NumberUtils {
     private static final String DIGIT = "零壹贰叁肆伍陆柒捌玖";
     private static final double MAX_VALUE = 9999999999999.99D;
 
-    // 转为大写金额转为大写
-    public static String change(double v) {
+    /**
+     * 转为大写金额转为大写
+     * @param v 数值
+     * @return 转换后的大写金额
+     */
+    public static String moneyToChinese(double v) {
         if (v < 0 || v > MAX_VALUE) {
             return "参数非法!";
         }
@@ -126,16 +130,28 @@ public class NumberUtils {
      * @return
      */
     private static String getFraction(String tempString) {
-        String strFraction = null;
+        String strFraction;
         int intDotPos = tempString.indexOf(".");
         /* 没有点说明没有小数，直接返回 */
         if (intDotPos == -1) {
             return "";
         }
         strFraction = tempString.substring(intDotPos + 1);
-        StringBuffer sbResult = new StringBuffer(strFraction.length());
+        // 处理小数部分，避免科学计数法问题
+        // 如果小数部分长度超过一定限制，进行截断，避免过长
+        int maxFractionLength = 15; // 最大保留10位小数
+        if (strFraction.length() > maxFractionLength) {
+            strFraction = strFraction.substring(0, maxFractionLength);
+        }
+        StringBuilder sbResult = new StringBuilder();
         for (int i = 0; i < strFraction.length(); i++) {
-            sbResult.append(STR_NUMBER[strFraction.charAt(i) - 48]);
+            char c = strFraction.charAt(i);
+            if (c >= '0' && c <= '9') {
+                sbResult.append(STR_NUMBER[c - '0']);
+            } else {
+                // 非数字字符，跳过
+                continue;
+            }
         }
         return sbResult.toString();
     }
@@ -167,21 +183,27 @@ public class NumberUtils {
      * @return 返一个转换好的字符串
      */
     public static String numberToChinese(double tempNumber) {
-        DecimalFormat df = new DecimalFormat("#.#########");
-        String pTemp = df.format(tempNumber);
-        return getSign(pTemp) + getInteger(pTemp) + getDot(pTemp) + getFraction(pTemp);
+        return numberToChinese(new BigDecimal(tempNumber));
     }
 
     public static String numberToChinese(BigDecimal tempNumber) {
-        return numberToChinese(tempNumber.doubleValue());
+        if (tempNumber == null) {
+            return null;
+        }
+        // 使用toPlainString避免科学计数法
+        String pTemp = tempNumber.toPlainString();
+        if (pTemp.equals("NaN")) {
+            return "非数字";
+        }
+        return getSign(pTemp) + getInteger(pTemp) + getDot(pTemp) + getFraction(pTemp);
     }
 
     /**
      * 替代字符
      *
-     * @param pValue
-     * @param pSource
-     * @param pDest
+     * @param pValue 字符串
+     * @param pSource 原字符
+     * @param pDest 替换字符
      */
     private static void replace(StringBuffer pValue, String pSource, String pDest) {
         if (pValue == null || pSource == null || pDest == null) {
@@ -273,8 +295,8 @@ public class NumberUtils {
     /**
      * 小数转整数
      *
-     * @param numString
-     * @return
+     * @param numString 数字字符串
+     * @return 整数字符串
      */
     public static String formatInteger(String numString) {
         try {
@@ -359,8 +381,8 @@ public class NumberUtils {
     /**
      * 科学计算法转换（转为整数）
      *
-     * @param longNumber
-     * @return
+     * @param longNumber 科学计数法数字字符串
+     * @return 整数
      */
     public static String formatLongNumber(String longNumber) {
         if (longNumber == null) {
@@ -380,8 +402,8 @@ public class NumberUtils {
     /**
      * 科学计算法转换（默认2位小数）
      *
-     * @param longNumber
-     * @return
+     * @param longNumber 科学计数法数字字符串
+     * @return 2位小数
      */
     public static String formatLongDecimalNumber(String longNumber) {
         return formatLongDecimalNumber(longNumber, DEFAULT_DECIMAL_PLACES);
@@ -413,7 +435,7 @@ public class NumberUtils {
      * 判断是否是科学计算法、数字、浮点
      *
      * @param str 原字符串
-     * @return
+     * @return 是否是科学计算法、数字、浮点
      */
     public static boolean isNumeric(String str) {
         if (null == str || "".equals(str)) {
@@ -430,6 +452,12 @@ public class NumberUtils {
         return pattern.matcher(str).matches();
     }
 
+    /**
+     * 判断数字是否为null或者0
+     *
+     * @param number 数字字符串
+     * @return 是否为null或者0
+     */
     public static boolean isNullOrZero(String number) {
         if (null == number || number.isEmpty()) {
             return true;

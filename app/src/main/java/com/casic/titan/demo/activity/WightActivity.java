@@ -42,7 +42,7 @@ import pers.fz.mvvm.listener.OnMenuClickListener;
 import pers.fz.mvvm.utils.common.DateUtil;
 import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.utils.common.DrawableUtil;
-import pers.fz.mvvm.utils.common.NumberUtils;
+import pers.fz.mvvm.utils.common.NumberUtil;
 import pers.fz.mvvm.utils.common.RxView;
 import pers.fz.mvvm.widget.customview.Code;
 import pers.fz.mvvm.widget.customview.utils.NumberTextWatcher;
@@ -167,7 +167,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             if (fragment != null) {
                 fragment.getAdapter().notifyDataSetChanged();
             }
-            binding.tvCalendarViewSingle.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（单选模式）");
+            binding.tvCalendarViewSingle.setText(calendarData.getYear() + "-" + NumberUtil.formatMonthOrDay(calendarData.getMonth()) + "（单选模式）");
         });
         binding.calendarViewSingle.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate));
         //多选日历
@@ -177,7 +177,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
             if (fragmentMulti != null) {
                 fragmentMulti.getAdapter().notifyDataSetChanged();
             }
-            binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtils.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
+            binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtil.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
         });
         binding.calendarViewMulti.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate + "~" + endDate));
         Glide.with(this)

@@ -20,7 +20,7 @@ import pers.fz.mvvm.base.BaseRecyclerViewAdapter;
 import pers.fz.mvvm.base.BaseViewHolder;
 import pers.fz.mvvm.utils.common.DateUtil;
 import pers.fz.mvvm.utils.common.DensityUtil;
-import pers.fz.mvvm.utils.common.NumberUtils;
+import pers.fz.mvvm.utils.common.NumberUtil;
 
 /**
  * created by fz on 2024/11/20 15:10
@@ -37,8 +37,8 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
     @Override
     public void onBindHolder(BaseViewHolder<ItemCalendarDayBinding> holder, int pos) {
         String day = getList().get(pos).getYear() + "-"
-                + NumberUtils.formatMonthOrDay(getList().get(pos).getMonth()) + "-"
-                + NumberUtils.formatMonthOrDay(getList().get(pos).getDay());
+                + NumberUtil.formatMonthOrDay(getList().get(pos).getMonth()) + "-"
+                + NumberUtil.formatMonthOrDay(getList().get(pos).getDay());
         boolean isSelected = false;
         /*
          * 设置不可点击,主要是区别是否有占位符

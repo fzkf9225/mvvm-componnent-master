@@ -16,7 +16,7 @@ import java.util.Date;
 
 import pers.fz.mvvm.enums.DateMode;
 import pers.fz.mvvm.utils.common.DateUtil;
-import pers.fz.mvvm.utils.common.NumberUtils;
+import pers.fz.mvvm.utils.common.NumberUtil;
 import pers.fz.mvvm.widget.dialog.DatePickDialog;
 
 /**
@@ -91,8 +91,8 @@ public class FormDateTime extends FormSelection {
                 .setTodayTextColor(this.confirmTextColor)
                 .setDateMode(DateMode.getMode(this.datePickModel))
                 .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                    String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day)
-                            + " " + NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                    String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day)
+                            + " " + NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
                     if (DateUtil.DEFAULT_DATE_TIME_FORMAT.equals(format)) {
                         ((AppCompatTextView) tvSelection).setText(text);
                         return;

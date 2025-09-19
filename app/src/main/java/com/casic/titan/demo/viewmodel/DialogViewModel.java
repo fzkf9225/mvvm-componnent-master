@@ -53,7 +53,7 @@ import pers.fz.mvvm.repository.RepositoryImpl;
 import pers.fz.mvvm.utils.common.DateUtil;
 import pers.fz.mvvm.utils.common.DensityUtil;
 import pers.fz.mvvm.utils.common.DrawableUtil;
-import pers.fz.mvvm.utils.common.NumberUtils;
+import pers.fz.mvvm.utils.common.NumberUtil;
 import pers.fz.mvvm.utils.log.LogUtil;
 import pers.fz.mvvm.widget.dialog.BottomSheetDialog;
 import pers.fz.mvvm.widget.dialog.ConfirmDialog;
@@ -247,7 +247,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day);
+                        String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day);
                         Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
                     })
                     .builder()
@@ -257,7 +257,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
                     .setDateMode(DateMode.HOUR_MINUTE_SECOND)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        String text = NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
                         Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
                     })
                     .builder()
@@ -269,8 +269,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day) + " " +
-                                NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day) + " " +
+                                NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
                         Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
                     })
                     .builder()
@@ -285,8 +285,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                        String text = year + "-" + NumberUtils.formatMonthOrDay(month) + "-" + NumberUtils.formatMonthOrDay(day) + " " +
-                                NumberUtils.formatMonthOrDay(hour) + ":" + NumberUtils.formatMonthOrDay(minute) + ":" + NumberUtils.formatMonthOrDay(second);
+                        String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day) + " " +
+                                NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
                         Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
                     })
                     .builder()
@@ -315,8 +315,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             shapeDrawableBg.setCornerRadius(view.getContext().getResources().getDimension(pers.fz.mvvm.R.dimen.radius_l)); // 设置圆角半径，单位为像素
             int daysInMonthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH); // 获取本月最大天数
             new DateRangePickDialog(view.getContext())
-                    .setStartDate(DateUtil.getCurrentYear() + "-" + NumberUtils.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
-                    .setEndDate(DateUtil.getCurrentYear() + "-" + NumberUtils.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
+                    .setStartDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
+                    .setEndDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
                     .setSelectedTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.white))
                     .setWeekTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.theme_red))
                     .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), com.casic.titan.commonui.R.color.auto_color))
