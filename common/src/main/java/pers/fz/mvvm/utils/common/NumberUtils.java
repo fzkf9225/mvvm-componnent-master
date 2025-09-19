@@ -451,25 +451,4 @@ public class NumberUtils {
         return false;
     }
 
-    /**
-     * 判断数字是否为null或零（支持指定小数位数检查）
-     *
-     * @param number        数字字符串
-     * @param decimalPlaces 要检查的小数位数
-     * @return 是否为null或零
-     */
-    public static boolean isNullOrZero(String number, int decimalPlaces) {
-        if (isNullOrZero(number)) {
-            return true;
-        }
-        try {
-            // 格式化数字后检查是否为0
-            String formatted = decimalFormat(number, decimalPlaces);
-            BigDecimal bd = new BigDecimal(formatted);
-            return bd.compareTo(BigDecimal.ZERO) == 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
