@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <pers.fz.mvvm.widget.speak.VoiceView
+        <com.casic.otitan.common.widget.speak.VoiceView
             android:id="@+id/btn_wx_voice"
             android:layout_width="match_parent"
             android:layout_height="100dp"

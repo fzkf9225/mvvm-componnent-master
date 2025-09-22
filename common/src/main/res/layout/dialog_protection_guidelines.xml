@@ -52,7 +52,7 @@
                 tools:text="隐私保护协议提醒" />
         </ScrollView>
 
-        <pers.fz.mvvm.widget.customview.CornerButton
+        <com.casic.otitan.common.widget.customview.CornerButton
             android:id="@+id/dialog_agree"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"

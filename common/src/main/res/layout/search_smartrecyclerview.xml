@@ -37,14 +37,14 @@
                     android:layout_height="match_parent"
                     android:overScrollMode="never" />
 
-                <pers.fz.mvvm.widget.recyclerview.TxSlideRecyclerView
+                <com.casic.otitan.common.widget.recyclerview.TxSlideRecyclerView
                     android:id="@+id/mRecyclerView_slide"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:overScrollMode="never"
                     android:visibility="gone" />
 
-                <pers.fz.mvvm.widget.empty.EmptyLayout
+                <com.casic.otitan.common.widget.empty.EmptyLayout
                     android:id="@+id/emptyLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -26,7 +26,7 @@
                 android:layout_gravity="center" />
 
 
-            <pers.fz.mvvm.widget.gallery.impl.PhotoView
+            <com.casic.otitan.common.widget.gallery.impl.PhotoView
                 android:id="@+id/photo_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,7 +42,7 @@
                 android:visibility="gone" />
         </FrameLayout>
 
-        <pers.fz.mvvm.widget.camera.CaptureLayout
+        <com.casic.otitan.common.widget.camera.CaptureLayout
             android:id="@+id/capture_layout"
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <pers.fz.mvvm.widget.customview.CirclePaddingImageView
+        <com.casic.otitan.common.widget.customview.CirclePaddingImageView
             android:id="@+id/image_flash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="@id/capture_layout"
             app:layout_constraintBottom_toBottomOf="@id/capture_layout" />
 
-        <pers.fz.mvvm.widget.customview.CirclePaddingImageView
+        <com.casic.otitan.common.widget.customview.CirclePaddingImageView
             android:id="@+id/image_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
             app:layout_constraintEnd_toEndOf="@+id/capture_layout"
             app:layout_constraintTop_toTopOf="@id/capture_layout"
             app:layout_constraintBottom_toBottomOf="@id/capture_layout"  />
-        <pers.fz.mvvm.widget.camera.FocusView
+        <com.casic.otitan.common.widget.camera.FocusView
             android:id="@+id/focusView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

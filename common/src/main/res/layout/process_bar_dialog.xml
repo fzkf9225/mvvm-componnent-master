@@ -11,7 +11,7 @@
 
         <variable
             name="setting"
-            type="pers.fz.mvvm.widget.dialog.bean.ProgressBarSetting" />
+            type="com.casic.otitan.common.widget.dialog.bean.ProgressBarSetting" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +53,7 @@
             android:layout_marginTop="@dimen/vertical_margin_l"
             app:layout_constraintTop_toBottomOf="@+id/dialog_textView">
 
-            <pers.fz.mvvm.widget.customview.CircleProgressBar
+            <com.casic.otitan.common.widget.customview.CircleProgressBar
                 android:id="@+id/circle_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 app:strokeWidth="10dp"
                 tools:visibility="gone" />
 
-            <pers.fz.mvvm.widget.customview.HorizontalProgressBar
+            <com.casic.otitan.common.widget.customview.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

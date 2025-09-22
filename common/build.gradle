@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'pers.fz.mvvm'
+    namespace 'com.casic.otitan.common'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -180,9 +180,9 @@ afterEvaluate {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
-                groupId = 'pers.fz.mvvm'
+                groupId = 'com.casic.otitan.common'
                 artifactId = 'common'
-                version = '2.5.0'
+                version = '3.0.0'
             }
         }
 

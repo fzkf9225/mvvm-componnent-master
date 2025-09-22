@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@null">
 
-        <pers.fz.mvvm.widget.customview.CornerConstraintLayout
+        <com.casic.otitan.common.widget.customview.CornerConstraintLayout
             android:id="@+id/iv_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -60,9 +60,9 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
                 app:layout_constraintTop_toTopOf="@id/guideline_top" />
-        </pers.fz.mvvm.widget.customview.CornerConstraintLayout>
+        </com.casic.otitan.common.widget.customview.CornerConstraintLayout>
 
-        <pers.fz.mvvm.widget.customview.CornerImageView
+        <com.casic.otitan.common.widget.customview.CornerImageView
             android:id="@+id/iv_image_show"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:radius="@dimen/radius_s" />
 
-        <pers.fz.mvvm.widget.customview.CornerTextView
+        <com.casic.otitan.common.widget.customview.CornerTextView
             android:id="@+id/upload_mark"
             android:layout_width="0dp"
             android:layout_height="0dp"

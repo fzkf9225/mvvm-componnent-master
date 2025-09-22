@@ -6,7 +6,7 @@
 
         <variable
             name="toolbarConfig"
-            type="pers.fz.mvvm.bean.base.ToolbarConfig" />
+            type="com.casic.otitan.common.bean.base.ToolbarConfig" />
 
         <import type="androidx.core.content.ContextCompat" />
 

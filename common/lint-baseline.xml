@@ -1686,7 +1686,7 @@
 
     <issue
         id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (pers.fz.mvvm.zxing.camera.AutoFocusManager.AutoFocusTask)"
+        message="This `AsyncTask` class should be static or leaks might occur (com.casic.common.zxing.camera.AutoFocusManager.AutoFocusTask)"
         errorLine1=" private final class AutoFocusTask extends AsyncTask&lt;Object,Object,Object> {"
         errorLine2="                     ~~~~~~~~~~~~~">
         <location
@@ -1719,7 +1719,7 @@
 
     <issue
         id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (pers.fz.mvvm.zxing.InactivityTimer.InactivityAsyncTask)"
+        message="This `AsyncTask` class should be static or leaks might occur (com.casic.common.zxing.InactivityTimer.InactivityAsyncTask)"
         errorLine1="    private final class InactivityAsyncTask extends AsyncTask&lt;Object, Object, Object> {"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
         <location

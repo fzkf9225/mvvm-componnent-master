@@ -34,7 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <pers.fz.mvvm.widget.customview.CornerButton
+            <com.casic.otitan.common.widget.customview.CornerButton
                 android:id="@+id/button_clear"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
@@ -50,7 +50,7 @@
                 app:layout_constraintTop_toTopOf="@+id/button_submit"
                 app:radius="@dimen/radius_s"/>
 
-            <pers.fz.mvvm.widget.customview.CornerButton
+            <com.casic.otitan.common.widget.customview.CornerButton
                 android:id="@+id/button_submit"
                 android:layout_width="0dp"
                 android:layout_height="35dp"

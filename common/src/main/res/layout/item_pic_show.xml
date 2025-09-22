@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <pers.fz.mvvm.widget.gallery.impl.PhotoView
+        <com.casic.otitan.common.widget.gallery.impl.PhotoView
             android:id="@+id/pic_pv"
             android:layout_width="0dp"
             android:layout_height="0dp"

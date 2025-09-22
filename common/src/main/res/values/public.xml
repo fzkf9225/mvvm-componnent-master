@@ -159,7 +159,6 @@
     <public name="view_error_layout" type="layout"/>
     <public name="texture_view_player_activity" type="layout"/>
     <public name="process_bar_dialog" type="layout"/>
-    <public name="picktime_view" type="layout"/>
     <public name="image_save_dialog" type="layout"/>
     <public name="tab_text_view" type="layout"/>
     <public name="camera_view" type="layout"/>

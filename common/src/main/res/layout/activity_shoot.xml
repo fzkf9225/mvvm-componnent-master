@@ -6,7 +6,7 @@
 
     </data>
 
-    <pers.fz.mvvm.widget.camera.CameraView
+    <com.casic.otitan.common.widget.camera.CameraView
         android:id="@+id/camera_face_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

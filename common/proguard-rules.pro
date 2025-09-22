@@ -120,26 +120,26 @@
 
 # ==================== 项目特定类 ====================
 # 保留 MVVM 框架相关类
--keep class pers.fz.mvvm.** { *; }
--dontwarn pers.fz.mvvm.**
+-keep class com.casic.otitan.common.** { *; }
+-dontwarn com.casic.otitan.common.**
 
 # 保留数据模型类（Bean）
--keep class pers.fz.mvvm.bean.** { *; }
--keepclassmembers class pers.fz.mvvm.bean.** {
+-keep class com.casic.otitan.common.bean.** { *; }
+-keepclassmembers class com.casic.otitan.common.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留 BaseResponse
--keep class pers.fz.mvvm.base.BaseResponse { *; }
--keepclassmembers class pers.fz.mvvm.base.BaseResponse {
+-keep class com.casic.otitan.common.base.BaseResponse { *; }
+-keepclassmembers class com.casic.otitan.common.base.BaseResponse {
     void set*(***);
     *** get*();
 }
 
 # 保留 Dialog Bean
--keep class pers.fz.mvvm.widget.dialog.bean.** { *; }
--keepclassmembers class pers.fz.mvvm.widget.dialog.bean.** {
+-keep class com.casic.otitan.common.widget.dialog.bean.** { *; }
+-keepclassmembers class com.casic.otitan.common.widget.dialog.bean.** {
     void set*(***);
     *** get*();
 }

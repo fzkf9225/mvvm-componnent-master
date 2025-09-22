@@ -175,7 +175,7 @@
             app:layout_constraintStart_toEndOf="@+id/secondPicker"
             app:layout_constraintTop_toTopOf="@+id/secondPicker" />
 
-        <pers.fz.mvvm.widget.customview.CornerButton
+        <com.casic.otitan.common.widget.customview.CornerButton
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -197,7 +197,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/yearPicker" />
 
-        <pers.fz.mvvm.widget.customview.CornerButton
+        <com.casic.otitan.common.widget.customview.CornerButton
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"

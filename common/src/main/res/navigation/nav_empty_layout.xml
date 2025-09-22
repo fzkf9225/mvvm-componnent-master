@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/empty_layout_page"
-        android:name="pers.fz.mvvm.fragment.EmptyFragment"
+        android:name="com.casic.otitan.common.fragment.EmptyFragment"
         android:label=""
         android:layout="@layout/empty_fragment">
     </fragment>

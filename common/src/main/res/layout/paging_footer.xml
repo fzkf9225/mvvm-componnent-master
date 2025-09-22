@@ -24,7 +24,7 @@
             android:indeterminateTint="#666666"
             tools:ignore="MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

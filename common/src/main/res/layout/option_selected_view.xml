@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="pers.fz.mvvm.bean.PopupWindowBean" />
+            type="com.casic.otitan.common.bean.PopupWindowBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <pers.fz.mvvm.widget.customview.CornerTextView
+        <com.casic.otitan.common.widget.customview.CornerTextView
             android:id="@+id/tv_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

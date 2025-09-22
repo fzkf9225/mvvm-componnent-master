@@ -5,7 +5,7 @@
     <data>
         <variable
             name="item"
-            type="pers.fz.mvvm.bean.PopupWindowBean" />
+            type="com.casic.otitan.common.bean.PopupWindowBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
