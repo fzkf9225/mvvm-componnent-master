@@ -1,4 +1,4 @@
-package pers.fz.annotation.format;
+package com.casic.otitan.annotation.format;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

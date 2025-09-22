@@ -20,13 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 #自定义注解混淆
--keep @interface pers.fz.annotation.verify.VerifyEntity
--keep @interface pers.fz.annotation.verify.VerifyField
--keep @interface pers.fz.annotation.verify.VerifyParams
--keep @interface pers.fz.annotation.verify.VerifyFieldSort
--keep @interface pers.fz.annotation.verify.Valid
--keep @interface pers.fz.annotation.format.FormatDecimal
--keep class pers.fz.annotation.verify.VerifyResult
+-keep @interface com.casic.otitan.annotation.annotation.VerifyEntity
+-keep @interface com.casic.otitan.annotation.annotation.VerifyField
+-keep @interface com.casic.otitan.annotation.annotation.VerifyParams
+-keep @interface com.casic.otitan.annotation.annotation.VerifyFieldSort
+-keep @interface com.casic.otitan.annotation.annotation.Valid
+-keep @interface com.casic.otitan.annotation.format.FormatDecimal
+-keep class com.casic.otitan.annotation.annotation.bean.VerifyResult
 
 #保留注释
 -keepattributes *Annotation*

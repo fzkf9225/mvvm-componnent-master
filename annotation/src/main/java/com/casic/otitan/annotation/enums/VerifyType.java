@@ -1,4 +1,4 @@
-package pers.fz.annotation.enums;
+package com.casic.otitan.annotation.enums;
 
 /**
  * Created by fz on 2023/9/5 16:03

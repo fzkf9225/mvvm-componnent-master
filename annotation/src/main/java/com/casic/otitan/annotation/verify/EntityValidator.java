@@ -1,4 +1,4 @@
-package pers.fz.annotation.verify;
+package com.casic.otitan.annotation.verify;
 
 
 import java.lang.reflect.Field;
@@ -6,17 +6,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import pers.fz.annotation.annotation.Valid;
-import pers.fz.annotation.annotation.VerifyArray;
-import pers.fz.annotation.annotation.VerifyEntity;
-import pers.fz.annotation.annotation.VerifyField;
-import pers.fz.annotation.annotation.VerifyParams;
-import pers.fz.annotation.annotation.VerifySort;
-import pers.fz.annotation.bean.VerifyResult;
-import pers.fz.annotation.enums.VerifyType;
-import pers.fz.annotation.inter.VerifyGroup;
-import pers.fz.annotation.utils.RegexUtils;
-import pers.fz.annotation.utils.ValidatorUtil;
+import com.casic.otitan.annotation.annotation.Valid;
+import com.casic.otitan.annotation.annotation.VerifyArray;
+import com.casic.otitan.annotation.annotation.VerifyEntity;
+import com.casic.otitan.annotation.annotation.VerifyField;
+import com.casic.otitan.annotation.annotation.VerifyParams;
+import com.casic.otitan.annotation.annotation.VerifySort;
+import com.casic.otitan.annotation.bean.VerifyResult;
+import com.casic.otitan.annotation.enums.VerifyType;
+import com.casic.otitan.annotation.inter.VerifyGroup;
+import com.casic.otitan.annotation.utils.RegexUtils;
+import com.casic.otitan.annotation.utils.ValidatorUtil;
 
 /**
  * Created by fz on 2023/9/5 16:25

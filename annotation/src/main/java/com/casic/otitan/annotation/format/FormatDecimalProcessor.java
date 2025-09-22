@@ -1,4 +1,4 @@
-package pers.fz.annotation.format;
+package com.casic.otitan.annotation.format;
 
 import com.google.auto.service.AutoService;
 
@@ -27,7 +27,7 @@ import javax.tools.JavaFileObject;
  * describe:java中AbstractProcessor自定义注解处理器演示demo，自动生成代码
  */
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.casic.titan.annotation.format.FormatDecimal")
+@SupportedAnnotationTypes("com.casic.otitan.annotation.format.FormatDecimal")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class FormatDecimalProcessor extends AbstractProcessor {
     private Filer filer;

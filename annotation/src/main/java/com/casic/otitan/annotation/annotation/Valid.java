@@ -1,11 +1,11 @@
-package pers.fz.annotation.annotation;
+package com.casic.otitan.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import pers.fz.annotation.inter.VerifyGroup;
+import com.casic.otitan.annotation.inter.VerifyGroup;
 
 /**
  * Created by  @author fz on 2023/9/5 19:33

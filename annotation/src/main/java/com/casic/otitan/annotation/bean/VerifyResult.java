@@ -1,4 +1,4 @@
-package pers.fz.annotation.bean;
+package com.casic.otitan.annotation.bean;
 
 /**
  * Created by fz on 2023/9/5 16:59

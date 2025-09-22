@@ -1,4 +1,4 @@
-package pers.fz.annotation.inter;
+package com.casic.otitan.annotation.inter;
 
 public class VerifyGroup {
     /**
