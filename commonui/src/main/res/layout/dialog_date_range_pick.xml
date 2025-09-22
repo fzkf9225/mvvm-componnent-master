@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
             tools:text="2024-12" />
 
-        <com.casic.titan.commonui.widght.calendar.CalendarView
+        <com.casic.otitan.commonui.widght.calendar.CalendarView
             android:id="@+id/calendarView_range"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             app:showDot="false"
             app:layout_constraintTop_toBottomOf="@+id/tv_month"/>
 
-        <pers.fz.mvvm.widget.customview.CornerButton
+        <com.casic.otitan.common.widget.customview.CornerButton
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -81,7 +81,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView_range" />
-        <pers.fz.mvvm.widget.customview.CornerButton
+        <com.casic.otitan.common.widget.customview.CornerButton
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"

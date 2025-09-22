@@ -1,33 +1,33 @@
 # 保留 CommonUI 框架核心类
--keep class com.casic.titan.commonui.** { *; }
--dontwarn com.casic.titan.commonui.**
+-keep class com.casic.otitan.commonui.** { *; }
+-dontwarn com.casic.otitan.commonui.**
 
 # 确保数据模型不被混淆
--keep class com.casic.titan.commonui.bean.** { *; }
--keepclassmembers class com.casic.titan.commonui.bean.** {
+-keep class com.casic.otitan.commonui.bean.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留自定义 Widget 组件
--keep class com.casic.titan.commonui.widget.** { *; }
--keepclassmembers class com.casic.titan.commonui.widget.** {
+-keep class com.casic.otitan.commonui.widget.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
 # 保留 Fragment
--keep class com.casic.titan.commonui.fragment.** { *; }
+-keep class com.casic.otitan.commonui.fragment.** { *; }
 
 # 保留适配器
--keep class com.casic.titan.commonui.adapter.** { *; }
+-keep class com.casic.otitan.commonui.adapter.** { *; }
 
 # 保留表单相关功能
--keep class com.casic.titan.commonui.form.** { *; }
+-keep class com.casic.otitan.commonui.form.** { *; }
 
 # 保留接口和回调
--keep interface com.casic.titan.commonui.inter.** { *; }
--keep class com.casic.titan.commonui.impl.** { *; }
+-keep interface com.casic.otitan.commonui.inter.** { *; }
+-keep class com.casic.otitan.commonui.impl.** { *; }
 
 # 保留数据绑定相关类
 -keep class *Binding { *; }

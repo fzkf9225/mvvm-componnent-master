@@ -117,46 +117,46 @@
 
 # ==================== 项目特定类 ====================
 # 保留 CommonUI 框架相关类
--keep class com.casic.titan.commonui.** { *; }
--dontwarn com.casic.titan.commonui.**
+-keep class com.casic.otitan.commonui.** { *; }
+-dontwarn com.casic.otitan.commonui.**
 
 # 保留数据模型类（Bean）
--keep class com.casic.titan.commonui.bean.** { *; }
--keepclassmembers class com.casic.titan.commonui.bean.** {
+-keep class com.casic.otitan.commonui.bean.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留适配器类
--keep class com.casic.titan.commonui.adapter.** { *; }
--keepclassmembers class com.casic.titan.commonui.adapter.** {
+-keep class com.casic.otitan.commonui.adapter.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.adapter.** {
     public <init>(...);
 }
 
 # 保留 Fragment 类
--keep class com.casic.titan.commonui.fragment.** { *; }
+-keep class com.casic.otitan.commonui.fragment.** { *; }
 
 # 保留自定义 Widget 组件
--keep class com.casic.titan.commonui.widget.** { *; }
--keepclassmembers class com.casic.titan.commonui.widget.** {
+-keep class com.casic.otitan.commonui.widget.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
 # 保留表单相关类
--keep class com.casic.titan.commonui.form.** { *; }
+-keep class com.casic.otitan.commonui.form.** { *; }
 
 # 保留接口和实现类
--keep interface com.casic.titan.commonui.inter.** { *; }
--keep class com.casic.titan.commonui.impl.** { *; }
+-keep interface com.casic.otitan.commonui.inter.** { *; }
+-keep class com.casic.otitan.commonui.impl.** { *; }
 
 # 保留帮助类和工具类
--keep class com.casic.titan.commonui.helper.** { *; }
--keep class com.casic.titan.commonui.api.** { *; }
+-keep class com.casic.otitan.commonui.helper.** { *; }
+-keep class com.casic.otitan.commonui.api.** { *; }
 
 # 保留枚举类
--keep class com.casic.titan.commonui.enums.** { *; }
+-keep class com.casic.otitan.commonui.enums.** { *; }
 
 # ==================== 资源文件 ====================
 # 保留 R 类
@@ -181,10 +181,10 @@
 
 # ==================== 依赖库相关 ====================
 # 保留 common 和 commonmedia 依赖的类
--keep class pers.fz.mvvm.** { *; }
--dontwarn pers.fz.mvvm.**
--keep class pers.fz.media.** { *; }
--dontwarn pers.fz.media.**
+-keep class com.casic.otitan.common.** { *; }
+-dontwarn com.casic.otitan.common.**
+-keep class com.casic.otitan.media.** { *; }
+-dontwarn com.casic.otitan.media.**
 
 # ==================== RecyclerView 相关 ====================
 # 保留 ViewHolder

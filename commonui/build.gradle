@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.titan.commonui'
+    namespace 'com.casic.otitan.commonui'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -124,9 +124,9 @@ afterEvaluate {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
-                groupId = 'com.casic.titan.commonui'
+                groupId = 'com.casic.otitan.commonui'
                 artifactId = 'commonui'
-                version = '1.5.0'
+                version = '2.0.0'
             }
         }
         repositories {
