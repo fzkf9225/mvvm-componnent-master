@@ -1,6 +1,7 @@
 package pers.fz.mvvm.utils.common;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -384,19 +385,16 @@ public class NumberUtil {
      * @param longNumber 科学计数法数字字符串
      * @return 整数
      */
-    public static String formatLongNumber(String longNumber) {
-        if (longNumber == null) {
-            return null;
+    public static String scientificToInteger(String scientificNumber) {
+        if (scientificNumber == null) return null;
+        try {
+            BigDecimal bd = new BigDecimal(scientificNumber);
+            // 转为整数（去掉小数部分）
+            bd = bd.setScale(0, RoundingMode.DOWN);
+            return bd.toPlainString();
+        } catch (NumberFormatException e) {
+            return scientificNumber; // 不是数字，原样返回
         }
-        if (isNumeric(longNumber)) {
-            if (longNumber.contains("e") || longNumber.contains("E")) {
-                BigDecimal bd = new BigDecimal(longNumber);
-                return formatInteger(bd.toPlainString());
-            } else {
-                return formatInteger(longNumber);
-            }
-        }
-        return longNumber;
     }
 
     /**
@@ -405,8 +403,8 @@ public class NumberUtil {
      * @param longNumber 科学计数法数字字符串
      * @return 2位小数
      */
-    public static String formatLongDecimalNumber(String longNumber) {
-        return formatLongDecimalNumber(longNumber, DEFAULT_DECIMAL_PLACES);
+    public static String scientificToLongDecimalNumber(String longNumber) {
+        return scientificToDecimalNumber(longNumber, DEFAULT_DECIMAL_PLACES);
     }
 
     /**
@@ -416,7 +414,7 @@ public class NumberUtil {
      * @param decimalPlaces 小数位数
      * @return 格式化后的数字字符串
      */
-    public static String formatLongDecimalNumber(String longNumber, int decimalPlaces) {
+    public static String scientificToDecimalNumber(String longNumber, int decimalPlaces) {
         if (longNumber == null) {
             return null;
         }
@@ -438,10 +436,10 @@ public class NumberUtil {
      * @return 是否是科学计算法、数字、浮点
      */
     public static boolean isNumeric(String str) {
-        if (null == str || "".equals(str)) {
+        if (null == str || str.isEmpty()) {
             return false;
         }
-        String regx = "[+-]*\\d+\\.?\\d*[Ee]*[+-]*\\d+";
+        String regx = "^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$";
         Pattern pattern = Pattern.compile(regx);
         boolean isNumber = pattern.matcher(str).matches();
         if (isNumber) {
