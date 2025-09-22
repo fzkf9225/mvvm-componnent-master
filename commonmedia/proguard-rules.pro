@@ -90,41 +90,41 @@
 
 # ==================== 项目特定类 ====================
 # 保留 Media 框架相关类
--keep class pers.fz.media.** { *; }
--dontwarn pers.fz.media.**
+-keep class com.casic.otitan.media.** { *; }
+-dontwarn com.casic.otitan.media.**
 
 # 保留数据模型类（Bean）
--keep class pers.fz.media.bean.** { *; }
--keepclassmembers class pers.fz.media.bean.** {
+-keep class com.casic.otitan.media.bean.** { *; }
+-keepclassmembers class com.casic.otitan.media.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留回调接口
--keep class pers.fz.media.callback.** { *; }
--keep interface pers.fz.media.callback.** { *; }
+-keep class com.casic.otitan.media.callback.** { *; }
+-keep interface com.casic.otitan.media.callback.** { *; }
 
 # 保留工具类
--keep class pers.fz.media.utils.** { *; }
+-keep class com.casic.otitan.media.utils.** { *; }
 
 # 保留 MediaBuilder 和 MediaHelper（核心类）
--keep class pers.fz.media.MediaBuilder { *; }
--keep class pers.fz.media.MediaHelper { *; }
--keepclassmembers class pers.fz.media.MediaBuilder {
+-keep class com.casic.otitan.media.MediaBuilder { *; }
+-keep class com.casic.otitan.media.MediaHelper { *; }
+-keepclassmembers class com.casic.otitan.media.MediaBuilder {
     public <init>();
     public *;
 }
--keepclassmembers class pers.fz.media.MediaHelper {
+-keepclassmembers class com.casic.otitan.media.MediaHelper {
     public static *;
 }
 
 # 保留处理器和帮助类
--keep class pers.fz.media.handler.** { *; }
--keep class pers.fz.media.helper.** { *; }
+-keep class com.casic.otitan.media.handler.** { *; }
+-keep class com.casic.otitan.media.helper.** { *; }
 
 # 保留监听器
--keep class pers.fz.media.listener.** { *; }
--keep interface pers.fz.media.listener.** { *; }
+-keep class com.casic.otitan.media.listener.** { *; }
+-keep interface com.casic.otitan.media.listener.** { *; }
 
 # ==================== 资源文件 ====================
 # 保留 R 类
