@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.casic.titan.demo.bean.Person" />
+            type="com.casic.otitan.demo.bean.Person" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="12dp">
 
-        <pers.fz.mvvm.widget.customview.SquareLabelView
+        <com.casic.otitan.common.widget.customview.SquareLabelView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="这是标题哦！！！！" />
 
-        <com.casic.titan.commonui.form.FormTextView
+        <com.casic.otitan.commonui.form.FormTextView
             android:id="@+id/tv_age"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             app:text="@{item.age}"
             app:textAlign="left" />
 
-        <com.casic.titan.commonui.form.FormTextView
+        <com.casic.otitan.commonui.form.FormTextView
             android:id="@+id/tv_sex"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             app:text="@{item.sex}"
             app:textAlign="left" />
 
-        <com.casic.titan.commonui.form.FormTextView
+        <com.casic.otitan.commonui.form.FormTextView
             android:id="@+id/tv_birthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
             app:required="false"
             app:text="@{item.birthday}"
             app:textAlign="left" />
-        <com.casic.titan.commonui.form.FormTextView
+        <com.casic.otitan.commonui.form.FormTextView
             android:id="@+id/tv_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

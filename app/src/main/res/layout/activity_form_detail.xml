@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="com.casic.titan.demo.bean.FormBean" />
+            type="com.casic.otitan.demo.bean.FormBean" />
     </data>
 
     <ScrollView
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
             <!--简报名称-->
-            <com.casic.titan.commonui.form.FormTextView
+            <com.casic.otitan.commonui.form.FormTextView
                 android:id="@+id/tv_bulletin_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 app:required="false"
                 app:text="@{data.title}" />
             <!--简报提交时间-->
-            <com.casic.titan.commonui.form.FormTextView
+            <com.casic.otitan.commonui.form.FormTextView
                 android:id="@+id/tv_bulletin_create_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 app:required="false"
                 app:text="@{data.date}" />
             <!--简报内容-->
-            <com.casic.titan.commonui.form.FormTextView
+            <com.casic.otitan.commonui.form.FormTextView
                 android:id="@+id/tv_bulletin_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:required="false"
                 app:text="@{data.content}" />
             <!--富文本-->
-            <com.casic.titan.commonui.form.FormRichText
+            <com.casic.otitan.commonui.form.FormRichText
                 android:id="@+id/tv_rich_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_rich_text" />
 
             <!--现场图片-->
-            <com.casic.titan.commonui.form.FormImage
+            <com.casic.otitan.commonui.form.FormImage
                 android:id="@+id/form_screen_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 app:required="false" />
 
             <!--现场视频-->
-            <com.casic.titan.commonui.form.FormVideo
+            <com.casic.otitan.commonui.form.FormVideo
                 android:id="@+id/form_screen_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                 app:required="false" />
 
             <!--现场视频-->
-            <com.casic.titan.commonui.form.FormImageAndVideo
+            <com.casic.otitan.commonui.form.FormImageAndVideo
                 android:id="@+id/form_image_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 app:required="false" />
 
             <!--其他附件-->
-            <com.casic.titan.commonui.form.FormFile
+            <com.casic.otitan.commonui.form.FormFile
                 android:id="@+id/form_screen_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

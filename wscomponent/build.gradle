@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.titan.wscomponent'
+    namespace 'com.casic.otitan.wscomponent'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()

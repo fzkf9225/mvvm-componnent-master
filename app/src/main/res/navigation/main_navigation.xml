@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.casic.titan.demo.fragment.HomeFragment"
+        android:name="com.casic.otitan.demo.fragment.HomeFragment"
         android:label="@string/nv_index"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_me"
-        android:name="com.casic.titan.usercomponent.fragment.MeFragment"
+        android:name="com.casic.otitan.usercomponent.fragment.MeFragment"
         android:label="@string/nv_me"
         tools:layout="@layout/me_fragment" />
 

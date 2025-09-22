@@ -7,7 +7,7 @@
 
         <variable
             name="data"
-            type="com.casic.titan.demo.bean.Person" />
+            type="com.casic.otitan.demo.bean.Person" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <!--姓名-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     app:required="true"
                     app:text="@={data.name}" />
                 <!--性别-->
-                <com.casic.titan.commonui.form.FormSelection
+                <com.casic.otitan.commonui.form.FormSelection
                     android:id="@+id/tv_sex"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                     app:required="true"
                     app:text="@{data.sex}" />
                 <!--生日-->
-                <com.casic.titan.commonui.form.FormDate
+                <com.casic.otitan.commonui.form.FormDate
                     android:id="@+id/tv_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                     app:startYear="1990"
                     app:text="@={data.birthday}" />
                 <!--教育经历-->
-                <com.casic.titan.commonui.form.FormDateRange
+                <com.casic.otitan.commonui.form.FormDateRange
                     android:id="@+id/tv_educational_experience_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
                     app:weekTextColor="@color/theme_red"
                     app:workingDayTextColor="@color/autoColor" />
                 <!--开学时间-->
-                <com.casic.titan.commonui.form.FormDateTime
+                <com.casic.otitan.commonui.form.FormDateTime
                     android:id="@+id/tv_school_start_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                     app:startYear="1990"
                     app:text="@={data.schoolStartTime}" />
                 <!--每天上课时间-->
-                <com.casic.titan.commonui.form.FormTime
+                <com.casic.otitan.commonui.form.FormTime
                     android:id="@+id/tv_class_start_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                     app:startYear="1990"
                     app:text="@={data.classStartTime}" />
                 <!--手机号码-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                     app:required="true"
                     app:text="@={data.mobile}" />
                 <!--座机-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_tel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
                     app:required="true"
                     app:text="@={data.tel}" />
                 <!--年龄-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                     app:text="@={data.age}" />
 
                 <!--体重-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_weight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -224,7 +224,7 @@
                     app:text="@={data.weight}" />
 
                 <!--身高-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -243,7 +243,7 @@
                     app:required="true"
                     app:text="@={data.height}" />
                 <!--邮箱-->
-                <com.casic.titan.commonui.form.FormEditText
+                <com.casic.otitan.commonui.form.FormEditText
                     android:id="@+id/edit_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -261,7 +261,7 @@
                     app:text="@={data.email}" />
 
                 <!--爱好-->
-                <com.casic.titan.commonui.form.FormEditArea
+                <com.casic.otitan.commonui.form.FormEditArea
                     android:id="@+id/edit_hobby"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -278,7 +278,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_email"
                     app:required="true" />
                 <!--本人照片-->
-                <com.casic.titan.commonui.form.FormImage
+                <com.casic.otitan.commonui.form.FormImage
                     android:id="@+id/form_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,7 +296,7 @@
                     app:mediaType="camera_album"
                     app:required="false" />
                 <!--本人视频-->
-                <com.casic.titan.commonui.form.FormVideo
+                <com.casic.otitan.commonui.form.FormVideo
                     android:id="@+id/form_video"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -314,7 +314,7 @@
                     app:mediaType="camera_album"
                     app:required="false" />
                 <!--家庭照片视频-->
-                <com.casic.titan.commonui.form.FormImageAndVideo
+                <com.casic.otitan.commonui.form.FormImageAndVideo
                     android:id="@+id/form_image_video"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -332,7 +332,7 @@
                     app:mediaType="camera_album"
                     app:required="false" />
                 <!--荣誉证书-->
-                <com.casic.titan.commonui.form.FormFile
+                <com.casic.otitan.commonui.form.FormFile
                     android:id="@+id/form_file"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

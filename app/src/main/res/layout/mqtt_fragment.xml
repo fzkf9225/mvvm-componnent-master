@@ -6,7 +6,7 @@
 
         <variable
             name="mqttBean"
-            type="com.casic.titan.mqttcomponent.MqttBean" />
+            type="com.casic.otitan.mqttcomponent.MqttBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

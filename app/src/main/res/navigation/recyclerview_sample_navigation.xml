@@ -6,7 +6,7 @@
     app:startDestination="@+id/recyclerview_sample_layout_page">
     <fragment
         android:id="@+id/recyclerview_sample_layout_page"
-        android:name="com.casic.titan.demo.fragment.OnViewSampleFragment"
+        android:name="com.casic.otitan.demo.fragment.OnViewSampleFragment"
         android:label="RecyclerViewSample示例"
         tools:layout="@layout/smartrecyclerview">
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <activity
         android:id="@+id/paging_details_activity"
-        android:name="com.casic.titan.demo.activity.PagingDetailActivity"
+        android:name="com.casic.otitan.demo.activity.PagingDetailActivity"
         android:label="详情"
         tools:layout="@layout/activity_paging_detail">
 

@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="com.casic.titan.usercomponent.api.UserAccountHelper" />
+        <import type="com.casic.otitan.usercomponent.api.UserAccountHelper" />
 
         <import type="android.view.View" />
 
         <variable
             name="setViewModel"
-            type="com.casic.titan.usercomponent.viewmodel.SettingViewModel" />
+            type="com.casic.otitan.usercomponent.viewmodel.SettingViewModel" />
 
-        <import type="pers.fz.mvvm.api.AppSettingHelper" />
+        <import type="com.casic.otitan.common.api.AppSettingHelper" />
     </data>
 
     <ScrollView
@@ -29,7 +29,7 @@
 
             <View style="@style/h_area" />
 
-            <pers.fz.mvvm.widget.customview.IconLabelValueView
+            <com.casic.otitan.common.widget.customview.IconLabelValueView
                 android:id="@+id/cleanUp"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -51,7 +51,7 @@
                 app:valueTextColor="#888888"
                 app:valueTextSize="@dimen/font_size_l" />
 
-            <pers.fz.mvvm.widget.customview.IconLabelValueView
+            <com.casic.otitan.common.widget.customview.IconLabelValueView
                 android:id="@+id/versionName"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -73,7 +73,7 @@
                 app:valueTextSize="@dimen/font_size_l" />
 
 
-            <pers.fz.mvvm.widget.customview.IconLabelValueView
+            <com.casic.otitan.common.widget.customview.IconLabelValueView
                 android:id="@+id/tv_support"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -96,7 +96,7 @@
                 app:valueTextSize="@dimen/font_size_l" />
 
 
-            <pers.fz.mvvm.widget.customview.IconLabelValueView
+            <com.casic.otitan.common.widget.customview.IconLabelValueView
                 android:id="@+id/tv_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"

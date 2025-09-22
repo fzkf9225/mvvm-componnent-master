@@ -132,22 +132,22 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== MVVM Common Library ====================
 # 保留 MVVM 框架核心类
--keep class pers.fz.mvvm.** { *; }
--dontwarn pers.fz.mvvm.**
+-keep class com.casic.otitan.common.** { *; }
+-dontwarn com.casic.otitan.common.**
 
 # 保留数据绑定相关类
--keep class pers.fz.mvvm.bean.** { *; }
--keepclassmembers class pers.fz.mvvm.bean.** {
+-keep class com.casic.otitan.common.bean.** { *; }
+-keepclassmembers class com.casic.otitan.common.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留 BaseResponse 和 ViewModel
--keep class pers.fz.mvvm.base.BaseResponse { *; }
--keep class pers.fz.mvvm.viewmodel.** { *; }
+-keep class com.casic.otitan.common.base.BaseResponse { *; }
+-keep class com.casic.otitan.common.viewmodel.** { *; }
 
 # 保留注解处理器生成的类
--keep class * extends pers.fz.mvvm.base.** { *; }
+-keep class * extends com.casic.otitan.common.base.** { *; }
 
 # 保留资源绑定相关类（如果有自动生成的绑定类）
 -keep class *Binding { *; }
@@ -156,27 +156,27 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== Media Common Library ====================
 # 保留 Media 框架核心类
--keep class pers.fz.media.** { *; }
--dontwarn pers.fz.media.**
+-keep class com.casic.otitan.media.** { *; }
+-dontwarn com.casic.otitan.media.**
 
 # 保留数据模型类
--keep class pers.fz.media.bean.** { *; }
--keepclassmembers class pers.fz.media.bean.** {
+-keep class com.casic.otitan.media.bean.** { *; }
+-keepclassmembers class com.casic.otitan.media.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留核心工具类和构建器
--keep class pers.fz.media.MediaBuilder { *; }
--keep class pers.fz.media.MediaHelper { *; }
--keep class pers.fz.media.utils.** { *; }
+-keep class com.casic.otitan.media.MediaBuilder { *; }
+-keep class com.casic.otitan.media.MediaHelper { *; }
+-keep class com.casic.otitan.media.utils.** { *; }
 
 # 保留回调接口
--keep class pers.fz.media.callback.** { *; }
--keep interface pers.fz.media.callback.** { *; }
+-keep class com.casic.otitan.media.callback.** { *; }
+-keep interface com.casic.otitan.media.callback.** { *; }
 
 # 保留多媒体处理方法
--keepclassmembers class pers.fz.media.** {
+-keepclassmembers class com.casic.otitan.media.** {
     public * compress*(...);
     public * process*(...);
     public * encode*(...);
@@ -187,35 +187,35 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== CommonUI Library ====================
 # 保留 CommonUI 框架核心类
--keep class com.casic.titan.commonui.** { *; }
--dontwarn com.casic.titan.commonui.**
+-keep class com.casic.otitan.commonui.** { *; }
+-dontwarn com.casic.otitan.commonui.**
 
 # 确保数据模型不被混淆
--keep class com.casic.titan.commonui.bean.** { *; }
--keepclassmembers class com.casic.titan.commonui.bean.** {
+-keep class com.casic.otitan.commonui.bean.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留自定义 Widget 组件
--keep class com.casic.titan.commonui.widget.** { *; }
--keepclassmembers class com.casic.titan.commonui.widget.** {
+-keep class com.casic.otitan.commonui.widget.** { *; }
+-keepclassmembers class com.casic.otitan.commonui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
 # 保留 Fragment
--keep class com.casic.titan.commonui.fragment.** { *; }
+-keep class com.casic.otitan.commonui.fragment.** { *; }
 
 # 保留适配器
--keep class com.casic.titan.commonui.adapter.** { *; }
+-keep class com.casic.otitan.commonui.adapter.** { *; }
 
 # 保留表单相关功能
--keep class com.casic.titan.commonui.form.** { *; }
+-keep class com.casic.otitan.commonui.form.** { *; }
 
 # 保留接口和回调
--keep interface com.casic.titan.commonui.inter.** { *; }
--keep class com.casic.titan.commonui.impl.** { *; }
+-keep interface com.casic.otitan.commonui.inter.** { *; }
+-keep class com.casic.otitan.commonui.impl.** { *; }
 
 # 保留数据绑定相关类
 -keep class *Binding { *; }
@@ -225,28 +225,28 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== Google GPS Library ====================
 # 保留 GPS 框架核心类
--keep class com.casic.titan.googlegps.** { *; }
--dontwarn com.casic.titan.googlegps.**
+-keep class com.casic.otitan.googlegps.** { *; }
+-dontwarn com.casic.otitan.googlegps.**
 
 # 保留定位服务
--keep class com.casic.titan.googlegps.service.** { *; }
--keepclassmembers class com.casic.titan.googlegps.service.** {
+-keep class com.casic.otitan.googlegps.service.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.service.** {
     public * onStartCommand(...);
     public * onBind(...);
 }
 
 # 保留 Socket 通信
--keep class com.casic.titan.googlegps.socket.** { *; }
--keepclassmembers class com.casic.titan.googlegps.socket.** {
+-keep class com.casic.otitan.googlegps.socket.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.socket.** {
     public * connect*(...);
     public * send*(...);
 }
 
 # 保留工具类
--keep class com.casic.titan.googlegps.utils.** { *; }
+-keep class com.casic.otitan.googlegps.utils.** { *; }
 
 # 保留监听器接口
--keep interface com.casic.titan.googlegps.listener.** { *; }
+-keep interface com.casic.otitan.googlegps.listener.** { *; }
 
 # 保留位置数据处理方法
 -keepclassmembers class * {

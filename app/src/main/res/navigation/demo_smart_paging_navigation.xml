@@ -6,7 +6,7 @@
     app:startDestination="@+id/demo_smart_paging_layout_page">
     <fragment
         android:id="@+id/demo_smart_paging_layout_page"
-        android:name="com.casic.titan.demo.fragment.DemoSmartPagingFragment"
+        android:name="com.casic.otitan.demo.fragment.DemoSmartPagingFragment"
         android:label="SmartPaging列表实例"
         tools:layout="@layout/base_smart_paging" />
 </navigation>

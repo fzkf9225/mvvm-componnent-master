@@ -132,7 +132,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file_result" />
 
-            <pers.fz.mvvm.widget.customview.CornerImageView
+            <com.casic.otitan.common.widget.customview.CornerImageView
                 android:id="@+id/oldImage"
                 imageUri="@{sourceImagePath}"
                 android:layout_width="90dp"
@@ -145,7 +145,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/choose_file"
                 app:radius="@dimen/radius_l" />
 
-            <pers.fz.mvvm.widget.customview.CornerImageView
+            <com.casic.otitan.common.widget.customview.CornerImageView
                 android:id="@+id/waterMarkImage"
                 imageUri="@{waterMarkImagePath}"
                 android:layout_width="90dp"

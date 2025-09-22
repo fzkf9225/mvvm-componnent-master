@@ -7,7 +7,7 @@
 
         <variable
             name="googleGPSViewModel"
-            type="com.casic.titan.demo.viewmodel.GoogleGpsViewModel" />
+            type="com.casic.otitan.demo.viewmodel.GoogleGpsViewModel" />
     </data>
 
     <ScrollView

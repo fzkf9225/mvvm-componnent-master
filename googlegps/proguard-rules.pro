@@ -112,12 +112,12 @@
 
 # ==================== 项目特定类 ====================
 # 保留 Google GPS 框架相关类
--keep class com.casic.titan.googlegps.** { *; }
--dontwarn com.casic.titan.googlegps.**
+-keep class com.casic.otitan.googlegps.** { *; }
+-dontwarn com.casic.otitan.googlegps.**
 
 # 保留服务类（Service）
--keep class com.casic.titan.googlegps.service.** { *; }
--keepclassmembers class com.casic.titan.googlegps.service.** {
+-keep class com.casic.otitan.googlegps.service.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.service.** {
     public * onStartCommand(...);
     public * onBind(...);
     public * onUnbind(...);
@@ -125,34 +125,34 @@
 }
 
 # 保留 Socket 通信类
--keep class com.casic.titan.googlegps.socket.** { *; }
--keepclassmembers class com.casic.titan.googlegps.socket.** {
+-keep class com.casic.otitan.googlegps.socket.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.socket.** {
     public * connect*(...);
     public * send*(...);
     public * receive*(...);
 }
 
 # 保留工具类
--keep class com.casic.titan.googlegps.utils.** { *; }
--keepclassmembers class com.casic.titan.googlegps.utils.** {
+-keep class com.casic.otitan.googlegps.utils.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.utils.** {
     public static *;
 }
 
 # 保留对话框类
--keep class com.casic.titan.googlegps.dialog.** { *; }
--keepclassmembers class com.casic.titan.googlegps.dialog.** {
+-keep class com.casic.otitan.googlegps.dialog.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.dialog.** {
     public <init>(android.content.Context);
     public * show();
     public * dismiss();
 }
 
 # 保留监听器接口
--keep class com.casic.titan.googlegps.listener.** { *; }
--keep interface com.casic.titan.googlegps.listener.** { *; }
+-keep class com.casic.otitan.googlegps.listener.** { *; }
+-keep interface com.casic.otitan.googlegps.listener.** { *; }
 
 # 保留帮助类
--keep class com.casic.titan.googlegps.helper.** { *; }
--keepclassmembers class com.casic.titan.googlegps.helper.** {
+-keep class com.casic.otitan.googlegps.helper.** { *; }
+-keepclassmembers class com.casic.otitan.googlegps.helper.** {
     public static *;
 }
 

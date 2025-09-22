@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.casic.titan.demo">
+    package="com.casic.otitan.demo">
     <!-- Android 13+ 通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Android 13及以上版本发送通知必须申请的运行时权限，用户需要明确授权 -->
 
@@ -116,7 +116,7 @@
     <uses-permission android:name="android.permission.REQUEST_NOTIFICATION_POLICY" /> <!-- 允许应用访问和修改通知策略，如设置勿扰模式等 -->
 
     <application
-        android:name=".api.ApplicationHelper"
+        android:name="com.casic.otitan.demo.api.ApplicationHelper"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -160,72 +160,72 @@
             android:value="640" />
 
         <activity
-            android:name=".activity.CustomCameraActivity"
+            android:name="com.casic.otitan.demo.activity.CustomCameraActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FormTopDetailActivity"
+            android:name="com.casic.otitan.demo.activity.FormTopDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FormDetailActivity"
+            android:name="com.casic.otitan.demo.activity.FormDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.RoomPagingActivity"
+            android:name="com.casic.otitan.demo.activity.RoomPagingActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.TargetActivity"
+            android:name="com.casic.otitan.demo.activity.TargetActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PagingDetailActivity"
+            android:name="com.casic.otitan.demo.activity.PagingDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HiltActivity"
+            android:name="com.casic.otitan.demo.activity.HiltActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.DemoSmartPagingActivity"
+            android:name="com.casic.otitan.demo.activity.DemoSmartPagingActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.DemoPagingActivity"
+            android:name="com.casic.otitan.demo.activity.DemoPagingActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ScanQrCodeActivity"
+            android:name="com.casic.otitan.demo.activity.ScanQrCodeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.VerifyActivity"
+            android:name="com.casic.otitan.demo.activity.VerifyActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.VerifyTopActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activity.ViewPagerSampleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.RecyclerViewSampleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.CoordinatorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.MediaCompressActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.DownloadActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.MediaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.DialogActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.WightActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.GoogleGPSActivity"
+            android:name="com.casic.otitan.demo.activity.VerifyTopActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.LaunchActivity"
+            android:name="com.casic.otitan.demo.activity.ViewPagerSampleActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.RecyclerViewSampleActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.CoordinatorActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.MediaCompressActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.DownloadActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.MediaActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.DialogActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.WightActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.casic.otitan.demo.activity.GoogleGPSActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.casic.otitan.demo.activity.LaunchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/AppTheme.SplashScreen">
@@ -237,7 +237,7 @@
         </activity>
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.casic.otitan.demo.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask" />

@@ -3,7 +3,7 @@
     <domain-config cleartextTrafficPermitted="true"><!-- true代表允许http明文传输，一般用于测试开发环境 -->
         <domain includeSubdomains="true">*</domain> <!-- 通配符，这个配置这里无效-->
         <domain includeSubdomains="true">192.168.1.68</domain><!-- 显式添加 IP 地址 -->
-        <domain includeSubdomains="true">casic.titan.com</domain><!-- 自定义的WebView域名 -->
+        <domain includeSubdomains="true">casic.otitan.com</domain><!-- 自定义的WebView域名 -->
         <domain includeSubdomains="true">localhost</domain>
         <trust-anchors>
             <certificates src="system" /><!-- 信任系统预装CA证书，只信任系统证书 -->

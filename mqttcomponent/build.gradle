@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.titan.mqttcomponent'
+    namespace 'com.casic.otitan.mqttcomponent'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()

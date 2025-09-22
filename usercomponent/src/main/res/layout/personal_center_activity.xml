@@ -125,6 +125,6 @@
 
         <variable
             name="userInfo"
-            type="com.casic.titan.userapi.bean.UserInfo" />
+            type="com.casic.otitan.userapi.bean.UserInfo" />
     </data>
 </layout>

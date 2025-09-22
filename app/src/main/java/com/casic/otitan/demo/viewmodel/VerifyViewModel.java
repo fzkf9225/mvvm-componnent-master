@@ -1,0 +1,45 @@
+package com.casic.otitan.demo.viewmodel;
+
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+
+import com.casic.otitan.demo.bean.Person;
+import com.casic.otitan.demo.database.PersonDatabase;
+import com.casic.otitan.demo.repository.RoomPagingRepositoryImpl;
+
+import io.reactivex.rxjava3.disposables.Disposable;
+import com.casic.otitan.common.api.ApiRetrofit;
+import com.casic.otitan.common.base.BaseView;
+import com.casic.otitan.common.base.BaseViewModel;
+import com.casic.otitan.common.utils.log.LogUtil;
+
+/**
+ * created by fz on 2024/11/6 10:57
+ * describe:
+ */
+public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, BaseView> {
+
+    public MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+
+    public VerifyViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    @Override
+    protected RoomPagingRepositoryImpl createRepository() {
+        return new RoomPagingRepositoryImpl(PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
+    }
+
+    public void add(Person person) {
+        Disposable disposable = iRepository.insert(true,person).subscribe(
+                () -> {
+                    liveData.postValue(true);
+                }, throwable -> {
+                    LogUtil.show(ApiRetrofit.TAG,"错误："+throwable);
+                    baseView.showToast(throwable.getMessage());
+                    liveData.postValue(false);
+                });
+    }
+}

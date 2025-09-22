@@ -7,10 +7,10 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.titan.demo'
+    namespace 'com.casic.otitan.demo'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        applicationId "com.casic.titan.demo"
+        applicationId "com.casic.otitan.demo"
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         versionCode 1

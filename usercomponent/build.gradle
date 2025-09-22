@@ -5,11 +5,11 @@ plugins {
     alias(libs.plugins.ksp)
 }
 android {
-    namespace 'com.casic.titan.usercomponent'
+    namespace 'com.casic.otitan.usercomponent'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         if (userComponentIsApplication.toBoolean()) {
-            applicationId "com.casic.titan.usercomponent"
+            applicationId "com.casic.otitan.usercomponent"
         }
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()

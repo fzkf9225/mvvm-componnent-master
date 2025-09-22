@@ -7,7 +7,7 @@
 
         <variable
             name="dialogViewModel"
-            type="com.casic.titan.demo.viewmodel.DialogViewModel" />
+            type="com.casic.otitan.demo.viewmodel.DialogViewModel" />
     </data>
 
     <ScrollView
