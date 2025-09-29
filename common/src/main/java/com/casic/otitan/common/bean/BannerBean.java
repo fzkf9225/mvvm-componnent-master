@@ -12,18 +12,15 @@ public class BannerBean extends BaseObservable {
     /**
      * 图片地址
      */
-    @Bindable
     private Object bannerUrl;
     /**
      * 点击图片跳转的页面地址
      */
-    @Bindable
     private String linkUrl;
 
     /**
      * 是否在app内部预览
      */
-    @Bindable
     private boolean linkInside = false;
 
     public BannerBean(Object bannerUrl) {
@@ -44,7 +41,7 @@ public class BannerBean extends BaseObservable {
     public BannerBean() {
 
     }
-
+    @Bindable
     public String getLinkUrl() {
         return linkUrl;
     }
@@ -53,6 +50,7 @@ public class BannerBean extends BaseObservable {
         this.linkUrl = linkUrl;
     }
 
+    @Bindable
     public Object getBannerUrl() {
         return bannerUrl;
     }
@@ -61,6 +59,7 @@ public class BannerBean extends BaseObservable {
         this.bannerUrl = bannerUrl;
     }
 
+    @Bindable
     public boolean isLinkInside() {
         return linkInside;
     }
