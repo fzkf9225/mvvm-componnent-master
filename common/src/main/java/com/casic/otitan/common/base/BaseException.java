@@ -4,115 +4,52 @@ import androidx.annotation.NonNull;
 
 /**
  * Create by CherishTang on 2019/8/1
- * describe:自定义异常封装
+ * describe: 自定义异常封装
  */
 public class BaseException extends RuntimeException {
-    /**
-     * 解析数据失败
-     */
-    public static final String PARSE_ERROR = "1001";
-    public static final String PARSE_ERROR_MSG = "解析数据时发生异常！";
 
-    /**
-     * 网络问题
-     */
-    public static final String BAD_NETWORK = "1002";
-    public static final String BAD_NETWORK_MSG = "服务器或网络异常，请检查后再试！";
-    /**
-     * 连接错误
-     */
-    public static final String CONNECT_ERROR = "1003";
-    public static final String CONNECT_ERROR_MSG = "服务器连接失败或未知主机异常！";
-    /**
-     * 连接超时
-     */
-    public static final String CONNECT_TIMEOUT = "1004";
-    public static final String CONNECT_TIMEOUT_MSG = "请求超时，请检查网络环境或稍后再试！";
-    /**
-     * 未知错误
-     */
-    public static final String OTHER = "1005";
-    public static final String OTHER_MSG = "检测未知错误";
+    public enum ErrorType {
+        PARSE_ERROR("1001", "解析数据时发生异常！"),
+        BAD_NETWORK("1002", "服务器或网络异常，请检查后再试！"),
+        CONNECT_ERROR("1003", "服务器连接失败或未知主机异常！"),
+        CONNECT_TIMEOUT("1004", "请求超时，请检查网络环境或稍后再试！"),
+        OTHER("1005", "检测未知错误"),
+        REQUEST_ERROR("1006", "请求失败，请稍后再试！"),
+        TOKEN_ERROR("1007", "登录超时"),
+        DJI_ERROR("1008", null),
+        DJI_MEDIA_ERROR("1009", null),
+        OSS_ERROR("1010", ""),
+        STS_ERROR("1011", null),
+        OSS_FILE_NOT_FIND_ERROR("1012", null),
+        MQTT_CONNECTING_ERROR("1013", null),
+        MQTT_DIS_CONNECTING_ERROR("1014", null),
+        WEBSOCKET_SUBSCRIBE_ERROR("1015", null),
+        WEBSOCKET_NO_PERMISSION_ERROR("1016", null),
+        NOT_FOUND("1017", "暂无数据"),
+        DELETE_SUCCESS("1018", "删除成功"),
+        DOWNLOAD_URL_404("1019", "下载地址错误"),
+        DOWNLOAD_NOT_PERMISSION("1020", "请先同意文件管理权限"),
+        DOWNLOADING_ERROR("1021", "检测到当前文件已有下载任务正在进行中");
 
-    /**
-     * 其他问题，即服务器返回的请求失败
-     */
-    public static final String REQUEST_ERROR = "1006";
+        private final String code;
+        private final String msg;
 
-    /**
-     * 登录超时
-     */
-    public static final String TOKEN_ERROR = "1007";
-    public static final String TOKEN_ERROR_MSG = "登录超时";
+        ErrorType(String code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
 
-    /**
-     * DJI错误
-     */
-    public static final String DJI_ERROR = "1008";
-    /**
-     * 大疆媒体管理异常
-     */
-    public static final String DJI_MEDIA_ERROR = "1009";
-    /**
-     * OSS异常
-     */
-    public static final String OSS_ERROR = "1010";
-    /**
-     * STS异常
-     */
-    public static final String STS_ERROR = "1011";
-    /**
-     * OSS上传时发现图片、录像等文件不存在
-     */
-    public static final String OSS_FILE_NOT_FIND_ERROR = "1012";
-    /**
-     * MQTT连接初始化异常
-     */
-    public static final String MQTT_CONNECTING_ERROR = "1013";
-    /**
-     * MQTT断开连接异常
-     */
-    public static final String MQTT_DIS_CONNECTING_ERROR = "1014";
-    /**
-     * WebSocket订阅消息异常
-     */
-    public static final String WEBSOCKET_SUBSCRIBE_ERROR = "1015";
-    /**
-     * WebSocket未授权，即token过期
-     */
-    public static final String WEBSOCKET_NO_PERMISSION_ERROR = "1016";
+        public String getCode() {
+            return code;
+        }
 
-    /**
-     * 暂无数据
-     */
-    public static final String NOT_FOUND = "1017";
-    public static final String NOT_FOUND_MSG = "暂无数据";
-    /**
-     * 删除成功
-     */
-    public static final String DELETE_SUCCESS = "1018";
-    public static final String DELETE_SUCCESS_MSG = "删除成功";
-
-    /**
-     * 下载地址错误
-     */
-    public static final String DOWNLOAD_URL_404 = "1019";
-    public static final String DOWNLOAD_URL_404_MSG = "下载地址错误";
-
-    /**
-     * 保存暂无权限
-     */
-    public static final String DOWNLOAD_NOT_PERMISSION = "1020";
-    public static final String DOWNLOAD_NOT_PERMISSION_MSG = "请先同意文件管理权限";
-
-    /**
-     * 当前url已存在下载任务
-     */
-    public static final String DOWNLOADING_ERROR = "1021";
-    public static final String DOWNLOADING_ERROR_MSG = "检测到当前文件已有下载任务正在进行中";
+        public String getMsg() {
+            return msg;
+        }
+    }
 
     private final String errorMsg;
-    private String errorCode;
+    private final String errorCode;
 
     public String getErrorMsg() {
         return errorMsg;
@@ -122,9 +59,11 @@ public class BaseException extends RuntimeException {
         return errorCode;
     }
 
+    // 基本构造方法
     public BaseException(String errorMsg, Throwable cause) {
         super(errorMsg, cause);
         this.errorMsg = errorMsg;
+        this.errorCode = ErrorType.OTHER.getCode();
     }
 
     public BaseException(String message, Throwable cause, String errorCode) {
@@ -134,8 +73,47 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(String message, String errorCode) {
+        super(message);
         this.errorCode = errorCode;
         this.errorMsg = message;
+    }
+
+    // 使用 ErrorType 构造
+    public BaseException(ErrorType errorType) {
+        this(errorType.getMsg(), errorType.getCode());
+    }
+
+    public BaseException(ErrorType errorType, Throwable cause) {
+        this(errorType.getMsg(), cause, errorType.getCode());
+    }
+
+    public BaseException(ErrorType errorType, String customMsg) {
+        this(customMsg, errorType.getCode());
+    }
+
+    public BaseException(ErrorType errorType, String customMsg, Throwable cause) {
+        this(customMsg, cause, errorType.getCode());
+    }
+
+    // 快速创建方法
+    public static BaseException asParseError(Throwable cause) {
+        return new BaseException(ErrorType.PARSE_ERROR, cause);
+    }
+
+    public static BaseException asNetworkError(Throwable cause) {
+        return new BaseException(ErrorType.BAD_NETWORK, cause);
+    }
+
+    public static BaseException asConnectError(Throwable cause) {
+        return new BaseException(ErrorType.CONNECT_ERROR, cause);
+    }
+
+    public static BaseException asTimeoutError(Throwable cause) {
+        return new BaseException(ErrorType.CONNECT_TIMEOUT, cause);
+    }
+
+    public static BaseException asTokenError() {
+        return new BaseException(ErrorType.TOKEN_ERROR);
     }
 
     @NonNull

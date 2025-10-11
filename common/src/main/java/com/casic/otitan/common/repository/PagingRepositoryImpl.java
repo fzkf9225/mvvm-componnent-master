@@ -64,7 +64,7 @@ public abstract class PagingRepositoryImpl<API extends BaseApiService,T, BV exte
 
     public void onError(Exception exception) {
         if (baseView != null) {
-            baseView.onErrorCode(new BaseResponse(BaseException.OTHER, exception.getMessage()));
+            baseView.onErrorCode(new BaseResponse(BaseException.ErrorType.OTHER.getCode(), exception.getMessage()));
         }
     }
 

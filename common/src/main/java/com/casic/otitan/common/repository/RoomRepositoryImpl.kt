@@ -133,10 +133,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(
-                        BaseException.DELETE_SUCCESS_MSG,
-                        BaseException.DELETE_SUCCESS
-                    )
+                    throw BaseException(BaseException.ErrorType.DELETE_SUCCESS)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -173,10 +170,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(
-                        BaseException.DELETE_SUCCESS_MSG,
-                        BaseException.DELETE_SUCCESS
-                    )
+                    throw BaseException(BaseException.ErrorType.DELETE_SUCCESS)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -213,10 +207,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(
-                        BaseException.DELETE_SUCCESS_MSG,
-                        BaseException.DELETE_SUCCESS
-                    )
+                    throw BaseException(BaseException.ErrorType.DELETE_SUCCESS)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -250,7 +241,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.NOT_FOUND_MSG, BaseException.NOT_FOUND)
+                    throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -395,7 +386,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.NOT_FOUND_MSG, BaseException.NOT_FOUND)
+                    throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -437,7 +428,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.NOT_FOUND_MSG, BaseException.NOT_FOUND)
+                    throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -477,7 +468,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.NOT_FOUND_MSG, BaseException.NOT_FOUND)
+                    throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {
@@ -569,7 +560,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
             .defaultIfEmpty(emptyList())
             .doOnNext {
                 if (it.isEmpty()) {
-                    throw BaseException(BaseException.NOT_FOUND_MSG, BaseException.NOT_FOUND)
+                    throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 //下面这行代码是因为room返回flowable的时候他不执行doFinally
                 if (!showLoading) {

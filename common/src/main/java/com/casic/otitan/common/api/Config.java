@@ -19,6 +19,10 @@ import com.casic.otitan.common.utils.log.LogcatHelper;
 public class Config {
     private Application application;
     private ErrorService errorService;
+    /**
+     * 网络请求是否输出json格式
+     */
+    private boolean responseConverterJson = false;
 
     private Config() {
     }
@@ -64,4 +68,11 @@ public class Config {
         }
     }
 
+    public boolean isResponseConverterJson() {
+        return responseConverterJson;
+    }
+
+    public void setResponseConverterJson(boolean responseConverterJson) {
+        this.responseConverterJson = responseConverterJson;
+    }
 }

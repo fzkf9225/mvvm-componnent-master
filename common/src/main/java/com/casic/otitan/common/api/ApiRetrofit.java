@@ -20,6 +20,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+
 import com.casic.otitan.common.base.BaseConverterFactory;
 import com.casic.otitan.common.impl.ApiServiceWrapper;
 import com.casic.otitan.common.inter.ApiRetrofitService;
@@ -29,6 +30,7 @@ import com.casic.otitan.common.utils.common.DateUtil;
 import com.casic.otitan.common.utils.common.PropertiesUtil;
 import com.casic.otitan.common.utils.encode.MD5Util;
 import com.casic.otitan.common.utils.log.LogUtil;
+
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
@@ -67,7 +69,7 @@ public class ApiRetrofit {
 
         try {
             String contentType = request.header("Content-Type");
-            if (contentType == null || !contentType.contains("multipart/form-data")) {
+            if (contentType == null || !contentType.contains("multipart/form-data")|| !contentType.contains("MULTIPART/FORM-DATA")) {
                 LogUtil.show(TAG, "Request Body：" + bodyToString(request.body()));
             }
         } catch (IOException e) {
@@ -86,9 +88,17 @@ public class ApiRetrofit {
         try {
             ResponseBody responseBody = response.peekBody(1024 * 1024);
             LogUtil.show(TAG, "Response Body：" + responseBody.string());
+            if (Config.getInstance().isResponseConverterJson()) {
+                try {
+                    LogUtil.json(responseBody.string());
+                } catch (Exception e) {
+                    LogUtil.show(TAG, "Response converter json error");
+                }
+            }
         } catch (Exception e) {
             LogUtil.show(TAG, "Response parse error");
         }
+
         LogUtil.show(TAG, "--------------------Request End--------------------");
     }
 
@@ -326,7 +336,7 @@ public class ApiRetrofit {
                 headerMap.put("o-appPackage", mContext.getPackageName());
             }
 
-            if(mobileInfo){
+            if (mobileInfo) {
                 //app的ip
                 headerMap.put("o-appIp", MobileHelper.getIp(mContext));
                 //app的唯一标识，可能为null或找不到

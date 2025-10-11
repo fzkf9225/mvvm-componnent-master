@@ -31,6 +31,7 @@ import com.casic.otitan.common.api.BaseApplication;
 import com.casic.otitan.common.base.BaseException;
 import com.casic.otitan.common.utils.common.FileUtil;
 import com.casic.otitan.common.utils.log.LogUtil;
+
 /**
  * Created by fz on 2023/5/29 15:54
  * describe :对象存储
@@ -195,16 +196,16 @@ public class OSSHelper {
                 s3.setEndpoint(endPoint);
                 ContentResolver contentResolver = BaseApplication.getInstance().getContentResolver();
                 if (contentResolver == null) {
-                    throw new BaseException("文件管理器异常！", BaseException.OSS_ERROR);
+                    throw new BaseException("文件管理器异常！", BaseException.ErrorType.OSS_ERROR.getCode());
                 }
                 InputStream inputStream = contentResolver.openInputStream(uri);
 
                 Cursor cursor = contentResolver.query(uri, null, null, null, null);
                 if (cursor == null) {
-                    throw new BaseException("未查找到本地文件信息或本地文件不存在", BaseException.OSS_ERROR);
+                    throw new BaseException("未查找到本地文件信息或本地文件不存在", BaseException.ErrorType.OSS_ERROR.getCode());
                 }
                 if (!cursor.moveToFirst()) {
-                    throw new BaseException("未查找到本地文件信息或本地文件不存在", BaseException.OSS_ERROR);
+                    throw new BaseException("未查找到本地文件信息或本地文件不存在", BaseException.ErrorType.OSS_ERROR.getCode());
                 }
                 size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
                 fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));

@@ -64,18 +64,18 @@ public class DownloadManger {
      */
     public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload) {
         if (TextUtils.isEmpty(fileUrl)) {
-            return Observable.error(new BaseException(BaseException.DOWNLOAD_URL_404_MSG, BaseException.DOWNLOAD_URL_404));
+            return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOAD_URL_404));
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             if (PermissionsChecker.getInstance().lacksPermissions(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 //申请WRITE_EXTERNAL_STORAGE权限
                 ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         0x01);
-                return Observable.error(new BaseException(BaseException.DOWNLOAD_NOT_PERMISSION_MSG, BaseException.DOWNLOAD_NOT_PERMISSION));
+                return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOAD_NOT_PERMISSION));
             }
         }
         if (downloadMap.contains(fileUrl) && verifyRepeatDownload) {
-            return Observable.error(new BaseException(BaseException.DOWNLOADING_ERROR_MSG, BaseException.DOWNLOADING_ERROR));
+            return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOADING_ERROR));
         }
         downloadMap.add(fileUrl);
         if (TextUtils.isEmpty(saveBasePath)) {

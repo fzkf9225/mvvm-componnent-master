@@ -32,10 +32,14 @@ public abstract class BaseViewPagerActivity<VM extends BaseViewModel, VDB extend
         mBaseViewPager = binding.getRoot().findViewById(R.id.viewpager);
         tabLayout = binding.getRoot().findViewById(R.id.tabLayout);
         llTab = binding.getRoot().findViewById(R.id.ll_tab);
-        adapter = new BaseViewPagerAdapter(getSupportFragmentManager(), this.getLifecycle(), getPagers());
+        adapter = createAdapter();
         mBaseViewPager.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, mBaseViewPager, tabConfigurationStrategy).attach();
         mBaseViewPager.setCurrentItem(0, true);
+    }
+
+    protected BaseViewPagerAdapter createAdapter() {
+        return new BaseViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), getPagers());
     }
 
     public BaseViewPagerAdapter getAdapter() {

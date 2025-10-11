@@ -124,7 +124,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             LogUtil.show(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
             e.printStackTrace();
             setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
-            showToast(BaseException.PARSE_ERROR_MSG);
+            showToast(BaseException.ErrorType.PARSE_ERROR.getMsg());
         }
     }
 

@@ -2,6 +2,8 @@ package com.casic.otitan.common.api;
 
 import android.text.TextUtils;
 
+import com.casic.otitan.common.impl.DefaultExceptionConverter;
+import com.casic.otitan.common.inter.ExceptionConverter;
 import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
@@ -21,77 +23,91 @@ import retrofit2.HttpException;
 
 /**
  * Created by fz on 2023/11/30 15:52
- * describe :
+ * describe : 统一错误处理消费者
  */
 public class ErrorConsumer implements Consumer<Throwable> {
     private final BaseView baseView;
     private ApiRequestOptions apiRequestOptions;
+    private final ExceptionConverter exceptionConverter;
 
     public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions) {
+        this(baseView, apiRequestOptions, new DefaultExceptionConverter());
+    }
+
+    public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions, ExceptionConverter converter) {
         this.baseView = baseView;
-        this.apiRequestOptions = apiRequestOptions;
-        if (this.apiRequestOptions == null) {
-            this.apiRequestOptions = ApiRequestOptions.getDefault();
+        this.apiRequestOptions = apiRequestOptions != null ? apiRequestOptions : ApiRequestOptions.getDefault();
+        this.exceptionConverter = converter != null ? converter : new DefaultExceptionConverter();
+    }
+    @Override
+    public void accept(Throwable e) throws Throwable {
+        LogUtil.show(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
+
+        // 隐藏加载框
+        hideLoadingIfNeeded();
+        BaseException be = (e instanceof BaseException) ? (BaseException) e : exceptionConverter.convert(e);
+
+        LogUtil.show(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + be.getErrorMsg());
+
+        // 处理异常回调
+        handleException(be);
+    }
+
+    /**
+     * 处理 BaseException
+     */
+    private void handleException(BaseException be) {
+        if (baseView == null) {
+            return;
+        }
+
+        // 回调错误码
+        baseView.onErrorCode(createErrorResponse(be));
+
+        // 显示Toast提示
+        showToastIfNeeded(be);
+    }
+
+    /**
+     * 创建错误响应
+     */
+    private BaseResponse<?> createErrorResponse(BaseException be) {
+        return new BaseResponse<>(
+                be.getErrorCode(),
+                be.getErrorMsg(),
+                apiRequestOptions == null ? null : apiRequestOptions.getRequestParams()
+        );
+    }
+
+    /**
+     * 显示Toast提示
+     */
+    private void showToastIfNeeded(BaseException be) {
+        if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
+            String toastMsg = getToastMessage(be);
+            if (!TextUtils.isEmpty(toastMsg)) {
+                baseView.showToast(toastMsg);
+            }
         }
     }
 
-    @Override
-    public void accept(Throwable e) throws Throwable {
-        LogUtil.show(ApiRetrofit.TAG, "BaseViewModel|系统异常: " + e);
+    /**
+     * 获取Toast显示消息
+     */
+    private String getToastMessage(BaseException be) {
+        if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
+            return apiRequestOptions.getToastMsg();
+        } else {
+            return be.getErrorMsg();
+        }
+    }
 
+    /**
+     * 隐藏加载框
+     */
+    private void hideLoadingIfNeeded() {
         if (baseView != null && apiRequestOptions != null && apiRequestOptions.isShowDialog()) {
             baseView.hideLoading();
-        }
-        BaseException be;
-
-        if (e != null) {
-            if (e instanceof BaseException) {
-                be = (BaseException) e;
-                //回调到view层 处理 或者根据项目情况处理
-                if (baseView != null) {
-                    if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
-                        if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
-                            baseView.showToast(apiRequestOptions.getToastMsg());
-                        } else {
-                            baseView.showToast(be.getErrorMsg());
-                        }
-                    }
-                    baseView.onErrorCode(new BaseResponse<>(be.getErrorCode(), be.getErrorMsg(), apiRequestOptions == null ? null : apiRequestOptions.getRequestParams()));
-                    return;
-                }
-            } else {
-                if (e instanceof HttpException) {
-                    //   HTTP错误
-                    be = new BaseException(BaseException.BAD_NETWORK_MSG, e, BaseException.BAD_NETWORK);
-                } else if (e instanceof ConnectException
-                        || e instanceof UnknownHostException) {
-                    //   连接错误
-                    be = new BaseException(BaseException.CONNECT_ERROR_MSG, e, BaseException.CONNECT_ERROR);
-                } else if (e instanceof InterruptedIOException) {
-                    //  连接超时
-                    be = new BaseException(BaseException.CONNECT_TIMEOUT_MSG, e, BaseException.CONNECT_TIMEOUT);
-                } else if (e instanceof JsonParseException
-                        || e instanceof JSONException
-                        || e instanceof ParseException) {
-                    //  解析错误
-                    be = new BaseException(BaseException.PARSE_ERROR_MSG, e, BaseException.PARSE_ERROR);
-                } else {
-                    be = new BaseException(e.getMessage(), e, BaseException.OTHER);
-                }
-            }
-        } else {
-            be = new BaseException(BaseException.OTHER_MSG, BaseException.OTHER);
-        }
-        LogUtil.show(ApiRetrofit.TAG, "BaseViewModel|异常消息: " + be.getErrorMsg());
-        if (baseView != null) {
-            baseView.onErrorCode(new BaseResponse<>(be.getErrorCode(), be.getErrorMsg(), apiRequestOptions == null ? null : apiRequestOptions.getRequestParams()));
-            if (apiRequestOptions.isShowToast()) {
-                if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
-                    baseView.showToast(apiRequestOptions.getToastMsg());
-                } else {
-                    baseView.showToast(be.getErrorMsg());
-                }
-            }
         }
     }
 }
