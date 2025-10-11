@@ -1,5 +1,17 @@
 # mvvm-componnent-master
 
+# 工程介绍
+    - annotation：注解框架，主要用于数据校验的注解
+    - app：框架case示例
+    - common：共同模块，最基础的封装
+    - commonmedia：摄像头、相册、媒体相关封装
+    - commonui：UI组件封装，主要为表单组件
+    - googlegps：GPS工具类
+    - mqttcomponent：MQTT最基础的封装示例
+    - userapi：示例module的对外接口，模块之间调用
+    - usercomponent：示例module，也就是项目中模块化示例
+    - wscomponent：WebSocket最基础的封装示例
+
 全面使用``ksp``
 
 ## MVVM架构示例代码，重构版本
@@ -327,12 +339,19 @@ plugins {
 调用初始化方法
 
 ```
-    Config.init(this);
+    Config.getInstance().init(this);
+```
+
+### CommonUI中附件组件配置统一的上传服务
+```
+        MediaUploadConfig.getInstance()
+                .setFileApiService(fileApiService)
+                .setUploadUrl("minioc/upload");
 ```
 
 ### 新建ErrorServiceImpl实现ErrorService接口
 
-    里面有很多封装好的api需要实现，当然你也可以不用，不建议直接修改common组件，因为组件化讲的就是解耦，你什么都在common离实现那耦合性必然就会很高，当然也要新建ErrorServiceModule，这是hilt用法，具体你们自己百度了
+里面有很多封装好的api需要实现，当然你也可以不用，不建议直接修改common组件，因为组件化讲的就是解耦，你什么都在common离实现那耦合性必然就会很高，当然也要新建ErrorServiceModule，这是hilt用法，具体你们自己百度了
 
 ### 强调一下
 
@@ -340,8 +359,8 @@ plugins {
 //每个用到的模块都要加这两个，不能使用api
 
 ``` 
-    implementation "com.google.dagger:hilt-android:2.46.1"
-    annotationProcessor 'com.google.dagger:hilt-android-compiler:2.46.1'
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
 ```
 
 ### 项目中自动为您集成了今日头条的适配方案，因此需要你在配置文件中新增属性
@@ -390,13 +409,392 @@ plugins {
 初始化及获取其回调信息
 
 ```
+//传统初始化方式
     mediaHelper = new MediaBuilder(this, this)
         .setImageMaxSelectedCount(1)
         .builder();
     mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             
     });
+//hilt初始化方式，activity中
+    @Inject
+    @MediaModule.ActivityMediaHelper
+    MediaHelper mediaHelper;
+    
+//hilt初始化方式，fragment中
+    @Inject
+    @MediaModule.FragmentMediaHelper
+    MediaHelper mediaHelper;
 ```
+
+#### 欢迎页隐私权限dialog
+```
+        new ProtectionGuidelinesDialog(this)
+                .setCanOutSide(false)
+                .setPositiveBackgroundColor(ContextCompat.getColor(this, com.casic.otitan.common.R.color.theme_green))
+                .setSpannableContent(getSpannableContent())
+                .setOnNegativeClickListener(dialog -> {
+
+                    showToast("拒绝可能会导致部分功能使用异常");
+                    keepOnScreenCondition.compareAndSet(false, true);
+                    startCountDown();
+                })
+                .setOnPositiveClickListener(dialog -> {
+                    UserAccountHelper.setAgreement(true);
+                    if (!permissionManager.lacksPermissions(permissions())) {
+                        keepOnScreenCondition.compareAndSet(false, true);
+                        startCountDown();
+                    } else {
+                        permissionManager.request(permissions());
+                    }
+                })
+                .builder()
+                .show();
+```
+### 自定义注解使用
+```java
+import android.net.Uri;
+
+import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.TypeConverters;
+
+import java.util.List;
+
+import com.casic.otitan.annotation.annotation.VerifyEntity;
+import com.casic.otitan.annotation.annotation.VerifyField;
+import com.casic.otitan.annotation.annotation.VerifyParams;
+import com.casic.otitan.annotation.annotation.VerifySort;
+import com.casic.otitan.annotation.enums.VerifyType;
+import com.casic.otitan.annotation.inter.VerifyGroup;
+import com.casic.otitan.common.bean.BaseDaoBean;
+import com.casic.otitan.common.converter.RoomListStringConverter;
+
+/**
+ * Created by fz on 2023/9/5 18:32
+ * describe :
+ */
+@Entity
+@VerifyEntity(sort = true)
+public class Person extends BaseDaoBean {
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "姓名为空！"),
+            @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minLength = 2, maxLength = 10, errorMsg = "姓名输入错误！"),
+            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "您只能填张三！", equalStr = "张三")
+    })
+    @VerifySort(1)
+    @ColumnInfo
+    private String name;
+
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请选择性别！"),
+    })
+    @VerifySort(2)
+    @ColumnInfo
+    private String sex;
+
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请选择生日！"),
+    })
+    @VerifySort(3)
+    @ColumnInfo
+    private String birthday;
+
+    @Ignore
+    private String educationalExperienceDate;
+
+    @Ignore
+    private String schoolStartTime;
+
+    @Ignore
+    private String classStartTime;
+
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
+            @VerifyParams(type = VerifyType.MOBILE_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
+    })
+    @VerifySort(4)
+    @ColumnInfo
+    private String mobile;
+
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
+            @VerifyParams(type = VerifyType.TEL_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
+    })
+    @VerifySort(5)
+    @ColumnInfo
+    private String tel;
+
+    @VerifySort(6)
+    @VerifyParams(type = VerifyType.NUMBER_RANGE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
+    @ColumnInfo
+    private String age;
+
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "体重为空"),
+            @VerifyParams(type = VerifyType.NUMBER_00,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "体重输入格式不正确"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "你该减肥了！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
+    })
+    @VerifySort(7)
+    @ColumnInfo
+    private String weight;
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "身高为空"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "姚明都没你高！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
+
+    })
+    @VerifySort(8)
+    @ColumnInfo
+    private String height;
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Create.class}, errorMsg = "邮箱地址为空！"),
+            @VerifyParams(type = VerifyType.EMAIL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "邮箱地址错误！")
+    })
+    @VerifySort(9)
+    @ColumnInfo
+    private String email;
+
+    @VerifySort(10)
+    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "您填填写您的爱好！")
+    @ColumnInfo
+    @TypeConverters({RoomListStringConverter.class})
+    private List<String> hobby;
+
+    //    @VerifyFieldSort(11)
+//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
+    @Ignore
+    private List<Uri> imageList;
+
+    //    @VerifyFieldSort(12)
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
+    @Ignore
+    public Family family;
+
+    //    @VerifyFieldSort(13)
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭集合信息！")
+    @ColumnInfo
+    @Ignore
+    public List<Family> familyList;
+
+
+    public Person() {
+    }
+
+    @Ignore
+    public Person(String name, String birthday, String mobile, String tel, String age, String weight, String height, String email, List<String> hobby) {
+        this.name = name;
+        this.birthday = birthday;
+        this.mobile = mobile;
+        this.tel = tel;
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+        this.email = email;
+        this.hobby = hobby;
+    }
+
+    @Bindable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.name);
+    }
+
+    @Bindable
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.birthday);
+    }
+
+    @Bindable
+    public String getEducationalExperienceDate() {
+        return educationalExperienceDate;
+    }
+
+    public void setEducationalExperienceDate(String educationalExperienceDate) {
+        this.educationalExperienceDate = educationalExperienceDate;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.educationalExperienceDate);
+    }
+
+    @Bindable
+    public String getSchoolStartTime() {
+        return schoolStartTime;
+    }
+
+    public void setSchoolStartTime(String schoolStartTime) {
+        this.schoolStartTime = schoolStartTime;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.schoolStartTime);
+    }
+
+    @Bindable
+    public String getClassStartTime() {
+        return classStartTime;
+    }
+
+    public void setClassStartTime(String classStartTime) {
+        this.classStartTime = classStartTime;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.classStartTime);
+    }
+
+    @Bindable
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.age);
+    }
+
+    @Bindable
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.weight);
+    }
+
+    @Bindable
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.email);
+    }
+
+    public List<String> getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(List<String> hobby) {
+        this.hobby = hobby;
+    }
+
+    @Bindable
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.mobile);
+    }
+
+    @Bindable
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.tel);
+    }
+
+    @Bindable
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.height);
+    }
+
+    @Bindable
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+        notifyPropertyChanged(com.casic.otitan.demo.BR.sex);
+    }
+
+
+    public List<Uri> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<Uri> imageList) {
+        this.imageList = imageList;
+    }
+
+    public Family getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    public List<Family> getFamilyList() {
+        return familyList;
+    }
+
+    public void setFamilyList(List<Family> familyList) {
+        this.familyList = familyList;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", tel='" + tel + '\'' +
+                ", age='" + age + '\'' +
+                ", weight='" + weight + '\'' +
+                ", height='" + height + '\'' +
+                ", email='" + email + '\'' +
+                ", hobby=" + hobby +
+                ", imageList=" + imageList +
+                ", family=" + family +
+                ", familyList=" + familyList +
+                '}';
+    }
+}
+```
+开始校验
+```
+            VerifyResult verifyResult = EntityValidator.validate(binding.getData());
+            showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
+            if (!verifyResult.isOk()) {
+                return;
+            }
+```
+
+#### 自定义相机
+参考示例代码`CustomCameraActivity`
+
+#### Dialog常见封装示例
+参考示例代码`DialogActivity`
+
+#### 自定义组件封装示例
+参考示例代码`WightActivity`
+
+#### 二维码能力示例
+参考示例代码`ScanQrCodeActivity`
+
+#### GPS能力示例
+参考示例代码`GoogleGPSActivity`
+
+#### 自定义表单组件
+参考示例代码`VerifyActivity`和`VerifyTopActivity`
 
 #### 断点续传下载
 
@@ -432,7 +830,10 @@ plugins {
 #### 大图预览框架
 
 ```
-     new PreviewPhotoDialog(v.getContext(), PreviewPhotoDialog.createImageInfo(stringList), getAbsoluteAdapterPosition()).show();
+    new PreviewPhotoDialog(this)
+        .createImageInfo(imageUrl)
+        .currentPosition(0)
+        .show()
 ```
 
 #### 关于一些其他的公共库
