@@ -88,7 +88,7 @@ public class ApiRetrofit {
         try {
             ResponseBody responseBody = response.peekBody(1024 * 1024);
             LogUtil.show(TAG, "Response Body：" + responseBody.string());
-            if (Config.getInstance().isResponseConverterJson()) {
+            if (Config.getInstance().isResponseBodyLogConverterJson()) {
                 try {
                     LogUtil.json(responseBody.string());
                 } catch (Exception e) {

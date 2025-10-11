@@ -22,7 +22,7 @@ public class Config {
     /**
      * 网络请求是否输出json格式
      */
-    private boolean responseConverterJson = false;
+    private boolean responseBodyLogConverterJson = false;
 
     private Config() {
     }
@@ -68,11 +68,11 @@ public class Config {
         }
     }
 
-    public boolean isResponseConverterJson() {
-        return responseConverterJson;
+    public boolean isResponseBodyLogConverterJson() {
+        return responseBodyLogConverterJson;
     }
 
-    public void setResponseConverterJson(boolean responseConverterJson) {
-        this.responseConverterJson = responseConverterJson;
+    public void setResponseBodyLogConverterJson(boolean responseBodyLogConverterJson) {
+        this.responseBodyLogConverterJson = responseBodyLogConverterJson;
     }
 }

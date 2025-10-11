@@ -30,7 +30,7 @@ public class ApplicationHelper extends BaseApplication {
         super.onCreate();
         registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
         Config.getInstance().init(this);
-        Config.getInstance().setResponsePrintJson(true);
+        Config.getInstance().setResponseBodyLogConverterJson(true);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
         }
