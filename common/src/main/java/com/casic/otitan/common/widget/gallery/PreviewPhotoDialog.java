@@ -41,7 +41,7 @@ public class PreviewPhotoDialog extends Dialog {
      */
     private List<AttachmentBean> imageInfos = new ArrayList<>();
     /**
-     * 大图预览空间
+     * 大图预览控件
      */
     private ViewPager2 viewPager;
     /**
@@ -172,7 +172,6 @@ public class PreviewPhotoDialog extends Dialog {
         return createImageInfo(Arrays.asList(image));
     }
 
-    @SuppressLint("Range")
     public PreviewPhotoDialog createUriImageInfo(Uri... uri) {
         if (uri == null) {
             return null;
@@ -195,7 +194,6 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
-    @SuppressLint("Range")
     public PreviewPhotoDialog createUriImageInfo(List<Uri> images) {
         if (images == null) {
             return null;

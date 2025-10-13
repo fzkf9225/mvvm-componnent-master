@@ -16,11 +16,11 @@ import com.casic.otitan.common.utils.common.DensityUtil;
 public class ProgressBarSetting extends BaseObservable {
     private Context context;
     private @ColorInt int bgColor;
-    private @ColorInt  int progressColor;
+    private @ColorInt int progressColor;
     private boolean showText = true;
     private int fontSize;
     private float strokeWidth;
-    private  @ColorInt int fontColor = -1;
+    private @ColorInt int fontColor = -1;
     /**
      * 数字显示的小数点位置，为0时则保留整数
      */
@@ -36,8 +36,8 @@ public class ProgressBarSetting extends BaseObservable {
 
     public ProgressBarSetting(Context context) {
         this.context = context;
-        bgColor = ContextCompat.getColor(getContext(),R.color.themeColor);
-        progressColor = ContextCompat.getColor(getContext(),R.color.theme_green);
+        bgColor = ContextCompat.getColor(getContext(), R.color.themeColor);
+        progressColor = ContextCompat.getColor(getContext(), R.color.theme_green);
         bgRadius = (float) DensityUtil.dp2px(getContext(), 5);
         fontSize = DensityUtil.sp2px(getContext(), 12);
         strokeWidth = (float) DensityUtil.sp2px(getContext(), 10);
@@ -53,7 +53,7 @@ public class ProgressBarSetting extends BaseObservable {
         this.context = context;
     }
 
-    public @ColorInt  int getBgColor() {
+    public @ColorInt int getBgColor() {
         return bgColor;
     }
 
@@ -61,7 +61,7 @@ public class ProgressBarSetting extends BaseObservable {
         this.bgColor = bgColor;
     }
 
-    public @ColorInt  int getProgressColor() {
+    public @ColorInt int getProgressColor() {
         return progressColor;
     }
 
@@ -93,7 +93,7 @@ public class ProgressBarSetting extends BaseObservable {
         this.strokeWidth = strokeWidth;
     }
 
-    public @ColorInt  int getFontColor() {
+    public @ColorInt int getFontColor() {
         return fontColor;
     }
 

@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.casic.otitan.common.R
+import com.casic.otitan.common.base.BasePagingAdapter
 import com.casic.otitan.common.base.BaseViewHolder
 import com.casic.otitan.common.bean.HomeMenuBean
 import com.casic.otitan.common.databinding.AdapterHomeMenuItemBinding
@@ -19,7 +20,7 @@ import com.casic.otitan.common.widget.customview.HomeMenuView
  * describe:工作菜单
  */
 class HomeMenuAdapter(val homeMenuView: HomeMenuView?) :
-    com.casic.otitan.common.base.BasePagingAdapter<HomeMenuBean, AdapterHomeMenuItemBinding>(
+    BasePagingAdapter<HomeMenuBean, AdapterHomeMenuItemBinding>(
         COMPARATOR
     ) {
     override fun onBindHolder(

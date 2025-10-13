@@ -13,10 +13,12 @@ import com.bumptech.glide.request.RequestOptions;
 import org.jetbrains.annotations.NotNull;
 
 import com.casic.otitan.common.R;
+import com.casic.otitan.common.api.Config;
 import com.casic.otitan.common.base.BaseRecyclerViewAdapter;
 import com.casic.otitan.common.base.BaseViewHolder;
 import com.casic.otitan.common.bean.AttachmentBean;
 import com.casic.otitan.common.databinding.AdapterImageShowItemBinding;
+import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.widget.gallery.PreviewPhotoDialog;
 
 /**
@@ -32,13 +34,15 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
 
     public ImageShowAdapter() {
         super();
+        if (Config.getInstance().getApplication() != null) {
+            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
+        }
     }
 
     @Override
     protected int getLayoutId() {
         return R.layout.adapter_image_show_item;
     }
-
 
     public void setBgColor( @ColorInt int bgColor) {
         this.bgColor = bgColor;
