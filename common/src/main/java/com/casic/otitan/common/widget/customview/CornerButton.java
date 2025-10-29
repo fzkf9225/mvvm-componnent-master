@@ -18,9 +18,9 @@ import com.casic.otitan.common.R;
  * describe：自定义圆角矩形
  */
 public class CornerButton extends AppCompatButton {
-    private int strokeColor;
-    private int circleBackColor;
-    private final GradientDrawable gradientDrawable;
+    private @ColorInt int strokeColor;
+    private @ColorInt int circleBackColor;
+    private GradientDrawable gradientDrawable;
     private float radius, strokeWidth;
 
     public CornerButton(Context context) {
@@ -49,21 +49,21 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
-    public void setStrokeColor(@ColorInt int color) {
-        this.strokeColor = color;
+    public void setStrokeColor(@ColorInt int strokeColor) {
+        this.strokeColor = strokeColor;
         gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setStrokeWidth(int width) {
-        this.strokeWidth = width;
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
         gradientDrawable.setStroke(this.strokeColor, strokeColor);
         this.setBackground(gradientDrawable);
     }
 
-    public void setStroke(@ColorInt int color, int width) {
-        this.strokeColor = color;
-        this.strokeWidth = width;
+    public void setStroke(@ColorInt int strokeColor, int strokeWidth) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
         gradientDrawable.setStroke(this.strokeColor, this.strokeColor);
         this.setBackground(gradientDrawable);
     }
@@ -74,8 +74,8 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
-    public void setBackColor(ColorStateList color) {
-        gradientDrawable.setColor(color);
+    public void setBackColor(ColorStateList bgColor) {
+        gradientDrawable.setColor(bgColor);
         this.setBackground(gradientDrawable);
     }
 
@@ -85,11 +85,26 @@ public class CornerButton extends AppCompatButton {
         this.setBackground(gradientDrawable);
     }
 
-    public void setBgColorAndRadius(int color, float radius) {
+    public void setBgColorAndRadius(@ColorInt int bgColor, float radius) {
         this.radius = radius;
-        this.circleBackColor = color;
+        this.circleBackColor = bgColor;
         gradientDrawable.setColor(this.circleBackColor);
         gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setButtonStyle(@ColorInt int strokeColor, int strokeWidth, @ColorInt int bgColor, float radius) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.radius = radius;
+        this.circleBackColor = bgColor;
+        gradientDrawable.setColor(this.circleBackColor);
+        gradientDrawable.setCornerRadius(this.radius);
+        this.setBackground(gradientDrawable);
+    }
+
+    public void setGradientDrawable(GradientDrawable gradientDrawable) {
+        this.gradientDrawable = gradientDrawable;
         this.setBackground(gradientDrawable);
     }
 }

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +17,10 @@ import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okio.BufferedSource;
+
 import com.casic.otitan.common.api.BaseApplication;
 import com.casic.otitan.common.utils.common.FileUtil;
+import com.casic.otitan.common.utils.download.listener.DownloadListener;
 import com.casic.otitan.common.utils.download.util.DownloadNotificationUtil;
 
 /**
@@ -32,13 +35,25 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
     private final String fileUrl;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
+    private final DownloadListener downloadListener;
+
     public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath) {
+        this(interceptor, fileUrl, tempFile, saveBasePath, null);
+    }
+
+    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, DownloadListener downloadListener) {
         this.tempFile = tempFile;
         this.interceptor = interceptor;
         this.saveBasePath = saveBasePath;
         this.fileUrl = fileUrl;
+        this.downloadListener = downloadListener;
         downloadNotificationUtil = new DownloadNotificationUtil(BaseApplication.getInstance());
-        mainHandler.post(() -> downloadNotificationUtil.showNotification(fileUrl.hashCode()));
+        mainHandler.post(() -> {
+            downloadNotificationUtil.showNotification(fileUrl.hashCode());
+            if (downloadListener != null) {
+                downloadListener.onStart();
+            }
+        });
     }
 
     @Override
@@ -46,7 +61,7 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
         try (BufferedSource source = interceptor.getResponseBody().source()) {
             long totalByte = interceptor.getResponseBody().contentLength();
             long downloadByte = 0;
-            if (!tempFile.getParentFile().exists()) {
+            if (!Objects.requireNonNull(tempFile.getParentFile()).exists()) {
                 boolean mkdir = tempFile.getParentFile().mkdirs();
             }
 
@@ -64,8 +79,13 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
                 downloadByte += len;
                 int progress = (int) ((downloadByte * 100) / totalByte);
 
-                mainHandler.post(() -> downloadNotificationUtil.updateNotification(fileUrl.hashCode(),
-                        progress, FileUtil.getFileName(fileUrl)));
+                mainHandler.post(() -> {
+                    downloadNotificationUtil.updateNotification(fileUrl.hashCode(),
+                            progress, FileUtil.getFileName(fileUrl));
+                    if (downloadListener != null) {
+                        downloadListener.onProgress(progress);
+                    }
+                });
             }
             randomAccessFile.close();
 
@@ -82,15 +102,30 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
             boolean renameSuccess = tempFile.renameTo(newFile);
             mainHandler.post(() -> downloadNotificationUtil.cancelNotification(fileUrl.hashCode()));
             if (renameSuccess) {
-                mainHandler.post(() -> Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + newFile.getAbsolutePath(), Toast.LENGTH_SHORT).show());
+                mainHandler.post(() -> {
+                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + newFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    if (downloadListener != null) {
+                        downloadListener.onFinish(newFile);
+                    }
+                });
                 emitter.onNext(newFile);
             } else {
-                mainHandler.post(() -> Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + tempFile.getAbsolutePath(), Toast.LENGTH_SHORT).show());
+                mainHandler.post(() -> {
+                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + tempFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    if (downloadListener != null) {
+                        downloadListener.onFinish(tempFile);
+                    }
+                });
                 emitter.onNext(tempFile);
             }
             emitter.onComplete();
         } catch (IOException e) {
-            mainHandler.post(() -> downloadNotificationUtil.cancelNotification(fileUrl.hashCode()));
+            mainHandler.post(() -> {
+                downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+                if (downloadListener != null) {
+                    downloadListener.onError(e);
+                }
+            });
             emitter.onError(e);
             emitter.onComplete();
         }

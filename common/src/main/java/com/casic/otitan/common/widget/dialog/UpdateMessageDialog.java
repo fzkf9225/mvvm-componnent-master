@@ -8,16 +8,20 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.UpdateDialogBinding;
+import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.utils.network.NetworkStateUtil;
 
 
@@ -27,16 +31,86 @@ import com.casic.otitan.common.utils.network.NetworkStateUtil;
  */
 public class UpdateMessageDialog extends Dialog implements View.OnClickListener {
     private Context mContext;
+    /**
+     * 更新内容和版本好
+     */
     private String updateMsgString, versionName;
+    /**
+     * 按钮点击监听
+     */
     private OnUpdateListener onUpdateListener;
+    /**
+     * 弹框是否不可取消
+     */
     private boolean canCancel = false;
+    /**
+     * 默认按钮文字
+     */
     private final String DEFAULT_BUTTON_TEXT = "更新";
+    /**
+     * 按钮文字
+     */
     private String buttonText = DEFAULT_BUTTON_TEXT;
+    /**
+     * 按钮样式，这个和下面的样式互斥
+     */
     private Drawable drawable;
+    /**
+     * 按钮描边，这个和上面的样式互斥
+     */
+    private @ColorInt int strokeColor;
+    /**
+     * 按钮描边宽度，默认为0
+     */
+    private int strokeWidth;
+    /**
+     * 按钮的背景颜色
+     */
+    private @ColorInt int bgColor;
+    /**
+     * 按钮文字颜色
+     */
+    private @ColorInt int buttonTextColor;
+    /**
+     * dialog标题文字颜色
+     */
+    private @ColorInt int titleColor;
+    /**
+     * 更新内容文字颜色
+     */
+    private @ColorInt int updateMsgTextColor;
+    /**
+     * 标题文字大小
+     */
+    private float titleTextSize;
+    /**
+     * 更新内容文字大小
+     */
+    private float updateMsgTextSize;
+    /**
+     * 按钮文字大小
+     */
+    private float buttonTextSize;
+    /**
+     * 按钮圆角半径
+     */
+    private float radius;
+    private UpdateDialogBinding binding;
 
     public UpdateMessageDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
         this.mContext = context;
+        buttonTextColor = ContextCompat.getColor(context, R.color.white);
+        titleColor = ContextCompat.getColor(context, R.color.autoColor);
+        updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
+        bgColor = ContextCompat.getColor(context, R.color.themeColor);
+        strokeColor = ContextCompat.getColor(context, R.color.themeColor);
+
+        strokeWidth = 0;
+        radius = context.getResources().getDimension(R.dimen.radius_l);
+        titleTextSize = context.getResources().getDimension(R.dimen.font_size_xl);
+        updateMsgTextSize = context.getResources().getDimension(R.dimen.font_size_l);
+        buttonTextSize = context.getResources().getDimension(R.dimen.font_size_xl);
     }
 
     public UpdateMessageDialog(@NonNull Context context, int themeResId) {
@@ -68,13 +142,67 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
         return this;
     }
 
+    public UpdateMessageDialog setStrokeColor(int strokeColor) {
+        this.strokeColor = strokeColor;
+        return this;
+    }
+
+    public UpdateMessageDialog setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
+        return this;
+    }
+
+    public UpdateMessageDialog setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+        return this;
+    }
+
+    public UpdateMessageDialog setButtonTextColor(int buttonTextColor) {
+        this.buttonTextColor = buttonTextColor;
+        return this;
+    }
+
+    public UpdateMessageDialog setRadius(float radius) {
+        this.radius = radius;
+        return this;
+    }
+
+    public UpdateMessageDialog setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
+        return this;
+    }
+
+    public UpdateMessageDialog setUpdateMsgTextColor(int updateMsgTextColor) {
+        this.updateMsgTextColor = updateMsgTextColor;
+        return this;
+    }
+
+    public UpdateMessageDialog setTitleTextSize(float titleTextSize) {
+        this.titleTextSize = titleTextSize;
+        return this;
+    }
+
+    public UpdateMessageDialog setUpdateMsgTextSize(float updateMsgTextSize) {
+        this.updateMsgTextSize = updateMsgTextSize;
+        return this;
+    }
+
+    public UpdateMessageDialog setButtonTextSize(float buttonTextSize) {
+        this.buttonTextSize = buttonTextSize;
+        return this;
+    }
+
     public UpdateMessageDialog builder() {
         initView();
         return this;
     }
 
+    public UpdateDialogBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
-        UpdateDialogBinding binding = UpdateDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = UpdateDialogBinding.inflate(getLayoutInflater(), null, false);
 
         SpannableString spannableString = new SpannableString(TextUtils.isEmpty(updateMsgString) ? "暂无更新内容" : updateMsgString);
 
@@ -92,20 +220,34 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
             }
             stringBuilder.append(versionName);
         }
+
         binding.updateTitle.setText(stringBuilder.toString());
+        binding.updateTitle.setTextColor(titleColor);
+        binding.updateTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,titleTextSize);
+
+        binding.updateMsg.setTextColor(updateMsgTextColor);
+        binding.updateMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX,updateMsgTextSize);
+
         binding.updateBtn.setText(TextUtils.isEmpty(buttonText) ? DEFAULT_BUTTON_TEXT : buttonText);
+        binding.updateBtn.setTextColor(buttonTextColor);
+        binding.updateBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX,buttonTextSize);
+
         if (drawable != null) {
             binding.updateBtn.setBackground(drawable);
+        } else {
+            binding.updateBtn.setButtonStyle(strokeColor, strokeWidth, bgColor, radius);
         }
 
         binding.updateBtn.setOnClickListener(this);
-        setContentView(binding.getRoot());
         setCancelable(canCancel);
+        setCanceledOnTouchOutside(canCancel);
+
+        setContentView(binding.getRoot());
+
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;
         }
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();

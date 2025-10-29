@@ -1,9 +1,10 @@
 package com.casic.otitan.common.utils.download.core;
 
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
-import io.reactivex.rxjava3.annotations.NonNull;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Response;
@@ -29,6 +30,7 @@ public class DownloadInterceptor implements Interceptor {
     public DownloadInterceptor() {
     }
 
+    @NonNull
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());

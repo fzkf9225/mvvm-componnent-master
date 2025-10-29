@@ -11,15 +11,18 @@ import androidx.core.app.ActivityCompat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import com.casic.otitan.common.base.BaseException;
 import com.casic.otitan.common.utils.common.FileUtil;
 import com.casic.otitan.common.utils.download.core.DownloadRetrofitFactory;
+import com.casic.otitan.common.utils.download.listener.DownloadListener;
 import com.casic.otitan.common.utils.permission.PermissionsChecker;
 
 
@@ -61,8 +64,9 @@ public class DownloadManger {
      * @param fileUrl              下载文件路径
      * @param saveBasePath         保存文件路径默认文件路径为RxNet.PATH,
      * @param verifyRepeatDownload 是否验证重复下载
+     * @param downloadListener 下载监听
      */
-    public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload) {
+    public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener) {
         if (TextUtils.isEmpty(fileUrl)) {
             return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOAD_URL_404));
         }
@@ -82,11 +86,23 @@ public class DownloadManger {
             saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
                     File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator;
         }
-        return DownloadRetrofitFactory.enqueue(fileUrl, saveBasePath)
+        return DownloadRetrofitFactory.enqueue(fileUrl, saveBasePath, headers, downloadListener)
                 .map(file -> {
                     downloadMap.remove(fileUrl);
                     return file;
                 });
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload, DownloadListener downloadListener) {
+        return download(mContext, fileUrl, saveBasePath, verifyRepeatDownload, null, downloadListener);
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload, Map<String, String> headers) {
+        return download(mContext, fileUrl, saveBasePath, verifyRepeatDownload, headers, null);
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, String saveBasePath, boolean verifyRepeatDownload) {
+        return download(mContext, fileUrl, saveBasePath, verifyRepeatDownload, null, null);
     }
 
     public Observable<File> download(Activity mContext, String fileUrl) {
@@ -95,10 +111,34 @@ public class DownloadManger {
                         File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, false);
     }
 
+    public Observable<File> download(Activity mContext, String fileUrl, DownloadListener downloadListener) {
+        return download(mContext, fileUrl,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, false, downloadListener);
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, Map<String, String> headers) {
+        return download(mContext, fileUrl,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, false, headers);
+    }
+
     public Observable<File> download(Activity mContext, String fileUrl, boolean verifyRepeatDownload) {
         return download(mContext, fileUrl,
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
                         File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, verifyRepeatDownload);
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, boolean verifyRepeatDownload, DownloadListener downloadListener) {
+        return download(mContext, fileUrl,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, verifyRepeatDownload, downloadListener);
+    }
+
+    public Observable<File> download(Activity mContext, String fileUrl, boolean verifyRepeatDownload, Map<String, String> headers) {
+        return download(mContext, fileUrl,
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, verifyRepeatDownload, headers);
     }
 
     /**
@@ -108,15 +148,23 @@ public class DownloadManger {
         return download(mContext, urlString, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
                 File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator);
     }
+    public Single<List<File>> download(Activity mContext, List<String> urlString,Map<String, String> headers) {
+        return download(mContext, urlString, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator,headers);
+    }
 
     /**
      * RxJava方式下载附件，需要自己判断权限
      */
     public Single<List<File>> download(Activity mContext, List<String> urlString, boolean verifyRepeatDownload) {
         return download(mContext, urlString, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, false);
+                File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, verifyRepeatDownload);
     }
 
+    public Single<List<File>> download(Activity mContext, List<String> urlString, boolean verifyRepeatDownload,Map<String, String> headers) {
+        return download(mContext, urlString, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
+                File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator, verifyRepeatDownload,headers);
+    }
     /**
      * RxJava方式下载附件，需要自己判断权限
      */
@@ -124,13 +172,27 @@ public class DownloadManger {
         return download(mContext, urlString, saveBasePath, false);
     }
 
+    public Single<List<File>> download(Activity mContext, List<String> urlString, String saveBasePath,Map<String, String> headers) {
+        return download(mContext, urlString, saveBasePath, false,headers);
+    }
+
+    public Single<List<File>> download(Activity mContext, List<String> urlString, String saveBasePath, boolean verifyRepeatDownload) {
+        return download(mContext, urlString, saveBasePath, verifyRepeatDownload, null);
+    }
+
     /**
      * RxJava方式下载附件，需要自己判断权限
+     * @param mContext 上下文
+     * @param urlString 下载地址集合
+     * @param saveBasePath 保存路径
+     * @param verifyRepeatDownload 是否验证重复下载
+     * @param headers 请求头
+     * @return 观察者
      */
-    public Single<List<File>> download(Activity mContext, List<String> urlString, String saveBasePath, boolean verifyRepeatDownload) {
+    public Single<List<File>> download(Activity mContext, List<String> urlString, String saveBasePath, boolean verifyRepeatDownload, Map<String, String> headers) {
         return Observable.fromIterable(urlString)
                 .distinct()
-                .flatMap((Function<String, ObservableSource<File>>) filePath -> download(mContext, filePath, saveBasePath, verifyRepeatDownload))
+                .flatMap((Function<String, ObservableSource<File>>) filePath -> download(mContext, filePath, saveBasePath, verifyRepeatDownload, headers))
                 .toList()
                 .subscribeOn(Schedulers.io());
     }

@@ -12,9 +12,11 @@ import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import io.reactivex.rxjava3.disposables.Disposable;
+
 import com.casic.otitan.common.base.BaseException;
 import com.casic.otitan.common.utils.common.FileUtil;
 import com.casic.otitan.common.utils.download.core.DownloadRetrofitFactory;
@@ -33,12 +35,30 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     private final List<String> downloadMap;
     private final boolean verifyRepeatDownload;
 
+    private final DownloadListener downloadListener;
+    private final Map<String, String> headers;
+
     public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload) {
+        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, null, null);
+    }
+
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers) {
+        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, headers, null);
+    }
+
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, DownloadListener downloadListener) {
+        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, null, downloadListener);
+    }
+
+    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener) {
         this.mContext = mContext;
         this.apkUrl = apkUrl;
         this.downloadMap = downloadMap;
         this.verifyRepeatDownload = verifyRepeatDownload;
+        this.headers = headers;
+        this.downloadListener = downloadListener;
     }
+
 
     @Override
     public void onUpdate(View v) {
@@ -60,8 +80,13 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
         }
         downloadMap.add(apkUrl);
         DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
-        Disposable disposable = DownloadRetrofitFactory.enqueue(apkUrl, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator).map(file -> {
+        Disposable disposable = DownloadRetrofitFactory.enqueue(
+                        apkUrl,
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator,
+                        headers,
+                        downloadListener
+                )
+                .map(file -> {
                     downloadMap.remove(apkUrl);
                     return file;
                 })

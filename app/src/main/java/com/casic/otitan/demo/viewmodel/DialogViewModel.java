@@ -187,8 +187,12 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         } else if (R.id.updateMessageDialog == view.getId()) {
             new UpdateMessageDialog(view.getContext())
                     .setOnUpdateListener(v -> baseView.showToast("点击这个按钮可以开始下载操作了"))
-                    .setButtonText("下载")
+                    .setButtonText("更新")
+                    .setTitleColor(ContextCompat.getColor(view.getContext(), com.casic.otitan.common.R.color.black))
+                    .setTitleTextSize(DensityUtil.sp2px(view.getContext(), 18))
+                    .setBgColor(ContextCompat.getColor(view.getContext(), com.casic.otitan.common.R.color.theme_green))
                     .setUpdateMsgString("修复已知问题，更多更新内容请查看 \nhttps://www.baidu.com")
+                    .setUpdateMsgTextSize(DensityUtil.sp2px(view.getContext(), 12))
                     .setVersionName("1.0.1")
                     .builder()
                     .show();

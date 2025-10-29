@@ -8,6 +8,9 @@
         <trust-anchors>
             <certificates src="system" /><!-- 信任系统预装CA证书，只信任系统证书 -->
         </trust-anchors>
+        <domain-config cleartextTrafficPermitted="true">
+            <domain includeSubdomains="true">softfile.3g.qq.com</domain>
+        </domain-config>
     </domain-config>
     <base-config cleartextTrafficPermitted="false"><!-- false代表禁止http明文传输，一般用于生产环境 -->
         <trust-anchors>
