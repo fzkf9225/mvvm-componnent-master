@@ -29,7 +29,7 @@ android {
             minifyEnabled true// 混淆
             zipAlignEnabled true// Zipalign优化
             shrinkResources true // 移除无用的resource
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //app模块不需要添加这个
         }
         debug {
@@ -38,7 +38,7 @@ android {
             minifyEnabled false// 混淆
             zipAlignEnabled false// Zipalign优化
             shrinkResources false // 移除无用的resource
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

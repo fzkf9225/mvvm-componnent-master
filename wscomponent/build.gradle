@@ -17,7 +17,7 @@ android {
             resValue "string", "app_config_file", "prod.properties"
             buildConfigField "boolean", "DEBUG", "false"// 不显示log
             minifyEnabled true// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
             consumerProguardFiles 'proguard-rules.pro'
         }
@@ -25,7 +25,7 @@ android {
             resValue "string", "app_config_file", "dev.properties"
             buildConfigField "boolean", "DEBUG", "true"// 显示log
             minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

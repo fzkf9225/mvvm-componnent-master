@@ -27,7 +27,7 @@ android {
         debug {
             resValue "string", "user_config_file", "user_dev.properties"
             minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
