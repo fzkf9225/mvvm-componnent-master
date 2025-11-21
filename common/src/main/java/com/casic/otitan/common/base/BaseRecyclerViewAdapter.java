@@ -84,7 +84,7 @@ public abstract class BaseRecyclerViewAdapter<T, VDB extends ViewDataBinding> ex
     }
 
     @Override
-    public void onBindViewHolder(final BaseViewHolder baseViewHolder, final int pos) {
+    public void onBindViewHolder(@NonNull final BaseViewHolder baseViewHolder, final int pos) {
         if (getItemViewType(pos) == TYPE_HEAD) {
             onBindHeaderHolder(baseViewHolder);
             return;

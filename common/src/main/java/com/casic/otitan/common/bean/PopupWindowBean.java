@@ -19,6 +19,10 @@ public class PopupWindowBean<T> extends BaseObservable {
      */
     private String popupId;
     /**
+     * 编码
+     */
+    private String popupCode;
+    /**
      * 名称
      */
     private String popupName;
@@ -26,6 +30,10 @@ public class PopupWindowBean<T> extends BaseObservable {
      * id
      */
     private String parentPopupId;
+    /**
+     * 父编码
+     */
+    private String parentPopupCode;
     /**
      * 是否选中
      */
@@ -51,14 +59,34 @@ public class PopupWindowBean<T> extends BaseObservable {
         this.popupName = popupName;
     }
 
+    public PopupWindowBean(String popupId, String popupCode, String popupName) {
+        this.popupId = popupId;
+        this.popupCode = popupCode;
+        this.popupName = popupName;
+    }
+
     public PopupWindowBean(String popupId, String popupName, boolean isSingleSelected) {
         this.popupId = popupId;
         this.popupName = popupName;
         this.isSingleSelected = isSingleSelected;
     }
 
+    public PopupWindowBean(String popupId, String popupCode, String popupName, boolean isSingleSelected) {
+        this.popupId = popupId;
+        this.popupCode = popupCode;
+        this.popupName = popupName;
+        this.isSingleSelected = isSingleSelected;
+    }
+
     public PopupWindowBean(String popupId, String popupName, List<T> childList) {
         this.popupId = popupId;
+        this.popupName = popupName;
+        this.childList = childList;
+    }
+
+    public PopupWindowBean(String popupId, String popupCode, String popupName, List<T> childList) {
+        this.popupId = popupId;
+        this.popupCode = popupCode;
         this.popupName = popupName;
         this.childList = childList;
     }
@@ -85,6 +113,22 @@ public class PopupWindowBean<T> extends BaseObservable {
 
     public void setParentPopupId(String parentPopupId) {
         this.parentPopupId = parentPopupId;
+    }
+
+    public String getPopupCode() {
+        return popupCode;
+    }
+
+    public void setPopupCode(String popupCode) {
+        this.popupCode = popupCode;
+    }
+
+    public String getParentPopupCode() {
+        return parentPopupCode;
+    }
+
+    public void setParentPopupCode(String parentPopupCode) {
+        this.parentPopupCode = parentPopupCode;
     }
 
     public Boolean getSelected() {
@@ -117,5 +161,10 @@ public class PopupWindowBean<T> extends BaseObservable {
         }
         return list.stream().anyMatch(item -> item.getPopupId() != null && item.getPopupId().equals(popupId));
     }
-
+    public static <T extends PopupWindowBean<?>> boolean containsByCode(List<T> list, String popupCode) {
+        if (CollectionUtil.isEmpty(list) || TextUtils.isEmpty(popupCode)) {
+            return false;
+        }
+        return list.stream().anyMatch(item -> item.getPopupCode() != null && item.getPopupId().equals(popupCode));
+    }
 }

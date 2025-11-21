@@ -37,8 +37,8 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     private RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
     protected SmartRefreshLayout refreshLayout;
-    private boolean isCanRefresh = true;
-    private boolean isCanLoadMore = true;
+    protected boolean isCanRefresh = true;
+    protected boolean isCanLoadMore = true;
     protected int mCurrentPage = 0;
     public BaseRecyclerViewAdapter<T, ?> adapter;
 

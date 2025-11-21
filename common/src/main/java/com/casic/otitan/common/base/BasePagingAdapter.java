@@ -28,7 +28,7 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder baseViewHolder, int pos) {
+    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int pos) {
         onBindHolder(baseViewHolder, getItem(pos), pos);
     }
 

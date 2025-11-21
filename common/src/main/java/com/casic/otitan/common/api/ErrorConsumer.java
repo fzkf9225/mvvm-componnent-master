@@ -27,7 +27,7 @@ import retrofit2.HttpException;
  */
 public class ErrorConsumer implements Consumer<Throwable> {
     private final BaseView baseView;
-    private ApiRequestOptions apiRequestOptions;
+    private final ApiRequestOptions apiRequestOptions;
     private final ExceptionConverter exceptionConverter;
 
     public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions) {

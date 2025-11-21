@@ -47,7 +47,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     /**
      * UI控制器。管理弹框、toast之类
      */
-    private UIController uiController;
+    protected UIController uiController;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

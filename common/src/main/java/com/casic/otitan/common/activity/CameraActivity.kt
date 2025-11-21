@@ -1,6 +1,5 @@
 package com.casic.otitan.common.activity
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
