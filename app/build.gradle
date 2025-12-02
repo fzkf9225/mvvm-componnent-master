@@ -5,50 +5,51 @@ plugins {
     alias(libs.plugins.google.hilt.android)
     alias(libs.plugins.navigation.safeargs)
 }
-
 android {
-    namespace 'com.casic.otitan.demo'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    namespace = 'com.casic.otitan.demo'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        applicationId "com.casic.otitan.demo"
+        applicationId  = "com.casic.otitan.demo"
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
+        versionCode =  1
+        versionName = "1.0"
+        testInstrumentationRunner =  "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
         ndk {
-            abiFilters 'arm64-v8a', 'x86_64'
+            abiFilters = ['arm64-v8a', 'x86_64']
         }
     }
 
     buildTypes {
         release {
-            resValue "string", "app_config_file", "prod.properties"
-            buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示log
-            minifyEnabled true// 混淆
-            zipAlignEnabled true// Zipalign优化
-            shrinkResources true // 移除无用的resource
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            //app模块不需要添加这个
+            resValue("string", "app_config_file", "prod.properties")  // 加上括号
+            buildConfigField("boolean", "LOG_DEBUG", "false")  // 加上括号
+            minifyEnabled = true
+            zipAlignEnabled = true
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')  // 加上括号
         }
         debug {
-            resValue "string", "app_config_file", "dev.properties"
-            buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
-            minifyEnabled false// 混淆
-            zipAlignEnabled false// Zipalign优化
-            shrinkResources false // 移除无用的resource
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_config_file", "dev.properties")  // 加上括号
+            buildConfigField("boolean", "LOG_DEBUG", "true")  // 加上括号
+            minifyEnabled = false
+            zipAlignEnabled = false
+            shrinkResources = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')  // 加上括号
         }
     }
     compileOptions {
-        encoding "UTF-8"
-        targetCompatibility JavaVersion.VERSION_17
-        sourceCompatibility JavaVersion.VERSION_17
+        encoding = "UTF-8"
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)  // 这是 kotlin DSL 的写法
     }
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
     ksp {
@@ -56,8 +57,8 @@ android {
     }
     buildFeatures {
         //noinspection DataBindingWithoutKapt
-        dataBinding true
-        buildConfig true
+        dataBinding = true
+        buildConfig = true
     }
 }
 

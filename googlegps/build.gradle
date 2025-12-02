@@ -4,47 +4,51 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.otitan.googlegps'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    namespace = 'com.casic.otitan.googlegps'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            resValue "string", "gps_config_file", "prod.properties"
-            buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示log
-            minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "gps_config_file", "prod.properties" )
+            buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
-            consumerProguardFiles 'consumer-rules.pro'
+            consumerProguardFiles('consumer-rules.pro')
         }
         debug {
-            resValue "string", "gps_config_file", "dev.properties"
-            buildConfigField "boolean", "LOG_DEBUG", "true"// 显示log
-            minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "gps_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")// 显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
+    kotlin {
+        jvmToolchain(17)  // 这是 kotlin DSL 的写法
+    }
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
     buildFeatures {
-        viewBinding true
+        viewBinding = true
         //noinspection DataBindingWithoutKapt
-        dataBinding true
-        buildConfig true
+        dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -83,7 +87,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.otitan.googlegps'
                 artifactId = 'googlegps'
-                version = '2.0.0'
+                version = '2.0.1'
             }
         }
         repositories {

@@ -3,34 +3,35 @@ plugins {
 }
 
 android {
-    namespace 'com.casic.otitan.wscomponent'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    namespace = 'com.casic.otitan.wscomponent'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
-        consumerProguardFiles "consumer-rules.pro"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            resValue "string", "app_config_file", "prod.properties"
-            buildConfigField "boolean", "DEBUG", "false"// 不显示log
-            minifyEnabled true// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_config_file", "prod.properties" )
+            buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
-            consumerProguardFiles 'proguard-rules.pro'
+            consumerProguardFiles('consumer-rules.pro')
         }
         debug {
-            resValue "string", "app_config_file", "dev.properties"
-            buildConfigField "boolean", "DEBUG", "true"// 显示log
-            minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")// 显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

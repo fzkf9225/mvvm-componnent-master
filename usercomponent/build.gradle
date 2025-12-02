@@ -5,29 +5,31 @@ plugins {
     alias(libs.plugins.ksp)
 }
 android {
-    namespace 'com.casic.otitan.usercomponent'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    namespace = 'com.casic.otitan.usercomponent'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         if (userComponentIsApplication.toBoolean()) {
-            applicationId "com.casic.otitan.usercomponent"
+            applicationId = "com.casic.otitan.usercomponent"
         }
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            resValue "string", "user_config_file", "user_prod.properties"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "user_config_file", "prod.properties" )
+            buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
             //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
-            consumerProguardFiles 'proguard-rules.pro'
+            consumerProguardFiles('consumer-rules.pro')
         }
         debug {
-            resValue "string", "user_config_file", "user_dev.properties"
-            minifyEnabled false// 混淆
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "user_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")// 显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
     }
 
@@ -42,9 +44,9 @@ android {
         }
     }
     compileOptions {
-        encoding "UTF-8"
-        targetCompatibility JavaVersion.VERSION_17
-        sourceCompatibility JavaVersion.VERSION_17
+        encoding = "UTF-8"
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
     }
     lint {
         baseline = file("lint-baseline.xml")
@@ -54,16 +56,19 @@ android {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 
+    kotlin {
+        jvmToolchain(17)  // 这是 kotlin DSL 的写法
+    }
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17) // Match with Kotlin jvmTarget
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
 
     buildFeatures {
         //noinspection DataBindingWithoutKapt
-        dataBinding true
-        buildConfig true
+        dataBinding = true
+        buildConfig = true
     }
 }
 
