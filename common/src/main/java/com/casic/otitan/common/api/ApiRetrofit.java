@@ -5,6 +5,9 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +72,7 @@ public class ApiRetrofit {
 
         try {
             String contentType = request.header("Content-Type");
-            if (contentType == null || !contentType.contains("multipart/form-data")|| !contentType.contains("MULTIPART/FORM-DATA")) {
+            if (contentType == null || !contentType.contains("multipart/form-data") || !contentType.contains("MULTIPART/FORM-DATA")) {
                 LogUtil.show(TAG, "Request Body：" + bodyToString(request.body()));
             }
         } catch (IOException e) {
@@ -364,7 +367,33 @@ public class ApiRetrofit {
                             }
 
                             //添加默认请求头
-                            requestBuilder.headers(Headers.of(headerMap));
+                            // 对头部值进行 URL 编码处理
+                            Map<String, String> encodedHeaders = new HashMap<>();
+                            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                                String key = entry.getKey();
+                                String value = entry.getValue();
+
+                                if (value != null) {
+                                    // 判断是否包含非 ASCII 字符
+                                    boolean needsEncoding = false;
+                                    for (int i = 0; i < value.length(); i++) {
+                                        if (value.charAt(i) > 127) {
+                                            needsEncoding = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (needsEncoding) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                            value = URLEncoder.encode(value, StandardCharsets.UTF_8);
+                                        } else {
+                                            value = URLEncoder.encode(value, "UTF-8");
+                                        }
+                                    }
+                                }
+                                encodedHeaders.put(key, value);
+                            }
+                            requestBuilder.headers(Headers.of(encodedHeaders));
 
                             if (useDefaultSign) {
                                 requestBuilder.addHeader("o-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
