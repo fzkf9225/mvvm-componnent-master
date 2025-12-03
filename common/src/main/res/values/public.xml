@@ -223,6 +223,8 @@
     <public name="like_toast_dialog_style" type="style"/>
 
     <!--字符串资源-->
+    <public name="agree_and_continue" type="string"/>
+    <public name="think_again" type="string"/>
     <public name="protection_guidelines" type="string"/>
     <public name="create" type="string"/>
     <public name="modify" type="string"/>

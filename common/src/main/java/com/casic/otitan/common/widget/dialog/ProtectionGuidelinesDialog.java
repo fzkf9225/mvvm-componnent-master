@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -28,7 +29,7 @@ public class ProtectionGuidelinesDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String agreeText = "同意并继续", strCancelText = "再想想";
+    private String agreeText = null, refuseText = null, dialogMessageType = null;
 
     private ColorStateList positiveBackgroundColor = null;
     private ColorStateList positiveTextColor = null;
@@ -75,6 +76,11 @@ public class ProtectionGuidelinesDialog extends Dialog {
         return this;
     }
 
+    public ProtectionGuidelinesDialog setDialogMessageType(String messageType) {
+        this.dialogMessageType = messageType;
+        return this;
+    }
+
     public ProtectionGuidelinesDialog setPositiveTextColor(@ColorInt int color) {
         positiveTextColor = ColorStateList.valueOf(color);
         return this;
@@ -95,8 +101,8 @@ public class ProtectionGuidelinesDialog extends Dialog {
         return this;
     }
 
-    public ProtectionGuidelinesDialog setNegativeText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public ProtectionGuidelinesDialog setNegativeText(String refuseText) {
+        this.refuseText = refuseText;
         return this;
     }
 
@@ -112,7 +118,26 @@ public class ProtectionGuidelinesDialog extends Dialog {
     private void initView() {
         binding = DialogProtectionGuidelinesBinding.inflate(layoutInflater, null, false);
         binding.dialogAgree.setText(agreeText);
-        binding.dialogRefuse.setText(strCancelText);
+        binding.dialogRefuse.setText(refuseText);
+
+        if (TextUtils.isEmpty(agreeText)) {
+            binding.dialogAgree.setText(getContext().getString(R.string.agree_and_continue));
+        } else {
+            binding.dialogAgree.setText(agreeText);
+        }
+
+        if (TextUtils.isEmpty(refuseText)) {
+            binding.dialogRefuse.setText(getContext().getString(R.string.think_again));
+        } else {
+            binding.dialogRefuse.setText(refuseText);
+        }
+
+        if (TextUtils.isEmpty(dialogMessageType)) {
+            binding.dialogMessageType.setText(getContext().getString(R.string.protection_guidelines));
+        } else {
+            binding.dialogMessageType.setText(dialogMessageType);
+        }
+
         if (positiveTextColor != null) {
             binding.dialogAgree.setTextColor(positiveTextColor);
         }

@@ -73,4 +73,6 @@
     <string name="modify">编辑</string>
     <string name="create">新增</string>
     <string name="protection_guidelines">个人信息保护指引</string>
+    <string name="agree_and_continue">Agree and continue</string>
+    <string name="think_again">Think again</string>
 </resources>

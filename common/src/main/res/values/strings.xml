@@ -74,5 +74,6 @@
     <string name="modify">Modify</string>
     <string name="create">Create</string>
     <string name="protection_guidelines">Personal Information Protection Guidelines</string>
-
+    <string name="agree_and_continue">同意并继续</string>
+    <string name="think_again">再想想</string>
 </resources>
