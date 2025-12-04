@@ -5,10 +5,13 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.text.TextUtils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -170,30 +173,6 @@ public class AppManager {
     }
 
     /**
-     * 检查手机上是否安装了指定的软件
-     *
-     * @param context 上下文
-     * @param packageName：应用包名
-     * @return true代表安装，false代表未安装
-     */
-    public static boolean isInstalled(Context context, String packageName) {
-        //获取PackageManager
-        final PackageManager packageManager = context.getPackageManager();
-        //获取所有已安装程序的包信息
-        @SuppressLint("QueryPermissionsNeeded")
-        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
-        //用于存储所有已安装程序的包名
-        List<String> packageNames = new ArrayList<String>();
-        //从packageInfos中将包名字逐一取出，压入pName list中
-        for (int i = 0; i < packageInfos.size(); i++) {
-            String packName = packageInfos.get(i).packageName;
-            packageNames.add(packName);
-        }
-        //判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
-        return !packageNames.contains(packageName);
-    }
-
-    /**
      * 判断应用是否处于后台运行
      *
      * @param context 当前视图
@@ -265,7 +244,7 @@ public class AppManager {
      * @param context 上下文
      * @return int类型的版本号
      */
-    public long getVersionCode(Context context){
+    public long getVersionCode(Context context) {
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -284,7 +263,7 @@ public class AppManager {
      * @param context 上下文
      * @return 桌面图标资源id
      */
-    public int getAppIcon(Context context){
+    public int getAppIcon(Context context) {
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pi.applicationInfo.icon;
@@ -308,4 +287,121 @@ public class AppManager {
             return null;
         }
     }
+
+    /**
+     * 获取指定包名的应用版本名称
+     * @param context 上下文对象
+     * @param targetPackageName 目标应用的包名
+     * @return 版本名称，若应用未安装或查询失败，返回null。
+     */
+    public String getAppVersionName(Context context, String targetPackageName) {
+        try {
+            if (TextUtils.isEmpty(targetPackageName)) {
+                return null;
+            }
+            PackageInfo pi = context.getPackageManager().getPackageInfo(targetPackageName, 0);
+            return pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return context.getString(R.string.version_unknown);
+        }
+    }
+
+    /**
+     * 获取指定包名的应用版本代码
+     * @param context 上下文对象
+     * @param targetPackageName 目标应用的包名
+     * @return 版本代码，若应用未安装或查询失败，返回-1。
+     */
+    public long getAppVersionCode(Context context, String targetPackageName) {
+        try {
+            if (TextUtils.isEmpty(targetPackageName)) {
+                return -1;
+            }
+            PackageInfo pi = context.getPackageManager().getPackageInfo(targetPackageName, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return pi.getLongVersionCode();
+            } else {
+                return pi.versionCode;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
+     * 获取app的应用名称，也就是app模块的那个名字
+     * @param context 上下文
+     * @return app的桌面名称
+     */
+    public String getAppName(Context context, String targetPackageName) {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(targetPackageName, 0);
+            return context.getPackageManager().getApplicationLabel(pi.applicationInfo).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean isAppInstalled(Context context, String packageName) {
+        if (TextUtils.isEmpty(packageName)) {
+            return false;
+        }
+
+        try {
+            // 方法1：检查是否有启动Intent（最快，适用于大多数情况）
+            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+            if (launchIntent != null) {
+                return true;
+            }
+        } catch (Exception e) {
+            // 继续尝试其他方法
+        }
+
+        try {
+            PackageInfo info;
+            // 方法2：直接查询包信息（备用）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                info = context.getPackageManager().getPackageInfo(
+                        packageName,
+                        PackageManager.PackageInfoFlags.of(0L)
+                );
+            } else {
+                info = context.getPackageManager().getPackageInfo(packageName, 0);
+            }
+            return info != null;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    // 启动应用
+    public boolean launchApp(Context context, String packageName) {
+        try {
+            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+
+            if (launchIntent != null) {
+                // 如果是隐式 Intent，确保正确处理
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    // Android 14+ 需要显式处理
+                    // 确保 Intent 是明确的
+                    if (launchIntent.getComponent() == null) {
+                        // 如果没有组件，尝试设置包名
+                        launchIntent.setPackage(packageName);
+                    }
+                }
+
+                context.startActivity(launchIntent);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
