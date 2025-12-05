@@ -6,9 +6,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -18,8 +16,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -950,36 +946,6 @@ public class AppManager {
         }
 
         return false;
-    }
-
-    /**
-     * 方式5：专门用于启动B应用的方法
-     * 封装了B应用的特定配置
-     *
-     * @param context 上下文
-     * @return 是否启动成功
-     */
-    public boolean launchBApp(Context context) {
-        String bPackageName = "com.casic.otitan.hubei.demo";
-        String bAction = "com.casic.otitan.hubei.market.action_start";
-        String bActivityClass = bPackageName + ".MainActivity";
-
-        return launchAppSmart(context, bPackageName, bActivityClass, bAction, null);
-    }
-
-    /**
-     * 方式5-增强：启动B应用并传递参数
-     *
-     * @param context 上下文
-     * @param extras  额外参数
-     * @return 是否启动成功
-     */
-    public boolean launchBAppWithExtras(Context context, Bundle extras) {
-        String bPackageName = "com.casic.otitan.hubei.demo";
-        String bAction = "com.casic.otitan.hubei.market.action_start";
-        String bActivityClass = bPackageName + ".MainActivity";
-
-        return launchAppSmart(context, bPackageName, bActivityClass, bAction, extras);
     }
 
     /**
