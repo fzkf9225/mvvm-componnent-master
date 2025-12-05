@@ -386,7 +386,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     ContextCompat.getColor(view.getContext(), com.casic.otitan.common.R.color.theme_green),
                     ContextCompat.getColor(view.getContext(), com.casic.otitan.common.R.color.white),
                     DensityUtil.dp2px(view.getContext(), 6f)
-                    );
+            );
             cascadeMultiPopupWindow.setConfirmTextColor(ContextCompat.getColor(view.getContext(), com.casic.otitan.common.R.color.theme_green));
             PopupWindowCompat.showAsDropDown(
                     cascadeMultiPopupWindow, view, 0, 0, Gravity.CENTER
