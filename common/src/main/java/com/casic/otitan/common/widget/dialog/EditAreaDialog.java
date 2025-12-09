@@ -16,6 +16,7 @@ import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogEditAreaBinding;
@@ -31,7 +32,7 @@ public class EditAreaDialog extends Dialog {
     private DialogEditAreaBinding binding;
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String positiveText = "确定", negativeText = "取消";
+    private String positiveText = null, negativeText = null;
     private String tipsStr, hintStr, defaultStr;
     private int inputType = InputType.TYPE_CLASS_TEXT;
     private int maxWords = 30;
@@ -155,8 +156,16 @@ public class EditAreaDialog extends Dialog {
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
         binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
-        binding.dialogSure.setText(positiveText);
-        binding.dialogCancel.setText(negativeText);
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogSure.setText(ContextCompat.getString(getContext(), R.string.sure));
+        } else {
+            binding.dialogSure.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
         if (TextUtils.isEmpty(tipsStr)) {
             binding.dialogTips.setVisibility(View.GONE);
         } else {

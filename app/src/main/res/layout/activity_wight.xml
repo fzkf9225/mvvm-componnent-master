@@ -138,7 +138,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_code"
                 app:text="@string/scaling_str"
-                app:textColor="@color/themeColor" />
+                android:textColor="@color/autoColor"
+                app:scalingTextColor="@color/theme_red" />
 
             <com.casic.otitan.common.widget.customview.StarBar
                 android:id="@+id/starBar"
@@ -338,22 +339,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image" />
-
+            <!-- 在布局文件中使用 -->
             <com.casic.otitan.common.widget.customview.IconDotTextView
                 android:id="@+id/iconDotTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/themeColor"
-                android:textColorHint="@color/nv_bg_color"
-                app:imageHeight="60dp"
-                app:imageSrc="@drawable/ic_launcher_background"
-                app:imageWidth="60dp"
-                app:label="测试"
+                app:imageSrc="@mipmap/ic_launcher"
+                app:label="首页"
+                app:textSize="14sp"
+                app:textColor="@color/autoColor"
+                app:layoutDirection="icon_top_text_bottom"
+                app:iconTextSpacing="8dp"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                app:dotShow="true"
+                app:dotMaxCount="99"
+                app:isBold="true"
+                app:dotTextSize="10sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_video"
-                app:textColor="@color/themeColor"
-                app:textSize="@dimen/font_size_xl" />
+                app:dotTextColor="@color/white"
+                app:dotBackgroundColor="@color/theme_orange"
+                app:dotWidth="20dp"
+                app:dotHeight="20dp"
+                app:dotPadding="2dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_calendarView_single"

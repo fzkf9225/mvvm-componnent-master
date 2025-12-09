@@ -15,6 +15,10 @@ import androidx.core.content.ContextCompat;
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.ViewErrorLayoutBinding;
 
+/**
+ * Created by fz on 2025/12/09 16:30
+ * describe：空白占位View，也可以显示加载中、加载失败、无数据
+ */
 public class EmptyLayout extends LinearLayout {
 
     public enum State {

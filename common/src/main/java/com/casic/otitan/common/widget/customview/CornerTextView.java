@@ -17,11 +17,26 @@ import com.casic.otitan.common.R;
  * describe：自定义圆角矩形
  */
 public class CornerTextView extends AppCompatTextView {
-    private int strokeColor;
-    private int circleBackColor;
-    private float strokeWidth;
-    private float radius;
-    private GradientDrawable gradientDrawable = new GradientDrawable();
+    /**
+     * 边框颜色
+     */
+    protected int strokeColor;
+    /**
+     * 背景颜色
+     */
+    protected int circleBackColor;
+    /**
+     * 边框宽度
+     */
+    protected float strokeWidth;
+    /**
+     * 圆角半径
+     */
+    protected float radius;
+    /**
+     * 圆角矩形
+     */
+    protected GradientDrawable gradientDrawable = new GradientDrawable();
 
     public CornerTextView(Context context) {
         this(context, null);

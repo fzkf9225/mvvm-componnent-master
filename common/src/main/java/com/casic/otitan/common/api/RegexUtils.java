@@ -114,15 +114,38 @@ public class RegexUtils {
      * YYYY-MM-DD
      */
     public static final String DATE_FORMAT1 = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
-
+    /**
+     * 日期格式正则 (YYYY-MM-DD)
+     * 示例：2023-12-25, 2024-01-01
+     * 注意：不验证月份实际天数（如2月30日也会匹配）
+     */
     public static final String DATE = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$";
 
+    /**
+     * 时间格式正则 (HH:mm 或 HH:mm:ss)
+     * 24小时制，秒数可选，小时支持一位数
+     * 示例：14:30, 09:45:30, 1:05
+     */
     public static final String TIME = "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$";
-
+    /**
+     * 日期时间格式正则 (YYYY-MM-DD HH:mm:ss)
+     * 24小时制，必须包含秒数，小时必须两位数
+     * 示例：2023-12-25 14:30:45
+     */
     public static final String DATE_TIME = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
     /**
      * URL正则表达式
-     * 匹配 http www ftp
+     * 匹配 http、https、ftp 协议的URL格式
+     * 格式要求：协议://域名[路径/查询参数/锚点]
+     * 正则解释：
+     * ^(https?|ftp):\\/\\/      - 协议部分
+     *   (                        - 主机名开始分组
+     *     [^\\s\\/$.?#]          - 主机名第一个字符（不能是空白、斜杠、$、.、?、#）
+     *     .*                     - 主机名其余部分（任意字符，但受前一个字符约束）
+     *   )                        - 主机名结束分组
+     * $                         - 字符串结束
+     * 注意：这个正则实际上是匹配 https?、ftp 协议，不是只匹配 https
+     *       但存在设计缺陷，会导致某些有效URL匹配失败
      */
     public static final String URL = "^(https?|ftp):\\/\\/([^\\s\\/$.?#].[^\\s]*)$";
 
@@ -416,7 +439,7 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isENG_NUM(String str) {
+    public static boolean isEnglishNum(String str) {
         return Regular(str, STR_ENG_NUM);
     }
 
@@ -426,7 +449,7 @@ public class RegexUtils {
      * @param str 字符串
      * @return boolean
      */
-    public static boolean isENG_NUM_(String str) {
+    public static boolean isEnglishNum_(String str) {
         return Regular(str, STR_ENG_NUM_);
     }
 

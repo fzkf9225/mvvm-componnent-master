@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 import com.casic.otitan.common.utils.common.DateUtil;
 
@@ -26,7 +27,7 @@ public class LogcatHelper {
      * 初始化目录
      */
     public void init(Context context) {
-        PATH_LOGCAT = context.getExternalCacheDir().getAbsolutePath() + File.separator + "log";
+        PATH_LOGCAT = Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath() + File.separator + "log";
         File file = new File(PATH_LOGCAT);
         if (!file.exists()) {
             boolean isCreated = file.mkdirs();

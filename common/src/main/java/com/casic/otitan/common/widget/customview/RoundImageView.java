@@ -25,34 +25,34 @@ import com.casic.otitan.common.R;
  */
 public class RoundImageView extends AppCompatImageView {
 
-    private static final ScaleType SCALE_TYPE = ScaleType.FIT_XY;
+    protected static final ScaleType SCALE_TYPE = ScaleType.FIT_XY;
 
-    private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-    private static final int COLORDRAWABLE_DIMENSION = 1;
+    protected static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+    protected static final int COLORDRAWABLE_DIMENSION = 1;
 
-    private static final int DEFAULT_BORDER_WIDTH = 0;
-    private static final int DEFAULT_BORDER_COLOR = Color.WHITE;
+    protected static final int DEFAULT_BORDER_WIDTH = 0;
+    protected static final int DEFAULT_BORDER_COLOR = Color.WHITE;
 
-    private final RectF mDrawableRect = new RectF();
-    private final RectF mBorderRect = new RectF();
+    protected final RectF mDrawableRect = new RectF();
+    protected final RectF mBorderRect = new RectF();
 
-    private final Matrix mShaderMatrix = new Matrix();
-    private final Paint mBitmapPaint = new Paint();
-    private final Paint mBorderPaint = new Paint();
+    protected final Matrix mShaderMatrix = new Matrix();
+    protected final Paint mBitmapPaint = new Paint();
+    protected final Paint mBorderPaint = new Paint();
 
-    private int mBorderColor = DEFAULT_BORDER_COLOR;
-    private int mBorderWidth = DEFAULT_BORDER_WIDTH;
+    protected int mBorderColor = DEFAULT_BORDER_COLOR;
+    protected int mBorderWidth = DEFAULT_BORDER_WIDTH;
 
-    private Bitmap mBitmap;
-    private BitmapShader mBitmapShader;
-    private int mBitmapWidth;
-    private int mBitmapHeight;
+    protected Bitmap mBitmap;
+    protected BitmapShader mBitmapShader;
+    protected int mBitmapWidth;
+    protected int mBitmapHeight;
 
-    private float mDrawableRadius;
-    private float mBorderRadius;
+    protected float mDrawableRadius;
+    protected float mBorderRadius;
 
-    private boolean mReady;
-    private boolean mSetupPending;
+    protected boolean mReady;
+    protected boolean mSetupPending;
 
     public RoundImageView(Context context) {
         super(context);

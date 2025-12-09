@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 /**
  * created by fz on 2024/9/23 10:21
- * describe:
+ * describe:集合相关函数
  */
 
-public class IterUtil {
+public class IterableUtil {
 
     /**
      * Iterable是否为空

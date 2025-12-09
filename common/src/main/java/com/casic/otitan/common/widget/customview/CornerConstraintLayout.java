@@ -19,8 +19,14 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * describe :
  */
 public class CornerConstraintLayout extends ConstraintLayout {
-    private int circleBackColor;
-    private float radius;
+    /**
+     * 背景颜色
+     */
+    protected int circleBackColor;
+    /**
+     * 圆角半径
+     */
+    protected float radius;
 
     public CornerConstraintLayout(@NonNull Context context) {
         super(context);

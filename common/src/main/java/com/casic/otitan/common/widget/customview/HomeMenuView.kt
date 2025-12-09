@@ -36,27 +36,27 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * 指示器高度
      */
-    private var dotHeight: Int? = null
+    protected var dotHeight: Int? = null
 
     /**
      * 指示器与底部距离
      */
-    private var dotBottomMargin = 0
+    protected var dotBottomMargin = 0
 
     /**
      * 指示器与左侧边距
      */
-    private var dotLeftMargin: Int = 0
+    protected var dotLeftMargin: Int = 0
 
     /**
      * 指示器与右侧边距
      */
-    private var dotRightMargin: Int = 0
+    protected var dotRightMargin: Int = 0
 
     /**
      * 指示器内部margin，点与点之间的间距
      */
-    private var dotPadding: Int = 0
+    protected var dotPadding: Int = 0
 
     /**
      * 每行显示几个
@@ -71,7 +71,7 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * viewPager的topMargin
      */
-    private var topMargin = 0
+    protected var topMargin = 0
 
     /**
      * label显示行数
@@ -81,7 +81,7 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * 是否自适应高度
      */
-    private var isWrap = true
+    protected var isWrap = true
 
     /**
      * viewPager的leftMargin
@@ -96,32 +96,32 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * 指示器与viewPager的间隔
      */
-    private var bottomMargin = 0
+    protected var bottomMargin = 0
 
     /**
      * 列间距
      */
-    private var columnMargin = 0
+    protected var columnMargin = 0
 
     /**
      * 背景样式资源，与下面二选一
      */
-    private var backgroundDrawableRes: Drawable? = null
+    protected var backgroundDrawableRes: Drawable? = null
 
     /**
      * 背景颜色，与上面二选一
      */
-    private var backgroundColor: Int? = null
+    protected var backgroundColor: Int? = null
 
     /**
      * 背景圆角，与上面二选一
      */
-    private var backgroundCornerRadius: Float? = 0f
+    protected var backgroundCornerRadius: Float? = 0f
 
     /**
      * 选中时圆点样式
      */
-    private val defaultDrawableResCurrent: Drawable by lazy {
+    protected val defaultDrawableResCurrent: Drawable by lazy {
         DrawableUtil.createCircleDrawable(
             ContextCompat.getColor(context, R.color.white),
             DensityUtil.dp2px(context, 5f)
@@ -131,7 +131,7 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * 未选中时圆点样式
      */
-    private val defaultDrawableResNormal: Drawable by lazy {
+    protected val defaultDrawableResNormal: Drawable by lazy {
         DrawableUtil.createCircleDrawable(
             ContextCompat.getColor(context, R.color.gray),
             DensityUtil.dp2px(context, 5f)
@@ -159,14 +159,14 @@ open class HomeMenuView : ConstraintLayout {
     var customHomeMenuAdapterCallback: CustomHomeMenuAdapterCallback? = null
 
 
-    private val menuViewPager by lazy {
+    protected val menuViewPager by lazy {
         ViewPager2(context).apply {
             id = generateViewId()
             registerOnPageChangeCallback(onPageChangeCallback)
         }
     }
 
-    private val viewPagerLayoutParams by lazy {
+    protected val viewPagerLayoutParams by lazy {
         LayoutParams(
             0,
             if (isWrap) {
@@ -185,9 +185,9 @@ open class HomeMenuView : ConstraintLayout {
         }
     }
 
-    private var adapter: HomeMenuViewPager2Adapter<HomeMenuBean>? = null
+    protected var adapter: HomeMenuViewPager2Adapter<HomeMenuBean>? = null
 
-    private val dotsLayout by lazy {
+    protected val dotsLayout by lazy {
         // 初始化指针
         LinearLayout(context).apply {
             id = generateViewId()
@@ -197,7 +197,7 @@ open class HomeMenuView : ConstraintLayout {
         }
     }
 
-    private val dotLayoutParams by lazy {
+    protected val dotLayoutParams by lazy {
         LayoutParams(
             LayoutParams.WRAP_CONTENT,
             dotHeight ?: LayoutParams.WRAP_CONTENT,
@@ -216,7 +216,7 @@ open class HomeMenuView : ConstraintLayout {
     /**
      * 上一次索引位置
      */
-    private var lastPos = 0
+    protected var lastPos = 0
 
     constructor(context: Context) : super(context) {
         init(context, null)

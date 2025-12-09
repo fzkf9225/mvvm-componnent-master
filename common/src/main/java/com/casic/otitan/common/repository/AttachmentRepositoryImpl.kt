@@ -19,53 +19,53 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?
 
     fun queryFlowListByMainId(mainId: String): Flowable<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
+        queryParams["mainId"] = mainId
         return getRoomDao().doQueryByLimit(queryParams, null, Int.MAX_VALUE, 0)
     }
 
     fun queryFlowList(mainId: String, fieldName: String): Flowable<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
-        queryParams.put("fieldName", fieldName)
+        queryParams["mainId"] = mainId
+        queryParams["fieldName"] = fieldName
         return getRoomDao().doQueryByLimit(queryParams, null, Int.MAX_VALUE, 0)
     }
 
     fun queryLiveDataListByMainId(mainId: String): LiveData<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
+        queryParams["mainId"] = mainId
         return getRoomDao().doQueryByLimitLiveData(queryParams, null, Int.MAX_VALUE, 0)
     }
 
     fun queryFlowLiveDataList(mainId: String, fieldName: String): LiveData<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
-        queryParams.put("fieldName", fieldName)
+        queryParams["mainId"] = mainId
+        queryParams["fieldName"] = fieldName
         return getRoomDao().doQueryByLimitLiveData(queryParams, null, Int.MAX_VALUE, 0)
     }
 
     fun queryListByMainId(mainId: String): List<AttachmentBean> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
+        queryParams["mainId"] = mainId
         return getRoomDao().findPageList(queryParams, null, 10, 0)
     }
 
     fun queryList(mainId: String, fieldName: String): List<AttachmentBean> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
-        queryParams.put("fieldName", fieldName)
+        queryParams["mainId"] = mainId
+        queryParams["fieldName"] = fieldName
         return getRoomDao().findPageList(queryParams, null, Int.MAX_VALUE, 0)
     }
 
     fun deleteByMainId(mainId: String): Flowable<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
+        queryParams["mainId"] = mainId
         return getRoomDao().deleteByParams(queryParams)
     }
 
     fun delete(mainId: String, fieldName: String): Flowable<List<AttachmentBean>> {
         val queryParams = HashMap<String, String>()
-        queryParams.put("mainId", mainId)
-        queryParams.put("fieldName", fieldName)
+        queryParams["mainId"] = mainId
+        queryParams["fieldName"] = fieldName
         return getRoomDao().deleteByParams(queryParams)
     }
 

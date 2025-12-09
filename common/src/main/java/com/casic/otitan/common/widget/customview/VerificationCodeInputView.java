@@ -35,53 +35,53 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
         void onTextFinish(CharSequence text, int length);
     }
 
-    private int mTextColor;
+    protected int mTextColor;
     // 输入的最大长度
-    private int mMaxLength;
+    protected int mMaxLength;
     // 边框宽度
-    private int mStrokeWidth;
+    protected int mStrokeWidth;
     // 边框高度
-    private int mStrokeHeight;
+    protected int mStrokeHeight;
     // 边框之间的距离
-    private int mStrokePadding;
+    protected int mStrokePadding;
     // 光标宽度
-    private int mCursorWidth;
+    protected int mCursorWidth;
     // 光标高度
-    private int mCursorHeight;
+    protected int mCursorHeight;
     // 方框的背景
-    private StateListDrawable mStrokeDrawable;
+    protected StateListDrawable mStrokeDrawable;
     // 光标的背景
-    private StateListDrawable mCursorDrawable;
+    protected StateListDrawable mCursorDrawable;
     // 输入结束监听
-    private OnTextFinishListener mOnInputFinishListener;
+    protected OnTextFinishListener mOnInputFinishListener;
     // 是否光标获取焦点
-    private boolean mCursorStateFocused = true;
+    protected boolean mCursorStateFocused = true;
     // 记录上次光标获取焦点时间
-    private long mLastCursorFocusedTimeMillis = System.currentTimeMillis();
+    protected long mLastCursorFocusedTimeMillis = System.currentTimeMillis();
     //纯数字
-    private final int NUMBER = 0;
+    protected final int NUMBER = 0;
     //纯字母
-    private final int CHARACTER = 1;
+    protected final int CHARACTER = 1;
     //数字+字母
-    private final int ALL = 2;
+    protected final int ALL = 2;
     //验证码框颜色，有焦点时边框颜色
-    private int mStrokeFocusedColor;
+    protected int mStrokeFocusedColor;
     //验证码框圆角大小
-    private int mRadius;
+    protected int mRadius;
     //验证码框粗细
-    private int mBorderWidth;
+    protected int mBorderWidth;
     //验证码框颜色，有焦点时背景颜色
-    private int mStrokeFocusedBgColor;
+    protected int mStrokeFocusedBgColor;
     //验证码框颜色，有焦点时光标颜色
-    private int mCursorFocusedBgColor;
+    protected int mCursorFocusedBgColor;
     //验证码框颜色，无焦点时边框颜色
-    private int mStrokeDefaultColor;
+    protected int mStrokeDefaultColor;
     //验证码框颜色，无焦点时背景色
-    private int mStrokeDefaultBgColor;
+    protected int mStrokeDefaultBgColor;
     //输入类型
-    private int mCodeType = NUMBER;
+    protected int mCodeType = NUMBER;
     //验证码框颜色，无焦点时光标颜色
-    private int mCursorDefaultBgColor;
+    protected int mCursorDefaultBgColor;
 
     /**
      * 构造方法

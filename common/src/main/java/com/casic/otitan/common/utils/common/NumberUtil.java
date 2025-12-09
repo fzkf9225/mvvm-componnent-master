@@ -457,10 +457,13 @@ public class NumberUtil {
      * @return 是否为null或者0
      */
     public static boolean isNullOrZero(String number) {
-        if (null == number || number.isEmpty()) {
+        if (null == number || number.isEmpty() || number.trim().isEmpty()) {
             return true;
         }
-        if ("0".equals(number) || "0.0".equals(number) || "0.00".equals(number)) {
+        // 2. 去除前后空格
+        String trimmed = number.trim();
+        // 3. 快速检查常见零值（可选优化，不是必需的）
+        if ("0".equals(trimmed) || trimmed.matches("^0+(\\.0*)?$")) {
             return true;
         }
         if (!RegexUtils.isDouble(number)) {

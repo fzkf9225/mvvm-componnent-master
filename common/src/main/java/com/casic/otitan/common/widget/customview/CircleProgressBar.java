@@ -22,30 +22,56 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * describe :自定义圆形进度条
  */
 public class CircleProgressBar extends View {
-    private final String TAG = CircleProgressBar.class.getSimpleName();
-    private final int DEFAULT_BG_COLOR = Color.GRAY;
-    private final int DEFAULT_PROGRESS_COLOR = Color.GREEN;
-    private final int DEFAULT_STROKE_WIDTH = 3;
-
-    private int bgColor = DEFAULT_BG_COLOR;
-    private int progressColor = DEFAULT_PROGRESS_COLOR;
-    private float strokeWidth = DEFAULT_STROKE_WIDTH;
-    private boolean showText = true;
-    private float fontSize = 14;
-    private int fontColor = Color.BLACK;
-    private final Paint paintCircleBottom = new Paint();
-    private final Paint paintArcTop = new Paint();
-    private final Paint paintText = new Paint();
+    protected final String TAG = CircleProgressBar.class.getSimpleName();
+    /**
+     * 默认背景颜色
+     */
+    protected final int DEFAULT_BG_COLOR = Color.GRAY;
+    /**
+     * 默认进度颜色
+     */
+    protected final int DEFAULT_PROGRESS_COLOR = Color.GREEN;
+    /**
+     * 默认进度宽度
+     */
+    protected final int DEFAULT_STROKE_WIDTH = 3;
+    /**
+     * 背景颜色
+     */
+    protected int bgColor = DEFAULT_BG_COLOR;
+    /**
+     * 进度颜色
+     */
+    protected int progressColor = DEFAULT_PROGRESS_COLOR;
+    /**
+     * 进度宽度
+     */
+    protected float strokeWidth = DEFAULT_STROKE_WIDTH;
+    /**
+     * 是否显示文字
+     */
+    protected boolean showText = true;
+    /**
+     * 文字大小
+     */
+    protected float fontSize = 14;
+    /**
+     * 文字颜色
+     */
+    protected int fontColor = Color.BLACK;
+    protected final Paint paintCircleBottom = new Paint();
+    protected final Paint paintArcTop = new Paint();
+    protected final Paint paintText = new Paint();
     /**
      * 数字显示的小数点位置，为0时则保留整数
      */
-    private int fontPercent = 2;
-    private float maxProgress = 100;
+    protected int fontPercent = 2;
+    protected float maxProgress = 100;
     /**
      * 弧形的角度
      */
-    private float angle;
-    private OnProgressEndListener onProgressEndListener;
+    protected float angle;
+    protected OnProgressEndListener onProgressEndListener;
 
     public CircleProgressBar(Context context) {
         super(context);

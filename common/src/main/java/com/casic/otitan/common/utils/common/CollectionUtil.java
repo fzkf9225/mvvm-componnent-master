@@ -175,10 +175,10 @@ public class CollectionUtil {
      * @param <T>        集合元素类型
      * @param collection 集合
      * @return {@link Map}
-     * @see IterUtil#countMap(Iterator)
+     * @see IterableUtil#countMap(Iterator)
      */
     public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
-        return IterUtil.countMap(null == collection ? null : collection.iterator());
+        return IterableUtil.countMap(null == collection ? null : collection.iterator());
     }
 
     /**
@@ -542,10 +542,10 @@ public class CollectionUtil {
      *
      * @param iterable Iterable对象
      * @return 是否为空
-     * @see IterUtil#isEmpty(Iterable)
+     * @see IterableUtil#isEmpty(Iterable)
      */
     public static boolean isEmpty(Iterable<?> iterable) {
-        return IterUtil.isEmpty(iterable);
+        return IterableUtil.isEmpty(iterable);
     }
 
     /**
@@ -553,10 +553,10 @@ public class CollectionUtil {
      *
      * @param Iterator Iterator对象
      * @return 是否为空
-     * @see IterUtil#isEmpty(Iterator)
+     * @see IterableUtil#isEmpty(Iterator)
      */
     public static boolean isEmpty(Iterator<?> Iterator) {
-        return IterUtil.isEmpty(Iterator);
+        return IterableUtil.isEmpty(Iterator);
     }
 
     /**
@@ -597,10 +597,10 @@ public class CollectionUtil {
      *
      * @param iterable Iterable对象
      * @return 是否为空
-     * @see IterUtil#isNotEmpty(Iterable)
+     * @see IterableUtil#isNotEmpty(Iterable)
      */
     public static boolean isNotEmpty(Iterable<?> iterable) {
-        return IterUtil.isNotEmpty(iterable);
+        return IterableUtil.isNotEmpty(iterable);
     }
 
     /**
@@ -608,10 +608,10 @@ public class CollectionUtil {
      *
      * @param Iterator Iterator对象
      * @return 是否为空
-     * @see IterUtil#isNotEmpty(Iterator)
+     * @see IterableUtil#isNotEmpty(Iterator)
      */
     public static boolean isNotEmpty(Iterator<?> Iterator) {
-        return IterUtil.isNotEmpty(Iterator);
+        return IterableUtil.isNotEmpty(Iterator);
     }
 
     /**
@@ -629,11 +629,11 @@ public class CollectionUtil {
      *
      * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
      * @return 是否包含{@code null}元素
-     * @see IterUtil#hasNull(Iterable)
+     * @see IterableUtil#hasNull(Iterable)
      * @since 3.0.7
      */
     public static boolean hasNull(Iterable<?> iterable) {
-        return IterUtil.hasNull(iterable);
+        return IterableUtil.hasNull(iterable);
     }
 
     /**
@@ -675,10 +675,10 @@ public class CollectionUtil {
      * @param <V>       值类型
      * @param entryIter entry集合
      * @return Map
-     * @see IterUtil#toMap(Iterable)
+     * @see IterableUtil#toMap(Iterable)
      */
     public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
-        return IterUtil.toMap(entryIter);
+        return IterableUtil.toMap(entryIter);
     }
 
     /**
@@ -701,10 +701,10 @@ public class CollectionUtil {
      * @param <E>  元素类型
      * @param iter {@link Iterator}
      * @return {@link Iterable}
-     * @see IterUtil#asIterable(Iterator)
+     * @see IterableUtil#asIterable(Iterator)
      */
     public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-        return IterUtil.asIterable(iter);
+        return IterableUtil.asIterable(iter);
     }
 
     /**
@@ -871,11 +871,11 @@ public class CollectionUtil {
      * @param <T>      集合元素类型
      * @param iterable {@link Iterable}
      * @return 第一个元素
-     * @see IterUtil#getFirst(Iterable)
+     * @see IterableUtil#getFirst(Iterable)
      * @since 3.0.1
      */
     public static <T> T getFirst(Iterable<T> iterable) {
-        return IterUtil.getFirst(iterable);
+        return IterableUtil.getFirst(iterable);
     }
 
     /**
@@ -884,11 +884,11 @@ public class CollectionUtil {
      * @param <T>      集合元素类型
      * @param iterator {@link Iterator}
      * @return 第一个元素
-     * @see IterUtil#getFirst(Iterator)
+     * @see IterableUtil#getFirst(Iterator)
      * @since 3.0.1
      */
     public static <T> T getFirst(Iterator<T> iterator) {
-        return IterUtil.getFirst(iterator);
+        return IterableUtil.getFirst(iterator);
     }
 
     /**

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogConfirmBinding;
@@ -30,7 +32,7 @@ public class ConfirmDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String positiveText = "确定", negativeText = "取消";
+    private String positiveText = null, negativeText = null;
     private boolean isShowSureView = true, isShowCancelView = true, isShowLineView = true;
 
     private ColorStateList positiveTextColor = null;
@@ -125,8 +127,16 @@ public class ConfirmDialog extends Dialog {
 
     private void initView() {
         binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
-        binding.dialogSure.setText(positiveText);
-        binding.dialogCancel.setText(negativeText);
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogSure.setText(ContextCompat.getString(getContext(), R.string.sure));
+        } else {
+            binding.dialogSure.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
         if (positiveTextColor != null) {
             binding.dialogSure.setTextColor(positiveTextColor);
         }

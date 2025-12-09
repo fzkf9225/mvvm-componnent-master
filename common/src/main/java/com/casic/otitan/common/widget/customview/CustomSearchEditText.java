@@ -33,21 +33,39 @@ import com.casic.otitan.common.utils.log.LogUtil;
 public class CustomSearchEditText extends AppCompatEditText implements AppCompatEditText.OnEditorActionListener, TextWatcher {
     private final String TAG = this.getClass().getSimpleName();
 
-    private Drawable drawableSearch = null;
-    private Drawable drawableClear = null;
+    /**
+     * 搜索图标drawable样式
+     */
+    protected Drawable drawableSearch = null;
+    /**
+     * 删除图标drawable样式
+     */
+    protected Drawable drawableClear = null;
     /**
      * 1-左，2-上，3-右，4-下
      */
-    private int drawablePosition = 1;
-    private int strokeColor;
-    private int circleBackColor;
-    private float radius;
-    private float strokeWidth;
-    private GradientDrawable gradientDrawable = new GradientDrawable();
+    protected int drawablePosition = 1;
+    /**
+     * 描边颜色
+     */
+    protected int strokeColor;
+    /**
+     * 背景颜色
+     */
+    protected int circleBackColor;
+    /**
+     * 圆角半径
+     */
+    protected float radius;
+    /**
+     * 描边宽度
+     */
+    protected float strokeWidth;
+    protected GradientDrawable gradientDrawable = new GradientDrawable();
     /**
      * 是否启用背景图、描边等样式
      */
-    private boolean enableBgStyle = false;
+    protected boolean enableBgStyle = false;
 
     public CustomSearchEditText(Context context) {
         super(context);

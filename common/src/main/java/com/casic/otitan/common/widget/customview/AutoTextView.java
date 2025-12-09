@@ -30,9 +30,9 @@ import com.casic.otitan.common.utils.common.DensityUtil;
 public class AutoTextView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
 
-    private final float mHeight;
-    private final int mColor;
-    private String textStr;
+    protected final float mHeight;
+    protected final int mColor;
+    protected String textStr;
     //mInUp,mOutUp分别构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
     private Rotate3dAnimation mOutUp;

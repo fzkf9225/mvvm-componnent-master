@@ -8,14 +8,21 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
+import com.casic.otitan.common.base.BaseView;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleOnSubscribe;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 /**
- * Created by fz on 2016/6/21.
- * 缓存工具类，包含Glide图片缓存和通用应用缓存管理
+ * updated by fz on 202/12/09.
+ * describe：缓存工具类，包含Glide图片缓存和通用应用缓存管理
  */
 public class CacheUtil {
 
@@ -32,11 +39,7 @@ public class CacheUtil {
      */
     public void clearImageDiskCache(final Context context) {
         try {
-            if (Looper.myLooper() == Looper.getMainLooper()) {
-                ThreadExecutor.getInstance().execute(() -> Glide.get(context).clearDiskCache());
-            } else {
-                Glide.get(context).clearDiskCache();
-            }
+            Glide.get(context).clearDiskCache();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,9 +50,7 @@ public class CacheUtil {
      */
     public void clearImageMemoryCache(Context context) {
         try {
-            if (Looper.myLooper() == Looper.getMainLooper()) { //只能在主线程执行
                 Glide.get(context).clearMemory();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +84,78 @@ public class CacheUtil {
      * @param context 上下文
      * @return 格式化后的缓存大小字符串
      */
-    public String getTotalCacheSize(Context context) {
+    public Single<String> calculateCacheSizeRxJava(Context context) {
+        return calculateCacheSize(context,null,null,false);
+    }
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @param context 上下文
+     * @param baseView ui操作View
+     * @return 格式化后的缓存大小字符串
+     */
+    public Single<String> calculateCacheSize(Context context, BaseView baseView) {
+        return calculateCacheSize(context,baseView,null,false);
+    }
+
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @param context 上下文
+     * @param baseView ui操作View
+     * @param message 提示信息
+     * @return 格式化后的缓存大小字符串
+     */
+    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message) {
+        return calculateCacheSize(context,baseView,message,false);
+    }
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @param context 上下文
+     * @param baseView ui操作View
+     * @param message 提示信息
+     * @param enableDynamicEllipsis 动态播放省略号
+     * @return 格式化后的缓存大小字符串
+     */
+    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+        return Single.create((SingleOnSubscribe<String>) emitter -> {
+                    long cacheSize = 0;
+                    // 内部缓存
+                    cacheSize += getFolderSize(context.getCacheDir());
+
+                    // 外部缓存（如果可用）
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        File externalCacheDir = context.getExternalCacheDir();
+                        if (externalCacheDir != null) {
+                            cacheSize += getFolderSize(externalCacheDir);
+                        }
+                    }
+
+                    // Glide专用缓存（避免重复计算，但为了完整性可以加上）
+                    File glideInternalCache = new File(context.getCacheDir() + File.separator + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR);
+                    if (glideInternalCache.exists()) {
+                        cacheSize += getFolderSize(glideInternalCache);
+                    }
+                    emitter.onSuccess(getFormatSize(cacheSize));
+                })
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                    if (baseView != null) {
+                        baseView.showLoading(TextUtils.isEmpty(message) ? "正在计算缓存，请稍后..." : message, enableDynamicEllipsis);
+                    }
+                })
+                .doFinally(() -> {
+                    if (baseView != null) {
+                        baseView.hideLoading();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @param context 上下文
+     * @return 格式化后的缓存大小字符串
+     */
+    public String calculateCacheSize(Context context) {
         long cacheSize = 0;
         try {
             // 内部缓存
@@ -113,7 +185,71 @@ public class CacheUtil {
      * 清理所有应用缓存（包括内部和外部）
      * @param context 上下文
      */
-    public void clearAllCache(Context context) {
+    public Completable clearCacheCompletable(Context context) {
+        return clearCache(context, null, null, false);
+    }
+
+    /**
+     * 清理所有应用缓存（包括内部和外部）
+     * @param context 上下文
+     * @param baseView ui操作View
+     */
+    public Completable clearCache(Context context, BaseView baseView) {
+        return clearCache(context, baseView, null, false);
+    }
+
+    /**
+     * 清理所有应用缓存（包括内部和外部）
+     * @param context 上下文
+     * @param baseView ui操作View
+     * @param message 提示信息
+     */
+    public Completable clearCache(Context context, BaseView baseView, String message) {
+        return clearCache(context, baseView, message, false);
+    }
+
+    /**
+     * 清理所有应用缓存（包括内部和外部）
+     * @param context 上下文
+     * @param baseView ui操作View
+     * @param message 提示信息
+     * @param enableDynamicEllipsis 动态播放省略号
+     */
+    public Completable clearCache(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+        return Completable.create(emitter -> {
+                    // 清理内部缓存
+                    deleteFolderFile(context.getCacheDir().getAbsolutePath(), false);
+
+                    // 清理外部缓存（如果可用）
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        File externalCacheDir = context.getExternalCacheDir();
+                        if (externalCacheDir != null) {
+                            deleteFolderFile(externalCacheDir.getAbsolutePath(), false);
+                        }
+                    }
+
+                    // 额外清理Glide缓存（确保完全清除）
+                    clearImageAllCache(context);
+                    emitter.onComplete();
+                }).subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                    if (baseView != null) {
+                        baseView.showLoading(TextUtils.isEmpty(message) ? "缓存清理中，请稍后..." : message, enableDynamicEllipsis);
+                    }
+                })
+                .doFinally(() -> {
+                    if (baseView != null) {
+                        baseView.hideLoading();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 清理所有应用缓存（包括内部和外部）
+     * @param context 上下文
+     */
+    public void clearCache(Context context) {
         // 清理内部缓存
         deleteFolderFile(context.getCacheDir().getAbsolutePath(), false);
 

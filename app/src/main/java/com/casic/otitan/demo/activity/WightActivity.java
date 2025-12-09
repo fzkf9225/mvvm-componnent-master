@@ -193,6 +193,7 @@ public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBin
                 DensityUtil.dp2px(this, 5f)
         ));
         binding.homeMenuView.setOnMenuClickListener(menuClickListener);
+        binding.iconDotTextView.setDotText("66");
     }
 
     OnMenuClickListener menuClickListener = new OnMenuClickListener() {

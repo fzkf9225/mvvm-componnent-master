@@ -18,12 +18,21 @@ import com.casic.otitan.common.R;
  * describe:圆形AppCompatTextView
  */
 public class CircleTextView extends AppCompatTextView {
-    private final Paint circlePaint;
-    private final Paint backPaint;
-    private final Paint textPaint;
-    private int strokeColor;
-    private int circleBackColor;
-    private float strokeWidth;
+    protected final Paint circlePaint;
+    protected final Paint backPaint;
+    protected final Paint textPaint;
+    /**
+     * 边框颜色
+     */
+    protected int strokeColor;
+    /**
+     * 背景颜色
+     */
+    protected int circleBackColor;
+    /**
+     * 边框宽度
+     */
+    protected float strokeWidth;
 
     public CircleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

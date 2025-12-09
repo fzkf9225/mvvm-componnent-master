@@ -18,35 +18,35 @@ public class CirclePaddingImageView extends AppCompatImageView {
     /**
      * 边框颜色
      */
-    private int borderColor;
+    protected int borderColor;
     /**
      * 默认背景色
      */
-    private int defaultBackgroundColor;
+    protected int defaultBackgroundColor;
     /**
      * 选中或按下时的北背景颜色
      */
-    private int focusBackgroundColor;
+    protected int focusBackgroundColor;
     /**
      * 是否启用选中样式
      */
-    private boolean enableSelected;
+    protected boolean enableSelected;
     /**
      * 是否启用按下样式
      */
-    private boolean enablePressed;
+    protected boolean enablePressed;
     /**
      * 边框粗细
      */
-    private int borderWidth;
+    protected int borderWidth;
     /**
      * 按下时的背景样式资源
      */
-    private GradientDrawable bgFocusedDrawable;
+    protected GradientDrawable bgFocusedDrawable;
     /**
      * 默认的背景样式资源
      */
-    private GradientDrawable bgDefaultDrawable;
+    protected GradientDrawable bgDefaultDrawable;
 
     public CirclePaddingImageView(Context context) {
         super(context);

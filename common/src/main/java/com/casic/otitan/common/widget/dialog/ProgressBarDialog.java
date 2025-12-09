@@ -45,7 +45,7 @@ public class ProgressBarDialog extends Dialog {
     private String messageType;
     private @ColorInt Integer contentColor;
     private String content;
-    private String buttonText = "关闭";
+    private String buttonText = null;
     private boolean isShowButton = true;
     private View.OnClickListener onButtonClickListener;
     private @ColorInt Integer buttonColor;
@@ -223,13 +223,15 @@ public class ProgressBarDialog extends Dialog {
         }
         if (TextUtils.isEmpty(buttonText) || !isShowButton) {
             processBarDialogBinding.dialogOption.setVisibility(View.GONE);
-            processBarDialogBinding.line.setVisibility(View.GONE);
+            processBarDialogBinding.line.setVisibility(View.INVISIBLE);
         } else {
             processBarDialogBinding.dialogOption.setVisibility(View.VISIBLE);
             processBarDialogBinding.line.setVisibility(View.VISIBLE);
         }
         if (!TextUtils.isEmpty(buttonText)) {
             processBarDialogBinding.dialogOption.setText(buttonText);
+        } else {
+            processBarDialogBinding.dialogOption.setText(getContext().getString(R.string.close));
         }
         if (buttonColor != null) {
             processBarDialogBinding.dialogOption.setTextColor(buttonColor);

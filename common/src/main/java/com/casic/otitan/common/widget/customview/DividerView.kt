@@ -13,11 +13,29 @@ import com.casic.otitan.common.R
  * describe:横向竖向虚线
  */
 class DividerView : View {
+    /**
+     * 虚线间隔
+     */
     var dashGap: Float? = null
+    /**
+     * 虚线长度
+     */
     var dashLength: Float? = null
+    /**
+     * 虚线宽度
+     */
     var dashThickness: Float? = null
+    /**
+     * 虚线颜色
+     */
     var color: Int? = null
+    /**
+     * 虚线方向
+     */
     var orientation: Int = ORIENTATION_HORIZONTAL
+    /**
+     * 画笔
+     */
     var mPaint: Paint? = null
 
     companion object {

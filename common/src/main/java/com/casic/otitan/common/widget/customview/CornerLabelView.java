@@ -22,10 +22,10 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * describe:自定义三角形角标view，可以自定义在四个角落和角标的宽度背景色
  */
 public class CornerLabelView extends View {
-    private float mHalfWidth;//View宽度的一半，取宽高的最小值，即：短的一边，然后取正方形
-    private Paint mPaint;//角标画笔
-    private TextPaint mTextPaint;//文字画笔
-    private Path mPath;//角标路径
+    protected float mHalfWidth;//View宽度的一半，取宽高的最小值，即：短的一边，然后取正方形
+    protected Paint mPaint;//角标画笔
+    protected TextPaint mTextPaint;//文字画笔
+    protected Path mPath;//角标路径
 
     private Position position = Position.RIGHT_TOP;//角标位置，0：右上角、1：右下角、2：左下角、3：左上角
 

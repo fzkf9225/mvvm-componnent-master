@@ -31,7 +31,6 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
  * 底部确认弹框
  */
 public class MenuDialog<T extends PopupWindowBean> extends Dialog {
-    private final Context context;
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
     /**
      * 是否可以点击外部取消
@@ -44,6 +43,8 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
      */
     private int gravity = Gravity.BOTTOM;
     private boolean isShowCancelButton = true;
+    private @ColorInt int lineColor = -1;
+    private boolean isShowLine = true;
     /**
      * 取消按钮颜色
      */
@@ -51,7 +52,6 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
 
     public MenuDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
-        this.context = context;
     }
 
     public MenuDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
@@ -77,6 +77,16 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         for (String menu : data) {
             this.menuData.add((T) new PopupWindowBean(null, menu));
         }
+        return this;
+    }
+
+    public MenuDialog<T> setLineColor(@ColorInt int lineColor) {
+        this.lineColor = lineColor;
+        return this;
+    }
+
+    public MenuDialog<T> setShowLine(boolean showLine) {
+        isShowLine = showLine;
         return this;
     }
 
@@ -107,7 +117,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
     }
 
     private void initView() {
-        binding = MenuDialogBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = MenuDialogBinding.inflate(LayoutInflater.from(getContext()), null, false);
         binding.buttonCancel.setOnClickListener(v -> dismiss());
         if (negativeTextColor != null) {
             binding.buttonCancel.setTextColor(negativeTextColor);
@@ -121,10 +131,12 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
             }
         });
         binding.mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
-        binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
-        binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL,
-                DensityUtil.dp2px(context, 1),
-                ContextCompat.getColor(context, R.color.h_line_color), false));
+        binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (isShowLine) {
+            binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL,
+                    DensityUtil.dp2px(getContext(), 1),
+                    lineColor == -1 ? ContextCompat.getColor(getContext(), R.color.h_line_color) : lineColor, false));
+        }
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());

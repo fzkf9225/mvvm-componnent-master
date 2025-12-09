@@ -26,7 +26,7 @@ import com.casic.otitan.common.utils.network.NetworkStateUtil;
 
 
 /**
- * Created by fz on 2017/12/13.
+ * Updated by fz on 2025/12/09.
  * 更新弹框
  */
 public class UpdateMessageDialog extends Dialog implements View.OnClickListener {
@@ -44,13 +44,9 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
      */
     private boolean canCancel = false;
     /**
-     * 默认按钮文字
-     */
-    private final String DEFAULT_BUTTON_TEXT = "更新";
-    /**
      * 按钮文字
      */
-    private String buttonText = DEFAULT_BUTTON_TEXT;
+    private String buttonText = null;
     /**
      * 按钮样式，这个和下面的样式互斥
      */
@@ -204,8 +200,12 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
     private void initView() {
         binding = UpdateDialogBinding.inflate(getLayoutInflater(), null, false);
 
-        SpannableString spannableString = new SpannableString(TextUtils.isEmpty(updateMsgString) ? "暂无更新内容" : updateMsgString);
-
+        SpannableString spannableString;
+        if (TextUtils.isEmpty(updateMsgString)) {
+            spannableString = new SpannableString(getContext().getString(R.string.no_upgrade_info));
+        } else {
+            spannableString = new SpannableString(TextUtils.isEmpty(updateMsgString) ? "暂无更新内容" : updateMsgString);
+        }
         // 使用Linkify类将文本中的链接转换为可点击的链接
         Linkify.addLinks(spannableString, Linkify.WEB_URLS);
 
@@ -213,7 +213,7 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
         // 设置TextView可点击
         binding.updateMsg.setMovementMethod(LinkMovementMethod.getInstance());
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("检测到新版");
+        stringBuilder.append(getContext().getString(R.string.checked_new_version));
         if (!TextUtils.isEmpty(versionName)) {
             if (!versionName.contains("v") && !versionName.contains("V")) {
                 stringBuilder.append("V");
@@ -223,14 +223,18 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
 
         binding.updateTitle.setText(stringBuilder.toString());
         binding.updateTitle.setTextColor(titleColor);
-        binding.updateTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,titleTextSize);
+        binding.updateTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleTextSize);
 
         binding.updateMsg.setTextColor(updateMsgTextColor);
-        binding.updateMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX,updateMsgTextSize);
+        binding.updateMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, updateMsgTextSize);
 
-        binding.updateBtn.setText(TextUtils.isEmpty(buttonText) ? DEFAULT_BUTTON_TEXT : buttonText);
+        if (TextUtils.isEmpty(buttonText)) {
+            binding.updateBtn.setText(ContextCompat.getString(getContext(), R.string.upgrade));
+        } else {
+            binding.updateBtn.setText(buttonText);
+        }
         binding.updateBtn.setTextColor(buttonTextColor);
-        binding.updateBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX,buttonTextSize);
+        binding.updateBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, buttonTextSize);
 
         if (drawable != null) {
             binding.updateBtn.setBackground(drawable);

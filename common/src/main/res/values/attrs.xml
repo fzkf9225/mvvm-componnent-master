@@ -49,11 +49,17 @@
     <attr name="backgroundDrawable" format="reference" />
     <attr name="backgroundColor" format="color" />
     <attr name="backgroundCornerRadius" format="dimension" />
+    <attr name="dotWidth" format="dimension" />
     <attr name="dotHeight" format="dimension" />
+    <attr name="dotShow" format="boolean" />
+    <!--显示行数-->
+    <attr name="line" format="integer" />
     <attr name="dotBottomMargin" format="dimension" />
     <attr name="dotLeftMargin" format="dimension" />
     <attr name="dotRightMargin" format="dimension" />
     <attr name="dotPadding" format="dimension" />
+    <!--是否加粗-->
+    <attr name="isBold" format="boolean" />
     <declare-styleable name="ConfigurableWebView">
 
         <attr name="domain" format="string" />
@@ -80,7 +86,7 @@
     <declare-styleable name="scaling_text_view">
         <attr name="text" />
         <attr name="defaultLine" format="integer" />
-        <attr name="textColor" />
+        <attr name="scalingTextColor" format="reference|color"/>
         <attr name="defaultCollapsed" format="boolean" />
     </declare-styleable>
     <declare-styleable name="RatingBar">
@@ -121,6 +127,31 @@
         <attr name="imageWidth" />
         <attr name="imageSrc" />
         <attr name="label" />
+        <!-- 新增：角标相关属性 -->
+        <attr name="dotTextSize" format="dimension" />
+        <attr name="dotTextColor" format="color" />
+        <attr name="dotBackground" format="reference" />
+        <attr name="dotBackgroundColor" format="color" />
+        <attr name="dotWidth" />
+        <attr name="dotHeight" />
+        <attr name="dotPadding" />
+        <attr name="dotShow" />
+        <!--显示行数-->
+        <attr name="line" />
+        <attr name="dotMaxCount" format="integer" />
+
+        <!-- 新增：布局方向 -->
+        <attr name="layoutDirection" format="enum">
+            <enum name="icon_top_text_bottom" value="0" />
+            <enum name="icon_bottom_text_top" value="1" />
+        </attr>
+        <!-- label是否加粗 -->
+        <attr name="isBold" />
+        <!-- 新增：图标与文字的间距 -->
+        <attr name="iconTextSpacing" format="dimension" />
+        <!-- 新增：角标的偏移量 -->
+        <attr name="dotOffsetX" format="dimension" />
+        <attr name="dotOffsetY" format="dimension" />
     </declare-styleable>
     <declare-styleable name="CircleTextView">
         <attr name="strokeColor" />
@@ -387,7 +418,7 @@
         <!--右侧图标高度-->
         <attr name="endDrawableHeight" format="dimension" />
         <!--是否加粗-->
-        <attr name="isBold" format="boolean" />
+        <attr name="isBold" />
     </declare-styleable>
 
     <declare-styleable name="FocusView">
@@ -488,9 +519,9 @@
         <attr name="rowCount" />
         <attr name="topMargin" />
         <!--是否自适应高度，默认为true-->
-        <attr name="isWrap" format="boolean"/>
+        <attr name="isWrap" format="boolean" />
         <!--label显示行数-->
-        <attr name="labelLines" format="integer"/>
+        <attr name="labelLines" format="integer" />
         <attr name="startMargin" />
         <attr name="endMargin" />
         <attr name="bottomMargin" />

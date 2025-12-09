@@ -2,6 +2,8 @@
 
     <string name="loginClick">点击登录</string>
     <string name="cancel">取消</string>
+    <string name="tips_message">提示信息</string>
+    <string name="close">关闭</string>
     <string name="login_user_hint">请输入用户名</string>
     <string name="login_tel_hint">请输入手机号码</string>
     <string name="login_pwd_hint">请输入密码</string>
@@ -54,6 +56,8 @@
     <string name="permission_rationale">浏览图片需要您提供浏览存储的权限</string>
     <string name="permission_rationale_write_storage">保存拍照图片需要您提供写存储权限</string>
     <string name="upgrade">更新</string>
+    <string name="checked_new_version">检测到新版本</string>
+    <string name="no_upgrade_info">暂无更新内容描述</string>
     <string name="loading_now">正在加载…</string>
     <string name="please_entry_something">请输入</string>
     <string name="sure">确定</string>

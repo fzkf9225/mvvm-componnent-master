@@ -18,10 +18,22 @@ import com.casic.otitan.common.R;
  * describe：自定义圆角矩形
  */
 public class CornerButton extends AppCompatButton {
-    private @ColorInt int strokeColor;
-    private @ColorInt int circleBackColor;
-    private GradientDrawable gradientDrawable;
-    private float radius, strokeWidth;
+    /**
+     * 边框颜色
+     */
+    protected @ColorInt int strokeColor;
+    /**
+     * 背景颜色
+     */
+    protected @ColorInt int circleBackColor;
+    /**
+     * 圆角矩形样式
+     */
+    protected GradientDrawable gradientDrawable;
+    /**
+     * 圆角半径和边框宽度
+     */
+    protected float radius, strokeWidth;
 
     public CornerButton(Context context) {
         this(context, null);

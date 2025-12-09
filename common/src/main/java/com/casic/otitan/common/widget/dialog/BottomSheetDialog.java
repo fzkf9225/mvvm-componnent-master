@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,20 +25,20 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
  * describe:底部选择框
  */
 public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.android.material.bottomsheet.BottomSheetDialog {
-    private Context context = null;
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
     private boolean outSide = true;
     private List<T> menuData;
     private OptionBottomMenuListAdapter<T> optionBottomMenuListAdapter;
+    private @ColorInt int lineColor = -1;
+    private boolean isShowLine = true;
     private boolean showCancelButton = false;
+
     public BottomSheetDialog(@NonNull Context context) {
         super(context);
-        this.context = context;
     }
 
     public BottomSheetDialog(@NonNull Context context, int theme) {
         super(context, theme);
-        this.context = context;
     }
 
     public BottomSheetDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
@@ -60,19 +61,29 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         return this;
     }
 
+    public BottomSheetDialog<T> setShowLine(boolean showLine) {
+        isShowLine = showLine;
+        return this;
+    }
+
+    public BottomSheetDialog<T> setLineColor(@ColorInt int lineColor) {
+        this.lineColor = lineColor;
+        return this;
+    }
+
     public BottomSheetDialog<T> setData(String... data) {
         this.menuData = new ArrayList<>();
         if (data == null) {
             return this;
         }
         for (String menu : data) {
-            this.menuData.add((T)new PopupWindowBean(null, menu));
+            this.menuData.add((T) new PopupWindowBean(null, menu));
         }
         return this;
     }
 
     public BottomSheetDialog<T> builder() {
-        initView(context);
+        initView();
         return this;
     }
 
@@ -86,8 +97,8 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         return optionBottomMenuListAdapter;
     }
 
-    private void initView(Context context) {
-        binding = OptionBottomMenuDialogBinding.inflate(LayoutInflater.from(context), null, false);
+    private void initView() {
+        binding = OptionBottomMenuDialogBinding.inflate(LayoutInflater.from(getContext()), null, false);
         binding.buttonCancel.setOnClickListener(v -> dismiss());
         optionBottomMenuListAdapter = new OptionBottomMenuListAdapter<>();
         optionBottomMenuListAdapter.setList(menuData);
@@ -96,12 +107,14 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
                 optionBottomMenuClickListener.onOptionBottomMenuClick(this, optionBottomMenuListAdapter.getList(), position);
             }
         });
-        binding.buttonCancel.setVisibility(showCancelButton?View.VISIBLE:View.GONE);
+        binding.buttonCancel.setVisibility(showCancelButton ? View.VISIBLE : View.GONE);
         binding.mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
-        binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(context));
-        binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL,
-                DensityUtil.dp2px(context, 1),
-                ContextCompat.getColor(context, R.color.h_line_color), false));
+        binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (isShowLine) {
+            binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL,
+                    DensityUtil.dp2px(getContext(), 1),
+                    lineColor == -1 ? ContextCompat.getColor(getContext(), R.color.h_line_color) : lineColor, false));
+        }
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());

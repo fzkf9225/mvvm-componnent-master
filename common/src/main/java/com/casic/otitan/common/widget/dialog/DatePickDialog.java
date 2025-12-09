@@ -15,6 +15,7 @@ import android.widget.NumberPicker;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 
@@ -36,7 +37,7 @@ public class DatePickDialog extends Dialog {
     private OnDialogInterfaceClickListener onNegativeClickListener;
     private boolean outSide = true;
     private DateMode dateMode = DateMode.YEAR_MONTH_DAY;
-    private String positiveText = "确定", negativeText = "取消";
+    private String positiveText = null, negativeText = null;
     private boolean isShowSureView = true, isShowCancelView = true;
     private DialogDatePickBinding binding;
     private ColorStateList positiveTextColor = null;
@@ -211,9 +212,16 @@ public class DatePickDialog extends Dialog {
 
     private void initView() {
         binding = DialogDatePickBinding.inflate(LayoutInflater.from(context), null, false);
-        binding.dialogConfirm.setText(positiveText);
-        binding.dialogCancel.setText(negativeText);
-
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.sure));
+        } else {
+            binding.dialogConfirm.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
         if (positiveTextColor != null) {
             binding.dialogConfirm.setBackColor(positiveTextColor);
         }

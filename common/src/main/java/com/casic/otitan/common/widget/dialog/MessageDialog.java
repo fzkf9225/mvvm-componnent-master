@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogMessageBinding;
@@ -31,8 +33,8 @@ public class MessageDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener;
     private boolean outSide = true;
-    private String positiveText = "确定";
-    private String messageType = "提示信息";
+    private String positiveText = null;
+    private String messageType = null;
     private final LayoutInflater layoutInflater;
     private Drawable bgDrawable;
     private ColorStateList textColor = null;
@@ -94,9 +96,19 @@ public class MessageDialog extends Dialog {
     }
 
     private void initView() {
-         binding = DialogMessageBinding.inflate(layoutInflater, null, false);
-        binding.dialogOption.setText(positiveText);
-        binding.dialogMessageType.setText(messageType);
+        binding = DialogMessageBinding.inflate(layoutInflater, null, false);
+
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogOption.setText(ContextCompat.getString(getContext(), R.string.sure));
+        } else {
+            binding.dialogOption.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(messageType)) {
+            binding.dialogMessageType.setText(ContextCompat.getString(getContext(), R.string.tips_message));
+        } else {
+            binding.dialogMessageType.setText(messageType);
+        }
+
         binding.dialogMessageType.setVisibility(StringUtil.isEmpty(binding.dialogMessageType.getText().toString()) ? View.GONE : View.VISIBLE);
         if (bgDrawable != null) {
             binding.clMessage.setBackground(bgDrawable);

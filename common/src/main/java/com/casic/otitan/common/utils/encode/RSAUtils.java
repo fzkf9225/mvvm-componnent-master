@@ -3,6 +3,7 @@ package com.casic.otitan.common.utils.encode;
 import android.content.Context;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
@@ -24,7 +25,7 @@ public class RSAUtils {
             InputStream inPublic = context.getResources().getAssets().open("rsa_public_key.pem");
             PublicKey publicKey = RSAUtilsHelper.loadPublicKey(inPublic);
             // 加密
-            byte[] encryptByte = RSAUtilsHelper.encryptData(source.getBytes("UTF-8"), publicKey);
+            byte[] encryptByte = RSAUtilsHelper.encryptData(source.getBytes(StandardCharsets.UTF_8), publicKey);
             // 为了方便观察吧加密后的数据用base64加密转一下，要不然看起来是乱码,所以解密是也是要用Base64先转换
 //            BASE64Encoder encoder = new BASE64Encoder();
 //            String ss = Base64Util.encode(encryptByte);
@@ -46,8 +47,7 @@ public class RSAUtils {
             // 因为RSA加密后的内容经Base64再加密转换了一下，所以先Base64解密回来再给RSA解密
             byte[] b1 = Base64.getDecoder().decode(data);
             byte[] decryptByte = RSAUtilsHelper.decryptData(b1, privateKey);
-            String decryptStr = new String(decryptByte);
-            return decryptStr;
+            return new String(decryptByte);
         } catch (Exception e) {
             e.printStackTrace();
             return "解密错误";

@@ -17,27 +17,46 @@ import com.casic.otitan.common.R
  * Created by fz on 2023/8/14 16:31
  * describe :
  */
-class ScalingTextView(context: Context, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
-    private var maxLinesCollapsed: Int = 2
-    private var isCollapsed: Boolean = false
-    private var mOriginText: String
-    @ColorInt
-    private var mOriginTextColor: Int
+open class ScalingTextView(context: Context, attrs: AttributeSet?) :
+    androidx.appcompat.widget.AppCompatTextView(context, attrs) {
+    /**
+     * 最大展示行数
+     */
+    protected var maxLinesCollapsed: Int = 2
 
-    companion object{
+    /**
+     * 是否是收起
+     */
+    protected var isCollapsed: Boolean = false
+
+    /**
+     * 原始文字
+     */
+    protected var mOriginText: String?
+
+    /**
+     * 收起、展开文字颜色
+     */
+    @ColorInt
+    protected var scalingTextColor: Int
+
+    companion object {
         private const val DEFAULT_OPEN_SUFFIX = "查看全文"
         private const val DEFAULT_CLOSE_SUFFIX = "收起全文"
     }
 
-    private val ellipsis = "..."
-    private var spannableString: SpannableString? = null
+    protected val ellipsis = "..."
+    protected var spannableString: SpannableString? = null
 
     init {
         val typedValue = context.obtainStyledAttributes(attrs, R.styleable.scaling_text_view)
-        mOriginText = typedValue.getString(R.styleable.scaling_text_view_text).toString()
-        maxLinesCollapsed = typedValue.getInt(R.styleable.scaling_text_view_defaultLine,2).toInt()
-        isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_defaultCollapsed,false)
-        mOriginTextColor = typedValue.getColor(R.styleable.scaling_text_view_textColor,ContextCompat.getColor(context,R.color.themeColor)).toInt()
+        mOriginText = typedValue.getString(R.styleable.scaling_text_view_text)
+        maxLinesCollapsed = typedValue.getInt(R.styleable.scaling_text_view_defaultLine, 2)
+        isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_defaultCollapsed, false)
+        scalingTextColor = typedValue.getColor(
+            R.styleable.scaling_text_view_scalingTextColor,
+            ContextCompat.getColor(context, R.color.themeColor)
+        )
         text = mOriginText
     }
 
@@ -50,13 +69,13 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) : androidx.appcomp
 
         override fun updateDrawState(ds: TextPaint) {
             // 设置点击文字的颜色
-            ds.color = Color.BLUE
+            ds.color = scalingTextColor
             // 如果不希望点击文字有下划线，可以注释下面这行代码
             ds.isUnderlineText = true
         }
     }
 
-    fun setOriginText(mOriginText:String ){
+    fun setOriginText(mOriginText: String?) {
         this.mOriginText = mOriginText;
         requestLayout();
     }
@@ -95,7 +114,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) : androidx.appcomp
             )
             //设置文本颜色
             spannableString?.setSpan(
-                ForegroundColorSpan(mOriginTextColor),
+                ForegroundColorSpan(scalingTextColor),
                 newText.lastIndexOf(DEFAULT_OPEN_SUFFIX),
                 newText.lastIndexOf(DEFAULT_OPEN_SUFFIX) + DEFAULT_OPEN_SUFFIX.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -103,7 +122,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) : androidx.appcomp
             text = spannableString
             movementMethod = LinkMovementMethod.getInstance()
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        }else if (layout != null && !isCollapsed) {
+        } else if (layout != null && !isCollapsed) {
             val newText = mOriginText + DEFAULT_CLOSE_SUFFIX
             spannableString = SpannableString(newText);
             //设置点击事件
@@ -115,7 +134,7 @@ class ScalingTextView(context: Context, attrs: AttributeSet?) : androidx.appcomp
             )
             //设置文本颜色
             spannableString?.setSpan(
-                ForegroundColorSpan(mOriginTextColor),
+                ForegroundColorSpan(scalingTextColor),
                 newText.lastIndexOf(DEFAULT_CLOSE_SUFFIX),
                 newText.lastIndexOf(DEFAULT_CLOSE_SUFFIX) + DEFAULT_CLOSE_SUFFIX.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

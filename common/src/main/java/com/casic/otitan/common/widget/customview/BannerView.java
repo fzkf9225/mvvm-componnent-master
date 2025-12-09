@@ -52,63 +52,63 @@ import com.casic.otitan.common.widget.gallery.PreviewPhotoDialog;
  */
 
 public class BannerView<T extends BannerBean> extends ConstraintLayout {
-    private ViewPager2 viewPager;
-    private LinearLayout dotsLayout;
+    protected ViewPager2 viewPager;
+    protected LinearLayout dotsLayout;
     /**
      * 上一次索引位置
      */
-    private int lastPos = 0;
+    protected int lastPos = 0;
     /**
      * 预览大图
      */
-    private boolean previewLarger = true;
+    protected boolean previewLarger = true;
     /**
      * 自动轮播
      */
-    private boolean autoLoop = true;
+    protected boolean autoLoop = true;
     /**
      * 底部圆点位置
      */
-    private int dotPosition = DotPosition.INNER_BOTTOM_CENTER;
+    protected int dotPosition = DotPosition.INNER_BOTTOM_CENTER;
     /**
      * 错误时占位图
      */
-    private @DrawableRes int placeholderImage;
+    protected @DrawableRes int placeholderImage;
     /**
      * banner数据
      */
-    private List<T> bannerList;
+    protected List<T> bannerList;
     /**
      * 宽高
      */
-    private float width, height;
+    protected float width, height;
     /**
      * 背景色
      */
-    private int bgColor = Color.WHITE;
+    protected int bgColor = Color.WHITE;
     /**
      * 各大圆角大小
      */
-    private int leftTopRadius;
-    private int rightTopRadius;
-    private int rightBottomRadius;
-    private int leftBottomRadius;
+    protected int leftTopRadius;
+    protected int rightTopRadius;
+    protected int rightBottomRadius;
+    protected int leftBottomRadius;
     /**
      * 自动轮播间隔时间
      */
-    private int loopInterval = 3000;
+    protected int loopInterval = 3000;
     /**
      * 选中时圆点样式
      */
-    private Drawable drawableResCurrent;
+    protected Drawable drawableResCurrent;
     /**
      * 未选中时圆点样式
      */
-    private Drawable drawableResNormal;
-    private final Path mPath = new Path();
-    private Paint mPaint;
-    private float dotHeight = 0, dotBottomMargin, dotLeftMargin, dotRightMargin, dotPadding;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    protected Drawable drawableResNormal;
+    protected final Path mPath = new Path();
+    protected Paint mPaint;
+    protected float dotHeight = 0, dotBottomMargin, dotLeftMargin, dotRightMargin, dotPadding;
+    protected final Handler handler = new Handler(Looper.getMainLooper());
 
     public final static class DotPosition {
         public final static int INNER_BOTTOM_CENTER = 0;

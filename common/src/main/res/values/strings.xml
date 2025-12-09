@@ -55,9 +55,12 @@
     <string name="permission_rationale">Storage read permission is needed to pick files.</string>
     <string name="permission_rationale_write_storage">Storage write permission is needed to save the image.</string>
     <string name="upgrade">upgrade</string>
+    <string name="checked_new_version">A new version has been detected</string>
+    <string name="no_upgrade_info">There is no description of the updated content for the time being</string>
     <string name="loading_now">Loading…</string>
     <string name="please_entry_something">Please enter</string>
     <string name="sure">OK</string>
+    <string name="tips_message">Tips</string>
     <string name="search">Search</string>
     <string name="please_enter">Please enter…</string>
     <string name="year">Years</string>
@@ -65,6 +68,7 @@
     <string name="day">Day</string>
     <string name="today">today</string>
     <string name="hour">Hours</string>
+    <string name="close">Close</string>
     <string name="minute">Minute</string>
     <string name="second">Second</string>
     <string name="save_to_local">Save to local</string>

@@ -18,17 +18,46 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * describe:左侧带方块的TextView，一般用于模块名文本
  */
 public class SquareLabelView extends AppCompatTextView {
-    private static final int DEFAULT_SQUARE_COLOR = Color.BLUE;
-    private static final int DEFAULT_SQUARE_SIZE = 14; // dp
-    private static final int DEFAULT_SQUARE_SPACING = 8; // dp
-
-    private int squareColor;
-    private float squareWidth;
-    private float squareHeight;
-    private int squareShape;
-    private float squareCornerRadius;
-    private int squarePosition;
-    private float squareSpacing;
+    /**
+     * 默认方块颜色
+     */
+    protected static final int DEFAULT_SQUARE_COLOR = Color.BLUE;
+    /**
+     * 默认方块大小
+     */
+    protected static final int DEFAULT_SQUARE_SIZE = 14; // dp
+    /**
+     * 默认方块间距
+     */
+    protected static final int DEFAULT_SQUARE_SPACING = 8; // dp
+    /**
+     * 方块颜色
+     */
+    protected int squareColor;
+    /**
+     * 方块宽度
+     */
+    protected float squareWidth;
+    /**
+     * 方块高度
+     */
+    protected float squareHeight;
+    /**
+     * 方块形状，rectangle-0，oval-1，round_rectangle-2
+     */
+    protected int squareShape;
+    /**
+     * 方块圆角半径
+     */
+    protected float squareCornerRadius;
+    /**
+     * 方块位置,0-左，1-上，2-右，3-下
+     */
+    protected int squarePosition;
+    /**
+     * 方块间距
+     */
+    protected float squareSpacing;
 
     private Paint squarePaint;
     private RectF squareRect;

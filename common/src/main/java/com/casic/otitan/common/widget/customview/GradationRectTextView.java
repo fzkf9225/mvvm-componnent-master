@@ -36,39 +36,95 @@ import com.casic.otitan.common.widget.customview.round.SpanContainer;
  * describe :渐变背景色且可以设置左右不同文字颜色的TextView
  */
 public class GradationRectTextView extends AppCompatTextView {
-
-    private static final String EMPTY_SPACE = "\u3000";
-    private int type = RECTANGLE;
-    private float mRadius;
-    private float mTopLeftRadius, mTopRightRadius, mBottomLeftRadius, mBottomRightRadius;
-    private int mStrokeColor;
-    private int mStrokeWidth;
-    private int mSolid;
-    private float mTextPadding;
-    private CharSequence mTextLeft;
-    private CharSequence mTextRight;
-    private ColorStateList mIconColor = null;
-    private int mCurIconColor;
-    private CharSequence iconString;
-    private ColorStateList mLeftColor = null;
-    private int mCurLeftColor;
-    private ColorStateList mRightColor = null;
-    private int mCurRightColor;
-    private float mLeftSize;
-    private float mRightSize;
-    private List<SpanContainer> leftContainer;
-    private List<SpanContainer> rightContainer;
-    private int mTextLeftStyle;
-    private int mTextRightStyle;
-    private int mTextCenterStyle;
+    /**
+     * 空格
+     */
+    protected static final String EMPTY_SPACE = "\u3000";
+    /**
+     * 默认为圆角样式
+     */
+    protected int type = RECTANGLE;
+    /**
+     * 圆角半径
+     */
+    protected float mRadius;
+    /**
+     * 圆角半径
+     */
+    protected float mTopLeftRadius, mTopRightRadius, mBottomLeftRadius, mBottomRightRadius;
+    /**
+     * 边框颜色
+     */
+    protected int mStrokeColor;
+    /**
+     * 边框宽度
+     */
+    protected int mStrokeWidth;
+    /**
+     * 填充颜色
+     */
+    protected int mSolid;
+    /**
+     * 文字间距
+     */
+    protected float mTextPadding;
+    /**
+     * 左边文字
+     */
+    protected CharSequence mTextLeft;
+    /**
+     * 右边文字
+     */
+    protected CharSequence mTextRight;
+    /**
+     * 图标颜色
+     */
+    protected ColorStateList mIconColor = null;
+    protected int mCurIconColor;
+    /**
+     * 图标
+     */
+    protected CharSequence iconString;
+    /**
+     * 左边文字颜色
+     */
+    protected ColorStateList mLeftColor = null;
+    protected int mCurLeftColor;
+    /**
+     * 右侧文字
+     */
+    protected ColorStateList mRightColor = null;
+    protected int mCurRightColor;
+    /**
+     * 左边文字大小
+     */
+    protected float mLeftSize;
+    /**
+     * 右侧文字大小
+     */
+    protected float mRightSize;
+    protected List<SpanContainer> leftContainer;
+    protected List<SpanContainer> rightContainer;
+    /**
+     * 左边文字样式
+     */
+    protected int mTextLeftStyle;
+    /**
+     * 右边文字样式
+     */
+    protected int mTextRightStyle;
+    /**
+     * 中间文字样式
+     */
+    protected int mTextCenterStyle;
     //icon的index
-    private int iconIndex = 0;
+    protected int iconIndex = 0;
     //是否开启计算文字边界，开启后会以最大文字大小为View高度，并且会增加部分文字高度，防止部分英文类型y,g由于基线的原因无法显示完全
-    private boolean autoMaxHeight;
+    protected boolean autoMaxHeight;
     //渐变色
-    private ColorStateList startColor = null;
-    private ColorStateList centerColor = null;
-    private ColorStateList endColor = null;
+    protected ColorStateList startColor = null;
+    protected ColorStateList centerColor = null;
+    protected ColorStateList endColor = null;
     //渐变方向
     GradientDrawable.Orientation orientation;
 

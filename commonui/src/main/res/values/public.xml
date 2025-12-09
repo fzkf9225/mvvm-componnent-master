@@ -8,6 +8,7 @@
     <public name="bg_green_alpha" type="color"/>
     <public name="bg_red_alpha" type="color"/>
     <public name="dark_color" type="color"/>
+    <public name="auto_color" type="color"/>
     <!--drawable-->
     <public name="line_bottom" type="drawable"/>
     <public name="line_left" type="drawable"/>

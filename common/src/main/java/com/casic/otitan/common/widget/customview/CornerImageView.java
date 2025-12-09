@@ -19,14 +19,32 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * describe:圆角ImageView
  */
 public class CornerImageView extends AppCompatImageView {
-    float width, height;
-    private int radius;
-    private int leftTopRadius;
-    private int rightTopRadius;
-    private int rightBottomRadius;
-    private int leftBottomRadius;
-    private Paint mPaint;
-    private final Path mPath = new Path();
+    /**
+     * 图片宽高
+     */
+    protected float width, height;
+    /**
+     * 圆角半径
+     */
+    protected int radius;
+    /**
+     * 左上圆角半径
+     */
+    protected int leftTopRadius;
+    /**
+     * 右上圆角半径
+     */
+    protected int rightTopRadius;
+    /**
+     * 右下圆角半径
+     */
+    protected int rightBottomRadius;
+    /**
+     * 左下圆角半径
+     */
+    protected int leftBottomRadius;
+    protected Paint mPaint;
+    protected final Path mPath = new Path();
 
     public CornerImageView(Context context) {
         this(context, null);

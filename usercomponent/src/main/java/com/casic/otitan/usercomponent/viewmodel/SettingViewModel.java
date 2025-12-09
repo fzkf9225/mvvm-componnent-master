@@ -63,7 +63,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
                     .setOnPositiveClickListener(dialog -> {
                         try {
                             // 清理所有缓存
-                            CacheUtil.getInstance().clearAllCache(view.getContext());
+                            CacheUtil.getInstance().clearCache(view.getContext());
                             tvCleanUp.setValue(getCacheSize());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -80,7 +80,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
      * 计算缓存大小
      */
     public String getCacheSize() {
-        return CacheUtil.getInstance().getTotalCacheSize(getApplication());
+        return CacheUtil.getInstance().calculateCacheSize(getApplication());
     }
 
 }
