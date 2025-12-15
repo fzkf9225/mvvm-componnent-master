@@ -38,7 +38,7 @@ public class DatePickDialog extends Dialog {
     private boolean outSide = true;
     private DateMode dateMode = DateMode.YEAR_MONTH_DAY;
     private String positiveText = null, negativeText = null;
-    private boolean isShowSureView = true, isShowCancelView = true;
+    private boolean isShowPositiveView = true, isShowNegativeView = true;
     private DialogDatePickBinding binding;
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
@@ -187,8 +187,8 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
-    public DatePickDialog setShowPositiveView(boolean isShowSureView) {
-        this.isShowSureView = isShowSureView;
+    public DatePickDialog setShowPositiveView(boolean isShowPositiveView) {
+        this.isShowPositiveView = isShowPositiveView;
         return this;
     }
     public DatePickDialog setGravity(int gravity) {
@@ -196,8 +196,8 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
-    public DatePickDialog setShowNegativeView(boolean isShowCancelView) {
-        this.isShowCancelView = isShowCancelView;
+    public DatePickDialog setShowNegativeView(boolean isShowNegativeView) {
+        this.isShowNegativeView = isShowNegativeView;
         return this;
     }
 
@@ -213,7 +213,7 @@ public class DatePickDialog extends Dialog {
     private void initView() {
         binding = DialogDatePickBinding.inflate(LayoutInflater.from(context), null, false);
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.sure));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
             binding.dialogConfirm.setText(positiveText);
         }
@@ -234,11 +234,11 @@ public class DatePickDialog extends Dialog {
             binding.tvToday.setTextColor(todayTextColor);
         }
 
-        if (!isShowCancelView) {
+        if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
         }
 
-        if (!isShowSureView) {
+        if (!isShowPositiveView) {
             binding.dialogConfirm.setVisibility(View.GONE);
         }
         if (bgDrawable != null) {

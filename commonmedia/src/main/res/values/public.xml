@@ -14,6 +14,7 @@
     <public name="shoot_dialog" type="layout"/>
 
     <!--字符串资源-->
+    <public name="go_to_authorization" type="string"/>
     <public name="album" type="string"/>
     <public name="camera" type="string"/>
     <public name="shoot" type="string"/>
@@ -21,6 +22,6 @@
     <public name="audio" type="string"/>
     <public name="cancel" type="string"/>
     <public name="media_manage" type="string"/>
-    <public name="sure" type="string"/>
+    <public name="confirm" type="string"/>
 
 </resources>

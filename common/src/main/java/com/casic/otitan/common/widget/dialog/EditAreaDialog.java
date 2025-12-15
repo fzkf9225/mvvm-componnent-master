@@ -138,7 +138,7 @@ public class EditAreaDialog extends Dialog {
         binding = DialogEditAreaBinding.inflate(layoutInflater, null, false);
         // 初始化控件
         if (positiveTextColor != null) {
-            binding.dialogSure.setTextColor(positiveTextColor);
+            binding.dialogConfirm.setTextColor(positiveTextColor);
         }
         if (textColor != null) {
             binding.dialogInput.setTextColor(textColor);
@@ -157,9 +157,9 @@ public class EditAreaDialog extends Dialog {
         binding.dialogInput.setInputType(inputType);
         binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogSure.setText(ContextCompat.getString(getContext(), R.string.sure));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
-            binding.dialogSure.setText(positiveText);
+            binding.dialogConfirm.setText(positiveText);
         }
         if (TextUtils.isEmpty(negativeText)) {
             binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
@@ -172,14 +172,14 @@ public class EditAreaDialog extends Dialog {
             binding.dialogTips.setText(tipsStr);
         }
 
-        binding.dialogSure.setOnClickListener(v -> {
+        binding.dialogConfirm.setOnClickListener(v -> {
             if (onPositiveClickListener != null) {
-                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
             }
         });
         binding.dialogCancel.setOnClickListener(v -> {
             if (onNegativeClickListener != null) {
-                onNegativeClickListener.onDialogClick(this, binding.dialogInput.getText().toString());
+                onNegativeClickListener.onDialogClick(this, binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
             } else {
                 dismiss();
             }

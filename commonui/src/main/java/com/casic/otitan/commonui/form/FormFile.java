@@ -271,35 +271,15 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setShowPermissionDialog(protocolDialog)
                 .setFileType(fileType)
-                .setMediaListener(new MediaListener() {
+                .setFileSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedFileCount() {
-                        return fileAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedAudioCount() {
-                        return fileAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedImageCount() {
-                        return fileAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedVideoCount() {
-                        return fileAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedMediaCount() {
+                    public int onSelectedCount() {
                         return fileAddAdapter.getList().size();
                     }
                 })
                 .builder();
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            if(requireUriPermission){
+            if (requireUriPermission) {
                 AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
             }
             fileAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));

@@ -62,7 +62,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="@string/sure"
+            android:text="@string/confirm"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_xl"

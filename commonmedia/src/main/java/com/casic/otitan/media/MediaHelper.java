@@ -323,8 +323,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         return mutableLiveDataWaterMark;
     }
     private boolean isMoreThanMaxMedia() {
-        if (mediaBuilder.getMediaListener() != null) {
-            if (mediaBuilder.getMediaMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedMediaCount()) {
+        if (mediaBuilder.getImageAndVideoSelectedListener() != null) {
+            if (mediaBuilder.getMediaMaxSelectedCount() <= mediaBuilder.getImageAndVideoSelectedListener().onSelectedCount()) {
                 uiController.showToast("最多只可选" + mediaBuilder.getMediaMaxSelectedCount() + "个附件");
                 return true;
             }
@@ -333,8 +333,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private boolean isMoreThanMaxImage() {
-        if (mediaBuilder.getMediaListener() != null) {
-            if (mediaBuilder.getImageMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedImageCount()) {
+        if (mediaBuilder.getImageSelectedListener() != null) {
+            if (mediaBuilder.getImageMaxSelectedCount() <= mediaBuilder.getImageSelectedListener().onSelectedCount()) {
                 uiController.showToast("最多只可选" + mediaBuilder.getImageMaxSelectedCount() + "张图片");
                 return true;
             }
@@ -343,8 +343,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private boolean isMoreThanMaxVideo() {
-        if (mediaBuilder.getMediaListener() != null) {
-            if (mediaBuilder.getVideoMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedVideoCount()) {
+        if (mediaBuilder.getVideoSelectedListener() != null) {
+            if (mediaBuilder.getVideoMaxSelectedCount() <= mediaBuilder.getVideoSelectedListener().onSelectedCount()) {
                 uiController.showToast("最多只可选" + mediaBuilder.getVideoMaxSelectedCount() + "条视频");
                 return true;
             }
@@ -353,8 +353,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private boolean isMoreThanMaxAudio() {
-        if (mediaBuilder.getMediaListener() != null) {
-            if (mediaBuilder.getAudioMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedAudioCount()) {
+        if (mediaBuilder.getAudioSelectedListener() != null) {
+            if (mediaBuilder.getAudioMaxSelectedCount() <= mediaBuilder.getAudioSelectedListener().onSelectedCount()) {
                 uiController.showToast("最多只可选" + mediaBuilder.getAudioMaxSelectedCount() + "条音频");
                 return true;
             }
@@ -363,8 +363,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     private boolean isMoreThanMaxFile() {
-        if (mediaBuilder.getMediaListener() != null) {
-            if (mediaBuilder.getFileMaxSelectedCount() <= mediaBuilder.getMediaListener().onSelectedFileCount()) {
+        if (mediaBuilder.getFileSelectedListener() != null) {
+            if (mediaBuilder.getFileMaxSelectedCount() <= mediaBuilder.getFileSelectedListener().onSelectedCount()) {
                 uiController.showToast("最多只可选" + mediaBuilder.getFileMaxSelectedCount() + "个文件");
                 return true;
             }

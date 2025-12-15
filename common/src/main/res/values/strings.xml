@@ -59,7 +59,7 @@
     <string name="no_upgrade_info">There is no description of the updated content for the time being</string>
     <string name="loading_now">Loading…</string>
     <string name="please_entry_something">Please enter</string>
-    <string name="sure">OK</string>
+    <string name="confirm">OK</string>
     <string name="tips_message">Tips</string>
     <string name="search">Search</string>
     <string name="please_enter">Please enter…</string>

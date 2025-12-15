@@ -352,30 +352,10 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .setVideoType(fileType)
                 .setMaxVideoTime(maxVideoDuration)
                 .setShowPermissionDialog(protocolDialog)
-                .setMediaListener(new MediaListener() {
+                .setVideoSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedFileCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedAudioCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedImageCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedVideoCount() {
+                    public int onSelectedCount() {
                         return videoAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedMediaCount() {
-                        return 0;
                     }
                 })
                 .builder();

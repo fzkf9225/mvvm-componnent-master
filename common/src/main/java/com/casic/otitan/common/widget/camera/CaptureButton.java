@@ -24,7 +24,7 @@ import com.casic.otitan.common.listener.CaptureListener;
 
 /**
  * created fz on 2024/10/22 19:56
- * describe：
+ * describe：自定义相机中的拍照按钮，仿微信
  */
 public class CaptureButton extends View {
 

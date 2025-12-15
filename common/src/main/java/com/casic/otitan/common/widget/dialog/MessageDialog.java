@@ -99,7 +99,7 @@ public class MessageDialog extends Dialog {
         binding = DialogMessageBinding.inflate(layoutInflater, null, false);
 
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogOption.setText(ContextCompat.getString(getContext(), R.string.sure));
+            binding.dialogOption.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
             binding.dialogOption.setText(positiveText);
         }

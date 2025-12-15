@@ -87,7 +87,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.otitan.googlegps'
                 artifactId = 'googlegps'
-                version = '2.0.1'
+                version = '2.0.2'
             }
         }
         repositories {

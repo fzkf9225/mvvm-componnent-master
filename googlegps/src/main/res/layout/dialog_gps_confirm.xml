@@ -61,12 +61,12 @@
             android:layout_width="1dp"
             android:background="#666666"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
-            app:layout_constraintEnd_toStartOf="@id/dialog_sure"
+            app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
             app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialog_sure"
+            android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:gravity="center"

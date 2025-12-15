@@ -6,5 +6,6 @@
     <string name="audio">audio</string>
     <string name="cancel" tools:ignore="ButtonCase">cancel</string>
     <string name="media_manage">Select from the multimedia file</string>
-    <string name="sure">OK</string>
+    <string name="confirm">OK</string>
+    <string name="go_to_authorization">Go to Authorization</string>
 </resources>

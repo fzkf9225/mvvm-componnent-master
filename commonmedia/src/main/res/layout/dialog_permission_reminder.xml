@@ -61,19 +61,19 @@
             android:layout_width="1dp"
             android:background="@color/h_line_color"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
-            app:layout_constraintEnd_toStartOf="@id/dialog_sure"
+            app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
             app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialog_sure"
+            android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
             android:gravity="center"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:text="@string/sure"
+            android:text="@string/confirm"
             app:layout_constraintHorizontal_weight="1"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl"

@@ -129,7 +129,7 @@ afterEvaluate {
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.otitan.commonui'
                 artifactId = 'commonui'
-                version = '2.0.4'
+                version = '2.0.5'
             }
         }
         repositories {

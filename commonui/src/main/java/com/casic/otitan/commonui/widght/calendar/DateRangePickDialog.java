@@ -39,12 +39,12 @@ import com.casic.otitan.common.utils.common.NumberUtil;
  */
 public class DateRangePickDialog extends Dialog implements DefaultLifecycleObserver {
     private final Context context;
-    private String title = "请选择日期范围";
+    private String title = null;
     private CalendarView.OnSelectedChangedListener onPositiveClickListener;
     private OnDialogInterfaceClickListener onNegativeClickListener;
     private boolean outSide = true;
-    private String strSureText = "确定", strCancelText = "取消";
-    private boolean isShowSureView = true, isShowCancelView = true;
+    private String positiveText = null, negativeText = null;
+    private boolean isShowPositiveView = true, isShowNegativeView = true;
     private DialogDateRangePickBinding binding;
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
@@ -178,13 +178,13 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         return this;
     }
 
-    public DateRangePickDialog setPositiveText(String strSureText) {
-        this.strSureText = strSureText;
+    public DateRangePickDialog setPositiveText(String positiveText) {
+        this.positiveText = positiveText;
         return this;
     }
 
-    public DateRangePickDialog setNegativeText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public DateRangePickDialog setNegativeText(String negativeText) {
+        this.negativeText = negativeText;
         return this;
     }
 
@@ -193,8 +193,8 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         return this;
     }
 
-    public DateRangePickDialog setShowPositiveView(boolean isShowSureView) {
-        this.isShowSureView = isShowSureView;
+    public DateRangePickDialog setShowPositiveView(boolean isShowPositiveView) {
+        this.isShowPositiveView = isShowPositiveView;
         return this;
     }
 
@@ -203,8 +203,8 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         return this;
     }
 
-    public DateRangePickDialog setShowNegativeView(boolean isShowCancelView) {
-        this.isShowCancelView = isShowCancelView;
+    public DateRangePickDialog setShowNegativeView(boolean isShowNegativeView) {
+        this.isShowNegativeView = isShowNegativeView;
         return this;
     }
 
@@ -281,8 +281,16 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
     private void initView() {
         binding = DialogDateRangePickBinding.inflate(LayoutInflater.from(context), null, false);
-        binding.dialogConfirm.setText(strSureText);
-        binding.dialogCancel.setText(strCancelText);
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
+        } else {
+            binding.dialogConfirm.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
 
         if (positiveTextColor != null) {
             binding.dialogConfirm.setBackColor(positiveTextColor);
@@ -296,11 +304,11 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
             binding.tvClear.setTextColor(clearTextColor);
         }
 
-        if (!isShowCancelView) {
+        if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
         }
 
-        if (!isShowSureView) {
+        if (!isShowPositiveView) {
             binding.dialogConfirm.setVisibility(View.GONE);
         }
 
@@ -363,7 +371,11 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         //刷新布局
         binding.calendarViewRange.refreshTitle();
         binding.calendarViewRange.initData(lifecycle, fragmentManager);
-        binding.dialogMessageType.setText(title);
+        if (TextUtils.isEmpty(title)) {
+            binding.dialogMessageType.setText(ContextCompat.getString(getContext(), com.casic.otitan.commonui.R.string.please_select_the_date_range));
+        } else {
+            binding.dialogMessageType.setText(title);
+        }
         binding.dialogMessageType.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
         binding.tvClear.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
         setCanceledOnTouchOutside(outSide);

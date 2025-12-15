@@ -1,3 +1,4 @@
 <resources>
     <string name="clear_selected">Clear selection</string>
+    <string name="please_select_the_date_range">Please select the date range</string>
 </resources>

@@ -19,7 +19,7 @@ import com.casic.otitan.common.listener.TypeListener;
 
 /**
  * created fz on 2024/10/22 19:56
- * describe：
+ * describe：自定义相机中的底部操作按钮视图
  */
 public class CaptureLayout extends FrameLayout {
     /**

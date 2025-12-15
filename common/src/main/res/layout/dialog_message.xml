@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xl"
             android:gravity="center"
-            android:text="@string/sure"
+            android:text="@string/confirm"
             app:layout_constraintTop_toBottomOf="@+id/h_line"
             android:clickable="true"
             android:focusable="true"

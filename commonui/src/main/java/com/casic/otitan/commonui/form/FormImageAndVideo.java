@@ -348,29 +348,9 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setShowPermissionDialog(protocolDialog)
                 .setMediaType(fileType)
-                .setMediaListener(new MediaListener() {
+                .setImageSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedFileCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedAudioCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedImageCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedVideoCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedMediaCount() {
+                    public int onSelectedCount() {
                         return mediaAddAdapter.getList().size();
                     }
                 })

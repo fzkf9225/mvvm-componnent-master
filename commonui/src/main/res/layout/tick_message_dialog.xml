@@ -22,7 +22,7 @@
         tick_view:clickable="false"
         tick_view:rate="normal" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dialog_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

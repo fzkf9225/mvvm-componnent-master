@@ -18,8 +18,29 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
+ *
+ * 功能说明：
+ * 1. 支持两种样式：TYPE_MINE（自己发送）和TYPE_OTHER（他人发送），显示位置和对齐方式不同
+ * 2. 播放语音时显示扩散波形动画，包含一个实心扇形和两个空心圆弧
+ * 3. 支持Base64编码的音频数据解码播放
+ * 4. 自动管理临时音频文件，播放完成后自动清理
+ *
+ * 使用示例：
+ * ```kotlin
+ * // XML布局中
+ * <com.casic.otitan.common.widget.speak.SpeakerView
+ *     android:id="@+id/speakerView"
+ *     android:layout_width="wrap_content"
+ *     android:layout_height="wrap_content" />
+ *
+ * // 代码中
+ * speakerView.setType(SpeakerView.TYPE_MINE) // 或 TYPE_OTHER
+ * speakerView.setText("16″") // 设置时长文本
+ * speakerView.start(messageId, ".mp3", base64AudioData) // 开始播放
+ * ```
+ *
  * created by fz on 2024/11/5 16:40
- * describe:
+ * describe：语音消息播放控件（带波形动画）
  */
 class SpeakerView : View {
     companion object {

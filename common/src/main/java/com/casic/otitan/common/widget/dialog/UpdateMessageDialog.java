@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.UpdateDialogBinding;
-import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.utils.network.NetworkStateUtil;
 
 
@@ -29,8 +28,7 @@ import com.casic.otitan.common.utils.network.NetworkStateUtil;
  * Updated by fz on 2025/12/09.
  * 更新弹框
  */
-public class UpdateMessageDialog extends Dialog implements View.OnClickListener {
-    private Context mContext;
+public class UpdateMessageDialog extends Dialog {
     /**
      * 更新内容和版本好
      */
@@ -95,7 +93,6 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
 
     public UpdateMessageDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
-        this.mContext = context;
         buttonTextColor = ContextCompat.getColor(context, R.color.white);
         titleColor = ContextCompat.getColor(context, R.color.autoColor);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
@@ -242,7 +239,26 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
             binding.updateBtn.setButtonStyle(strokeColor, strokeWidth, bgColor, radius);
         }
 
-        binding.updateBtn.setOnClickListener(this);
+        binding.updateBtn.setOnClickListener(v->{
+            if (isShowing()) {
+                dismiss();
+            }
+            if (NetworkStateUtil.isMobile(v.getContext())) {
+                new ConfirmDialog(v.getContext())
+                        .setMessage("您正在使用数据流量，确定继续下载吗？")
+                        .setOnPositiveClickListener(dialog -> {
+                            if (onUpdateListener != null) {
+                                onUpdateListener.onUpdate(v);
+                            }
+                        })
+                        .builder()
+                        .show();
+            } else {
+                if (onUpdateListener != null) {
+                    onUpdateListener.onUpdate(v);
+                }
+            }
+        });
         setCancelable(canCancel);
         setCanceledOnTouchOutside(canCancel);
 
@@ -267,33 +283,6 @@ public class UpdateMessageDialog extends Dialog implements View.OnClickListener 
         return this;
     }
 
-    private void showMessageDialog(String message, final View v) {
-        new ConfirmDialog(mContext)
-                .setMessage(message)
-                .setOnPositiveClickListener(dialog -> {
-                    if (onUpdateListener != null) {
-                        onUpdateListener.onUpdate(v);
-                    }
-                })
-                .builder()
-                .show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.updateBtn) {
-            if (isShowing()) {
-                dismiss();
-            }
-            if (NetworkStateUtil.isMobile(mContext)) {
-                showMessageDialog("您正在使用数据流量，确定继续下载吗？", v);
-            } else {
-                if (onUpdateListener != null) {
-                    onUpdateListener.onUpdate(v);
-                }
-            }
-        }
-    }
 
     public interface OnUpdateListener {
         void onUpdate(View v);

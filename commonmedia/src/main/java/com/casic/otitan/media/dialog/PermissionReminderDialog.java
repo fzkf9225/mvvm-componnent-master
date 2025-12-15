@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -14,6 +15,7 @@ import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.media.R;
 import com.casic.otitan.media.databinding.DialogPermissionReminderBinding;
@@ -29,7 +31,7 @@ public class PermissionReminderDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String strSureText = "前往授权", strCancelText = "取消";
+    private String positiveText = null, negativeText = null;
 
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
@@ -90,13 +92,13 @@ public class PermissionReminderDialog extends Dialog {
         return this;
     }
 
-    public PermissionReminderDialog setPositiveText(String strSureText) {
-        this.strSureText = strSureText;
+    public PermissionReminderDialog setPositiveText(String positiveText) {
+        this.positiveText = positiveText;
         return this;
     }
 
-    public PermissionReminderDialog setNegativeText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public PermissionReminderDialog setNegativeText(String negativeText) {
+        this.negativeText = negativeText;
         return this;
     }
 
@@ -111,10 +113,20 @@ public class PermissionReminderDialog extends Dialog {
 
     private void initView() {
         binding = DialogPermissionReminderBinding.inflate(layoutInflater, null, false);
-        binding.dialogSure.setText(strSureText);
-        binding.dialogCancel.setText(strCancelText);
+
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.go_to_authorization));
+        } else {
+            binding.dialogConfirm.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
+
         if (positiveTextColor != null) {
-            binding.dialogSure.setTextColor(positiveTextColor);
+            binding.dialogConfirm.setTextColor(positiveTextColor);
         }
         if (bgDrawable != null) {
             binding.clConfirm.setBackground(bgDrawable);
@@ -127,7 +139,7 @@ public class PermissionReminderDialog extends Dialog {
             binding.dialogTextView.setTextColor(textColor);
         }
 
-        binding.dialogSure.setOnClickListener(v -> {
+        binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);

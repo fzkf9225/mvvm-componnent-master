@@ -88,7 +88,7 @@
             android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:layout_marginBottom="@dimen/vertical_margin_l"
-            android:text="@string/sure"
+            android:text="@string/confirm"
             android:gravity="center"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/vertical_margin_xl"

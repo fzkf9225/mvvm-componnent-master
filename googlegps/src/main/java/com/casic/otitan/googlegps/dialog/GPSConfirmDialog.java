@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.googlegps.R;
 import com.casic.otitan.googlegps.databinding.DialogGpsConfirmBinding;
@@ -30,8 +32,8 @@ public class GPSConfirmDialog extends Dialog {
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
-    private String strSureText = "确定", strCancelText = "取消";
-    private boolean isShowSureView = true, isShowCancelView = true, isShowLineView = true;
+    private String positiveText = null, negativeText = null;
+    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
 
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
@@ -92,25 +94,25 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
-    public GPSConfirmDialog setPositiveText(String strSureText) {
-        this.strSureText = strSureText;
+    public GPSConfirmDialog setPositiveText(String positiveText) {
+        this.positiveText = positiveText;
         return this;
     }
 
-    public GPSConfirmDialog setNegativeText(String strCancelText) {
-        this.strCancelText = strCancelText;
+    public GPSConfirmDialog setNegativeText(String negativeText) {
+        this.negativeText = negativeText;
         return this;
     }
 
-    public GPSConfirmDialog setShowPositiveView(boolean isShowSureView) {
-        this.isShowSureView = isShowSureView;
-        this.isShowLineView = this.isShowSureView;
+    public GPSConfirmDialog setShowPositiveView(boolean isShowPositiveView) {
+        this.isShowPositiveView = isShowPositiveView;
+        this.isShowLineView = this.isShowPositiveView;
         return this;
     }
 
-    public GPSConfirmDialog setShowNegativeView(boolean isShowCancelView) {
-        this.isShowCancelView = isShowCancelView;
-        this.isShowLineView = this.isShowCancelView;
+    public GPSConfirmDialog setShowNegativeView(boolean isShowNegativeView) {
+        this.isShowNegativeView = isShowNegativeView;
+        this.isShowLineView = this.isShowNegativeView;
         return this;
     }
 
@@ -125,10 +127,18 @@ public class GPSConfirmDialog extends Dialog {
 
     private void initView() {
         binding = DialogGpsConfirmBinding.inflate(layoutInflater, null, false);
-        binding.dialogSure.setText(strSureText);
-        binding.dialogCancel.setText(strCancelText);
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
+        } else {
+            binding.dialogConfirm.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
         if (positiveTextColor != null) {
-            binding.dialogSure.setTextColor(positiveTextColor);
+            binding.dialogConfirm.setTextColor(positiveTextColor);
         }
         if (bgDrawable != null) {
             binding.clConfirm.setBackground(bgDrawable);
@@ -144,13 +154,13 @@ public class GPSConfirmDialog extends Dialog {
         if (!isShowLineView) {
             binding.sLine.setVisibility(View.GONE);
         }
-        if (!isShowCancelView) {
+        if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
         }
-        if (!isShowSureView) {
-            binding.dialogSure.setVisibility(View.GONE);
+        if (!isShowPositiveView) {
+            binding.dialogConfirm.setVisibility(View.GONE);
         }
-        binding.dialogSure.setOnClickListener(v -> {
+        binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);

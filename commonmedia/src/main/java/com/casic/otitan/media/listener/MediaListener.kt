@@ -5,9 +5,5 @@ package com.casic.otitan.media.listener
  * describe :
  */
 interface MediaListener {
-    fun onSelectedImageCount(): Int = 0
-    fun onSelectedVideoCount(): Int = 0
-    fun onSelectedAudioCount(): Int = 0
-    fun onSelectedFileCount(): Int = 0
-    fun onSelectedMediaCount(): Int = 0
+    fun onSelectedCount(): Int = 0
 }

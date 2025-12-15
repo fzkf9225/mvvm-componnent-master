@@ -52,7 +52,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/padding_l"
             android:paddingEnd="@dimen/padding_l"
-            android:text="@string/sure"
+            android:text="@string/confirm"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:textColor="@color/themeColor"
             android:textSize="@dimen/font_size_l"

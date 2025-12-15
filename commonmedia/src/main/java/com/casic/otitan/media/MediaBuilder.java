@@ -102,9 +102,25 @@ public class MediaBuilder {
      */
     private String videoSubPath;
     /**
-     * 监听
+     * 图片选择数量监听
      */
-    private MediaListener mediaListener;
+    private MediaListener imageSelectedListener;
+    /**
+     * 视频选择数量监听
+     */
+    private MediaListener videoSelectedListener;
+    /**
+     * 图片+视频选择数量监听
+     */
+    private MediaListener imageAndVideoSelectedListener;
+    /**
+     * 多媒体音频选择数量监听
+     */
+    private MediaListener audioSelectedListener;
+    /**
+     * 文件选择数量监听
+     */
+    private MediaListener fileSelectedListener;
     /**
      * 是否展示请求权限前的dialog
      */
@@ -496,12 +512,91 @@ public class MediaBuilder {
     }
 
     /**
-     * 设置监听
-     * @param mediaListener 监听
+     * 获取视频选择数量监听
+     * @return 返回视频已选择的数量
+     */
+    public MediaListener getVideoSelectedListener() {
+        return videoSelectedListener;
+    }
+    /**
+     * 设置图片选择数量监听
+     * @param videoSelectedListener 监听
      * @return this
      */
-    public MediaBuilder setMediaListener(MediaListener mediaListener) {
-        this.mediaListener = mediaListener;
+    public MediaBuilder setVideoSelectedListener(MediaListener videoSelectedListener) {
+        this.videoSelectedListener = videoSelectedListener;
+        return this;
+    }
+
+    /**
+     * 获取图片选择数量监听
+     * @return 获取图片已选择的数量
+     */
+    public MediaListener getImageSelectedListener() {
+        return imageSelectedListener;
+    }
+
+    /**
+     * 获取图片选择数量监听
+     * @param imageListener 监听
+     * @return this
+     */
+    public MediaBuilder setImageSelectedListener(MediaListener imageSelectedListener) {
+        this.imageSelectedListener = imageSelectedListener;
+        return this;
+    }
+
+    /**
+     * 获取图片和视频选择数量监听
+     * @return 获取图片和视频已选择的数量
+     */
+    public MediaListener getImageAndVideoSelectedListener() {
+        return imageAndVideoSelectedListener;
+    }
+
+    /**
+     * 设置图片和视频选择数量监听
+     * @param imageAndVideoSelectedListener 监听
+     * @return this
+     */
+    public MediaBuilder setImageAndVideoSelectedListener(MediaListener imageAndVideoSelectedListener) {
+        this.imageAndVideoSelectedListener = imageAndVideoSelectedListener;
+        return this;
+    }
+
+    /**
+     * 获取音频选择数量监听
+     * @return 获取音频已选择的数量
+     */
+    public MediaListener getAudioSelectedListener() {
+        return audioSelectedListener;
+    }
+
+    /**
+     * 获取音频选择数量监听
+     * @param audioSelectedListener 监听
+     * @return this
+     */
+    public MediaBuilder setAudioSelectedListener(MediaListener audioSelectedListener) {
+        this.audioSelectedListener = audioSelectedListener;
+        return this;
+    }
+
+    /**
+     * 获取文件选择数量监听
+     * @return 获取文件已选择的数量
+     */
+    public MediaListener getFileSelectedListener() {
+        return fileSelectedListener;
+    }
+
+    /**
+     * 获取文件选择数量监听
+     * @param fileSelectedListener 监听
+     * @return this
+     */
+    public MediaBuilder setFileSelectedListener(MediaListener fileSelectedListener) {
+        this.fileSelectedListener = fileSelectedListener;
         return this;
     }
 
@@ -708,13 +803,6 @@ public class MediaBuilder {
         return imageQualityCompress;
     }
 
-    /**
-     * 获取图片选择监听
-     * @return 图片选择监听
-     */
-    public MediaListener getMediaListener() {
-        return mediaListener;
-    }
 
     /**
      * 获取选择的类型

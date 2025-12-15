@@ -22,7 +22,38 @@ import com.casic.otitan.common.utils.log.LogUtil
 import java.io.File
 import kotlin.concurrent.Volatile
 import kotlin.math.min
-
+/**
+ *
+ * 功能说明：
+ * 1. 长按录音，松开发送，上滑取消
+ * 2. 录音时显示悬浮对话框，包含音量波形动画和操作提示
+ * 3. 支持设置最短录音时间（1秒）和最长录音时间（60秒）
+ * 4. 录音文件保存为AMR格式，按用户ID分目录存储
+ * 5. 实时获取录音分贝值驱动动画，倒计时提醒
+ *
+ * 使用示例：
+ * ```kotlin
+ * // XML布局中
+ * <com.casic.otitan.common.widget.speak.SpeakButton
+ *     android:id="@+id/btnSpeak"
+ *     android:layout_width="wrap_content"
+ *     android:layout_height="wrap_content"
+ *     android:text="按住说话" />
+ *
+ * // 代码中
+ * btnSpeak.setUserId("user123") // 设置用户ID用于文件分类
+ * btnSpeak.setOnFinishedRecordListener { bytes, duration ->
+ *     // bytes: 录音文件字节数组
+ *     // duration: 录音时长（秒）
+ *     // 处理录音结果
+ * }
+ * ```
+ * created by fz on 2024/11/5 16:40
+ * describe：语音录制按钮控件
+ * @param context 上下文
+ * @param attrs 属性集
+ * @param defStyle 默认样式
+ */
 class SpeakButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

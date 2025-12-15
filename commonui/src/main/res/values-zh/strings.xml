@@ -1,3 +1,4 @@
 <resources>
     <string name="clear_selected">清空选择</string>
+    <string name="please_select_the_date_range">请选择日期范围</string>
 </resources>

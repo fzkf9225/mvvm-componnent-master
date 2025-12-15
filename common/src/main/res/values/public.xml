@@ -245,7 +245,7 @@
     <public name="search" type="string"/>
     <public name="loginClick" type="string"/>
     <public name="cancel" type="string"/>
-    <public name="sure" type="string"/>
+    <public name="confirm" type="string"/>
     <public name="please_entry_something" type="string"/>
     <public name="album" type="string"/>
     <public name="camera" type="string"/>

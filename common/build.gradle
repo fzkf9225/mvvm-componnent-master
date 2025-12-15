@@ -186,7 +186,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.otitan.common'
                 artifactId = 'common'
-                version = '3.0.4'
+                version = '3.0.5'
             }
         }
 

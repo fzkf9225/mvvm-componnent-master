@@ -339,30 +339,10 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setShowPermissionDialog(protocolDialog)
                 .setImageType(fileType)
-                .setMediaListener(new MediaListener() {
+                .setImageSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedFileCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedAudioCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedImageCount() {
+                    public int onSelectedCount() {
                         return imageAddAdapter.getList().size();
-                    }
-
-                    @Override
-                    public int onSelectedVideoCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int onSelectedMediaCount() {
-                        return 0;
                     }
                 })
                 .setImageQualityCompress(compressImageSize)

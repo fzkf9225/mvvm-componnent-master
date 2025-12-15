@@ -35,5 +35,6 @@
     <public name="icon_file" type="mipmap"/>
     <!--字符串资源-->
     <public name="clear_selected" type="string"/>
+    <public name="please_select_the_date_range" type="string"/>
 
 </resources>

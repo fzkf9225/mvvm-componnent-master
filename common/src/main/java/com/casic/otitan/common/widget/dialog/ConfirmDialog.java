@@ -33,7 +33,7 @@ public class ConfirmDialog extends Dialog {
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
     private boolean outSide = true;
     private String positiveText = null, negativeText = null;
-    private boolean isShowSureView = true, isShowCancelView = true, isShowLineView = true;
+    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
 
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
@@ -104,15 +104,15 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
-    public ConfirmDialog setShowPositiveView(boolean isShowSureView) {
-        this.isShowSureView = isShowSureView;
-        this.isShowLineView = this.isShowSureView;
+    public ConfirmDialog setShowPositiveView(boolean isShowPositiveView) {
+        this.isShowPositiveView = isShowPositiveView;
+        this.isShowLineView = this.isShowPositiveView;
         return this;
     }
 
-    public ConfirmDialog setShowNegativeView(boolean isShowCancelView) {
-        this.isShowCancelView = isShowCancelView;
-        this.isShowLineView = this.isShowCancelView;
+    public ConfirmDialog setShowNegativeView(boolean isShowNegativeView) {
+        this.isShowNegativeView = isShowNegativeView;
+        this.isShowLineView = this.isShowNegativeView;
         return this;
     }
 
@@ -128,9 +128,9 @@ public class ConfirmDialog extends Dialog {
     private void initView() {
         binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogSure.setText(ContextCompat.getString(getContext(), R.string.sure));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
-            binding.dialogSure.setText(positiveText);
+            binding.dialogConfirm.setText(positiveText);
         }
         if (TextUtils.isEmpty(negativeText)) {
             binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
@@ -138,7 +138,7 @@ public class ConfirmDialog extends Dialog {
             binding.dialogCancel.setText(negativeText);
         }
         if (positiveTextColor != null) {
-            binding.dialogSure.setTextColor(positiveTextColor);
+            binding.dialogConfirm.setTextColor(positiveTextColor);
         }
         if (bgDrawable != null) {
             binding.clConfirm.setBackground(bgDrawable);
@@ -154,13 +154,13 @@ public class ConfirmDialog extends Dialog {
         if (!isShowLineView) {
             binding.sLine.setVisibility(View.GONE);
         }
-        if (!isShowCancelView) {
+        if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
         }
-        if (!isShowSureView) {
-            binding.dialogSure.setVisibility(View.GONE);
+        if (!isShowPositiveView) {
+            binding.dialogConfirm.setVisibility(View.GONE);
         }
-        binding.dialogSure.setOnClickListener(v -> {
+        binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);

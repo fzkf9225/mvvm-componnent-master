@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+
 import com.casic.otitan.media.MediaHelper;
 import com.casic.otitan.media.dialog.OpenFileDialog;
 import com.casic.otitan.media.dialog.OpenImageDialog;
@@ -80,29 +81,36 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setMediaMaxSelectedCount(6)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWaterMark("仅测试使用")
-                .setMediaListener(new MediaListener() {
+                .setImageSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedFileCount() {
-                        return fileList.size();
-                    }
-
-                    @Override
-                    public int onSelectedAudioCount() {
-                        return audioList.size();
-                    }
-
-                    @Override
-                    public int onSelectedImageCount() {
+                    public int onSelectedCount() {
                         return imageAddAdapter.getList().size();
                     }
-
+                })
+                .setVideoSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedVideoCount() {
+                    public int onSelectedCount() {
                         return videoAddAdapter.getList().size();
                     }
+                })
 
+                .setAudioSelectedListener(new MediaListener() {
                     @Override
-                    public int onSelectedMediaCount() {
+                    public int onSelectedCount() {
+                        return audioList.size();
+                    }
+                })
+
+                .setFileSelectedListener(new MediaListener() {
+                    @Override
+                    public int onSelectedCount() {
+                        return fileList.size();
+                    }
+                })
+
+                .setImageAndVideoSelectedListener(new MediaListener() {
+                    @Override
+                    public int onSelectedCount() {
                         return mediaAddAdapter.getList().size();
                     }
                 })
@@ -248,7 +256,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void imgAdd(View view) {
-        LogUtil.show(TAG,"上传是否成功："+imageAddAdapter.isUploadingSuccess());
+        LogUtil.show(TAG, "上传是否成功：" + imageAddAdapter.isUploadingSuccess());
         mediaHelper.openImageDialog(view, OpenImageDialog.CAMERA_ALBUM);
     }
 
