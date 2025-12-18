@@ -72,17 +72,17 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     public boolean hasPermission(String errorCode) {
-        return true;
+        return !UserAccountHelper.isNoPermission(errorCode);
     }
 
     @Override
     public void toNoPermission(Context mContext, ActivityResultLauncher<Intent> activityResultLauncher) {
-
+        userRouterService.toLogin(mContext, activityResultLauncher);
     }
 
     @Override
-    public void toNoPermission(Context context) {
-
+    public void toNoPermission(Context mContext) {
+        userRouterService.toLogin(mContext);
     }
 
     @Override

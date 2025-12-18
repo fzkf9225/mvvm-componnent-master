@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.casic.otitan.demo.activity.CoordinatorActivity;
 import com.casic.otitan.demo.activity.CustomCameraActivity;
 import com.casic.otitan.demo.activity.DemoPagingActivity;
+import com.casic.otitan.demo.activity.DemoSmartFlowPagingActivity;
 import com.casic.otitan.demo.activity.DemoSmartPagingActivity;
 import com.casic.otitan.demo.activity.DialogActivity;
 import com.casic.otitan.demo.activity.DownloadActivity;
@@ -46,6 +47,7 @@ public enum UseCaseEnum {
     RECYCLER_VIEW(RecyclerViewSampleActivity.class, "列表示例", "自定义封装列表", null),
     PAGING(DemoPagingActivity.class, "Paging列表示例", "Jetpack Paging3列表封装", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
+    SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),
     ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3综合列表封装", null),
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),
     VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器", "在线视频播放器，集成自GSYVideoPlayer", getVideoBundle()),

@@ -26,8 +26,17 @@ interface UserApiService : BaseApiService {
     @POST("user/loginApp")
     fun getToken(@Body requestLoginBean: RequestLoginBean): Observable<TokenBean>
 
+    /**
+     * 获取token
+     */
+    @POST("user/loginApp")
+    suspend fun getTokenSuspend(@Body requestLoginBean: RequestLoginBean): TokenBean
+
     @GET("code/getCode")
     fun getImageCode(@Query("num") randomNumber: String): Observable<GraphicVerificationCodeBean>
+
+    @GET("code/getCode")
+    suspend fun getImageCodeSuspend(@Query("num") randomNumber: String): GraphicVerificationCodeBean
 
     /**
      * 获取token
@@ -37,6 +46,16 @@ interface UserApiService : BaseApiService {
     fun refreshToken(
         @Field("refreshToken") refreshToken: String?
     ): Observable<TokenBean>
+
+    /**
+     * 获取token
+     */
+    @POST("auth/refresh-token")
+    @FormUrlEncoded
+    suspend fun refreshTokenSuspend(
+        @Field("refreshToken") refreshToken: String?
+    ): TokenBean
+
     /**
      * 获取token
      */
@@ -49,6 +68,9 @@ interface UserApiService : BaseApiService {
     fun getUserInfo(): Observable<UserInfo>
 
     @GET("user/getLoginUserInfo")
+    suspend fun getUserInfoSuspend(): UserInfo
+
+    @GET("user/getLoginUserInfo")
     fun getUserInfoFlow(): Flowable<UserInfo>
 
     @PUT("user")
@@ -56,4 +78,7 @@ interface UserApiService : BaseApiService {
 
     @GET("user/logoutApp")
     fun logout(): Observable<Any>
+
+    @GET("user/logoutApp")
+    suspend fun logoutSuspend(): Any?
 }

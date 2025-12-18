@@ -184,6 +184,9 @@
             android:name="com.casic.otitan.demo.activity.DemoSmartPagingActivity"
             android:exported="false" />
         <activity
+            android:name="com.casic.otitan.demo.activity.DemoSmartFlowPagingActivity"
+            android:exported="false" />
+        <activity
             android:name="com.casic.otitan.demo.activity.DemoPagingActivity"
             android:exported="false" />
         <activity

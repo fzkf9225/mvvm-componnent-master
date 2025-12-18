@@ -5,7 +5,6 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import com.casic.otitan.common.base.BaseConverterFactory;
 import com.casic.otitan.common.impl.ApiServiceWrapper;
 import com.casic.otitan.common.inter.ApiRetrofitService;
 import com.casic.otitan.common.inter.ErrorService;
+import com.casic.otitan.common.inter.FlowRetryService;
 import com.casic.otitan.common.inter.RetryService;
 import com.casic.otitan.common.utils.common.DateUtil;
 import com.casic.otitan.common.utils.common.PropertiesUtil;
@@ -192,6 +192,10 @@ public class ApiRetrofit {
          */
         private RetryService retryService = null;
         /**
+         * 请求接口重试服务
+         */
+        private FlowRetryService flowRetryService = null;
+        /**
          * 请求成功版本号，如果自定义converterFactory情况下不生效
          */
         private String successCode;
@@ -226,6 +230,11 @@ public class ApiRetrofit {
 
         public Builder setRetryService(RetryService retryService) {
             this.retryService = retryService;
+            return this;
+        }
+
+        public Builder setFlowRetryService(FlowRetryService flowRetryService) {
+            this.flowRetryService = flowRetryService;
             return this;
         }
 
@@ -498,6 +507,10 @@ public class ApiRetrofit {
 
         public RetryService getRetryService() {
             return retryService;
+        }
+
+        public FlowRetryService getFlowRetryService() {
+            return flowRetryService;
         }
 
         public boolean isAppInfo() {

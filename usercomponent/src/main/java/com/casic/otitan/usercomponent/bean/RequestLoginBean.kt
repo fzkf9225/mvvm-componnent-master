@@ -10,16 +10,17 @@ data class RequestLoginBean(
     var num: String? = null,
     var openId: String? = null,
     var password: String? = null,
-    var userName: String? = null
+    var userName: String? = null,
+    var phoneCode: String? = null,
 ) {
     constructor(
         code: String,
         num: String,
         password: String? = null,
         userName: String
-    ) : this(null, code, num, null, password, userName)
+    ) : this(null, code, num, null, password, userName,"873990")
 
-    constructor(userName: String? = null) : this(null, null, null, null, null, userName)
-    constructor() : this(null, null, null, null, null, null)
+    constructor(userName: String? = null) : this(null, null, null, null, null, userName,"873990")
+    constructor() : this(null, null, null, null, null, null,"873990")
 
 }

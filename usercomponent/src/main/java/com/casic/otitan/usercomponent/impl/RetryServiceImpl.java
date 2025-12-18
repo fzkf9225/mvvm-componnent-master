@@ -1,5 +1,6 @@
 package com.casic.otitan.usercomponent.impl;
 
+import com.casic.otitan.common.api.ApiRetrofit;
 import com.casic.otitan.userapi.bean.UserInfo;
 import com.casic.otitan.usercomponent.api.UserAccountHelper;
 import com.casic.otitan.usercomponent.api.UserApiService;
@@ -11,10 +12,12 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
+
 import com.casic.otitan.common.api.ConstantsHelper;
 import com.casic.otitan.common.base.BaseException;
 import com.casic.otitan.common.inter.RetryService;
 import com.casic.otitan.common.utils.log.LogUtil;
+
 import retrofit2.HttpException;
 
 /**
@@ -23,7 +26,6 @@ import retrofit2.HttpException;
  * 设置3次重试，每次间隔1秒,但仅适用于用户登录过期刷新token和无权限刷新用户菜单时使用
  */
 public class RetryServiceImpl implements RetryService {
-    private final static String TAG = RetryService.class.getSimpleName();
     /**
      * 最大出错重试次数
      */
@@ -49,13 +51,13 @@ public class RetryServiceImpl implements RetryService {
 
     @Override
     public Observable<?> handleObservableError(Observable<? extends Throwable> observable) {
-        LogUtil.show(TAG, "-----------------RetryService Observable-------------");
+        LogUtil.show(ApiRetrofit.TAG, "-----------------RetryService Observable-------------");
         return observable.flatMap(this::handleThrowable);
     }
 
     @Override
     public Publisher<?> handleFlowableError(Flowable<Throwable> flowable) {
-        LogUtil.show(TAG, "-----------------RetryService Flowable-------------");
+        LogUtil.show(ApiRetrofit.TAG, "-----------------RetryService Flowable-------------");
         return flowable.flatMap(this::handleFlowableThrowable);
     }
 
@@ -76,14 +78,20 @@ public class RetryServiceImpl implements RetryService {
     private boolean shouldRetry(Throwable throwable) {
         if (throwable instanceof BaseException) {
             BaseException baseException = (BaseException) throwable;
-            LogUtil.show(TAG, "baseException:" + baseException);
+            LogUtil.show(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "baseException：" + baseException);
             boolean isLoginPastOrNoPermission = true; // 改成实际逻辑
-            return ++retryCount <= maxRetries && isLoginPastOrNoPermission;
+            if (++retryCount <= maxRetries && isLoginPastOrNoPermission) {
+                return true;
+            }
         } else if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
-            LogUtil.show(TAG, "httpException:" + httpException);
-            return 401 == httpException.code();
+            LogUtil.show(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "httpException：" + httpException);
+            if (++retryCount <= maxRetries && 401 == httpException.code()) {
+                return true;
+            }
         }
+        retryCount = 0;
+        LogUtil.show(ApiRetrofit.TAG, "不满足重试条件！");
         return false;
     }
 
@@ -95,7 +103,10 @@ public class RetryServiceImpl implements RetryService {
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
                     return userApiService.getUserInfo();
                 })
-                .doOnNext(userInfo -> UserAccountHelper.saveLoginState(userInfo, true));
+                .doOnNext(userInfo -> {
+                    UserAccountHelper.saveLoginState(userInfo, true);
+                    retryCount = 0; // 重置计数器
+                });
     }
 
     private Flowable<UserInfo> refreshFlow(UserApiService userApiService) {
@@ -106,47 +117,11 @@ public class RetryServiceImpl implements RetryService {
                     UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
                     return userApiService.getUserInfoFlow();
                 })
-                .doOnNext(userInfo -> UserAccountHelper.saveLoginState(userInfo, true));
+                .doOnNext(userInfo -> {
+                    UserAccountHelper.saveLoginState(userInfo, true);
+                    retryCount = 0; // 重置计数器
+                });
     }
-//    @Override
-//    public Observable<?> apply(Observable<? extends Throwable> observable) throws Exception {
-//        LogUtil.show(TAG, "-----------------RetryService-------------");
-//        return observable
-//                .flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
-//                    if (throwable instanceof BaseException) {
-//                        BaseException baseException = (BaseException) throwable;
-//                        LogUtil.show(TAG, "baseException:" + baseException.toString());
-//                        boolean isLoginPastOrNoPermission = true;//这里的true改成自己的逻辑
-//                        if (++retryCount <= maxRetries && isLoginPastOrNoPermission) {
-//                            return refresh(userApiService);
-//                        }
-//                    } else if (throwable instanceof HttpException) {
-//                        HttpException httpException = (HttpException) throwable;
-//                        LogUtil.show(TAG, "httpException:" + httpException);
-//                        if (401 == httpException.code()) {
-//                            return refresh(userApiService);
-//                        }
-//                        return Observable.error(throwable);
-//                    }
-//                    return Observable.error(throwable);
-//                });
-//    }
-//
-//    private Observable<UserInfo> refresh(UserApiService userApiService) {
-//        // 如果上面检测到token过期就会进入到这里
-//        // 然后下面的方法就是更新token
-//        UserAccountHelper.saveLoginPast(false);
-//        return userApiService.refreshToken(UserAccountHelper.getRefreshToken(),"000000",
-//                        GrantType.REFRESH_TOKEN.getValue(), "all"
-//                        , "account")
-//                .flatMap((Function<TokenBean, Observable<UserInfo>>) tokenBean -> {
-//                    UserAccountHelper.setToken(tokenBean.getAccess_token());
-//                    UserAccountHelper.setRefreshToken(tokenBean.getRefresh_token());
-//                    return userApiService.getUserInfo();
-//                })
-//                .doOnNext(userInfo -> UserAccountHelper.saveLoginState(userInfo, true));
-//    }
-
 
     @Override
     public void setMaxRetryCount(int maxRetryCount) {

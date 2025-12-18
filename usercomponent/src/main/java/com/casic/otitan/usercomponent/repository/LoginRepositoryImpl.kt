@@ -40,7 +40,7 @@ class LoginRepositoryImpl constructor(apiService: UserApiService?) : RepositoryI
                     apiService.getUserInfo()
                 },
             ApiRequestOptions.getDefault().apply { dialogMessage = "登录中，请稍后..." },
-            liveData, null, null
+            liveData
         )
     }
 

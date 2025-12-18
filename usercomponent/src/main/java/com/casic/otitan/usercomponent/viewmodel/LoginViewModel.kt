@@ -12,6 +12,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.casic.otitan.userapi.UserService
 import com.casic.otitan.userapi.bean.UserInfo
 import com.casic.otitan.usercomponent.api.UserAccountHelper
@@ -31,6 +32,8 @@ import com.casic.otitan.common.api.RepositoryFactory
 import com.casic.otitan.common.base.BaseViewModel
 import com.casic.otitan.common.utils.encode.SM3Utils
 import com.casic.otitan.common.widget.dialog.ConfirmDialog
+import com.casic.otitan.usercomponent.repository.LoginFlowRepositoryImpl
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -125,6 +128,12 @@ class LoginViewModel @Inject constructor(application: Application) :
                 )
             )
         iRepository.login(loginState.value, liveData)
+        // 使用 Flow，不用liveData去接收，这里只是懒得改
+//        viewModelScope.launch {
+//            iRepository?.login(loginState.value)?.collect {
+//                liveData.value =  it
+//            }
+//        }
     }
 
     fun loginCallback(userInfo: UserInfo?, userName: String) {
@@ -157,6 +166,12 @@ class LoginViewModel @Inject constructor(application: Application) :
     public fun getImageCode() {
         _loginState.value.num =  Random.nextInt(10000000, 100000000).toString()
         iRepository.getImageCode(loginState.value.num!!, imageLiveData)
+        // 使用 Flow，不用liveData去接收，这里只是懒得改
+//        viewModelScope.launch {
+//            iRepository.getImageCode(loginState.value.num!!).collect {
+//                imageLiveData.value = it
+//            }
+//        }
     }
 
     public fun agreementSpannableString(color: Int = Color.BLACK): SpannableString {

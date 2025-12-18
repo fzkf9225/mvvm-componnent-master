@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/demo_smart_flow_paging_navigation"
+    app:startDestination="@+id/demo_smart_flow_paging_layout_page">
+    <fragment
+        android:id="@+id/demo_smart_flow_paging_layout_page"
+        android:name="com.casic.otitan.demo.fragment.DemoSmartFlowPagingFragment"
+        android:label="SmartPaging列表实例"
+        tools:layout="@layout/base_smart_paging" />
+</navigation>

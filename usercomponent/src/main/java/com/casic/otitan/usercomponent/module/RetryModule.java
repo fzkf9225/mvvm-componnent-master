@@ -1,5 +1,7 @@
 package com.casic.otitan.usercomponent.module;
 
+import com.casic.otitan.common.inter.FlowRetryService;
+import com.casic.otitan.usercomponent.impl.FlowRetryServiceImpl;
 import com.casic.otitan.usercomponent.impl.RetryServiceImpl;
 
 import dagger.Binds;
@@ -17,7 +19,7 @@ import com.casic.otitan.common.inter.RetryService;
 public abstract class RetryModule {
     @Binds
     abstract RetryService bindRetryService(RetryServiceImpl retryServiceImpl);
-//
-//    @Binds
-//    abstract RetryFlowService bindRetryFlowService(RetryFlowServiceImpl retryFlowService);
+
+    @Binds
+    abstract FlowRetryService bindFlowRetryService(FlowRetryServiceImpl flowRetryServiceImpl);
 }

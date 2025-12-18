@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.core.content.ContextCompat;
 
+import com.casic.otitan.common.inter.FlowRetryService;
 import com.casic.otitan.commonui.api.FileApiService;
 import com.casic.otitan.demo.R;
 import com.casic.otitan.demo.api.ApiServiceHelper;
@@ -27,7 +28,7 @@ import com.casic.otitan.common.utils.log.LogUtil;
 public class AppModule {
 
     @Provides
-    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService, RetryService retryService) {
+    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService, RetryService retryService, FlowRetryService flowRetryService) {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
         LogUtil.show(ApiRetrofit.TAG, "App模块baseUrl:" + baseUrl);
         return new ApiRetrofit
@@ -35,6 +36,7 @@ public class AppModule {
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
                 .setRetryService(retryService)
+                .setFlowRetryService(flowRetryService)
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(ApiServiceHelper.class);

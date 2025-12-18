@@ -18,7 +18,6 @@ import com.casic.otitan.common.utils.log.LogUtil;
  * describe :
  */
 public class DefaultRetryServiceImpl implements RetryService {
-    private final String TAG = DefaultRetryServiceImpl.class.getSimpleName();
     // 最大可重试次数
     protected int maxRetries = ConstantsHelper.RETRY_WHEN_MAX_COUNT;
     // 当前已重试次数
@@ -51,12 +50,12 @@ public class DefaultRetryServiceImpl implements RetryService {
     public Observable<?> handleObservableError(Observable<? extends Throwable> throwableObservable) {
         return throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
             LogUtil.e(throwable);
-            LogUtil.show(TAG, "发生网络异常，判断是否需要重试");
+            LogUtil.show(ApiRetrofit.TAG, "发生网络异常，判断是否需要重试");
 
             if (shouldRetry(throwable)) {
                 currentRetryCount++;
                 int currentWaitTime = calculateWaitTime();
-                LogUtil.show(TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
+                LogUtil.show(ApiRetrofit.TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
                 return Observable.timer(currentWaitTime, TimeUnit.MILLISECONDS);
             }
             return Observable.error(throwable);
@@ -67,12 +66,12 @@ public class DefaultRetryServiceImpl implements RetryService {
     public Publisher<?> handleFlowableError(Flowable<Throwable> throwableFlowable) {
         return throwableFlowable.flatMap((Function<Throwable, Publisher<?>>) throwable -> {
             LogUtil.e(throwable);
-            LogUtil.show(TAG, "发生网络异常，判断是否需要重试");
+            LogUtil.show(ApiRetrofit.TAG, "发生网络异常，判断是否需要重试");
 
             if (shouldRetry(throwable)) {
                 currentRetryCount++;
                 int currentWaitTime = calculateWaitTime();
-                LogUtil.show(TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
+                LogUtil.show(ApiRetrofit.TAG, "准备重试，当前次数: " + currentRetryCount + ", 等待时间: " + currentWaitTime + "ms");
                 return Flowable.timer(currentWaitTime, TimeUnit.MILLISECONDS);
             }
             return Flowable.error(throwable);
