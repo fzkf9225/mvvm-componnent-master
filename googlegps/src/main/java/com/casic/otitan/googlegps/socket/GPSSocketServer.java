@@ -21,7 +21,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * Created by fz on 2023/10/19 13:31
- * describe :
+ * describe :基于 Netty 实现的 TCP Socket 客户端，主要用于向指定服务器发送 GPS 定位数据，并支持断线重连、心跳维持、数据加密和连接状态监听等功能
  */
 public class GPSSocketServer {
     public final static String TAG = GPSSocketServer.class.getSimpleName();
