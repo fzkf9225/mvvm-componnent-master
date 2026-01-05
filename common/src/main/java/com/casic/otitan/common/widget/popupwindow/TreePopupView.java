@@ -73,7 +73,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
 
     private void init() {
         binding = PopupCascadeViewBinding.inflate(LayoutInflater.from(activity), null, false);
-        binding.maskView.setOnClickListener(v-> dismiss());
+        binding.maskView.setOnClickListener(v -> dismiss());
         this.setContentView(binding.getRoot());
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setWidth(WindowManager.LayoutParams.MATCH_PARENT);
@@ -180,7 +180,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
         // 延迟设置遮罩层高度
         binding.getRoot().post(() -> {
             DisplayMetrics metrics = new DisplayMetrics();
-            ((WindowManager)activity.getSystemService(Context.WINDOW_SERVICE))
+            ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE))
                     .getDefaultDisplay().getMetrics(metrics);
             int maskHeight = metrics.heightPixels;
             if (maskHeight > 0) {
@@ -192,6 +192,11 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implem
     }
 
     private void initChild(List<T> childLists) {
+        if (childAdapter != null) {
+            childAdapter.setList(childLists);
+            childAdapter.notifyDataSetChanged();
+            return;
+        }
         childAdapter = new PopupWindowAdapter<>();
         childAdapter.setItemHeight(itemHeight);
         childAdapter.setSelectBgColor(selectBgColor);
