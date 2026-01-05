@@ -151,7 +151,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
     }
 
     override fun hasTarget(): Boolean {
-        val targetActivity = bundle!!.getString(ConstantsHelper.TARGET_ACTIVITY)
+        val targetActivity = bundle?.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
             return false
         }
@@ -165,7 +165,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
     }
 
     override fun toTarget() {
-        val targetActivity = bundle!!.getString(ConstantsHelper.TARGET_ACTIVITY)
+        val targetActivity = bundle?.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
             toLast()
             return

@@ -52,8 +52,8 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
     }
 
     @Override
-    public void onLoginSuccessCallback(Bundle bundle) {
-        super.onLoginSuccessCallback(bundle);
+    public void onAuthSuccess(Bundle bundle) {
+        super.onAuthSuccess(bundle);
 
     }
 

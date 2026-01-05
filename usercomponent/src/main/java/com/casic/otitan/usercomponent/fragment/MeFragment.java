@@ -61,13 +61,13 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
             if (UserAccountHelper.isLogin()) {
                 return;
             }
-            userRouterService.toLogin(requireContext(), authManager.getLauncher());
+            userRouterService.toLogin(requireContext(), authManager.getLoginLauncher());
         });
         binding.tvSetting.setOnClickListener(v -> startActivity(SettingActivity.class));
         binding.tvModifyPassword.setOnClickListener(v -> startActivity(ModifyPasswordActivity.class));
         binding.headImg.setOnClickListener(v -> {
             if (!UserAccountHelper.isLogin()) {
-                userRouterService.toLogin(requireContext(), authManager.getLauncher());
+                userRouterService.toLogin(requireContext(), authManager.getLoginLauncher());
             } else {
                 new OpenImageDialog(requireActivity())
                         .setMediaType(OpenImageDialog.CAMERA_ALBUM)

@@ -149,8 +149,8 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     protected abstract BaseRecyclerViewAdapter<T, ?> getRecyclerAdapter();
 
     @Override
-    public void onLoginSuccessCallback(Bundle bundle) {
-        super.onLoginSuccessCallback(bundle);
+    public void onAuthSuccess(Bundle bundle) {
+        super.onAuthSuccess(bundle);
         setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
@@ -174,19 +174,10 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             }
             onRefreshFinish(false);
             onLoadFinish(false);
-            if (errorService == null||model==null) {
-                return;
-            }
-            if (errorService.isLoginPast(model.getCode())) {
-                errorService.toLogin(requireContext(),authManager.getLauncher());
-                return;
-            }
-            if (!errorService.hasPermission(model.getCode())) {
-                errorService.toNoPermission(requireContext(),authManager.getLauncher());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onErrorCode(model);
     }
 
     protected void setCanRefresh(boolean isCanRefresh) {

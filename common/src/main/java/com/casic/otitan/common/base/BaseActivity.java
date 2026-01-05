@@ -58,8 +58,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        createAuthManager();
         super.onCreate(savedInstanceState);
+        createAuthManager();
         AppManager.getAppManager().addActivity(this);
         createUIController();
         initToolbar();
@@ -70,9 +70,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     protected void createAuthManager() {
         if (authManager == null) {
-            authManager = new AuthManager(this);
+            authManager = new AuthManager(this, errorService == null || errorService.unifyHandling());
         }
-        authManager.setAuthCallback(this);
+        authManager.setLoginCallback(this);
     }
 
     protected void createUIController() {
@@ -132,12 +132,12 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     @Override
-    public void onLoginSuccessCallback(@Nullable Bundle data) {
+    public void onAuthSuccess(@Nullable Bundle data) {
 
     }
 
     @Override
-    public void onLoginFailCallback(int resultCode, @Nullable Bundle data) {
+    public void onAuthFail(int resultCode, @Nullable Bundle data) {
 
     }
 
@@ -175,8 +175,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     @Override
-    public void showLoading(String dialogMessage,boolean enableDynamicEllipsis) {
-        uiController.showLoading(dialogMessage,enableDynamicEllipsis, false);
+    public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        uiController.showLoading(dialogMessage, enableDynamicEllipsis, false);
     }
 
     @Override
@@ -205,11 +205,11 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(this, authManager.getLauncher());
+            errorService.toLogin(this, authManager.getLoginLauncher());
             return;
         }
         if (!errorService.hasPermission(model.getCode())) {
-            errorService.toNoPermission(this);
+            errorService.toNoPermission(this, authManager.getPermissionLauncher());
         }
     }
 

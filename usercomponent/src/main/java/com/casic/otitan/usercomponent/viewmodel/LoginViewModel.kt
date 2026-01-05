@@ -137,11 +137,6 @@ class LoginViewModel @Inject constructor(application: Application) :
     }
 
     fun loginCallback(userInfo: UserInfo?, userName: String) {
-//        viewModelScope.launch {
-//            with(Dispatchers.IO) {
-//                JPUS
-//            }
-//        }
         //存储登录信息和登录状态
         UserAccountHelper.saveLoginState(userInfo, true)
         UserAccountHelper.setAgreement(true)

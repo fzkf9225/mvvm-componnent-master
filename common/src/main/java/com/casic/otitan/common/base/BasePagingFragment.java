@@ -110,8 +110,8 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected abstract BasePagingAdapter<T, ?> getRecyclerAdapter();
 
     @Override
-    public void onLoginSuccessCallback(@Nullable Bundle data) {
-        super.onLoginSuccessCallback(data);
+    public void onAuthSuccess(@Nullable Bundle data) {
+        super.onAuthSuccess(data);
         setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
@@ -132,19 +132,10 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
             if (mViewModel != null) {
                 setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
             }
-            if (errorService == null || model == null) {
-                return;
-            }
-            if (errorService.isLoginPast(model.getCode())) {
-                errorService.toLogin(requireContext(), authManager.getLauncher());
-                return;
-            }
-            if (!errorService.hasPermission(model.getCode())) {
-                errorService.toNoPermission(requireContext(), authManager.getLauncher());
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onErrorCode(model);
     }
 
     public EmptyLayout.State getEmptyType() {

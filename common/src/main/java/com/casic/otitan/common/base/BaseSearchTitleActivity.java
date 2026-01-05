@@ -51,14 +51,14 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
     protected View.OnClickListener onSearchClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            keywordsLiveData.setValue(searchBinding.inputEdit.getText().toString());
+            keywordsLiveData.setValue(searchBinding.inputEdit.getText() == null ? null : searchBinding.inputEdit.getText().toString());
         }
     };
 
     protected CustomSearchEditText.OnInputSubmitListener onInputSubmitListener = new CustomSearchEditText.OnInputSubmitListener() {
         @Override
         public void onInputSubmit(String query) {
-            keywordsLiveData.setValue(searchBinding.inputEdit.getText().toString());
+            keywordsLiveData.setValue(query);
         }
 
         @Override

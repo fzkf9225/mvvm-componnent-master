@@ -28,7 +28,7 @@ import com.casic.otitan.common.inter.ErrorService;
  * Created by fz on 2017/11/22.
  * BaseFragment封装
  */
-public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView ,AuthManager.AuthCallback{
+public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
     /**
      * viewModel
@@ -38,8 +38,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * 正文布局
      */
     protected VDB binding;
+
     @Inject
-    protected ErrorService errorService;
+    public ErrorService errorService;
     /**
      * 认证管理，管理登录相关
      */
@@ -63,9 +64,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     protected void createAuthManager() {
         if (authManager == null) {
-            authManager = new AuthManager(this);
+            authManager = new AuthManager(this, errorService == null || errorService.unifyHandling());
         }
-        authManager.setAuthCallback(this);
+        authManager.setLoginCallback(this);
     }
 
     protected void createUIController() {
@@ -73,6 +74,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             uiController = new UIController(requireContext(), getLifecycle());
         }
     }
+
     /**
      * 创建viewModel
      */
@@ -87,7 +89,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
                 modelClass = BaseViewModel.class;
             }
             mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
-            mViewModel.createRepository(useActivityViewModel() ? ((BaseActivity)requireActivity()) : this);
+            mViewModel.createRepository(useActivityViewModel() ? ((BaseActivity) requireActivity()) : this);
         }
     }
 
@@ -117,12 +119,12 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     protected abstract void initData(Bundle bundle);
 
     @Override
-    public void onLoginSuccessCallback(@Nullable Bundle data) {
+    public void onAuthSuccess(@Nullable Bundle data) {
 
     }
 
     @Override
-    public void onLoginFailCallback(int resultCode, @Nullable Bundle data) {
+    public void onAuthFail(int resultCode, @Nullable Bundle data) {
 
     }
 
@@ -134,13 +136,12 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
-
     @Override
-    public void showLoading(String dialogMessage,boolean enableDynamicEllipsis) {
+    public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
         if (requireActivity().isFinishing()) {
             return;
         }
-        uiController.showLoading(requireActivity(),dialogMessage,enableDynamicEllipsis,false);
+        uiController.showLoading(requireActivity(), dialogMessage, enableDynamicEllipsis, false);
     }
 
     @Override
@@ -170,11 +171,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(requireContext(), authManager.getLauncher());
+            errorService.toLogin(requireContext(), authManager.getLoginLauncher());
             return;
         }
         if (!errorService.hasPermission(model.getCode())) {
-            errorService.toNoPermission(requireContext());
+            errorService.toNoPermission(requireContext(), authManager.getPermissionLauncher());
         }
     }
 

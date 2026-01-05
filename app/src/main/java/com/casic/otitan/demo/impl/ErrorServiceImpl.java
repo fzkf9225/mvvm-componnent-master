@@ -86,6 +86,11 @@ public class ErrorServiceImpl implements ErrorService {
     }
 
     @Override
+    public boolean unifyHandling() {
+        return true;
+    }
+
+    @Override
     public void uploadErrorInfo(String errorInfo) {
 
     }

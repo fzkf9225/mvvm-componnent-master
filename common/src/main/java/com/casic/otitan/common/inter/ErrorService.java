@@ -22,7 +22,7 @@ public interface ErrorService {
     boolean isLogin();
     /**
      * 是否登录超时或者登录无效等情况，他包含是否登录
-     * @return 是否为登录过期
+     * @return 是否为登录过期，true：登录过期，false：登录有效
      */
     boolean isLoginPast(String errorCode);
 
@@ -48,8 +48,8 @@ public interface ErrorService {
 
     void toLogin(Context context,Bundle bundle);
     /**
-     * 是否有操作权限
-     * @return 是否有权限
+     * 是否有操作权限，errorCode为错误编码，注意这里返回的是有权限的情况
+     * @return 是否有权限，true：有权限，false：无权限
      */
     boolean hasPermission(String errorCode);
 
@@ -64,6 +64,11 @@ public interface ErrorService {
      * @param context 上下文
      */
     void toNoPermission(Context context);
+    /**
+     * 是否统一处理登录和权限回调
+     * @return true为统一处理，false为不同处理
+     */
+    boolean unifyHandling();
     /**
      * 崩溃日志
      * @param errorInfo 上传登录日志

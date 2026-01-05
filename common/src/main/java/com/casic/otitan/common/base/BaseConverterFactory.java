@@ -41,7 +41,7 @@ public final class BaseConverterFactory extends Converter.Factory {
 
     public static BaseConverterFactory create(String successCode, Gson gson) {
         if (gson == null) {
-            throw new NullPointerException("gson == null");
+            throw new NullPointerException("gson must be not null");
         }
         return new BaseConverterFactory(successCode, gson);
     }
