@@ -8,8 +8,11 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.casic.otitan.common.R;
 
 public class RecycleViewDivider extends RecyclerView.ItemDecoration {
 
@@ -25,7 +28,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
      * @param orientation 列表方向
      */
     public RecycleViewDivider(Context context, int orientation) {
-        this(context, orientation, 1, context.getResources().getColor(android.R.color.darker_gray));
+        this(context, orientation, 1, ContextCompat.getColor(context, R.color.h_line_color));
     }
 
     public RecycleViewDivider(Context context, int orientation, boolean isShowLastDivider) {

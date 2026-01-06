@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Create by fz on 2019/8/28 0028
- * describe:
+ * describe:可左滑删除的RecyclerView
  */
 public class TxSlideRecyclerView extends RecyclerView {
 

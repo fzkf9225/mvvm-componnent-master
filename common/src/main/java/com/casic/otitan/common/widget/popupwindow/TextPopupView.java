@@ -22,7 +22,7 @@ import com.casic.otitan.common.utils.common.DensityUtil;
 
 /**
  * created by fz on 2025/7/4 8:54
- * describe:
+ * describe：PopupWindow的按钮，不是PopupWindow弹框
  */
 public class TextPopupView extends ConstraintLayout {
 
@@ -40,10 +40,19 @@ public class TextPopupView extends ConstraintLayout {
     private int labelTextColor;//文字颜色
     private boolean isBold = false;//是否加粗
 
+    /**
+     * 文本控件
+     */
     private AppCompatTextView tvLabel;
 
+    /**
+     * 左侧图标控件
+     */
     private AppCompatImageView ivStartDrawable;
 
+    /**
+     * 右侧图标控件
+     */
     private AppCompatImageView ivEndDrawable;
 
     public TextPopupView(@NonNull Context context) {

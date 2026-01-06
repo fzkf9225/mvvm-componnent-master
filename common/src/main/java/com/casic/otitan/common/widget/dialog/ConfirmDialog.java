@@ -28,20 +28,57 @@ import com.casic.otitan.common.listener.OnDialogInterfaceClickListener;
  * describe：确认弹框
  */
 public class ConfirmDialog extends Dialog {
+    /**
+     * 弹框提示内容
+     */
     private String content;
+    /**
+     * 富文本样式内容，可以添加超链接和颜色，优先级高于 content
+     */
     private SpannableString spannableContent;
+    /**
+     * 弹框按钮点击监听
+     */
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
-    private String positiveText = null, negativeText = null;
+    /**
+     * 弹框右侧确认按钮文字
+     */
+    private String positiveText = null;
+    /**
+     * 弹框右侧取消按钮文字
+     */
+    private String negativeText = null;
+    /**
+     * 是否显示按钮和分割线
+     */
     private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
-
+    /**
+     * 弹框右侧确认按钮文字颜色
+     */
     private ColorStateList positiveTextColor = null;
+    /**
+     * 弹框右侧取消按钮文字颜色
+     */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 弹框内容文字颜色
+     */
     private ColorStateList textColor = null;
-
+    /**
+     * 弹框背景
+     */
     private Drawable bgDrawable;
+    /**
+     * 布局填充器
+     */
     private final LayoutInflater layoutInflater;
-
+    /**
+     * 弹框布局
+     */
     private DialogConfirmBinding binding;
 
     public ConfirmDialog(@NonNull Context context) {

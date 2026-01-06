@@ -26,22 +26,46 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
 
 /**
  * updated by fz on 2025/2/13 14:17
- * describe：PopupWindow 下拉框
+ * describe：PopupWindow 下拉框，竖向下拉的PopupWindow
  */
 public class PopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
+    /**
+     * 列表选中结果监听
+     */
     private final SelectedListener<T> selectedListener;
+    /**
+     * 列表数据源
+     */
     private final List<T> dataList;
 
+    /**
+     * 列表适配器
+     */
     private PopupWindowAdapter<T> popupWindowAdapter = null;
 
+    /**
+     * 上下文
+     */
     private final Context context;
 
+    /**
+     * 列表选中项的文字颜色
+     */
     private @ColorInt int selectTextColor;
 
+    /**
+     * 列表未选中项的文字颜色
+     */
     private @ColorInt int unSelectTextColor;
 
+    /**
+     * 列表选中项的背景颜色
+     */
     private @ColorInt int selectBgColor;
 
+    /**
+     * 列表未选中项的背景颜色
+     */
     private @ColorInt int unSelectBgColor;
 
     /**

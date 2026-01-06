@@ -17,7 +17,13 @@ import com.casic.otitan.common.databinding.ImageSaveDialogBinding;
  * describe:选择照片和拍照弹框
  */
 public class ImageSaveDialog extends Dialog {
+    /**
+     * 监听
+     */
     private OnImageSaveListener onImageSaveListener;
+    /**
+     * 绑定布局
+     */
     private ImageSaveDialogBinding binding;
 
     public ImageSaveDialog setOnImageSaveListener(OnImageSaveListener onImageSaveListener) {

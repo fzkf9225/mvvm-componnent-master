@@ -29,12 +29,21 @@ import com.casic.otitan.common.widget.recyclerview.GridSpacingItemDecoration;
 
 /**
  * updated by fz on 2025/2/13 14:17
- * describe：PopupWindow 多选下拉框（不是级联）
+ * describe：PopupWindow 多选下拉框（不是级联），为网格布局样式
  */
 public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
+    /**
+     * 选中回调
+     */
     private final SelectedListener<T> selectedListener;
+    /**
+     * 数据源
+     */
     private final List<T> dataList;
 
+    /**
+     * 列表适配器
+     */
     private PopupWindowMultiAdapter<T> popupWindowAdapter = null;
 
     private final Context context;
@@ -64,6 +73,9 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
      */
     private Drawable unSelectBgDrawable;
 
+    /**
+     * 绑定布局
+     */
     private PopupMultiViewBinding binding;
 
     public MultiPopupView(Context context, List<T> dataList, SelectedListener<T> selectedListener) {

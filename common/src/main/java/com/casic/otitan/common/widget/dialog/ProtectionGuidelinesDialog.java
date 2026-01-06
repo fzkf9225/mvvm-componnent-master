@@ -26,19 +26,46 @@ import com.casic.otitan.common.listener.OnDialogInterfaceClickListener;
  * describe：请求权限提示弹框
  */
 public class ProtectionGuidelinesDialog extends Dialog {
+    /**
+     * 富文本样式内容，可以添加超链接和颜色
+     */
     private SpannableString spannableContent;
+    /**
+     * 点击事件监听
+     */
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
+    /**
+     * 按钮文字，同意文字内容，拒绝文字内容，标题内容
+     */
     private String agreeText = null, refuseText = null, dialogMessageType = null;
-
+    /**
+     * 同意按钮北京颜色
+     */
     private ColorStateList positiveBackgroundColor = null;
+    /**
+     * 同意按钮文字颜色
+     */
     private ColorStateList positiveTextColor = null;
+    /**
+     * 拒绝按钮文字颜色
+     */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 内容文字颜色
+     */
     private ColorStateList textColor = null;
-
+    /**
+     * 背景样式
+     */
     private Drawable bgDrawable;
     private final LayoutInflater layoutInflater;
-
+    /**
+     * 绑定布局
+     */
     private DialogProtectionGuidelinesBinding binding;
 
     public ProtectionGuidelinesDialog(@NonNull Context context) {

@@ -29,16 +29,43 @@ import com.casic.otitan.common.utils.common.StringUtil;
  * 提示弹框
  */
 public class MessageDialog extends Dialog {
+    /**
+     * 弹框内容
+     */
     private String content;
+    /**
+     * 富文本样式内容，可以添加超链接和颜色，优先级高于 content
+     */
     private SpannableString spannableContent;
+    /**
+     * 弹框按钮点击监听
+     */
     private OnDialogInterfaceClickListener onPositiveClickListener;
+    /**
+     * 是否允许点击外部取消弹框
+     */
     private boolean outSide = true;
+    /**
+     * 弹框按钮文字
+     */
     private String positiveText = null;
+    /**
+     * 弹框类型
+     */
     private String messageType = null;
     private final LayoutInflater layoutInflater;
+    /**
+     * 弹框背景
+     */
     private Drawable bgDrawable;
+    /**
+     * 弹框文字颜色
+     */
     private ColorStateList textColor = null;
 
+    /**
+     * 弹框布局
+     */
     private DialogMessageBinding binding;
 
     public MessageDialog(@NonNull Context context) {

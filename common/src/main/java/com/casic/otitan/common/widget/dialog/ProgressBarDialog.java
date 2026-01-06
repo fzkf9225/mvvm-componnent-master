@@ -24,10 +24,25 @@ import com.casic.otitan.common.widget.dialog.bean.ProgressBarSetting;
  */
 
 public class ProgressBarDialog extends Dialog {
+    /**
+     * 进度条布局
+     */
     private ProcessBarDialogBinding processBarDialogBinding;
+    /**
+     * 是否可以取消
+     */
     private boolean isCanCancel = false;
+    /**
+     * 取消监听
+     */
     private OnCancelListener onCancelListener;
+    /**
+     * 进度
+     */
     private float process;
+    /**
+     * 进度条设置参数
+     */
     private ProgressBarSetting progressBarSetting;
     /**
      * 圆形进度条
@@ -41,17 +56,45 @@ public class ProgressBarDialog extends Dialog {
      * 默认为水平进度条
      */
     private int progressBarType = HORIZONTAL_PROGRESS_BAR;
+    /**
+     * 消息类型颜色
+     */
     private @ColorInt Integer messageTypeColor;
+    /**
+     * 消息类型
+     */
     private String messageType;
+    /**
+     * 内容颜色
+     */
     private @ColorInt Integer contentColor;
+    /**
+     * 内容
+     */
     private String content;
+    /**
+     * 按钮文字
+     */
     private String buttonText = null;
+    /**
+     * 是否显示按钮
+     */
     private boolean isShowButton = true;
+    /**
+     * 按钮点击监听
+     */
     private View.OnClickListener onButtonClickListener;
+    /**
+     * 按钮颜色
+     */
     private @ColorInt Integer buttonColor;
-
+    /**
+     * 按钮背景颜色
+     */
     private @ColorInt Integer buttonBgColor;
-
+    /**
+     * 进度结束监听
+     */
     private OnProgressEndListener onProgressEndListener;
 
     public ProgressBarDialog(Context context) {

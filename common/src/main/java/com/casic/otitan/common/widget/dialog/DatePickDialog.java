@@ -31,17 +31,57 @@ import com.casic.otitan.common.listener.OnDialogInterfaceClickListener;
  * describe：年月日选择dialog
  */
 public class DatePickDialog extends Dialog {
+    /**
+     * 上下文
+     */
     private final Context context;
+    /**
+     * 标题
+     */
     private String title;
+    /**
+     * 确定按钮点击监听
+     */
     private OnDatePickSelectedListener onPositiveClickListener;
+    /**
+     * 取消按钮点击监听
+     */
     private OnDialogInterfaceClickListener onNegativeClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
+    /**
+     * 模式，参考枚举 DateMode
+     */
     private DateMode dateMode = DateMode.YEAR_MONTH_DAY;
-    private String positiveText = null, negativeText = null;
+    /**
+     * 右侧确定按钮文字
+     */
+    private String positiveText = null;
+    /**
+     * 右侧取消按钮文字
+     */
+    private String negativeText = null;
+    /**
+     * 是否显示确认或取消按钮
+     */
     private boolean isShowPositiveView = true, isShowNegativeView = true;
+    /**
+     * 绑定的view
+     */
     private DialogDatePickBinding binding;
+    /**
+     * 确定按钮文字颜色
+     */
     private ColorStateList positiveTextColor = null;
+    /**
+     * 取消按钮文字颜色
+     */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 当天文字颜色
+     */
     private ColorStateList todayTextColor = null;
     /**
      * 默认起始位前一年1月1日，结束为后一年12月31日
@@ -56,11 +96,19 @@ public class DatePickDialog extends Dialog {
     private int defaultMinute = Calendar.getInstance().get(Calendar.MINUTE);
     private int defaultHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     private int defaultSecond = Calendar.getInstance().get(Calendar.SECOND);
+    /**
+     * 年、月、日、时、分、秒标签
+     */
     private String yearLabel, monthLabel, dayLabel, hourLabel, minuteLabel, secondLabel;
+    /**
+     * 背景样式
+     */
     private Drawable bgDrawable;
 
+    /**
+     * 对齐方式
+     */
     private int gravity = Gravity.BOTTOM;
-
 
     public DatePickDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);

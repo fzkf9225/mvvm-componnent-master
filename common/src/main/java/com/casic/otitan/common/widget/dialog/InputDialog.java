@@ -26,24 +26,63 @@ import com.casic.otitan.common.utils.common.StringUtil;
 
 /**
  * Created by fz on 2017/1/14.
- * 输入弹框
+ * describe：单行文本输入框
  */
-
 public class InputDialog extends Dialog {
+    /**
+     * 绑定布局
+     */
     private DialogInputBinding binding;
 
+    /**
+     * 监听器
+     */
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
-    private String positiveText = null, negativeText = null;
+    /**
+     * 右侧确认按钮提示文字
+     */
+    private String positiveText = null;
+    /**
+     * 左侧取消按钮提示文字
+     */
+    private String negativeText = null;
+    /**
+     * 提示标题、输入框提示文字、默认文本
+     */
     private String tipsStr, hintStr, defaultStr;
+    /**
+     * 输入框类型
+     */
     private int inputType = InputType.TYPE_CLASS_TEXT;
+    /**
+     * 最大输入字数
+     */
     private int maxWords = 30;
+    /**
+     * 右侧确认按钮文字颜色
+     */
     private ColorStateList positiveTextColor = null;
+    /**
+     * 左侧取消按钮文字颜色
+     */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 文本颜色
+     */
     private ColorStateList textColor = null;
+    /**
+     * 提示标题颜色
+     */
     private ColorStateList tipColor = null;
 
     private final LayoutInflater layoutInflater;
+    /**
+     * 背景
+     */
     private Drawable bgDrawable;
 
     public InputDialog(@NonNull Context context) {

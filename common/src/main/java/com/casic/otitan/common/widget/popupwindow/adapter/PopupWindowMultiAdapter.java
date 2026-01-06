@@ -22,14 +22,29 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  * updated by fz on 2024/11/22.
  */
 public class PopupWindowMultiAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionTextViewBinding> {
+    /**
+     * 已选中项
+     */
     private final List<T> selected = new ArrayList<>();
 
+    /**
+     * 选中文本样式
+     */
     private @ColorInt int selectTextColor;
 
+    /**
+     * 未选中文本样式
+     */
     private @ColorInt int unSelectTextColor;
 
+    /**
+     * 选中背景样式
+     */
     private Drawable selectBgDrawable;
 
+    /**
+     * 未选中背景样式
+     */
     private Drawable unSelectBgDrawable;
 
     public PopupWindowMultiAdapter() {

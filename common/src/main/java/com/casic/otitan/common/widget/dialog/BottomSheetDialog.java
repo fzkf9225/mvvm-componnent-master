@@ -25,12 +25,33 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
  * describe:底部选择框
  */
 public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.android.material.bottomsheet.BottomSheetDialog {
+    /**
+     * 菜单点击监听
+     */
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
+    /**
+     * 菜单数据
+     */
     private List<T> menuData;
+    /**
+     * 菜单适配器
+     */
     private OptionBottomMenuListAdapter<T> optionBottomMenuListAdapter;
+    /**
+     * 菜单分割线颜色
+     */
     private @ColorInt int lineColor = -1;
+    /**
+     * 是否显示分割线
+     */
     private boolean isShowLine = true;
+    /**
+     * 是否显示取消按钮
+     */
     private boolean showCancelButton = false;
 
     public BottomSheetDialog(@NonNull Context context) {

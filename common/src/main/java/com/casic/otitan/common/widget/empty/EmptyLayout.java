@@ -60,7 +60,7 @@ public class EmptyLayout extends LinearLayout {
     @StringRes private int defaultErrorText = R.string.state_load_error;
     @StringRes private int defaultLoadingText = R.string.state_loading;
     @StringRes private int defaultNoDataText = R.string.noData;
-    @StringRes private int defaultClickableNoDataText = R.string.state_loading_again;
+    @StringRes private final int defaultClickableNoDataText = R.string.state_loading_again;
 
     private final ViewErrorLayoutBinding binding;
 

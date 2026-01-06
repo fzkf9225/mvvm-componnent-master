@@ -23,6 +23,9 @@ import com.casic.otitan.common.utils.common.DensityUtil;
  */
 public class PopupWindowCheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionCheckboxViewBinding> {
 
+    /**
+     * 文本颜色
+     */
     private @ColorInt int textColor;
 
     /**
@@ -39,6 +42,9 @@ public class PopupWindowCheckBoxAdapter<T extends PopupWindowBean> extends BaseR
      */
     private float itemHeight = 0;
 
+    /**
+     * 是否显示复选框
+     */
     private boolean showCheckBox = false;
 
     private final PopupWindowSelectedAdapter<T> selectedAdapter;

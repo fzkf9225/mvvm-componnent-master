@@ -21,14 +21,29 @@ import com.casic.otitan.common.utils.common.DensityUtil;
 public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionTextViewBinding> {
     private int selectedPosition = -1;
 
+    /**
+     * 选中文字样式
+     */
     private @ColorInt int selectTextColor;
 
+    /**
+     * 未选中文字样式
+     */
     private @ColorInt int unSelectTextColor;
 
+    /**
+     * 选中背景样式
+     */
     private @ColorInt int selectBgColor;
 
+    /**
+     * 未选中背景样式
+     */
     private @ColorInt int unSelectBgColor;
 
+    /**
+     * 列表项高度
+     */
     private float itemHeight = 0;
 
     public PopupWindowAdapter() {

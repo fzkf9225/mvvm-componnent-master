@@ -19,9 +19,21 @@ import com.casic.otitan.common.utils.common.ScreenUtil;
  * describe:自定义加载dialog
  */
 public class LoadingProgressDialog extends Dialog {
+    /**
+     * 单例
+     */
     private volatile static LoadingProgressDialog instance;
+    /**
+     * 绑定布局
+     */
     private LoadingDialogBinding loadingDialogBinding;
+    /**
+     * 是否可取消
+     */
     private boolean isCanCancel = false;
+    /**
+     * 取消监听
+     */
     private OnCancelListener onCancelListener;
     /**
      * 加载提示文字

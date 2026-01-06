@@ -27,26 +27,58 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
 
 /**
  * updated by fz on 2025/2/13 14:17
- * describe：PopupWindow 下拉框
+ * describe：PopupWindow 下拉框，树结构的PopupWindow
  */
 public class TreePopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
+    /**
+     * 选择监听
+     */
     private final SelectedListener<T> selectedListener;
+    /**
+     * 数据源
+     */
     private final List<T> dataList;
 
+    /**
+     * 父级适配器
+     */
     private PopupWindowAdapter<T> popupWindowAdapter = null;
+    /**
+     * 子级适配器
+     */
     private PopupWindowAdapter<T> childAdapter = null;
 
+    /**
+     * 当前选中的父级位置、子集位置，可能为null
+     */
     private Integer parentPosition, childPosition;
+    /**
+     * 上下文
+     */
     private final Context activity;
+    /**
+     * 是否有右侧按钮，也就是是否有子集
+     */
     private final boolean hasRight;
 
-
+    /**
+     * 选中项的文字颜色
+     */
     private @ColorInt int selectTextColor;
 
+    /**
+     * 未选中项的文字颜色
+     */
     private @ColorInt int unSelectTextColor;
 
+    /**
+     * 选中项的背景颜色
+     */
     private @ColorInt int selectBgColor;
 
+    /**
+     * 未选中项的背景颜色
+     */
     private @ColorInt int unSelectBgColor;
 
     /**

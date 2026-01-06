@@ -35,18 +35,39 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
  */
 public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowCheckBoxAdapter.OnItemSelectedChangedListener, PopupWindowSelectedAdapter.OnItemSelectedClearListener {
     public final static String TAG = "PopupMultiCascadeView";
+    /**
+     * 选项列表适配器
+     */
     private PopupWindowCheckBoxAdapter<T> popupWindowAdapter;
+    /**
+     * 选中列表适配器
+     */
     private PopupWindowSelectedAdapter<T> popupWindowSelectedAdapter;
+    /**
+     * 布局
+     */
     private PopupMultiCascadeBinding binding;
+    /**
+     * 选项数据源
+     */
     private final List<T> dataList;
+    /**
+     * 选中数据
+     */
     private final SelectedListener<T> selectedListener;
     /**
      * 顶部选中文字颜色
      */
     private @ColorInt int selectTextColor;
 
+    /**
+     * 圆角
+     */
     private float radius;
 
+    /**
+     * 选项列表选中背景颜色
+     */
     private @ColorInt int selectBgColor;
 
     /**

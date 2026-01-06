@@ -31,19 +31,37 @@ import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
  * 底部确认弹框
  */
 public class MenuDialog<T extends PopupWindowBean> extends Dialog {
+    /**
+     * 菜单点击监听
+     */
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
     /**
      * 是否可以点击外部取消
      */
     private boolean outSide = true;
+    /**
+     * 菜单数据
+     */
     private List<T> menuData;
+    /**
+     * 菜单适配器
+     */
     private MenuListAdapter<T> optionBottomMenuListAdapter;
     /**
      * dialog展示位置
      */
     private int gravity = Gravity.BOTTOM;
+    /**
+     * 是否显示取消按钮
+     */
     private boolean isShowCancelButton = true;
+    /**
+     * 菜单分割线颜色
+     */
     private @ColorInt int lineColor = -1;
+    /**
+     * 是否显示分割线
+     */
     private boolean isShowLine = true;
     /**
      * 取消按钮颜色
