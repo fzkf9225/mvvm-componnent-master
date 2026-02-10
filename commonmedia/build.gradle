@@ -112,7 +112,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'com.casic.otitan.media'
                 artifactId = 'media'
-                version = '2.0.2'
+                version = '2.0.3'
             }
         }
         repositories {
