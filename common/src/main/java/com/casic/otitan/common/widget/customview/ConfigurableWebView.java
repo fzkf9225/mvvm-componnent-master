@@ -106,6 +106,7 @@ public class ConfigurableWebView extends WebView {
      * @param domain 自定义域名
      */
     public void setDomain(String domain) {
+        this.domain = domain;
         // 初始化AssetLoader用于加载本地资源
         assetLoader = new WebViewAssetLoader.Builder()
                 .setHttpAllowed(true)

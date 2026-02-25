@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 
+import com.casic.otitan.common.activity.WebViewActivity;
+import com.casic.otitan.common.enums.WebViewUrlTypeEnum;
 import com.casic.otitan.demo.R;
 import com.casic.otitan.demo.databinding.ActivityLaunchBinding;
 import com.casic.otitan.usercomponent.api.UserAccountHelper;
@@ -194,7 +196,13 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, ActivityLaunchB
         ClickableSpan userAgreementSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                showToast("用户协议");
+                WebViewActivity.show(
+                        widget.getContext(),
+                        "用户协议.html",
+                        "用户协议",
+                        true,
+                        false
+                );
             }
 
             @Override
@@ -209,7 +217,13 @@ public class LaunchActivity extends BaseActivity<EmptyViewModel, ActivityLaunchB
         ClickableSpan privacyPolicySpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                showToast("隐私保护协议");
+                WebViewActivity.show(
+                        widget.getContext(),
+                        "隐私保护政策.html",
+                        "隐私保护政策",
+                        true,
+                        false
+                );
             }
 
             @Override
