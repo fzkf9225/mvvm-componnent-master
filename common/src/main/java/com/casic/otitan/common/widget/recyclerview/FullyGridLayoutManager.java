@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by CherishTang on 2018/7/30.
+ * Created by fz on 2018/7/30.
  * 解决scrollView嵌套RecyclerView显示不全和焦点冲突的问题
  */
 

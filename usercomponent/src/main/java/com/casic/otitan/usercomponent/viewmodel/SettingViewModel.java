@@ -25,7 +25,7 @@ import com.casic.otitan.common.widget.customview.IconLabelValueView;
 import com.casic.otitan.common.widget.dialog.ConfirmDialog;
 
 /**
- * Create by CherishTang on 2020/3/26 0026
+ * Create by fz on 2020/3/26 0026
  * describe:
  */
 public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,BaseView> {

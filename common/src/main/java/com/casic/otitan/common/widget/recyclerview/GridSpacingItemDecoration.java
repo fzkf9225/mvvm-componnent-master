@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
- * Created by CherishTang on 2018/9/25.
+ * Created by fz on 2018/9/25.
  */
 
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

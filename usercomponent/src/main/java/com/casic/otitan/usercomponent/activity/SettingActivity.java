@@ -11,7 +11,7 @@ import com.casic.otitan.common.api.AppManager;
 import com.casic.otitan.common.base.BaseActivity;
 
 /**
- * Create by CherishTang on 2019/10/11
+ * Create by fz on 2019/10/11
  * describe:设置
  */
 @AndroidEntryPoint

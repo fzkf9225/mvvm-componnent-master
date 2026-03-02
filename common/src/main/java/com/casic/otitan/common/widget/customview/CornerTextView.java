@@ -13,7 +13,7 @@ import com.casic.otitan.common.R;
 
 
 /**
- * Created by CherishTang on 2019/5/31.
+ * Created by fz on 2019/5/31.
  * describe：自定义圆角矩形
  */
 public class CornerTextView extends AppCompatTextView {

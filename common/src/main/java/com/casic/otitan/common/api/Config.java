@@ -24,6 +24,10 @@ public class Config {
      */
     private boolean responseBodyLogConverterJson = false;
 
+    /**
+     * 空白处可以点击收起键盘
+     */
+    private boolean hideKeyboardOnTouchOutside = true;
     private Config() {
     }
 
@@ -35,9 +39,16 @@ public class Config {
         return ConfigHolder.CONFIG;
     }
 
-
     public Application getApplication() {
         return application;
+    }
+
+    public boolean isHideKeyboardOnTouchOutside() {
+        return hideKeyboardOnTouchOutside;
+    }
+
+    public void setHideKeyboardOnTouchOutside(boolean hideKeyboardOnTouchOutside) {
+        this.hideKeyboardOnTouchOutside = hideKeyboardOnTouchOutside;
     }
 
     /**

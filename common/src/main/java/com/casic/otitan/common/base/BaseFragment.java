@@ -25,7 +25,7 @@ import com.casic.otitan.common.helper.UIController;
 import com.casic.otitan.common.inter.ErrorService;
 
 /**
- * Created by fz on 2017/11/22.
+ * Created by fz on 2025/11/22.
  * BaseFragment封装
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView, AuthManager.AuthCallback {

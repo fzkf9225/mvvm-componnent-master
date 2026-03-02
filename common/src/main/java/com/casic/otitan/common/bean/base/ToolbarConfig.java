@@ -15,7 +15,7 @@ import com.casic.otitan.common.R;
 import com.casic.otitan.common.utils.theme.ThemeUtils;
 
 /**
- * Create by CherishTang on 2020/3/25 0025
+ * Create by fz on 2020/3/25 0025
  * describe:toolbar配置
  */
 public class ToolbarConfig extends BaseObservable {

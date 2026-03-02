@@ -2,6 +2,7 @@ package com.casic.otitan.common.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
@@ -19,14 +20,16 @@ import javax.inject.Inject;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.api.AppManager;
+import com.casic.otitan.common.api.Config;
 import com.casic.otitan.common.bean.base.ToolbarConfig;
 import com.casic.otitan.common.databinding.BaseActivityConstraintBinding;
 import com.casic.otitan.common.helper.AuthManager;
 import com.casic.otitan.common.helper.UIController;
 import com.casic.otitan.common.inter.ErrorService;
+import com.casic.otitan.common.utils.common.KeyBoardUtil;
 
 /**
- * Create by CherishTang on 2019/8/1
+ * Create by fz on 2019/8/1
  * describe:BaseActivity封装
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, AuthManager.AuthCallback {
@@ -79,6 +82,23 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (uiController == null) {
             uiController = new UIController(this, getLifecycle());
         }
+    }
+
+    /**
+     * 特性开关：点击空白区域关闭键盘
+     * 子类可以重写此方法改变行为
+     */
+    protected boolean hideKeyboardOnTouchOutside() {
+        return Config.getInstance().isHideKeyboardOnTouchOutside();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (hideKeyboardOnTouchOutside()) {
+            // 调用工具类处理键盘收起
+            KeyBoardUtil.handleDispatchTouchEvent(this, ev);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     protected void initToolbar() {

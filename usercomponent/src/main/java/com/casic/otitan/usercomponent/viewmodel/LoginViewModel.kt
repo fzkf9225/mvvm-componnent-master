@@ -38,7 +38,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 /**
- * Create by CherishTang on 2020/3/19 0019
+ * Create by fz on 2020/3/19 0019
  * describe:loginViewModel
  */
 @HiltViewModel

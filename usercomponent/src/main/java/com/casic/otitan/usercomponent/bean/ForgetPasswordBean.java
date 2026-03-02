@@ -1,7 +1,7 @@
 package com.casic.otitan.usercomponent.bean;
 
 /**
- * Create by CherishTang on 2019/10/21 0021
+ * Create by fz on 2019/10/21 0021
  * describe:忘记密码
  */
 public class ForgetPasswordBean {

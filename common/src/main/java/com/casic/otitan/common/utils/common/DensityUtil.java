@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import androidx.annotation.NonNull;
 
 /**
- * Created by CherishTang on 2018/7/12.
+ * Created by fz on 2018/7/12.
  * px与dp互转
  */
 public class DensityUtil {

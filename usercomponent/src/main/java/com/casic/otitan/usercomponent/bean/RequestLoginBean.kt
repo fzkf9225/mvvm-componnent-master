@@ -1,7 +1,7 @@
 package com.casic.otitan.usercomponent.bean
 
 /**
- * Create by CherishTang on 2024/11/8 0018
+ * Create by fz on 2024/11/8 0018
  * describe:
  */
 data class RequestLoginBean(

@@ -13,7 +13,7 @@ import com.casic.otitan.common.R;
 import com.casic.otitan.common.bean.PagerInfo;
 
 /**
- * Create by CherishTang on 2019/8/1
+ * Create by fz on 2019/8/1
  * describe: tabLayout+viewpager侧滑fragment布局封装
  */
 public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseFragment<VM, VDB> {

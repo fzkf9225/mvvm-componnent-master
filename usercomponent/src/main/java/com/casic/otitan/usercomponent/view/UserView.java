@@ -4,7 +4,7 @@ package com.casic.otitan.usercomponent.view;
 import com.casic.otitan.common.base.BaseView;
 
 /**
- * Create by CherishTang on 2020/3/27 0027
+ * Create by fz on 2020/3/27 0027
  * describe:
  */
 public interface UserView extends BaseView {

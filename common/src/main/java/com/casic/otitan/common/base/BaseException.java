@@ -3,7 +3,7 @@ package com.casic.otitan.common.base;
 import androidx.annotation.NonNull;
 
 /**
- * Create by CherishTang on 2019/8/1
+ * Create by fz on 2019/8/1
  * describe: 自定义异常封装
  */
 public class BaseException extends RuntimeException {

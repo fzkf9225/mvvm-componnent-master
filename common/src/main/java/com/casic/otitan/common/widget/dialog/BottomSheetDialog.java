@@ -21,7 +21,7 @@ import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.widget.recyclerview.RecycleViewDivider;
 
 /**
- * Create by CherishTang on 2020/6/23 0023
+ * Create by fz on 2020/6/23 0023
  * describe:底部选择框
  */
 public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.android.material.bottomsheet.BottomSheetDialog {

@@ -2,7 +2,7 @@ package com.casic.otitan.googlegps.socket;
 
 
 /**
- * Create by CherishTang on 2019/8/1
+ * Create by fz on 2019/8/1
  * describe:自定义异常封装
  */
 public class SocketException extends Exception {

@@ -27,7 +27,7 @@ import com.casic.otitan.common.utils.log.LogUtil;
 
 
 /**
- * Create by CherishTang on 2019/12/25 0025
+ * Create by fz on 2019/12/25 0025
  * describe:自定义输入框
  */
 public class CustomSearchEditText extends AppCompatEditText implements AppCompatEditText.OnEditorActionListener, TextWatcher {

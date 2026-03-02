@@ -13,10 +13,12 @@
         android:layout_height="match_parent">
 
         <com.scwang.smart.refresh.header.ClassicsHeader
+            android:id="@+id/v_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <FrameLayout
+            android:id="@+id/fl_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/default_background">
@@ -37,6 +39,7 @@
         </FrameLayout>
 
         <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:id="@+id/v_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srlClassicsSpinnerStyle="Translate" />

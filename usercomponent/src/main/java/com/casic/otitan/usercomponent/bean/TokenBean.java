@@ -1,7 +1,7 @@
 package com.casic.otitan.usercomponent.bean;
 
 /**
- * Create by CherishTang on 2019/10/18 0018
+ * Create by fz on 2019/10/18 0018
  * describe:登录返回值token
  */
 public class TokenBean {

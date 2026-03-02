@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.casic.otitan.common.repository.IRepository;
 
 /**
- * Create by CherishTang on 2020/3/19 0019
+ * Create by fz on 2020/3/19 0019
  * describe:baseViewMode封装
  */
 public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseView> extends BaseViewViewModel<BV> {

@@ -21,7 +21,7 @@ import com.casic.otitan.common.viewmodel.VideoPlayerViewModel;
 import com.casic.otitan.common.widget.dialog.MessageDialog;
 
 /**
- * Create by CherishTang on 2019/11/27
+ * Create by fz on 2019/11/27
  * describe:视频播放，仿腾讯视频,Oppo R11上播放会偶尔闪退返回，几率时间，原因未知
  */
 @AndroidEntryPoint

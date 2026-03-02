@@ -20,7 +20,7 @@ import com.casic.otitan.common.bean.Code.ResponseCode;
 import retrofit2.Converter;
 
 /**
- * Create by CherishTang on 2019/8/1
+ * Create by fz on 2019/8/1
  * describe:解析接口统一返回数据
  */
 public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> {

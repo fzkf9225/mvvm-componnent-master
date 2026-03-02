@@ -18,7 +18,7 @@ import com.casic.otitan.common.R;
 import com.casic.otitan.common.utils.common.DensityUtil;
 
 /**
- * Create by CherishTang on 2019/11/5
+ * Create by fz on 2019/11/5
  * describe:自定义三角形角标view，可以自定义在四个角落和角标的宽度背景色
  */
 public class CornerLabelView extends View {
