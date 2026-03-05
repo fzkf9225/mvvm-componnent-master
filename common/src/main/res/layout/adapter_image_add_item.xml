@@ -9,14 +9,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null">
+        android:clipChildren="false">
 
         <com.casic.otitan.common.widget.customview.CornerConstraintLayout
             android:id="@+id/iv_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/vertical_margin_l"
-            android:layout_marginEnd="@dimen/vertical_margin_l"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,11 +64,9 @@
             android:id="@+id/iv_image_show"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/vertical_margin_l"
-            android:layout_marginEnd="@dimen/vertical_margin_l"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -103,8 +99,8 @@
             android:layout_width="@dimen/image_m"
             android:layout_height="@dimen/image_m"
             android:layout_gravity="end"
-            android:layout_marginTop="@dimen/vertical_margin_s"
-            android:layout_marginEnd="@dimen/vertical_margin_s"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="-8dp"
             android:background="@drawable/ib_clear_image_selector"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"

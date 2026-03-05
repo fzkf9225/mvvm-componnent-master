@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.casic.otitan.common.R;
@@ -38,32 +39,25 @@ import com.casic.otitan.common.widget.customview.CornerTextView;
 import com.casic.otitan.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2021/4/2
- * describe:添加视频
+ * 添加图片、视频多媒体文件的适配器
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @created 2026/3/5 10:06
  */
-public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterMediaAddItemBinding> {
+public class MediaAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterMediaAddItemBinding> {
     public final String TAG = this.getClass().getSimpleName();
 
     public MediaClearListener mediaClearListener;
     public MediaAddListener mediaAddListener;
-    //最大上传数量
-    private int defaultMaxCount = -1;
-    private int bgColor = Color.WHITE;
-    private float radius = 8;
-
-    protected Drawable placeholderImage;
-    protected Drawable errorImage;
 
     public MediaAddAdapter() {
         super();
-        if (Config.getInstance().getApplication() != null) {
-            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
-        }
     }
 
     public MediaAddAdapter(int maxCount) {
-        this();
-        this.defaultMaxCount = maxCount;
+        super(maxCount);
     }
 
     @Override
@@ -71,24 +65,10 @@ public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
         return R.layout.adapter_media_add_item;
     }
 
-    public void setPlaceholderImage(Drawable placeholderImage) {
-        this.placeholderImage = placeholderImage;
-    }
-
-    public void setErrorImage(Drawable errorImage) {
-        this.errorImage = errorImage;
-    }
-
-    public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
     @Override
     public void onBindHolder(BaseViewHolder<AdapterMediaAddItemBinding> holder, int pos) {
+        holder.getBinding().ivClearMedia.setLayoutParams(getClearLayoutParams(holder.getBinding().ivClearMedia));
+        holder.getBinding().ivClearMedia.setImageDrawable(getClearImage() == null ? getClearDefaultImage() : getClearImage());
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
             holder.getBinding().ivPlayer.setVisibility(View.GONE);
             holder.getBinding().mediaAdd.setVisibility(View.VISIBLE);
@@ -108,8 +88,8 @@ public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
             }
             Glide.with(holder.getBinding().ivMediaShow.getContext())
                     .load(mList.get(pos).getPath())
-                    .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
-                            .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                    .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
+                            .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivMediaShow);
             holder.getBinding().uploadProcess.setText(mList.get(pos).getUploadingPercent());
             updateUploadView(UploadStatusEnum.getInfo(mList.get(pos).getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
@@ -233,6 +213,7 @@ public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
             updateUploadView(status, holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
         }
     }
+
     public void updateUploadView(UploadStatusEnum status, AppCompatTextView uploadProcess, CornerTextView markView) {
         if (status == UploadStatusEnum.UPLOADING) {
             uploadProcess.setVisibility(View.VISIBLE);
@@ -255,6 +236,7 @@ public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
             markView.setVisibility(View.GONE);
         }
     }
+
     /**
      * 上传失败重试监听
      */
@@ -273,7 +255,7 @@ public class MediaAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
         public <T> ViewHolder(@NotNull AdapterMediaAddItemBinding binding, MediaAddAdapter adapter) {
             super(binding, adapter);
             binding.ivMediaShow.setRadius((int) adapter.radius);
-            binding.mediaAdd.setBgColorAndRadius(adapter.bgColor, adapter.radius);
+            binding.mediaAdd.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
             binding.uploadMark.setBgColorAndRadius(0x80000000, adapter.radius);
             binding.uploadProcess.setOnClickListener(v -> {
                 if (UploadStatusEnum.CANCELED.typeValue != adapter.getList().get(getAbsoluteAdapterPosition()).getUploading() &&

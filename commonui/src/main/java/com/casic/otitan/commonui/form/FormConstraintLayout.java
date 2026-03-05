@@ -3,14 +3,17 @@ package com.casic.otitan.commonui.form;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -126,6 +129,38 @@ public class FormConstraintLayout extends ConstraintLayout {
      */
     protected AppCompatTextView tvLabel;
     /**
+     * 左侧文字的图标控件
+     */
+    protected AppCompatImageView ivLabelIcon;
+    /**
+     * 是否展示label左侧图标，默认false
+     */
+    protected boolean showLabelIcon;
+    /**
+     * 左侧文字的图标
+     */
+    protected Drawable labelIcon;
+    /**
+     * 左侧文字的图标宽高
+     */
+    protected float labelIconWidth;
+    /**
+     *左侧文字的图标宽高
+     */
+    protected float labelIconHeight;
+    /**
+     * 左侧文字的图标左侧margin
+     */
+    protected float labelIconStartMargin;
+    /**
+     * 左侧文字的图标右侧margin
+     */
+    protected float labelIconEndMargin;
+    /**
+     * required*号控件的左侧margin
+     */
+    protected float requiredStartMargin;
+    /**
      * 底部边框控件
      */
     protected View vBorderBottom;
@@ -189,6 +224,14 @@ public class FormConstraintLayout extends ConstraintLayout {
             labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
             textAlign = typedArray.getInt(R.styleable.FormUI_textAlign, TextAlignEnum.RIGHT.value);
             labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
+
+            showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
+            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
+            labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
+            labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
+            labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin, 0);
+            labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin, 0);
+            requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
             typedArray.recycle();
         } else {
             formTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
@@ -207,14 +250,22 @@ public class FormConstraintLayout extends ConstraintLayout {
             labelAlign = LabelAlignEnum.LEFT.value;
             textAlign = TextAlignEnum.RIGHT.value;
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
+            showLabelIcon = false;
+            labelIconWidth = DensityUtil.dp2px(getContext(), 0);
+            labelIconHeight = DensityUtil.dp2px(getContext(), 0);
+            labelIconStartMargin = 0;
+            labelIconEndMargin = DensityUtil.dp2px(getContext(), 8);
+            requiredStartMargin = DensityUtil.dp2px(getContext(), 4f);
         }
     }
 
     protected void init() {
+        createLabelIcon();
         createLabel();
         createRequired();
         createText();
         createBottomLine();
+        layoutLabelIcon();
         layoutLabel();
         layoutRequired();
         layoutText();
@@ -255,6 +306,23 @@ public class FormConstraintLayout extends ConstraintLayout {
         return vBorderBottom;
     }
 
+    public AppCompatImageView getIvLabelIcon() {
+        return ivLabelIcon;
+    }
+
+    public void createLabelIcon() {
+        ivLabelIcon = new AppCompatImageView(getContext());
+        ivLabelIcon.setId(View.generateViewId());
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                labelIconWidth <= 0 ? ConstraintLayout.LayoutParams.WRAP_CONTENT : (int) labelIconWidth,
+                labelIconHeight <= 0 ? ConstraintLayout.LayoutParams.WRAP_CONTENT : (int) labelIconHeight
+        );
+        ivLabelIcon.setImageDrawable(labelIcon);
+        params.setMarginStart((int) labelIconStartMargin);
+        params.setMarginEnd((int) labelIconEndMargin);//这样设置其实没用，因为右侧没有宽度限制
+        addView(ivLabelIcon, params);
+    }
+
     public void createLabel() {
         tvLabel = new AppCompatTextView(getContext());
         tvLabel.setId(View.generateViewId());
@@ -288,7 +356,7 @@ public class FormConstraintLayout extends ConstraintLayout {
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.setMarginStart(DensityUtil.dp2px(getContext(), 4f));
+        params.setMarginStart((int) requiredStartMargin);
 
         addView(tvRequired, params);
     }
@@ -364,24 +432,71 @@ public class FormConstraintLayout extends ConstraintLayout {
         constraintSet.applyTo(this);
     }
 
-    public void layoutLabel() {
+    public void layoutLabelIcon() {
+        if (!showLabelIcon || labelIcon == null) {
+            return;
+        }
         if (LabelAlignEnum.TOP.value == labelAlign) {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(this);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
             constraintSet.applyTo(this);
-            ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-            params.topMargin = (int) defaultTextMargin;
         } else if (LabelAlignEnum.LEFT.value == labelAlign) {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(this);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.END, tvLabel.getId(), ConstraintSet.START);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
+            constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
             constraintSet.applyTo(this);
-            ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-            params.topMargin = 0;
+        }
+    }
+
+    public void layoutLabel() {
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            if (!showLabelIcon || labelIcon == null) {
+                //没有左侧图标，所以直接直连父级
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            } else {
+                //有左侧图标，所以左侧是图标
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            }
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            if (!showLabelIcon || labelIcon == null) {
+                //没有左侧图标，所以直接直连父级
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = 0;
+            } else {
+                //有左侧图标，所以左侧是图标
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = 0;
+            }
         } else {
 
         }

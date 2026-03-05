@@ -166,10 +166,17 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         imageAddAdapter.setRadius(radius);
         imageAddAdapter.setErrorImage(errorImage);
         imageAddAdapter.setPlaceholderImage(placeholderImage);
+        imageAddAdapter.setClearImage(clearImage);
+        imageAddAdapter.setClearImageWidth((int) clearImageWidth);
+        imageAddAdapter.setClearImageHeight((int) clearImageHeight);
+        imageAddAdapter.setClearImageTopMargin((int) clearImageTopMargin);
+        imageAddAdapter.setClearImageEndMargin((int) clearImageEndMargin);
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         imageAddAdapter.setOnUploadRetryClickListener(this);
         mediaRecyclerView.setAdapter(imageAddAdapter);
+        mediaRecyclerView.setClipChildren(false);
+        setClipChildren(false);
     }
 
     public void createCountLabel() {

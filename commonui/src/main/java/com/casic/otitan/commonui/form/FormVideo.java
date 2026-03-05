@@ -172,10 +172,17 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         videoAddAdapter.setRadius(radius);
         videoAddAdapter.setErrorImage(errorImage);
         videoAddAdapter.setPlaceholderImage(placeholderImage);
+        videoAddAdapter.setClearImage(clearImage);
+        videoAddAdapter.setClearImageWidth((int) clearImageWidth);
+        videoAddAdapter.setClearImageHeight((int) clearImageHeight);
+        videoAddAdapter.setClearImageTopMargin((int) clearImageTopMargin);
+        videoAddAdapter.setClearImageEndMargin((int) clearImageEndMargin);
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
         videoAddAdapter.setOnUploadRetryClickListener(this);
         mediaRecyclerView.setAdapter(videoAddAdapter);
+        mediaRecyclerView.setClipChildren(false);
+        setClipChildren(false);
     }
 
     /**

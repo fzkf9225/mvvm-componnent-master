@@ -10,9 +10,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -63,6 +65,42 @@ public abstract class FormMedia extends ConstraintLayout {
      * label文字控件
      */
     protected AppCompatTextView tvLabel;
+    /**
+     * 是否隐藏顶部layout，也就是顶部的标签栏和数量栏，默认为false，也就是展示
+     */
+    protected boolean hideTopLabelLayout = false;
+    /**
+     * 左侧文字的图标控件
+     */
+    protected AppCompatImageView ivLabelIcon;
+    /**
+     * 是否展示label左侧图标，默认false
+     */
+    protected boolean showLabelIcon;
+    /**
+     * 左侧文字的图标
+     */
+    protected Drawable labelIcon;
+    /**
+     * 左侧文字的图标宽高
+     */
+    protected float labelIconWidth;
+    /**
+     *左侧文字的图标宽高
+     */
+    protected float labelIconHeight;
+    /**
+     * 左侧文字的图标左侧margin
+     */
+    protected float labelIconStartMargin;
+    /**
+     * 左侧文字的图标右侧margin
+     */
+    protected float labelIconEndMargin;
+    /**
+     * required*号控件的左侧margin
+     */
+    protected float requiredStartMargin;
     /**
      * 底部边框控件
      */
@@ -163,6 +201,26 @@ public abstract class FormMedia extends ConstraintLayout {
      * 回调
      */
     protected BaseView baseView;
+    /**
+     * 右上角占位按钮图片
+     */
+    protected Drawable clearImage;
+    /**
+     * 默认右上角占位按钮图片宽高
+     */
+    protected float clearImageWidth;
+    /**
+     * 默认右上角占位按钮图片宽高
+     */
+    protected float clearImageHeight;
+    /**
+     * 默认右上角占位按钮图片topMargin，这个理论上是个-值
+     */
+    protected float clearImageTopMargin;
+    /**
+     * 默认右上角占位按钮图片endMargin，这个理论上是个-值
+     */
+    protected float clearImageEndMargin;
 
     public FormMedia(@NonNull Context context) {
         super(context);
@@ -210,7 +268,7 @@ public abstract class FormMedia extends ConstraintLayout {
 
             defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
 
-            columnMargin = typedArray.getDimension(R.styleable.FormUI_columnMargin, DensityUtil.dp2px(getContext(), 8f));
+            columnMargin = typedArray.getDimension(R.styleable.FormUI_columnMargin, DensityUtil.dp2px(getContext(), 16f));
 
             labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
 
@@ -231,6 +289,28 @@ public abstract class FormMedia extends ConstraintLayout {
             } else {
                 fileType = defaultFileType();
             }
+            // 右上角占位按钮图片
+            clearImage = typedArray.getDrawable(R.styleable.FormUI_clearImage);
+            if (clearImage == null) {
+                clearImage = ContextCompat.getDrawable(getContext(), com.casic.otitan.common.R.drawable.ib_clear_image_selector);
+            }
+            // 默认右上角占位按钮图片宽度
+            clearImageWidth = typedArray.getDimension(R.styleable.FormUI_clearImageWidth, DensityUtil.dp2px(getContext(), 24f));
+            // 默认右上角占位按钮图片高度
+            clearImageHeight = typedArray.getDimension(R.styleable.FormUI_clearImageHeight, DensityUtil.dp2px(getContext(), 24f));
+            // 默认右上角占位按钮图片topMargin
+            clearImageTopMargin = typedArray.getDimension(R.styleable.FormUI_clearImageTopMargin, DensityUtil.dp2px(getContext(), -8f));
+            // 默认右上角占位按钮图片endMargin
+            clearImageEndMargin = typedArray.getDimension(R.styleable.FormUI_clearImageEndMargin, DensityUtil.dp2px(getContext(), -8f));
+
+            showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
+            hideTopLabelLayout = typedArray.getBoolean(R.styleable.FormUI_hideTopLabelLayout, false);
+            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
+            labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
+            labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
+            labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin, 0);
+            labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin, 0);
+            requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
             typedArray.recycle();
         } else {
             bgColor = 0xFFF1F3F2;
@@ -252,10 +332,27 @@ public abstract class FormMedia extends ConstraintLayout {
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
             columnCount = 4;
             borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
-            columnMargin = DensityUtil.dp2px(getContext(), 8f);
+            columnMargin = DensityUtil.dp2px(getContext(), 16f);
             placeholderImage = ContextCompat.getDrawable(getContext(), com.casic.otitan.common.R.mipmap.ic_default_image);
             errorImage = ContextCompat.getDrawable(getContext(), com.casic.otitan.common.R.mipmap.ic_default_image);
             autoUpload = false;
+            // 右上角占位按钮图片
+            clearImage = ContextCompat.getDrawable(getContext(), com.casic.otitan.common.R.drawable.ib_clear_image_selector);
+            // 默认右上角占位按钮图片宽度
+            clearImageWidth = DensityUtil.dp2px(getContext(), 24f);
+            // 默认右上角占位按钮图片高度
+            clearImageHeight = DensityUtil.dp2px(getContext(), 24f);
+            // 默认右上角占位按钮图片topMargin
+            clearImageTopMargin = DensityUtil.dp2px(getContext(), -8f);
+            // 默认右上角占位按钮图片endMargin
+            clearImageEndMargin = DensityUtil.dp2px(getContext(), -8f);
+            hideTopLabelLayout = false;
+            showLabelIcon = false;
+            labelIconWidth = DensityUtil.dp2px(getContext(), 0);
+            labelIconHeight = DensityUtil.dp2px(getContext(), 0);
+            labelIconStartMargin = 0;
+            labelIconEndMargin = DensityUtil.dp2px(getContext(), 8);
+            requiredStartMargin = DensityUtil.dp2px(getContext(), 4f);
         }
     }
 
@@ -286,13 +383,40 @@ public abstract class FormMedia extends ConstraintLayout {
     }
 
     protected void init() {
+        createLabelIcon();
         createLabel();
         createRequired();
         createRecyclerView();
         createBottomLine();
+        layoutLabelIcon();
         layoutLabel();
         layoutRequired();
         layoutRecyclerView();
+        applyShowTopLayout();
+    }
+
+    public void applyShowTopLayout() {
+        if (hideTopLabelLayout) {
+            if (tvLabel != null) {
+                tvLabel.setVisibility(GONE);
+            }
+            if (ivLabelIcon != null) {
+                ivLabelIcon.setVisibility(GONE);
+            }
+            if (tvRequired != null) {
+                tvRequired.setVisibility(GONE);
+            }
+        } else {
+            if (tvLabel != null) {
+                tvLabel.setVisibility(VISIBLE);
+            }
+            if (ivLabelIcon != null) {
+                ivLabelIcon.setVisibility(VISIBLE);
+            }
+            if (tvRequired != null) {
+                tvRequired.setVisibility(VISIBLE);
+            }
+        }
     }
 
     public AppCompatTextView getTvLabel() {
@@ -311,6 +435,23 @@ public abstract class FormMedia extends ConstraintLayout {
         return vBorderBottom;
     }
 
+    public AppCompatImageView getIvLabelIcon() {
+        return ivLabelIcon;
+    }
+
+    public void createLabelIcon() {
+        ivLabelIcon = new AppCompatImageView(getContext());
+        ivLabelIcon.setId(View.generateViewId());
+        LayoutParams params = new LayoutParams(
+                labelIconWidth <= 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) labelIconWidth,
+                labelIconHeight <= 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) labelIconHeight
+        );
+        ivLabelIcon.setImageDrawable(labelIcon);
+        params.setMarginStart((int) labelIconStartMargin);
+        params.setMarginEnd((int) labelIconEndMargin);//这样设置其实没用，因为右侧没有宽度限制
+        addView(ivLabelIcon, params);
+    }
+
     public void createLabel() {
         tvLabel = new AppCompatTextView(getContext());
         tvLabel.setId(View.generateViewId());
@@ -321,7 +462,7 @@ public abstract class FormMedia extends ConstraintLayout {
         LayoutParams params = new LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.setMarginStart((int) labelStartMargin);
-        params.setMarginEnd((int) labelEndMargin);
+        params.setMarginEnd((int) labelEndMargin);//这样设置其实没用，因为右侧没有宽度限制
         if (LabelTextStyleEnum.BOLD.value == labelTextStyle) {
             // 设置为加粗
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
@@ -344,7 +485,7 @@ public abstract class FormMedia extends ConstraintLayout {
 
         LayoutParams params = new LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.setMarginStart(DensityUtil.dp2px(getContext(), 4f));
+        params.setMarginStart((int) requiredStartMargin);
 
         addView(tvRequired, params);
     }
@@ -391,14 +532,38 @@ public abstract class FormMedia extends ConstraintLayout {
         constraintSet.applyTo(this);
     }
 
-    public void layoutLabel() {
+    public void layoutLabelIcon() {
+        if (!showLabelIcon || labelIcon == null) {
+            return;
+        }
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
-        constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
+        constraintSet.connect(ivLabelIcon.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
         constraintSet.applyTo(this);
-        LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-        params.topMargin = (int) defaultTextMargin;
+    }
+
+    public void layoutLabel() {
+        if (!showLabelIcon || labelIcon == null) {
+            //没有左侧图标，所以直接直连父级
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.applyTo(this);
+            LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+            params.topMargin = (int) defaultTextMargin;
+        } else {
+            //有左侧图标，所以左侧是图标
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(this);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.applyTo(this);
+            LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+            params.topMargin = (int) defaultTextMargin;
+        }
     }
 
     public void layoutRequired() {

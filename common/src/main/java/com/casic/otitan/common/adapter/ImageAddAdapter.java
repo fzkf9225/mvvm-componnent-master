@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
@@ -17,11 +16,10 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.casic.otitan.common.R;
-import com.casic.otitan.common.api.Config;
-import com.casic.otitan.common.base.BaseRecyclerViewAdapter;
 import com.casic.otitan.common.base.BaseViewHolder;
 import com.casic.otitan.common.bean.AttachmentBean;
 import com.casic.otitan.common.databinding.AdapterImageAddItemBinding;
@@ -29,51 +27,27 @@ import com.casic.otitan.common.enums.UploadStatusEnum;
 import com.casic.otitan.common.listener.OnUploadRetryClickListener;
 import com.casic.otitan.common.utils.common.AttachmentUtil;
 import com.casic.otitan.common.utils.common.CollectionUtil;
-import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.widget.customview.CornerTextView;
 import com.casic.otitan.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2017/10/20.
- * 添加圖片
+ * 添加图片适配器
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @created 2026/3/5 9:40
  */
-public class ImageAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterImageAddItemBinding> {
+public class ImageAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterImageAddItemBinding> {
     public ImageViewClearListener imageViewClearListener;
     public ImageViewAddListener imageViewAddListener;
-    //最大上传数量
-    private int defaultMaxCount = -1;
-    private @ColorInt int bgColor = Color.WHITE;
-    private float radius = 8;
-
-    protected Drawable placeholderImage;
-    protected Drawable errorImage;
 
     public ImageAddAdapter() {
         super();
-        if (Config.getInstance().getApplication() != null) {
-            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
-        }
     }
 
     public ImageAddAdapter(int maxCount) {
-        this();
-        this.defaultMaxCount = maxCount;
-    }
-
-    public void setPlaceholderImage(Drawable placeholderImage) {
-        this.placeholderImage = placeholderImage;
-    }
-
-    public void setErrorImage(Drawable errorImage) {
-        this.errorImage = errorImage;
-    }
-
-    public void setBgColor(@ColorInt int bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
+        super(maxCount);
     }
 
     @Override
@@ -83,6 +57,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
 
     @Override
     public void onBindHolder(BaseViewHolder<AdapterImageAddItemBinding> holder, int pos) {
+        holder.getBinding().ivClearImg.setLayoutParams(getClearLayoutParams(holder.getBinding().ivClearImg));
+        holder.getBinding().ivClearImg.setImageDrawable(getClearImage() == null ? getClearDefaultImage() : getClearImage());
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
             holder.getBinding().uploadProcess.setVisibility(View.GONE);
             holder.getBinding().uploadMark.setVisibility(View.GONE);
@@ -95,8 +71,8 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivImageShow.getContext())
                     .load(mList.get(pos).getPath())
-                    .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
-                            .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                    .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
+                            .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivImageShow);
             holder.getBinding().uploadProcess.setText(mList.get(pos).getUploadingPercent());
             updateUploadView(UploadStatusEnum.getInfo(mList.get(pos).getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
@@ -261,7 +237,7 @@ public class ImageAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
         public ViewHolder(@NotNull AdapterImageAddItemBinding binding, ImageAddAdapter adapter) {
             super(binding, adapter);
             binding.ivImageShow.setRadius((int) adapter.radius);
-            binding.ivAdd.setBgColorAndRadius(adapter.bgColor, adapter.radius);
+            binding.ivAdd.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
             binding.uploadMark.setBgColorAndRadius(0x80000000, adapter.radius);
             binding.uploadProcess.setOnClickListener(v -> {
                 if (UploadStatusEnum.CANCELED.typeValue != adapter.getList().get(getAbsoluteAdapterPosition()).getUploading() &&

@@ -107,22 +107,43 @@ public class FormEditText extends FormConstraintLayout {
     @Override
     public void layoutLabel() {
         if (LabelAlignEnum.TOP.value == labelAlign) {
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(this);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            constraintSet.applyTo(this);
-            ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-            params.topMargin = (int) defaultTextMargin;
+            if (!showLabelIcon || labelIcon == null) {
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            } else {
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            }
         } else if (LabelAlignEnum.LEFT.value == labelAlign) {
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(this);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
-            constraintSet.applyTo(this);
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
-            params.topMargin = (int) defaultTextMargin;
+            if (!showLabelIcon || labelIcon == null) {
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            } else {
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(this);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.START,  ivLabelIcon.getId(), ConstraintSet.END);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
+                constraintSet.applyTo(this);
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
+                params.topMargin = (int) defaultTextMargin;
+            }
         } else {
 
         }

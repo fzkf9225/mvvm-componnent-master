@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.casic.otitan.common.R;
@@ -36,32 +37,25 @@ import com.casic.otitan.common.utils.log.LogUtil;
 import com.casic.otitan.common.widget.customview.CornerTextView;
 
 /**
- * Created by fz on 2021/4/2
- * describe:添加视频
+ * 添加视频适配器
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/3/5 10:09
  */
-public class VideoAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterVideoAddItemBinding> {
+public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterVideoAddItemBinding> {
     public final String TAG = this.getClass().getSimpleName();
 
     public VideoClearListener videoClearListener;
     public VideoAddListener videoAddListener;
-    //最大上传数量
-    private int defaultMaxCount = -1;
-    private int bgColor = Color.WHITE;
-    private float radius = 8;
-
-    protected Drawable placeholderImage;
-    protected Drawable errorImage;
 
     public VideoAddAdapter() {
         super();
-        if (Config.getInstance().getApplication() != null) {
-            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
-        }
     }
 
     public VideoAddAdapter(int maxCount) {
-        this();
-        this.defaultMaxCount = maxCount;
+        super(maxCount);
     }
 
     @Override
@@ -69,24 +63,10 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
         return R.layout.adapter_video_add_item;
     }
 
-    public void setPlaceholderImage(Drawable placeholderImage) {
-        this.placeholderImage = placeholderImage;
-    }
-
-    public void setErrorImage(Drawable errorImage) {
-        this.errorImage = errorImage;
-    }
-
-    public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
     @Override
     public void onBindHolder(BaseViewHolder<AdapterVideoAddItemBinding> holder, int pos) {
+        holder.getBinding().ivClearImg.setLayoutParams(getClearLayoutParams(holder.getBinding().ivClearImg));
+        holder.getBinding().ivClearImg.setImageDrawable(getClearImage() == null ? getClearDefaultImage() : getClearImage());
         if (pos == mList.size() && (mList.size() < defaultMaxCount || defaultMaxCount == -1)) {
             holder.getBinding().ivPlayer.setVisibility(View.GONE);
             holder.getBinding().videoAdd.setVisibility(View.VISIBLE);
@@ -99,8 +79,8 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
             holder.getBinding().ivVideoShow.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivVideoShow.getContext())
                     .load(mList.get(pos).getPath())
-                    .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
-                            .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                    .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
+                            .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivVideoShow);
             holder.getBinding().uploadProcess.setText(mList.get(pos).getUploadingPercent());
             updateUploadView(UploadStatusEnum.getInfo(mList.get(pos).getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
@@ -261,7 +241,7 @@ public class VideoAddAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ada
         public <T> ViewHolder(@NotNull AdapterVideoAddItemBinding binding, VideoAddAdapter adapter) {
             super(binding, adapter);
             binding.ivVideoShow.setRadius((int) adapter.radius);
-            binding.videoAdd.setBgColorAndRadius(adapter.bgColor, adapter.radius);
+            binding.videoAdd.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
             binding.uploadMark.setBgColorAndRadius(0x80000000, adapter.radius);
             binding.uploadProcess.setOnClickListener(v -> {
                 if (UploadStatusEnum.CANCELED.typeValue != adapter.getList().get(getAbsoluteAdapterPosition()).getUploading() &&

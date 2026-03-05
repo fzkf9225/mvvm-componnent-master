@@ -95,6 +95,30 @@
         <attr name="field" format="string"/>
         <!--添加图片视频的时候，框框背景色-->
         <attr name="bgColor" format="color" />
+        <!-- 右上角占位按钮图片 -->
+        <attr name="clearImage" format="reference"/>
+        <!-- 默认右上角占位按钮图片宽度 -->
+        <attr name="clearImageWidth" format="dimension"/>
+        <!-- 默认右上角占位按钮图片高度 -->
+        <attr name="clearImageHeight" format="dimension"/>
+        <!-- 默认右上角占位按钮图片topMargin -->
+        <attr name="clearImageTopMargin" format="dimension"/>
+        <!-- 默认右上角占位按钮图片endMargin -->
+        <attr name="clearImageEndMargin" format="dimension"/>
+        <!-- 是否展示label左侧图标，默认false -->
+        <attr name="showLabelIcon" format="boolean"/>
+        <!-- label左侧图标 -->
+        <attr name="labelIcon" format="reference"/>
+        <!-- label左侧图标宽度 -->
+        <attr name="labelIconWidth" format="dimension"/>
+        <!-- label左侧图标高度 -->
+        <attr name="labelIconHeight" format="dimension"/>
+        <!-- label左侧图标endMargin -->
+        <attr name="labelIconEndMargin" format="dimension"/>
+        <!-- label左侧图标startMargin -->
+        <attr name="labelIconStartMargin" format="dimension"/>
+        <!-- required*号控件的左侧margin -->
+        <attr name="requiredStartMargin" format="dimension"/>
         <!--媒体样式-->
         <attr name="mediaType">
             <!--相册、拍照兼具-->
@@ -148,6 +172,8 @@
         <attr name="errorImage" format="reference"/>
         <!--是否自动上传-->
         <attr name="autoUpload" format="boolean"/>
+        <!--是否隐藏顶部layout，也就是顶部的标签栏和数量栏，默认为false，也就是展示-->
+        <attr name="hideTopLabelLayout" format="boolean"/>
         <!--是否必填，也就是是否显示必填的*号-->
         <attr name="required" />
         <!--是否调用uri的持久化权限takeUriPermission，默认为true-->
