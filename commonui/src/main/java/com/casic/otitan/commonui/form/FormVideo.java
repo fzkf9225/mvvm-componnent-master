@@ -185,6 +185,34 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         setClipChildren(false);
     }
 
+    public boolean isCompress() {
+        return compress;
+    }
+
+    public void setCompress(boolean compress) {
+        this.compress = compress;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public int getCompressVideo() {
+        return compressVideo;
+    }
+
+    public void setCompressVideo(int compressVideo) {
+        this.compressVideo = compressVideo;
+    }
+
+    public int getMaxVideoDuration() {
+        return maxVideoDuration;
+    }
+
+    public void setMaxVideoDuration(int maxVideoDuration) {
+        this.maxVideoDuration = maxVideoDuration;
+    }
+
     /**
      * 自动上传图片
      *

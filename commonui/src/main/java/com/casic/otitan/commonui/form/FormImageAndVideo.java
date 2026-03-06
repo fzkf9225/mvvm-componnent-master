@@ -150,6 +150,50 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         }
     }
 
+    public int getMaxVideoDuration() {
+        return maxVideoDuration;
+    }
+
+    public void setMaxVideoDuration(int maxVideoDuration) {
+        this.maxVideoDuration = maxVideoDuration;
+    }
+
+    public boolean isShowCountLabel() {
+        return showCountLabel;
+    }
+
+    public void setShowCountLabel(boolean showCountLabel) {
+        this.showCountLabel = showCountLabel;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public int getCompressVideo() {
+        return compressVideo;
+    }
+
+    public void setCompressVideo(int compressVideo) {
+        this.compressVideo = compressVideo;
+    }
+
+    public int getCompressImageSize() {
+        return compressImageSize;
+    }
+
+    public void setCompressImageSize(int compressImageSize) {
+        this.compressImageSize = compressImageSize;
+    }
+
+    public boolean isCompress() {
+        return compress;
+    }
+
+    public void setCompress(boolean compress) {
+        this.compress = compress;
+    }
+
     @Override
     public String[] defaultFileType() {
         return new String[]{"image/*"};
