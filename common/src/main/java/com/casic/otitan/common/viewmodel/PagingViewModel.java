@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
@@ -23,7 +24,9 @@ public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends Ba
     protected final static int DEFAULT_PAGE_SIZE = 20;
     protected final static int DEFAULT_PREFETCH_DISTANCE = 3;
 
-    private LiveData<PagingData<T>> items;
+    private final MediatorLiveData<PagingData<T>> items = new MediatorLiveData<>();
+
+    private LiveData<PagingData<T>> sourceLiveData;
 
     public PagingViewModel(@NonNull Application application) {
         super(application);
@@ -40,11 +43,15 @@ public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends Ba
     @Override
     public void createRepository(V baseView) {
         super.createRepository(baseView);
-        items = createPagingData();
     }
 
     public void refreshData() {
-        items = createPagingData();
+        // 移除旧的源
+        if (sourceLiveData != null) {
+            items.removeSource(sourceLiveData);
+        }
+        sourceLiveData = createPagingData();
+        items.addSource(sourceLiveData, items::setValue);
     }
 
     public int getStartPage() {
