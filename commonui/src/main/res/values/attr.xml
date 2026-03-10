@@ -45,6 +45,10 @@
     <attr name="labelStartMargin" format="dimension" />
     <!--label文字右侧margin-->
     <attr name="labelEndMargin" format="dimension" />
+    <!--label文字左侧margin-->
+    <attr name="labelTopMargin" format="dimension" />
+    <!--label文字右侧margin-->
+    <attr name="labelBottomMargin" format="dimension" />
     <!--正文文字左侧margin-->
     <attr name="textStartMargin" format="dimension" />
     <!--正文文字右侧margin-->
@@ -152,6 +156,13 @@
             <enum name="left" value="0" />
             <enum name="top" value="1" />
         </attr>
+        <!--表单中label文字对齐方式，当对齐方式为左侧时，他的垂直方向对齐方式-->
+        <attr name="labelVerticalAlign" format="enum">
+            <enum name="top" value="0" />
+            <enum name="topToValue" value="1" />
+            <enum name="center" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
         <!--正文文字对齐方式，默认为右侧，只有labelAlign在左侧时才有效-->
         <attr name="textAlign" format="enum">
             <enum name="left" value="0" />
@@ -224,6 +235,10 @@
         <attr name="labelStartMargin" />
         <!--label文字右侧margin-->
         <attr name="labelEndMargin" />
+        <!--label文字顶部margin-->
+        <attr name="labelTopMargin" />
+        <!--label文字底部margin-->
+        <attr name="labelBottomMargin" />
         <!--正文文字左侧margin-->
         <attr name="textStartMargin" />
         <!--正文文字右侧margin-->

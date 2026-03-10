@@ -44,11 +44,11 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 是否必填
      */
-    protected boolean required = false;
+    protected boolean required;
     /**
      * 是否展示底部边框
      */
-    protected boolean bottomBorder = true;
+    protected boolean bottomBorder;
     /**
      * label文字颜色
      */
@@ -68,7 +68,7 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 是否隐藏顶部layout，也就是顶部的标签栏和数量栏，默认为false，也就是展示
      */
-    protected boolean hideTopLabelLayout = false;
+    protected boolean hideTopLabelLayout;
     /**
      * 左侧文字的图标控件
      */
@@ -144,7 +144,7 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 网格RecyclerView的时候列数
      */
-    protected int columnCount = 4;
+    protected int columnCount;
     /**
      * 列间距
      */
@@ -164,7 +164,7 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 主要是适配器item的圆角
      */
-    protected float radius = 8;
+    protected float radius;
     /**
      * 文件类型
      */
@@ -172,15 +172,15 @@ public abstract class FormMedia extends ConstraintLayout {
     /**
      * 是否显示协议dialog
      */
-    protected boolean protocolDialog = true;
+    protected boolean protocolDialog;
     /**
      * 是否调用uri的持久化权限takeUriPermission，默认为true
      */
-    protected boolean requireUriPermission = true;
+    protected boolean requireUriPermission;
     /**
      * label文字样式，默认不加粗
      */
-    protected int labelTextStyle = LabelTextStyleEnum.NORMAL.value;
+    protected int labelTextStyle;
     /**
      * 文件上传服务
      */

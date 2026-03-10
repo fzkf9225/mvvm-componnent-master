@@ -27,7 +27,7 @@ public class FormDateTime extends FormSelection {
     /**
      * 时间格式，默认yyyy-MM-dd HH:mm:ss
      */
-    protected String format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
+    protected String format;
     /**
      * 确认按钮背景色
      */
@@ -35,7 +35,7 @@ public class FormDateTime extends FormSelection {
     /**
      * 日期选择模式，参考DateMode
      */
-    protected int datePickModel = DateMode.YEAR_MONTH_DAY.model;
+    protected int datePickModel;
     /**
      * 起始年份
      */
@@ -77,6 +77,7 @@ public class FormDateTime extends FormSelection {
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
         } else {
+            datePickModel = DateMode.YEAR_MONTH_DAY.model;
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;

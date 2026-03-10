@@ -52,7 +52,7 @@ public class FormVideoPreview extends FormMedia {
     /**
      * 暂无数据控件文字内容
      */
-    private String emptyText = "暂无附件";
+    private String emptyText;
 
     public FormVideoPreview(@NonNull Context context) {
         super(context);

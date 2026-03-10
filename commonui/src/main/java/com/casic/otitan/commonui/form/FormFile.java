@@ -53,7 +53,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     /**
      * 最大可选数量
      */
-    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    protected int maxCount;
     /**
      * 文本大小
      */
@@ -65,7 +65,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     /**
      * 添加附件图标资源id
      */
-    protected int fileAddSrc = R.mipmap.ic_add_theme_color;
+    protected int fileAddSrc;
     /**
      * 空白、暂无数据控件
      */
@@ -82,7 +82,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     /**
      * 空白文字内容
      */
-    protected String emptyText = "暂无附件，请点击右上角添加附件";
+    protected String emptyText;
     /**
      * 文件限定格式，英文逗号分割
      */

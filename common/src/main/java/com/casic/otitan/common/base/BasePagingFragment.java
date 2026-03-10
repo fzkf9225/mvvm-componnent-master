@@ -62,7 +62,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         refreshLayout.setOnRefreshListener(this);
         // 监听加载状态
         adapter.addLoadStateListener(loadStateListener);
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
+        setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
 
     protected ConcatAdapter createdHeaderFootAdapter(){
@@ -74,16 +74,16 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
             refreshLayout.setRefreshing(false);
             if (adapter.getItemCount() == 0) {
-                setRecyclerViewVisibility(EmptyLayout.State.NO_DATA);
+                setViewState(EmptyLayout.State.NO_DATA);
             } else {
-                setRecyclerViewVisibility(EmptyLayout.State.HIDE_LAYOUT);
+                setViewState(EmptyLayout.State.HIDE_LAYOUT);
             }
         } else if (loadStates.getRefresh() instanceof LoadState.Loading) {
 //            refreshLayout.setRefreshing(true);
         } else if (loadStates.getRefresh() instanceof LoadState.Error) {
             LoadState.Error state = (LoadState.Error) loadStates.getRefresh();
             refreshLayout.setRefreshing(false);
-//            setRecyclerViewVisibility(EmptyLayout.LOADING_ERROR);
+//            setViewState(EmptyLayout.LOADING_ERROR);
         }
         return null;
     };
@@ -112,7 +112,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     @Override
     public void onAuthSuccess(@Nullable Bundle data) {
         super.onAuthSuccess(data);
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
+        setViewState(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
 
@@ -130,7 +130,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     public void onErrorCode(BaseResponse model) {
         try {
             if (mViewModel != null) {
-                setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
+                setViewState(EmptyLayout.State.LOADING_ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         return emptyLayout.getCurrentState();
     }
 
-    protected void setRecyclerViewVisibility(EmptyLayout.State emptyType) {
+    protected void setViewState(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
@@ -151,7 +151,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING_REFRESH);
+        setViewState(EmptyLayout.State.NETWORK_LOADING_REFRESH);
         mViewModel.refreshData();
         adapter.refresh();
     }

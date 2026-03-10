@@ -40,15 +40,15 @@ public class FormDateRange extends FormSelection {
     /**
      * 时间格式分隔符，默认为 "-"，也就是yyyy-MM-dd中间的"-"。这里没有实现这个功能
      */
-    protected String separator = "-";
+    protected String separator;
     /**
      * 起始时间格式，默认yyyy-MM-dd
      */
-    protected String startFormat = DateUtil.DEFAULT_FORMAT_DATE;
+    protected String startFormat;
     /**
      * 结束时间格式，默认yyyy-MM-dd
      */
-    protected String endFormat = DateUtil.DEFAULT_FORMAT_DATE;
+    protected String endFormat;
     /**
      * 日期选择dialog
      */

@@ -56,15 +56,15 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     /**
      * 是否压缩，默认为true：启用压缩
      */
-    protected boolean compress = true;
+    protected boolean compress;
     /**
      * 压缩图片大小，默认为300kb
      */
-    protected int compressImageSize = 300;
+    protected int compressImageSize;
     /**
      * 压缩质量，默认为低质量
      */
-    protected int compressVideo = VideoQualityEnum.MEDIUM.value;
+    protected int compressVideo;
     /**
      * 适配器
      */
@@ -76,7 +76,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     /**
      * 媒体选择类型，默认：相机和相册
      */
-    protected int mediaType = OpenMediaDialog.CAMERA_SHOOT_ALBUM;
+    protected int mediaType;
     /**
      * 添加图片监听器
      */
@@ -88,7 +88,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     /**
      * 最大可选数量
      */
-    protected int maxCount = MediaHelper.DEFAULT_MEDIA_MAX_COUNT;
+    protected int maxCount;
     /**
      * 显示数量标签文字大小
      */
@@ -108,7 +108,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     /**
      * 拍摄视频最大时长，单位：秒，默认为30秒
      */
-    protected int maxVideoDuration = 30;
+    protected int maxVideoDuration;
 
     public FormImageAndVideo(@NonNull Context context) {
         super(context);

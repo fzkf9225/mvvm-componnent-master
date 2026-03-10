@@ -57,11 +57,11 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 是否启用压缩，默认为true：启用压缩
      */
-    protected boolean compress = true;
+    protected boolean compress ;
     /**
      * 压缩质量，默认为低质量
      */
-    protected int compressVideo = VideoQualityEnum.MEDIUM.value;
+    protected int compressVideo;
     /**
      * 适配器
      */
@@ -73,7 +73,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 媒体选择类型，默认为：相册相机都可
      */
-    protected int mediaType = OpenShootDialog.CAMERA_ALBUM;
+    protected int mediaType;
     /**
      * 添加视频适配监听器
      */
@@ -85,7 +85,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 最大可选数量
      */
-    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    protected int maxCount;
     /**
      * 显示数量标签文字大小
      */
@@ -101,7 +101,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 拍摄视频最大时长，单位：秒，默认为30秒
      */
-    protected int maxVideoDuration = 30;
+    protected int maxVideoDuration;
 
     /**
      * 显示数量标签控件
@@ -126,7 +126,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
-            compress = typedArray.getBoolean(R.styleable.FormUI_compress, compress);
+            compress = typedArray.getBoolean(R.styleable.FormUI_compress, true);
             maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
             compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenShootDialog.CAMERA_ALBUM);

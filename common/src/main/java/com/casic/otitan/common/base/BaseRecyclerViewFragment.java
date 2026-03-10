@@ -79,9 +79,9 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         refreshLayout.setOnLoadMoreListener(this);
 
         if (NetworkStateUtil.isConnected(requireContext())) {
-            setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
+            setViewState(EmptyLayout.State.NETWORK_LOADING);
         } else {
-            setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
+            setViewState(EmptyLayout.State.LOADING_ERROR);
         }
     }
     protected RecyclerView.ItemDecoration createDivider() {
@@ -116,14 +116,14 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             }
             adapter.notifyDataSetChanged();
             if (adapter == null || adapter.getList() == null || adapter.getList().isEmpty()) {
-                setRecyclerViewVisibility(EmptyLayout.State.NO_DATA);
+                setViewState(EmptyLayout.State.NO_DATA);
             } else {
-                setRecyclerViewVisibility(EmptyLayout.State.HIDE_LAYOUT);
+                setViewState(EmptyLayout.State.HIDE_LAYOUT);
             }
         } catch (Exception e) {
             LogUtil.show(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
             e.printStackTrace();
-            setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
+            setViewState(EmptyLayout.State.LOADING_ERROR);
             showToast(BaseException.ErrorType.PARSE_ERROR.getMsg());
         }
     }
@@ -151,7 +151,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @Override
     public void onAuthSuccess(Bundle bundle) {
         super.onAuthSuccess(bundle);
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
+        setViewState(EmptyLayout.State.NETWORK_LOADING);
         onRefresh();
     }
 
@@ -170,7 +170,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         try {
             if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING ||
                     emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
-                setRecyclerViewVisibility(EmptyLayout.State.LOADING_ERROR);
+                setViewState(EmptyLayout.State.LOADING_ERROR);
             }
             onRefreshFinish(false);
             onLoadFinish(false);
@@ -202,7 +202,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         return emptyLayout.getCurrentState();
     }
 
-    protected void setRecyclerViewVisibility(EmptyLayout.State emptyType) {
+    protected void setViewState(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
@@ -250,7 +250,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
 
     @Override
     public void onEmptyLayoutClick(View v) {
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING_REFRESH);
+        setViewState(EmptyLayout.State.NETWORK_LOADING_REFRESH);
         onRefresh();
     }
 
@@ -267,7 +267,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     public void onRefresh() {
-        setRecyclerViewVisibility(EmptyLayout.State.NETWORK_LOADING);
+        setViewState(EmptyLayout.State.NETWORK_LOADING);
         onRefresh(refreshLayout);
     }
 

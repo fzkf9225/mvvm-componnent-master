@@ -101,6 +101,116 @@
         <!--星星满图-->
         <attr name="starFill" format="reference" />
     </declare-styleable>
+    <declare-styleable name="EmptyLayout">
+        <!-- 图片资源 -->
+        <attr name="errorImage" format="reference" />
+        <attr name="loadingImage" format="reference" />
+        <attr name="noDataImage" format="reference" />
+        <attr name="clickableNoDataImage" format="reference" />
+
+        <!-- 文字资源 -->
+        <attr name="errorText" format="reference" />
+        <attr name="loadingText" format="reference" />
+        <attr name="noDataText" format="reference" />
+        <attr name="clickableNoDataText" format="reference" />
+
+        <!-- 文字颜色 -->
+        <attr name="errorTextColor" format="color" />
+        <attr name="loadingTextColor" format="color" />
+        <attr name="noDataTextColor" format="color" />
+        <attr name="clickableNoDataTextColor" format="color" />
+
+        <!-- 文字大小 -->
+        <attr name="errorTextSize" format="dimension" />
+        <attr name="loadingTextSize" format="dimension" />
+        <attr name="noDataTextSize" format="dimension" />
+        <attr name="clickableNoDataTextSize" format="dimension" />
+
+        <!-- 文字样式 0:正常 1:加粗 -->
+        <attr name="errorTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+        <attr name="loadingTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+        <attr name="noDataTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+        <attr name="clickableNoDataTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+
+        <!-- 内容对齐方式 0:居中 1:顶部 2:底部 -->
+        <attr name="contentGravity" format="enum">
+            <enum name="center" value="0" />
+            <enum name="top" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+
+        <!-- 图片文字排列 0:图片在上 1:文字在上 -->
+        <attr name="imageTextArrangement" format="enum">
+            <enum name="image_top" value="0" />
+            <enum name="text_top" value="1" />
+        </attr>
+
+        <!-- 间距 -->
+        <attr name="contentStartMargin" format="dimension" />
+        <attr name="contentEndMargin" format="dimension" />
+        <attr name="contentTopMargin" format="dimension" />
+        <attr name="contentBottomMargin" format="dimension" />
+        <attr name="imageTextMargin" format="dimension" />
+
+        <!-- 图片尺寸 -->
+        <attr name="imageWidth"/>
+        <attr name="imageHeight"/>
+        <attr name="loadingWidth" format="dimension" />
+        <attr name="loadingHeight" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CounterEditText">
+        <!-- 输入框高度 -->
+        <attr name="inputHeight" format="dimension" />
+
+        <!-- 最大输入字数，0表示无限制 -->
+        <attr name="maxLength" format="integer" />
+
+        <!-- 计数器文字颜色 -->
+        <attr name="counterColor" format="color" />
+
+        <!-- 计数器文字大小 -->
+        <attr name="counterTextSize" format="dimension" />
+
+        <!-- 复用系统的文字相关属性 -->
+        <attr name="android:textSize" />
+        <attr name="android:textColor" />
+        <attr name="android:hint" />
+        <attr name="android:background" />
+        <attr name="android:fontFamily" />
+    </declare-styleable>
+
+    <!-- 自定义TabLayout属性 -->
+    <declare-styleable name="StyledTabLayout">
+        <!-- 选中时文字颜色 -->
+        <attr name="selectedTextColor" format="color" />
+
+        <!-- 未选中时文字颜色 -->
+        <attr name="unselectedTextColor" format="color" />
+
+        <!-- 文字大小 -->
+        <attr name="tabTextSize" format="dimension" />
+
+        <!-- 选中时背景 -->
+        <attr name="selectedBackground" format="reference" />
+
+        <!-- Tab宽度 -->
+        <attr name="tabWidth" format="dimension" />
+
+        <!-- Tab高度 -->
+        <attr name="tabHeight" format="dimension" />
+    </declare-styleable>
     <!--自动换行-->
     <declare-styleable name="WarpLinearLayout">
         <attr name="gravity" format="enum"><!--对齐方式 !-->

@@ -19,10 +19,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
+import com.casic.otitan.common.api.ApiRetrofit;
+import com.casic.otitan.common.utils.log.LogUtil;
 import com.casic.otitan.commonui.R;
 import com.casic.otitan.commonui.enums.LabelAlignEnum;
 
 import com.casic.otitan.common.utils.common.DensityUtil;
+import com.casic.otitan.commonui.enums.LabelVerticalAlignEnum;
 
 
 /**
@@ -33,19 +36,19 @@ public class FormEditArea extends FormConstraintLayout {
     /**
      * 输入框类型，默认为多行文本
      */
-    protected int inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+    protected int inputType;
     /**
      * 回车按钮样式
      */
-    protected int imeOptions = EditorInfo.IME_ACTION_NEXT;
+    protected int imeOptions;
     /**
      * 格式化文本，这个功能未实现
      */
-    protected int formatText = 0;
+    protected int formatText;
     /**
      * 最大输入长度，默认为-1，不限制
      */
-    protected int maxLength = -1;
+    protected int maxLength;
     /**
      * 输入框背景
      */
@@ -113,7 +116,7 @@ public class FormEditArea extends FormConstraintLayout {
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
                 constraintSet.applyTo(this);
                 ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
+                params.topMargin = (int) labelTopMargin;
             } else {
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(this);
@@ -121,27 +124,41 @@ public class FormEditArea extends FormConstraintLayout {
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
                 constraintSet.applyTo(this);
                 ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
+                params.topMargin = (int) labelTopMargin;
             }
         } else if (LabelAlignEnum.LEFT.value == labelAlign) {
             if (!showLabelIcon || labelIcon == null) {
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(this);
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                if (LabelVerticalAlignEnum.TOP.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.CENTER.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.BOTTOM.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                } else {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                }
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
                 constraintSet.applyTo(this);
-                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
             } else {
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(this);
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
-                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                if (LabelVerticalAlignEnum.TOP.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.CENTER.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.BOTTOM.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                } else {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                }
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
                 constraintSet.applyTo(this);
-                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
             }
         } else {
 

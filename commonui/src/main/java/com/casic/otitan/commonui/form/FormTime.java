@@ -27,11 +27,11 @@ public class FormTime extends FormSelection {
     /**
      * 时间格式分隔符，默认为 ":"，也就是HH:mm:ss中间的":"
      */
-    protected String separator = ":";
+    protected String separator;
     /**
      * 时间格式，默认为HH:mm:ss
      */
-    protected String format = DateUtil.DEFAULT_FORMAT_TIME;
+    protected String format;
     /**
      * 确认按钮背景色
      */
@@ -39,7 +39,7 @@ public class FormTime extends FormSelection {
     /**
      * 日期选择器模式，参考DateMode
      */
-    protected int datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
+    protected int datePickModel;
     /**
      * 日期选择器dialog
      */
@@ -68,6 +68,7 @@ public class FormTime extends FormSelection {
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
         } else {
+            datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
         }
         if (TextUtils.isEmpty(separator)) {

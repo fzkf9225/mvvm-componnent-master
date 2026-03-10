@@ -36,23 +36,23 @@ public class FormEditText extends FormConstraintLayout {
     /**
      * 输入框类型
      */
-    protected int inputType = InputType.TYPE_CLASS_TEXT;
+    protected int inputType;
     /**
      * 回车按钮样式
      */
-    protected int imeOptions = EditorInfo.IME_ACTION_NEXT;
+    protected int imeOptions;
     /**
      * 输入框格式，暂未实现功能
      */
-    protected int formatText = 0;
+    protected int formatText;
     /**
      * 可输入最大长度，默认为-1，不限制
      */
-    protected int maxLength = -1;
+    protected int maxLength;
     /**
      * 小数位，只有在小数的时候才有效，所以请配合输入类型使用
      */
-    protected int digits = -1;
+    protected int digits;
     /**
      * 输入框背景
      */

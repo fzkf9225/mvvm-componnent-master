@@ -24,6 +24,7 @@ import androidx.databinding.ObservableField;
 import com.casic.otitan.commonui.R;
 import com.casic.otitan.commonui.enums.LabelAlignEnum;
 import com.casic.otitan.commonui.enums.LabelTextStyleEnum;
+import com.casic.otitan.commonui.enums.LabelVerticalAlignEnum;
 import com.casic.otitan.commonui.enums.TextAlignEnum;
 import com.casic.otitan.commonui.inter.FormTextWatcher;
 import com.casic.otitan.commonui.inter.FormTextWatcherAfter;
@@ -43,11 +44,11 @@ public class FormConstraintLayout extends ConstraintLayout {
     /**
      * 是否必填，也就是是否显示*号
      */
-    protected boolean required = false;
+    protected boolean required;
     /**
      * 是否展示底部边框
      */
-    protected boolean bottomBorder = true;
+    protected boolean bottomBorder;
     /**
      * 右侧或者正文也就是输入框、选择框正文文字颜色
      */
@@ -63,7 +64,7 @@ public class FormConstraintLayout extends ConstraintLayout {
     /**
      * 输入框、选择框正文行数
      */
-    protected int line = 1;
+    protected int line;
     /**
      * 输入监听
      */
@@ -97,6 +98,14 @@ public class FormConstraintLayout extends ConstraintLayout {
      */
     protected float labelEndMargin;
     /**
+     * label文字顶部margin，默认12dp，根据对齐方式生效
+     */
+    protected float labelTopMargin;
+    /**
+     * label文字底部部margin，默认12dp，根据对齐方式生效
+     */
+    protected float labelBottomMargin;
+    /**
      * 正文文字与左侧的距离，默认16dp
      */
     protected float textStartMargin;
@@ -115,15 +124,19 @@ public class FormConstraintLayout extends ConstraintLayout {
     /**
      * label对齐方式 是顶部还是左侧，默认为左侧
      */
-    protected int labelAlign = LabelAlignEnum.LEFT.value;
+    protected int labelAlign;
+    /**
+     * 表单中label文字对齐方式，当对齐方式为左侧时，他的垂直方向对齐方式
+     */
+    protected int labelVerticalAlign;
     /**
      * 文本对齐方式 是左侧还是右侧，默认为右侧
      */
-    protected int textAlign = TextAlignEnum.RIGHT.value;
+    protected int textAlign;
     /**
      * label是否加粗，默认不加粗
      */
-    protected int labelTextStyle = LabelTextStyleEnum.NORMAL.value;
+    protected int labelTextStyle;
     /**
      * label控件
      */
@@ -209,6 +222,9 @@ public class FormConstraintLayout extends ConstraintLayout {
             labelStartMargin = typedArray.getDimension(R.styleable.FormUI_labelStartMargin, DensityUtil.dp2px(getContext(), 16f));
             labelEndMargin = typedArray.getDimension(R.styleable.FormUI_labelEndMargin, 0);
 
+            labelTopMargin = typedArray.getDimension(R.styleable.FormUI_labelTopMargin, DensityUtil.dp2px(getContext(), 12f));
+            labelBottomMargin = typedArray.getDimension(R.styleable.FormUI_labelBottomMargin, DensityUtil.dp2px(getContext(), 12f));
+
             textStartMargin = typedArray.getDimension(R.styleable.FormUI_textStartMargin, DensityUtil.dp2px(getContext(), 12f));
             textEndMargin = typedArray.getDimension(R.styleable.FormUI_textEndMargin, DensityUtil.dp2px(getContext(), 16f));
 
@@ -222,6 +238,7 @@ public class FormConstraintLayout extends ConstraintLayout {
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormUI_line, 1);
             labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
+            labelVerticalAlign = typedArray.getInt(R.styleable.FormUI_labelVerticalAlign, LabelVerticalAlignEnum.TOP_TO_VALUE.value);
             textAlign = typedArray.getInt(R.styleable.FormUI_textAlign, TextAlignEnum.RIGHT.value);
             labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
 
@@ -243,12 +260,15 @@ public class FormConstraintLayout extends ConstraintLayout {
             borderBottomEndMargin = 0;
             labelStartMargin = DensityUtil.dp2px(getContext(), 16f);
             labelEndMargin = 0;
+            labelTopMargin= DensityUtil.dp2px(getContext(), 12f);
+            labelBottomMargin = DensityUtil.dp2px(getContext(), 12f);
             textStartMargin = DensityUtil.dp2px(getContext(), 12f);
             textEndMargin = DensityUtil.dp2px(getContext(), 16f);
             defaultTextMargin = DensityUtil.dp2px(getContext(), 12f);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
             labelAlign = LabelAlignEnum.LEFT.value;
             textAlign = TextAlignEnum.RIGHT.value;
+            labelVerticalAlign = LabelVerticalAlignEnum.TOP_TO_VALUE.value;
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
             showLabelIcon = false;
             labelIconWidth = DensityUtil.dp2px(getContext(), 0);
@@ -464,7 +484,7 @@ public class FormConstraintLayout extends ConstraintLayout {
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
                 constraintSet.applyTo(this);
                 ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
+                params.topMargin = (int) labelTopMargin;
             } else {
                 //有左侧图标，所以左侧是图标
                 ConstraintSet constraintSet = new ConstraintSet();
@@ -473,7 +493,7 @@ public class FormConstraintLayout extends ConstraintLayout {
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
                 constraintSet.applyTo(this);
                 ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = (int) defaultTextMargin;
+                params.topMargin = (int) labelTopMargin;
             }
         } else if (LabelAlignEnum.LEFT.value == labelAlign) {
             if (!showLabelIcon || labelIcon == null) {
@@ -481,21 +501,35 @@ public class FormConstraintLayout extends ConstraintLayout {
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(this);
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                if (LabelVerticalAlignEnum.TOP.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.CENTER.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.BOTTOM.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                } else {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                }
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
                 constraintSet.applyTo(this);
-                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = 0;
             } else {
                 //有左侧图标，所以左侧是图标
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(this);
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivLabelIcon.getId(), ConstraintSet.END);
-                constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                if (LabelVerticalAlignEnum.TOP.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.CENTER.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, (int) labelTopMargin);
+                } else if (LabelVerticalAlignEnum.BOTTOM.value == labelVerticalAlign) {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, (int) labelBottomMargin);
+                } else {
+                    constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, tvSelection.getId(), ConstraintSet.TOP);
+                }
                 constraintSet.connect(tvLabel.getId(), ConstraintSet.END, tvRequired.getId(), ConstraintSet.START);
                 constraintSet.applyTo(this);
-                ConstraintLayout.LayoutParams params = (LayoutParams) tvLabel.getLayoutParams();
-                params.topMargin = 0;
             }
         } else {
 

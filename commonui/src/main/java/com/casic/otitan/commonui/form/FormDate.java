@@ -27,11 +27,11 @@ public class FormDate extends FormSelection {
     /**
      * 时间格式分隔符，默认为 "-"，也就是yyyy-MM-dd中间的"-"
      */
-    protected String separator = "-";
+    protected String separator;
     /**
      * 时间格式，默认为yyyy-MM-dd
      */
-    protected String format = DateUtil.DEFAULT_FORMAT_DATE;
+    protected String format;
     /**
      * 确认按钮文字背景色
      */
@@ -39,7 +39,7 @@ public class FormDate extends FormSelection {
     /**
      * 时间选择模式，参考DateMode
      */
-    protected int datePickModel = DateMode.YEAR_MONTH_DAY.model;
+    protected int datePickModel;
     /**
      * 其实年份
      */
@@ -78,6 +78,7 @@ public class FormDate extends FormSelection {
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
             typedArray.recycle();
         } else {
+            datePickModel = DateMode.YEAR_MONTH_DAY.model;
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;

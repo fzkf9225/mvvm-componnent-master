@@ -55,11 +55,11 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     /**
      * 是否压缩，默认为true：启用压缩
      */
-    protected boolean compress = true;
+    protected boolean compress;
     /**
      * 压缩图片大小，默认为300kb
      */
-    protected int compressImageSize = 300;
+    protected int compressImageSize;
     /**
      * 适配器
      */
@@ -71,7 +71,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     /**
      * 媒体选择类型，默认：相机和相册
      */
-    protected int mediaType = OpenImageDialog.CAMERA_ALBUM;
+    protected int mediaType;
     /**
      * 添加图片监听器
      */
@@ -83,7 +83,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     /**
      * 最大可选数量
      */
-    protected int maxCount = MediaHelper.DEFAULT_ALBUM_MAX_COUNT;
+    protected int maxCount;
     /**
      * 显示数量标签文字大小
      */
@@ -113,8 +113,12 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         super(context, attrs, defStyleAttr);
     }
 
+    private boolean isInitialized = false;  // 添加初始化标志
     @Override
     protected void initAttr(AttributeSet attrs) {
+        if (isInitialized) {
+            return;
+        }
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
@@ -134,6 +138,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             compressImageSize = 300;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
         }
+
+
+        isInitialized = true;
     }
 
     public boolean isCompress() {

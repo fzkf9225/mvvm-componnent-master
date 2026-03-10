@@ -52,7 +52,7 @@ public class FormImagePreview extends FormMedia {
     /**
      * 暂无数据控件文字内容
      */
-    protected String emptyText = "暂无附件";
+    protected String emptyText;
 
     public FormImagePreview(@NonNull Context context) {
         super(context);

@@ -55,7 +55,7 @@ public class FormFilePreview extends FormMedia {
     /**
      * 空白暂无数据文字内容
      */
-    protected String emptyText = "暂无附件";
+    protected String emptyText;
     /**
      * 列表中文字颜色
      */
@@ -67,7 +67,7 @@ public class FormFilePreview extends FormMedia {
     /**
      * 是否展示文件图标
      */
-    protected boolean isShowFileDrawable = true;
+    protected boolean isShowFileDrawable;
 
     public FormFilePreview(@NonNull Context context) {
         super(context);
