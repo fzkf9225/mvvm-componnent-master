@@ -162,8 +162,6 @@ public class EmptyLayout extends ConstraintLayout {
         contentBottomMargin = DensityUtil.dp2px(getContext(), 20);
         imageTextMargin = DensityUtil.dp2px(getContext(), 16);
 
-        imageWidth = DensityUtil.dp2px(getContext(), 80);
-        imageHeight = DensityUtil.dp2px(getContext(), 80);
         loadingWidth = DensityUtil.dp2px(getContext(), 32);
         loadingHeight = DensityUtil.dp2px(getContext(), 32);
 
@@ -219,6 +217,22 @@ public class EmptyLayout extends ConstraintLayout {
 
             a.recycle();
         }
+    }
+
+    public AppCompatTextView getTvText() {
+        return tvText;
+    }
+
+    public Loading getLoadingView() {
+        return loadingView;
+    }
+
+    public AppCompatImageView getIvImage() {
+        return ivImage;
+    }
+
+    public LinearLayout getContainerView() {
+        return containerView;
     }
 
     private void initViews() {

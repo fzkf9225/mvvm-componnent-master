@@ -339,6 +339,11 @@
         <attr name="bgColor" />
         <attr name="strokeWidth" />
         <attr name="radius" />
+        <!-- 新增四个圆角属性 -->
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
     </declare-styleable>
 
     <declare-styleable name="Custom_Round_Image_View">
