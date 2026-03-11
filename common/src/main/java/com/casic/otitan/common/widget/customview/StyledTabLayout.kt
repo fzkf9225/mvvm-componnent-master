@@ -51,7 +51,7 @@ class StyledTabLayout @JvmOverloads constructor(
         generateViewId()
     }
     private var selectedBgResource : Drawable?=null
-    private var tabWidth: Int = 75
+    private var tabWidth: Int = 0
     private var tabHeight: Int = 29
 
     // 缓存Tab视图，避免重复创建
@@ -201,7 +201,7 @@ class StyledTabLayout @JvmOverloads constructor(
             id = tvId
 
             // 设置布局参数 - 使用指定的宽高
-            val layoutParams = LayoutParams(tabWidth, tabHeight)
+            val layoutParams = LayoutParams(if(tabWidth>0) tabWidth else LayoutParams.WRAP_CONTENT, if(tabHeight>0) tabHeight else LayoutParams.WRAP_CONTENT)
             layoutParams.gravity = Gravity.CENTER
             this.layoutParams = layoutParams
 
