@@ -2,6 +2,7 @@ package com.casic.otitan.demo.enums;
 
 import android.os.Bundle;
 
+import com.casic.otitan.demo.activity.CheckBoxActivity;
 import com.casic.otitan.demo.activity.CoordinatorActivity;
 import com.casic.otitan.demo.activity.CustomCameraActivity;
 import com.casic.otitan.demo.activity.DemoPagingActivity;
@@ -45,6 +46,7 @@ public enum UseCaseEnum {
     DOWNLOAD(DownloadActivity.class, "文件下载", "自定义断点续传下载功能", null),
     COMPRESS(MediaCompressActivity.class, "文件压缩", "展示文件压缩能力", null),
     RECYCLER_VIEW(RecyclerViewSampleActivity.class, "列表示例", "自定义封装列表", null),
+    CHECK_BOX(CheckBoxActivity.class, "单选复选框Adapter", "封装支持单选复选的选择框", null),
     PAGING(DemoPagingActivity.class, "Paging列表示例", "Jetpack Paging3列表封装", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
     SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),

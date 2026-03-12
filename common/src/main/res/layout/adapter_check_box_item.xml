@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_item"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:foreground="?attr/selectableItemBackground">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            android:lines="1"
+            android:layout_marginStart="23dp"
+            android:ellipsize="middle"
+            tools:text="我是选项内容"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_l" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_check"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            app:layout_constraintTop_toTopOf="@+id/tv_option"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_option"
+            app:layout_constraintStart_toEndOf="@+id/tv_option"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

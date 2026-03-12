@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:ellipsize="end"
         android:paddingTop="@dimen/padding_l"
         android:paddingBottom="@dimen/padding_l"
         android:text="@{item.popupName}"
