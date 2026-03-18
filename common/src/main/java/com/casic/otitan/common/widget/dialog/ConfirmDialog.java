@@ -3,6 +3,7 @@ package com.casic.otitan.common.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -15,12 +16,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogConfirmBinding;
 import com.casic.otitan.common.listener.OnDialogInterfaceClickListener;
+import com.casic.otitan.common.utils.common.DensityUtil;
+import com.casic.otitan.common.utils.common.DrawableUtil;
+
+import java.util.Objects;
 
 
 /**
@@ -55,7 +63,7 @@ public class ConfirmDialog extends Dialog {
     /**
      * 是否显示按钮和分割线
      */
-    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
+    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowSLineView = true, isShowHLineView = true;
     /**
      * 弹框右侧确认按钮文字颜色
      */
@@ -69,9 +77,35 @@ public class ConfirmDialog extends Dialog {
      */
     private ColorStateList textColor = null;
     /**
+     * 分割线颜色
+     */
+    private @ColorInt Integer lineColor = null;
+    /**
      * 弹框背景
      */
     private Drawable bgDrawable;
+
+    // 新增属性
+    /** 确定按钮文字大小 (sp) */
+    private float positiveTextSize = 0;
+    /** 取消按钮文字大小 (sp) */
+    private float negativeTextSize = 0;
+    /** 内容文字大小 (sp) */
+    private float contentTextSize = 0;
+    /** 确定按钮背景 */
+    private Drawable positiveBtnBackground = null;
+    /** 取消按钮背景 */
+    private Drawable negativeBtnBackground = null;
+    /** 内容距离顶部的间距 (px) */
+    private int textPaddingTop = -1;
+    /** 水平分割线距离内容的间距 (px) */
+    private int textPaddingBottom = -1;
+    /** 按钮高度 (px) */
+    private int buttonHeight = -1;
+    /** 按钮高度资源ID */
+    @DimenRes
+    private int buttonHeightRes = -1;
+
     /**
      * 布局填充器
      */
@@ -111,6 +145,16 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    public ConfirmDialog setShowHLineView(boolean showHLineView) {
+        isShowHLineView = showHLineView;
+        return this;
+    }
+
+    public ConfirmDialog setShowSLineView(boolean showSLineView) {
+        isShowSLineView = showSLineView;
+        return this;
+    }
+
     public ConfirmDialog setBgDrawable(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
         return this;
@@ -131,6 +175,11 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    public ConfirmDialog setLineColor(Integer lineColor) {
+        this.lineColor = lineColor;
+        return this;
+    }
+
     public ConfirmDialog setPositiveText(String positiveText) {
         this.positiveText = positiveText;
         return this;
@@ -143,13 +192,83 @@ public class ConfirmDialog extends Dialog {
 
     public ConfirmDialog setShowPositiveView(boolean isShowPositiveView) {
         this.isShowPositiveView = isShowPositiveView;
-        this.isShowLineView = this.isShowPositiveView;
         return this;
     }
 
     public ConfirmDialog setShowNegativeView(boolean isShowNegativeView) {
         this.isShowNegativeView = isShowNegativeView;
-        this.isShowLineView = this.isShowNegativeView;
+        return this;
+    }
+
+    // 新增setter方法
+
+    public ConfirmDialog setPositiveTextSize(float spSize) {
+        this.positiveTextSize = spSize;
+        return this;
+    }
+
+    public ConfirmDialog setNegativeTextSize(float spSize) {
+        this.negativeTextSize = spSize;
+        return this;
+    }
+
+    public ConfirmDialog setContentTextSize(float spSize) {
+        this.contentTextSize = spSize;
+        return this;
+    }
+
+    public ConfirmDialog setPositiveBtnBackground(Drawable background) {
+        this.positiveBtnBackground = background;
+        return this;
+    }
+
+    public ConfirmDialog setPositiveBtnBackgroundResource(@DrawableRes int resId) {
+        this.positiveBtnBackground = ContextCompat.getDrawable(getContext(), resId);
+        return this;
+    }
+
+    public ConfirmDialog setNegativeBtnBackground(Drawable background) {
+        this.negativeBtnBackground = background;
+        return this;
+    }
+
+    public ConfirmDialog setNegativeBtnBackgroundResource(@DrawableRes int resId) {
+        this.negativeBtnBackground = ContextCompat.getDrawable(getContext(), resId);
+        return this;
+    }
+
+    public ConfirmDialog setTextPaddingTop(int px) {
+        this.textPaddingTop = px;
+        return this;
+    }
+
+    public ConfirmDialog setTextPaddingTopDp(int dp) {
+        this.textPaddingTop = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ConfirmDialog setTextPaddingBottom(int px) {
+        this.textPaddingBottom = px;
+        return this;
+    }
+
+    public ConfirmDialog setTextPaddingBottomDp(int dp) {
+        this.textPaddingBottom = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ConfirmDialog setButtonHeight(int px) {
+        this.buttonHeight = px;
+        return this;
+    }
+
+    public ConfirmDialog setButtonHeightDp(int dp) {
+        this.buttonHeight = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ConfirmDialog setButtonHeightResource(@DimenRes int resId) {
+        this.buttonHeightRes = resId;
         return this;
     }
 
@@ -164,6 +283,8 @@ public class ConfirmDialog extends Dialog {
 
     private void initView() {
         binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
+
+        // 设置文字
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -174,12 +295,12 @@ public class ConfirmDialog extends Dialog {
         } else {
             binding.dialogCancel.setText(negativeText);
         }
+
+        // 设置文字颜色
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }
-        if (bgDrawable != null) {
-            binding.clConfirm.setBackground(bgDrawable);
-        }
+
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
@@ -188,8 +309,71 @@ public class ConfirmDialog extends Dialog {
             binding.dialogTextView.setTextColor(textColor);
         }
 
-        if (!isShowLineView) {
+        // 设置文字大小
+        if (positiveTextSize > 0) {
+            binding.dialogConfirm.setTextSize(positiveTextSize);
+        }
+
+        if (negativeTextSize > 0) {
+            binding.dialogCancel.setTextSize(negativeTextSize);
+        }
+
+        if (contentTextSize > 0) {
+            binding.dialogTextView.setTextSize(contentTextSize);
+        }
+
+        // 设置按钮背景
+        if (positiveBtnBackground != null) {
+            binding.dialogConfirm.setBackground(positiveBtnBackground);
+        }
+
+        if (negativeBtnBackground != null) {
+            binding.dialogCancel.setBackground(negativeBtnBackground);
+        }
+
+        // 设置内容上边距
+        if (textPaddingTop >= 0) {
+            binding.dialogTextView.setPadding(
+                    binding.dialogTextView.getPaddingStart(),
+                    textPaddingTop,
+                    binding.dialogTextView.getPaddingEnd(),
+                    binding.dialogTextView.getPaddingBottom());
+        }
+
+        // 设置分割线上边距
+        if (textPaddingBottom >= 0) {
+            binding.dialogTextView.setPadding(binding.dialogTextView.getPaddingStart(),
+                    binding.dialogTextView.getPaddingTop(),
+                    binding.dialogTextView.getPaddingEnd(),
+                    textPaddingBottom);
+
+        }
+
+        // 设置按钮高度
+        int targetButtonHeight = -1;
+        if (buttonHeightRes != -1) {
+            targetButtonHeight = getContext().getResources().getDimensionPixelSize(buttonHeightRes);
+        } else if (buttonHeight >= 0) {
+            targetButtonHeight = buttonHeight;
+        }
+
+        if (targetButtonHeight >= 0) {
+            ViewGroup.LayoutParams cancelParams = binding.dialogCancel.getLayoutParams();
+            cancelParams.height = targetButtonHeight;
+            binding.dialogCancel.setLayoutParams(cancelParams);
+
+            ViewGroup.LayoutParams confirmParams = binding.dialogConfirm.getLayoutParams();
+            confirmParams.height = targetButtonHeight;
+            binding.dialogConfirm.setLayoutParams(confirmParams);
+        }
+
+        // 控制视图显示
+        if (!isShowSLineView) {
             binding.sLine.setVisibility(View.GONE);
+        }
+        // 控制视图显示
+        if (!isShowHLineView) {
+            binding.hLine.setVisibility(View.GONE);
         }
         if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
@@ -197,31 +381,49 @@ public class ConfirmDialog extends Dialog {
         if (!isShowPositiveView) {
             binding.dialogConfirm.setVisibility(View.GONE);
         }
+
+        // 设置点击事件
         binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);
             }
         });
+
         binding.dialogCancel.setOnClickListener(v -> {
             dismiss();
             if (onNegativeClickListener != null) {
                 onNegativeClickListener.onDialogClick(this);
             }
         });
+        binding.hLine.setBackground(DrawableUtil.createRectDrawable(
+                lineColor == null ? ContextCompat.getColor(getContext(),R.color.h_line_color) : lineColor,
+                0,
+                DensityUtil.dp2px(getContext(), 1f)
+        ));
+        binding.sLine.setBackground(DrawableUtil.createRectDrawable(
+                lineColor == null ?  ContextCompat.getColor(getContext(),R.color.h_line_color) : lineColor,
+                DensityUtil.dp2px(getContext(), 1f),
+                0
+        ));
+        // 设置内容
         if (spannableContent == null) {
             binding.dialogTextView.setText(content);
         } else {
             binding.dialogTextView.setText(spannableContent);
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        // 设置Dialog属性
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
+
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;
         }
+
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
@@ -230,8 +432,16 @@ public class ConfirmDialog extends Dialog {
             dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+
         // 设置Dialog从窗体中间弹出
         dialogWindow.setGravity(Gravity.CENTER);
+        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
+                Color.WHITE,
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f)
+        )));
     }
 
 }

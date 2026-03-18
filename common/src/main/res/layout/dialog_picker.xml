@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingEnd="@dimen/padding_l">
+
+        <!-- 标题 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/padding_xl"
+            android:paddingBottom="@dimen/padding_xl"
+            android:textSize="@dimen/font_18"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- 分割线 -->
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/h_line_color"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            android:layout_marginTop="@dimen/vertical_margin_m"/>
+
+        <!-- NumberPicker -->
+        <NumberPicker
+            android:id="@+id/data_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/v_line"
+            android:layout_marginTop="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/horizontal_margin_xl"
+            android:visibility="visible" />
+
+        <com.casic.otitan.common.widget.customview.CornerButton
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/cancel"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:gravity="center"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/hint_text_color"
+            app:radius="20dp"
+            app:strokeColor="@color/hint_text_color"
+            app:strokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_confirm"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearPicker" />
+
+        <com.casic.otitan.common.widget.customview.CornerButton
+            android:id="@+id/dialog_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:text="@string/confirm"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/black"
+            app:radius="20dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/dialog_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/data_picker" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

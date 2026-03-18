@@ -3,6 +3,7 @@ package com.casic.otitan.demo.viewmodel;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -19,6 +20,7 @@ import androidx.core.widget.PopupWindowCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
+import com.casic.otitan.common.widget.dialog.PickerDialog;
 import com.casic.otitan.commonui.widght.dialog.TickViewMessageDialog;
 import com.casic.otitan.commonui.widght.calendar.DateRangePickDialog;
 import com.casic.otitan.demo.R;
@@ -105,10 +107,35 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         if (R.id.bottomSheetDialog == view.getId()) {
             new BottomSheetDialog<>(view.getContext())
                     .setData(dataList)
+                    // 设置菜单项样式
+                    .setItemHeight(DensityUtil.dp2px(view.getContext(), 54f)) // 设置列表项高度
+                    .setTextSize(15f) // 设置字体大小
+                    .setTextColor(Color.BLUE) // 设置字体颜色
+                    .setSingleLine(false) // 设置为多行显示
+                    .setShowCancelButton(false)
+                    .setMaxLines(1) // 最多显示3行
+                    .setMargins(DensityUtil.dp2px(view.getContext(), 16f), DensityUtil.dp2px(view.getContext(), 16f)) // 设置左右边距
+                    .setVerticalPadding(DensityUtil.dp2px(view.getContext(), 8f), DensityUtil.dp2px(view.getContext(), 8f)) // 设置上下内边距
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
                         baseView.showToast(list.get(pos).getPopupName());
                     })
+                    .builder()
+                    .show();
+        } else if (R.id.pickerDialog == view.getId()) {
+// 基本用法 - 使用字符串数组
+            new PickerDialog<>(view.getContext())
+                    .setData(dataList)
+                    .setShowTitle(false)
+                    .setTextSize(DensityUtil.sp2px(view.getContext(), 15f))
+                    .setTextColor(Color.BLACK)   // 修改文字颜色
+                    .setSelectedTextColor(Color.BLUE) // 修改选中项文字颜色
+                    .setTitleText("请选择")
+                    .setConfirmButtonText("确定")
+                    .setCancelButtonText("取消")
+                    .setOnNumberPickListener((position, displayValue, entryValue) ->
+                            Toast.makeText(view.getContext(), "选中：" + displayValue, Toast.LENGTH_SHORT).show()
+                    )
                     .builder()
                     .show();
         } else if (R.id.confirmDialog == view.getId()) {
@@ -154,6 +181,15 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         } else if (R.id.menuDialog == view.getId()) {
             new MenuDialog<>(view.getContext())
                     .setData(dataList)
+                    // 设置菜单项样式
+                    .setItemHeight(DensityUtil.dp2px(view.getContext(), 54f)) // 设置列表项高度
+                    .setTextSize(15f) // 设置字体大小
+                    .setTextColor(Color.BLUE) // 设置字体颜色
+                    .setSingleLine(false) // 设置为多行显示
+                    .setShowCancelButton(false)
+                    .setMaxLines(1) // 最多显示3行
+                    .setMargins(DensityUtil.dp2px(view.getContext(), 16f), DensityUtil.dp2px(view.getContext(), 16f)) // 设置左右边距
+                    .setVerticalPadding(DensityUtil.dp2px(view.getContext(), 8f), DensityUtil.dp2px(view.getContext(), 8f)) // 设置上下内边距
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
                         baseView.showToast(list.get(pos).getPopupName());

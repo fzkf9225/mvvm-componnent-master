@@ -1,6 +1,8 @@
 package com.casic.otitan.common.bean.base;
 
 
+import android.util.TypedValue;
+
 import androidx.activity.ComponentActivity;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -12,6 +14,7 @@ import java.util.Objects;
 
 import com.casic.otitan.common.BR;
 import com.casic.otitan.common.R;
+import com.casic.otitan.common.utils.common.DensityUtil;
 import com.casic.otitan.common.utils.theme.ThemeUtils;
 
 /**
@@ -36,6 +39,11 @@ public class ToolbarConfig extends BaseObservable {
      * 标题背景色
      */
     private @ColorRes int bgColor = R.color.white;
+    /**
+     * toolbar高度
+     */
+    private int height = 0;
+
     /**
      * 状态栏背景色
      */
@@ -84,6 +92,27 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setTitle(String title) {
         this.title = title;
+        notifyPropertyChanged(BR.title);
+        return this;
+    }
+
+    @Bindable
+    public int getHeight() {
+        if (height > 0) {
+            return height;
+        }
+        TypedValue typedValue = new TypedValue();
+        if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            return TypedValue.complexToDimensionPixelSize(
+                    typedValue.data,
+                    activity.getResources().getDisplayMetrics()
+            );
+        }
+        return DensityUtil.dp2px(activity,48f);
+    }
+
+    public ToolbarConfig setHeight(int height) {
+        this.height = height;
         notifyPropertyChanged(BR.title);
         return this;
     }

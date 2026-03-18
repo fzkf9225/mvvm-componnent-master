@@ -33,6 +33,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pickerDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="PickerDialog"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottomSheetDialog" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/confirmDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +54,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bottomSheetDialog" />
+                app:layout_constraintTop_toBottomOf="@+id/pickerDialog" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/customProgressDialog"

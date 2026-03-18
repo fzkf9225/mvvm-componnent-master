@@ -3,6 +3,7 @@ package com.casic.otitan.common.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -18,12 +19,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogDatePickBinding;
 import com.casic.otitan.common.enums.DateMode;
 import com.casic.otitan.common.listener.OnDatePickSelectedListener;
 import com.casic.otitan.common.listener.OnDialogInterfaceClickListener;
+import com.casic.otitan.common.utils.common.DensityUtil;
+import com.casic.otitan.common.utils.common.DrawableUtil;
 
 
 /**
@@ -96,6 +100,8 @@ public class DatePickDialog extends Dialog {
     private int defaultMinute = Calendar.getInstance().get(Calendar.MINUTE);
     private int defaultHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     private int defaultSecond = Calendar.getInstance().get(Calendar.SECOND);
+
+    private int dividerHeight = 0; // 分割线高度
     /**
      * 年、月、日、时、分、秒标签
      */
@@ -127,6 +133,11 @@ public class DatePickDialog extends Dialog {
 
     public DatePickDialog setCanOutSide(boolean outSide) {
         this.outSide = outSide;
+        return this;
+    }
+
+    public DatePickDialog setDividerHeight(int dividerHeight) {
+        this.dividerHeight = dividerHeight;
         return this;
     }
 
@@ -289,9 +300,6 @@ public class DatePickDialog extends Dialog {
         if (!isShowPositiveView) {
             binding.dialogConfirm.setVisibility(View.GONE);
         }
-        if (bgDrawable != null) {
-            binding.clDate.setBackground(bgDrawable);
-        }
         binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
@@ -339,17 +347,27 @@ public class DatePickDialog extends Dialog {
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(gravity);
+
+        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
+                Color.WHITE,
+                DensityUtil.dp2px(getContext(), 16f),
+                DensityUtil.dp2px(getContext(), 16f),
+                0,
+                0
+        )));
     }
 
     private void initPickValue() {
         //设置年
         binding.yearPicker.setWrapSelectorWheel(false);
+        binding.yearPicker.setSelectionDividerHeight(dividerHeight);
         binding.yearPicker.setMinValue(startYear); // 最小年份
         binding.yearPicker.setMaxValue(endYear); // 最大年份
         binding.yearPicker.setValue(defaultYear); // 初始值为当前年份
         binding.yearPicker.setOnValueChangedListener(onValueChangeListener);
         //设置月
         binding.monthPicker.setWrapSelectorWheel(false);
+        binding.monthPicker.setSelectionDividerHeight(dividerHeight);
         binding.monthPicker.setMinValue(startMonth); // 最小月份
         binding.monthPicker.setMaxValue(endMonth); // 最大月份
         binding.monthPicker.setValue(defaultMonth); // 初始值为当前月份
@@ -360,21 +378,25 @@ public class DatePickDialog extends Dialog {
         calendar.set(Calendar.MONTH, defaultMonth - 1);
         int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         binding.dayPicker.setWrapSelectorWheel(false);
+        binding.dayPicker.setSelectionDividerHeight(dividerHeight);
         binding.dayPicker.setMinValue(1); // 最小日
         binding.dayPicker.setMaxValue(dayOfMonth); // 最小日
         binding.dayPicker.setValue(defaultDay); // 最小日
         //设置时
         binding.hourPicker.setWrapSelectorWheel(false);
+        binding.hourPicker.setSelectionDividerHeight(dividerHeight);
         binding.hourPicker.setMinValue(0); // 最小小时
         binding.hourPicker.setMaxValue(23); // 最大小时
         binding.hourPicker.setValue(defaultHour); // 初始值为当前小时
         //设置分
         binding.minutePicker.setWrapSelectorWheel(false);
+        binding.minutePicker.setSelectionDividerHeight(dividerHeight);
         binding.minutePicker.setMinValue(0); // 最小分钟
         binding.minutePicker.setMaxValue(59); // 最大分钟
         binding.minutePicker.setValue(defaultMinute); // 初始值为当前分钟
         //设置秒
         binding.secondPicker.setWrapSelectorWheel(false);
+        binding.secondPicker.setSelectionDividerHeight(dividerHeight);
         binding.secondPicker.setMinValue(0); // 最小秒
         binding.secondPicker.setMaxValue(59); // 最大秒
         binding.secondPicker.setValue(defaultSecond); // 初始值为当前秒

@@ -3,6 +3,7 @@ package com.casic.otitan.common.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -21,7 +22,11 @@ import androidx.core.content.ContextCompat;
 import com.casic.otitan.common.R;
 import com.casic.otitan.common.databinding.DialogInputBinding;
 import com.casic.otitan.common.listener.OnInputDialogInterfaceListener;
+import com.casic.otitan.common.utils.common.DensityUtil;
+import com.casic.otitan.common.utils.common.DrawableUtil;
 import com.casic.otitan.common.utils.common.StringUtil;
+
+import java.util.Objects;
 
 
 /**
@@ -184,9 +189,6 @@ public class InputDialog extends Dialog {
             binding.dialogConfirm.setTextColor(textColor);
         }
 
-        if (bgDrawable != null) {
-            binding.clInput.setBackground(bgDrawable);
-        }
 
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
@@ -244,6 +246,14 @@ public class InputDialog extends Dialog {
         }
         // 设置Dialog从窗体中间弹出
         dialogWindow.setGravity(Gravity.CENTER);
+
+        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
+                Color.WHITE,
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f),
+                DensityUtil.dp2px(getContext(), 8f)
+        )));
     }
 
 }

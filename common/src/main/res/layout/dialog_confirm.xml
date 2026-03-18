@@ -10,21 +10,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_confirm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white_16">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="90dp"
+            android:paddingTop="29dp"
+            android:paddingBottom="23dp"
             android:gravity="center"
-            android:paddingTop="@dimen/padding_l"
-            android:paddingBottom="@dimen/padding_l"
-            android:paddingStart="@dimen/padding_xl"
-            android:paddingEnd="@dimen/padding_xl"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,8 +31,7 @@
         <View
             android:id="@+id/h_line"
             android:layout_height="1dp"
-            android:layout_width="0dp"
-            android:background="@color/h_line_color"
+            android:layout_width="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
@@ -59,7 +56,6 @@
             android:id="@+id/s_line"
             android:layout_height="0dp"
             android:layout_width="1dp"
-            android:background="@color/h_line_color"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
             app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"

@@ -11,11 +11,11 @@ public class PagerInfo extends BaseObservable {
     /**
      * tab上的title
      */
-    private final String title;
+    private String title;
     /**
      * 页面page路由
      */
-    private final Fragment toFragment;
+    private Fragment toFragment;
 
     public PagerInfo(String title, Fragment toFragment) {
         this.title = title;
@@ -28,6 +28,18 @@ public class PagerInfo extends BaseObservable {
 
     public Fragment getFragment() {
         return toFragment;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Fragment getToFragment() {
+        return toFragment;
+    }
+
+    public void setToFragment(Fragment toFragment) {
+        this.toFragment = toFragment;
     }
 }
 

@@ -36,15 +36,15 @@ class StyledTabLayout @JvmOverloads constructor(
 ) : TabLayout(context, attrs, defStyleAttr) {
 
     // 自定义属性
-    private var selectedTextColor: Int = ContextCompat.getColor(context, R.color.white)
-    private var unselectedTextColor: Int = ContextCompat.getColor(context, R.color.autoColor)
+    private var selectedTextColor: Int = ContextCompat.getColor(context, android.R.color.white)
+    private var unselectedTextColor: Int = ContextCompat.getColor(context, com.casic.otitan.common.R.color.autoColor)
     private var textSize: Float = 12f
     private val defaultDrawable : Drawable by lazy {
         DrawableUtil.createRectDrawable(
-            R.color.black,
+            android.R.color.black,
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT,
-            DensityUtil.dp2px(context, 23f).toFloat()
+            DensityUtil.dp2px(context,23f).toFloat()
         )
     }
     private val tvId by lazy {
@@ -60,11 +60,11 @@ class StyledTabLayout @JvmOverloads constructor(
     init {
         // 关键修复1：移除底部指示器 - 使用setter方法
         setSelectedTabIndicator(android.R.color.transparent)
-        setSelectedTabIndicatorColor(ContextCompat.getColor(context, R.color.transparent))
+        setSelectedTabIndicatorColor(ContextCompat.getColor(context, android.R.color.transparent))
 
         // 关键修复2：设置Tab填充模式为固定，避免自动拉伸
-        tabMode = MODE_FIXED
-        tabGravity = GRAVITY_FILL
+        tabMode = TabLayout.MODE_FIXED
+        tabGravity = TabLayout.GRAVITY_FILL
 
         // 解析自定义属性
         attrs?.let { parseAttributes(context, it) }
@@ -144,12 +144,12 @@ class StyledTabLayout @JvmOverloads constructor(
                 // 选中状态 - 设置圆角黑色背景
                 textView.setTextColor(selectedTextColor)
                 textView.background = selectedBgResource
-                textView.setTypeface(textView.typeface, Typeface.BOLD)
+//                textView.setTypeface(textView.typeface, Typeface.BOLD)
             } else {
                 // 未选中状态 - 透明背景
                 textView.setTextColor(unselectedTextColor)
                 textView.background = null
-                textView.setTypeface(textView.typeface, Typeface.NORMAL)
+//                textView.setTypeface(textView.typeface, Typeface.NORMAL)
             }
         }
     }
@@ -201,7 +201,7 @@ class StyledTabLayout @JvmOverloads constructor(
             id = tvId
 
             // 设置布局参数 - 使用指定的宽高
-            val layoutParams = LayoutParams(if(tabWidth>0) tabWidth else LayoutParams.WRAP_CONTENT, if(tabHeight>0) tabHeight else LayoutParams.WRAP_CONTENT)
+            val layoutParams = FrameLayout.LayoutParams(if(tabWidth>0) tabWidth else LayoutParams.WRAP_CONTENT, if(tabHeight>0) tabHeight else LayoutParams.WRAP_CONTENT)
             layoutParams.gravity = Gravity.CENTER
             this.layoutParams = layoutParams
 
@@ -213,9 +213,9 @@ class StyledTabLayout @JvmOverloads constructor(
             // 设置内边距
             setPadding(
                 dpToPx(context, 8),
-                dpToPx(context, 4),
+                dpToPx(context, 5),
                 dpToPx(context, 8),
-                dpToPx(context, 4)
+                dpToPx(context, 5)
             )
 
             // 设置单行显示
@@ -236,7 +236,6 @@ class StyledTabLayout @JvmOverloads constructor(
 
         updateTabStyle(tab, setSelected)
     }
-
 
     /**
      * 移除Tab时清理缓存
@@ -297,7 +296,7 @@ class StyledTabLayout @JvmOverloads constructor(
         // 更新所有Tab的TextView布局参数
         tabViews.values.forEach { view ->
             val textView = view.findViewById<AppCompatTextView>(tvId)
-            textView?.layoutParams = LayoutParams(width, height).apply {
+            textView?.layoutParams = FrameLayout.LayoutParams(width, height).apply {
                 gravity = Gravity.CENTER
             }
         }

@@ -171,8 +171,10 @@
         <attr name="loadingHeight" format="dimension" />
     </declare-styleable>
     <declare-styleable name="CounterEditText">
-        <!-- 输入框高度 -->
+        <!-- 输入框高度，设置为0或负数时使用最低高度 -->
         <attr name="inputHeight" format="dimension" />
+        <!-- 最低高度，当inputHeight<=0时生效 -->
+        <attr name="minHeight" format="dimension" />
 
         <!-- 最大输入字数，0表示无限制 -->
         <attr name="maxLength" format="integer" />

@@ -48,6 +48,20 @@ object DrawableUtil {
         shapeDrawable.setIntrinsicHeight(size)
         return shapeDrawable
     }
+
+    /**
+     * 创建一个圆形Drawable（无尺寸限制）
+     * @param color 填充颜色
+     * @return 圆形ShapeDrawable
+     */
+    @JvmStatic
+    public fun createCircleDrawable(color: Int): ShapeDrawable {
+        val shapeDrawable = ShapeDrawable(OvalShape())
+        shapeDrawable.paint.setColor(color)
+        shapeDrawable.paint.isAntiAlias = true // 启用抗锯齿
+        return shapeDrawable
+    }
+
     /**
      * 创建一个圆角矩形Drawable
      * @param color 填充颜色
@@ -78,6 +92,32 @@ object DrawableUtil {
         shapeDrawable.setIntrinsicHeight(height)
         return shapeDrawable
     }
+
+    /**
+     * 创建一个圆角矩形Drawable（无尺寸限制）
+     * @param color 填充颜色
+     * @param cornerRadius 圆角半径
+     * @return 圆角矩形ShapeDrawable
+     */
+    @JvmStatic
+    fun createRectDrawable(
+        color: Int,
+        cornerRadius: Float
+    ): ShapeDrawable {
+        val shape = RoundRectShape(
+            floatArrayOf(
+                cornerRadius, cornerRadius, // 左上角
+                cornerRadius, cornerRadius, // 右上角
+                cornerRadius, cornerRadius, // 右下角
+                cornerRadius, cornerRadius  // 左下角
+            ), null, null
+        )
+        val shapeDrawable = ShapeDrawable(shape)
+        shapeDrawable.paint.setColor(color)
+        shapeDrawable.paint.isAntiAlias = true // 启用抗锯齿
+        return shapeDrawable
+    }
+
     /**
      * 创建支持自定义四个角的圆角矩形 Drawable
      * @param color 填充颜色
@@ -109,6 +149,34 @@ object DrawableUtil {
             setSize(width, height)
         }
     }
+
+    /**
+     * 创建支持自定义四个角的圆角矩形 Drawable（无尺寸限制）
+     * @param color 填充颜色
+     * @param topLeftRadius 左上角半径
+     * @param topRightRadius 右上角半径
+     * @param bottomRightRadius 右下角半径
+     * @param bottomLeftRadius 左下角半径
+     */
+    @JvmStatic
+    fun createRectDrawable(
+        color: Int,
+        topLeftRadius: Float,
+        topRightRadius: Float,
+        bottomRightRadius: Float,
+        bottomLeftRadius: Float
+    ): GradientDrawable {
+        return GradientDrawable().apply {
+            setColor(color)
+            cornerRadii = floatArrayOf(
+                topLeftRadius, topLeftRadius,
+                topRightRadius, topRightRadius,
+                bottomRightRadius, bottomRightRadius,
+                bottomLeftRadius, bottomLeftRadius
+            )
+        }
+    }
+
     /**
      * 创建带边框的圆角矩形
      * @param fillColor 填充颜色
@@ -129,6 +197,7 @@ object DrawableUtil {
             this.cornerRadius = cornerRadius
         }
     }
+
     /**
      * 创建线性渐变背景
      * @param colors 渐变颜色数组
@@ -145,6 +214,7 @@ object DrawableUtil {
             this.cornerRadius = cornerRadius
         }
     }
+
     /**
      * 创建带文字和背景的组合 Drawable（适用于 TextView 背景）
      * @param text 文字内容
@@ -174,6 +244,7 @@ object DrawableUtil {
         textView.background = background
         return textView.background
     }
+
     /**
      * 创建虚线边框圆角矩形
      * @param strokeColor 边框颜色
@@ -296,6 +367,29 @@ object DrawableUtil {
     }
 
     /**
+     * 创建圆形Drawable（支持设置边框，无尺寸限制）
+     * @param fillColor 填充颜色
+     * @param strokeColor 边框颜色
+     * @param strokeWidth 边框宽度
+     */
+    @JvmStatic
+    fun createCircle(
+        fillColor: Int,
+        strokeColor: Int,
+        strokeWidth: Int
+    ): ShapeDrawable {
+        val shapeDrawable = ShapeDrawable(OvalShape())
+        shapeDrawable.paint.apply {
+            setColor(fillColor)
+            isAntiAlias = true
+            style = Paint.Style.FILL_AND_STROKE
+            this.strokeWidth = strokeWidth.toFloat()
+            strokeJoin = Paint.Join.ROUND
+        }
+        return shapeDrawable
+    }
+
+    /**
      * 创建圆形Drawable（仅边框）
      * @param strokeColor 边框颜色
      * @param strokeWidth 边框宽度
@@ -320,6 +414,29 @@ object DrawableUtil {
         shapeDrawable.setIntrinsicHeight(size)
         return shapeDrawable
     }
+
+    /**
+     * 创建圆形Drawable（仅边框，无尺寸限制）
+     * @param strokeColor 边框颜色
+     * @param strokeWidth 边框宽度
+     */
+    @JvmStatic
+    fun createCircle(
+        strokeColor: Int,
+        strokeWidth: Int
+    ): ShapeDrawable {
+        val shapeDrawable = ShapeDrawable(OvalShape())
+        shapeDrawable.paint.apply {
+            setColor(Color.TRANSPARENT)
+            style = Paint.Style.STROKE
+            this.strokeWidth = strokeWidth.toFloat()
+            strokeJoin = Paint.Join.ROUND
+            color = strokeColor
+            isAntiAlias = true
+        }
+        return shapeDrawable
+    }
+
     /**
      * 创建GradientDrawable形状Drawable
      * @param colorRes 颜色资源
@@ -337,6 +454,7 @@ object DrawableUtil {
         drawable.cornerRadius = cornerRadius
         return drawable
     }
+
     /**
      * 创建形状Drawable（支持设置形状类型）
      * @param color 填充颜色
@@ -615,6 +733,71 @@ object DrawableUtil {
 
         return bitmap.toDrawable(context.resources)
     }
+
+    /**
+     * 创建文字头像Drawable（圆形背景+文字，无尺寸限制）
+     * @param text 文字内容
+     * @param backgroundColor 背景颜色
+     * @param textColor 文字颜色
+     * @param textSize 文字大小（sp）
+     */
+    @JvmStatic
+    fun createTextAvatarDrawable(
+        context: Context,
+        text: String,
+        backgroundColor: Int,
+        textColor: Int,
+        textSize: Float = 16f
+    ): Drawable {
+        return object : Drawable() {
+            private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                this.color = textColor
+                textAlign = Paint.Align.CENTER
+                this.textSize = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    textSize,
+                    context.resources.displayMetrics
+                )
+                style = Paint.Style.FILL
+            }
+
+            private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                this.color = backgroundColor
+                style = Paint.Style.FILL
+            }
+
+            override fun draw(canvas: Canvas) {
+                val bounds = bounds
+                val centerX = bounds.centerX().toFloat()
+                val centerY = bounds.centerY().toFloat()
+                val radius = minOf(bounds.width(), bounds.height()) / 2f
+
+                // 绘制圆形背景
+                canvas.drawCircle(centerX, centerY, radius, bgPaint)
+
+                // 绘制文字
+                val x = centerX
+                val y = centerY - (paint.descent() + paint.ascent()) / 2
+                canvas.drawText(text.take(1).uppercase(), x, y, paint)
+            }
+
+            override fun setAlpha(alpha: Int) {
+                paint.alpha = alpha
+                bgPaint.alpha = alpha
+            }
+
+            override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {
+                paint.colorFilter = colorFilter
+                bgPaint.colorFilter = colorFilter
+            }
+
+            @Deprecated("Deprecated in Java")
+            override fun getOpacity(): Int {
+                return PixelFormat.TRANSLUCENT
+            }
+        }
+    }
+
     /**
      * 创建矩形Drawable（无圆角）
      * @param color 填充颜色
@@ -628,6 +811,17 @@ object DrawableUtil {
         height: Int
     ): ShapeDrawable {
         return createRectDrawable(color, width, height, 0f)
+    }
+
+    /**
+     * 创建矩形Drawable（无圆角，无尺寸限制）
+     * @param color 填充颜色
+     */
+    @JvmStatic
+    fun createRectDrawable(
+        color: Int
+    ): ShapeDrawable {
+        return createRectDrawable(color, 0f)
     }
 
     /**
@@ -653,6 +847,27 @@ object DrawableUtil {
             setStroke(strokeWidth, strokeColor)
             this.cornerRadius = cornerRadius
             setSize(width, height)
+        }
+    }
+
+    /**
+     * 创建矩形Drawable（支持设置边框，无尺寸限制）
+     * @param fillColor 填充颜色
+     * @param strokeColor 边框颜色
+     * @param strokeWidth 边框宽度
+     * @param cornerRadius 圆角半径
+     */
+    @JvmStatic
+    fun createRect(
+        fillColor: Int,
+        strokeColor: Int,
+        strokeWidth: Int,
+        cornerRadius: Float
+    ): GradientDrawable {
+        return GradientDrawable().apply {
+            setColor(fillColor)
+            setStroke(strokeWidth, strokeColor)
+            this.cornerRadius = cornerRadius
         }
     }
 
@@ -709,22 +924,25 @@ object DrawableUtil {
             }
         }
     }
+
     /**
      * 将字符转换为圆形Drawable
      * @param context 上下文
      * @param char 要显示的字符
+     * @param sizeInPx 总大小（宽高）
      * @param textColor 文字颜色，默认为白色
      * @param backgroundColor 背景颜色，默认为灰色（为了让圆形可见）
+     * @param textSizeSp 文字大小
      * @return 包含字符的圆形自定义Drawable
      */
     @JvmStatic
     fun charToOvalDrawable(
         context: Context,
         char: String,
-        sizeInPx: Int,  // 改为总大小（宽高），而不是半径
+        sizeInPx: Int,
         textColor: Int = Color.WHITE,
         backgroundColor: Int = Color.LTGRAY,
-        textSizeSp: Float = 12f  // 增加文字大小参数
+        textSizeSp: Float = 12f
     ): Drawable {
         return object : Drawable() {
             private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -735,6 +953,7 @@ object DrawableUtil {
                     context.resources.displayMetrics
                 )
                 isAntiAlias = true
+                this.color = textColor
             }
 
             private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -753,9 +972,6 @@ object DrawableUtil {
 
                 // 绘制圆形背景
                 canvas.drawCircle(centerX, centerY, radius, bgPaint)
-
-                // 设置文字颜色
-                paint.color = textColor
 
                 // 绘制文字（垂直居中）
                 val text = char.ifEmpty { "?" }
@@ -784,6 +1000,78 @@ object DrawableUtil {
             }
         }
     }
+
+    /**
+     * 将字符转换为圆形Drawable（无尺寸限制）
+     * @param context 上下文
+     * @param char 要显示的字符
+     * @param textColor 文字颜色，默认为白色
+     * @param backgroundColor 背景颜色，默认为灰色（为了让圆形可见）
+     * @param textSizeSp 文字大小
+     * @return 包含字符的圆形自定义Drawable
+     */
+    @JvmStatic
+    fun charToOvalDrawable(
+        context: Context,
+        char: String,
+        textColor: Int = Color.WHITE,
+        backgroundColor: Int = Color.LTGRAY,
+        textSizeSp: Float = 12f
+    ): Drawable {
+        return object : Drawable() {
+            private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                textAlign = Paint.Align.CENTER
+                textSize = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    textSizeSp,
+                    context.resources.displayMetrics
+                )
+                isAntiAlias = true
+                this.color = textColor
+            }
+
+            private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = backgroundColor
+                style = Paint.Style.FILL
+                isAntiAlias = true
+            }
+
+            override fun draw(canvas: Canvas) {
+                // 计算圆心位置（在Drawable的中心）
+                val centerX = bounds.centerX().toFloat()
+                val centerY = bounds.centerY().toFloat()
+
+                // 半径取宽高最小值的一半
+                val radius = minOf(bounds.width(), bounds.height()) / 2f
+
+                // 绘制圆形背景
+                canvas.drawCircle(centerX, centerY, radius, bgPaint)
+
+                // 绘制文字（垂直居中）
+                val text = char.ifEmpty { "?" }
+                val x = centerX
+                val y = centerY - (paint.descent() + paint.ascent()) / 2f
+
+                canvas.drawText(text, x, y, paint)
+            }
+
+            override fun setAlpha(alpha: Int) {
+                paint.alpha = alpha
+                bgPaint.alpha = alpha
+            }
+
+            override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {
+                paint.colorFilter = colorFilter
+                bgPaint.colorFilter = colorFilter
+            }
+
+            @Deprecated("Deprecated in Java")
+            override fun getOpacity(): Int {
+                return android.graphics.PixelFormat.TRANSLUCENT
+            }
+        }
+    }
+
     /**
      * 创建选中状态的Drawable（圆形背景+勾选图标）
      * @param context 上下文
@@ -812,6 +1100,34 @@ object DrawableUtil {
         layerDrawable.setLayerGravity(1, Gravity.CENTER)
         return layerDrawable
     }
+
+    /**
+     * 创建选中状态的Drawable（圆形背景+勾选图标，无尺寸限制）
+     * @param context 上下文
+     * @param colorRes 背景颜色
+     * @return 组合的LayerDrawable
+     */
+    @JvmStatic
+    public fun createCheckedDrawable(
+        context: Context,
+        @ColorInt colorRes: Int
+    ): Drawable {
+        // 创建背景矩形
+        val background = GradientDrawable()
+        background.setShape(GradientDrawable.OVAL)
+        background.setColor(colorRes) // 使用你的主题色
+
+        // 获取勾选图标
+        val checkIcon = ContextCompat.getDrawable(context, com.casic.otitan.common.R.drawable.common_ic_check)
+
+        // 创建LayerDrawable
+        val layers = arrayOf(background, checkIcon)
+        val layerDrawable = LayerDrawable(layers)
+        // 设置勾选图标居中
+        layerDrawable.setLayerGravity(1, Gravity.CENTER)
+        return layerDrawable
+    }
+
     /**
      * 创建未选中状态的Drawable（圆形边框）
      * @param stroke 边框宽度
@@ -825,6 +1141,20 @@ object DrawableUtil {
         uncheckedDrawable.setShape(GradientDrawable.OVAL)
         uncheckedDrawable.setStroke(stroke, colorRes)
         uncheckedDrawable.setSize(size, size)
+        return uncheckedDrawable
+    }
+
+    /**
+     * 创建未选中状态的Drawable（圆形边框，无尺寸限制）
+     * @param stroke 边框宽度
+     * @param colorRes 边框颜色
+     * @return 圆形边框Drawable
+     */
+    @JvmStatic
+    public fun createUncheckedDrawable(stroke: Int, @ColorInt colorRes: Int): Drawable {
+        val uncheckedDrawable = GradientDrawable()
+        uncheckedDrawable.setShape(GradientDrawable.OVAL)
+        uncheckedDrawable.setStroke(stroke, colorRes)
         return uncheckedDrawable
     }
 
@@ -898,14 +1228,13 @@ object DrawableUtil {
     ): String? {
         val drawable = ContextCompat.getDrawable(context, resourceId)
         val resourceName = context.resources.getResourceEntryName(resourceId)
-        return drawableToBase64(drawable, resourceName.substringAfterLast("."),format)
+        return drawableToBase64(drawable, resourceName.substringAfterLast("."), format)
     }
 
     /**
      * 通过资源ID获取 Base64
      * @param context 上下文
      * @param resourceId 资源ID
-     * @param format 图片格式
      * @return Base64 字符串
      */
     @JvmStatic
@@ -965,7 +1294,7 @@ object DrawableUtil {
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -982,7 +1311,7 @@ fun TextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int, height: 
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -999,7 +1328,7 @@ fun TextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, height: In
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1016,7 +1345,7 @@ fun TextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, height: In
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1033,7 +1362,7 @@ fun TextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int, height:
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableStart(drawable: Drawable?, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableStart(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         drawable,
@@ -1049,7 +1378,7 @@ fun TextView.setDrawableStart(drawable: Drawable?, width: Int, height: Int) {
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableTop(drawable: Drawable?, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableTop(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
@@ -1081,8 +1410,96 @@ fun AppCompatTextView.setDrawableEnd(drawable: Drawable?, width: Int, height: In
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun TextView.setDrawableBottom(drawable: Drawable?, width: Int, height: Int) {
+fun AppCompatTextView.setDrawableBottom(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
+    setCompoundDrawablesRelative(
+        compoundDrawablesRelative[0],
+        compoundDrawablesRelative[1],
+        compoundDrawablesRelative[2],
+        drawable
+    )
+}
+
+/**
+ * 动态设置drawableStart（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawableId 图片资源ID
+ */
+fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int) {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+    setDrawableStart(drawable)
+}
+
+/**
+ * 动态设置drawableTop（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawableId 图片资源ID
+ */
+fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int) {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+    setDrawableTop(drawable)
+}
+
+/**
+ * 动态设置drawableEnd（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawableId 图片资源ID
+ */
+fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int) {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+    setDrawableEnd(drawable)
+}
+
+/**
+ * 动态设置drawableBottom（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawableId 图片资源ID
+ */
+fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int) {
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+    setDrawableBottom(drawable)
+}
+
+/**
+ * 动态设置drawableStart（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawable Drawable对象
+ */
+fun AppCompatTextView.setDrawableStart(drawable: Drawable?) {
+    setCompoundDrawablesRelative(
+        drawable,
+        compoundDrawablesRelative[1],
+        compoundDrawablesRelative[2],
+        compoundDrawablesRelative[3]
+    )
+}
+
+/**
+ * 动态设置drawableTop（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawable Drawable对象
+ */
+fun AppCompatTextView.setDrawableTop(drawable: Drawable?) {
+    setCompoundDrawablesRelative(
+        compoundDrawablesRelative[0],
+        drawable,
+        compoundDrawablesRelative[2],
+        compoundDrawablesRelative[3]
+    )
+}
+
+/**
+ * 动态设置drawableEnd（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawable Drawable对象
+ */
+fun AppCompatTextView.setDrawableEnd(drawable: Drawable?) {
+    setCompoundDrawablesRelative(
+        compoundDrawablesRelative[0],
+        compoundDrawablesRelative[1],
+        drawable,
+        compoundDrawablesRelative[3]
+    )
+}
+
+/**
+ * 动态设置drawableBottom（无尺寸参数，使用Drawable原始尺寸）
+ * @param drawable Drawable对象
+ */
+fun AppCompatTextView.setDrawableBottom(drawable: Drawable?) {
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
         compoundDrawablesRelative[1],

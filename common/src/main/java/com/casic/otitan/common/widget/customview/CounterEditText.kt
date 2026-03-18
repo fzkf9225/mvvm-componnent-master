@@ -66,13 +66,25 @@ class CounterEditText @JvmOverloads constructor(
     // 当前输入字数
     private var currentLength: Int = 0
 
+    // 最低高度（像素）
+    private var minHeightPx: Int = 0
+
+    // 输入框的原始高度模式
+    private var inputHeightMode: Int = LayoutParams.WRAP_CONTENT
+
+    // 输入框的单行高度（用于计算行数）
+    private var lineHeight: Int = 0
+
     init {
         // 创建输入框
         editText = AppCompatEditText(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT
-            )
+                LayoutParams.WRAP_CONTENT
+            ).apply {
+                // 保存初始高度模式
+                inputHeightMode = height
+            }
             gravity = Gravity.START or Gravity.TOP
             setPadding(
                 DensityUtil.dp2px(context, 12f),
@@ -82,6 +94,10 @@ class CounterEditText @JvmOverloads constructor(
             )
             // 默认提示文字
             hint = "请输入内容..."
+            // 设置为多行输入
+            isSingleLine = false
+            maxLines = Integer.MAX_VALUE
+            isVerticalScrollBarEnabled = false
         }
 
         // 创建计数器 TextView
@@ -113,6 +129,11 @@ class CounterEditText @JvmOverloads constructor(
         addView(editText)
         addView(counterTextView)
 
+        // 计算单行高度
+        post {
+            calculateLineHeight()
+        }
+
         // 设置输入监听
         setupTextWatcher()
 
@@ -122,9 +143,9 @@ class CounterEditText @JvmOverloads constructor(
         dataSource.addOnPropertyChangedCallback(object : OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 val newValue = dataSource.get()
-                if (editText.getText() == null) {
+                if (editText.text == null) {
                     editText.setText(newValue)
-                } else if (editText.getText().toString() != newValue) {
+                } else if (editText.text.toString() != newValue) {
                     editText.setText(newValue)
                 }
             }
@@ -133,6 +154,48 @@ class CounterEditText @JvmOverloads constructor(
 
     public fun getEditText(): AppCompatEditText {
         return editText
+    }
+
+    /**
+     * 计算单行高度
+     */
+    private fun calculateLineHeight() {
+        if (lineHeight == 0 && editText.layout != null) {
+            val paint = editText.paint
+            val fontMetrics = paint.fontMetrics
+            lineHeight = (fontMetrics.bottom - fontMetrics.top).toInt()
+        }
+    }
+
+    /**
+     * 调整输入框高度
+     */
+    private fun adjustHeight() {
+        if (minHeightPx <= 0 || inputHeightMode > 0) {
+            return // 如果没有设置最低高度或已指定固定高度，则不调整
+        }
+
+        calculateLineHeight()
+
+        if (lineHeight > 0) {
+            val lineCount = editText.lineCount
+            // 计算内容所需高度：行数 * 行高 + 上下内边距
+            val contentHeight = lineCount * lineHeight +
+                    editText.paddingTop + editText.paddingBottom
+
+            // 取内容高度和最低高度的最大值
+            val newHeight = if (contentHeight > minHeightPx) contentHeight else minHeightPx
+
+            // 更新布局参数
+            val layoutParams = editText.layoutParams
+            if (layoutParams.height != newHeight) {
+                layoutParams.height = newHeight
+                editText.layoutParams = layoutParams
+
+                // 重新布局
+                requestLayout()
+            }
+        }
     }
 
     /**
@@ -148,13 +211,27 @@ class CounterEditText @JvmOverloads constructor(
                 LayoutParams.WRAP_CONTENT
             )
             if (inputHeight > 0) {
+                // 指定固定高度
                 editText.layoutParams.height = inputHeight
+                inputHeightMode = inputHeight
+            } else {
+                // 获取最低高度
+                minHeightPx = typedArray.getDimensionPixelSize(
+                    R.styleable.CounterEditText_minHeight,
+                    0
+                )
+                if (minHeightPx > 0) {
+                    // 设置最低高度
+                    editText.minHeight = minHeightPx
+                    editText.layoutParams.height = LayoutParams.WRAP_CONTENT
+                    inputHeightMode = LayoutParams.WRAP_CONTENT
+                }
             }
 
             // 输入框文字大小
             val textSize = typedArray.getDimension(
                 R.styleable.CounterEditText_android_textSize,
-                resources.getDimension(R.dimen.font_size_l)
+                resources.getDimension(com.casic.otitan.common.R.dimen.font_size_l)
             )
             editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
 
@@ -199,7 +276,7 @@ class CounterEditText @JvmOverloads constructor(
             // 计数器文字大小
             val counterSize = typedArray.getDimension(
                 R.styleable.CounterEditText_counterTextSize,
-                resources.getDimension(R.dimen.font_size_l)
+                resources.getDimension(com.casic.otitan.common.R.dimen.font_size_l)
             )
             counterTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, counterSize)
 
@@ -223,16 +300,22 @@ class CounterEditText @JvmOverloads constructor(
             override fun afterTextChanged(s: Editable?) {
                 currentLength = s?.length ?: 0
 
-                // 如果超过最大长度，截断（可选，此处只统计不截断，如需截断可放开注释）
-                // if (maxLength > 0 && currentLength > maxLength) {
-                //     s?.delete(maxLength, currentLength)
-                //     currentLength = maxLength
-                // }
+                // 如果超过最大长度，截断
+                if (maxLength > 0 && currentLength > maxLength) {
+                    s?.delete(maxLength, currentLength)
+                    currentLength = maxLength
+                }
 
                 updateCounterText()
+                adjustHeight() // 调整高度
                 onTextChangeListener?.invoke(editText.text.toString())
             }
         })
+
+        // 添加布局变化监听
+        editText.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            adjustHeight()
+        }
     }
 
     /**
@@ -257,6 +340,7 @@ class CounterEditText @JvmOverloads constructor(
     fun setText(text: String?) {
         editText.setText(text)
         editText.setSelection(text?.length ?: 0)
+        adjustHeight() // 设置文本后调整高度
     }
 
     /**
@@ -279,6 +363,20 @@ class CounterEditText @JvmOverloads constructor(
     fun setCounterColor(color: Int) {
         counterTextView.setTextColor(color)
     }
+
+    /**
+     * 设置最低高度
+     */
+    fun setMinHeight(minHeight: Int) {
+        this.minHeightPx = minHeight
+        editText.minHeight = minHeight
+        adjustHeight()
+    }
+
+    /**
+     * 获取最低高度
+     */
+    fun getMinHeight(): Int = minHeightPx
 
     // 文本变化监听回调
     private var onTextChangeListener: ((String) -> Unit)? = null
