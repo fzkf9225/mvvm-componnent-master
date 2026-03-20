@@ -1,5 +1,6 @@
 package com.casic.otitan.common.widget.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -134,10 +135,12 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
 
     public BottomSheetDialog(@NonNull Context context) {
         super(context);
+        itemHeight = DensityUtil.dp2px(getContext(), 54f);
     }
 
     public BottomSheetDialog(@NonNull Context context, int theme) {
         super(context, theme);
+        itemHeight = DensityUtil.dp2px(getContext(), 54f);
     }
 
     public BottomSheetDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
@@ -416,20 +419,20 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         }
 
         if (leftMargin >= 0 || rightMargin >= 0) {
-            int left = leftMargin >= 0 ? leftMargin : 0;
-            int right = rightMargin >= 0 ? rightMargin : 0;
+            int left = Math.max(leftMargin, 0);
+            int right = Math.max(rightMargin, 0);
             optionBottomMenuListAdapter.setMargins(left, right);
         }
 
         if (topPadding >= 0 || bottomPadding >= 0) {
-            int top = topPadding >= 0 ? topPadding : 0;
-            int bottom = bottomPadding >= 0 ? bottomPadding : 0;
+            int top = Math.max(topPadding, 0);
+            int bottom = Math.max(bottomPadding, 0);
             optionBottomMenuListAdapter.setVerticalPadding(top, bottom);
         }
 
         if (leftPadding >= 0 || rightPadding >= 0) {
-            int left = leftPadding >= 0 ? leftPadding : 0;
-            int right = rightPadding >= 0 ? rightPadding : 0;
+            int left = Math.max(leftPadding, 0);
+            int right = Math.max(rightPadding, 0);
             optionBottomMenuListAdapter.setHorizontalPadding(left, right);
         }
     }
@@ -448,6 +451,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
     /**
      * 刷新菜单项样式
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void refreshStyles() {
         if (optionBottomMenuListAdapter != null) {
             applyStylesToAdapter();

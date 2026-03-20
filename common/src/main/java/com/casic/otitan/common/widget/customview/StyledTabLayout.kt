@@ -1,12 +1,14 @@
 package com.casic.otitan.common.widget.customview
 
 import android.content.Context
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -37,32 +39,32 @@ class StyledTabLayout @JvmOverloads constructor(
 
     // 自定义属性
     private var selectedTextColor: Int = ContextCompat.getColor(context, android.R.color.white)
-    private var unselectedTextColor: Int = ContextCompat.getColor(context, com.casic.otitan.common.R.color.autoColor)
+    private var unselectedTextColor: Int =
+        ContextCompat.getColor(context, com.casic.otitan.common.R.color.autoColor)
     private var textSize: Float = 12f
-    private val defaultDrawable : Drawable by lazy {
+    private val defaultDrawable: Drawable by lazy {
         DrawableUtil.createRectDrawable(
             android.R.color.black,
-            LayoutParams.WRAP_CONTENT,
-            LayoutParams.WRAP_CONTENT,
-            DensityUtil.dp2px(context,23f).toFloat()
+            DensityUtil.dp2px(context, 23f).toFloat()
         )
     }
-    private val tvId by lazy {
-        generateViewId()
+
+    private val textPaint by lazy {
+        Paint()
     }
-    private var selectedBgResource : Drawable?=null
+    private var selectedBgResource: Drawable? = null
     private var tabWidth: Int = 0
     private var tabHeight: Int = 29
 
     // 缓存Tab视图，避免重复创建
-    private val tabViews = mutableMapOf<Tab, View>()
+    private val tabViews = mutableMapOf<Int, AppCompatTextView>() // 使用position作为key
 
     init {
-        // 关键修复1：移除底部指示器 - 使用setter方法
+        // 移除底部指示器
         setSelectedTabIndicator(android.R.color.transparent)
         setSelectedTabIndicatorColor(ContextCompat.getColor(context, android.R.color.transparent))
 
-        // 关键修复2：设置Tab填充模式为固定，避免自动拉伸
+        // 设置Tab填充模式
         tabMode = TabLayout.MODE_FIXED
         tabGravity = TabLayout.GRAVITY_FILL
 
@@ -72,11 +74,17 @@ class StyledTabLayout @JvmOverloads constructor(
         // 设置Tab渐变监听
         addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab?) {
-                updateTabStyle(tab, true)
+                tab?.let {
+                    updateTabStyle(it.position, true)
+                    updateTextWidth(it.position, true)
+                }
             }
 
             override fun onTabUnselected(tab: Tab?) {
-                updateTabStyle(tab, false)
+                tab?.let {
+                    updateTabStyle(it.position, false)
+                    updateTextWidth(it.position, false)
+                }
             }
 
             override fun onTabReselected(tab: Tab?) {
@@ -106,7 +114,7 @@ class StyledTabLayout @JvmOverloads constructor(
 
             selectedBgResource = typedArray.getDrawable(
                 R.styleable.StyledTabLayout_selectedBackground
-            )?:defaultDrawable
+            ) ?: defaultDrawable
 
             tabWidth = typedArray.getDimensionPixelSize(
                 R.styleable.StyledTabLayout_tabWidth,
@@ -124,72 +132,107 @@ class StyledTabLayout @JvmOverloads constructor(
     }
 
     /**
-     * 更新Tab样式
+     * 更新Tab样式 - 使用position
      */
-    private fun updateTabStyle(tab: Tab?, isSelected: Boolean) {
-        tab?.let {
-            // 获取或创建自定义视图
-            val customView = tabViews[it] ?: createCustomTabView().also { view ->
-                tabViews[it] = view
-                it.customView = view
-            }
+    private fun updateTabStyle(position: Int, isSelected: Boolean) {
+        val tab = getTabAt(position) ?: return
 
-            val textView = customView.findViewById<AppCompatTextView>(tvId) ?:
-            createTextViewForTab(customView)
-
-            // 更新文本
-            textView.text = it.text
-
-            if (isSelected) {
-                // 选中状态 - 设置圆角黑色背景
-                textView.setTextColor(selectedTextColor)
-                textView.background = selectedBgResource
-//                textView.setTypeface(textView.typeface, Typeface.BOLD)
-            } else {
-                // 未选中状态 - 透明背景
-                textView.setTextColor(unselectedTextColor)
-                textView.background = null
-//                textView.setTypeface(textView.typeface, Typeface.NORMAL)
-            }
+        // 获取或创建自定义视图
+        val textView = tabViews[position] ?: createTextView().also { view ->
+            tabViews[position] = view
+            tab.customView = view
         }
+
+        // 更新文本
+        textView.text = tab.text
+        if (isSelected) {
+            // 选中状态 - 设置圆角黑色背景
+            textView.setTextColor(selectedTextColor)
+            textView.background = selectedBgResource
+        } else {
+            // 未选中状态 - 透明背景
+            textView.setTextColor(unselectedTextColor)
+            textView.background = null
+        }
+
+        // 更新宽度后重新布局
+        updateTextWidth(position, isSelected)
     }
 
     /**
-     * 为已有视图创建或获取TextView
+     * 公开方法：更新指定位置的Tab文本
      */
-    private fun createTextViewForTab(parentView: View): AppCompatTextView {
-        var textView = parentView.findViewById<AppCompatTextView>(tvId)
+    fun updateTabText(position: Int, text: String) {
+        val tab = getTabAt(position) ?: return
+        tab.text = text // 这行很重要，更新Tab本身的文本
 
-        if (textView == null) {
-            textView = createTextView().apply {
-                id = tvId
-            }
+        // 更新自定义视图中的文本
+        val textView = tabViews[position]
+        textView?.text = text
 
-            // 将TextView添加到父布局
-            if (parentView is FrameLayout) {
-                parentView.addView(textView)
-            }
-        }
-
-        return textView
+        // 同时更新样式（保持选中状态）
+        updateTabStyle(position, position == selectedTabPosition)
     }
-
     /**
-     * 创建自定义Tab视图（动态创建）
+     * 添加平滑切换动画
      */
-    private fun createCustomTabView(): FrameLayout {
-        return FrameLayout(context).apply {
-            layoutParams = LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
+    private fun animateWidthChange(view: View, targetWidth: Int) {
+        view.animate()
+            .setDuration(200)
+            .setInterpolator(android.view.animation.DecelerateInterpolator())
+            .start()
+
+        // 更新LayoutParams
+        val layoutParams = view.layoutParams
+        layoutParams.width = targetWidth
+        view.layoutParams = layoutParams
+    }
+    /**
+     * 更新文本宽度并触发重新布局
+     */
+    private fun updateTextWidth(position: Int, isSelected: Boolean) {
+        val textView = tabViews[position] ?: return
+
+        // 先设置内边距
+        if (isSelected) {
+            textView.setPadding(
+                dpToPx(context, 8),
+                textView.paddingTop,
+                dpToPx(context, 8),
+                textView.paddingBottom
             )
+        } else {
+            textView.setPadding(0, textView.paddingTop, 0, textView.paddingBottom)
+        }
 
-            // 设置重力居中
-            foregroundGravity = Gravity.CENTER
+        // 重新测量TextView
+        textView.measure(
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        )
 
-            // 关键修复3：设置TabView本身不获取焦点，让内部的TextView处理
-            isFocusable = false
-            isFocusableInTouchMode = false
+        // 获取测量后的宽度（包括内边距）
+        val measuredWidth = textView.measuredWidth
+        // 更新LayoutParams宽度
+        val layoutParams = textView.layoutParams
+        layoutParams.width = measuredWidth
+        textView.layoutParams = layoutParams
+
+        // 关键：通知TabLayout重新布局
+        textView.requestLayout()
+        // 使用动画更新宽度
+        animateWidthChange(textView, measuredWidth)
+        // 获取Tab的父容器（TabLayout内部视图）并请求重新布局
+        val tab = getTabAt(position)
+        (tab?.view as? ViewGroup)?.requestLayout()
+    }
+
+    /**
+     * 公开方法：批量更新所有Tab文本
+     */
+    fun updateAllTabTexts(texts: List<String>) {
+        for (i in 0 until minOf(tabCount, texts.size)) {
+            updateTabText(i, texts[i])
         }
     }
 
@@ -198,30 +241,28 @@ class StyledTabLayout @JvmOverloads constructor(
      */
     private fun createTextView(): AppCompatTextView {
         return AppCompatTextView(context).apply {
-            id = tvId
+            id = generateViewId()
 
-            // 设置布局参数 - 使用指定的宽高
-            val layoutParams = FrameLayout.LayoutParams(if(tabWidth>0) tabWidth else LayoutParams.WRAP_CONTENT, if(tabHeight>0) tabHeight else LayoutParams.WRAP_CONTENT)
-            layoutParams.gravity = Gravity.CENTER
+            // 设置布局参数 - 使用WRAP_CONTENT
+            val layoutParams = ViewGroup.LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                if (tabHeight > 0) tabHeight else LayoutParams.WRAP_CONTENT
+            )
             this.layoutParams = layoutParams
 
             // 设置文本属性
             gravity = Gravity.CENTER
-            // 注意：setTextSize需要传入sp单位的值
             this.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            textPaint.textSize = textSize
 
-            // 设置内边距
-            setPadding(
-                dpToPx(context, 8),
-                dpToPx(context, 5),
-                dpToPx(context, 8),
-                dpToPx(context, 5)
-            )
+            // 设置最小宽度，避免太窄
+            minWidth = dpToPx(context, 30)
 
             // 设置单行显示
             isSingleLine = true
         }
     }
+
 
     /**
      * 添加Tab并应用样式
@@ -230,18 +271,18 @@ class StyledTabLayout @JvmOverloads constructor(
         super.addTab(tab, position, setSelected)
 
         // 立即创建并设置自定义视图
-        val customView = createCustomTabView()
-        tabViews[tab] = customView
+        val customView = createTextView()
+        tabViews[position] = customView
         tab.customView = customView
-
-        updateTabStyle(tab, setSelected)
+        updateTabStyle(position, setSelected)
     }
 
     /**
      * 移除Tab时清理缓存
      */
     override fun removeTab(tab: Tab) {
-        tabViews.remove(tab)
+        val position = tab.position
+        tabViews.remove(position)
         super.removeTab(tab)
     }
 
@@ -265,8 +306,7 @@ class StyledTabLayout @JvmOverloads constructor(
      */
     fun applyStylesToAllTabs() {
         for (i in 0 until tabCount) {
-            val tab = getTabAt(i)
-            updateTabStyle(tab, i == selectedTabPosition)
+            updateTabStyle(i, i == selectedTabPosition)
         }
     }
 
@@ -292,13 +332,5 @@ class StyledTabLayout @JvmOverloads constructor(
     fun setTabSize(width: Int, height: Int) {
         this.tabWidth = width
         this.tabHeight = height
-
-        // 更新所有Tab的TextView布局参数
-        tabViews.values.forEach { view ->
-            val textView = view.findViewById<AppCompatTextView>(tvId)
-            textView?.layoutParams = FrameLayout.LayoutParams(width, height).apply {
-                gravity = Gravity.CENTER
-            }
-        }
     }
 }

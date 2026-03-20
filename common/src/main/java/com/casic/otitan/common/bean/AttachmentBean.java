@@ -38,6 +38,10 @@ public class AttachmentBean extends BaseObservable {
      */
     private String relativePath;
     /**
+     * 缩略图
+     */
+    private String thumbnailPath;
+    /**
      * 关联业务表id
      */
     private String mainId;
@@ -71,6 +75,39 @@ public class AttachmentBean extends BaseObservable {
      * 其他参数，村json
      */
     private String otherInfo;
+
+    // ========== 新增字段 ==========
+    /**
+     * 俯仰角
+     */
+    private Double pitch;
+
+    /**
+     * 偏航角
+     */
+    private Double yaw;
+
+    /**
+     * 翻滚角
+     */
+    private Double roll;
+
+    /**
+     * 拍照时所在经度
+     */
+    private Double longitude;
+
+    /**
+     * 拍照时所在纬度
+     */
+    private Double latitude;
+
+    /**
+     * 拍照时所在海拔高程
+     */
+    private Double height;
+    // ========== 新增字段结束 ==========
+
     /**
      * 是否正在上传
      */
@@ -154,6 +191,15 @@ public class AttachmentBean extends BaseObservable {
     }
 
     @Bindable
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    @Bindable
     public String getFieldName() {
         return fieldName;
     }
@@ -224,6 +270,62 @@ public class AttachmentBean extends BaseObservable {
         this.uploadInfo = uploadInfo;
     }
 
+    // ========== 新增字段的getter/setter ==========
+    @Bindable
+    public Double getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(Double pitch) {
+        this.pitch = pitch;
+    }
+
+    @Bindable
+    public Double getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(Double yaw) {
+        this.yaw = yaw;
+    }
+
+    @Bindable
+    public Double getRoll() {
+        return roll;
+    }
+
+    public void setRoll(Double roll) {
+        this.roll = roll;
+    }
+
+    @Bindable
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    @Bindable
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    @Bindable
+    public Double getHeight() {
+        return height;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+    // ========== 新增字段的getter/setter结束 ==========
+
     @NonNull
     @Override
     public String toString() {
@@ -232,6 +334,7 @@ public class AttachmentBean extends BaseObservable {
                 ", fileId='" + fileId + '\'' +
                 ", path='" + path + '\'' +
                 ", relativePath='" + relativePath + '\'' +
+                ", thumbnailPath='" + thumbnailPath + '\'' +
                 ", mainId='" + mainId + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSize='" + fileSize + '\'' +
@@ -242,6 +345,12 @@ public class AttachmentBean extends BaseObservable {
                 ", otherInfo='" + otherInfo + '\'' +
                 ", uploading=" + uploading +
                 ", uploadingPercent='" + uploadingPercent + '\'' +
+                ", pitch=" + pitch +
+                ", yaw=" + yaw +
+                ", roll=" + roll +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", height=" + height +
                 '}';
     }
 }
