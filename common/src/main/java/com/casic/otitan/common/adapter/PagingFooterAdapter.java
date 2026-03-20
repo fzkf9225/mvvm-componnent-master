@@ -47,6 +47,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
                 holder.getBinding().progressBar.setVisibility(View.GONE);
                 holder.getBinding().retryButton.setVisibility(View.VISIBLE);
                 holder.getBinding().setMessage("暂无更多数据");
+                holder.getBinding().progressBar.hide();
             } else {
                 holder.getBinding().progressBar.setVisibility(View.GONE);
                 holder.getBinding().retryButton.setVisibility(View.GONE);
@@ -56,6 +57,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
             holder.getBinding().setMessage("暂无更多数据...");
             holder.getBinding().progressBar.setVisibility(View.GONE);
             holder.getBinding().retryButton.setVisibility(View.GONE);
+            holder.getBinding().progressBar.hide();
         }
     }
 

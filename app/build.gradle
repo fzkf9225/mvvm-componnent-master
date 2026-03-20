@@ -129,4 +129,6 @@ dependencies {
     implementation libs.room.rxjava3
     // optional - Paging 3 Integration
     implementation libs.room.paging
+
+    implementation libs.androidx.exifinterface
 }

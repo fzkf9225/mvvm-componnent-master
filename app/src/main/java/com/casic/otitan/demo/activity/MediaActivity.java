@@ -14,6 +14,8 @@ import com.casic.otitan.demo.R;
 import com.casic.otitan.demo.bean.UseCase;
 import com.casic.otitan.demo.databinding.ActivityMediaBinding;
 import com.casic.otitan.demo.viewmodel.MediaViewModel;
+import com.casic.otitan.media.helper.DeviceOrientationHelper;
+import com.casic.otitan.media.utils.ExifUtil;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
@@ -73,6 +75,9 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void initView(Bundle savedInstanceState) {
+        binding.imageRecyclerView.setClipChildren(false);
+        binding.videoRecyclerView.setClipChildren(false);
+        binding.imageVideoRecyclerView.setClipChildren(false);
         //初始化一些媒体配置
         //新api实现最大可选数量比较鸡肋因此我直接判断选择完的回调方法，当然应该也可以通过重新PickMultipleVisualMedia去实现，没试过看源码应该是可以实现的
         mediaHelper.getMediaBuilder()
@@ -135,6 +140,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 if (mediaBean.getMediaList() != null && mediaBean.getMediaList().size() > 0) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 }
+                ExifUtil.ExifData exifUtil = ExifUtil.getExifData(this,mediaBean.getMediaList().get(0));
+                LogUtil.show(TAG,"经纬度等图片信息："+(exifUtil==null?null:exifUtil.toString()));
                 imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
                 percentage = 0;

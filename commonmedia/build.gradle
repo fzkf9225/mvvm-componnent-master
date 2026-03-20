@@ -83,6 +83,8 @@ dependencies {
     implementation libs.google.hilt.android
     annotationProcessor libs.google.hilt.android.compiler
     ksp libs.google.hilt.android.compiler
+
+    implementation libs.androidx.exifinterface
 }
 
 

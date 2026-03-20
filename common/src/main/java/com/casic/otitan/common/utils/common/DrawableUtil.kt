@@ -7,8 +7,10 @@ import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -230,7 +232,7 @@ object DrawableUtil {
         bgColor: Int,
         cornerRadius: Float
     ): Drawable {
-        val textView = TextView(context).apply {
+        val textView = AppCompatTextView(context).apply {
             setText(text)
             setTextColor(textColor)
             textSize = 14f
@@ -308,14 +310,38 @@ object DrawableUtil {
         shadowColor: Int,
         shadowRadius: Float,
         cornerRadius: Float
-    ): android.graphics.drawable.RippleDrawable? {
-        val shape = GradientDrawable().apply {
-            setColor(color)
-            this.cornerRadius = cornerRadius
+    ): RippleDrawable? {
+
+        // 自定义 Drawable 支持阴影
+        val shapeDrawable = object : Drawable() {
+            private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                setColor(color)
+                setShadowLayer(shadowRadius, 0f, 0f, shadowColor)
+            }
+
+            override fun draw(canvas: Canvas) {
+                val rectF = RectF(bounds)
+                canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
+            }
+
+            override fun setAlpha(alpha: Int) {
+                paint.alpha = alpha
+            }
+
+            @Deprecated("Deprecated in Java")
+            override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
+
+            override fun setColorFilter(colorFilter: ColorFilter?) {
+                paint.colorFilter = colorFilter
+            }
         }
-        return android.graphics.drawable.RippleDrawable(
-            android.content.res.ColorStateList.valueOf(shadowColor),
-            shape,
+
+        // 需要在使用 View 上开启硬件加速，否则 shadow 不显示
+        // view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+
+        return RippleDrawable(
+            ColorStateList.valueOf(shadowColor),
+            shapeDrawable,
             null
         )
     }
@@ -353,14 +379,33 @@ object DrawableUtil {
         strokeWidth: Int,
         size: Int
     ): ShapeDrawable {
-        val shapeDrawable = ShapeDrawable(OvalShape())
-        shapeDrawable.paint.apply {
-            setColor(fillColor)
-            isAntiAlias = true
-            style = Paint.Style.FILL_AND_STROKE
-            this.strokeWidth = strokeWidth.toFloat()
-            strokeJoin = Paint.Join.ROUND
+        val shapeDrawable = object : ShapeDrawable(OvalShape()) {
+            private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = fillColor
+                style = Paint.Style.FILL
+            }
+
+            private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = strokeColor
+                style = Paint.Style.STROKE
+                this.strokeWidth = strokeWidth.toFloat()
+                strokeJoin = Paint.Join.ROUND
+            }
+
+            override fun draw(canvas: Canvas) {
+                val radius = Math.min(bounds.width(), bounds.height()) / 2f
+                val cx = bounds.left + bounds.width() / 2f
+                val cy = bounds.top + bounds.height() / 2f
+
+                // 先画填充
+                canvas.drawCircle(cx, cy, radius - strokeWidth / 2f, fillPaint)
+                // 再画边框
+                if (strokeWidth > 0) {
+                    canvas.drawCircle(cx, cy, radius - strokeWidth / 2f, strokePaint)
+                }
+            }
         }
+
         shapeDrawable.setIntrinsicWidth(size)
         shapeDrawable.setIntrinsicHeight(size)
         return shapeDrawable
@@ -378,15 +423,32 @@ object DrawableUtil {
         strokeColor: Int,
         strokeWidth: Int
     ): ShapeDrawable {
-        val shapeDrawable = ShapeDrawable(OvalShape())
-        shapeDrawable.paint.apply {
-            setColor(fillColor)
-            isAntiAlias = true
-            style = Paint.Style.FILL_AND_STROKE
-            this.strokeWidth = strokeWidth.toFloat()
-            strokeJoin = Paint.Join.ROUND
+        return object : ShapeDrawable(OvalShape()) {
+            private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = fillColor
+                style = Paint.Style.FILL
+            }
+
+            private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = strokeColor
+                style = Paint.Style.STROKE
+                this.strokeWidth = strokeWidth.toFloat()
+                strokeJoin = Paint.Join.ROUND
+            }
+
+            override fun draw(canvas: Canvas) {
+                val radius = Math.min(bounds.width(), bounds.height()) / 2f
+                val cx = bounds.left + bounds.width() / 2f
+                val cy = bounds.top + bounds.height() / 2f
+
+                // 先画填充
+                canvas.drawCircle(cx, cy, radius - strokeWidth / 2f, fillPaint)
+                // 再画边框
+                if (strokeWidth > 0) {
+                    canvas.drawCircle(cx, cy, radius - strokeWidth / 2f, strokePaint)
+                }
+            }
         }
-        return shapeDrawable
     }
 
     /**
