@@ -185,7 +185,7 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
-    public ConfirmDialog setNegativeText(String strCancelText) {
+    public ConfirmDialog setNegativeText(String negativeText) {
         this.negativeText = negativeText;
         return this;
     }
