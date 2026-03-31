@@ -23,6 +23,7 @@ import com.casic.otitan.common.utils.download.core.DownloadRetrofitFactory;
 import com.casic.otitan.common.utils.download.util.DownloadNotificationUtil;
 import com.casic.otitan.common.utils.download.util.DownloadUtil;
 import com.casic.otitan.common.utils.permission.PermissionsChecker;
+import com.casic.otitan.common.widget.dialog.ConfirmDialog;
 import com.casic.otitan.common.widget.dialog.UpdateMessageDialog;
 
 /**
@@ -33,26 +34,28 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     private final String apkUrl;
     private final Activity mContext;
     private final List<String> downloadMap;
+    private final String saveFileName;
     private final boolean verifyRepeatDownload;
 
     private final DownloadListener downloadListener;
     private final Map<String, String> headers;
 
-    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload) {
-        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, null, null);
+    public ApkUpdateListener(Activity mContext, String apkUrl,String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload) {
+        this(mContext, apkUrl,saveFileName,downloadMap, verifyRepeatDownload, null, null);
     }
 
-    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers) {
-        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, headers, null);
+    public ApkUpdateListener(Activity mContext, String apkUrl,String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers) {
+        this(mContext, apkUrl,saveFileName,downloadMap, verifyRepeatDownload, headers, null);
     }
 
-    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, DownloadListener downloadListener) {
-        this(mContext, apkUrl, downloadMap, verifyRepeatDownload, null, downloadListener);
+    public ApkUpdateListener(Activity mContext, String apkUrl, String saveFileName,List<String> downloadMap, boolean verifyRepeatDownload, DownloadListener downloadListener) {
+        this(mContext, apkUrl, saveFileName,downloadMap, verifyRepeatDownload, null, downloadListener);
     }
 
-    public ApkUpdateListener(Activity mContext, String apkUrl, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener) {
+    public ApkUpdateListener(Activity mContext, String apkUrl,String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener) {
         this.mContext = mContext;
         this.apkUrl = apkUrl;
+        this.saveFileName = saveFileName;
         this.downloadMap = downloadMap;
         this.verifyRepeatDownload = verifyRepeatDownload;
         this.headers = headers;
@@ -74,15 +77,34 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                 return;
             }
         }
+        String saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator;
+        if(!TextUtils.isEmpty(saveFileName)){
+            File targetFile = new File(saveBasePath,saveFileName);
+            if(targetFile.exists()&&targetFile.isFile()){
+                new ConfirmDialog(mContext)
+                        .setMessage("当前版本已在WIFI环境下自动下载，是否直接安装？")
+                        .setPositiveText("直接安装")
+                        .setNegativeText("重新下载")
+                        .setOnPositiveClickListener(dialog -> DownloadUtil.installApk(mContext.getApplicationContext(), targetFile))
+                        .setOnNegativeClickListener(dialog -> download())
+                        .builder()
+                        .show();
+                return;
+            }
+        }
         if (downloadMap.contains(apkUrl) && verifyRepeatDownload) {
             Toast.makeText(mContext, "新版本正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
+        download();
+    }
+    private void download() {
         downloadMap.add(apkUrl);
         DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
         Disposable disposable = DownloadRetrofitFactory.enqueue(
                         apkUrl,
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator,
+                        saveFileName,
                         headers,
                         downloadListener
                 )

@@ -167,6 +167,14 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
             keepOnScreenCondition.set(false)
             // 开始倒计时
             startCountDown()
+        } else {
+            keepOnScreenCondition.set(false)
+            // 检查用户协议同意状态
+            if (UserAccountHelper.isAgree()) {
+                checkPermissionsAndProceed()
+            } else {
+                showUserAgreementDialog()
+            }
         }
     }
 
@@ -174,13 +182,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
      * 检查所有条件是否满足
      */
     private fun allConditionsMet(): Boolean {
-        // 检查所有必要的条件
-        // 1. 背景图已加载（实际上Glide的回调已经处理）
-        // 2. 权限状态已处理（已经在各个回调中处理）
-        // 3. 其他初始化条件
-
-        // 如果需要等待某些异步操作完成，可以在这里检查
-        return true
+        return UserAccountHelper.isAgree() && permissionManager?.lacksPermissions(permissions) == false
     }
 
     private fun showUserAgreementDialog() {
@@ -195,7 +197,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
             .setSpannableContent(getSpannableContent())
             .setOnNegativeClickListener { _: Dialog? ->
                 showToast("拒绝可能会导致部分功能使用异常")
-                checkAndProceed()
+                checkPermissionsAndProceed()
             }
             .setOnPositiveClickListener { _: Dialog? ->
                 UserAccountHelper.setAgreement(true)

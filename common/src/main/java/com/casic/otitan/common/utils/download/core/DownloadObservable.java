@@ -32,19 +32,21 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
     private final DownloadInterceptor interceptor;
     private final DownloadNotificationUtil downloadNotificationUtil;
     private final String saveBasePath;
+    private final String saveFileName;
     private final String fileUrl;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private final DownloadListener downloadListener;
 
-    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath) {
-        this(interceptor, fileUrl, tempFile, saveBasePath, null);
+    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, String saveFileName) {
+        this(interceptor, fileUrl, tempFile, saveBasePath, saveFileName, null);
     }
 
-    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, DownloadListener downloadListener) {
+    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, String saveFileName, DownloadListener downloadListener) {
         this.tempFile = tempFile;
         this.interceptor = interceptor;
         this.saveBasePath = saveBasePath;
+        this.saveFileName = saveFileName;
         this.fileUrl = fileUrl;
         this.downloadListener = downloadListener;
         downloadNotificationUtil = new DownloadNotificationUtil(BaseApplication.getInstance());
@@ -68,6 +70,7 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
             byte[] buffer = new byte[1024 * 4];
             RandomAccessFile randomAccessFile = new RandomAccessFile(tempFile, "rwd");
             long tempFileLen = tempFile.length();
+
             randomAccessFile.seek(tempFileLen);
             while (true) {
                 int len = interceptor.getResponseBody().byteStream().read(buffer);
@@ -90,15 +93,21 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
             randomAccessFile.close();
 
             String fileName;
-            MediaType mediaType = interceptor.getResponseBody().contentType();
-            String contentDisposition = findHeaderIgnoreCase(interceptor.getHeaders(), "Content-Disposition");
-            //获取请求头中的Content-Disposition，有值的话说明指定了文件名和后缀名
-            if (mediaType != null && !TextUtils.isEmpty(contentDisposition)) {
-                fileName = FileUtil.autoRenameFileName(saveBasePath, getFileNameFromForceDownloadHeader(contentDisposition));
+            if (TextUtils.isEmpty(saveFileName)) {
+                MediaType mediaType = interceptor.getResponseBody().contentType();
+                String contentDisposition = findHeaderIgnoreCase(interceptor.getHeaders(), "Content-Disposition");
+                //获取请求头中的Content-Disposition，有值的话说明指定了文件名和后缀名
+                if (mediaType != null && !TextUtils.isEmpty(contentDisposition)) {
+                    fileName = FileUtil.autoRenameFileName(saveBasePath, getFileNameFromForceDownloadHeader(contentDisposition));
+                } else {
+                    fileName = FileUtil.autoRenameFileName(saveBasePath, FileUtil.getFileNameByUrl(fileUrl));
+                }
             } else {
-                fileName = FileUtil.autoRenameFileName(saveBasePath, FileUtil.getFileNameByUrl(fileUrl));
+                File targetFile = new File(saveBasePath, saveFileName);
+                targetFile.deleteOnExit();
+                fileName = saveFileName;
             }
-            File newFile = new File(saveBasePath + fileName);
+            File newFile = new File(saveBasePath, fileName);
             boolean renameSuccess = tempFile.renameTo(newFile);
             mainHandler.post(() -> downloadNotificationUtil.cancelNotification(fileUrl.hashCode()));
             if (renameSuccess) {

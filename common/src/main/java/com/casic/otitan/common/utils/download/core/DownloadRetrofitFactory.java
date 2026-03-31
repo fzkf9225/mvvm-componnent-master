@@ -77,16 +77,16 @@ public class DownloadRetrofitFactory {
         }
     }
 
-    public static Observable<File> enqueue(String url, String saveBasePath) {
-        return enqueue(url, saveBasePath, null, null);
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName) {
+        return enqueue(url, saveBasePath, saveFileName, null, null);
     }
 
-    public static Observable<File> enqueue(String url, String saveBasePath, Map<String, String> headers) {
-        return enqueue(url, saveBasePath, headers, null);
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, Map<String, String> headers) {
+        return enqueue(url, saveBasePath, saveFileName, headers, null);
     }
 
-    public static Observable<File> enqueue(String url, String saveBasePath, DownloadListener listener) {
-        return enqueue(url, saveBasePath, null, listener);
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, DownloadListener listener) {
+        return enqueue(url, saveBasePath, saveFileName, null, listener);
     }
 
     /**
@@ -97,7 +97,7 @@ public class DownloadRetrofitFactory {
      * @param listener 监听
      * @return 观察者
      */
-    public static Observable<File> enqueue(String url, String saveBasePath, Map<String, String> headers, DownloadListener listener) {
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, Map<String, String> headers, DownloadListener listener) {
         File tempFile = FileUtil.getTempFile(url, saveBasePath);
         DownloadInterceptor interceptor = new DownloadInterceptor();
         return getDownloadRetrofit(interceptor, headers)
@@ -105,7 +105,7 @@ public class DownloadRetrofitFactory {
                 .downloadFile("bytes=" + tempFile.length() + "-", url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(responseBody ->
-                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, listener))
+                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
                 )
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -120,14 +120,14 @@ public class DownloadRetrofitFactory {
      * @param listener 监听
      * @return 观察者
      */
-    public static Observable<File> enqueue(String url, String saveBasePath, DownloadInterceptor interceptor, Map<String, String> headers, DownloadListener listener) {
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, DownloadInterceptor interceptor, Map<String, String> headers, DownloadListener listener) {
         File tempFile = FileUtil.getTempFile(url, saveBasePath);
         return getDownloadRetrofit(interceptor, headers)
                 .create(BaseApiService.class)
                 .downloadFile("bytes=" + tempFile.length() + "-", url)
                 .subscribeOn(Schedulers.io())
                 .flatMap(responseBody ->
-                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, listener))
+                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
                 )
                 .observeOn(AndroidSchedulers.mainThread());
 

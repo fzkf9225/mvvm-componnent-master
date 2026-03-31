@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -34,9 +35,32 @@ public class DownloadInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
+
+        // 处理 416 错误
+        if (originalResponse.code() == 416) {
+            // 关闭错误的响应
+            originalResponse.body().close();
+
+            // 移除 Range 头，重新请求
+            Request newRequest = chain.request().newBuilder()
+                    .removeHeader("Range")
+                    .build();
+
+            Response newResponse = chain.proceed(newRequest);
+            headers = newResponse.headers();
+            responseBody = newResponse.body();
+
+            return newResponse.newBuilder()
+                    .body(responseBody)
+                    .build();
+        }
+
+        // 正常处理
         headers = originalResponse.headers();
+        responseBody = originalResponse.body();
+
         return originalResponse.newBuilder()
-                .body(responseBody = originalResponse.body())
+                .body(responseBody)
                 .build();
     }
 }

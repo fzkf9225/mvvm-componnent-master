@@ -32,7 +32,7 @@ import com.casic.otitan.common.api.Config;
 import com.casic.otitan.common.api.ConstantsHelper;
 import com.casic.otitan.common.bean.AttachmentBean;
 import com.casic.otitan.common.enums.AttachmentTypeEnum;
-import com.casic.otitan.common.utils.download.DownloadManger;
+import com.casic.otitan.common.utils.download.DownloadManager;
 import com.casic.otitan.common.utils.log.LogUtil;
 import com.casic.otitan.common.widget.dialog.MenuDialog;
 import com.casic.otitan.common.widget.gallery.PreviewPhotoDialog;
@@ -508,7 +508,7 @@ public class AttachmentUtil {
                             if (AppManager.getAppManager().currentActivity() == null || AppManager.getAppManager().currentActivity().isFinishing()) {
                                 return;
                             }
-                            Disposable disposable = DownloadManger.getInstance().download(AppManager.getAppManager().currentActivity(), url)
+                            Disposable disposable = DownloadManager.getInstance().download(AppManager.getAppManager().currentActivity(), url)
                                     .subscribe(file -> {
                                         if (pos == 1) {
                                             viewAbsoluteFile(mContext, file.getAbsolutePath());

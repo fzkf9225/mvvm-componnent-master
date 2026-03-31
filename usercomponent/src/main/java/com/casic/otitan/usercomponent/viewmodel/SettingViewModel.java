@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.casic.otitan.common.utils.download.UpdateManager;
 import com.casic.otitan.usercomponent.R;
 import com.casic.otitan.usercomponent.activity.FeedBackActivity;
 import com.casic.otitan.usercomponent.activity.LoginActivity;
@@ -20,7 +21,6 @@ import com.casic.otitan.common.base.BaseView;
 import com.casic.otitan.common.base.BaseViewModel;
 import com.casic.otitan.common.repository.RepositoryImpl;
 import com.casic.otitan.common.utils.common.CacheUtil;
-import com.casic.otitan.common.utils.download.UpdateManger;
 import com.casic.otitan.common.widget.customview.IconLabelValueView;
 import com.casic.otitan.common.widget.dialog.ConfirmDialog;
 
@@ -50,8 +50,9 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
             baseView.showLoading("正在检测新版本...",true);
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
-                UpdateManger.getInstance().checkUpdateInfo((Activity) view.getContext(),
+                UpdateManager.getInstance().checkUpdateInfo((Activity) view.getContext(),
                         "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk",
+                        "qq_hd_mini_1.4.apk",
                         "1、修复已知bug",
                         "1.0.1");
                 baseView.hideLoading();

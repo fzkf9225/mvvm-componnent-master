@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 
+import com.casic.otitan.common.utils.download.DownloadManager;
 import com.casic.otitan.demo.R;
 import com.casic.otitan.demo.databinding.ActivityQrCodeBinding;
 import com.casic.otitan.demo.view.ScanQrCodeView;
@@ -40,7 +41,6 @@ import com.casic.otitan.common.activity.CaptureActivity;
 import com.casic.otitan.common.base.BaseActivity;
 import com.casic.otitan.common.base.BaseException;
 import com.casic.otitan.common.utils.common.QRCodeUtil;
-import com.casic.otitan.common.utils.download.DownloadManger;
 
 
 @AndroidEntryPoint
@@ -282,7 +282,7 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
                 callbackContext.error("识别失败");
                 return;
             }
-            Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
+            Disposable disposable = DownloadManager.getInstance().download(this, binding.editUrl.getText().toString().trim())
                     .subscribe(file -> {
                         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                         if (bitmap == null) {
