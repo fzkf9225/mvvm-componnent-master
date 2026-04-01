@@ -80,4 +80,184 @@
     <string name="protection_guidelines">Personal Information Protection Guidelines</string>
     <string name="agree_and_continue">Agree and continue</string>
     <string name="think_again">Think again</string>
+    <!-- ========== Common ========== -->
+    <string name="app_name">App Name</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="more">More</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="share">Share</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="refresh">Refresh</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
+    <string name="detail">Detail</string>
+    <string name="view_all">View All</string>
+    <string name="load_more">Load More</string>
+
+    <!-- ========== Login/Register ========== -->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="get_verification_code">Get Code</string>
+    <string name="resend_verification_code">Resend</string>
+    <string name="agree_privacy_policy">Agree to Privacy Policy</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="user_agreement">User Agreement</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="no_account">No account yet?</string>
+    <string name="register_now">Register Now</string>
+    <string name="login_now">Login Now</string>
+
+    <!-- ========== Message Tips ========== -->
+    <string name="loading">Loading…</string>
+    <string name="load_failed">Load failed</string>
+    <string name="load_success">Load successful</string>
+    <string name="submit_success">Submit successful</string>
+    <string name="submit_failed">Submit failed</string>
+    <string name="operation_success">Operation successful</string>
+    <string name="operation_failed">Operation failed</string>
+    <string name="network_unavailable">Network unavailable, please check your network settings</string>
+    <string name="network_connecting">Connecting to network…</string>
+    <string name="data_empty">No data</string>
+    <string name="data_error">Data error</string>
+    <string name="request_timeout">Request timeout, please try again later</string>
+    <string name="server_error">Server error, please try again later</string>
+
+    <!-- ========== Form Validation ========== -->
+    <string name="field_required">This field is required</string>
+    <string name="invalid_phone_number">Please enter a valid phone number</string>
+    <string name="invalid_email">Please enter a valid email address</string>
+    <string name="invalid_username">Invalid username format</string>
+    <string name="password_length_limit">Password must be at least %1$d characters</string>
+    <string name="password_not_match">Passwords do not match</string>
+    <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="id_card_invalid">Invalid ID number format</string>
+
+    <!-- ========== Time Related ========== -->
+    <string name="just_now">Just now</string>
+    <string name="minutes_ago">%1$d minutes ago</string>
+    <string name="hours_ago">%1$d hours ago</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="days_ago">%1$d days ago</string>
+    <string name="weeks_ago">%1$d weeks ago</string>
+    <string name="months_ago">%1$d months ago</string>
+    <string name="years_ago">%1$d years ago</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="date_format_ymd">%1$d/%2$d/%3$d</string>
+    <string name="date_format_ymd_slash">%1$d/%2$d/%3$d</string>
+    <string name="time_format_hms">%1$d:%2$d:%3$d</string>
+    <string name="time_format_hm">%1$d:%2$d</string>
+
+    <!-- ========== Image/Gallery ========== -->
+    <string name="camera">Camera</string>
+    <string name="album">Album</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_image">Select Image</string>
+    <string name="select_video">Select Video</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_album">Choose from Album</string>
+    <string name="image_preview">Image Preview</string>
+    <string name="video_preview">Video Preview</string>
+    <string name="compress_image">Compress Image</string>
+    <string name="original_image">Original</string>
+    <string name="image_selected_count">%1$d images selected</string>
+    <string name="video_selected_count">%1$d videos selected</string>
+    <string name="max_select_limit">Maximum %1$d items</string>
+
+    <!-- ========== Settings ========== -->
+    <string name="account_settings">Account Settings</string>
+    <string name="personal_info">Personal Information</string>
+    <string name="change_password">Change Password</string>
+    <string name="change_phone">Change Phone Number</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="language_settings">Language Settings</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="cache_size">Cache Size</string>
+    <string name="version_info">Version Info</string>
+    <string name="check_update">Check for Updates</string>
+    <string name="current_version">Current Version</string>
+    <string name="latest_version">Latest Version</string>
+    <string name="update_now">Update Now</string>
+    <string name="update_later">Later</string>
+    <string name="force_update_tip">A new version is available, please update to continue</string>
+
+    <!-- ========== Exit/Logout ========== -->
+    <string name="exit_app">Exit App</string>
+    <string name="exit_app_confirm">Are you sure you want to exit?</string>
+    <string name="logout_confirm">Are you sure you want to log out?</string>
+    <string name="logout_success">Logged out successfully</string>
+    <string name="account_cancel">Delete Account</string>
+    <string name="account_cancel_warning">All data will be cleared after deletion, this action cannot be undone</string>
+    <string name="account_cancel_confirm">Are you sure you want to delete your account?</string>
+
+    <!-- ========== Search ========== -->
+    <string name="search_hint">Search…</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="clear_search_history">Clear Search History</string>
+    <string name="no_search_result">No results found</string>
+    <string name="search_result">Search Results</string>
+
+    <!-- ========== Share ========== -->
+    <string name="share_to">Share to</string>
+    <string name="share_success">Share successful</string>
+    <string name="share_failed">Share failed</string>
+    <string name="share_canceled">Share canceled</string>
+
+    <!-- ========== Dialog ========== -->
+    <string name="dialog_title_tip">Tip</string>
+    <string name="dialog_title_warning">Warning</string>
+    <string name="dialog_title_error">Error</string>
+    <string name="dialog_title_success">Success</string>
+    <string name="dialog_title_info">Information</string>
+    <string name="dialog_confirm_delete">Are you sure you want to delete?</string>
+    <string name="dialog_confirm_clear">Are you sure you want to clear?</string>
+
+    <!-- ========== Permissions ========== -->
+    <string name="permission_camera_rationale">Camera permission is required to take photos and record videos</string>
+    <string name="permission_location_rationale">Location permission is required to use this feature</string>
+    <string name="permission_microphone_rationale">Microphone permission is required to record audio</string>
+    <string name="permission_contacts_rationale">Contacts permission is required to select contacts</string>
+    <string name="permission_calendar_rationale">Calendar permission is required to add reminders</string>
+    <string name="permission_phone_rationale">Phone permission is required to make calls</string>
+    <string name="permission_sms_rationale">SMS permission is required to send verification codes</string>
+    <string name="permission_notification_rationale">Notification permission is required to receive message alerts</string>
+
+    <!-- ========== File Related ========== -->
+    <string name="file_not_exist">File does not exist</string>
+    <string name="file_downloading">Downloading…</string>
+    <string name="file_download_success">Download successful</string>
+    <string name="file_download_failed">Download failed</string>
+    <string name="file_save_path">Save path</string>
+    <string name="file_size">File size</string>
+    <string name="file_format_error">Invalid file format</string>
+    <string name="file_too_large">File is too large, please select a file smaller than %1$dMB</string>
+
+    <!-- ========== Update ========== -->
+    <string name="update_title">Update Available</string>
+    <string name="update_content">What\'s new:</string>
+    <string name="update_immediately">Update</string>
+    <string name="update_in_background">Background Download</string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_paused">Paused</string>
+    <string name="install_now">Install Now</string>
+    <string name="install_later">Install Later</string>
 </resources>

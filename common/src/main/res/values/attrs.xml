@@ -60,6 +60,17 @@
     <attr name="dotPadding" format="dimension" />
     <!--是否加粗-->
     <attr name="isBold" format="boolean" />
+    <!-- 正文文字颜色 -->
+    <attr name="valueTextColor" format="color" />
+    <attr name="valueTextSize" format="dimension" />
+    <attr name="labelText" format="string" />
+    <!-- value 相关属性 -->
+    <attr name="valueText" format="string" />
+
+    <!-- unit 相关属性 -->
+    <attr name="unitText" format="string" />
+    <attr name="unitTextColor" format="color" />
+    <attr name="unitTextSize" format="dimension" />
     <declare-styleable name="ConfigurableWebView">
 
         <attr name="domain" format="string" />
@@ -193,16 +204,23 @@
         <attr name="android:fontFamily" />
     </declare-styleable>
 
+    <!-- 选中时文字颜色 -->
+    <attr name="selectedTextColor" format="color" />
+
+    <!-- 未选中时文字颜色 -->
+    <attr name="unselectedTextColor" format="color" />
+    <!-- Tab文字相关属性 -->
+    <attr name="tabTextSize" format="dimension" />
     <!-- 自定义TabLayout属性 -->
     <declare-styleable name="StyledTabLayout">
         <!-- 选中时文字颜色 -->
-        <attr name="selectedTextColor" format="color" />
+        <attr name="selectedTextColor" />
 
         <!-- 未选中时文字颜色 -->
-        <attr name="unselectedTextColor" format="color" />
+        <attr name="unselectedTextColor"/>
 
         <!-- 文字大小 -->
-        <attr name="tabTextSize" format="dimension" />
+        <attr name="tabTextSize"/>
 
         <!-- 选中时背景 -->
         <attr name="selectedBackground" format="reference" />
@@ -555,7 +573,7 @@
         <!-- 是否展示底部边框 -->
         <attr name="bottomBorder" format="boolean" />
         <!-- 正文文字颜色 -->
-        <attr name="valueTextColor" format="color" />
+        <attr name="valueTextColor"/>
         <!-- 底部边框颜色 -->
         <attr name="borderBottomColor" format="color" />
         <!-- label文字颜色 -->
@@ -563,7 +581,7 @@
         <!-- label文字大小 -->
         <attr name="labelTextSize" />
         <!-- 正文文字大小 -->
-        <attr name="valueTextSize" format="dimension" />
+        <attr name="valueTextSize"/>
         <!-- 底部边框与左侧的距离 -->
         <attr name="borderBottomStartMargin" format="dimension" />
         <!-- 底部边框与右侧的距离 -->
@@ -658,5 +676,158 @@
         <!-- label文字大小 -->
         <attr name="labelIconMargin" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="ValueDisplayView">
+        <!-- label 相关属性 -->
+        <attr name="labelText"/>
+        <attr name="labelTextColor" />
+        <attr name="labelTextSize" />
 
+        <!-- value 相关属性 -->
+        <attr name="valueText"/>
+        <attr name="valueTextColor"/>
+        <attr name="valueTextSize"/>
+
+        <!-- unit 相关属性 -->
+        <attr name="unitText"/>
+        <attr name="unitTextColor"/>
+        <attr name="unitTextSize"/>
+
+        <!-- 整体内边距 -->
+        <attr name="contentPadding" format="dimension" />
+        <attr name="contentPaddingStart" format="dimension" />
+        <attr name="contentPaddingEnd" format="dimension" />
+        <attr name="contentPaddingTop" format="dimension" />
+        <attr name="contentPaddingBottom" format="dimension" />
+
+        <!-- 新增：布局排列方式 -->
+        <attr name="labelPosition" format="enum">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+        </attr>
+
+        <!-- 新增：label与value/unit之间的间距 -->
+        <attr name="labelSpacing" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="IndicatorTabLayout">
+        <!-- 指示条高度 -->
+        <attr name="indicatorHeight" format="dimension" />
+
+        <!-- 指示条宽度模式 -->
+        <attr name="indicatorWidthMode" format="enum">
+            <enum name="text" value="0" />   <!-- 跟随文字宽度 -->
+            <enum name="fixed" value="1" />  <!-- 固定宽度 -->
+            <enum name="tab" value="2" />    <!-- 跟随Tab宽度 -->
+        </attr>
+
+        <!-- 指示条固定宽度（仅在fixed模式下生效） -->
+        <attr name="indicatorWidth" format="dimension" />
+
+        <!-- 指示条颜色 -->
+        <attr name="indicatorColor" format="color" />
+
+        <!-- 指示条圆角半径 -->
+        <attr name="indicatorCornerRadius" format="dimension" />
+
+        <!-- 指示条底部边距 -->
+        <attr name="indicatorMarginBottom" format="dimension" />
+        <!-- Tab文字相关属性 -->
+        <attr name="tabTextSize"/>
+        <attr name="selectedTextColor"/>
+        <attr name="unselectedTextColor"/>
+        <attr name="tabTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="medium" value="2" />
+        </attr>
+        <attr name="tabPaddingHorizontal" format="dimension" />
+        <attr name="tabPaddingVertical" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="TabLayout">
+        <!-- Tab文字相关属性 -->
+        <attr name="tabTextSize"/>
+        <!-- Color of the indicator used to show the currently selected tab. -->
+        <attr format="color" name="tabIndicatorColor"/>
+        <!-- {@deprecated Instead, set the intrinsic size of the custom drawable provided to the
+             tabIndicator attribute in order to change the indicator height. For example, this can be
+             done by setting the <size> property in a <shape> resource.} -->
+        <attr format="dimension" name="tabIndicatorHeight"/>
+        <!-- Position in the Y axis from the starting edge that tabs should be positioned from. -->
+        <attr format="dimension" name="tabContentStart"/>
+        <!-- Reference to a background to be applied to tabs. -->
+        <attr format="reference" name="tabBackground"/>
+        <!-- Reference to a drawable to use as selection indicator for tabs. If this attribute is not
+             specified, indicator defaults to a line along the bottom of the tab. -->
+        <attr format="reference" name="tabIndicator"/>
+        <!-- Gravity constant for tab selection indicator. -->
+        <attr name="tabIndicatorGravity">
+            <!-- Align indicator to the bottom of this tab layout. -->
+            <enum name="bottom" value="0"/>
+            <!-- Align indicator along the center of this tab layout. -->
+            <enum name="center" value="1"/>
+            <!-- Align indicator to the top of this tab layout. -->
+            <enum name="top" value="2"/>
+            <!-- Stretch indicator to match the height and width of a tab item in this layout. -->
+            <enum name="stretch" value="3"/>
+        </attr>
+        <!-- Duration in milliseconds for the animation of the selection indicator from one tab item
+             to another. -->
+        <attr format="integer" name="tabIndicatorAnimationDuration"/>
+        <!-- Whether the selection indicator width should fill the full width of the tab item,
+             or if it should be fitted to the content of the tab text label. If no text label is
+             present, it will be set to the width of the icon or to a minimum width of 24dp. -->
+        <attr format="boolean" name="tabIndicatorFullWidth"/>
+        <!-- The behavior mode for the Tabs in this layout -->
+        <attr name="tabMode">
+            <enum name="scrollable" value="0"/>
+            <enum name="fixed" value="1"/>
+            <enum name="auto" value="2"/>
+        </attr>
+        <!-- Gravity constant for tabs. -->
+        <attr name="tabGravity">
+            <enum name="fill" value="0"/>
+            <enum name="center" value="1"/>
+        </attr>
+        <!-- Whether to display tab labels horizontally inline with icons, or underneath icons. -->
+        <attr format="boolean" name="tabInlineLabel"/>
+        <!-- The minimum width for tabs. -->
+        <attr format="dimension" name="tabMinWidth"/>
+        <!-- The maximum width for tabs. -->
+        <attr format="dimension" name="tabMaxWidth"/>
+        <!-- A reference to a TextAppearance style to be applied to tabs. -->
+        <attr format="reference" name="tabTextAppearance"/>
+        <!-- The default text color to be applied to tabs. -->
+        <attr format="color" name="tabTextColor"/>
+        <!-- {@deprecated Instead, provide a ColorStateList to the tabTextColor attribute with a
+             selected color set.}  -->
+        <attr format="color" name="tabSelectedTextColor"/>
+        <!-- The preferred padding along the start edge of tabs. -->
+        <attr format="dimension" name="tabPaddingStart"/>
+        <!-- The preferred padding along the top edge of tabs. -->
+        <attr format="dimension" name="tabPaddingTop"/>
+        <!-- The preferred padding along the end edge of tabs. -->
+        <attr format="dimension" name="tabPaddingEnd"/>
+        <!-- The preferred padding along the bottom edge of tabs. -->
+        <attr format="dimension" name="tabPaddingBottom"/>
+        <!-- The preferred padding along all edges of tabs. -->
+        <attr format="dimension" name="tabPadding"/>
+        <!-- Tint to apply to tab icons, if present. This can be a color state list or a color. -->
+        <attr format="color" name="tabIconTint"/>
+        <!-- Blending mode to apply to tab icons. -->
+        <attr name="tabIconTintMode">
+            <enum name="src_over" value="3"/>
+            <enum name="src_in" value="5"/>
+            <enum name="src_atop" value="9"/>
+            <enum name="multiply" value="14"/>
+            <enum name="screen" value="15"/>
+            <enum name="add" value="16"/>
+        </attr>
+        <!-- Ripple color for the tabs. This may be a color state list, if the desired ripple color
+             should be stateful.-->
+        <attr format="color" name="tabRippleColor"/>
+        <!-- Whether to use unbounded ripple effect for tabs, or if ripple should instead be bound to
+             tab item bounds. -->
+        <attr format="boolean" name="tabUnboundedRipple"/>
+    </declare-styleable>
 </resources>

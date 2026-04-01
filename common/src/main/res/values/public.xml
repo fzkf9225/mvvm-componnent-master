@@ -58,6 +58,7 @@
 
     <!--Color资源-->
     <public name="white" type="color"/>
+    <public name="black" type="color"/>
     <public name="gray" type="color"/>
     <public name="background" type="color"/>
     <public name="themeColor" type="color"/>
@@ -306,5 +307,71 @@
     <public name="permission_rationale_write_storage" type="string"/>
     <public name="loading_now" type="string"/>
     <public name="save_to_local" type="string"/>
-
+    <public name="app_name" type="string" />
+    <public name="ok" type="string" />
+    <public name="yes" type="string" />
+    <public name="no" type="string" />
+    <public name="retry" type="string" />
+    <public name="back" type="string" />
+    <public name="next" type="string" />
+    <public name="skip" type="string" />
+    <public name="more" type="string" />
+    <public name="delete" type="string" />
+    <public name="add" type="string" />
+    <public name="edit" type="string" />
+    <public name="save" type="string" />
+    <public name="share" type="string" />
+    <public name="copy" type="string" />
+    <public name="paste" type="string" />
+    <public name="select_all" type="string" />
+    <public name="refresh" type="string" />
+    <public name="login" type="string" />
+    <public name="register" type="string" />
+    <public name="logout" type="string" />
+    <public name="username" type="string" />
+    <public name="password" type="string" />
+    <public name="phone_number" type="string" />
+    <public name="email" type="string" />
+    <public name="verification_code" type="string" />
+    <public name="get_verification_code" type="string" />
+    <public name="privacy_policy" type="string" />
+    <public name="user_agreement" type="string" />
+    <public name="loading" type="string" />
+    <public name="load_failed" type="string" />
+    <public name="submit_success" type="string" />
+    <public name="submit_failed" type="string" />
+    <public name="network_unavailable" type="string" />
+    <public name="data_empty" type="string" />
+    <public name="field_required" type="string" />
+    <public name="invalid_phone_number" type="string" />
+    <public name="invalid_email" type="string" />
+    <public name="password_not_match" type="string" />
+    <public name="just_now" type="string" />
+    <public name="minutes_ago" type="string" />
+    <public name="hours_ago" type="string" />
+    <public name="yesterday" type="string" />
+    <public name="gallery" type="string" />
+    <public name="select_image" type="string" />
+    <public name="take_photo" type="string" />
+    <public name="choose_from_album" type="string" />
+    <public name="account_settings" type="string" />
+    <public name="personal_info" type="string" />
+    <public name="change_password" type="string" />
+    <public name="clear_cache" type="string" />
+    <public name="check_update" type="string" />
+    <public name="current_version" type="string" />
+    <public name="exit_app" type="string" />
+    <public name="logout_confirm" type="string" />
+    <public name="search_hint" type="string" />
+    <public name="recent_searches" type="string" />
+    <public name="no_search_result" type="string" />
+    <public name="share_to" type="string" />
+    <public name="dialog_title_tip" type="string" />
+    <public name="dialog_confirm_delete" type="string" />
+    <public name="permission_camera_rationale" type="string" />
+    <public name="file_not_exist" type="string" />
+    <public name="file_downloading" type="string" />
+    <public name="update_title" type="string" />
+    <public name="downloading" type="string" />
+    <public name="install_now" type="string" />
 </resources>
