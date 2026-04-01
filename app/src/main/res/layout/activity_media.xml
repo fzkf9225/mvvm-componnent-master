@@ -19,11 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
+        android:clipChildren="false"
         tools:context=".activity.MediaActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clipChildren="false">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_image"
@@ -40,6 +42,8 @@
                 android:id="@+id/image_RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
@@ -61,6 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:clipChildren="false"
+                android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/tv_video" />
@@ -81,6 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:clipChildren="false"
+                android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image_video" />

@@ -3,6 +3,7 @@ package com.casic.otitan.demo.activity;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
+import com.casic.otitan.common.utils.common.DensityUtil;
+import com.casic.otitan.common.widget.recyclerview.GridSpacingItemDecoration;
 import com.casic.otitan.demo.R;
 import com.casic.otitan.demo.bean.UseCase;
 import com.casic.otitan.demo.databinding.ActivityMediaBinding;
@@ -167,6 +170,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
         imageAddAdapter = new ImageAddAdapter(mediaHelper.getMediaBuilder().imageMaxSelectedCount);
+        imageAddAdapter.setBgColor(Color.WHITE);
+        binding.imageRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
@@ -180,6 +185,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         videoAddAdapter = new VideoAddAdapter(mediaHelper.getMediaBuilder().videoMaxSelectedCount);
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
+        videoAddAdapter.setBgColor(Color.WHITE);
+        binding.videoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
         binding.videoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
@@ -191,6 +198,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         mediaAddAdapter = new MediaAddAdapter(mediaHelper.getMediaBuilder().mediaMaxSelectedCount);
         mediaAddAdapter.setMediaClearListener(this);
         mediaAddAdapter.setMediaAddListener(this);
+        mediaAddAdapter.setBgColor(Color.WHITE);
+        binding.imageVideoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
         binding.imageVideoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
