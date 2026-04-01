@@ -3,6 +3,7 @@ package com.casic.otitan.googlegps.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -15,12 +16,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.casic.otitan.googlegps.R;
 import com.casic.otitan.googlegps.databinding.DialogGpsConfirmBinding;
+import com.casic.otitan.googlegps.helper.AppUtil;
 import com.casic.otitan.googlegps.listener.OnDialogInterfaceClickListener;
+
+import java.util.Objects;
 
 
 /**
@@ -28,20 +34,83 @@ import com.casic.otitan.googlegps.listener.OnDialogInterfaceClickListener;
  * describe：确认弹框
  */
 public class GPSConfirmDialog extends Dialog {
+    /**
+     * 弹框提示内容
+     */
     private String content;
+    /**
+     * 富文本样式内容，可以添加超链接和颜色，优先级高于 content
+     */
     private SpannableString spannableContent;
+    /**
+     * 弹框按钮点击监听
+     */
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
+    /**
+     * 是否允许点击外部取消
+     */
     private boolean outSide = true;
-    private String positiveText = null, negativeText = null;
-    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
-
+    /**
+     * 弹框右侧确认按钮文字
+     */
+    private String positiveText = null;
+    /**
+     * 弹框右侧取消按钮文字
+     */
+    private String negativeText = null;
+    /**
+     * 是否显示按钮和分割线
+     */
+    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowSLineView = true, isShowHLineView = true;
+    /**
+     * 弹框右侧确认按钮文字颜色
+     */
     private ColorStateList positiveTextColor = null;
+    /**
+     * 弹框右侧取消按钮文字颜色
+     */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 弹框内容文字颜色
+     */
     private ColorStateList textColor = null;
-
+    /**
+     * 分割线颜色
+     */
+    private @ColorInt Integer lineColor = null;
+    /**
+     * 弹框背景
+     */
     private Drawable bgDrawable;
-    private final LayoutInflater layoutInflater;
 
+    // 新增属性
+    /** 确定按钮文字大小 (sp) */
+    private float positiveTextSize = 0;
+    /** 取消按钮文字大小 (sp) */
+    private float negativeTextSize = 0;
+    /** 内容文字大小 (sp) */
+    private float contentTextSize = 0;
+    /** 确定按钮背景 */
+    private Drawable positiveBtnBackground = null;
+    /** 取消按钮背景 */
+    private Drawable negativeBtnBackground = null;
+    /** 内容距离顶部的间距 (px) */
+    private int textPaddingTop = -1;
+    /** 水平分割线距离内容的间距 (px) */
+    private int textPaddingBottom = -1;
+    /** 按钮高度 (px) */
+    private int buttonHeight = -1;
+    /** 按钮高度资源ID */
+    @DimenRes
+    private int buttonHeightRes = -1;
+
+    /**
+     * 布局填充器
+     */
+    private final LayoutInflater layoutInflater;
+    /**
+     * 弹框布局
+     */
     private DialogGpsConfirmBinding binding;
 
     public GPSConfirmDialog(@NonNull Context context) {
@@ -74,6 +143,16 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog setShowHLineView(boolean showHLineView) {
+        isShowHLineView = showHLineView;
+        return this;
+    }
+
+    public GPSConfirmDialog setShowSLineView(boolean showSLineView) {
+        isShowSLineView = showSLineView;
+        return this;
+    }
+
     public GPSConfirmDialog setBgDrawable(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
         return this;
@@ -94,6 +173,11 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog setLineColor(Integer lineColor) {
+        this.lineColor = lineColor;
+        return this;
+    }
+
     public GPSConfirmDialog setPositiveText(String positiveText) {
         this.positiveText = positiveText;
         return this;
@@ -106,13 +190,83 @@ public class GPSConfirmDialog extends Dialog {
 
     public GPSConfirmDialog setShowPositiveView(boolean isShowPositiveView) {
         this.isShowPositiveView = isShowPositiveView;
-        this.isShowLineView = this.isShowPositiveView;
         return this;
     }
 
     public GPSConfirmDialog setShowNegativeView(boolean isShowNegativeView) {
         this.isShowNegativeView = isShowNegativeView;
-        this.isShowLineView = this.isShowNegativeView;
+        return this;
+    }
+
+    // 新增setter方法
+
+    public GPSConfirmDialog setPositiveTextSize(float spSize) {
+        this.positiveTextSize = spSize;
+        return this;
+    }
+
+    public GPSConfirmDialog setNegativeTextSize(float spSize) {
+        this.negativeTextSize = spSize;
+        return this;
+    }
+
+    public GPSConfirmDialog setContentTextSize(float spSize) {
+        this.contentTextSize = spSize;
+        return this;
+    }
+
+    public GPSConfirmDialog setPositiveBtnBackground(Drawable background) {
+        this.positiveBtnBackground = background;
+        return this;
+    }
+
+    public GPSConfirmDialog setPositiveBtnBackgroundResource(@DrawableRes int resId) {
+        this.positiveBtnBackground = ContextCompat.getDrawable(getContext(), resId);
+        return this;
+    }
+
+    public GPSConfirmDialog setNegativeBtnBackground(Drawable background) {
+        this.negativeBtnBackground = background;
+        return this;
+    }
+
+    public GPSConfirmDialog setNegativeBtnBackgroundResource(@DrawableRes int resId) {
+        this.negativeBtnBackground = ContextCompat.getDrawable(getContext(), resId);
+        return this;
+    }
+
+    public GPSConfirmDialog setTextPaddingTop(int px) {
+        this.textPaddingTop = px;
+        return this;
+    }
+
+    public GPSConfirmDialog setTextPaddingTopDp(int dp) {
+        this.textPaddingTop = AppUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public GPSConfirmDialog setTextPaddingBottom(int px) {
+        this.textPaddingBottom = px;
+        return this;
+    }
+
+    public GPSConfirmDialog setTextPaddingBottomDp(int dp) {
+        this.textPaddingBottom = AppUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public GPSConfirmDialog setButtonHeight(int px) {
+        this.buttonHeight = px;
+        return this;
+    }
+
+    public GPSConfirmDialog setButtonHeightDp(int dp) {
+        this.buttonHeight = AppUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public GPSConfirmDialog setButtonHeightResource(@DimenRes int resId) {
+        this.buttonHeightRes = resId;
         return this;
     }
 
@@ -127,6 +281,8 @@ public class GPSConfirmDialog extends Dialog {
 
     private void initView() {
         binding = DialogGpsConfirmBinding.inflate(layoutInflater, null, false);
+
+        // 设置文字
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -137,12 +293,12 @@ public class GPSConfirmDialog extends Dialog {
         } else {
             binding.dialogCancel.setText(negativeText);
         }
+
+        // 设置文字颜色
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }
-        if (bgDrawable != null) {
-            binding.clConfirm.setBackground(bgDrawable);
-        }
+
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
@@ -151,8 +307,71 @@ public class GPSConfirmDialog extends Dialog {
             binding.dialogTextView.setTextColor(textColor);
         }
 
-        if (!isShowLineView) {
+        // 设置文字大小
+        if (positiveTextSize > 0) {
+            binding.dialogConfirm.setTextSize(positiveTextSize);
+        }
+
+        if (negativeTextSize > 0) {
+            binding.dialogCancel.setTextSize(negativeTextSize);
+        }
+
+        if (contentTextSize > 0) {
+            binding.dialogTextView.setTextSize(contentTextSize);
+        }
+
+        // 设置按钮背景
+        if (positiveBtnBackground != null) {
+            binding.dialogConfirm.setBackground(positiveBtnBackground);
+        }
+
+        if (negativeBtnBackground != null) {
+            binding.dialogCancel.setBackground(negativeBtnBackground);
+        }
+
+        // 设置内容上边距
+        if (textPaddingTop >= 0) {
+            binding.dialogTextView.setPadding(
+                    binding.dialogTextView.getPaddingStart(),
+                    textPaddingTop,
+                    binding.dialogTextView.getPaddingEnd(),
+                    binding.dialogTextView.getPaddingBottom());
+        }
+
+        // 设置分割线上边距
+        if (textPaddingBottom >= 0) {
+            binding.dialogTextView.setPadding(binding.dialogTextView.getPaddingStart(),
+                    binding.dialogTextView.getPaddingTop(),
+                    binding.dialogTextView.getPaddingEnd(),
+                    textPaddingBottom);
+
+        }
+
+        // 设置按钮高度
+        int targetButtonHeight = -1;
+        if (buttonHeightRes != -1) {
+            targetButtonHeight = getContext().getResources().getDimensionPixelSize(buttonHeightRes);
+        } else if (buttonHeight >= 0) {
+            targetButtonHeight = buttonHeight;
+        }
+
+        if (targetButtonHeight >= 0) {
+            ViewGroup.LayoutParams cancelParams = binding.dialogCancel.getLayoutParams();
+            cancelParams.height = targetButtonHeight;
+            binding.dialogCancel.setLayoutParams(cancelParams);
+
+            ViewGroup.LayoutParams confirmParams = binding.dialogConfirm.getLayoutParams();
+            confirmParams.height = targetButtonHeight;
+            binding.dialogConfirm.setLayoutParams(confirmParams);
+        }
+
+        // 控制视图显示
+        if (!isShowSLineView) {
             binding.sLine.setVisibility(View.GONE);
+        }
+        // 控制视图显示
+        if (!isShowHLineView) {
+            binding.hLine.setVisibility(View.GONE);
         }
         if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
@@ -160,31 +379,55 @@ public class GPSConfirmDialog extends Dialog {
         if (!isShowPositiveView) {
             binding.dialogConfirm.setVisibility(View.GONE);
         }
+
+        // 设置点击事件
         binding.dialogConfirm.setOnClickListener(v -> {
             dismiss();
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);
             }
         });
+
         binding.dialogCancel.setOnClickListener(v -> {
             dismiss();
             if (onNegativeClickListener != null) {
                 onNegativeClickListener.onDialogClick(this);
             }
         });
+
+        // 设置分割线颜色
+        int defaultLineColor = ContextCompat.getColor(getContext(), R.color.h_line_color);
+        int lineColorValue = lineColor == null ? defaultLineColor : lineColor;
+
+        binding.hLine.setBackground(AppUtil.createRectDrawable(
+                lineColorValue,
+                0,
+                AppUtil.dp2px(getContext(), 1f)
+        ));
+        binding.sLine.setBackground(AppUtil.createRectDrawable(
+                lineColorValue,
+                AppUtil.dp2px(getContext(), 1f),
+                0
+        ));
+
+        // 设置内容
         if (spannableContent == null) {
             binding.dialogTextView.setText(content);
         } else {
             binding.dialogTextView.setText(spannableContent);
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        // 设置Dialog属性
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
+
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return;
         }
+
         DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
         if (appDisplayMetrics != null) {
             dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
@@ -193,8 +436,16 @@ public class GPSConfirmDialog extends Dialog {
             dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+
         // 设置Dialog从窗体中间弹出
         dialogWindow.setGravity(Gravity.CENTER);
+        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> AppUtil.createRectDrawable(
+                Color.WHITE,
+                AppUtil.dp2px(getContext(), 8f),
+                AppUtil.dp2px(getContext(), 8f),
+                AppUtil.dp2px(getContext(), 8f),
+                AppUtil.dp2px(getContext(), 8f)
+        )));
     }
 
 }
