@@ -81,7 +81,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             if (!verifyResult.isOk()) {
                 return;
             }
-            mViewModel.add(binding.getData());
+            mViewModel.add(binding.getData(),binding.formImage.getImages());
         });
         binding.tvSex.setOnClickListener(v ->
                 new MenuDialog<>(this)

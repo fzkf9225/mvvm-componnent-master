@@ -7,15 +7,21 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.casic.otitan.common.BR;
+import com.casic.otitan.common.enums.AttachmentTypeEnum;
 import com.casic.otitan.common.enums.UploadStatusEnum;
 
 /**
- * Created by fz on 2023/12/28 17:00
- * describe :附件表
+ * 附件表
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @created 2023/12/28 17:00
+ * @updated 2026/4/9 0:03
  */
 @Entity
 public class AttachmentBean extends BaseObservable {
@@ -28,40 +34,40 @@ public class AttachmentBean extends BaseObservable {
     /**
      * 文件id
      */
-    private String fileId;
+    private String fileId = "";
     /**
      * 附件绝对路径
      */
-    private String path;
+    private String path = "";
     /**
      * 附件相对路径
      */
-    private String relativePath;
+    private String relativePath = "";
     /**
      * 缩略图
      */
-    private String thumbnailPath;
+    private String thumbnailPath = "";
     /**
      * 关联业务表id
      */
-    private String mainId;
+    private String mainId = "";
     /**
      * 附件名称
      */
-    private String fileName;
+    private String fileName = "";
     /**
      * 附件大小
      */
-    private String fileSize;
+    private String fileSize = "0";
     /**
      * 附件类型，参考枚举值AttachmentTypeEnum，image-图片，video-视频，audio-音频，file-附件
      */
-    private String fileType;
+    private String fileType = AttachmentTypeEnum.IMAGE.typeValue;
     /**
      * 字段id，对应业务表的字段名，默认为空，也就是这个业务表只有一个类型的附件这个就不用赋值
      * 如果多个的话就赋值这个字段，区分各自的附件
      */
-    private String fieldName;
+    private String fieldName = "";
     /**
      * 插入数据的时间
      */
@@ -69,45 +75,42 @@ public class AttachmentBean extends BaseObservable {
     /**
      * 插入数据的用户
      */
-    private String createUser;
+    private String createUser = "";
 
     /**
-     * 其他参数，村json
+     * 其他参数，存json
      */
-    private String otherInfo;
+    private String otherInfo = "";
 
-    // ========== 新增字段 ==========
     /**
      * 俯仰角
      */
-    private Double pitch;
+    private Double pitch = 0.0;
 
     /**
      * 偏航角
      */
-    private Double yaw;
+    private Double yaw = 0.0;
 
     /**
      * 翻滚角
      */
-    private Double roll;
+    private Double roll = 0.0;
 
     /**
      * 拍照时所在经度
      */
-    private Double longitude;
+    private Double longitude = 0.0;
 
     /**
      * 拍照时所在纬度
      */
-    private Double latitude;
+    private Double latitude = 0.0;
 
     /**
      * 拍照时所在海拔高程
      */
-    private Double height;
-    // ========== 新增字段结束 ==========
-
+    private Double height = 0.0;
     /**
      * 是否正在上传
      */
@@ -118,10 +121,10 @@ public class AttachmentBean extends BaseObservable {
      * 已上传的附件百分比
      */
     @Ignore
-    private String uploadingPercent;
+    private String uploadingPercent = "0";
 
     @Ignore
-    private Map<String,Object> uploadInfo;
+    private Map<String,Object> uploadInfo = new HashMap<>();
 
     public AttachmentBean() {
     }
@@ -142,7 +145,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setFileId(String fileId) {
-        this.fileId = fileId;
+        this.fileId = fileId == null ? "" : fileId;
     }
 
     @Bindable
@@ -151,7 +154,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.path = path == null ? "" : path;
     }
 
     @Bindable
@@ -160,7 +163,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
+        this.relativePath = relativePath == null ? "" : relativePath;
     }
 
     @Bindable
@@ -169,7 +172,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setMainId(String mainId) {
-        this.mainId = mainId;
+        this.mainId = mainId == null ? "" : mainId;
     }
 
     @Bindable
@@ -178,7 +181,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+        this.fileName = fileName == null ? "" : fileName;
     }
 
     @Bindable
@@ -187,7 +190,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
+        this.fileSize = fileSize == null ? "0" : fileSize;
     }
 
     @Bindable
@@ -196,7 +199,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setThumbnailPath(String thumbnailPath) {
-        this.thumbnailPath = thumbnailPath;
+        this.thumbnailPath = thumbnailPath == null ? "" : thumbnailPath;
     }
 
     @Bindable
@@ -205,7 +208,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
+        this.fieldName = fieldName == null ? "" : fieldName;
     }
 
     @Bindable
@@ -214,7 +217,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setCreateTime(long createTime) {
-        this.createTime = createTime;
+        this.createTime = createTime == 0 ? System.currentTimeMillis() : createTime;
     }
 
     @Bindable
@@ -223,7 +226,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setCreateUser(String createUser) {
-        this.createUser = createUser;
+        this.createUser = createUser == null ? "" : createUser;
     }
 
     @Bindable
@@ -232,7 +235,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setFileType(String fileType) {
-        this.fileType = fileType;
+        this.fileType = fileType == null ? AttachmentTypeEnum.IMAGE.typeValue : fileType;
     }
 
     @Bindable
@@ -241,7 +244,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setUploading(Integer uploading) {
-        this.uploading = uploading;
+        this.uploading = uploading == null ? UploadStatusEnum.DEFAULT.typeValue : uploading;
     }
 
     @Bindable
@@ -250,7 +253,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setUploadingPercent(String uploadingPercent) {
-        this.uploadingPercent = uploadingPercent;
+        this.uploadingPercent = uploadingPercent == null ? "0" : uploadingPercent;
     }
 
     @Bindable
@@ -259,7 +262,7 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setOtherInfo(String otherInfo) {
-        this.otherInfo = otherInfo;
+        this.otherInfo = otherInfo == null? "" : otherInfo;
     }
 
     public Map<String,Object> getUploadInfo() {
@@ -267,10 +270,9 @@ public class AttachmentBean extends BaseObservable {
     }
 
     public void setUploadInfo(Map<String,Object> uploadInfo) {
-        this.uploadInfo = uploadInfo;
+        this.uploadInfo = uploadInfo == null ? new HashMap<>() : uploadInfo;
     }
 
-    // ========== 新增字段的getter/setter ==========
     @Bindable
     public Double getPitch() {
         return pitch;

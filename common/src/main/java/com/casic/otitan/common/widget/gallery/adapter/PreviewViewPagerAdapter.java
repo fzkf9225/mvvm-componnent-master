@@ -103,8 +103,8 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
                     Bundle bundleVideo = new Bundle();
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE,
                             TextUtils.isEmpty(mList.get(getAbsoluteAdapterPosition()).getFileName())?
-                            FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath())
-                            :mList.get(getAbsoluteAdapterPosition()).getFileName());
+                                    FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath())
+                                    :mList.get(getAbsoluteAdapterPosition()).getFileName());
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());
                     VideoPlayerActivity.show(v.getContext(), bundleVideo);
                 } catch (Exception e) {

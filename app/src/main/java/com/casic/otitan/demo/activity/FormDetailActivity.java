@@ -15,7 +15,7 @@ import com.casic.otitan.common.enums.AttachmentTypeEnum;
 import com.casic.otitan.common.viewmodel.EmptyViewModel;
 
 public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFormDetailBinding> {
-   private final List<AttachmentBean> imageList = new ArrayList<>();
+    private final List<AttachmentBean> imageList = new ArrayList<>();
     private final List<AttachmentBean> videoList = new ArrayList<>();
     private final List<AttachmentBean> imageVideoList = new ArrayList<>();
 
