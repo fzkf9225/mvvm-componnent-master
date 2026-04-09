@@ -29,20 +29,56 @@ public abstract class AttachmentDatabase extends RoomDatabase {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            // 添加typeCName列到EventUploadBean表
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN thumbnailPath TEXT");
-            // 添加俯仰角字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN pitch REAL");
-            // 添加偏航角字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN yaw REAL");
-            // 添加翻滚角字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN roll REAL");
-            // 添加拍照时所在经度字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN longitude REAL");
-            // 添加拍照时所在纬度字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN latitude REAL");
-            // 添加拍照时所在海拔高程字段
-            database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN height REAL");
+            // 检查并添加thumbnailPath列
+            if (isColumnExists(database, "thumbnailPath")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN thumbnailPath TEXT");
+            }
+            // 检查并添加俯仰角字段
+            if (isColumnExists(database, "pitch")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN pitch REAL");
+            }
+            // 检查并添加偏航角字段
+            if (isColumnExists(database, "yaw")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN yaw REAL");
+            }
+            // 检查并添加翻滚角字段
+            if (isColumnExists(database, "roll")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN roll REAL");
+            }
+            // 检查并添加拍照时所在经度字段
+            if (isColumnExists(database, "longitude")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN longitude REAL");
+            }
+            // 检查并添加拍照时所在纬度字段
+            if (isColumnExists(database, "latitude")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN latitude REAL");
+            }
+            // 检查并添加拍照时所在海拔高程字段
+            if (isColumnExists(database, "height")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN height REAL");
+            }
+        }
+
+        /**
+         * 检查表中是否存在指定列
+         *
+         * @param database   SQLite数据库
+         * @param columnName 列名
+         * @return 存在返回true，否则返回false
+         */
+        private boolean isColumnExists(@NonNull SupportSQLiteDatabase database,
+                                       @NonNull String columnName) {
+            String query = "SELECT COUNT(*) FROM sqlite_master " +
+                    "WHERE type = 'table' " +
+                    "AND name = ? " +
+                    "AND sql LIKE ?";
+            String likePattern = "%" + columnName + "%";
+            try (android.database.Cursor cursor = database.query(query, new String[]{"AttachmentBean", likePattern})) {
+                if (cursor.moveToFirst()) {
+                    return cursor.getInt(0) <= 0;
+                }
+                return true;
+            }
         }
     };
 
@@ -67,4 +103,3 @@ public abstract class AttachmentDatabase extends RoomDatabase {
         return attachmentDatabase;
     }
 }
-
