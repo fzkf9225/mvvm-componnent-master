@@ -66,7 +66,12 @@
     <attr name="labelText" format="string" />
     <!-- value 相关属性 -->
     <attr name="valueText" format="string" />
-
+    <!-- 间距 -->
+    <attr name="contentStartMargin" format="dimension" />
+    <attr name="contentEndMargin" format="dimension" />
+    <attr name="contentTopMargin" format="dimension" />
+    <attr name="contentBottomMargin" format="dimension" />
+    <attr name="imageTextMargin" format="dimension" />
     <!-- unit 相关属性 -->
     <attr name="unitText" format="string" />
     <attr name="unitTextColor" format="color" />
@@ -169,11 +174,11 @@
         </attr>
 
         <!-- 间距 -->
-        <attr name="contentStartMargin" format="dimension" />
-        <attr name="contentEndMargin" format="dimension" />
-        <attr name="contentTopMargin" format="dimension" />
-        <attr name="contentBottomMargin" format="dimension" />
-        <attr name="imageTextMargin" format="dimension" />
+        <attr name="contentStartMargin"/>
+        <attr name="contentEndMargin"/>
+        <attr name="contentTopMargin"/>
+        <attr name="contentBottomMargin"/>
+        <attr name="imageTextMargin"/>
 
         <!-- 图片尺寸 -->
         <attr name="imageWidth"/>
@@ -679,7 +684,7 @@
     <declare-styleable name="ValueDisplayView">
         <!-- label 相关属性 -->
         <attr name="labelText"/>
-        <attr name="labelTextColor" />
+        <attr name="labelTextColor"/>
         <attr name="labelTextSize" />
 
         <!-- value 相关属性 -->
@@ -699,15 +704,34 @@
         <attr name="contentPaddingTop" format="dimension" />
         <attr name="contentPaddingBottom" format="dimension" />
 
-        <!-- 新增：布局排列方式 -->
+        <!-- 布局排列方式 -->
         <attr name="labelPosition" format="enum">
             <enum name="top" value="0" />
             <enum name="bottom" value="1" />
         </attr>
 
-        <!-- 新增：label与value/unit之间的间距 -->
+        <!-- label与value/unit之间的间距 -->
         <attr name="labelSpacing" format="dimension" />
+
+        <!-- ========== 新增属性 ========== -->
+        <!-- 数值和单位的对齐方式 -->
+        <attr name="valueUnitAlignment" format="enum">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+            <enum name="spaceBetween" value="3" />
+        </attr>
+
+        <!-- 数值和单位之间的间距 -->
+        <attr name="valueUnitSpacing" format="dimension" />
+
+        <!-- 内容整体左侧边距 -->
+        <attr name="contentStartMargin"/>
+
+        <!-- 内容整体右侧边距 -->
+        <attr name="contentEndMargin"/>
     </declare-styleable>
+
 
     <declare-styleable name="IndicatorTabLayout">
         <!-- 指示条高度 -->
