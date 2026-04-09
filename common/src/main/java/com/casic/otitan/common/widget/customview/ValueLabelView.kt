@@ -300,30 +300,11 @@ class ValueLabelView @JvmOverloads constructor(
         )
         constraintSet.setHorizontalBias(container.id, 0.5f)
 
-        // 容器的垂直约束将在 setupLabelConstraints 中与 valueTextView 关联
-        // 这里需要将容器的垂直约束设置好
-        constraintSet.connect(
-            container.id,
-            ConstraintSet.TOP,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.TOP,
-            0
-        )
-        constraintSet.connect(
-            container.id,
-            ConstraintSet.BOTTOM,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.BOTTOM,
-            0
-        )
-
-        // 更新 valueTextView 的引用关系，让标签约束知道使用容器
-        // 在 setupLabelConstraints 中需要特殊处理居中对齐的情况
+        // 注意：不要在这里连接容器的 TOP 和 BOTTOM 到父布局
+        // 容器的垂直约束将在 setupLabelConstraints 中根据 labelPosition 动态设置
+        // 这里只设置水平约束，垂直约束由 setupLabelConstraints 中的 targetViewId 处理
     }
 
-    /**
-     * 不使用容器，直接使用 ConstraintLayout 约束实现对齐
-     */
     /**
      * 不使用容器，直接使用 ConstraintLayout 约束实现对齐
      */
@@ -426,20 +407,8 @@ class ValueLabelView @JvmOverloads constructor(
         }
 
         // 设置数值控件的垂直约束（用于标签定位）
-        constraintSet.connect(
-            valueTextView.id,
-            ConstraintSet.TOP,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.TOP,
-            0
-        )
-        constraintSet.connect(
-            valueTextView.id,
-            ConstraintSet.BOTTOM,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.BOTTOM,
-            0
-        )
+        // 注意：不要同时连接 TOP 和 BOTTOM，避免被拉伸
+        // 具体的垂直约束在 setupLabelConstraints 中根据 labelPosition 设置
     }
 
     /**
@@ -476,6 +445,7 @@ class ValueLabelView @JvmOverloads constructor(
         when (labelPosition) {
             LABEL_POSITION_TOP -> {
                 // 标签在上方，数值/单位在下方
+                // 标签顶部对齐父布局顶部
                 constraintSet.connect(
                     labelTextView.id,
                     ConstraintSet.TOP,
@@ -483,6 +453,9 @@ class ValueLabelView @JvmOverloads constructor(
                     ConstraintSet.TOP,
                     0
                 )
+                // 标签底部不连接父布局，让高度由内容决定
+
+                // 数值/单位顶部对齐标签底部
                 constraintSet.connect(
                     targetViewId,
                     ConstraintSet.TOP,
@@ -490,6 +463,7 @@ class ValueLabelView @JvmOverloads constructor(
                     ConstraintSet.BOTTOM,
                     labelSpacing
                 )
+                // 数值/单位底部对齐父布局底部
                 constraintSet.connect(
                     targetViewId,
                     ConstraintSet.BOTTOM,
@@ -500,6 +474,7 @@ class ValueLabelView @JvmOverloads constructor(
             }
             LABEL_POSITION_BOTTOM -> {
                 // 数值/单位在上方，标签在下方
+                // 数值/单位顶部对齐父布局顶部
                 constraintSet.connect(
                     targetViewId,
                     ConstraintSet.TOP,
@@ -507,6 +482,9 @@ class ValueLabelView @JvmOverloads constructor(
                     ConstraintSet.TOP,
                     0
                 )
+                // 数值/单位底部不连接父布局，让高度由内容决定
+
+                // 标签顶部对齐数值/单位底部
                 constraintSet.connect(
                     labelTextView.id,
                     ConstraintSet.TOP,
@@ -514,6 +492,7 @@ class ValueLabelView @JvmOverloads constructor(
                     ConstraintSet.BOTTOM,
                     labelSpacing
                 )
+                // 标签底部对齐父布局底部
                 constraintSet.connect(
                     labelTextView.id,
                     ConstraintSet.BOTTOM,
