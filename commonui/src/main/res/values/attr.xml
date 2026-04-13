@@ -169,10 +169,7 @@
             <enum name="right" value="1" />
         </attr>
         <!-- Default text typeface style. -->
-        <attr name="labelTextStyle">
-            <flag name="normal" value="0" />
-            <flag name="bold" value="1" />
-        </attr>
+        <attr name="labelTextStyle"/>
         <!--label文字内容-->
         <attr name="label" />
         <!--下拉框图标-->

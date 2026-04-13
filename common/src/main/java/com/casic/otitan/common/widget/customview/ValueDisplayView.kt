@@ -3,6 +3,7 @@ package com.casic.otitan.common.widget.customview
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -39,6 +40,8 @@ class ValueDisplayView @JvmOverloads constructor(
         setTextColor(Color.BLACK)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
         gravity = Gravity.CENTER
+        // 默认 value 加粗
+        setTypeface(typeface, Typeface.BOLD)
     }
 
     private val unitTextView: AppCompatTextView = AppCompatTextView(context).apply {
@@ -83,6 +86,9 @@ class ValueDisplayView @JvmOverloads constructor(
                         labelTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 label 加粗
+                val labelStyle = typedArray.getInt(R.styleable.ValueDisplayView_labelTextStyle, 0)
+                setLabelBold(labelStyle == 1)
 
                 // 解析 value 属性
                 typedArray.getString(R.styleable.ValueDisplayView_valueText)?.let {
@@ -96,6 +102,9 @@ class ValueDisplayView @JvmOverloads constructor(
                         valueTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 value 加粗
+                val valueStyle = typedArray.getInt(R.styleable.ValueDisplayView_valueTextStyle, 1)
+                setValueBold(valueStyle == 1)
 
                 // 解析 unit 属性
                 typedArray.getString(R.styleable.ValueDisplayView_unitText)?.let {
@@ -109,6 +118,9 @@ class ValueDisplayView @JvmOverloads constructor(
                         unitTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 unit 加粗
+                val unitStyle = typedArray.getInt(R.styleable.ValueDisplayView_unitTextStyle, 0)
+                setUnitBold(unitStyle == 1)
 
                 // 解析内边距
                 val padding = typedArray.getDimensionPixelSize(R.styleable.ValueDisplayView_contentPadding, -1)
@@ -251,6 +263,17 @@ class ValueDisplayView @JvmOverloads constructor(
     }
 
     /**
+     * 设置标签文字是否加粗
+     */
+    fun setLabelBold(bold: Boolean) {
+        if (bold) {
+            labelTextView.setTypeface(labelTextView.typeface, Typeface.BOLD)
+        } else {
+            labelTextView.setTypeface(labelTextView.typeface, Typeface.NORMAL)
+        }
+    }
+
+    /**
      * 设置数值文本
      */
     fun setValue(text: CharSequence) {
@@ -292,6 +315,17 @@ class ValueDisplayView @JvmOverloads constructor(
     }
 
     /**
+     * 设置数值文字是否加粗
+     */
+    fun setValueBold(bold: Boolean) {
+        if (bold) {
+            valueTextView.setTypeface(valueTextView.typeface, Typeface.BOLD)
+        } else {
+            valueTextView.setTypeface(valueTextView.typeface, Typeface.NORMAL)
+        }
+    }
+
+    /**
      * 设置单位文本
      */
     fun setUnit(text: CharSequence) {
@@ -314,6 +348,17 @@ class ValueDisplayView @JvmOverloads constructor(
      */
     fun setUnitTextSize(sp: Float) {
         unitTextView.textSize = sp
+    }
+
+    /**
+     * 设置单位文字是否加粗
+     */
+    fun setUnitBold(bold: Boolean) {
+        if (bold) {
+            unitTextView.setTypeface(unitTextView.typeface, Typeface.BOLD)
+        } else {
+            unitTextView.setTypeface(unitTextView.typeface, Typeface.NORMAL)
+        }
     }
 
     /**
@@ -347,7 +392,7 @@ class ValueDisplayView @JvmOverloads constructor(
     /**
      * 获取各个TextView
      */
-    fun getLabelTextView(): TextView = labelTextView
-    fun getValueTextView(): TextView = valueTextView
-    fun getUnitTextView(): TextView = unitTextView
+    fun getLabelTextView(): AppCompatTextView = labelTextView
+    fun getValueTextView(): AppCompatTextView = valueTextView
+    fun getUnitTextView(): AppCompatTextView = unitTextView
 }

@@ -3,6 +3,7 @@ package com.casic.otitan.common.widget.customview
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -25,7 +26,7 @@ import com.casic.otitan.common.utils.common.dp2px
  * - 底部区域：标签文字（水平居中）
  *
  * 支持功能：
- * - 自定义数值、单位、标签的文本、颜色、大小
+ * - 自定义数值、单位、标签的文本、颜色、大小、加粗样式
  * - 支持数值和单位的水平对齐方式（左对齐、居中、右对齐、两端对齐）
  * - 支持数值和单位之间的间距调节
  * - 支持整体内容的左/右内边距调节
@@ -65,6 +66,8 @@ class ValueLabelView @JvmOverloads constructor(
         setTextColor(Color.BLACK)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
         gravity = Gravity.CENTER_VERTICAL
+        // 默认 value 加粗
+        setTypeface(typeface, Typeface.BOLD)
     }
 
     /**
@@ -152,6 +155,9 @@ class ValueLabelView @JvmOverloads constructor(
                         valueTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 value 加粗，默认值为 1（加粗）
+                val valueStyle = typedArray.getInt(R.styleable.ValueDisplayView_valueTextStyle, 1)
+                setValueBold(valueStyle == 1)
 
                 // ========== 解析 unit 属性 ==========
                 typedArray.getString(R.styleable.ValueDisplayView_unitText)?.let {
@@ -165,6 +171,9 @@ class ValueLabelView @JvmOverloads constructor(
                         unitTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 unit 加粗，默认值为 0（正常）
+                val unitStyle = typedArray.getInt(R.styleable.ValueDisplayView_unitTextStyle, 0)
+                setUnitBold(unitStyle == 1)
 
                 // ========== 解析 label 属性 ==========
                 typedArray.getString(R.styleable.ValueDisplayView_labelText)?.let {
@@ -178,6 +187,9 @@ class ValueLabelView @JvmOverloads constructor(
                         labelTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size.toFloat())
                     }
                 }
+                // 解析 label 加粗，默认值为 0（正常）
+                val labelStyle = typedArray.getInt(R.styleable.ValueDisplayView_labelTextStyle, 0)
+                setLabelBold(labelStyle == 1)
 
                 // ========== 解析内边距 ==========
                 val padding = typedArray.getDimensionPixelSize(R.styleable.ValueDisplayView_contentPadding, -1)
@@ -532,6 +544,17 @@ class ValueLabelView @JvmOverloads constructor(
     }
 
     /**
+     * 设置标签文字是否加粗
+     */
+    fun setLabelBold(bold: Boolean) {
+        if (bold) {
+            labelTextView.setTypeface(labelTextView.typeface, Typeface.BOLD)
+        } else {
+            labelTextView.setTypeface(labelTextView.typeface, Typeface.NORMAL)
+        }
+    }
+
+    /**
      * 设置数值文本
      */
     fun setValue(text: CharSequence) {
@@ -573,6 +596,17 @@ class ValueLabelView @JvmOverloads constructor(
     }
 
     /**
+     * 设置数值文字是否加粗
+     */
+    fun setValueBold(bold: Boolean) {
+        if (bold) {
+            valueTextView.setTypeface(valueTextView.typeface, Typeface.BOLD)
+        } else {
+            valueTextView.setTypeface(valueTextView.typeface, Typeface.NORMAL)
+        }
+    }
+
+    /**
      * 设置单位文本
      */
     fun setUnit(text: CharSequence) {
@@ -595,6 +629,17 @@ class ValueLabelView @JvmOverloads constructor(
      */
     fun setUnitTextSize(sp: Float) {
         unitTextView.textSize = sp
+    }
+
+    /**
+     * 设置单位文字是否加粗
+     */
+    fun setUnitBold(bold: Boolean) {
+        if (bold) {
+            unitTextView.setTypeface(unitTextView.typeface, Typeface.BOLD)
+        } else {
+            unitTextView.setTypeface(unitTextView.typeface, Typeface.NORMAL)
+        }
     }
 
     /**
