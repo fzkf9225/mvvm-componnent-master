@@ -20,7 +20,7 @@
             url  = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
         }
 ```
-`ALIYUN_USER_NAME`为阿里云账号，`ALIYUN_PASSWORD`为阿里云密码，后面会单独提供，不卸载这里，需要将用户名密码添加到电脑的`环境变量`中
+`ALIYUN_USER_NAME`为阿里云账号，`ALIYUN_PASSWORD`为阿里云密码，后面会单独提供，不写在这里，需要将用户名密码添加到电脑的`环境变量`中
 也可以添加阿里云国内镜像，这个是可选择的
 ```groovy
         maven { setUrl("https://jitpack.io") }
