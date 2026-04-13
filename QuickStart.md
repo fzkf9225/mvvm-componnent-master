@@ -143,7 +143,6 @@ ATTACHMENT_DATA_BASE=attachment_dev
             zipAlignEnabled = true// Zipalign优化
             shrinkResources = true // 移除无用的resource
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
-            //app模块不需要添加这个
         }
         debug {
             resValue("string", "app_config_file", "dev.properties")//这里的app_config_file会自动生成对应R文件字符串资源通过R.string.app_config_file获取
@@ -195,7 +194,6 @@ enum class PropertiesKeyEnum constructor(
     alias(libs.plugins.google.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.navigation.safeargs) apply false
-    id('kotlin-kapt')//可选，如果不使用databinding理论上可以不添加
 ```
 在`app`模块的`build.gradle`文件中添加：
 ```groovy
@@ -204,6 +202,7 @@ enum class PropertiesKeyEnum constructor(
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.hilt.android)
     alias(libs.plugins.navigation.safeargs)
+    id('kotlin-kapt')//可选，如果不使用databinding理论上可以不添加
 ```
 配置sdk版本
 ```groovy
@@ -295,7 +294,7 @@ class BusinessApiModule {
 }
 ```
 #### 添加请求
-随机在`BusinessApiService`添加一个请求
+随机在`BusinessApiService`添加一个请求，返回理论上应该是`BaseResponse<BasePage<EventReportingBean>>`，`BaseResponse`负责解析外部的请求`code`、`message`等，但是框架里已经自动解析了请求是否成功这里所以只需要写：`BasePage<EventReportingBean>`
 ```kotlin
     /**
      * 我的事件上报分页列表
@@ -319,7 +318,7 @@ class BusinessApiModule {
         @Query("queryType") queryType: String?,
         @Query("keyword") keyword: String?,
         @Query("status")status: Array<String>?
-    ): Observable<BasePage<EventReportingBean>>
+    ): Observable<BasePage<EventReportingBean>> //
 ```
 #### 新建respository
 新建一个类`EventRepositoryImpl`，继承`RepositoryImpl`，具体实现参考项目实例代码，普通请求集成`RepositoryImpl`,paging分页请求集成`PagingRepositoryImpl`，协程请求继承`FlowRepositoryImpl`和`PagingFlowRepositoryImpl`
