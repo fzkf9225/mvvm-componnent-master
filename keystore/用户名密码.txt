@@ -1,0 +1,3 @@
+签名秘钥：mvvm-componment-master.jks
+签名别名：mvvm-componment-master
+签名秘钥密码和别名密码：github@fzkf!2026

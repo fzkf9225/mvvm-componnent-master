@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.casic.otitan.common.R
+import com.casic.otitan.common.utils.common.dp2px
 
 /**
  * created by fz on 2024/10/11 14:55
@@ -17,22 +18,27 @@ class DividerView : View {
      * 虚线间隔
      */
     var dashGap: Float? = null
+
     /**
      * 虚线长度
      */
     var dashLength: Float? = null
+
     /**
      * 虚线宽度
      */
     var dashThickness: Float? = null
+
     /**
      * 虚线颜色
      */
-    var color: Int? = null
+    var dividerLineColor: Int? = null
+
     /**
      * 虚线方向
      */
     var orientation: Int = ORIENTATION_HORIZONTAL
+
     /**
      * 画笔
      */
@@ -64,23 +70,24 @@ class DividerView : View {
             dashGap = a.getDimension(R.styleable.DividerView_dashGap, 5f)
             dashLength = a.getDimension(R.styleable.DividerView_dashLength, 5f)
             dashThickness = a.getDimension(R.styleable.DividerView_dashThickness, 3f)
-            color = a.getColor(R.styleable.DividerView_dividerLineColor, 0x666666)
+            dividerLineColor = a.getColor(R.styleable.DividerView_dividerLineColor, 0x666666)
             orientation =
                 a.getInt(R.styleable.DividerView_dividerOrientation, ORIENTATION_HORIZONTAL)
         } finally {
             a.recycle()
         }
-        mPaint = Paint()
-        mPaint!!.isAntiAlias = true
-        color?.let { mPaint!!.setColor(it) }
-        mPaint!!.style = Paint.Style.STROKE
-        mPaint!!.strokeWidth = dashThickness!!
-        mPaint!!.setPathEffect(
-            DashPathEffect(
-                floatArrayOf(dashGap!!, dashLength!!),
-                0f
+        mPaint = Paint().apply {
+            isAntiAlias = true
+            color = dividerLineColor ?: 0x666666
+            style = Paint.Style.STROKE
+            strokeWidth = dashThickness ?: 1.dp2px(context).toFloat()
+            setPathEffect(
+                DashPathEffect(
+                    floatArrayOf(dashLength ?: 5f, dashGap ?: 5f),
+                    0f
+                )
             )
-        )
+        }
     }
 
     override fun onDraw(canvas: Canvas) {

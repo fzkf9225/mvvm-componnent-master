@@ -25,14 +25,18 @@ import com.casic.otitan.common.R;
 import com.casic.otitan.common.utils.log.LogUtil;
 
 /**
- * Created by fz on 2017/6/15.
- * 应用程序Activity管理类：用于Activity管理和应用程序退出
- * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
- * <p>
- * 添加Activity到堆栈
- * AppManager.getAppManager().addActivity(this);
- * 结束Activity&从堆栈中移除
- * AppManager.getAppManager().finishActivity(this);
+ *  * 应用程序Activity管理类：用于Activity管理和应用程序退出
+ *  * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
+ *  * <p>
+ *  * 添加Activity到堆栈
+ *  * AppManager.getAppManager().addActivity(this);
+ *  * 结束Activity&从堆栈中移除
+ *  * AppManager.getAppManager().finishActivity(this);
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/4/13 14:07
  */
 public class AppManager {
     public final static String TAG = AppManager.class.getSimpleName();
