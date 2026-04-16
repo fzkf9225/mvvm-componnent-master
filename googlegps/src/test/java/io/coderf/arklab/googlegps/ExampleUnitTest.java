@@ -1,4 +1,4 @@
-package com.casic.otitan.googlegps;
+package io.coderf.arklab.googlegps;
 
 import static org.junit.Assert.assertEquals;
 
