@@ -307,7 +307,6 @@
     <public name="permission_rationale_write_storage" type="string"/>
     <public name="loading_now" type="string"/>
     <public name="save_to_local" type="string"/>
-    <public name="app_name" type="string" />
     <public name="ok" type="string" />
     <public name="yes" type="string" />
     <public name="no" type="string" />
@@ -374,4 +373,89 @@
     <public name="update_title" type="string" />
     <public name="downloading" type="string" />
     <public name="install_now" type="string" />
+    <public name="deselect_all" type="string" />
+    <public name="sort" type="string" />
+    <public name="filter" type="string" />
+    <public name="detail" type="string" />
+    <public name="view_all" type="string" />
+    <public name="load_more" type="string" />
+    <public name="resend_verification_code" type="string" />
+    <public name="agree_privacy_policy" type="string" />
+    <public name="already_have_account" type="string" />
+    <public name="no_account" type="string" />
+    <public name="register_now" type="string" />
+    <public name="login_now" type="string" />
+    <public name="load_success" type="string" />
+    <public name="operation_success" type="string" />
+    <public name="operation_failed" type="string" />
+    <public name="network_connecting" type="string" />
+    <public name="data_error" type="string" />
+    <public name="request_timeout" type="string" />
+    <public name="server_error" type="string" />
+    <public name="invalid_username" type="string" />
+    <public name="password_length_limit" type="string" />
+    <public name="invalid_verification_code" type="string" />
+    <public name="id_card_invalid" type="string" />
+    <public name="days_ago" type="string" />
+    <public name="weeks_ago" type="string" />
+    <public name="months_ago" type="string" />
+    <public name="years_ago" type="string" />
+    <public name="am" type="string" />
+    <public name="pm" type="string" />
+    <public name="date_format_ymd" type="string" />
+    <public name="date_format_ymd_slash" type="string" />
+    <public name="time_format_hms" type="string" />
+    <public name="time_format_hm" type="string" />
+    <public name="select_video" type="string" />
+    <public name="image_preview" type="string" />
+    <public name="video_preview" type="string" />
+    <public name="compress_image" type="string" />
+    <public name="original_image" type="string" />
+    <public name="image_selected_count" type="string" />
+    <public name="video_selected_count" type="string" />
+    <public name="max_select_limit" type="string" />
+    <public name="change_phone" type="string" />
+    <public name="notification_settings" type="string" />
+    <public name="privacy_settings" type="string" />
+    <public name="language_settings" type="string" />
+    <public name="cache_size" type="string" />
+    <public name="version_info" type="string" />
+    <public name="latest_version" type="string" />
+    <public name="update_now" type="string" />
+    <public name="update_later" type="string" />
+    <public name="force_update_tip" type="string" />
+    <public name="exit_app_confirm" type="string" />
+    <public name="logout_success" type="string" />
+    <public name="account_cancel" type="string" />
+    <public name="account_cancel_warning" type="string" />
+    <public name="account_cancel_confirm" type="string" />
+    <public name="clear_search_history" type="string" />
+    <public name="search_result" type="string" />
+    <public name="share_success" type="string" />
+    <public name="share_failed" type="string" />
+    <public name="share_canceled" type="string" />
+    <public name="dialog_title_warning" type="string" />
+    <public name="dialog_title_error" type="string" />
+    <public name="dialog_title_success" type="string" />
+    <public name="dialog_title_info" type="string" />
+    <public name="dialog_confirm_clear" type="string" />
+    <public name="permission_location_rationale" type="string" />
+    <public name="permission_microphone_rationale" type="string" />
+    <public name="permission_contacts_rationale" type="string" />
+    <public name="permission_calendar_rationale" type="string" />
+    <public name="permission_phone_rationale" type="string" />
+    <public name="permission_sms_rationale" type="string" />
+    <public name="permission_notification_rationale" type="string" />
+    <public name="file_download_success" type="string" />
+    <public name="file_download_failed" type="string" />
+    <public name="file_save_path" type="string" />
+    <public name="file_size" type="string" />
+    <public name="file_format_error" type="string" />
+    <public name="file_too_large" type="string" />
+    <public name="update_content" type="string" />
+    <public name="update_immediately" type="string" />
+    <public name="update_in_background" type="string" />
+    <public name="download_paused" type="string" />
+    <public name="install_later" type="string" />
+
 </resources>
