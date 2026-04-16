@@ -1,5 +1,7 @@
 package io.coderf.arklab.demo.api;
 
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.utils.DebugUtil;
 import io.coderf.arklab.ui.api.FileApiService;
 import io.coderf.arklab.ui.api.MediaUploadConfig;
 import io.coderf.arklab.ui.helper.CalendarDataSource;
@@ -30,9 +32,11 @@ public class ApplicationHelper extends BaseApplication {
         super.onCreate();
         registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
         Config.getInstance().init(this);
+        GpsSettingConfig.getInstance().init(this);
         Config.getInstance().setResponseBodyLogConverterJson(true);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
+            DebugUtil.enableDebug(true);
         }
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()

@@ -3,9 +3,7 @@ package io.coderf.arklab.googlegps.helper
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -16,9 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import io.coderf.arklab.googlegps.common.GpsSettingConfig
 import io.coderf.arklab.googlegps.dialog.GPSConfirmDialog
 import io.coderf.arklab.googlegps.helper.permission.PermissionsChecker
-import kotlin.collections.iterator
 
 /**
  * created by fz on 2024/11/21 16:49
@@ -74,7 +72,7 @@ class GpsLifecycleObserver constructor(
 
     private var gpsLauncher: ActivityResultLauncher<Intent>? = null
     private var locationPermissionLauncher: ActivityResultLauncher<Array<String>>? = null
-    private var backPermissionLauncher: ActivityResultLauncher<Intent>? = null
+    private var backPermissionLauncher: ActivityResultLauncher<String>? = null
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
@@ -97,12 +95,21 @@ class GpsLifecycleObserver constructor(
         )
 
         backPermissionLauncher = fragment?.registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            backPermissionCallback
-        ) ?: activity?.registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            backPermissionCallback
-        )
+            ActivityResultContracts.RequestPermission()
+        ) { grantResult ->
+            if (grantResult) {
+                callback?.let { it(true, "后台定位权限被拒绝") }
+                return@registerForActivityResult
+            }
+            callback?.let { it(true, "已授权后台定位权限") }
+        }
+            ?: activity?.registerForActivityResult(ActivityResultContracts.RequestPermission()) { grantResult ->
+                if (grantResult) {
+                    callback?.let { it(true, "后台定位权限被拒绝") }
+                    return@registerForActivityResult
+                }
+                callback?.let { it(true, "已授权后台定位权限") }
+            }
         callback?.let { startCheck(it) }
     }
 
@@ -162,7 +169,7 @@ class GpsLifecycleObserver constructor(
         if (PermissionsChecker.getInstance()
                 .lacksPermissions(
                     context!!,
-                    *GPSConstantsHelper.PERMISSIONS_LOCATION
+                    *GpsSettingConfig.PERMISSIONS_LOCATION
                 )
         ) {
             GPSConfirmDialog(context!!)
@@ -173,7 +180,7 @@ class GpsLifecycleObserver constructor(
                     callback(false, "请同意定位权限，否则无法获取经纬度信息")
                 }
                 .setOnPositiveClickListener { _ ->
-                    locationPermissionLauncher?.launch(GPSConstantsHelper.PERMISSIONS_LOCATION)
+                    locationPermissionLauncher?.launch(GpsSettingConfig.PERMISSIONS_LOCATION)
                 }
                 .builder()
                 .show()
@@ -228,10 +235,10 @@ class GpsLifecycleObserver constructor(
                         callback(true, "后台定位权限被拒绝")
                     }
                     .setOnPositiveClickListener { _ ->
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        val uri = Uri.fromParts("package", context!!.packageName, null)
-                        intent.setData(uri)
-                        backPermissionLauncher?.launch(intent)
+//                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//                        val uri = Uri.fromParts("package", context!!.packageName, null)
+//                        intent.setData(uri)
+                        backPermissionLauncher?.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     }
                     .builder()
                     .show()
@@ -243,14 +250,6 @@ class GpsLifecycleObserver constructor(
         callback(true, "已授权")
     }
 
-    private var backPermissionCallback: ActivityResultCallback<ActivityResult> =
-        ActivityResultCallback { result: ActivityResult ->
-            if (result.resultCode == PackageManager.PERMISSION_GRANTED) {
-                callback?.let { it(true, "后台定位权限被拒绝") }
-                return@ActivityResultCallback
-            }
-            callback?.let { it(true, "已授权后台定位权限") }
-        }
 
     /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的

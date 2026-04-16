@@ -60,6 +60,9 @@ dependencies {
     testImplementation libs.junit
     implementation libs.netty.all
     implementation libs.org.apache.commons.commons.lang3
+    implementation libs.mmkv
+    implementation libs.gson
+    implementation "androidx.preference:preference:1.2.1"
 }
 //执行以下命令完成制品推送
 //推送命令

@@ -28,14 +28,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.googlegps.helper.GPSConstantsHelper;
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.helper.NmeaSentence;
 import io.coderf.arklab.googlegps.service.GpsService;
 import io.coderf.arklab.googlegps.socket.LogUtil;
 
 
 public class GnssLocationListener extends GnssStatus.Callback implements LocationListener, OnNmeaMessageListener {
-    private final static String TAG = "GnssLocationListener";
     private String listenerName;
     private static GpsService loggingService;
     protected String latestHdop;
@@ -54,21 +53,22 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     /**
      * Event raised when a new fix is received.
      */
+    @Override
     public void onLocationChanged(Location loc) {
-        LogUtil.show(TAG, "onLocationChanged: " + loc);
+        LogUtil.show(GpsService.TAG, "onLocationChanged: " + loc);
         try {
             if (loc != null) {
                 Bundle b = new Bundle();
-                b.putString(GPSConstantsHelper.HDOP, this.latestHdop);
-                b.putString(GPSConstantsHelper.PDOP, this.latestPdop);
-                b.putString(GPSConstantsHelper.VDOP, this.latestVdop);
-                b.putString(GPSConstantsHelper.GEOIDHEIGHT, this.geoIdHeight);
-                b.putString(GPSConstantsHelper.AGEOFDGPSDATA, this.ageOfDgpsData);
-                b.putString(GPSConstantsHelper.DGPSID, this.dgpsId);
+                b.putString(GpsSettingConfig.HDOP, this.latestHdop);
+                b.putString(GpsSettingConfig.PDOP, this.latestPdop);
+                b.putString(GpsSettingConfig.VDOP, this.latestVdop);
+                b.putString(GpsSettingConfig.GEOIDHEIGHT, this.geoIdHeight);
+                b.putString(GpsSettingConfig.AGEOFDGPSDATA, this.ageOfDgpsData);
+                b.putString(GpsSettingConfig.DGPSID, this.dgpsId);
 
-                b.putBoolean(GPSConstantsHelper.PASSIVE, listenerName.equalsIgnoreCase(GPSConstantsHelper.PASSIVE));
-                b.putString(GPSConstantsHelper.LISTENER, listenerName);
-                b.putInt(GPSConstantsHelper.SATELLITES_FIX, satellitesUsedInFix);
+                b.putBoolean(GpsSettingConfig.PASSIVE, listenerName.equalsIgnoreCase(GpsSettingConfig.PASSIVE));
+                b.putString(GpsSettingConfig.LISTENER, listenerName);
+                b.putInt(GpsSettingConfig.SATELLITES_FIX, satellitesUsedInFix);
 
                 loc.setExtras(b);
                 loggingService.onLocationChanged(loc);
@@ -79,7 +79,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
             }
 
         } catch (Exception ex) {
-            LogUtil.show(TAG, "ex: " + ex);
+            LogUtil.show(GpsService.TAG, "ex: " + ex);
         }
 
     }
@@ -87,46 +87,46 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     @Override
     public void onStopped() {
         super.onStopped();
-        LogUtil.show(TAG, "onStopped");
+        LogUtil.show(GpsService.TAG, "onStopped");
         loggingService.restartGpsManagers();
     }
 
     public void onProviderDisabled(String provider) {
-        LogUtil.show(TAG, "Provider disabled: " + provider);
+        LogUtil.show(GpsService.TAG, "Provider disabled: " + provider);
         loggingService.restartGpsManagers();
     }
 
     public void onProviderEnabled(String provider) {
-        LogUtil.show(TAG, "Provider enabled: " + provider);
+        LogUtil.show(GpsService.TAG, "Provider enabled: " + provider);
         loggingService.restartGpsManagers();
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        LogUtil.show(TAG, "onStatusChanged: " + provider);
+        LogUtil.show(GpsService.TAG, "onStatusChanged: " + provider);
         if (status == LocationProvider.OUT_OF_SERVICE) {
-            LogUtil.show(TAG, provider + " is out of service");
+            LogUtil.show(GpsService.TAG, provider + " is out of service");
         }
 
         if (status == LocationProvider.AVAILABLE) {
-            LogUtil.show(TAG, provider + " is available");
+            LogUtil.show(GpsService.TAG, provider + " is available");
         }
 
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-            LogUtil.show(TAG, provider + " is temporarily unavailable");
+            LogUtil.show(GpsService.TAG, provider + " is temporarily unavailable");
         }
     }
 
     @Override
     public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
         super.onSatelliteStatusChanged(status);
-        LogUtil.show(TAG, "onSatelliteStatusChanged:" + status.toString());
+        LogUtil.show(GpsService.TAG, "onSatelliteStatusChanged:" + status.toString());
         int maxSatellites = status.getSatelliteCount();
         loggingService.setSatelliteInfo(maxSatellites);
     }
 
     @Override
     public void onNmeaMessage(String message, long timestamp) {
-        LogUtil.show(TAG, "onNmeaMessage:" + message + ",timestamp：" + timestamp);
+        LogUtil.show(GpsService.TAG, "onNmeaMessage:" + message + ",timestamp：" + timestamp);
         loggingService.onNmeaSentence(timestamp, message);
         if (message == null || message.isEmpty()) {
             return;
