@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6732dc01-74de-406b-91c1-9de636a392cc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/CoordinatorActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/CoordinatorActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/DemoPagingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/DemoPagingActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/DemoSmartPagingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/DemoSmartPagingActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/HiltActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/HiltActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/LaunchActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/LaunchActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/RecyclerViewSampleActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/RecyclerViewSampleActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/VerifyActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/activity/VerifyActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/fragment/DemoPagingFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/fragment/DemoPagingFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/impl/ErrorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/impl/ErrorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/module/AppModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/module/AppModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DemoPagingViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DemoPagingViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DialogViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DialogViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DownloadViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/DownloadViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/GoogleGpsViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/GoogleGpsViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/HiltViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/TestHiltViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/HomeFragmentViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/HomeFragmentViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MainViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MainViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MediaCompressViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MediaCompressViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MediaViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/MediaViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/RecyclerViewSampleViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/RecyclerViewSampleViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/ScanQrCodeViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/ScanQrCodeViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/SplashViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/SplashViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/WightViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/java/com/casic/titan/demo/viewmodel/WightViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/main/res/layout/activity_hilt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/main/res/layout/activity_hilt.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/activity/TechnicalSupportActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/activity/TechnicalSupportActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BasePagingFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BasePagingFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseRecyclerViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseRecyclerViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseSmartPagingFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseSmartPagingFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/base/BaseViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/datasource/PagingSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/datasource/PagingSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/fragment/EmptyFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/fragment/EmptyFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/EmptyViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/EmptyViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/MainViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/PagingViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/PagingViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/VideoPlayerViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pers/fz/mvvm/viewmodel/VideoPlayerViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/activity/FeedBackActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/activity/FeedBackActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/activity/SettingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/activity/SettingActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/fragment/MeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/fragment/MeFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/fragment/SettingFragment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/viewmodel/SettingViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/viewmodel/SettingViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/viewmodel/UserViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../usercomponent/src/main/java/com/casic/titan/usercomponent/viewmodel/UserViewModel.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2oEjv0JkjhAM3SCDAVX8M89UiHx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "android.gradle.sync.needed": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6732dc01-74de-406b-91c1-9de636a392cc" name="Changes" comment="" />
+      <created>1730441857570</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730441857570</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.coderf.arklab.annotation.test", appContext.getPackageName());
+        assertEquals("com.casic.otitan.annotation.test", appContext.getPackageName());
     }
 }
