@@ -358,22 +358,22 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== MVVM Common Library ====================
 # 保留 MVVM 框架核心类
--keep class com.casic.otitan.common.** { *; }
--dontwarn com.casic.otitan.common.**
+-keep class io.coderf.arklab.common.** { *; }
+-dontwarn io.coderf.arklab.common.**
 
 # 保留数据绑定相关类
--keep class com.casic.otitan.common.bean.** { *; }
--keepclassmembers class com.casic.otitan.common.bean.** {
+-keep class io.coderf.arklab.common.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.common.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留 BaseResponse 和 ViewModel
--keep class com.casic.otitan.common.base.BaseResponse { *; }
--keep class com.casic.otitan.common.viewmodel.** { *; }
+-keep class io.coderf.arklab.common.base.BaseResponse { *; }
+-keep class io.coderf.arklab.common.viewmodel.** { *; }
 
 # 保留注解处理器生成的类
--keep class * extends com.casic.otitan.common.base.** { *; }
+-keep class * extends io.coderf.arklab.common.base.** { *; }
 
 # 保留资源绑定相关类（如果有自动生成的绑定类）
 -keep class *Binding { *; }
@@ -382,27 +382,27 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== Media Common Library ====================
 # 保留 Media 框架核心类
--keep class com.casic.otitan.media.** { *; }
--dontwarn com.casic.otitan.media.**
+-keep class io.coderf.arklab.media.** { *; }
+-dontwarn io.coderf.arklab.media.**
 
 # 保留数据模型类
--keep class com.casic.otitan.media.bean.** { *; }
--keepclassmembers class com.casic.otitan.media.bean.** {
+-keep class io.coderf.arklab.media.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.media.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留核心工具类和构建器
--keep class com.casic.otitan.media.MediaBuilder { *; }
--keep class com.casic.otitan.media.MediaHelper { *; }
--keep class com.casic.otitan.media.utils.** { *; }
+-keep class io.coderf.arklab.media.MediaBuilder { *; }
+-keep class io.coderf.arklab.media.MediaHelper { *; }
+-keep class io.coderf.arklab.media.utils.** { *; }
 
 # 保留回调接口
--keep class com.casic.otitan.media.callback.** { *; }
--keep interface com.casic.otitan.media.callback.** { *; }
+-keep class io.coderf.arklab.media.callback.** { *; }
+-keep interface io.coderf.arklab.media.callback.** { *; }
 
 # 保留多媒体处理方法
--keepclassmembers class com.casic.otitan.media.** {
+-keepclassmembers class io.coderf.arklab.media.** {
     public * compress*(...);
     public * process*(...);
     public * encode*(...);
@@ -413,35 +413,35 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== CommonUI Library ====================
 # 保留 CommonUI 框架核心类
--keep class com.casic.otitan.commonui.** { *; }
--dontwarn com.casic.otitan.commonui.**
+-keep class io.coderf.arklab.commonui.** { *; }
+-dontwarn io.coderf.arklab.commonui.**
 
 # 确保数据模型不被混淆
--keep class com.casic.otitan.commonui.bean.** { *; }
--keepclassmembers class com.casic.otitan.commonui.bean.** {
+-keep class io.coderf.arklab.commonui.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.commonui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留自定义 Widget 组件
--keep class com.casic.otitan.commonui.widget.** { *; }
--keepclassmembers class com.casic.otitan.commonui.widget.** {
+-keep class io.coderf.arklab.commonui.widget.** { *; }
+-keepclassmembers class io.coderf.arklab.commonui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
 # 保留 Fragment
--keep class com.casic.otitan.commonui.fragment.** { *; }
+-keep class io.coderf.arklab.commonui.fragment.** { *; }
 
 # 保留适配器
--keep class com.casic.otitan.commonui.adapter.** { *; }
+-keep class io.coderf.arklab.commonui.adapter.** { *; }
 
 # 保留表单相关功能
--keep class com.casic.otitan.commonui.form.** { *; }
+-keep class io.coderf.arklab.commonui.form.** { *; }
 
 # 保留接口和回调
--keep interface com.casic.otitan.commonui.inter.** { *; }
--keep class com.casic.otitan.commonui.impl.** { *; }
+-keep interface io.coderf.arklab.commonui.inter.** { *; }
+-keep class io.coderf.arklab.commonui.impl.** { *; }
 
 # 保留数据绑定相关类
 -keep class *Binding { *; }
@@ -451,28 +451,28 @@ TAG值为类名：`ApiRetrofit`
 ```
 # ==================== Google GPS Library ====================
 # 保留 GPS 框架核心类
--keep class com.casic.otitan.googlegps.** { *; }
--dontwarn com.casic.otitan.googlegps.**
+-keep class io.coderf.arklab.googlegps.** { *; }
+-dontwarn io.coderf.arklab.googlegps.**
 
 # 保留定位服务
--keep class com.casic.otitan.googlegps.service.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.service.** {
+-keep class io.coderf.arklab.googlegps.service.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.service.** {
     public * onStartCommand(...);
     public * onBind(...);
 }
 
 # 保留 Socket 通信
--keep class com.casic.otitan.googlegps.socket.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.socket.** {
+-keep class io.coderf.arklab.googlegps.socket.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.socket.** {
     public * connect*(...);
     public * send*(...);
 }
 
 # 保留工具类
--keep class com.casic.otitan.googlegps.utils.** { *; }
+-keep class io.coderf.arklab.googlegps.utils.** { *; }
 
 # 保留监听器接口
--keep interface com.casic.otitan.googlegps.listener.** { *; }
+-keep interface io.coderf.arklab.googlegps.listener.** { *; }
 
 # 保留位置数据处理方法
 -keepclassmembers class * {
@@ -645,7 +645,7 @@ plugins {
 ```
         new ProtectionGuidelinesDialog(this)
                 .setCanOutSide(false)
-                .setPositiveBackgroundColor(ContextCompat.getColor(this, com.casic.otitan.common.R.color.theme_green))
+                .setPositiveBackgroundColor(ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_green))
                 .setSpannableContent(getSpannableContent())
                 .setOnNegativeClickListener(dialog -> {
 
@@ -666,6 +666,7 @@ plugins {
                 .show();
 ```
 ### 自定义注解使用
+
 ```java
 import android.net.Uri;
 
@@ -677,14 +678,14 @@ import androidx.room.TypeConverters;
 
 import java.util.List;
 
-import com.casic.otitan.annotation.annotation.VerifyEntity;
-import com.casic.otitan.annotation.annotation.VerifyField;
-import com.casic.otitan.annotation.annotation.VerifyParams;
-import com.casic.otitan.annotation.annotation.VerifySort;
-import com.casic.otitan.annotation.enums.VerifyType;
-import com.casic.otitan.annotation.inter.VerifyGroup;
-import com.casic.otitan.common.bean.BaseDaoBean;
-import com.casic.otitan.common.converter.RoomListStringConverter;
+import io.coderf.arklab.annotation.annotation.VerifyEntity;
+import io.coderf.arklab.annotation.annotation.VerifyField;
+import io.coderf.arklab.annotation.annotation.VerifyParams;
+import io.coderf.arklab.annotation.annotation.VerifySort;
+import io.coderf.arklab.annotation.enums.VerifyType;
+import io.coderf.arklab.annotation.inter.VerifyGroup;
+import io.coderf.arklab.common.bean.BaseDaoBean;
+import io.coderf.arklab.common.converter.RoomListStringConverter;
 
 /**
  * Created by fz on 2023/9/5 18:32
@@ -703,14 +704,14 @@ public class Person extends BaseDaoBean {
     private String name;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请选择性别！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请选择性别！"),
     })
     @VerifySort(2)
     @ColumnInfo
     private String sex;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请选择生日！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请选择生日！"),
     })
     @VerifySort(3)
     @ColumnInfo
@@ -726,47 +727,47 @@ public class Person extends BaseDaoBean {
     private String classStartTime;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
-            @VerifyParams(type = VerifyType.MOBILE_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
+            @VerifyParams(type = VerifyType.MOBILE_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
     })
     @VerifySort(4)
     @ColumnInfo
     private String mobile;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
-            @VerifyParams(type = VerifyType.TEL_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
+            @VerifyParams(type = VerifyType.TEL_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
     })
     @VerifySort(5)
     @ColumnInfo
     private String tel;
 
     @VerifySort(6)
-    @VerifyParams(type = VerifyType.NUMBER_RANGE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
+    @VerifyParams(type = VerifyType.NUMBER_RANGE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     @ColumnInfo
     private String age;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "体重为空"),
-            @VerifyParams(type = VerifyType.NUMBER_00,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "体重输入格式不正确"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "你该减肥了！！！"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "体重为空"),
+            @VerifyParams(type = VerifyType.NUMBER_00, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "体重输入格式不正确"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "你该减肥了！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
     @VerifySort(7)
     @ColumnInfo
     private String weight;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "身高为空"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "姚明都没你高！！！"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "身高为空"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "姚明都没你高！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
     @VerifySort(8)
     @ColumnInfo
     private String height;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Create.class}, errorMsg = "邮箱地址为空！"),
-            @VerifyParams(type = VerifyType.EMAIL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "邮箱地址错误！")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Create.class}, errorMsg = "邮箱地址为空！"),
+            @VerifyParams(type = VerifyType.EMAIL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "邮箱地址错误！")
     })
     @VerifySort(9)
     @ColumnInfo
@@ -818,7 +819,7 @@ public class Person extends BaseDaoBean {
 
     public void setName(String name) {
         this.name = name;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.name);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.name);
     }
 
     @Bindable
@@ -828,7 +829,7 @@ public class Person extends BaseDaoBean {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.birthday);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.birthday);
     }
 
     @Bindable
@@ -838,7 +839,7 @@ public class Person extends BaseDaoBean {
 
     public void setEducationalExperienceDate(String educationalExperienceDate) {
         this.educationalExperienceDate = educationalExperienceDate;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.educationalExperienceDate);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.educationalExperienceDate);
     }
 
     @Bindable
@@ -848,7 +849,7 @@ public class Person extends BaseDaoBean {
 
     public void setSchoolStartTime(String schoolStartTime) {
         this.schoolStartTime = schoolStartTime;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.schoolStartTime);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.schoolStartTime);
     }
 
     @Bindable
@@ -858,7 +859,7 @@ public class Person extends BaseDaoBean {
 
     public void setClassStartTime(String classStartTime) {
         this.classStartTime = classStartTime;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.classStartTime);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.classStartTime);
     }
 
     @Bindable
@@ -868,7 +869,7 @@ public class Person extends BaseDaoBean {
 
     public void setAge(String age) {
         this.age = age;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.age);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.age);
     }
 
     @Bindable
@@ -878,7 +879,7 @@ public class Person extends BaseDaoBean {
 
     public void setWeight(String weight) {
         this.weight = weight;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.weight);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.weight);
     }
 
     @Bindable
@@ -888,7 +889,7 @@ public class Person extends BaseDaoBean {
 
     public void setEmail(String email) {
         this.email = email;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.email);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.email);
     }
 
     public List<String> getHobby() {
@@ -906,7 +907,7 @@ public class Person extends BaseDaoBean {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.mobile);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.mobile);
     }
 
     @Bindable
@@ -916,7 +917,7 @@ public class Person extends BaseDaoBean {
 
     public void setTel(String tel) {
         this.tel = tel;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.tel);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.tel);
     }
 
     @Bindable
@@ -926,7 +927,7 @@ public class Person extends BaseDaoBean {
 
     public void setHeight(String height) {
         this.height = height;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.height);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.height);
     }
 
     @Bindable
@@ -936,7 +937,7 @@ public class Person extends BaseDaoBean {
 
     public void setSex(String sex) {
         this.sex = sex;
-        notifyPropertyChanged(com.casic.otitan.demo.BR.sex);
+        notifyPropertyChanged(io.coderf.arklab.demo.BR.sex);
     }
 
 

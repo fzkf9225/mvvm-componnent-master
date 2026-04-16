@@ -6,7 +6,7 @@
 
         <variable
             name="toolbarConfig"
-            type="com.casic.otitan.common.bean.base.ToolbarConfig" />
+            type="io.coderf.arklab.common.bean.base.ToolbarConfig" />
 
         <import type="android.view.View" />
 
@@ -20,7 +20,7 @@
             name="context"
             type="android.content.Context" />
 
-        <import type="com.casic.otitan.common.R" />
+        <import type="io.coderf.arklab.common.R" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.casic.otitan.common.widget.customview.CustomSearchEditText
+                    <io.coderf.arklab.common.widget.customview.CustomSearchEditText
                         android:id="@+id/input_edit"
                         android:layout_width="0dp"
                         android:layout_height="33dp"

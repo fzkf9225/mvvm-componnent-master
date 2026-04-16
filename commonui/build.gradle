@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.casic.otitan.commonui'
+    namespace = 'io.coderf.arklab.ui'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -127,9 +127,9 @@ afterEvaluate {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
-                groupId = 'com.casic.otitan.commonui'
-                artifactId = 'commonui'
-                version = '2.0.12'
+                groupId = 'io.coderf.arklab.ui'
+                artifactId = 'ui'
+                version = '3.0.0'
             }
         }
         repositories {

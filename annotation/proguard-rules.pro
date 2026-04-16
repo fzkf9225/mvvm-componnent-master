@@ -20,13 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 #自定义注解混淆
--keep @interface com.casic.otitan.annotation.annotation.VerifyEntity
--keep @interface com.casic.otitan.annotation.annotation.VerifyField
--keep @interface com.casic.otitan.annotation.annotation.VerifyParams
--keep @interface com.casic.otitan.annotation.annotation.VerifyFieldSort
--keep @interface com.casic.otitan.annotation.annotation.Valid
--keep @interface com.casic.otitan.annotation.format.FormatDecimal
--keep class com.casic.otitan.annotation.annotation.bean.VerifyResult
+-keep @interface io.coderf.arklab.annotation.annotation.VerifyEntity
+-keep @interface io.coderf.arklab.annotation.annotation.VerifyField
+-keep @interface io.coderf.arklab.annotation.annotation.VerifyParams
+-keep @interface io.coderf.arklab.annotation.annotation.VerifyFieldSort
+-keep @interface io.coderf.arklab.annotation.annotation.Valid
+-keep @interface io.coderf.arklab.annotation.format.FormatDecimal
+-keep class io.coderf.arklab.annotation.annotation.bean.VerifyResult
 
 #保留注释
 -keepattributes *Annotation*

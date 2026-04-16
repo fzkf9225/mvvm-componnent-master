@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <com.casic.otitan.common.widget.speak.VoiceView
+        <io.coderf.arklab.common.widget.speak.VoiceView
             android:id="@+id/btn_wx_voice"
             android:layout_width="match_parent"
             android:layout_height="100dp"

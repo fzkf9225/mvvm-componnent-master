@@ -6,10 +6,10 @@ plugins {
     alias(libs.plugins.navigation.safeargs)
 }
 android {
-    namespace = 'com.casic.otitan.demo'
+    namespace = 'io.coderf.arklab.demo'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
-        applicationId  = "com.casic.otitan.demo"
+        applicationId  = "io.coderf.arklab.demo"
         minSdk = libs.versions.minSdkVersion.get().toInteger()
         targetSdk = libs.versions.targetSdkVersion.get().toInteger()
         versionCode =  1

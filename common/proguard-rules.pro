@@ -120,26 +120,26 @@
 
 # ==================== 项目特定类 ====================
 # 保留 MVVM 框架相关类
--keep class com.casic.otitan.common.** { *; }
--dontwarn com.casic.otitan.common.**
+-keep class io.coderf.arklab.common.** { *; }
+-dontwarn io.coderf.arklab.common.**
 
 # 保留数据模型类（Bean）
--keep class com.casic.otitan.common.bean.** { *; }
--keepclassmembers class com.casic.otitan.common.bean.** {
+-keep class io.coderf.arklab.common.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.common.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留 BaseResponse
--keep class com.casic.otitan.common.base.BaseResponse { *; }
--keepclassmembers class com.casic.otitan.common.base.BaseResponse {
+-keep class io.coderf.arklab.common.base.BaseResponse { *; }
+-keepclassmembers class io.coderf.arklab.common.base.BaseResponse {
     void set*(***);
     *** get*();
 }
 
 # 保留 Dialog Bean
--keep class com.casic.otitan.common.widget.dialog.bean.** { *; }
--keepclassmembers class com.casic.otitan.common.widget.dialog.bean.** {
+-keep class io.coderf.arklab.common.widget.dialog.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.common.widget.dialog.bean.** {
     void set*(***);
     *** get*();
 }

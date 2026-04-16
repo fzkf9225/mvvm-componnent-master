@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.casic.otitan.media'
+    namespace = 'io.coderf.arklab.media'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -112,9 +112,9 @@ afterEvaluate {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
-                groupId = 'com.casic.otitan.media'
+                groupId = 'io.coderf.arklab.media'
                 artifactId = 'media'
-                version = '2.0.3'
+                version = '3.0.0'
             }
         }
         repositories {

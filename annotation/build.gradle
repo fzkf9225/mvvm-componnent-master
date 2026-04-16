@@ -31,9 +31,9 @@ afterEvaluate {
                 // 发布源码 JAR，确保 classifier 为 'sources'，并且 extension 为 'jar'
                 artifact(androidSourcesJar)
                 artifact("$buildDir/libs/${artifactId}.jar")
-                groupId = 'com.casic.otitan.annotation'
+                groupId = 'io.coderf.arklab.annotation'
                 artifactId = 'annotation'
-                version = '2.0.0'
+                version = '3.0.0'
             }
         }
         repositories {

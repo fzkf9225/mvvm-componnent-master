@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.casic.otitan.mqttcomponent'
+    namespace = 'io.coderf.arklab.mqttcomponent'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()

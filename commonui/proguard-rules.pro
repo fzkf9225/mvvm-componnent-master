@@ -117,46 +117,46 @@
 
 # ==================== 项目特定类 ====================
 # 保留 CommonUI 框架相关类
--keep class com.casic.otitan.commonui.** { *; }
--dontwarn com.casic.otitan.commonui.**
+-keep class io.coderf.arklab.ui.** { *; }
+-dontwarn io.coderf.arklab.ui.**
 
 # 保留数据模型类（Bean）
--keep class com.casic.otitan.commonui.bean.** { *; }
--keepclassmembers class com.casic.otitan.commonui.bean.** {
+-keep class io.coderf.arklab.ui.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.ui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留适配器类
--keep class com.casic.otitan.commonui.adapter.** { *; }
--keepclassmembers class com.casic.otitan.commonui.adapter.** {
+-keep class io.coderf.arklab.ui.adapter.** { *; }
+-keepclassmembers class io.coderf.arklab.ui.adapter.** {
     public <init>(...);
 }
 
 # 保留 Fragment 类
--keep class com.casic.otitan.commonui.fragment.** { *; }
+-keep class io.coderf.arklab.ui.fragment.** { *; }
 
 # 保留自定义 Widget 组件
--keep class com.casic.otitan.commonui.widget.** { *; }
--keepclassmembers class com.casic.otitan.commonui.widget.** {
+-keep class io.coderf.arklab.ui.widget.** { *; }
+-keepclassmembers class io.coderf.arklab.ui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
 # 保留表单相关类
--keep class com.casic.otitan.commonui.form.** { *; }
+-keep class io.coderf.arklab.ui.form.** { *; }
 
 # 保留接口和实现类
--keep interface com.casic.otitan.commonui.inter.** { *; }
--keep class com.casic.otitan.commonui.impl.** { *; }
+-keep interface io.coderf.arklab.ui.inter.** { *; }
+-keep class io.coderf.arklab.ui.impl.** { *; }
 
 # 保留帮助类和工具类
--keep class com.casic.otitan.commonui.helper.** { *; }
--keep class com.casic.otitan.commonui.api.** { *; }
+-keep class io.coderf.arklab.ui.helper.** { *; }
+-keep class io.coderf.arklab.ui.api.** { *; }
 
 # 保留枚举类
--keep class com.casic.otitan.commonui.enums.** { *; }
+-keep class io.coderf.arklab.ui.enums.** { *; }
 
 # ==================== 资源文件 ====================
 # 保留 R 类
@@ -181,10 +181,10 @@
 
 # ==================== 依赖库相关 ====================
 # 保留 common 和 commonmedia 依赖的类
--keep class com.casic.otitan.common.** { *; }
--dontwarn com.casic.otitan.common.**
--keep class com.casic.otitan.media.** { *; }
--dontwarn com.casic.otitan.media.**
+-keep class io.coderf.arklab.common.** { *; }
+-dontwarn io.coderf.arklab.common.**
+-keep class io.coderf.arklab.media.** { *; }
+-dontwarn io.coderf.arklab.media.**
 
 # ==================== RecyclerView 相关 ====================
 # 保留 ViewHolder

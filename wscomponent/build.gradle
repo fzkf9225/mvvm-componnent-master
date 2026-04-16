@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.casic.otitan.wscomponent'
+    namespace = 'io.coderf.arklab.wscomponent'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()

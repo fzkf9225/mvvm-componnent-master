@@ -40,11 +40,11 @@ commonmedia = "2.0.3"
 commonVersion = "3.0.11"
 [libraries]
 # 基础
-base-common = { module = "com.casic.otitan.common:common", version.ref = "commonVersion" }
-base-media = { module = "com.casic.otitan.media:media", version.ref = "commonmedia" }
-base-commonui = { module = "com.casic.otitan.commonui:commonui", version.ref = "commonui" }
-base-googlegps = { module = "com.casic.otitan.googlegps:googlegps", version.ref = "commongps" }
-base-annotation = { module = "com.casic.otitan.annotation:annotation", version.ref = "annotation" }
+base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
+base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
+base-commonui = { module = "io.coderf.arklab.ui:commonui", version.ref = "commonui" }
+base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
+base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
 ```
 在需要的模块引入即可，比如，在`user模块`引入`common`,示例： 打开`user模块`的`build.gradle`
 ```groovy

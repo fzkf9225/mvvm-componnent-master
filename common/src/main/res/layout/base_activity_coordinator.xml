@@ -6,7 +6,7 @@
 
         <variable
             name="toolbarConfig"
-            type="com.casic.otitan.common.bean.base.ToolbarConfig" />
+            type="io.coderf.arklab.common.bean.base.ToolbarConfig" />
 
         <import type="androidx.core.content.ContextCompat" />
 

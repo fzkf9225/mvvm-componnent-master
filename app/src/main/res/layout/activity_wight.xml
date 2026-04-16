@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.casic.otitan.common.widget.customview.CornerConstraintLayout
+            <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
                 android:id="@+id/cornerConstraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -40,9 +40,9 @@
                     android:gravity="center"
                     android:text="CornerConstraintLayout"
                     android:textColor="@color/white" />
-            </com.casic.otitan.common.widget.customview.CornerConstraintLayout>
+            </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
-            <com.casic.otitan.common.widget.customview.CornerTextView
+            <io.coderf.arklab.common.widget.customview.CornerTextView
                 android:id="@+id/cornerTextView"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -58,7 +58,7 @@
                 app:strokeColor="@color/theme_red"
                 app:strokeWidth="2dp" />
 
-            <com.casic.otitan.common.widget.customview.CornerButton
+            <io.coderf.arklab.common.widget.customview.CornerButton
                 android:id="@+id/cornerButton"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -94,7 +94,7 @@
                     android:text="CornerLabelView"
                     android:textColor="@color/white" />
 
-                <com.casic.otitan.common.widget.customview.CornerLabelView
+                <io.coderf.arklab.common.widget.customview.CornerLabelView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -107,7 +107,7 @@
                     app:textSize="@dimen/font_size_m" />
             </FrameLayout>
 
-            <com.casic.otitan.common.widget.customview.AutoTextView
+            <io.coderf.arklab.common.widget.customview.AutoTextView
                 android:id="@+id/autoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/autoTextView" />
 
-            <com.casic.otitan.common.widget.customview.ScalingTextView
+            <io.coderf.arklab.common.widget.customview.ScalingTextView
                 android:id="@+id/scalingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                 android:textColor="@color/autoColor"
                 app:scalingTextColor="@color/theme_red" />
 
-            <com.casic.otitan.common.widget.customview.StarBar
+            <io.coderf.arklab.common.widget.customview.StarBar
                 android:id="@+id/starBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
                 app:layout_constraintStart_toEndOf="@+id/starBar"
                 app:layout_constraintTop_toTopOf="@+id/starBar" />
 
-            <com.casic.otitan.common.widget.customview.GradationRectTextView
+            <io.coderf.arklab.common.widget.customview.GradationRectTextView
                 android:id="@+id/roundTextView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xxl"
@@ -200,7 +200,7 @@
                 android:text="自定义轮播图"
                 app:layout_constraintTop_toBottomOf="@+id/roundTextView" />
 
-            <com.casic.otitan.common.widget.customview.BannerView
+            <io.coderf.arklab.common.widget.customview.BannerView
                 android:id="@+id/customBannerPicture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -223,7 +223,7 @@
                 android:text="自定义ImageView"
                 app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
 
-            <com.casic.otitan.common.widget.customview.CornerImageView
+            <io.coderf.arklab.common.widget.customview.CornerImageView
                 android:id="@+id/cornersImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -234,7 +234,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_image"
                 app:radius="@dimen/radius_l" />
 
-            <com.casic.otitan.common.widget.customview.CustomSearchEditText
+            <io.coderf.arklab.common.widget.customview.CustomSearchEditText
                 android:id="@+id/customEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
@@ -251,7 +251,7 @@
                 app:strokeColor="@color/themeColor"
                 app:strokeWidth="1dp" />
 
-            <com.casic.otitan.common.widget.customview.CornerEditText
+            <io.coderf.arklab.common.widget.customview.CornerEditText
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
@@ -283,7 +283,7 @@
                 android:textSize="@dimen/font_size_l"
                 app:layout_constraintTop_toBottomOf="@+id/edit_area" />
 
-            <com.casic.otitan.common.widget.customview.VerificationCodeInputView
+            <io.coderf.arklab.common.widget.customview.VerificationCodeInputView
                 android:id="@+id/verificationCodeInputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -293,7 +293,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"
                 app:radius="@dimen/radius_m" />
 
-            <com.casic.otitan.common.widget.customview.CircleProgressBar
+            <io.coderf.arklab.common.widget.customview.CircleProgressBar
                 android:id="@+id/circle_progress_bar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -311,7 +311,7 @@
                 app:textColor="@color/themeColor"
                 app:textSize="16sp" />
 
-            <com.casic.otitan.common.widget.customview.HorizontalProgressBar
+            <io.coderf.arklab.common.widget.customview.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
@@ -340,7 +340,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_image" />
             <!-- 在布局文件中使用 -->
-            <com.casic.otitan.common.widget.customview.IconDotTextView
+            <io.coderf.arklab.common.widget.customview.IconDotTextView
                 android:id="@+id/iconDotTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -373,7 +373,7 @@
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintTop_toBottomOf="@+id/iconDotTextView" />
 
-            <com.casic.otitan.commonui.widght.calendar.CalendarView
+            <io.coderf.arklab.ui.widght.calendar.CalendarView
                 android:id="@+id/calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -398,7 +398,7 @@
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintTop_toBottomOf="@+id/calendarView_single" />
 
-            <com.casic.otitan.commonui.widght.calendar.CalendarView
+            <io.coderf.arklab.ui.widght.calendar.CalendarView
                 android:id="@+id/calendarView_multi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -441,7 +441,7 @@
                 app:strokeColor="@color/theme_green"
                 app:strokeWidth="3dp" />
 
-            <com.casic.otitan.common.widget.customview.HomeMenuView
+            <io.coderf.arklab.common.widget.customview.HomeMenuView
                 android:id="@+id/homeMenuView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -459,7 +459,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/roundedShapeableImageView"
                 app:rowCount="2"
                 app:topMargin="16dp" />
-            <com.casic.otitan.common.widget.customview.ValueLabelView
+            <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -482,7 +482,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
                 app:unitText="次" />
-            <com.casic.otitan.common.widget.customview.ValueLabelView
+            <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -505,7 +505,7 @@
                 app:layout_constraintStart_toEndOf="@+id/value_label_start"
                 app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
                 app:unitText="次" />
-            <com.casic.otitan.common.widget.customview.ValueLabelView
+            <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_space_between"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -527,7 +527,7 @@
                 app:layout_constraintStart_toEndOf="@+id/value_label_center"
                 app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
                 app:unitText="次" />
-            <com.casic.otitan.common.widget.customview.ValueLabelView
+            <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

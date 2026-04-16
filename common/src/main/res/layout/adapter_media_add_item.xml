@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:clipChildren="false">
 
-        <com.casic.otitan.common.widget.customview.CornerConstraintLayout
+        <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
             android:id="@+id/media_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -60,9 +60,9 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
                 app:layout_constraintTop_toTopOf="@id/guideline_top" />
-        </com.casic.otitan.common.widget.customview.CornerConstraintLayout>
+        </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
-        <com.casic.otitan.common.widget.customview.CornerImageView
+        <io.coderf.arklab.common.widget.customview.CornerImageView
             android:id="@+id/iv_media_show"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -126,7 +126,7 @@
                 app:layout_constraintTop_toTopOf="@id/media_guideline_top" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.casic.otitan.common.widget.customview.CornerTextView
+        <io.coderf.arklab.common.widget.customview.CornerTextView
             android:id="@+id/upload_mark"
             android:layout_width="0dp"
             android:layout_height="0dp"

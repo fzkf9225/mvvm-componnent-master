@@ -112,12 +112,12 @@
 
 # ==================== 项目特定类 ====================
 # 保留 Google GPS 框架相关类
--keep class com.casic.otitan.googlegps.** { *; }
--dontwarn com.casic.otitan.googlegps.**
+-keep class io.coderf.arklab.googlegps.** { *; }
+-dontwarn io.coderf.arklab.googlegps.**
 
 # 保留服务类（Service）
--keep class com.casic.otitan.googlegps.service.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.service.** {
+-keep class io.coderf.arklab.googlegps.service.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.service.** {
     public * onStartCommand(...);
     public * onBind(...);
     public * onUnbind(...);
@@ -125,34 +125,34 @@
 }
 
 # 保留 Socket 通信类
--keep class com.casic.otitan.googlegps.socket.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.socket.** {
+-keep class io.coderf.arklab.googlegps.socket.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.socket.** {
     public * connect*(...);
     public * send*(...);
     public * receive*(...);
 }
 
 # 保留工具类
--keep class com.casic.otitan.googlegps.utils.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.utils.** {
+-keep class io.coderf.arklab.googlegps.utils.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.utils.** {
     public static *;
 }
 
 # 保留对话框类
--keep class com.casic.otitan.googlegps.dialog.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.dialog.** {
+-keep class io.coderf.arklab.googlegps.dialog.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.dialog.** {
     public <init>(android.content.Context);
     public * show();
     public * dismiss();
 }
 
 # 保留监听器接口
--keep class com.casic.otitan.googlegps.listener.** { *; }
--keep interface com.casic.otitan.googlegps.listener.** { *; }
+-keep class io.coderf.arklab.googlegps.listener.** { *; }
+-keep interface io.coderf.arklab.googlegps.listener.** { *; }
 
 # 保留帮助类
--keep class com.casic.otitan.googlegps.helper.** { *; }
--keepclassmembers class com.casic.otitan.googlegps.helper.** {
+-keep class io.coderf.arklab.googlegps.helper.** { *; }
+-keepclassmembers class io.coderf.arklab.googlegps.helper.** {
     public static *;
 }
 

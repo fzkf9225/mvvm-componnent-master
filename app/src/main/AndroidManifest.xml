@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.casic.otitan.demo">
+    package="io.coderf.arklab.demo">
     <!-- Android 13+ 通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Android 13及以上版本发送通知必须申请的运行时权限，用户需要明确授权 -->
     <!-- 读取设备上的图片文件 -->

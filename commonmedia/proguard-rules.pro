@@ -90,41 +90,41 @@
 
 # ==================== 项目特定类 ====================
 # 保留 Media 框架相关类
--keep class com.casic.otitan.media.** { *; }
--dontwarn com.casic.otitan.media.**
+-keep class io.coderf.arklab.media.** { *; }
+-dontwarn io.coderf.arklab.media.**
 
 # 保留数据模型类（Bean）
--keep class com.casic.otitan.media.bean.** { *; }
--keepclassmembers class com.casic.otitan.media.bean.** {
+-keep class io.coderf.arklab.media.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.media.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留回调接口
--keep class com.casic.otitan.media.callback.** { *; }
--keep interface com.casic.otitan.media.callback.** { *; }
+-keep class io.coderf.arklab.media.callback.** { *; }
+-keep interface io.coderf.arklab.media.callback.** { *; }
 
 # 保留工具类
--keep class com.casic.otitan.media.utils.** { *; }
+-keep class io.coderf.arklab.media.utils.** { *; }
 
 # 保留 MediaBuilder 和 MediaHelper（核心类）
--keep class com.casic.otitan.media.MediaBuilder { *; }
--keep class com.casic.otitan.media.MediaHelper { *; }
--keepclassmembers class com.casic.otitan.media.MediaBuilder {
+-keep class io.coderf.arklab.media.MediaBuilder { *; }
+-keep class io.coderf.arklab.media.MediaHelper { *; }
+-keepclassmembers class io.coderf.arklab.media.MediaBuilder {
     public <init>();
     public *;
 }
--keepclassmembers class com.casic.otitan.media.MediaHelper {
+-keepclassmembers class io.coderf.arklab.media.MediaHelper {
     public static *;
 }
 
 # 保留处理器和帮助类
--keep class com.casic.otitan.media.handler.** { *; }
--keep class com.casic.otitan.media.helper.** { *; }
+-keep class io.coderf.arklab.media.handler.** { *; }
+-keep class io.coderf.arklab.media.helper.** { *; }
 
 # 保留监听器
--keep class com.casic.otitan.media.listener.** { *; }
--keep interface com.casic.otitan.media.listener.** { *; }
+-keep class io.coderf.arklab.media.listener.** { *; }
+-keep interface io.coderf.arklab.media.listener.** { *; }
 
 # ==================== 资源文件 ====================
 # 保留 R 类

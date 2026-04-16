@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.casic.otitan.userapi'
+    namespace = 'io.coderf.arklab.userapi'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()

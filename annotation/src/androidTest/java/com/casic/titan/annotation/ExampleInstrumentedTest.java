@@ -1,4 +1,4 @@
-package com.casic.otitan.annotation;
+package io.coderf.arklab.annotation;
 
 import android.content.Context;
 
