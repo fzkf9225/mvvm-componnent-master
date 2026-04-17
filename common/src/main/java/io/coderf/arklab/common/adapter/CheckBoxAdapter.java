@@ -363,7 +363,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     /**
      * 判断是否所有项都被选中
      */
-    private boolean isAllSelected() {
+    public boolean isAllSelected() {
         if (CollectionUtil.isEmpty(mList)) {
             return false;
         }
@@ -378,7 +378,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     /**
      * 切换全选状态
      */
-    private void toggleSelectAll() {
+    public void toggleSelectAll() {
         boolean allSelected = isAllSelected();
         for (T item : mList) {
             item.setSelected(!allSelected);
@@ -389,7 +389,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     /**
      * 切换项的选择状态（多选模式）
      */
-    private void toggleSelection(int position) {
+    public void toggleSelection(int position) {
         T item = mList.get(position);
         boolean newSelected = item.getSelected() == null || !item.getSelected();
         item.setSelected(newSelected);
@@ -404,7 +404,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     /**
      * 单选模式：选择一项，取消其他项
      */
-    private void selectSingle(int position) {
+    public void selectSingle(int position) {
         T clickedItem = mList.get(position);
         boolean willBeSelected = clickedItem.getSelected() == null || !clickedItem.getSelected();
 
