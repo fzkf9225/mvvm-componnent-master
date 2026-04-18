@@ -5,8 +5,6 @@ import android.Manifest;
 import android.location.Location;
 import android.os.Build;
 
-import com.tencent.mmkv.MMKV;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

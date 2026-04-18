@@ -61,7 +61,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
 
             binding.tvMessage.text = "正在开启service服务..."
             flowJob = lifecycleScope.launch {
-                gpsStarter.locationFlow(gpsOptions,once = false).collect { location ->
+                gpsStarter.locationFlow(once = false).collect { location ->
                     binding.tvMessage.text = formatLocation(location) + "\nFlow方式监听..."
                 }
             }
