@@ -732,7 +732,114 @@ public final class DateUtil {
         }
         return df2.format(date1);
     }
+    /**
+     * 将毫秒数格式化为 "XX时XX分XX秒" 格式
+     * @param milliseconds 毫秒数
+     * @return 格式化后的时间字符串，如 "1时23分45秒"
+     */
+    public static String formatDuration(long milliseconds) {
+        if (milliseconds <= 0) {
+            return "0秒";
+        }
 
+        long totalSeconds = milliseconds / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) {
+            sb.append(hours).append("时");
+        }
+        if (minutes > 0 || hours > 0) {
+            sb.append(minutes).append("分");
+        }
+        sb.append(seconds).append("秒");
+
+        return sb.toString();
+    }
+
+    /**
+     * 将毫秒数格式化为 "XX时XX分" 格式（省略秒）
+     * @param milliseconds 毫秒数
+     * @return 格式化后的时间字符串，如 "1时23分"
+     */
+    public static String formatDurationWithoutSeconds(long milliseconds) {
+        if (milliseconds <= 0) {
+            return "0分";
+        }
+
+        long totalSeconds = milliseconds / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) {
+            sb.append(hours).append("时");
+        }
+        sb.append(minutes).append("分");
+
+        return sb.toString();
+    }
+
+    /**
+     * 将毫秒数格式化为 "HH:mm:ss" 格式
+     * @param milliseconds 毫秒数
+     * @return 格式化后的时间字符串，如 "01:23:45"
+     */
+    public static String formatDurationAsTime(long milliseconds) {
+        if (milliseconds <= 0) {
+            return "00:00:00";
+        }
+
+        long totalSeconds = milliseconds / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
+     * 将毫秒数格式化为智能格式（自动选择显示精度）
+     * <p>
+     * 规则：
+     * - 小于1分钟：显示秒数
+     * - 1分钟到1小时：显示分钟和秒
+     * - 1小时以上：显示小时和分钟
+     * </p>
+     * @param milliseconds 毫秒数
+     * @return 格式化后的时间字符串
+     */
+    public static String formatDurationSmart(long milliseconds) {
+        if (milliseconds <= 0) {
+            return "0秒";
+        }
+
+        long totalSeconds = milliseconds / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        if (hours > 0) {
+            // 1小时以上：显示小时和分钟
+            return String.format(Locale.getDefault(), "%d时%d分", hours, minutes);
+        } else if (minutes > 0) {
+            // 1分钟到1小时：显示分钟和秒
+            return String.format(Locale.getDefault(), "%d分%d秒", minutes, seconds);
+        } else {
+            // 小于1分钟：显示秒数
+            return String.format(Locale.getDefault(), "%d秒", seconds);
+        }
+    }
+
+    /**
+     * 获取当前时间戳的格式化字符串（用于显示）
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public static String getCurrentDateTime() {
+        return getDateTimeFormat(new Date());
+    }
     /**
      * 获取年月日时分秒字符串，用于文件名
      * @return yyyyMMddHHmmssSSS

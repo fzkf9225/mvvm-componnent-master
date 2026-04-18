@@ -87,14 +87,29 @@ public class GpsSettingConfig {
     private boolean fileLogEnabled = true;
 
     // ========== 常量定义 ==========
-    /** 通道 ID */
-    public static final String CHANNEL_ID = "GPSService";
-    /** 通道名称 */
-    public static final String CHANNEL_NAME = "GPS位置服务";
+
+// ========== 新增：通知通道配置 ==========
+    /** 通知通道 ID，默认 "GPSService" */
+    private String notificationChannelId = "GPSService";
+    /** 通知通道名称，默认 "GPS位置服务" */
+    private String notificationChannelName = "GPS位置服务";
+    /** 通知通道重要性级别，默认 IMPORTANCE_LOW */
+    private int notificationImportance = android.app.NotificationManager.IMPORTANCE_LOW;
+    /** 通知通道是否开启灯光，默认 false */
+    private boolean notificationEnableLights = false;
+    /** 通知通道是否开启振动，默认 false */
+    private boolean notificationEnableVibration = false;
+    /** 通知通道是否在锁屏显示，默认 VISIBILITY_PUBLIC */
+    private int notificationLockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC;
+    /** 通知通道是否显示角标，默认 true */
+    private boolean notificationShowBadge = true;
+    /** 通知通道描述（用于系统设置页显示） */
+    private String notificationChannelDescription = "GPS位置服务通知，用于显示定位状态和轨迹记录信息";
+
     /** 通知 ID */
-    public static final int NOTIFICATION_ID = 300000;
+    private int notificationId = 300000;
     /** Intent 额外参数：获取下一个点 */
-    public static final String GET_NEXT_POINT = "getnextpoint";
+    public static final String GET_NEXT_POINT = "GET_NEXT_POINT";
 
     // Bundle 键名
     public static final String HDOP = "HDOP";
@@ -139,9 +154,12 @@ public class GpsSettingConfig {
     private GpsSettingConfig() {
     }
 
+    public GpsSettingConfig(Application application) {
+        this.application = application;
+    }
+
     public void init(Application application) {
         this.application = application;
-        MMKV.initialize(application);
     }
 
     public Application getApplication() {
@@ -175,6 +193,22 @@ public class GpsSettingConfig {
      */
     public GpsSettingConfig setAccuracyMeters(float meters) {
         this.minAccuracy = meters;
+        return this;
+    }
+
+    /**
+     * 快速设置通知栏图标
+     */
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    /**
+     * 快速设置通知栏 ID
+     * @param notificationId 默认为300000，可自行修改
+     */
+    public GpsSettingConfig setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
         return this;
     }
 
@@ -530,6 +564,100 @@ public class GpsSettingConfig {
             return date != null ? date.getTime() : 0;
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    // ========== 新增：通知通道 Getter/Setter ==========
+
+    public String getNotificationChannelId() {
+        return notificationChannelId;
+    }
+
+    public GpsSettingConfig setNotificationChannelId(String notificationChannelId) {
+        this.notificationChannelId = notificationChannelId;
+        return this;
+    }
+
+    public String getNotificationChannelName() {
+        return notificationChannelName;
+    }
+
+    public GpsSettingConfig setNotificationChannelName(String notificationChannelName) {
+        this.notificationChannelName = notificationChannelName;
+        return this;
+    }
+
+    public int getNotificationImportance() {
+        return notificationImportance;
+    }
+
+    public GpsSettingConfig setNotificationImportance(int notificationImportance) {
+        this.notificationImportance = notificationImportance;
+        return this;
+    }
+
+    public boolean isNotificationEnableLights() {
+        return notificationEnableLights;
+    }
+
+    public GpsSettingConfig setNotificationEnableLights(boolean notificationEnableLights) {
+        this.notificationEnableLights = notificationEnableLights;
+        return this;
+    }
+
+    public boolean isNotificationEnableVibration() {
+        return notificationEnableVibration;
+    }
+
+    public GpsSettingConfig setNotificationEnableVibration(boolean notificationEnableVibration) {
+        this.notificationEnableVibration = notificationEnableVibration;
+        return this;
+    }
+
+    public int getNotificationLockscreenVisibility() {
+        return notificationLockscreenVisibility;
+    }
+
+    public GpsSettingConfig setNotificationLockscreenVisibility(int notificationLockscreenVisibility) {
+        this.notificationLockscreenVisibility = notificationLockscreenVisibility;
+        return this;
+    }
+
+    public boolean isNotificationShowBadge() {
+        return notificationShowBadge;
+    }
+
+    public GpsSettingConfig setNotificationShowBadge(boolean notificationShowBadge) {
+        this.notificationShowBadge = notificationShowBadge;
+        return this;
+    }
+
+    public String getNotificationChannelDescription() {
+        return notificationChannelDescription;
+    }
+
+    public GpsSettingConfig setNotificationChannelDescription(String notificationChannelDescription) {
+        this.notificationChannelDescription = notificationChannelDescription;
+        return this;
+    }
+
+    /**
+     * 创建通知通道（应在 Application 或 Service 中调用）
+     */
+    public void createNotificationChannel(android.app.NotificationManager manager) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            android.app.NotificationChannel channel = new android.app.NotificationChannel(
+                    notificationChannelId,
+                    notificationChannelName,
+                    notificationImportance
+            );
+            channel.enableLights(notificationEnableLights);
+            channel.enableVibration(notificationEnableVibration);
+            channel.setSound(null, null);
+            channel.setShowBadge(notificationShowBadge);
+            channel.setLockscreenVisibility(notificationLockscreenVisibility);
+            channel.setDescription(notificationChannelDescription);
+            manager.createNotificationChannel(channel);
         }
     }
 }

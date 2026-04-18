@@ -27,10 +27,12 @@ import androidx.lifecycle.Observer;
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.common.Session;
 import io.coderf.arklab.googlegps.helper.AppUtil;
+import io.coderf.arklab.googlegps.helper.GpsOptions;
 import io.coderf.arklab.googlegps.listener.GnssLocationListener;
 import io.coderf.arklab.googlegps.listener.NmeaLocationListener;
 import io.coderf.arklab.googlegps.logger.FileLoggerFactory;
 import io.coderf.arklab.googlegps.socket.LogUtil;
+import io.coderf.arklab.googlegps.utils.EsriUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class GpsService extends Service {
     public final static String TAG = GpsService.class.getSimpleName();
     private static NotificationManager notificationManager;
     private final IBinder binder = new GpsBinder();
-    AlarmManager nextPointAlarmManager;
+    private AlarmManager nextPointAlarmManager;
     private NotificationCompat.Builder nfc;
 
     // ---------------------------------------------------
@@ -56,8 +58,12 @@ public class GpsService extends Service {
     private NmeaLocationListener nmeaLocationListener;
 
     // ========== 新增：配置和会话 ==========
-    private GpsSettingConfig config;
+    private GpsOptions gpsOptions = new GpsOptions();
     private Session session;
+    /**
+     * 开始时间
+     */
+    private Long startTime = null;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     // ========== 新增：重试和超时相关 ==========
@@ -97,29 +103,24 @@ public class GpsService extends Service {
 
     @Override
     public void onCreate() {
-        // ========== 新增：初始化配置和会话 ==========
-        config = GpsSettingConfig.getInstance();
         session = Session.getInstance();
 
         // 初始化超时 Runnable
         initTimeoutRunnable();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(GpsSettingConfig.NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
+            startForeground(gpsOptions.getConfig().getNotificationId(), gpsOptions.getNotification(getApplicationContext()), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
         } else {
-            startForeground(GpsSettingConfig.NOTIFICATION_ID, getNotification());
+            startForeground(gpsOptions.getConfig().getNotificationId(), gpsOptions.getNotification(getApplicationContext()));
         }
         nextPointAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
     // ========== 新增：初始化超时 Runnable ==========
     private void initTimeoutRunnable() {
-        stopManagerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.show(TAG, "Absolute timeout reached, giving up on this point");
-                stopManagerAndResetAlarm();
-            }
+        stopManagerRunnable = () -> {
+            LogUtil.show(TAG, "Absolute timeout reached, giving up on this point");
+            stopManagerAndResetAlarm();
         };
     }
 
@@ -131,9 +132,9 @@ public class GpsService extends Service {
         boolean isNextPoint = intent != null && intent.getBooleanExtra(GpsSettingConfig.GET_NEXT_POINT, false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(GpsSettingConfig.NOTIFICATION_ID, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
+            startForeground(gpsOptions.getConfig().getNotificationId(), gpsOptions.getNotification(getApplicationContext()), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
         } else {
-            startForeground(GpsSettingConfig.NOTIFICATION_ID, getNotification());
+            startForeground(gpsOptions.getConfig().getNotificationId(), gpsOptions.getNotification(getApplicationContext()));
         }
 
         if (isNextPoint) {
@@ -171,9 +172,9 @@ public class GpsService extends Service {
         LogUtil.show(TAG, "-------------------startLogging--------------------");
 
         // 根据配置初始化文件记录器
-        if (config.isFileLogEnabled()) {
-            String fileType = config.getFileLogType();
-            String fileNamePrefix = config.getEffectiveFileNamePrefix();
+        if (gpsOptions.getConfig().isFileLogEnabled()) {
+            String fileType = gpsOptions.getConfig().getFileLogType();
+            String fileNamePrefix = gpsOptions.getConfig().getEffectiveFileNamePrefix();
 
             // 使用配置的文件类型和文件名前缀
             FileLoggerFactory.init(fileType, fileNamePrefix);
@@ -227,54 +228,16 @@ public class GpsService extends Service {
         notificationManager.cancelAll();
     }
 
-    /**
-     * Shows a notification icon in the status bar for GPS Service
-     */
-    private Notification getNotification() {
-        if (nfc == null) {
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            NotificationChannel channel = new NotificationChannel(GpsSettingConfig.CHANNEL_ID,
-                    GpsSettingConfig.CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            channel.setSound(null, null);
-            channel.setShowBadge(true);
-            manager.createNotificationChannel(channel);
-
-            nfc = new NotificationCompat.Builder(getApplicationContext(), GpsSettingConfig.CHANNEL_ID)
-                    .setSmallIcon(config.getNotificationSmallIconResId() != 0 ?
-                            config.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(getApplicationContext()))
-                    .setLargeIcon(config.getNotificationLargeIconResId() != 0 ?
-                            BitmapFactory.decodeResource(getResources(), config.getNotificationLargeIconResId()) :
-                            BitmapFactory.decodeResource(getResources(), AppUtil.getAppManager().getAppIcon(getApplicationContext())))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setContentTitle(config.getNotificationTitle())
-                    .setContentText(config.getNotificationContent())
-                    .setOngoing(config.isNotificationOngoing())
-                    .setOnlyAlertOnce(true);
-            nfc.setPriority(NotificationCompat.PRIORITY_LOW);
-        }
-
-        // 使用固定的标题和内容，不动态更新
-        nfc.setContentTitle(config.getNotificationTitle());
-        nfc.setContentText(config.getNotificationContent());
-
-        return nfc.build();
-    }
-
     private void showNotification() {
         // 每次调用都重新构建通知，但内容固定
-        Notification notification = getNotification();
+        Notification notification = gpsOptions.getNotification(getApplicationContext());
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(GpsSettingConfig.NOTIFICATION_ID, notification);
+        notificationManager.notify(gpsOptions.getConfig().getNotificationId(), notification);
     }
 
     @SuppressWarnings("ResourceType")
     private void startPassiveManager() {
-        if (config.isEnablePassive()) {
+        if (gpsOptions.getConfig().isEnablePassive()) {
             LogUtil.show(TAG, "Starting passive location listener");
             if (passiveLocationListener == null) {
                 passiveLocationListener = new GnssLocationListener(this, GpsSettingConfig.PASSIVE);
@@ -324,7 +287,7 @@ public class GpsService extends Service {
         session.setTowerEnabled(networkProviderEnabled);
 
         // ========== 新增：GPS 定位 ==========
-        if (config.isEnableGps() && gpsProviderEnabled) {
+        if (gpsOptions.getConfig().isEnableGps() && gpsProviderEnabled) {
             LogUtil.show(TAG, "Requesting GPS location updates");
             gpsLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gnssLocationListener);
             session.setUsingGps(true);
@@ -332,14 +295,14 @@ public class GpsService extends Service {
         }
 
         // ========== 新增：网络定位 ==========
-        if (config.isEnableNetwork() && networkProviderEnabled) {
+        if (gpsOptions.getConfig().isEnableNetwork() && networkProviderEnabled) {
             LogUtil.show(TAG, "Requesting cell and wifi location updates");
             towerLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, towerLocationListener);
             startAbsoluteTimer();
         }
 
         // ========== 新增：检查是否有可用的定位源 ==========
-        if ((!config.isEnableGps() || !gpsProviderEnabled) && (!config.isEnableNetwork() || !networkProviderEnabled)) {
+        if ((!gpsOptions.getConfig().isEnableGps() || !gpsProviderEnabled) && (!gpsOptions.getConfig().isEnableNetwork() || !networkProviderEnabled)) {
             LogUtil.show(TAG, "No provider available!");
             startAbsoluteTimer();
             return;
@@ -395,20 +358,20 @@ public class GpsService extends Service {
         long currentTimeStamp = System.currentTimeMillis();
 
         // ========== 1. 过滤过时点位（时间戳倒退） ==========
-        if (config.isFilterStaleLocation() && session.getPreviousLocationInfo() != null &&
+        if (gpsOptions.getConfig().isFilterStaleLocation() && session.getPreviousLocationInfo() != null &&
                 loc.getTime() <= session.getPreviousLocationInfo().getTime()) {
             LogUtil.show(TAG, "Received a stale location, its time was less than or equal to a previous point. Ignoring.");
             return;
         }
 
         // ========== 2. 最小时间间隔过滤 ==========
-        if (!isPassiveLocation && (currentTimeStamp - session.getLatestTimeStamp()) < config.getMinTimeInterval()) {
+        if (!isPassiveLocation && (currentTimeStamp - session.getLatestTimeStamp()) < gpsOptions.getConfig().getMinTimeInterval()) {
             LogUtil.show(TAG, "Received location, but minimum logging interval has not passed. Ignoring.");
             return;
         }
 
         // ========== 3. 被动定位间隔过滤 ==========
-        if (isPassiveLocation && config.isEnablePassive() && session.getPreviousLocationInfo() != null) {
+        if (isPassiveLocation && gpsOptions.getConfig().isEnablePassive() && session.getPreviousLocationInfo() != null) {
             if ((loc.getTime() - session.getLatestPassiveTimeStamp()) < 1000) { // 被动定位默认1秒间隔
                 LogUtil.show(TAG, "Passive location discarded due to filter interval");
                 return;
@@ -417,14 +380,14 @@ public class GpsService extends Service {
         }
 
         // ========== 4. 过滤速度过大的异常跳点 ==========
-        if (config.isFilterLargeJump() && session.getCurrentLocationInfo() != null) {
-            double distanceTravelled = calculateDistance(
+        if (gpsOptions.getConfig().isFilterLargeJump() && session.getCurrentLocationInfo() != null) {
+            double distanceTravelled = EsriUtil.calculateDistance(
                     loc.getLatitude(), loc.getLongitude(),
                     session.getCurrentLocationInfo().getLatitude(),
                     session.getCurrentLocationInfo().getLongitude());
             long timeDifference = Math.abs(loc.getTime() - session.getCurrentLocationInfo().getTime()) / 1000;
 
-            if (timeDifference > 0 && (distanceTravelled / timeDifference) > config.getMaxSpeedMps()) {
+            if (timeDifference > 0 && (distanceTravelled / timeDifference) > gpsOptions.getConfig().getMaxSpeedMps()) {
                 LogUtil.show(TAG, String.format("Very large jump detected - %.0f meters in %d sec - discarding point",
                         distanceTravelled, timeDifference));
                 return;
@@ -432,24 +395,24 @@ public class GpsService extends Service {
         }
 
         // ========== 5. 精度过滤和重试逻辑 ==========
-        if (config.getMinAccuracy() > 0) {
+        if (gpsOptions.getConfig().getMinAccuracy() > 0) {
             if (!loc.hasAccuracy() || loc.getAccuracy() == 0) {
                 LogUtil.show(TAG, "Received location, but it has no accuracy value. Ignoring.");
                 return;
             }
 
             // 精度不满足要求
-            if (config.getMinAccuracy() < Math.abs(loc.getAccuracy())) {
+            if (gpsOptions.getConfig().getMinAccuracy() < Math.abs(loc.getAccuracy())) {
                 if (session.getFirstRetryTimeStamp() == 0) {
                     session.setFirstRetryTimeStamp(System.currentTimeMillis());
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() <= config.getRetryPeriodSeconds() * 1000L) {
+                if (currentTimeStamp - session.getFirstRetryTimeStamp() <= gpsOptions.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.show(TAG, String.format("Only accuracy of %.1f m. Point discarded. Keep trying.", loc.getAccuracy()));
                     return;
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() > config.getRetryPeriodSeconds() * 1000L) {
+                if (currentTimeStamp - session.getFirstRetryTimeStamp() > gpsOptions.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.show(TAG, String.format("Only accuracy of %.1f m and timeout reached. Giving up.", loc.getAccuracy()));
                     stopManagerAndResetAlarm();
                     session.setFirstRetryTimeStamp(0);
@@ -459,7 +422,7 @@ public class GpsService extends Service {
                 session.setFirstRetryTimeStamp(0);
             }
             // 获取最佳精度逻辑
-            else if (config.isGetBestPossibleAccuracy() && !isPassiveLocation) {
+            else if (gpsOptions.getConfig().isGetBestPossibleAccuracy() && !isPassiveLocation) {
                 if (session.getFirstRetryTimeStamp() == 0) {
                     session.setTemporaryLocationForBestAccuracy(null);
                     session.setFirstRetryTimeStamp(System.currentTimeMillis());
@@ -471,11 +434,11 @@ public class GpsService extends Service {
                     session.setTemporaryLocationForBestAccuracy(loc);
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() <= config.getRetryPeriodSeconds() * 1000L) {
+                if (currentTimeStamp - session.getFirstRetryTimeStamp() <= gpsOptions.getConfig().getRetryPeriodSeconds() * 1000L) {
                     return;
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() > config.getRetryPeriodSeconds() * 1000L) {
+                if (currentTimeStamp - session.getFirstRetryTimeStamp() > gpsOptions.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.show(TAG, String.format("Retry timeout reached, using best point with accuracy of %.1f m.",
                             session.getTemporaryLocationForBestAccuracy().getAccuracy()));
                     loc = session.getTemporaryLocationForBestAccuracy();
@@ -486,18 +449,20 @@ public class GpsService extends Service {
         }
 
         // ========== 6. 最小距离间隔过滤 ==========
-        if (!isPassiveLocation && config.getMinDistanceInterval() > 0 && session.hasValidLocation()) {
-            double distanceTraveled = calculateDistance(
+        if (!isPassiveLocation && gpsOptions.getConfig().getMinDistanceInterval() > 0 && session.hasValidLocation()) {
+            double distanceTraveled = EsriUtil.calculateDistance(
                     loc.getLatitude(), loc.getLongitude(),
                     session.getCurrentLatitude(), session.getCurrentLongitude());
 
-            if (config.getMinDistanceInterval() > distanceTraveled) {
+            if (gpsOptions.getConfig().getMinDistanceInterval() > distanceTraveled) {
                 LogUtil.show(TAG, String.format("Not enough distance traveled: %.1f m, point discarded", distanceTraveled));
                 stopManagerAndResetAlarm();
                 return;
             }
         }
-
+        if (startTime == null) {
+            startTime = System.currentTimeMillis();
+        }
         // ========== 所有过滤通过，记录点位 ==========
         Log.d(TAG, String.format("Location accepted: %.6f, %.6f, accuracy: %.1fm",
                 loc.getLatitude(), loc.getLongitude(), loc.hasAccuracy() ? loc.getAccuracy() : -1));
@@ -520,7 +485,7 @@ public class GpsService extends Service {
 
         // 通知观察者
         notifyLocationObservers(loc);
-
+        gpsOptions.onLocationAccepted(loc);
         // ========== 新增：检查是否需要停止服务（单点模式） ==========
         if (session.isSinglePointMode()) {
             LogUtil.show(TAG, "Single point mode - stopping now");
@@ -528,15 +493,6 @@ public class GpsService extends Service {
         }
     }
 
-    // ========== 新增：计算两点间距离（米） ==========
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        if (lat1 == 0 && lon1 == 0 && lat2 == 0 && lon2 == 0) {
-            return 0;
-        }
-        float[] results = new float[1];
-        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
-        return results[0];
-    }
 
     // ========== 新增：更新总行程距离 ==========
     private void updateTotalDistance(Location loc) {
@@ -545,7 +501,7 @@ public class GpsService extends Service {
             return;
         }
 
-        double distance = calculateDistance(
+        double distance = EsriUtil.calculateDistance(
                 session.getPreviousLatitude(),
                 session.getPreviousLongitude(),
                 loc.getLatitude(),
@@ -557,17 +513,17 @@ public class GpsService extends Service {
 
     // ========== 新增：检查用户是否静止太久 ==========
     private boolean userHasBeenStillForTooLong() {
-        if (!config.isLogOnlyOnSignificantMotion()) {
+        if (!gpsOptions.getConfig().isLogOnlyOnSignificantMotion()) {
             return false;
         }
         return session.getUserStillSinceTimeStamp() > 0 &&
-                (System.currentTimeMillis() - session.getUserStillSinceTimeStamp()) > config.getMinTimeInterval();
+                (System.currentTimeMillis() - session.getUserStillSinceTimeStamp()) > gpsOptions.getConfig().getMinTimeInterval();
     }
 
     // ========== 新增：启动绝对超时定时器 ==========
     private void startAbsoluteTimer() {
-        if (config.getAbsoluteTimeoutSeconds() >= 1) {
-            handler.postDelayed(stopManagerRunnable, config.getAbsoluteTimeoutSeconds() * 1000L);
+        if (gpsOptions.getConfig().getAbsoluteTimeoutSeconds() >= 1) {
+            handler.postDelayed(stopManagerRunnable, gpsOptions.getConfig().getAbsoluteTimeoutSeconds() * 1000L);
         }
     }
 
@@ -593,9 +549,9 @@ public class GpsService extends Service {
         PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_MUTABLE);
         nextPointAlarmManager.cancel(pi);
 
-        long triggerTime = SystemClock.elapsedRealtime() + config.getMinTimeInterval();
+        long triggerTime = SystemClock.elapsedRealtime() + gpsOptions.getConfig().getMinTimeInterval();
         nextPointAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pi);
-        LogUtil.show(TAG, "Alarm set for next point in " + config.getMinTimeInterval() + "ms");
+        LogUtil.show(TAG, "Alarm set for next point in " + gpsOptions.getConfig().getMinTimeInterval() + "ms");
     }
 
     // ========== 新增：停止闹钟 ==========
@@ -633,7 +589,11 @@ public class GpsService extends Service {
             return GpsService.this;
         }
 
-        // ========== 新增：Binder 方法 ==========
+        public GpsOptions setGpsOptions(GpsOptions options) {
+            GpsService.this.gpsOptions = options;
+            return options;
+        }
+
         public void logOnce() {
             GpsService.this.logOnce();
         }

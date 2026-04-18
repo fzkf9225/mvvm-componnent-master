@@ -67,12 +67,17 @@ class GpsStarter(
     private var currentOnceMode: Boolean = false
 
     private var currentFlowJob: Job? = null
+    private var gpsOptions: GpsOptions? = null
+
     /**
      * Service连接回调
      */
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             gpsService = (service as? GpsService.GpsBinder)?.service
+            gpsOptions?.let {
+                (service as? GpsService.GpsBinder)?.setGpsOptions(it)
+            }
             gpsService?.let {
                 locationObservers.forEach { observer ->
                     GpsService.addLocationObserver(observer)
@@ -113,7 +118,7 @@ class GpsStarter(
         gpsObserver = GpsLifecycleObserver(
             activity = lifecycleOwner as? ComponentActivity,
             fragment = lifecycleOwner as? Fragment,
-            checkBackPermission = false,
+            checkBackPermission = true,
             callback = permissionGpsCallback
         )
         // 确保在 STARTED 状态前注册
@@ -124,6 +129,7 @@ class GpsStarter(
         }
     }
 
+
     /**
      * 单次定位
      *
@@ -131,11 +137,12 @@ class GpsStarter(
      *
      * @param onResult 定位结果回调，定位失败时返回null
      */
-    fun getSingleLocation(onResult: (Location?) -> Unit) {
+    fun getSingleLocation(gpsOptions: GpsOptions? = null, onResult: (Location?) -> Unit) {
         if (isRunning) {
             onResult(null)
             return
         }
+        this.gpsOptions = gpsOptions
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
         // 触发权限和GPS检测
@@ -150,11 +157,11 @@ class GpsStarter(
      * @param onEachLocation 每次定位更新的回调
      * @return 停止函数，调用后可停止定位服务
      */
-    fun startContinuousLocation(onEachLocation: (Location) -> Unit): () -> Unit {
+    fun startContinuousLocation(gpsOptions: GpsOptions?=null,onEachLocation: (Location) -> Unit): () -> Unit {
         if (isRunning) {
             return {}
         }
-
+        this.gpsOptions = gpsOptions
         val onResult: (Location?) -> Unit = { location ->
             if (location != null) {
                 onEachLocation(location)
@@ -180,7 +187,7 @@ class GpsStarter(
      * @param once true: 单次定位，false: 持续定位
      * @return Location的Flow流
      */
-    fun locationFlow(once: Boolean = false): Flow<Location> = callbackFlow {
+    fun locationFlow(gpsOptions: GpsOptions?=null,once: Boolean = false): Flow<Location> = callbackFlow {
         val observer = Observer<Location> { location ->
             trySend(location)
             if (once) {
@@ -188,6 +195,7 @@ class GpsStarter(
             }
         }
 
+        this@GpsStarter.gpsOptions = gpsOptions
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(
             once = once,
@@ -225,7 +233,7 @@ class GpsStarter(
 
         locationObservers.add(locationObserver)
         isRunning = true
-        startServiceAndBind(request.once)
+        startServiceAndBind(gpsOptions,request.once)
         clearPendingRequest()
     }
 
@@ -263,7 +271,7 @@ class GpsStarter(
     /**
      * 启动前台Service并绑定
      */
-    private fun startServiceAndBind(once: Boolean) {
+    private fun startServiceAndBind(gpsOptions: GpsOptions?=null,once: Boolean) {
         val intent = Intent(context, GpsService::class.java)
         if (once) {
             intent.putExtra("once", true)
@@ -272,6 +280,7 @@ class GpsStarter(
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         serviceBound = true
     }
+
     /**
      * 使用 Flow 的方式获取定位（可单独停止）
      *
@@ -281,6 +290,7 @@ class GpsStarter(
      */
     @OptIn(DelicateCoroutinesApi::class)
     fun startLocationFlow(
+        gpsOptions: GpsOptions?=null,
         once: Boolean = false,
         onStart: (() -> Unit)? = null,
         onLocation: (Location) -> Unit
@@ -291,9 +301,10 @@ class GpsStarter(
         val job = Job()
         currentFlowJob = job
 
+        this@GpsStarter.gpsOptions = gpsOptions
         // 在协程中收集 Flow
         kotlinx.coroutines.GlobalScope.launch(job) {
-            locationFlow(once).collect { location ->
+            locationFlow(gpsOptions,once).collect { location ->
                 onLocation(location)
             }
         }
@@ -308,6 +319,7 @@ class GpsStarter(
         currentFlowJob?.cancel()
         currentFlowJob = null
     }
+
     /**
      * 清理所有资源
      */

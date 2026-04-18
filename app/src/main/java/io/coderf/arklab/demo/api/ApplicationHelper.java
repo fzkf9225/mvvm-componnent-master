@@ -1,5 +1,7 @@
 package io.coderf.arklab.demo.api;
 
+import android.app.NotificationManager;
+
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.utils.DebugUtil;
 import io.coderf.arklab.ui.api.FileApiService;
@@ -27,12 +29,26 @@ public class ApplicationHelper extends BaseApplication {
     ErrorService errorService;
     @Inject
     FileApiService fileApiService;
+
     @Override
     public void onCreate() {
         super.onCreate();
         registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
         Config.getInstance().init(this);
         GpsSettingConfig.getInstance().init(this);
+
+        GpsSettingConfig.getInstance()
+                .setNotificationChannelId(getApplicationContext().getPackageName() + ".GPSService")
+                .setNotificationChannelName("位置服务")
+                .setNotificationImportance(NotificationManager.IMPORTANCE_HIGH)
+                .setNotificationEnableLights(true)
+                .setNotificationShowBadge(true)
+                .setMinTimeInterval(1000)
+                .setMinDistanceInterval(0)
+                .setFilterLargeJump(false)
+                .setMinAccuracy(100f)
+                .setFilterStaleLocation(false);
+
         Config.getInstance().setResponseBodyLogConverterJson(true);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
