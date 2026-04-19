@@ -17,7 +17,7 @@
  * along with GPSLogger for Android.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.coderf.arklab.googlegps.common;
+package io.coderf.arklab.googlegps.logger;
 
 
 import android.content.Context;
@@ -41,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

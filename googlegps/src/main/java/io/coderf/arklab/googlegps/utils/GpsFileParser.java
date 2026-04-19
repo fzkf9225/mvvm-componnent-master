@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.common;
+package io.coderf.arklab.googlegps.utils;
 
 import android.location.Location;
 
@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.coderf.arklab.googlegps.logger.Files;
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+
 /**
  * 日志文件解析工具类
  *
@@ -20,7 +23,7 @@ import java.util.Locale;
  * @since 1.0
  * @created 2026/4/16 17:22
  */
-public class FileParser {
+public class GpsFileParser {
 
     /**
      * 获取所有日志文件

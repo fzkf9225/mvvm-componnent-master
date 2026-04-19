@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.socket;
+package io.coderf.arklab.googlegps.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,8 +24,8 @@ import java.util.Random;
  * Created by fz on 2023/10/31 14:00
  * describe:唯一识别号
  */
-public class PhoneUtils {
-    private final static String TAG = PhoneUtils.class.getSimpleName();
+public class GpsSockerUtils {
+    private final static String TAG = GpsSockerUtils.class.getSimpleName();
 
     public static String getUniqueCode(Context mContext) {
         String deviceId = getDeviceId(mContext);

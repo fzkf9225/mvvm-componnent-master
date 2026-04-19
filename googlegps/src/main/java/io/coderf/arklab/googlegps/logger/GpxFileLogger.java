@@ -11,9 +11,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import io.coderf.arklab.googlegps.common.Files;
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
-import io.coderf.arklab.googlegps.socket.LogUtil;
+import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**
  * GPX 格式文件记录器（标准轨迹格式）

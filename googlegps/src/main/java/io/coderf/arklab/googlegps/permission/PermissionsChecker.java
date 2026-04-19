@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.helper.permission;
+package io.coderf.arklab.googlegps.permission;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

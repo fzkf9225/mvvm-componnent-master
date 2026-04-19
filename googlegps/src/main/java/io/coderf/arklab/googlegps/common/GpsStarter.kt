@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.helper
+package io.coderf.arklab.googlegps.common
 
 import android.content.ComponentName
 import android.content.Context
@@ -12,8 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import io.coderf.arklab.googlegps.service.GpsService
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +26,9 @@ import kotlinx.coroutines.launch
 
 /**
  * 封装统一的GPS启动器
+ *
+ * <p>提供单次定位、持续定位、Flow定位等多种定位方式，
+ * 自动处理权限检查和GPS开关检测，支持生命周期自动管理。</p>
  *
  * 注意：必须在 onCreate 中创建实例，因为需要在 STARTED 状态前注册 LifecycleObserver
  *
@@ -34,6 +41,13 @@ import kotlinx.coroutines.launch
  *         super.onCreate(savedInstanceState)
  *         // 必须在 onCreate 中初始化
  *         gpsStarter = GpsStarter(this, this)
+ *
+ *         // 仅检查权限
+ *         gpsStarter.checkPermissionsOnly { isGranted, message ->
+ *             if (isGranted) {
+ *                 // 权限已就绪
+ *             }
+ *         }
  *
  *         binding.button.setOnClickListener {
  *             // 点击时调用定位方法
@@ -52,35 +66,48 @@ class GpsStarter(
     private val lifecycleOwner: LifecycleOwner,
     private val context: Context
 ) {
+    /** GPS 生命周期观察者，负责权限和GPS状态检测 */
     private var gpsObserver: GpsLifecycleObserver? = null
+
+    /** 服务是否已绑定 */
     private var serviceBound = false
+
+    /** GPS 服务实例 */
     private var gpsService: GpsService? = null
+    private val starterScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    /** 位置观察者列表，用于接收位置更新 */
     private val locationObservers = mutableListOf<Observer<Location>>()
 
-    // 是否正在运行
+    /** 是否正在运行定位服务 */
     private var isRunning = false
 
-    // 待执行的定位请求（权限/GPS就绪后执行）
+    /** 待执行的定位请求（权限/GPS就绪后执行） */
     private var pendingRequest: PendingLocationRequest? = null
 
-    // 当前的定位模式
+    /** 当前的定位模式（true: 单次定位, false: 持续定位） */
     private var currentOnceMode: Boolean = false
 
+    /** 当前 Flow 定位任务 */
     private var currentFlowJob: Job? = null
-    private var gpsOptions: GpsOptions? = null
+
+    /** GPS 回调配置 */
+    private var gpsCallback: GpsCallback? = null
 
     /**
      * Service连接回调
+     *
+     * <p>当服务连接成功时，获取服务实例并设置回调配置，
+     * 同时注册所有待处理的位置观察者。</p>
      */
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             gpsService = (service as? GpsService.GpsBinder)?.service
-            gpsOptions?.let {
+            gpsCallback?.let {
                 (service as? GpsService.GpsBinder)?.setGpsOptions(it)
             }
             gpsService?.let {
                 locationObservers.forEach { observer ->
-                    GpsService.addLocationObserver(observer)
+                    gpsService?.addLocationObserver(observer)
                 }
             }
         }
@@ -93,6 +120,9 @@ class GpsStarter(
 
     /**
      * 定位权限/GPS检测的回调
+     *
+     * <p>当权限和GPS检测完成后，如果全部就绪则执行待处理的定位请求，
+     * 否则回调失败结果并清理待处理请求。</p>
      */
     private val permissionGpsCallback: (Boolean, String) -> Unit = { isGranted, message ->
         if (!isGranted) {
@@ -106,6 +136,10 @@ class GpsStarter(
 
     /**
      * 数据类：待执行的定位请求
+     *
+     * @property once 是否为单次定位
+     * @property onResult 定位结果回调
+     * @property observer 位置观察者（可选）
      */
     private data class PendingLocationRequest(
         val once: Boolean,
@@ -129,20 +163,71 @@ class GpsStarter(
         }
     }
 
+    /**
+     * 仅检测权限和GPS状态，不触发定位
+     *
+     * <p>用于在需要定位前预先检查权限状态，或判断是否满足定位条件。
+     * 此方法不会启动任何定位服务，只进行权限和GPS开关的检测。</p>
+     *
+     * @param checkBackPermission 是否检查后台定位权限，默认为 true
+     * @param onResult 检测结果回调，参数为 (是否通过, 提示信息)
+     *                 通过时返回 true，失败时返回 false 及失败原因
+     *
+     * 使用示例：
+     * ```
+     * gpsStarter.checkPermissionsOnly { isGranted, message ->
+     *     if (isGranted) {
+     *         // 权限已就绪，可以开始定位
+     *         gpsStarter.getSingleLocation { location -> }
+     *     } else {
+     *         // 权限未就绪，message 包含失败原因
+     *         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+     *     }
+     * }
+     * ```
+     */
+    fun checkPermissionsOnly(
+        checkBackPermission: Boolean = true,
+        onResult: (Boolean, String) -> Unit
+    ) {
+        // 创建一个临时的定位请求，只用于检测权限，不实际执行定位
+        val tempRequest = PendingLocationRequest(
+            once = true,
+            onResult = { _ ->
+                // 检测完成后清理临时请求，不执行实际定位
+                clearPendingRequest()
+            }
+        )
+        pendingRequest = tempRequest
+
+        // 使用自定义回调，拦截权限检测结果
+        gpsObserver?.startCheck(checkBackPermission) { isGranted, message ->
+            onResult(isGranted, message)
+            if (!isGranted) {
+                // 权限检测失败，清理待处理请求
+                clearPendingRequest()
+            } else {
+                // 权限检测成功，但不需要执行定位，直接清理
+                clearPendingRequest()
+            }
+        }
+    }
 
     /**
      * 单次定位
      *
-     * 获取一次定位结果后自动停止服务和清理资源
+     * <p>获取一次定位结果后自动停止服务和清理资源。
+     * 内部会自动处理权限和GPS检测。</p>
      *
+     * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param onResult 定位结果回调，定位失败时返回null
      */
-    fun getSingleLocation(gpsOptions: GpsOptions? = null, onResult: (Location?) -> Unit) {
+    fun getSingleLocation(gpsCallback: GpsCallback? = null, onResult: (Location?) -> Unit) {
         if (isRunning) {
             onResult(null)
             return
         }
-        this.gpsOptions = gpsOptions
+        this.gpsCallback = gpsCallback
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
         // 触发权限和GPS检测
@@ -152,16 +237,18 @@ class GpsStarter(
     /**
      * 持续定位
      *
-     * 持续获取定位更新，返回停止函数用于手动停止
+     * <p>持续获取定位更新，返回停止函数用于手动停止。
+     * 内部会自动处理权限和GPS检测。</p>
      *
+     * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param onEachLocation 每次定位更新的回调
      * @return 停止函数，调用后可停止定位服务
      */
-    fun startContinuousLocation(gpsOptions: GpsOptions?=null,onEachLocation: (Location) -> Unit): () -> Unit {
+    fun startContinuousLocation(gpsCallback: GpsCallback? = null, onEachLocation: (Location) -> Unit): () -> Unit {
         if (isRunning) {
             return {}
         }
-        this.gpsOptions = gpsOptions
+        this.gpsCallback = gpsCallback
         val onResult: (Location?) -> Unit = { location ->
             if (location != null) {
                 onEachLocation(location)
@@ -182,12 +269,14 @@ class GpsStarter(
     /**
      * 使用 Flow 的方式获取定位（推荐）
      *
-     * 注意：使用 Flow 时，需要在协程作用域中调用
+     * <p>返回一个冷流，每次订阅时开始定位，取消订阅时停止定位。
+     * 注意：使用 Flow 时，需要在协程作用域中调用。</p>
      *
+     * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param once true: 单次定位，false: 持续定位
      * @return Location的Flow流
      */
-    fun locationFlow(gpsOptions: GpsOptions?=null,once: Boolean = false): Flow<Location> = callbackFlow {
+    fun locationFlow(gpsCallback: GpsCallback? = null, once: Boolean = false): Flow<Location> = callbackFlow {
         val observer = Observer<Location> { location ->
             trySend(location)
             if (once) {
@@ -195,7 +284,7 @@ class GpsStarter(
             }
         }
 
-        this@GpsStarter.gpsOptions = gpsOptions
+        this@GpsStarter.gpsCallback = gpsCallback
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(
             once = once,
@@ -215,6 +304,8 @@ class GpsStarter(
 
     /**
      * 执行待处理的定位请求
+     *
+     * <p>当权限和GPS检测通过后，启动服务并注册位置观察者。</p>
      */
     private fun executePendingRequest() {
         val request = pendingRequest ?: return
@@ -233,14 +324,14 @@ class GpsStarter(
 
         locationObservers.add(locationObserver)
         isRunning = true
-        startServiceAndBind(gpsOptions,request.once)
+        startServiceAndBind(gpsCallback, request.once)
         clearPendingRequest()
     }
 
     /**
      * 停止所有定位服务
      *
-     * 手动停止GPS服务，释放所有资源
+     * <p>手动停止GPS服务，释放所有资源。</p>
      */
     fun stop() {
         if (!isRunning) {
@@ -253,13 +344,10 @@ class GpsStarter(
 
     /**
      * 检查定位服务是否正在运行
+     *
+     * @return true 表示定位服务正在运行，false 表示未运行
      */
     fun isRunning(): Boolean = isRunning
-
-    /**
-     * 获取最后一次的定位结果
-     */
-//    fun getLastLocation(): Location? = gpsService?.getLastLocation()
 
     /**
      * 清理待处理的请求
@@ -268,10 +356,16 @@ class GpsStarter(
         pendingRequest = null
     }
 
+    public fun getGpsService(): GpsService? {
+        return gpsService
+    }
     /**
      * 启动前台Service并绑定
+     *
+     * @param gpsCallback GPS回调配置
+     * @param once 是否为单次定位模式
      */
-    private fun startServiceAndBind(gpsOptions: GpsOptions?=null,once: Boolean) {
+    private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
         val intent = Intent(context, GpsService::class.java)
         if (once) {
             intent.putExtra("once", true)
@@ -284,36 +378,40 @@ class GpsStarter(
     /**
      * 使用 Flow 的方式获取定位（可单独停止）
      *
+     * <p>提供更灵活的 Flow 定位控制，返回 Job 可用于手动取消。</p>
+     *
+     * @param gpsCallback GPS回调配置，可选
      * @param once true: 单次定位，false: 持续定位
      * @param onStart 可选，在权限和GPS检测通过后回调
+     * @param onLocation 每次定位更新的回调
      * @return Flow的Job，可用于取消
      */
     @OptIn(DelicateCoroutinesApi::class)
     fun startLocationFlow(
-        gpsOptions: GpsOptions?=null,
+        gpsCallback: GpsCallback? = null,
         once: Boolean = false,
         onStart: (() -> Unit)? = null,
         onLocation: (Location) -> Unit
     ): Job {
-        // 停止之前的 Flow
         currentFlowJob?.cancel()
 
-        val job = Job()
-        currentFlowJob = job
+        // 2. 使用 starterScope 替代 GlobalScope
+        val job = starterScope.launch {
+            // 如果有 onStart 回调，在这里触发
+            onStart?.invoke()
 
-        this@GpsStarter.gpsOptions = gpsOptions
-        // 在协程中收集 Flow
-        kotlinx.coroutines.GlobalScope.launch(job) {
-            locationFlow(gpsOptions,once).collect { location ->
+            locationFlow(gpsCallback, once).collect { location ->
                 onLocation(location)
             }
         }
-
+        currentFlowJob = job
         return job
     }
 
     /**
      * 停止 Flow 定位
+     *
+     * <p>取消正在进行的 Flow 定位任务。</p>
      */
     fun stopFlow() {
         currentFlowJob?.cancel()
@@ -322,10 +420,14 @@ class GpsStarter(
 
     /**
      * 清理所有资源
+     *
+     * <p>移除位置观察者、解绑服务、停止服务。</p>
      */
     private fun cleanup() {
         // 移除所有位置观察者
-        locationObservers.forEach { GpsService.removeLocationObserver(it) }
+        locationObservers.forEach {
+            gpsService?.removeLocationObserver(it)
+        }
         locationObservers.clear()
 
         // 解绑Service
@@ -342,8 +444,12 @@ class GpsStarter(
         context.stopService(Intent(context, GpsService::class.java))
     }
 
+
+
     /**
      * 释放资源（在 onDestroy 中调用）
+     *
+     * <p>停止定位服务并移除生命周期观察者。</p>
      */
     fun onDestroy() {
         stop()

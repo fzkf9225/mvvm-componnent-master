@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.helper;
+package io.coderf.arklab.googlegps.common;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -6,10 +6,15 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.text.TextUtils;
 
 import androidx.core.app.NotificationCompat;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import io.coderf.arklab.googlegps.utils.AppUtil;
 
 /**
  * 外部配置与回调的扩展适配器
@@ -19,9 +24,11 @@ import io.coderf.arklab.googlegps.common.GpsSettingConfig;
  * @created 2026/4/18 10:04
  * @since 1.0
  */
-public class GpsOptions {
-    NotificationCompat.Builder nfc;
+public class GpsCallback {
+    protected NotificationCompat.Builder nfc;
     private GpsSettingConfig config;
+
+    private String logFileName;
 
     // 1. 动态配置：默认为全局单例，你可以重写此方法返回自定义配置
     public GpsSettingConfig getConfig() {
@@ -31,11 +38,9 @@ public class GpsOptions {
         return config;
     }
 
-    // 2. 自定义通知：返回 null 则使用 Service 默认样式
     public Notification getNotification(Context context) {
         if (nfc == null) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
             NotificationChannel channel = new NotificationChannel(
                     config.getNotificationChannelId(),
                     config.getNotificationChannelName()
@@ -45,7 +50,6 @@ public class GpsOptions {
             channel.setSound(null, null);
             channel.setShowBadge(true);
             manager.createNotificationChannel(channel);
-
             nfc = new NotificationCompat.Builder(context, config.getNotificationChannelId())
                     .setSmallIcon(config.getNotificationSmallIconResId() != 0 ?
                             config.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(context))
@@ -79,11 +83,25 @@ public class GpsOptions {
 
     }
 
-    public NotificationCompat.Builder getNfc() {
-        return nfc;
+    /**
+     * 日志文件名称
+     */
+    public String getLogFileName() {
+        if (TextUtils.isEmpty(logFileName)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            logFileName = config.getEffectiveFileNamePrefix() + "_" + sdf.format(new Date()) + "." + config.getFileLogType();
+        }
+        return logFileName;
     }
 
-    public void setNfc(NotificationCompat.Builder nfc) {
-        this.nfc = nfc;
+    /**
+     * 达到最大记录时间
+     *
+     * @param maxTrackDurationMinutes 最大记录时间，单位：分钟
+     */
+    public void toLimitTracking(long maxTrackDurationMinutes) {
+
     }
+
+
 }

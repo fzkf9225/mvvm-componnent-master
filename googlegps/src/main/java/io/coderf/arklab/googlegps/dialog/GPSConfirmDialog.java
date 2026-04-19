@@ -23,7 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.googlegps.R;
 import io.coderf.arklab.googlegps.databinding.DialogGpsConfirmBinding;
-import io.coderf.arklab.googlegps.helper.AppUtil;
+import io.coderf.arklab.googlegps.utils.AppUtil;
 import io.coderf.arklab.googlegps.listener.OnDialogInterfaceClickListener;
 
 import java.util.Objects;

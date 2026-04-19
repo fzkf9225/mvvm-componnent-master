@@ -25,10 +25,9 @@ import io.coderf.arklab.common.utils.common.DateUtil
 import io.coderf.arklab.common.utils.common.MathUtil
 import io.coderf.arklab.googlegps.common.GpsSettingConfig
 import io.coderf.arklab.googlegps.common.Session
-import io.coderf.arklab.googlegps.helper.GpsOptions
-import io.coderf.arklab.googlegps.helper.GpsStarter
+import io.coderf.arklab.googlegps.common.GpsCallback
+import io.coderf.arklab.googlegps.common.GpsStarter
 import io.coderf.arklab.googlegps.service.GpsService
-import io.coderf.arklab.googlegps.utils.EsriUtil
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -52,19 +51,28 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
     override fun initView(savedInstanceState: Bundle?) {
         binding.setGoogleGPSViewModel(mViewModel)
         gpsStarter = GpsStarter(this, this)
-
-        // Flow 方式定位
+        binding.checkPermission.setOnClickListener { v: View? ->
+            gpsStarter.checkPermissionsOnly { bool, message ->
+                binding.tvMessage.text = "权限检测结果：$bool, $message"
+            }
+        }
+// Flow 方式定位
         binding.startService.setOnClickListener { v: View? ->
-            // 先停止之前的 Flow 定位
             flowJob?.cancel()
             gpsStarter.stop()
-
             binding.tvMessage.text = "正在开启service服务..."
-            flowJob = lifecycleScope.launch {
-                gpsStarter.locationFlow(once = false).collect { location ->
+            // 直接调用 startLocationFlow
+            flowJob = gpsStarter.startLocationFlow(
+                gpsCallback = gpsCallback,
+                once = false,
+                onStart = {
+                    // 可选：启动成功后的回调
+                },
+                onLocation = { location ->
+                    // 这里的代码会在主线程执行（因为 GpsStarter 内部默认在 Dispatchers.Main 启动）
                     binding.tvMessage.text = formatLocation(location) + "\nFlow方式监听..."
                 }
-            }
+            )
         }
 
         // 停止所有定位
@@ -90,7 +98,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
             stopAllLocation()
 
             binding.tvMessage.text = "正在开启监听，等待结果返回"
-            stopContinuous = gpsStarter.startContinuousLocation(gpsOptions) { location ->
+            stopContinuous = gpsStarter.startContinuousLocation { location ->
                 binding.tvMessage.text = formatLocation(location) + "\n正在持续监听..."
             }
         }
@@ -150,7 +158,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         public const val STOP_ACTION_REQUEST_CODE = 110
     }
 
-    val gpsOptions = object : GpsOptions() {
+    val gpsCallback = object : GpsCallback() {
 
         override fun getConfig(): GpsSettingConfig {
             return GpsSettingConfig(application)
@@ -165,6 +173,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
                 .setMinAccuracy(100f)
                 .setFilterStaleLocation(true)
         }
+
         override fun getNotification(context: Context?): Notification? {
             if (nfc == null) {
                 val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -179,10 +188,11 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
                 channel.setShowBadge(true)
                 manager.createNotificationChannel(channel)
                 // 创建点击通知打开Activity的Intent
-                val clickIntent = Intent(this@GoogleGPSActivity, GoogleGPSActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    putExtra("from_notification", true)  // 可选：标记是从通知打开的
-                }
+                val clickIntent =
+                    Intent(this@GoogleGPSActivity, GoogleGPSActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        putExtra("from_notification", true)  // 可选：标记是从通知打开的
+                    }
                 val pendingClickIntent = PendingIntent.getActivity(
                     this@GoogleGPSActivity,
                     100,  // 不同的request code
@@ -235,9 +245,14 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
                     System.currentTimeMillis() - Session.getInstance().startTimeStamp
 
                 val contentText = Html.fromHtml(
-                    ("经度：<b>" + (MathUtil.round(Session.getInstance()?.currentLongitude?:0.0,9) ?: "未知") + "</b>   "
-                            + "纬度︰<b>" + (MathUtil.round(Session.getInstance()?.currentLatitude?:0.0,9) ?: "未知") + "</b> <br/>"
-                            + "已巡护里程︰<b>" + (MathUtil.round(Session.getInstance()?.totalTravelled?:0.0,2) )+ "</b>米   "
+                    ("经度：<b>" + (MathUtil.round(Session.getInstance()?.currentLongitude ?: 0.0, 6)
+                        ?: "未知") + "</b>   "
+                            + "纬度︰<b>" + (MathUtil.round(
+                        Session.getInstance()?.currentLatitude ?: 0.0, 6
+                    ) ?: "未知") + "</b> <br/>"
+                            + "已巡护里程︰<b>" + (MathUtil.round(
+                        Session.getInstance()?.totalTravelled ?: 0.0, 2
+                    )) + "</b>米   "
                             + "时间︰<b>" + DateUtil.formatDurationSmart(totalPatrolTime) + "</b>"
                             ), Html.FROM_HTML_MODE_LEGACY
                 )
@@ -249,11 +264,10 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
                         .setBigContentTitle(contentTitle)
                 )
             }
-
-            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-                .notify(config?.notificationId?:0, nfc?.build())
             return nfc!!.build()
         }
+
+
     }
 
     override fun onDestroy() {

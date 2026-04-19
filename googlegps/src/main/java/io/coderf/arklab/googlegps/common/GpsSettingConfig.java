@@ -2,6 +2,7 @@ package io.coderf.arklab.googlegps.common;
 
 import android.app.Application;
 import android.Manifest;
+import android.app.NotificationManager;
 import android.location.Location;
 import android.os.Build;
 
@@ -16,6 +17,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import io.coderf.arklab.googlegps.logger.Files;
 
 /**
  * GPS 配置类
@@ -66,7 +69,7 @@ public class GpsSettingConfig {
 
     // ========== 通知栏配置 ==========
     /** 通知栏标题，默认 "GPS位置服务" */
-    private String notificationTitle = "GPS位置服务";
+    private String notificationTitle = "位置服务";
     /** 通知栏内容，默认 "正在获取位置信息" */
     private String notificationContent = "正在获取位置信息";
     /** 通知栏小图标资源 ID，需外部设置 */
@@ -75,6 +78,8 @@ public class GpsSettingConfig {
     private int notificationLargeIconResId = 0;
     /** 通知栏是否常驻（不可滑动清除），默认 true */
     private boolean notificationOngoing = true;
+    /** 最大记录时间，超过则会调用回调，默认单位为分钟 */
+    private long maxTrackDurationMinutes = 0;
 
     // ========== 文件记录配置 ==========
     /** 文件记录格式：csv 或 gpx，默认 csv */
@@ -90,9 +95,9 @@ public class GpsSettingConfig {
     /** 通知通道 ID，默认 "GPSService" */
     private String notificationChannelId = "GPSService";
     /** 通知通道名称，默认 "GPS位置服务" */
-    private String notificationChannelName = "GPS位置服务";
-    /** 通知通道重要性级别，默认 IMPORTANCE_LOW */
-    private int notificationImportance = android.app.NotificationManager.IMPORTANCE_LOW;
+    private String notificationChannelName = "位置服务";
+    /** 通知通道重要性级别，默认 IMPORTANCE_HIGH */
+    private int notificationImportance = NotificationManager.IMPORTANCE_HIGH;
     /** 通知通道是否开启灯光，默认 false */
     private boolean notificationEnableLights = false;
     /** 通知通道是否开启振动，默认 false */
@@ -102,7 +107,7 @@ public class GpsSettingConfig {
     /** 通知通道是否显示角标，默认 true */
     private boolean notificationShowBadge = true;
     /** 通知通道描述（用于系统设置页显示） */
-    private String notificationChannelDescription = "GPS位置服务通知，用于显示定位状态和轨迹记录信息";
+    private String notificationChannelDescription = "位置服务通知，用于显示定位状态和轨迹记录信息";
 
     /** 通知 ID */
     private int notificationId = 300000;
@@ -460,6 +465,15 @@ public class GpsSettingConfig {
 
     public GpsSettingConfig setNotificationOngoing(boolean notificationOngoing) {
         this.notificationOngoing = notificationOngoing;
+        return this;
+    }
+
+    public long getMaxTrackDurationMinutes() {
+        return maxTrackDurationMinutes;
+    }
+
+    public GpsSettingConfig setMaxTrackDurationMinutes(long maxTrackDurationMinutes) {
+        this.maxTrackDurationMinutes = maxTrackDurationMinutes;
         return this;
     }
 

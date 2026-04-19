@@ -1,8 +1,6 @@
-package io.coderf.arklab.googlegps.socket;
+package io.coderf.arklab.googlegps.utils;
 
 import android.util.Log;
-
-import io.coderf.arklab.googlegps.utils.DebugUtil;
 
 
 /**

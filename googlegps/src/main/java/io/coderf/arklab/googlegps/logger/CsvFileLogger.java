@@ -10,10 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import io.coderf.arklab.googlegps.common.Files;
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.service.GpsService;
-import io.coderf.arklab.googlegps.socket.LogUtil;
+import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**
  * CSV 格式文件记录器
@@ -52,8 +51,8 @@ public class CsvFileLogger implements IFileLogger {
     }
 
     /**
-     * 开始新的日志文件，指定文件名前缀
-     * @param customFileName 自定义文件名前缀（不含扩展名），为null时自动生成
+     * 开始新的日志文件，指定文件名文件名
+     * @param customFileName 自定义文件名（含扩展名），为null时自动生成
      */
     public void startNewLog(String customFileName) {
         try {
@@ -64,7 +63,7 @@ public class CsvFileLogger implements IFileLogger {
             String fileName;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
             if (customFileName != null && !customFileName.isEmpty()) {
-                fileName = customFileName + "_" + sdf.format(new Date()) + FILE_EXTENSION;
+                fileName = customFileName;
             } else {
                 fileName = "gps_track_" + sdf.format(new Date()) + FILE_EXTENSION;
             }

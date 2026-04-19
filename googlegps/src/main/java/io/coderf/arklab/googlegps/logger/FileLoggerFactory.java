@@ -4,7 +4,8 @@ import android.location.Location;
 
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.service.GpsService;
-import io.coderf.arklab.googlegps.socket.LogUtil;
+import io.coderf.arklab.googlegps.utils.GpsLoggerThreadExecutor;
+import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**
  * 文件记录器工厂，管理当前使用的记录器
@@ -40,7 +41,7 @@ public class FileLoggerFactory {
     /**
      * 初始化日志记录器，并指定自定义文件名前缀
      * @param type 日志类型
-     * @param customFileName 自定义文件名前缀
+     * @param customFileName 自定义的文件名
      */
     public static void init(String type, String customFileName) {
         close();
@@ -70,7 +71,7 @@ public class FileLoggerFactory {
             LogUtil.show(GpsService.TAG, "Logger not initialized, call init() first");
             return;
         }
-        currentLogger.write(loc);
+        GpsLoggerThreadExecutor.getInstance().execute(() -> currentLogger.write(loc));
     }
 
     /**

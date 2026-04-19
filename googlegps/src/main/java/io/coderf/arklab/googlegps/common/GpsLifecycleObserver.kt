@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.helper
+package io.coderf.arklab.googlegps.common
 
 import android.Manifest
 import android.content.Context
@@ -14,9 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import io.coderf.arklab.googlegps.common.GpsSettingConfig
 import io.coderf.arklab.googlegps.dialog.GPSConfirmDialog
-import io.coderf.arklab.googlegps.helper.permission.PermissionsChecker
+import io.coderf.arklab.googlegps.permission.PermissionsChecker
+import kotlin.collections.iterator
 
 /**
  * created by fz on 2024/11/21 16:49
@@ -227,7 +227,7 @@ class GpsLifecycleObserver constructor(
                     )
             ) {
                 GPSConfirmDialog(context!!)
-                    .setMessage("为了您更好的体验需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”")
+                    .setMessage("为了您更好的体验，应用需要访问后台定位权限，需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”")
                     .setPositiveText("前往设置")
                     .setNegativeText("稍后再说")
                     .setCanOutSide(false)

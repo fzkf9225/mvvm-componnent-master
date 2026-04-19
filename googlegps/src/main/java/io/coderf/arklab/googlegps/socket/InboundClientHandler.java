@@ -2,6 +2,7 @@ package io.coderf.arklab.googlegps.socket;
 
 import java.util.Date;
 
+import io.coderf.arklab.googlegps.utils.LogUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

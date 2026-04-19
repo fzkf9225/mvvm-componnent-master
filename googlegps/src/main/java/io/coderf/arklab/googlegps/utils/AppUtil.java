@@ -1,4 +1,4 @@
-package io.coderf.arklab.googlegps.helper;
+package io.coderf.arklab.googlegps.utils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
