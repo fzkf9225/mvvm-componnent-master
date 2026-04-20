@@ -471,6 +471,10 @@ public class GpsService extends Service {
      * @param loc Location 位置对象
      */
     public void onLocationChanged(Location loc) {
+        if(session.isPaused()){
+            LogUtil.show(TAG, "位置变化回调，但会话已暂停,将不进行推送！");
+            return;
+        }
         // ========== 新增：检查是否已停止 ==========
         if (!session.isStarted()) {
             LogUtil.show(TAG, "调用了 onLocationChanged，但会话未启动");
@@ -605,7 +609,9 @@ public class GpsService extends Service {
 
         // ========== 新增：写入文件 ==========
         FileLoggerFactory.write(loc);
-
+// ========== 新增：记录到历史列表 ==========
+        session.addLocationToHistory(loc);      // 添加到历史记录
+        session.incrementNumLegs();              // 增加轨迹点数
         // 更新会话状态
         session.setLatestTimeStamp(System.currentTimeMillis());
         session.setFirstRetryTimeStamp(0);
@@ -613,7 +619,6 @@ public class GpsService extends Service {
 
         // 更新总行程距离
         updateTotalDistance(loc);
-
         // 更新通知栏
         showNotification();
 

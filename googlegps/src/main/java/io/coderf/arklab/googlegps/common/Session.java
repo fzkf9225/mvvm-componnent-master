@@ -21,6 +21,9 @@ package io.coderf.arklab.googlegps.common;
 
 import android.location.Location;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 会话管理类，存储运行时状态
  * 不再依赖 SharedPreferences，全部使用内存变量
@@ -41,6 +44,9 @@ public class Session {
     /** 在获取最佳精度过程中临时保存的最佳精度位置 */
     private Location temporaryLocationForBestAccuracy;
 
+    /** 所有记录的轨迹点列表 */
+    private final List<Location> locationHistory = new ArrayList<>();
+
     // ========== 会话状态 ==========
 
     /** 是否为单点定位模式（获取一次位置后自动停止） */
@@ -48,7 +54,8 @@ public class Session {
 
     /** 日志记录会话是否已启动 */
     private boolean isStarted = false;
-
+    /** GPS推送是否已暂停 */
+    private boolean isPaused = false;
     /** 是否正在使用 GPS 定位源 */
     private boolean isUsingGps = false;
 
@@ -98,7 +105,7 @@ public class Session {
     /** 总行程距离（米） */
     private double totalTravelled = 0;
 
-    /** 轨迹段数（用于计算总行程） */
+    /** 轨迹段数（记录的点数） */
     private int numLegs = 0;
 
     /** 可见卫星数量 */
@@ -142,6 +149,64 @@ public class Session {
         return InstanceHolder.instance;
     }
 
+    // ========== 轨迹点记录方法 ==========
+
+    /**
+     * 添加轨迹点到历史记录
+     *
+     * @param location 要添加的位置点
+     */
+    public void addLocationToHistory(Location location) {
+        if (location != null) {
+            locationHistory.add(location);
+        }
+    }
+
+    /**
+     * 获取所有轨迹点历史记录
+     *
+     * @return 轨迹点列表（不可修改）
+     */
+    public List<Location> getLocationHistory() {
+        return new ArrayList<>(locationHistory);
+    }
+
+    /**
+     * 获取轨迹点数量
+     *
+     * @return 轨迹点数量
+     */
+    public int getLocationHistorySize() {
+        return locationHistory.size();
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean paused) {
+        isPaused = paused;
+    }
+
+    /**
+     * 清空轨迹点历史记录
+     */
+    public void clearLocationHistory() {
+        locationHistory.clear();
+    }
+
+    /**
+     * 获取最后一个轨迹点
+     *
+     * @return 最后一个轨迹点，如果没有则返回 null
+     */
+    public Location getLastLocationFromHistory() {
+        if (locationHistory.isEmpty()) {
+            return null;
+        }
+        return locationHistory.get(locationHistory.size() - 1);
+    }
+
     // ========== 状态重置方法 ==========
 
     /**
@@ -158,7 +223,7 @@ public class Session {
         isAnnotationMarked = false;
         addNewTrackSegment = true;
         locationServiceUnavailable = false;
-
+        isPaused = false;
         // ========== 以下为遗漏字段 ==========
         towerEnabled = false;           // 基站/网络定位是否可用
         gpsEnabled = false;              // GPS 定位是否可用
@@ -187,6 +252,9 @@ public class Session {
         currentLocationInfo = null;
         temporaryLocationForBestAccuracy = null;
 
+        // ========== 轨迹点历史记录 ==========
+        locationHistory.clear();
+
         // 注意：startTimeStamp 不应该被重置，因为它是会话开始时间
         // 如果需要在 reset 时也重置，可以添加：startTimeStamp = 0;
     }
@@ -201,6 +269,7 @@ public class Session {
         totalTravelled = 0;
         numLegs = 0;
         addNewTrackSegment = true;
+        clearLocationHistory();  // 清空历史轨迹点
     }
 
     // ========== Getter / Setter ==========
@@ -397,7 +466,7 @@ public class Session {
     }
 
     /**
-     * 获取轨迹段数
+     * 获取轨迹段数（记录的点数）
      *
      * @return 轨迹段数
      */
@@ -415,19 +484,18 @@ public class Session {
     }
 
     /**
+     * 增加轨迹段数（每记录一个点调用一次）
+     */
+    public void incrementNumLegs() {
+        this.numLegs++;
+    }
+
+    /**
      * 设置总行程距离
-     *
-     * <p>设置时会自动增加轨迹段数：如果总行程距离为 0 则设置段数为 1，
-     * 否则段数加 1。</p>
      *
      * @param totalTravelled 总行程距离（米）
      */
     public void setTotalTravelled(double totalTravelled) {
-        if (totalTravelled == 0) {
-            setNumLegs(1);
-        } else {
-            setNumLegs(getNumLegs() + 1);
-        }
         this.totalTravelled = totalTravelled;
     }
 

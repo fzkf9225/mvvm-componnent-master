@@ -61,7 +61,6 @@ dependencies {
     implementation libs.netty.all
     implementation libs.org.apache.commons.commons.lang3
     implementation libs.gson
-    implementation "androidx.preference:preference:1.2.1"
 }
 //执行以下命令完成制品推送
 //推送命令
@@ -89,7 +88,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.googlegps'
                 artifactId = 'googlegps'
-                version = '3.0.0'
+                version = '3.0.2'
             }
         }
         repositories {
