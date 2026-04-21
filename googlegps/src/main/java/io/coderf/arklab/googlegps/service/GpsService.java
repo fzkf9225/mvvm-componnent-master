@@ -483,9 +483,10 @@ public class GpsService extends Service {
         }
 
         // ========== 新增：判断是否为被动定位 ==========
-        boolean isPassiveLocation = loc.getExtras() != null &&
-                GpsSettingConfig.PASSIVE.equals(loc.getExtras().getString("provider_type"));
-        long currentTimeStamp = System.currentTimeMillis();
+        boolean isPassiveLocation = LocationManager.PASSIVE_PROVIDER.equals(loc.getProvider()) ||
+                (loc.getExtras() != null &&
+                        GpsSettingConfig.PASSIVE.equals(loc.getExtras().getString("provider_type")));
+        long locationTimeStamp = loc.getTime();
 
         // ========== 1. 过滤过时点位（时间戳倒退） ==========
         if (gpsCallback.getConfig().isFilterStaleLocation() && session.getPreviousLocationInfo() != null &&
@@ -495,7 +496,7 @@ public class GpsService extends Service {
         }
 
         // ========== 2. 最小时间间隔过滤 ==========
-        if (!isPassiveLocation && (currentTimeStamp - session.getLatestTimeStamp()) <
+        if (!isPassiveLocation && (locationTimeStamp - session.getLatestTimeStamp()) <
                 gpsCallback.getConfig().getMinTimeInterval()) {
             LogUtil.logger(TAG, "接收到位置，但未达到最小记录时间间隔，忽略");
             return;
@@ -517,12 +518,13 @@ public class GpsService extends Service {
                     loc.getLatitude(), loc.getLongitude(),
                     session.getCurrentLocationInfo().getLatitude(),
                     session.getCurrentLocationInfo().getLongitude());
-            long timeDifference = Math.abs(loc.getTime() - session.getCurrentLocationInfo().getTime()) / 1000;
+            long timeDifferenceMillis = Math.abs(loc.getTime() - session.getCurrentLocationInfo().getTime());
+            double timeDifferenceSeconds = timeDifferenceMillis / 1000d;
 
-            if (timeDifference > 0 && (distanceTravelled / timeDifference) >
+            if (timeDifferenceSeconds > 0 && (distanceTravelled / timeDifferenceSeconds) >
                     gpsCallback.getConfig().getMaxSpeedMps()) {
-                LogUtil.logger(TAG, String.format(Locale.getDefault(), "检测到异常跳点 - %.0f 米 / %d 秒 - 丢弃该点",
-                        distanceTravelled, timeDifference));
+                LogUtil.logger(TAG, String.format(Locale.getDefault(), "检测到异常跳点 - %.0f 米 / %.3f 秒 - 丢弃该点",
+                        distanceTravelled, timeDifferenceSeconds));
                 return;
             }
         }
@@ -540,13 +542,13 @@ public class GpsService extends Service {
                     session.setFirstRetryTimeStamp(System.currentTimeMillis());
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() <=
+                if (locationTimeStamp - session.getFirstRetryTimeStamp() <=
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.logger(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米，点被丢弃，继续尝试", loc.getAccuracy()));
                     return;
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() >
+                if (locationTimeStamp - session.getFirstRetryTimeStamp() >
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.logger(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米且超时，放弃", loc.getAccuracy()));
                     stopManagerAndResetAlarm();
@@ -569,12 +571,12 @@ public class GpsService extends Service {
                     session.setTemporaryLocationForBestAccuracy(loc);
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() <=
+                if (locationTimeStamp - session.getFirstRetryTimeStamp() <=
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
                     return;
                 }
 
-                if (currentTimeStamp - session.getFirstRetryTimeStamp() >
+                if (locationTimeStamp - session.getFirstRetryTimeStamp() >
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
                     LogUtil.logger(TAG, String.format(Locale.getDefault(), "重试超时，使用最佳点，精度为 %.1f 米",
                             session.getTemporaryLocationForBestAccuracy().getAccuracy()));
@@ -613,7 +615,7 @@ public class GpsService extends Service {
         session.addLocationToHistory(loc);      // 添加到历史记录
         session.incrementNumLegs();              // 增加轨迹点数
         // 更新会话状态
-        session.setLatestTimeStamp(System.currentTimeMillis());
+        session.setLatestTimeStamp(locationTimeStamp);
         session.setFirstRetryTimeStamp(0);
         session.setCurrentLocationInfo(loc);
 
@@ -629,7 +631,7 @@ public class GpsService extends Service {
         notifyLocationObservers(loc);
         gpsCallback.onLocationAccepted(loc);
         if (gpsCallback.getConfig().getMaxTrackDurationMinutes() > 0 &&
-                (System.currentTimeMillis() - session.getStartTimeStamp()) >= gpsCallback.getConfig().getMaxTrackDurationMinutes() * 1000) {
+                (System.currentTimeMillis() - session.getStartTimeStamp()) >= gpsCallback.getConfig().getMaxTrackDurationMinutes() * 60_000L) {
             gpsCallback.toLimitTracking(gpsCallback.getConfig().getMaxTrackDurationMinutes());
         }
         // ========== 新增：检查是否需要停止服务（单点模式） ==========
