@@ -85,9 +85,9 @@ public class CsvFileLogger implements IFileLogger {
             // 写入 CSV 头
             writeHeader();
 
-            LogUtil.show(GpsService.TAG, "Created new log file: " + currentFilePath);
+            LogUtil.logger(GpsService.TAG, "Created new log file: " + currentFilePath);
         } catch (IOException e) {
-            LogUtil.show(GpsService.TAG, "Failed to start log: " + e.getMessage());
+            LogUtil.logger(GpsService.TAG, "Failed to start log: " + e.getMessage());
             isWriterReady = false;
         }
     }
@@ -117,7 +117,7 @@ public class CsvFileLogger implements IFileLogger {
     @Override
     public void write(Location loc) {
         if (writer == null || !isWriterReady) {
-            LogUtil.show(GpsService.TAG, "Writer not initialized, cannot write location");
+            LogUtil.logger(GpsService.TAG, "Writer not initialized, cannot write location");
             return;
         }
 
@@ -145,13 +145,13 @@ public class CsvFileLogger implements IFileLogger {
         writer.println(sb.toString());
         writer.flush();
 
-        LogUtil.show(GpsService.TAG, "Written to CSV: " + timeStr + "," + loc.getLatitude() + "," + loc.getLongitude());
+        LogUtil.logger(GpsService.TAG, "Written to CSV: " + timeStr + "," + loc.getLatitude() + "," + loc.getLongitude());
     }
 
     @Override
     public void annotate(String description, Location loc) {
         if (writer == null || !isWriterReady) {
-            LogUtil.show(GpsService.TAG, "Writer not initialized, cannot write annotation");
+            LogUtil.logger(GpsService.TAG, "Writer not initialized, cannot write annotation");
             return;
         }
 
@@ -160,7 +160,7 @@ public class CsvFileLogger implements IFileLogger {
         String timeStr = dateFormat.format(new Date());
         writer.println("# " + timeStr + DELIMITER + "ANNOTATION" + DELIMITER + description);
         writer.flush();
-        LogUtil.show(GpsService.TAG, "Written annotation: " + description);
+        LogUtil.logger(GpsService.TAG, "Written annotation: " + description);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class CsvFileLogger implements IFileLogger {
             writer.close();
             writer = null;
             isWriterReady = false;
-            LogUtil.show(GpsService.TAG, "Closed log file: " + currentFilePath);
+            LogUtil.logger(GpsService.TAG, "Closed log file: " + currentFilePath);
         }
     }
 

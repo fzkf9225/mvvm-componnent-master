@@ -215,7 +215,7 @@ public class GpsService extends Service {
      */
     private void initTimeoutRunnable() {
         stopManagerRunnable = () -> {
-            LogUtil.show(TAG, "绝对超时时间已到，放弃本次位置获取");
+            LogUtil.logger(TAG, "绝对超时时间已到，放弃本次位置获取");
             stopManagerAndResetAlarm();
         };
     }
@@ -238,7 +238,7 @@ public class GpsService extends Service {
 
         if (isNextPoint) {
             // 如果是闹钟触发的，只开启定位采集，不重新初始化文件
-            LogUtil.show(TAG, "闹钟触发 - 获取下一个定位点");
+            LogUtil.logger(TAG, "闹钟触发 - 获取下一个定位点");
             startGpsManager();
         } else {
             // 只有在手动启动（点击开始按钮）时才初始化记录器
@@ -273,7 +273,7 @@ public class GpsService extends Service {
      * <p>初始化文件记录器、重置会话状态、启动定位管理器。</p>
      */
     protected void startLogging() {
-        LogUtil.show(TAG, "-------------------开始记录位置--------------------");
+        LogUtil.logger(TAG, "-------------------开始记录位置--------------------");
 
         // 根据配置初始化文件记录器
         if (gpsCallback.getConfig().isFileLogEnabled()) {
@@ -283,9 +283,9 @@ public class GpsService extends Service {
             // 使用配置的文件类型和文件名前缀
             FileLoggerFactory.init(fileType, gpsCallback.getLogFileName());
             session.setCurrentFileName(gpsCallback.getLogFileName());
-            LogUtil.show(TAG, "文件记录已启用: 类型=" + fileType + ", 前缀=" + fileNamePrefix + ", 文件名=" + gpsCallback.getLogFileName());
+            LogUtil.logger(TAG, "文件记录已启用: 类型=" + fileType + ", 前缀=" + fileNamePrefix + ", 文件名=" + gpsCallback.getLogFileName());
         } else {
-            LogUtil.show(TAG, "文件记录已禁用");
+            LogUtil.logger(TAG, "文件记录已禁用");
         }
 
         // 重置会话状态
@@ -307,7 +307,7 @@ public class GpsService extends Service {
      * <p>关闭文件记录器、停止定位管理器、取消闹钟、移除通知。</p>
      */
     public void stopLogging() {
-        LogUtil.show(TAG, "-------------------停止记录位置--------------------");
+        LogUtil.logger(TAG, "-------------------停止记录位置--------------------");
         // ========== 新增：关闭文件记录器 ==========
         FileLoggerFactory.close();
 
@@ -351,7 +351,7 @@ public class GpsService extends Service {
     @SuppressWarnings("ResourceType")
     private void startPassiveManager() {
         if (gpsCallback.getConfig().isEnablePassive()) {
-            LogUtil.show(TAG, "启动被动定位监听器");
+            LogUtil.logger(TAG, "启动被动定位监听器");
             if (passiveLocationListener == null) {
                 passiveLocationListener = new GnssLocationListener(this, GpsSettingConfig.PASSIVE);
             }
@@ -367,7 +367,7 @@ public class GpsService extends Service {
     @SuppressWarnings("ResourceType")
     private void stopPassiveManager() {
         if (passiveLocationManager != null && passiveLocationListener != null) {
-            LogUtil.show(TAG, "移除被动定位管理器更新");
+            LogUtil.logger(TAG, "移除被动定位管理器更新");
             passiveLocationManager.removeUpdates(passiveLocationListener);
         }
     }
@@ -381,7 +381,7 @@ public class GpsService extends Service {
     private void startGpsManager() {
         // ========== 新增：检查是否应该跳过定位（重要运动传感器逻辑） ==========
         if (userHasBeenStillForTooLong()) {
-            LogUtil.show(TAG, "过去的时间间隔内未检测到移动，将不记录位置");
+            LogUtil.logger(TAG, "过去的时间间隔内未检测到移动，将不记录位置");
             setAlarmForNextPoint();
             return;
         }
@@ -405,7 +405,7 @@ public class GpsService extends Service {
 
         // ========== 新增：GPS 定位 ==========
         if (gpsCallback.getConfig().isEnableGps() && gpsProviderEnabled) {
-            LogUtil.show(TAG, "请求 GPS 位置更新");
+            LogUtil.logger(TAG, "请求 GPS 位置更新");
             gpsLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
                     gnssLocationListener);
             session.setUsingGps(true);
@@ -414,7 +414,7 @@ public class GpsService extends Service {
 
         // ========== 新增：网络定位 ==========
         if (gpsCallback.getConfig().isEnableNetwork() && networkProviderEnabled) {
-            LogUtil.show(TAG, "请求基站和 WiFi 位置更新");
+            LogUtil.logger(TAG, "请求基站和 WiFi 位置更新");
             towerLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,
                     towerLocationListener);
             startAbsoluteTimer();
@@ -423,7 +423,7 @@ public class GpsService extends Service {
         // ========== 新增：检查是否有可用的定位源 ==========
         if ((!gpsCallback.getConfig().isEnableGps() || !gpsProviderEnabled) &&
                 (!gpsCallback.getConfig().isEnableNetwork() || !networkProviderEnabled)) {
-            LogUtil.show(TAG, "没有可用的定位源！");
+            LogUtil.logger(TAG, "没有可用的定位源！");
             startAbsoluteTimer();
             return;
         }
@@ -439,11 +439,11 @@ public class GpsService extends Service {
     @SuppressWarnings("ResourceType")
     private void stopGpsManager() {
         if (towerLocationListener != null) {
-            LogUtil.show(TAG, "移除基站定位管理器更新");
+            LogUtil.logger(TAG, "移除基站定位管理器更新");
             towerLocationManager.removeUpdates(towerLocationListener);
         }
         if (gnssLocationListener != null) {
-            LogUtil.show(TAG, "移除 GPS 定位管理器更新");
+            LogUtil.logger(TAG, "移除 GPS 定位管理器更新");
             gpsLocationManager.removeUpdates(gnssLocationListener);
         }
 
@@ -457,7 +457,7 @@ public class GpsService extends Service {
      * <p>先停止再启动，用于定位源状态变化时的恢复。</p>
      */
     public void restartGpsManagers() {
-        LogUtil.show(TAG, "重启定位管理器");
+        LogUtil.logger(TAG, "重启定位管理器");
         stopGpsManager();
         startGpsManager();
     }
@@ -472,12 +472,12 @@ public class GpsService extends Service {
      */
     public void onLocationChanged(Location loc) {
         if(session.isPaused()){
-            LogUtil.show(TAG, "位置变化回调，但会话已暂停,将不进行推送！");
+            LogUtil.logger(TAG, "位置变化回调，但会话已暂停,将不进行推送！");
             return;
         }
         // ========== 新增：检查是否已停止 ==========
         if (!session.isStarted()) {
-            LogUtil.show(TAG, "调用了 onLocationChanged，但会话未启动");
+            LogUtil.logger(TAG, "调用了 onLocationChanged，但会话未启动");
             stopLogging();
             return;
         }
@@ -490,14 +490,14 @@ public class GpsService extends Service {
         // ========== 1. 过滤过时点位（时间戳倒退） ==========
         if (gpsCallback.getConfig().isFilterStaleLocation() && session.getPreviousLocationInfo() != null &&
                 loc.getTime() <= session.getPreviousLocationInfo().getTime()) {
-            LogUtil.show(TAG, "接收到过时位置，其时间戳小于或等于前一个点，忽略");
+            LogUtil.logger(TAG, "接收到过时位置，其时间戳小于或等于前一个点，忽略");
             return;
         }
 
         // ========== 2. 最小时间间隔过滤 ==========
         if (!isPassiveLocation && (currentTimeStamp - session.getLatestTimeStamp()) <
                 gpsCallback.getConfig().getMinTimeInterval()) {
-            LogUtil.show(TAG, "接收到位置，但未达到最小记录时间间隔，忽略");
+            LogUtil.logger(TAG, "接收到位置，但未达到最小记录时间间隔，忽略");
             return;
         }
 
@@ -505,7 +505,7 @@ public class GpsService extends Service {
         if (isPassiveLocation && gpsCallback.getConfig().isEnablePassive() &&
                 session.getPreviousLocationInfo() != null) {
             if ((loc.getTime() - session.getLatestPassiveTimeStamp()) < 1000) { // 被动定位默认1秒间隔
-                LogUtil.show(TAG, "被动定位因过滤间隔被丢弃");
+                LogUtil.logger(TAG, "被动定位因过滤间隔被丢弃");
                 return;
             }
             session.setLatestPassiveTimeStamp(loc.getTime());
@@ -521,7 +521,7 @@ public class GpsService extends Service {
 
             if (timeDifference > 0 && (distanceTravelled / timeDifference) >
                     gpsCallback.getConfig().getMaxSpeedMps()) {
-                LogUtil.show(TAG, String.format(Locale.getDefault(), "检测到异常跳点 - %.0f 米 / %d 秒 - 丢弃该点",
+                LogUtil.logger(TAG, String.format(Locale.getDefault(), "检测到异常跳点 - %.0f 米 / %d 秒 - 丢弃该点",
                         distanceTravelled, timeDifference));
                 return;
             }
@@ -530,7 +530,7 @@ public class GpsService extends Service {
         // ========== 5. 精度过滤和重试逻辑 ==========
         if (gpsCallback.getConfig().getMinAccuracy() > 0) {
             if (!loc.hasAccuracy() || loc.getAccuracy() == 0) {
-                LogUtil.show(TAG, "接收到位置，但没有精度值，忽略");
+                LogUtil.logger(TAG, "接收到位置，但没有精度值，忽略");
                 return;
             }
 
@@ -542,13 +542,13 @@ public class GpsService extends Service {
 
                 if (currentTimeStamp - session.getFirstRetryTimeStamp() <=
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
-                    LogUtil.show(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米，点被丢弃，继续尝试", loc.getAccuracy()));
+                    LogUtil.logger(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米，点被丢弃，继续尝试", loc.getAccuracy()));
                     return;
                 }
 
                 if (currentTimeStamp - session.getFirstRetryTimeStamp() >
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
-                    LogUtil.show(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米且超时，放弃", loc.getAccuracy()));
+                    LogUtil.logger(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米且超时，放弃", loc.getAccuracy()));
                     stopManagerAndResetAlarm();
                     session.setFirstRetryTimeStamp(0);
                     return;
@@ -565,7 +565,7 @@ public class GpsService extends Service {
 
                 if (session.getTemporaryLocationForBestAccuracy() == null ||
                         loc.getAccuracy() < session.getTemporaryLocationForBestAccuracy().getAccuracy()) {
-                    LogUtil.show(TAG, String.format(Locale.getDefault(), "获取到新最佳点，精度为 %.1f 米", loc.getAccuracy()));
+                    LogUtil.logger(TAG, String.format(Locale.getDefault(), "获取到新最佳点，精度为 %.1f 米", loc.getAccuracy()));
                     session.setTemporaryLocationForBestAccuracy(loc);
                 }
 
@@ -576,7 +576,7 @@ public class GpsService extends Service {
 
                 if (currentTimeStamp - session.getFirstRetryTimeStamp() >
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
-                    LogUtil.show(TAG, String.format(Locale.getDefault(), "重试超时，使用最佳点，精度为 %.1f 米",
+                    LogUtil.logger(TAG, String.format(Locale.getDefault(), "重试超时，使用最佳点，精度为 %.1f 米",
                             session.getTemporaryLocationForBestAccuracy().getAccuracy()));
                     loc = session.getTemporaryLocationForBestAccuracy();
                     session.setTemporaryLocationForBestAccuracy(null);
@@ -593,7 +593,7 @@ public class GpsService extends Service {
                     session.getCurrentLatitude(), session.getCurrentLongitude());
 
             if (gpsCallback.getConfig().getMinDistanceInterval() > distanceTraveled) {
-                LogUtil.show(TAG, String.format(Locale.getDefault(), "移动距离不足: %.1f 米，点被丢弃", distanceTraveled));
+                LogUtil.logger(TAG, String.format(Locale.getDefault(), "移动距离不足: %.1f 米，点被丢弃", distanceTraveled));
                 stopManagerAndResetAlarm();
                 return;
             }
@@ -634,7 +634,7 @@ public class GpsService extends Service {
         }
         // ========== 新增：检查是否需要停止服务（单点模式） ==========
         if (session.isSinglePointMode()) {
-            LogUtil.show(TAG, "单点模式 - 立即停止");
+            LogUtil.logger(TAG, "单点模式 - 立即停止");
             stopLogging();
         }
     }
@@ -737,7 +737,7 @@ public class GpsService extends Service {
 
         long triggerTime = SystemClock.elapsedRealtime() + gpsCallback.getConfig().getMinTimeInterval();
         nextPointAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pi);
-        LogUtil.show(TAG, "下次定位闹钟已设置，间隔 " + gpsCallback.getConfig().getMinTimeInterval() + " 毫秒");
+        LogUtil.logger(TAG, "下次定位闹钟已设置，间隔 " + gpsCallback.getConfig().getMinTimeInterval() + " 毫秒");
     }
 
     // ========== 新增：停止闹钟 ==========

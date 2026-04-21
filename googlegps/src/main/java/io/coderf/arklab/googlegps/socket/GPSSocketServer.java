@@ -55,7 +55,7 @@ public class GPSSocketServer {
         HandlerThread thread = new HandlerThread(THREAD_NAME, 6);
         thread.start();
         handler = new Handler(thread.getLooper());
-        LogUtil.show(TAG, "----------------GPSSocketServer-----------------");
+        LogUtil.logger(TAG, "----------------GPSSocketServer-----------------");
     }
 
     private static final class GpsServerHolder {
@@ -112,7 +112,7 @@ public class GPSSocketServer {
     }
 
     private void connectServer(int retryTimes, @NotNull SocketCallbackListener socketCallbackListener) {
-        LogUtil.show(TAG, "开始尝试连接，第" + (errorCount + 1) + "次");
+        LogUtil.logger(TAG, "开始尝试连接，第" + (errorCount + 1) + "次");
         //避免重连时大量重新创建对象
         if (bootstrap == null) {
             bootstrap = new Bootstrap();
@@ -126,7 +126,7 @@ public class GPSSocketServer {
         try {
             bootstrap.connect(TCP_IP, TCP_PORT).sync()
                     .addListener((ChannelFutureListener) future -> {
-                        LogUtil.show(TAG, "------------------addListener：" + future.isSuccess() + "------------------");
+                        LogUtil.logger(TAG, "------------------addListener：" + future.isSuccess() + "------------------");
                         if (future.isSuccess()) {
                             socketChannel = (SocketChannel) future.channel();
                             connectionRunnable = null;
@@ -135,15 +135,15 @@ public class GPSSocketServer {
                                 onConnectionChangedListener.onConnected();
                             }
                         } else {
-                            LogUtil.show(TAG, "连接失败");
+                            LogUtil.logger(TAG, "连接失败");
                             errorCount++;
                             if (errorCount >= retryTimes) {
                                 connectionRunnable = null;
                                 socketCallbackListener.callBack(false, "连接失败已达最大次数，将不会再重试！");
-                                LogUtil.show(TAG, "连接失败已达最大次数，将不会再重试！");
+                                LogUtil.logger(TAG, "连接失败已达最大次数，将不会再重试！");
                                 return;
                             }
-                            LogUtil.show(TAG, "第" + (errorCount - 1) + "次连接失败," + (RETRY_INTERVAL / 1000) + "秒后将重试第" + (errorCount + 1) + "次");
+                            LogUtil.logger(TAG, "第" + (errorCount - 1) + "次连接失败," + (RETRY_INTERVAL / 1000) + "秒后将重试第" + (errorCount + 1) + "次");
                             handler.postDelayed(connectionRunnable = new ConnectionRunnable(retryTimes, socketCallbackListener), RETRY_INTERVAL);
                         }
                     });
@@ -153,11 +153,11 @@ public class GPSSocketServer {
             if (errorCount >= retryTimes) {
                 connectionRunnable = null;
                 socketCallbackListener.callBack(false, "连接失败已达最大次数，将不会再重试！");
-                LogUtil.show(TAG, "连接失败已达最大次数，将不会再重试！");
+                LogUtil.logger(TAG, "连接失败已达最大次数，将不会再重试！");
                 return;
             }
-            LogUtil.show(TAG, "第" + (errorCount) + "次连接异常," + e);
-            LogUtil.show(TAG, (RETRY_INTERVAL / 1000) + "秒后将重试第" + (errorCount + 1) + "次");
+            LogUtil.logger(TAG, "第" + (errorCount) + "次连接异常," + e);
+            LogUtil.logger(TAG, (RETRY_INTERVAL / 1000) + "秒后将重试第" + (errorCount + 1) + "次");
             handler.postDelayed(connectionRunnable = new ConnectionRunnable(retryTimes, socketCallbackListener), RETRY_INTERVAL);
         }
     }
@@ -193,14 +193,14 @@ public class GPSSocketServer {
                 socketCallbackListener.callBack(true, "WebSocket不在链接中，发送消息失败");
                 return;
             }
-            LogUtil.show(TAG, "sendMsg发送消息内容：" + msg);
+            LogUtil.logger(TAG, "sendMsg发送消息内容：" + msg);
             //转换字节发送，
             ByteBuf buffer = Unpooled.buffer();
             buffer.writeBytes(msg.getBytes());
             //直接发送文本TextWebSocketFrame
             socketChannel.writeAndFlush(buffer)
                     .addListener((ChannelFutureListener) future -> {
-                        LogUtil.show(TAG, "------------------sendMsg是否成功：" + future.isSuccess() + "------------------");
+                        LogUtil.logger(TAG, "------------------sendMsg是否成功：" + future.isSuccess() + "------------------");
                         if (future.isSuccess()) {
                             handler.post(() -> socketCallbackListener.callBack(true, "发送消息成功"));
                         } else {
@@ -227,7 +227,7 @@ public class GPSSocketServer {
             buffer.writeBytes(encode(context, longitude, latitude).getBytes());
             socketChannel.writeAndFlush(buffer)
                     .addListener((ChannelFutureListener) future -> {
-                        LogUtil.show(TAG, "------------------sendMsg是否成功：" + future.isSuccess() + "------------------");
+                        LogUtil.logger(TAG, "------------------sendMsg是否成功：" + future.isSuccess() + "------------------");
                         if (future.isSuccess()) {
                             handler.post(() -> socketCallbackListener.callBack(true, "发送消息成功"));
                         } else {
@@ -270,7 +270,7 @@ public class GPSSocketServer {
         CRC32 crc32 = new CRC32();
         crc32.update(data.getBytes());
         String s = "FF" + data + StringUtils.leftPad(Long.toHexString(crc32.getValue()), 8, '0') + "EE";
-        LogUtil.show(TAG, "密文:" + s);
+        LogUtil.logger(TAG, "密文:" + s);
         return s;
     }
 
@@ -303,7 +303,7 @@ public class GPSSocketServer {
             socketCallbackListener.callBack(true, "断开连接成功");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "断开连接异常：" + e);
+            LogUtil.logger(TAG, "断开连接异常：" + e);
             socketCallbackListener.callBack(false, "断开连接异常：" + e);
         }
     }

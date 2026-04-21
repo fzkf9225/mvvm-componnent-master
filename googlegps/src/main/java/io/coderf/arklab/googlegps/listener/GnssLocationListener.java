@@ -101,7 +101,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      */
     @Override
     public void onLocationChanged(Location loc) {
-        LogUtil.show(GpsService.TAG, "位置变化回调: " + loc);
+        LogUtil.logger(GpsService.TAG, "位置变化回调: " + loc);
         try {
             if (loc != null) {
                 Bundle b = new Bundle();
@@ -128,7 +128,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
             }
 
         } catch (Exception ex) {
-            LogUtil.show(GpsService.TAG, "位置变化回调异常: " + ex);
+            LogUtil.logger(GpsService.TAG, "位置变化回调异常: " + ex);
         }
     }
 
@@ -140,7 +140,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     @Override
     public void onStopped() {
         super.onStopped();
-        LogUtil.show(GpsService.TAG, "GNSS 定位已停止");
+        LogUtil.logger(GpsService.TAG, "GNSS 定位已停止");
         loggingService.restartGpsManagers();
     }
 
@@ -152,7 +152,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param provider 被禁用的定位提供者（如 "gps" 或 "network"）
      */
     public void onProviderDisabled(@NonNull String provider) {
-        LogUtil.show(GpsService.TAG, "定位提供者已禁用: " + provider);
+        LogUtil.logger(GpsService.TAG, "定位提供者已禁用: " + provider);
         loggingService.restartGpsManagers();
     }
 
@@ -164,7 +164,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param provider 被启用的定位提供者（如 "gps" 或 "network"）
      */
     public void onProviderEnabled(@NonNull String provider) {
-        LogUtil.show(GpsService.TAG, "定位提供者已启用: " + provider);
+        LogUtil.logger(GpsService.TAG, "定位提供者已启用: " + provider);
         loggingService.restartGpsManagers();
     }
 
@@ -178,17 +178,17 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param extras   附加信息
      */
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        LogUtil.show(GpsService.TAG, "定位提供者状态变化: " + provider);
+        LogUtil.logger(GpsService.TAG, "定位提供者状态变化: " + provider);
         if (status == LocationProvider.OUT_OF_SERVICE) {
-            LogUtil.show(GpsService.TAG, provider + " 服务已中断");
+            LogUtil.logger(GpsService.TAG, provider + " 服务已中断");
         }
 
         if (status == LocationProvider.AVAILABLE) {
-            LogUtil.show(GpsService.TAG, provider + " 已可用");
+            LogUtil.logger(GpsService.TAG, provider + " 已可用");
         }
 
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-            LogUtil.show(GpsService.TAG, provider + " 临时不可用");
+            LogUtil.logger(GpsService.TAG, provider + " 临时不可用");
         }
     }
 
@@ -202,7 +202,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     @Override
     public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
         super.onSatelliteStatusChanged(status);
-        LogUtil.show(GpsService.TAG, "卫星状态变化:" + status.toString());
+        LogUtil.logger(GpsService.TAG, "卫星状态变化:" + status.toString());
         int maxSatellites = status.getSatelliteCount();
         loggingService.setSatelliteInfo(maxSatellites);
     }
@@ -218,7 +218,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      */
     @Override
     public void onNmeaMessage(String message, long timestamp) {
-        LogUtil.show(GpsService.TAG, "NMEA 消息:" + message + ", 时间戳：" + timestamp);
+        LogUtil.logger(GpsService.TAG, "NMEA 消息:" + message + ", 时间戳：" + timestamp);
         loggingService.onNmeaSentence(timestamp, message);
         if (message == null || message.isEmpty()) {
             return;

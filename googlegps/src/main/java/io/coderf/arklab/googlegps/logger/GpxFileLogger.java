@@ -86,9 +86,9 @@ public class GpxFileLogger implements IFileLogger {
             writeHeader();
             hasWrittenFirstPoint = false;
 
-            LogUtil.show(TAG, "Created new GPX file: " + currentFilePath);
+            LogUtil.logger(TAG, "Created new GPX file: " + currentFilePath);
         } catch (IOException e) {
-            LogUtil.show(TAG, "Failed to start GPX log: " + e.getMessage());
+            LogUtil.logger(TAG, "Failed to start GPX log: " + e.getMessage());
             isWriterReady = false;
         }
     }
@@ -121,7 +121,7 @@ public class GpxFileLogger implements IFileLogger {
     @Override
     public void write(Location loc) {
         if (writer == null || !isWriterReady) {
-            LogUtil.show(TAG, "Writer not initialized, cannot write location");
+            LogUtil.logger(TAG, "Writer not initialized, cannot write location");
             return;
         }
 
@@ -152,13 +152,13 @@ public class GpxFileLogger implements IFileLogger {
         writer.flush();
         hasWrittenFirstPoint = true;
 
-        LogUtil.show(TAG, "Written to GPX: " + loc.getLatitude() + "," + loc.getLongitude());
+        LogUtil.logger(TAG, "Written to GPX: " + loc.getLatitude() + "," + loc.getLongitude());
     }
 
     @Override
     public void annotate(String description, Location loc) {
         if (writer == null || !isWriterReady) {
-            LogUtil.show(TAG, "Writer not initialized, cannot write annotation");
+            LogUtil.logger(TAG, "Writer not initialized, cannot write annotation");
             return;
         }
 
@@ -171,7 +171,7 @@ public class GpxFileLogger implements IFileLogger {
         writer.println("    <name>" + escapeXml(description) + "</name>");
         writer.println("  </wpt>");
         writer.flush();
-        LogUtil.show(TAG, "Written annotation to GPX: " + description);
+        LogUtil.logger(TAG, "Written annotation to GPX: " + description);
     }
 
     private String escapeXml(String text) {
@@ -190,7 +190,7 @@ public class GpxFileLogger implements IFileLogger {
             writer.close();
             writer = null;
             isWriterReady = false;
-            LogUtil.show(TAG, "Closed GPX file: " + currentFilePath);
+            LogUtil.logger(TAG, "Closed GPX file: " + currentFilePath);
         }
     }
 

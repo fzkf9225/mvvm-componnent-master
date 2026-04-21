@@ -40,7 +40,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 /**
  * Retrofit+okhttp初始化
- * 
+ *
  * @author fz
  * @version 1.0
  * @since 1.0
@@ -62,50 +62,62 @@ public class ApiRetrofit {
 
     public static void printLog(final Request request, final Response response) {
         LogUtil.logger(TAG, "--------------------Request Start--------------------");
-        LogUtil.logger(TAG, "Request Method：" + request.method());
-        LogUtil.logger(TAG, "Request Url：" + request.url());
+        StringBuilder sbRequest = new StringBuilder();
+        sbRequest.append("Request Method：").append(request.method()).append("\n");
+        sbRequest.append("Request Url：").append(request.url()).append("\n");
 
         // 格式化请求头
         Headers requestHeaders = request.headers();
+        sbRequest.append("Request Headers：").append("\n");
         if (requestHeaders.size() > 0) {
-            LogUtil.logger(TAG, "Request Headers：");
-            IntStream.range(0, requestHeaders.size()).forEach(i -> LogUtil.logger(TAG, "  " + requestHeaders.name(i) + ": " + requestHeaders.value(i)));
-        } else {
-            LogUtil.logger(TAG, "Request Headers：{}");
+            IntStream.range(0, requestHeaders.size()).forEach(i -> sbRequest.append("  ").append(requestHeaders.name(i)).append(": ").append(requestHeaders.value(i)).append("\n"));
         }
-
-        try {
+        LogUtil.logger(TAG, sbRequest.toString());
+        // --- 第二段：请求体 (Request Body) & 文件上传过滤 ---
+        RequestBody requestBody = request.body();
+        if (requestBody != null) {
             String contentType = request.header("Content-Type");
-            if (contentType == null || !contentType.contains("multipart/form-data") || !contentType.contains("MULTIPART/FORM-DATA")) {
-                LogUtil.logger(TAG, "Request Body：" + bodyToString(request.body()));
+            // 判断是否为文件上传或多部分表单
+            if (requestBody instanceof okhttp3.MultipartBody ||
+                    (contentType != null && contentType.contains("multipart/form-data"))) {
+                LogUtil.logger(TAG, "Body: [File/Multipart Data - Skip Printing]");
+            } else {
+                try {
+                    String body = bodyToString(requestBody);
+                    if (!TextUtils.isEmpty(body)) {
+                        LogUtil.logger(TAG, body);
+                    } else {
+                        LogUtil.logger(TAG, "Body: Empty");
+                    }
+                } catch (IOException e) {
+                    LogUtil.loggerE(TAG, "Request Body Parse Error", e);
+                }
             }
-        } catch (IOException e) {
-            LogUtil.logger(TAG, "Request parse error");
         }
 
         // 格式化响应头
         Headers responseHeaders = response.headers();
+        StringBuilder sbResponseHeader = new StringBuilder();
+        sbResponseHeader.append("Response Headers：").append("\n");
         if (responseHeaders.size() > 0) {
-            LogUtil.logger(TAG, "Response Headers：");
-            IntStream.range(0, responseHeaders.size()).forEach(i -> LogUtil.logger(TAG, "  " + responseHeaders.name(i) + ": " + responseHeaders.value(i)));
-        } else {
-            LogUtil.logger(TAG, "Response Headers：{}");
+            IntStream.range(0, responseHeaders.size()).forEach(i -> sbResponseHeader.append("  ").append(responseHeaders.name(i)).append(": ").append(responseHeaders.value(i)).append("\n"));
         }
 
+        LogUtil.logger(TAG, sbResponseHeader.toString());
         try {
             ResponseBody responseBody = response.peekBody(1024 * 1024);
-            LogUtil.logger(TAG, "Response Body：" + responseBody.string());
             if (Config.getInstance().isResponseBodyLogConverterJson()) {
                 try {
-                    LogUtil.json(responseBody.string());
+                    LogUtil.json(TAG, responseBody.string());
                 } catch (Exception e) {
                     LogUtil.logger(TAG, "Response converter json error");
                 }
+            } else {
+                LogUtil.logger(TAG, "Response Body：" + responseBody.string());
             }
         } catch (Exception e) {
             LogUtil.logger(TAG, "Response parse error");
         }
-
         LogUtil.logger(TAG, "--------------------Request End--------------------");
     }
 

@@ -54,7 +54,7 @@ public class FileLoggerFactory {
             currentLogger = new GpxFileLogger();
             ((GpxFileLogger) currentLogger).startNewLog(customFileName);
         } else {
-            LogUtil.show("FileLoggerFactory", "Unknown log type: " + type + ", using CSV");
+            LogUtil.logger("FileLoggerFactory", "Unknown log type: " + type + ", using CSV");
             currentLogger = new CsvFileLogger();
             ((CsvFileLogger) currentLogger).startNewLog(customFileName);
             currentLogType = TYPE_CSV;
@@ -68,7 +68,7 @@ public class FileLoggerFactory {
      */
     public static void write(Location loc) {
         if (currentLogger == null) {
-            LogUtil.show(GpsService.TAG, "Logger not initialized, call init() first");
+            LogUtil.logger(GpsService.TAG, "Logger not initialized, call init() first");
             return;
         }
         GpsLoggerThreadExecutor.getInstance().execute(() -> currentLogger.write(loc));
@@ -82,7 +82,7 @@ public class FileLoggerFactory {
      */
     public static void annotate(String description, Location loc) {
         if (currentLogger == null) {
-            LogUtil.show(GpsService.TAG, "Logger not initialized");
+            LogUtil.logger(GpsService.TAG, "Logger not initialized");
             return;
         }
         currentLogger.annotate(description, loc);
@@ -98,7 +98,7 @@ public class FileLoggerFactory {
             currentLogger = null;
         }
         currentLogType = null;
-        LogUtil.show(GpsService.TAG, "FileLogger closed");
+        LogUtil.logger(GpsService.TAG, "FileLogger closed");
     }
 
     /**
