@@ -61,64 +61,79 @@ public class ApiRetrofit {
     }
 
     public static void printLog(final Request request, final Response response) {
-        LogUtil.logger(TAG, "--------------------Request Start--------------------");
-        StringBuilder sbRequest = new StringBuilder();
-        sbRequest.append("Request Method：").append(request.method()).append("\n");
-        sbRequest.append("Request Url：").append(request.url()).append("\n");
+        String traceId = Integer.toHexString(System.identityHashCode(request));
+        StringBuilder logBuilder = new StringBuilder();
+        logBuilder.append("--------------------Request Start--------------------").append("\n");
+        logBuilder.append("Trace Id：").append(traceId).append("\n");
+        logBuilder.append("Request Method：").append(request.method()).append("\n");
+        logBuilder.append("Request Url：").append(request.url()).append("\n");
 
         // 格式化请求头
         Headers requestHeaders = request.headers();
-        sbRequest.append("Request Headers：").append("\n");
+        logBuilder.append("Request Headers：").append("\n");
         if (requestHeaders.size() > 0) {
-            IntStream.range(0, requestHeaders.size()).forEach(i -> sbRequest.append("  ").append(requestHeaders.name(i)).append(": ").append(requestHeaders.value(i)).append("\n"));
+            IntStream.range(0, requestHeaders.size()).forEach(i ->
+                    logBuilder.append("  ")
+                            .append(requestHeaders.name(i))
+                            .append(": ")
+                            .append(requestHeaders.value(i))
+                            .append("\n"));
+        } else {
+            logBuilder.append("  {}").append("\n");
         }
-        LogUtil.logger(TAG, sbRequest.toString());
-        // --- 第二段：请求体 (Request Body) & 文件上传过滤 ---
+
+        // 请求体 (Request Body) & 文件上传过滤
         RequestBody requestBody = request.body();
         if (requestBody != null) {
             String contentType = request.header("Content-Type");
             // 判断是否为文件上传或多部分表单
             if (requestBody instanceof okhttp3.MultipartBody ||
                     (contentType != null && contentType.contains("multipart/form-data"))) {
-                LogUtil.logger(TAG, "Body: [File/Multipart Data - Skip Printing]");
+                logBuilder.append("Request Body：").append("[File/Multipart Data - Skip Printing]").append("\n");
             } else {
                 try {
                     String body = bodyToString(requestBody);
                     if (!TextUtils.isEmpty(body)) {
-                        LogUtil.logger(TAG, body);
+                        logBuilder.append("Request Body：").append(body).append("\n");
                     } else {
-                        LogUtil.logger(TAG, "Body: Empty");
+                        logBuilder.append("Request Body：").append("Empty").append("\n");
                     }
                 } catch (IOException e) {
-                    LogUtil.loggerE(TAG, "Request Body Parse Error", e);
+                    logBuilder.append("Request Body Parse Error：").append(e.getMessage()).append("\n");
                 }
             }
+        } else {
+            logBuilder.append("Request Body：").append("null").append("\n");
         }
 
         // 格式化响应头
         Headers responseHeaders = response.headers();
-        StringBuilder sbResponseHeader = new StringBuilder();
-        sbResponseHeader.append("Response Headers：").append("\n");
+        logBuilder.append("Response Headers：").append("\n");
         if (responseHeaders.size() > 0) {
-            IntStream.range(0, responseHeaders.size()).forEach(i -> sbResponseHeader.append("  ").append(responseHeaders.name(i)).append(": ").append(responseHeaders.value(i)).append("\n"));
+            IntStream.range(0, responseHeaders.size()).forEach(i ->
+                    logBuilder.append("  ")
+                            .append(responseHeaders.name(i))
+                            .append(": ")
+                            .append(responseHeaders.value(i))
+                            .append("\n"));
+        } else {
+            logBuilder.append("  {}").append("\n");
         }
 
-        LogUtil.logger(TAG, sbResponseHeader.toString());
         try {
             ResponseBody responseBody = response.peekBody(1024 * 1024);
+            String responseText = responseBody.string();
+            logBuilder.append("Response Body：").append(responseText).append("\n");
             if (Config.getInstance().isResponseBodyLogConverterJson()) {
-                try {
-                    LogUtil.json(TAG, responseBody.string());
-                } catch (Exception e) {
-                    LogUtil.logger(TAG, "Response converter json error");
-                }
-            } else {
-                LogUtil.logger(TAG, "Response Body：" + responseBody.string());
+                ResponseBody responseJsonBody = response.peekBody(1024 * 1024);
+                String jsonResponse = responseJsonBody.string();
+                LogUtil.json(TAG, jsonResponse);
             }
         } catch (Exception e) {
-            LogUtil.logger(TAG, "Response parse error");
+            logBuilder.append("Response parse error：").append(e.getMessage()).append("\n");
         }
-        LogUtil.logger(TAG, "--------------------Request End--------------------");
+        logBuilder.append("--------------------Request End--------------------");
+        LogUtil.logger(TAG, logBuilder.toString());
     }
 
     public static String bodyToString(final RequestBody request) throws IOException {
