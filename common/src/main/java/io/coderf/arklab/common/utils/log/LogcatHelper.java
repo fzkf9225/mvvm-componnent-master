@@ -13,10 +13,13 @@ import java.util.Objects;
 import io.coderf.arklab.common.utils.common.DateUtil;
 
 /**
- * Created by fz on 2018/7/23.
  * 日志记录至本地
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @update 2026/4/21 10:03
  */
-
 public class LogcatHelper {
     private static LogcatHelper INSTANCE = null;
     private static String PATH_LOGCAT;

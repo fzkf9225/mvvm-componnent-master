@@ -202,7 +202,7 @@ class SpeakButton @JvmOverloads constructor(
             mediaPlayer.prepare()
             mediaPlayer.duration
         } catch (e: Exception) {
-            LogUtil.show(TAG, "mediaPlayer异常:$e")
+            LogUtil.loggerE(TAG, "mediaPlayer异常:$e")
         }
 
         if (finishedListener == null) {
@@ -263,14 +263,14 @@ class SpeakButton @JvmOverloads constructor(
             Environment.DIRECTORY_MUSIC,
             userId
         ).absolutePath + File.separator + "voice_" + DateUtil.getCurrentTime() + ".amr"
-        LogUtil.show(TAG, "语音保存路径为：$mFileName")
+        LogUtil.logger(TAG, "语音保存路径为：$mFileName")
         mRecorder?.setOutputFile(mFileName)
         try {
             mRecorder?.prepare()
             mRecorder?.start()
             startTime = System.currentTimeMillis()
         } catch (e: Exception) {
-            LogUtil.show(TAG, "录音启动失败:$e")
+            LogUtil.loggerE(TAG, "录音启动失败:$e")
             e.printStackTrace()
             mRecorder?.release()
             mRecorder = null

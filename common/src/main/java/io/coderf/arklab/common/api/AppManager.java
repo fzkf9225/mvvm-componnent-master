@@ -381,7 +381,7 @@ public class AppManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "检查是否有启动Intent异常: " + e);
+            LogUtil.logger(TAG, "检查是否有启动Intent异常: " + e);
         }
         // 方法1：直接查询包信息（最可靠的方式）
         try {
@@ -398,7 +398,7 @@ public class AppManager {
             return info != null;
         } catch (PackageManager.NameNotFoundException e) {
             // 继续尝试其他方法
-            LogUtil.show(TAG, "直接查询包信息异常: " + e);
+            LogUtil.logger(TAG, "直接查询包信息异常: " + e);
         }
 
         // 方法2：查询应用列表（更全面的检测）
@@ -840,7 +840,7 @@ public class AppManager {
 
             // 检查应用是否安装
             if (!isAppInstalled(context, packageName)) {
-                LogUtil.show(TAG, "应用未安装: " + packageName);
+                LogUtil.logger(TAG, "应用未安装: " + packageName);
                 return false;
             }
 
@@ -913,7 +913,7 @@ public class AppManager {
                                   String action, Bundle extras) {
         // 1. 首先检查应用是否安装
         if (!isAppInstalled(context, packageName)) {
-            LogUtil.show(TAG, "应用未安装: " + packageName);
+            LogUtil.logger(TAG, "应用未安装: " + packageName);
             return false;
         }
 
@@ -943,7 +943,7 @@ public class AppManager {
                 if (!TextUtils.isEmpty(activityClassName)) {
                     return launchAppByComponent(context, packageName, activityClassName, extras);
                 } else {
-                    LogUtil.show(TAG, "包名方式无法传递参数，请提供Activity类名");
+                    LogUtil.logger(TAG, "包名方式无法传递参数，请提供Activity类名");
                     return launchAppByPackageName(context, packageName);
                 }
             }
@@ -983,7 +983,7 @@ public class AppManager {
 
         // 首先检查应用是否安装
         if (!isAppInstalled(context, packageName)) {
-            LogUtil.show(TAG, "应用未安装: " + packageName);
+            LogUtil.logger(TAG, "应用未安装: " + packageName);
             return false;
         }
         boolean success = uninstall(context, packageName);
@@ -1170,7 +1170,7 @@ public class AppManager {
 
         // 首先检查应用是否安装
         if (!isAppInstalled(activity, packageName)) {
-            LogUtil.show(TAG, "应用未安装: " + packageName);
+            LogUtil.logger(TAG, "应用未安装: " + packageName);
             return false;
         }
 

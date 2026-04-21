@@ -28,7 +28,7 @@ public class UserModule {
     public UserApiService provideUserApiService(Application application,ErrorService errorService)
     {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application, ContextCompat.getString(application, R.string.user_config_file)).getBaseUrl();
-        LogUtil.show(ApiRetrofit.TAG,"登录baseUrl:"+baseUrl);
+        LogUtil.logger(ApiRetrofit.TAG,"登录baseUrl:"+baseUrl);
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)

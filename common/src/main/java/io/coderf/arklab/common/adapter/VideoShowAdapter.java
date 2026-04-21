@@ -95,7 +95,7 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
                     VideoPlayerActivity.show(v.getContext(), bundleVideo);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LogUtil.show(VideoShowAdapter.class.getSimpleName(), "视频播放失败:" + e);
+                    LogUtil.logger(VideoShowAdapter.class.getSimpleName(), "视频播放失败:" + e);
                     Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
                 }
             });

@@ -29,7 +29,7 @@ class FlowRetryServiceImpl @Inject constructor(
     override suspend fun shouldRetry(throwable: Throwable): Boolean {
         return when (throwable) {
             is BaseException -> {
-                LogUtil.show(ApiRetrofit.TAG, "第 $retryCount 次重试，BaseException：$throwable")
+                LogUtil.logger(ApiRetrofit.TAG, "第 $retryCount 次重试，BaseException：$throwable")
                 val isLoginPastOrNoPermission = true
                 if (isLoginPastOrNoPermission && ++retryCount <= maxRetries) {
                     return true
@@ -40,7 +40,7 @@ class FlowRetryServiceImpl @Inject constructor(
             }
 
             is HttpException -> {
-                LogUtil.show(ApiRetrofit.TAG, "第 $retryCount 次重试，HttpException：$throwable")
+                LogUtil.logger(ApiRetrofit.TAG, "第 $retryCount 次重试，HttpException：$throwable")
                 if (401 == throwable.code() && ++retryCount <= maxRetries) {
                     return true
                 } else {
@@ -50,7 +50,7 @@ class FlowRetryServiceImpl @Inject constructor(
             }
 
             else -> {
-                LogUtil.show(ApiRetrofit.TAG, "不满足重试条件！")
+                LogUtil.logger(ApiRetrofit.TAG, "不满足重试条件！")
                 retryCount = 0
                 false
             }
@@ -59,7 +59,7 @@ class FlowRetryServiceImpl @Inject constructor(
 
     override suspend fun refreshToken() {
         try {
-            LogUtil.show(ApiRetrofit.TAG, "Refreshing token... Attempt $retryCount/$maxRetries")
+            LogUtil.logger(ApiRetrofit.TAG, "Refreshing token... Attempt $retryCount/$maxRetries")
             UserAccountHelper.saveLoginPast(false)
 
             // 使用Kotlin协程版本的API
@@ -71,9 +71,9 @@ class FlowRetryServiceImpl @Inject constructor(
             val userInfo = userApiService.getUserInfoSuspend()
             UserAccountHelper.saveLoginState(userInfo, true)
             retryCount = 0
-            LogUtil.show(ApiRetrofit.TAG, "Token refreshed successfully")
+            LogUtil.logger(ApiRetrofit.TAG, "Token refreshed successfully")
         } catch (e: Exception) {
-            LogUtil.show(ApiRetrofit.TAG, "Failed to refresh token: $e")
+            LogUtil.logger(ApiRetrofit.TAG, "Failed to refresh token: $e")
             throw e
         }
     }

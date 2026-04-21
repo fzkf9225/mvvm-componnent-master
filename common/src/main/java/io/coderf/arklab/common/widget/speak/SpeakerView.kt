@@ -227,7 +227,7 @@ class SpeakerView : View {
                 playAudioFromByteArray(messageId, extension, Base64Util.decode(file))
             } catch (e: Exception) {
                 e.printStackTrace()
-                LogUtil.show(TAG,"播放音频异常：$e")
+                LogUtil.loggerE(TAG,"播放音频异常：$e")
                 Toast.makeText(context, "播放失败", Toast.LENGTH_SHORT).show()
                 stop()
             }
@@ -249,7 +249,7 @@ class SpeakerView : View {
         val fos = FileOutputStream(tempFile)
         fos.write(byteArray)
         fos.close()
-        LogUtil.show(TAG,"音频临时文件：${tempFile.absolutePath}")
+        LogUtil.logger(TAG,"音频临时文件：${tempFile.absolutePath}")
         // 3. 使用 MediaPlayer 播放音频
         val mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(tempFile.absolutePath)
@@ -257,7 +257,7 @@ class SpeakerView : View {
         mediaPlayer.start() // 播放音频
         // 4. 在播放完成后删除临时文件
         mediaPlayer.setOnCompletionListener {
-            LogUtil.show(TAG,"音频播放完成")
+            LogUtil.logger(TAG,"音频播放完成")
             tempFile.delete() // 播放完成后删除临时文件
             mediaPlayer.release() // 释放资源
             stop()

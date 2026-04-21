@@ -84,7 +84,7 @@ public class MobileHelper {
             }
         } catch (SocketException ex) {
             ex.printStackTrace();
-            LogUtil.show(TAG, "getLocalIpAddress：" + ex);
+            LogUtil.logger(TAG, "getLocalIpAddress：" + ex);
         }
         return "";
     }

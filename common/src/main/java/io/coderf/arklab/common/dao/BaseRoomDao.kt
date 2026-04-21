@@ -92,7 +92,7 @@ abstract class BaseRoomDao<T : Any> {
 
     fun deleteAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()}")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -102,7 +102,7 @@ abstract class BaseRoomDao<T : Any> {
      */
     fun deleteByParams(params: String, value: String): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $params='${value}'")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -118,27 +118,27 @@ abstract class BaseRoomDao<T : Any> {
             }
         }
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $conditions")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
     fun findAll(): Flowable<List<T>> {
         val query = SimpleSQLiteQuery("select * from ${getTableName()}")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
     fun findInfoById(id: Long): Single<T> {
         val query =
             SimpleSQLiteQuery("select * from ${getTableName()} where id = ?", arrayOf<Any>(id))
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
     fun findInfoById(id: String): Single<T> {
         val query =
             SimpleSQLiteQuery("select * from ${getTableName()} where id = ?", arrayOf<Any>(id))
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
@@ -148,7 +148,7 @@ abstract class BaseRoomDao<T : Any> {
                 "select * from ${getTableName()} where ? = ?",
                 arrayOf<Any>(primaryKey, id)
             )
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
@@ -158,7 +158,7 @@ abstract class BaseRoomDao<T : Any> {
                 "select * from ${getTableName()} where ? = ?",
                 arrayOf<Any>(primaryKey, id)
             )
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFind(query)
     }
 
@@ -183,7 +183,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -217,7 +217,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryList(query)
     }
 
@@ -241,7 +241,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryList(query)
     }
 
@@ -265,7 +265,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy ASC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryList(query)
     }
 
@@ -299,7 +299,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy ASC"
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryList(query)
     }
 
@@ -323,7 +323,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy desc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -357,7 +357,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -381,7 +381,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy asc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doQueryFlowable(query)
     }
 
@@ -396,7 +396,7 @@ abstract class BaseRoomDao<T : Any> {
      */
     fun deleteByParamsLiveData(params: String, value: String): LiveData<List<T>> {
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $params='${value}'")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 
@@ -412,7 +412,7 @@ abstract class BaseRoomDao<T : Any> {
             }
         }
         val query = SimpleSQLiteQuery("delete from ${getTableName()} where $conditions")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 
@@ -454,7 +454,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else " ORDER BY $orderBy "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order limit $limit offset $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 
@@ -478,7 +478,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy desc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 
@@ -512,7 +512,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy DESC "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions $order  LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 
@@ -536,7 +536,7 @@ abstract class BaseRoomDao<T : Any> {
         val order = if (orderBy.isNullOrEmpty()) "" else "ORDER BY $orderBy asc "
         val query =
             SimpleSQLiteQuery("SELECT * FROM ${getTableName()} $conditions  $order LIMIT $limit OFFSET $offset")
-        LogUtil.show(ApiRetrofit.TAG, "sql:${query.sql}")
+        LogUtil.logger(ApiRetrofit.TAG, "sql:${query.sql}")
         return doFindListLiveData(query)
     }
 

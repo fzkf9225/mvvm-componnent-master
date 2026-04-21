@@ -2,6 +2,8 @@ package io.coderf.arklab.googlegps.utils;
 
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 
 /**
  * Created by 方舟 on 2023/5/5 09:52
@@ -19,19 +21,19 @@ public class LogUtil {
 
     public static void show(String Tag,String str) {
         if (DebugUtil.isEnableDebug()) {
-            Log.d(Tag, str);
+            Logger.i(Tag, str);
         }
     }
 
     public static void i(String str) {
         if (DebugUtil.isEnableDebug()) {
-            Log.i(TAG, str);
+            Logger.i(TAG, str);
         }
     }
 
     public static void d(String str) {
         if (DebugUtil.isEnableDebug()) {
-            Log.d(TAG, str);
+            Logger.d(TAG, str);
         }
     }
 

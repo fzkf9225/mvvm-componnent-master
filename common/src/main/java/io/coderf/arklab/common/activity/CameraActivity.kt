@@ -107,7 +107,7 @@ class CameraActivity : BaseActivity<EmptyViewModel, ActivityShootBinding>() {
     }
 
     private fun onFinish(uri: Uri?, mediaType: String?) {
-        LogUtil.show(CameraView.TAG, "uri:${uri.toString()}, mediaType:$mediaType")
+        LogUtil.logger(CameraView.TAG, "uri:${uri.toString()}, mediaType:$mediaType")
         val returnBundle = intent.extras ?: Bundle();
         returnBundle.putParcelable(Result.PATH, uri)
         returnBundle.putString(Result.MEDIA_TYPE, mediaType)

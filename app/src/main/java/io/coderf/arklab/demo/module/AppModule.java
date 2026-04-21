@@ -30,7 +30,6 @@ public class AppModule {
     @Provides
     public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService, RetryService retryService, FlowRetryService flowRetryService) {
         String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
-        LogUtil.show(ApiRetrofit.TAG, "App模块baseUrl:" + baseUrl);
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)

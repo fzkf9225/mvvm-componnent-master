@@ -268,7 +268,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setButtonText("关闭")
                     .setButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
                     .setOnProgressEndListener(() -> {
-                        LogUtil.show(TAG, "---------------加载完成----------------");
+                        LogUtil.logger(TAG, "---------------加载完成----------------");
                     })
                     .setCanCancel(true)
                     .builder();
@@ -512,7 +512,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                             circleProgressBarDialog = null;
                             circleHandler.removeCallbacks(this);
                         })
-                        .setOnProgressEndListener(() -> LogUtil.show(TAG, "---------------加载结束----------------"))
+                        .setOnProgressEndListener(() -> LogUtil.logger(TAG, "---------------加载结束----------------"))
                         .setCanCancel(true)
                         .builder();
                 circleProgressBarDialog.show();
@@ -555,7 +555,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                             horizontalProgressBarDialog = null;
                             horizontalHandler.removeCallbacks(this);
                         })
-                        .setOnProgressEndListener(() -> LogUtil.show(TAG, "---------------加载结束----------------"))
+                        .setOnProgressEndListener(() -> LogUtil.logger(TAG, "---------------加载结束----------------"))
                         .setCanCancel(true)
                         .builder();
                 horizontalProgressBarDialog.show();

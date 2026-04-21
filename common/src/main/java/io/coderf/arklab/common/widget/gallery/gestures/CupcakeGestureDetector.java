@@ -65,7 +65,7 @@ public class CupcakeGestureDetector {
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 } else {
-                    LogUtil.show(PreviewPhotoDialog.TAG, "Velocity tracker is null");
+                    LogUtil.logger(PreviewPhotoDialog.TAG, "Velocity tracker is null");
                 }
 
                 mLastTouchX = getActiveX(ev);

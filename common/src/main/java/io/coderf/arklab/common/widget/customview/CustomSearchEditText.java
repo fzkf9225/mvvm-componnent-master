@@ -156,7 +156,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "onTextChanged:" + e);
+            LogUtil.logger(TAG, "onTextChanged:" + e);
         }
     }
 
@@ -182,7 +182,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "onTouchEvent:" + e);
+            LogUtil.logger(TAG, "onTouchEvent:" + e);
         }
         super.onTouchEvent(event);
         return true;
@@ -207,7 +207,7 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "onEditorAction:" + e);
+            LogUtil.logger(TAG, "onEditorAction:" + e);
         }
         return false;
     }

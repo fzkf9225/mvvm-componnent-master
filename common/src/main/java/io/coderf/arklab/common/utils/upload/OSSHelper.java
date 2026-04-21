@@ -210,8 +210,8 @@ public class OSSHelper {
                 size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
                 fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 cursor.close();
-                LogUtil.show(TAG, "文件大小：" + size);
-                LogUtil.show(TAG, "文件名称：" + fileName);
+                LogUtil.logger(TAG, "文件大小：" + size);
+                LogUtil.logger(TAG, "文件名称：" + fileName);
                 transferred = 0;
                 ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.setContentLength(size);
@@ -221,7 +221,7 @@ public class OSSHelper {
                     if (callback != null) {
                         transferred += progressEvent.getBytesTransferred();
                         int process = (int) (transferred * 100 / size);
-                        LogUtil.show(TAG, "--------------------上传中" + process + "--------------------");
+                        LogUtil.logger(TAG, "--------------------上传中" + process + "--------------------");
                         //进度100会回调两次，这样就是避免重复调用完成的方法
                         if (lastProcess != process) {
                             callback.progress(objectKey, fileName, process);
@@ -231,7 +231,7 @@ public class OSSHelper {
                 }));
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtil.show(TAG, "上传错误：" + e);
+                LogUtil.logger(TAG, "上传错误：" + e);
                 if (callback != null) {
                     callback.onError(e);
                 }
@@ -288,8 +288,8 @@ public class OSSHelper {
                 }, Region.getRegion(Regions.CN_NORTH_1), new ClientConfiguration());
                 //服务器地址
                 s3.setEndpoint(endPoint);
-                LogUtil.show(TAG, "文件大小：" + file.length());
-                LogUtil.show(TAG, "文件名称：" + file.getName());
+                LogUtil.logger(TAG, "文件大小：" + file.length());
+                LogUtil.logger(TAG, "文件名称：" + file.getName());
                 transferred = 0;
                 String objectKey = bucketName + "/" + file.getName();
                 PutObjectRequest request = new PutObjectRequest(bucketName, objectKey, file);
@@ -303,12 +303,12 @@ public class OSSHelper {
                             callback.progress(objectKey, file.getName(), process);
                         }
                         lastProcess = process;
-                        LogUtil.show(TAG, "--------------------上传中" + process + "--------------------");
+                        LogUtil.logger(TAG, "--------------------上传中" + process + "--------------------");
                     }
                 }));
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtil.show(TAG, "上传错误：" + e);
+                LogUtil.logger(TAG, "上传错误：" + e);
                 if (callback != null) {
                     callback.onError(e);
                 }

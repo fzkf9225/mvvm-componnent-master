@@ -121,7 +121,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
                 setViewState(EmptyLayout.State.HIDE_LAYOUT);
             }
         } catch (Exception e) {
-            LogUtil.show(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
+            LogUtil.logger(TAG,"| BasePresenterRecyclerViewFragment解析数据:" + e);
             e.printStackTrace();
             setViewState(EmptyLayout.State.LOADING_ERROR);
             showToast(BaseException.ErrorType.PARSE_ERROR.getMsg());

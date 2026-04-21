@@ -57,7 +57,7 @@ public class ApplicationHelper extends BaseApplication {
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()
                 .subscribe(CalendarDataSource.calendarObservableField::set,
-                        throwable -> LogUtil.show("CalendarView", "日历异常：" + throwable)
+                        throwable -> LogUtil.logger("CalendarView", "日历异常：" + throwable)
                 );
         MediaUploadConfig.getInstance()
                 .setFileApiService(fileApiService)

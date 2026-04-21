@@ -1060,7 +1060,7 @@ public final class FileUtil {
                 MediaStore.Files.FileColumns.SIZE
         }, null, null, null);
         long size = cursor.getLong(0);
-        LogUtil.show(TAG, "size:" + size);
+        LogUtil.logger(TAG, "size:" + size);
         return size;
     }
 

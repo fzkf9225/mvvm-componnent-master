@@ -157,7 +157,7 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptur
             finish();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "识别失败：" + e);
+            LogUtil.logger(TAG, "识别失败：" + e);
             // 处理识别失败
             Toast.makeText(this, "识别失败", Toast.LENGTH_SHORT).show();
         }

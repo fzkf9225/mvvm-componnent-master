@@ -39,8 +39,12 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 /**
- * Created by fz on 2019/8/1.
- * describe：Retrofit初始化
+ * Retrofit+okhttp初始化
+ * 
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @update 2026/4/21 10:18
  */
 public class ApiRetrofit {
     public static final String TAG = ApiRetrofit.class.getSimpleName();
@@ -57,52 +61,52 @@ public class ApiRetrofit {
     }
 
     public static void printLog(final Request request, final Response response) {
-        LogUtil.show(TAG, "--------------------Request Start--------------------");
-        LogUtil.show(TAG, "Request Method：" + request.method());
-        LogUtil.show(TAG, "Request Url：" + request.url());
+        LogUtil.logger(TAG, "--------------------Request Start--------------------");
+        LogUtil.logger(TAG, "Request Method：" + request.method());
+        LogUtil.logger(TAG, "Request Url：" + request.url());
 
         // 格式化请求头
         Headers requestHeaders = request.headers();
         if (requestHeaders.size() > 0) {
-            LogUtil.show(TAG, "Request Headers：");
-            IntStream.range(0, requestHeaders.size()).forEach(i -> LogUtil.show(TAG, "  " + requestHeaders.name(i) + ": " + requestHeaders.value(i)));
+            LogUtil.logger(TAG, "Request Headers：");
+            IntStream.range(0, requestHeaders.size()).forEach(i -> LogUtil.logger(TAG, "  " + requestHeaders.name(i) + ": " + requestHeaders.value(i)));
         } else {
-            LogUtil.show(TAG, "Request Headers：{}");
+            LogUtil.logger(TAG, "Request Headers：{}");
         }
 
         try {
             String contentType = request.header("Content-Type");
             if (contentType == null || !contentType.contains("multipart/form-data") || !contentType.contains("MULTIPART/FORM-DATA")) {
-                LogUtil.show(TAG, "Request Body：" + bodyToString(request.body()));
+                LogUtil.logger(TAG, "Request Body：" + bodyToString(request.body()));
             }
         } catch (IOException e) {
-            LogUtil.show(TAG, "Request parse error");
+            LogUtil.logger(TAG, "Request parse error");
         }
 
         // 格式化响应头
         Headers responseHeaders = response.headers();
         if (responseHeaders.size() > 0) {
-            LogUtil.show(TAG, "Response Headers：");
-            IntStream.range(0, responseHeaders.size()).forEach(i -> LogUtil.show(TAG, "  " + responseHeaders.name(i) + ": " + responseHeaders.value(i)));
+            LogUtil.logger(TAG, "Response Headers：");
+            IntStream.range(0, responseHeaders.size()).forEach(i -> LogUtil.logger(TAG, "  " + responseHeaders.name(i) + ": " + responseHeaders.value(i)));
         } else {
-            LogUtil.show(TAG, "Response Headers：{}");
+            LogUtil.logger(TAG, "Response Headers：{}");
         }
 
         try {
             ResponseBody responseBody = response.peekBody(1024 * 1024);
-            LogUtil.show(TAG, "Response Body：" + responseBody.string());
+            LogUtil.logger(TAG, "Response Body：" + responseBody.string());
             if (Config.getInstance().isResponseBodyLogConverterJson()) {
                 try {
                     LogUtil.json(responseBody.string());
                 } catch (Exception e) {
-                    LogUtil.show(TAG, "Response converter json error");
+                    LogUtil.logger(TAG, "Response converter json error");
                 }
             }
         } catch (Exception e) {
-            LogUtil.show(TAG, "Response parse error");
+            LogUtil.logger(TAG, "Response parse error");
         }
 
-        LogUtil.show(TAG, "--------------------Request End--------------------");
+        LogUtil.logger(TAG, "--------------------Request End--------------------");
     }
 
     public static String bodyToString(final RequestBody request) throws IOException {
@@ -550,12 +554,12 @@ public class ApiRetrofit {
     private static String encodeSign(String appSecret, String postJson, String timeStamp) {
         try {
             String signOld = ("o-appsecret" + appSecret + postJson + "o-timestamp" + timeStamp).toUpperCase();
-            LogUtil.show(TAG, "加密前：" + signOld);
+            LogUtil.logger(TAG, "加密前：" + signOld);
 
             return MD5Util.md5Encode(signOld).toUpperCase();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "签名计算异常：" + e);
+            LogUtil.logger(TAG, "签名计算异常：" + e);
         }
         return "";
     }

@@ -47,7 +47,7 @@ public class DownLoadImageService implements Runnable {
         String extension = null;
         try {
             extension = FileUtil.getFileExtension(url.toString());
-            LogUtil.show(TAG, "后缀名：" + extension);
+            LogUtil.logger(TAG, "后缀名：" + extension);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(TAG, "获取后缀名失败：" + e);

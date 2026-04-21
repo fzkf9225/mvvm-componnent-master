@@ -38,13 +38,13 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     public void onItemClick(View view, Person item, int position) {
         super.onItemClick(view, item, position);
 
-        LogUtil.show(ApiRetrofit.TAG, "点击："+position+","+item.getName());
+        LogUtil.logger(ApiRetrofit.TAG, "点击："+position+","+item.getName());
 //        Disposable disposable = mViewModel.getRepository().findInfoById(item.getId() ,true)
 //                .subscribe((data) -> {
-//                    LogUtil.show(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
+//                    LogUtil.logger(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
 //                    showToast("查询成功！");
 //                }, throwable -> {
-//                    LogUtil.show(ApiRetrofit.TAG, "查询失败：" + throwable);
+//                    LogUtil.logger(ApiRetrofit.TAG, "查询失败：" + throwable);
 //                    showToast("查询失败，" + throwable.getMessage());
 //                });
     }
@@ -66,12 +66,12 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setOnPositiveClickListener(dialog -> {
                     @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getIRepository().delete(item,true)
                             .subscribe(() -> {
-                                LogUtil.show(ApiRetrofit.TAG, "删除成功" );
+                                LogUtil.logger(ApiRetrofit.TAG, "删除成功" );
                                 showToast("删除成功！");
                                 mViewModel.refreshData();
                                 adapter.refresh();
                             }, throwable -> {
-                                LogUtil.show(ApiRetrofit.TAG, "删除失败：" + throwable);
+                                LogUtil.logger(ApiRetrofit.TAG, "删除失败：" + throwable);
                             });
                 })
                 .builder()

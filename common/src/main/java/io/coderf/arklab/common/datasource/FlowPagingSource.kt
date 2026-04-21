@@ -38,7 +38,7 @@ class FlowPagingSource<T : Any, BV : BaseView>(
             }
 
         } catch (e: Exception) {
-            LogUtil.show(ApiRetrofit.TAG, "FlowPagingSource请求错误：$e")
+            LogUtil.logger(ApiRetrofit.TAG, "FlowPagingSource请求错误：$e")
             pagingRepository.onError(e)
             LoadResult.Error(e)
         }

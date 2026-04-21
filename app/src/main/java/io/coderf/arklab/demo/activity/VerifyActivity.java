@@ -71,8 +71,8 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             }
         });
         binding.verifySubmit.setOnClickListener(v -> {
-            LogUtil.show("FormUi","图片上传是否成功："+binding.formImage.getAdapter().isUploadingSuccess());
-            LogUtil.show("FormUi","数据："+new Gson().toJson(binding.getData()));
+            LogUtil.logger("FormUi","图片上传是否成功："+binding.formImage.getAdapter().isUploadingSuccess());
+            LogUtil.logger("FormUi","数据："+new Gson().toJson(binding.getData()));
             showLoading("验证中...",true);
             binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());

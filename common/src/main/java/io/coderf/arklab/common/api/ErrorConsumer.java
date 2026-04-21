@@ -32,13 +32,13 @@ public class ErrorConsumer implements Consumer<Throwable> {
     }
     @Override
     public void accept(Throwable e) throws Throwable {
-        LogUtil.show(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
+        LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
 
         // 隐藏加载框
         hideLoadingIfNeeded();
         BaseException be = (e instanceof BaseException) ? (BaseException) e : exceptionConverter.convert(e);
 
-        LogUtil.show(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + be.getErrorMsg());
+        LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + be.getErrorMsg());
 
         // 处理异常回调
         handleException(be);

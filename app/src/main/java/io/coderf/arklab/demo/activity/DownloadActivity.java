@@ -62,7 +62,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
             }
             Disposable disposable = DownloadManager.getInstance().download(this, binding.editUrl.getText().toString().trim())
                     .subscribe(file -> {
-                        LogUtil.show(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
+                        LogUtil.logger(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
                         showToast("下载成功！");
                     }, throwable -> {
                         if (throwable instanceof BaseException baseException) {

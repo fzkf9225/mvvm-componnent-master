@@ -143,7 +143,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 }
                 ExifUtil.ExifData exifUtil = ExifUtil.getExifData(this,mediaBean.getMediaList().get(0));
-                LogUtil.show(TAG,"经纬度等图片信息："+(exifUtil==null?null:exifUtil.toString()));
+                LogUtil.logger(TAG,"经纬度等图片信息："+(exifUtil==null?null:exifUtil.toString()));
                 imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
                 percentage = 0;
@@ -271,7 +271,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
 
     @Override
     public void imgAdd(View view) {
-        LogUtil.show(TAG, "上传是否成功：" + imageAddAdapter.isUploadingSuccess());
+        LogUtil.logger(TAG, "上传是否成功：" + imageAddAdapter.isUploadingSuccess());
         mediaHelper.openImageDialog(view, OpenImageDialog.CAMERA_ALBUM);
     }
 

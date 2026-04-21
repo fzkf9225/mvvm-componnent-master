@@ -107,7 +107,7 @@ public class ThemeUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "setImmersiveStatusBar异常：" + e);
+            LogUtil.loggerE(TAG, "setImmersiveStatusBar异常：" + e);
         }
     }
     /**
@@ -149,7 +149,7 @@ public class ThemeUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "setImmersiveStatusBar异常：" + e);
+            LogUtil.loggerE(TAG, "setImmersiveStatusBar异常：" + e);
         }
     }
     /**
@@ -181,7 +181,7 @@ public class ThemeUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.show(TAG, "setupStatusBar异常：" + e);
+            LogUtil.loggerE(TAG, "setupStatusBar异常：" + e);
         }
     }
 

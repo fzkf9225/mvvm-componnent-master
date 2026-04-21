@@ -514,7 +514,7 @@ public class AttachmentUtil {
                                             viewAbsoluteFile(mContext, file.getAbsolutePath());
                                         }
                                     }, throwable -> {
-                                        LogUtil.show(TAG, "下载出现错误：" + throwable);
+                                        LogUtil.logger(TAG, "下载出现错误：" + throwable);
                                         Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show();
                                     });
                         })

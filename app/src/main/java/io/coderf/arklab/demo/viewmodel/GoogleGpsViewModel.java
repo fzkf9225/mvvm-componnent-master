@@ -74,13 +74,13 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, 
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            LogUtil.show(TAG, "------------GpsService已连接-------------");
+            LogUtil.logger(TAG, "------------GpsService已连接-------------");
             getService = ((GpsService.GpsBinder) iBinder).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            LogUtil.show(TAG, "------------GpsService断开连接-------------");
+            LogUtil.logger(TAG, "------------GpsService断开连接-------------");
             getService = null;
         }
     }

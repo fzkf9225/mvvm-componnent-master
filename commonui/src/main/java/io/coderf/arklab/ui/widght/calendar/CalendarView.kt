@@ -391,7 +391,7 @@ class CalendarView : ConstraintLayout {
                         CalendarDataSource.currentMonthPosField.get() ?: 0, false
                     )
                 }, {
-                    LogUtil.show("CalendarView", "日历信息加载错误:" + it)
+                    LogUtil.logger("CalendarView", "日历信息加载错误:" + it)
                     binding?.emptyLayout?.setState(EmptyLayout.State.LOADING_ERROR)
                     binding?.emptyLayout?.setErrorMessage("日历信息加载错误")
                 })

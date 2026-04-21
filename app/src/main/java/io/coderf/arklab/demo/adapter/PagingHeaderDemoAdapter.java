@@ -21,7 +21,6 @@ public class PagingHeaderDemoAdapter extends BasePagingAdapter<NotificationMessa
     }
     @Override
     public void onBindHolder(BaseViewHolder<PagingItemBinding> holder, NotificationMessageBean item, int pos) {
-        LogUtil.show(ApiRetrofit.TAG,"第："+pos+"行，"+item.getTitle());
         holder.getBinding().setVariable(BR.item, item);
         holder.getBinding().executePendingBindings();
     }

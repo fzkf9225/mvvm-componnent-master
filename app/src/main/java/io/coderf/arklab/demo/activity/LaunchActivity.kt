@@ -222,7 +222,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
                     }
                 },
                 { throwable: Throwable ->
-                    LogUtil.show(TAG, "倒计时异常：$throwable")
+                    LogUtil.logger(TAG, "倒计时异常：$throwable")
                     navigateToNextActivity()
                 }
             )

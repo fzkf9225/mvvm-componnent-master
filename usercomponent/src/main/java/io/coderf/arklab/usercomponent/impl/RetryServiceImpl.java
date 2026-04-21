@@ -51,13 +51,13 @@ public class RetryServiceImpl implements RetryService {
 
     @Override
     public Observable<?> handleObservableError(Observable<? extends Throwable> observable) {
-        LogUtil.show(ApiRetrofit.TAG, "-----------------RetryService Observable-------------");
+        LogUtil.logger(ApiRetrofit.TAG, "-----------------RetryService Observable-------------");
         return observable.flatMap(this::handleThrowable);
     }
 
     @Override
     public Publisher<?> handleFlowableError(Flowable<Throwable> flowable) {
-        LogUtil.show(ApiRetrofit.TAG, "-----------------RetryService Flowable-------------");
+        LogUtil.logger(ApiRetrofit.TAG, "-----------------RetryService Flowable-------------");
         return flowable.flatMap(this::handleFlowableThrowable);
     }
 
@@ -78,20 +78,20 @@ public class RetryServiceImpl implements RetryService {
     private boolean shouldRetry(Throwable throwable) {
         if (throwable instanceof BaseException) {
             BaseException baseException = (BaseException) throwable;
-            LogUtil.show(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "baseException：" + baseException);
+            LogUtil.logger(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "baseException：" + baseException);
             boolean isLoginPastOrNoPermission = true; // 改成实际逻辑
             if (++retryCount <= maxRetries && isLoginPastOrNoPermission) {
                 return true;
             }
         } else if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
-            LogUtil.show(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "httpException：" + httpException);
+            LogUtil.logger(ApiRetrofit.TAG, "第 " + retryCount + " 次重试，" + "httpException：" + httpException);
             if (++retryCount <= maxRetries && 401 == httpException.code()) {
                 return true;
             }
         }
         retryCount = 0;
-        LogUtil.show(ApiRetrofit.TAG, "不满足重试条件！");
+        LogUtil.logger(ApiRetrofit.TAG, "不满足重试条件！");
         return false;
     }
 

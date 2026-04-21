@@ -71,7 +71,7 @@ public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVer
             }
         });
         binding.verifySubmit.setOnClickListener(v -> {
-            LogUtil.show("FormUi", "数据：" + new Gson().toJson(binding.getData()));
+            LogUtil.logger("FormUi", "数据：" + new Gson().toJson(binding.getData()));
             showLoading("验证中...",true);
             binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
             VerifyResult verifyResult = EntityValidator.validate(binding.getData(), VerifyGroup.Create.class);

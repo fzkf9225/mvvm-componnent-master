@@ -101,7 +101,7 @@ public class SystemWebChromeClient extends WebChromeClient {
     }
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        LogUtil.show(TAG,"SourceId："+consoleMessage.sourceId()+"，MessageLevel："+consoleMessage.messageLevel()+
+        LogUtil.logger(TAG,"SourceId："+consoleMessage.sourceId()+"，MessageLevel："+consoleMessage.messageLevel()+
                 ",LineNumber："+consoleMessage.lineNumber()+",Message："+consoleMessage.message());
         return super.onConsoleMessage(consoleMessage);
     }

@@ -301,7 +301,7 @@ class CameraView @JvmOverloads constructor(
                         // 录制结束
                         if (recordEvent.hasError()) {
                             // 录制失败
-                            LogUtil.show(
+                            LogUtil.logger(
                                 TAG,
                                 "onError:${recordEvent.cause},${recordEvent.cause?.message}"
                             )
@@ -568,7 +568,7 @@ class CameraView @JvmOverloads constructor(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            LogUtil.show(TAG, "删除照片失败！")
+            LogUtil.logger(TAG, "删除照片失败！")
         }
     }
 

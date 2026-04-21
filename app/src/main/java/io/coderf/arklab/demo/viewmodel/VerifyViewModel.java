@@ -60,7 +60,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
                 () -> {
                     liveData.postValue(true);
                 }, throwable -> {
-                    LogUtil.show(ApiRetrofit.TAG,"错误："+throwable);
+                    LogUtil.logger(ApiRetrofit.TAG,"错误："+throwable);
                     baseView.showToast(throwable.getMessage());
                     liveData.postValue(false);
                 });
