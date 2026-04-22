@@ -34,22 +34,26 @@ import java.util.Locale
  * @created 2026/4/22 9:11
  */
 class GpsCallbackImpl (val activity: GoogleGPSActivity):GpsCallback() {
+    private var gpsSettingConfig: GpsSettingConfig? = null
 
     override fun getConfig(): GpsSettingConfig {
-        return GpsSettingConfig(activity.application)
-            .setNotificationChannelId(activity.applicationContext.packageName + ".GPSService")
-            .setNotificationChannelName("位置服务")
-            .setNotificationImportance(NotificationManager.IMPORTANCE_HIGH)
-            .setNotificationEnableLights(true)
-            .setNotificationShowBadge(true)
-            .setMaxTrackDurationMinutes(90)
-            .setFileLogEnabled(true)
-            .setCustomFileNamePrefix("gps_track")
-            .setMinTimeInterval(1000)
-            .setMinDistanceInterval(1f)
-            .setFilterLargeJump(true)
-            .setMinAccuracy(100f)
-            .setFilterStaleLocation(true)
+        if (gpsSettingConfig == null) {
+            gpsSettingConfig = GpsSettingConfig(activity.application)
+                .setNotificationChannelId(activity.applicationContext.packageName + ".GPSService")
+                .setNotificationChannelName("位置服务")
+                .setNotificationImportance(NotificationManager.IMPORTANCE_HIGH)
+                .setNotificationEnableLights(true)
+                .setNotificationShowBadge(true)
+                .setMaxTrackDurationMinutes(90)
+                .setFileLogEnabled(true)
+                .setCustomFileNamePrefix("gps_track")
+                .setMinTimeInterval(1000)
+                .setMinDistanceInterval(1f)
+                .setFilterLargeJump(true)
+                .setMinAccuracy(100f)
+                .setFilterStaleLocation(true)
+        }
+        return gpsSettingConfig!!
     }
 
     override fun getNotification(context: Context?): Notification? {
