@@ -23,6 +23,7 @@ import io.coderf.arklab.common.api.AppManager
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.utils.common.DateUtil
 import io.coderf.arklab.common.utils.common.MathUtil
+import io.coderf.arklab.demo.impl.GpsCallbackImpl
 import io.coderf.arklab.googlegps.common.GpsSettingConfig
 import io.coderf.arklab.googlegps.common.Session
 import io.coderf.arklab.googlegps.common.GpsCallback
@@ -39,7 +40,9 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
     // 分别管理不同定位方式的停止句柄
     private var stopContinuous: (() -> Unit)? = null
     private var flowJob: Job? = null  // 管理 Flow 的协程任务
-
+    private val gpsCallback by lazy {
+        GpsCallbackImpl(this@GoogleGPSActivity)
+    }
     override fun getLayoutId(): Int {
         return R.layout.activity_google_gps
     }
@@ -156,118 +159,6 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
     companion object {
         public const val STOP_ACTION = "STOP_SERVICE"
         public const val STOP_ACTION_REQUEST_CODE = 110
-    }
-
-    val gpsCallback = object : GpsCallback() {
-
-        override fun getConfig(): GpsSettingConfig {
-            return GpsSettingConfig(application)
-                .setNotificationChannelId(applicationContext.packageName + ".GPSService")
-                .setNotificationChannelName("位置服务")
-                .setNotificationImportance(NotificationManager.IMPORTANCE_HIGH)
-                .setNotificationEnableLights(true)
-                .setNotificationShowBadge(true)
-                .setMinTimeInterval(1000)
-                .setMinDistanceInterval(0.5f)
-                .setFilterLargeJump(true)
-                .setMinAccuracy(100f)
-                .setFilterStaleLocation(true)
-        }
-
-        override fun getNotification(context: Context?): Notification? {
-            if (nfc == null) {
-                val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                val channel = NotificationChannel(
-                    config.notificationChannelId,
-                    config.notificationChannelName,
-                    NotificationManager.IMPORTANCE_HIGH
-                )
-                channel.enableLights(false)
-                channel.enableVibration(false)
-                channel.setSound(null, null)
-                channel.setShowBadge(true)
-                manager.createNotificationChannel(channel)
-                // 创建点击通知打开Activity的Intent
-                val clickIntent =
-                    Intent(this@GoogleGPSActivity, GoogleGPSActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        putExtra("from_notification", true)  // 可选：标记是从通知打开的
-                    }
-                val pendingClickIntent = PendingIntent.getActivity(
-                    this@GoogleGPSActivity,
-                    100,  // 不同的request code
-                    clickIntent,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    } else {
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    }
-                )
-
-                // 创建停止服务的Intent
-                val stopIntent = Intent(this@GoogleGPSActivity, GpsService::class.java).apply {
-                    action = STOP_ACTION
-                }// 自定义Action用于停止服务
-                val pendingStopIntent = PendingIntent.getService(
-                    this@GoogleGPSActivity,
-                    STOP_ACTION_REQUEST_CODE,
-                    stopIntent,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        PendingIntent.FLAG_IMMUTABLE
-                    } else {
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    }
-                )
-                nfc = NotificationCompat.Builder(applicationContext, config.notificationChannelId)
-                    .setSmallIcon(AppManager.getAppManager().getAppIcon(applicationContext))
-                    .setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            resources,
-                            AppManager.getAppManager().getAppIcon(applicationContext)
-                        )
-                    )
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //This hides the notification from lock screen
-                    .setContentTitle(AppManager.getAppManager().getAppName(applicationContext))
-                    .setContentText("开始巡护任务")
-                    .setOngoing(true)
-                    .setOnlyAlertOnce(true)
-                    .setContentIntent(pendingClickIntent)  // 设置点击通知的意图
-                    .addAction(
-                        android.R.drawable.ic_menu_close_clear_cancel,
-                        "结束巡护",
-                        pendingStopIntent
-                    )// 设置按钮图标
-            }
-            if (Session.getInstance()?.currentLocationInfo != null) {
-                val totalPatrolTime =
-                    System.currentTimeMillis() - Session.getInstance().startTimeStamp
-
-                val contentText = Html.fromHtml(
-                    ("经度：<b>" + (MathUtil.round(Session.getInstance()?.currentLongitude ?: 0.0, 6)
-                        ?: "未知") + "</b>   "
-                            + "纬度︰<b>" + (MathUtil.round(
-                        Session.getInstance()?.currentLatitude ?: 0.0, 6
-                    ) ?: "未知") + "</b> <br/>"
-                            + "已巡护里程︰<b>" + (MathUtil.round(
-                        Session.getInstance()?.totalTravelled ?: 0.0, 2
-                    )) + "</b>米   "
-                            + "时间︰<b>" + DateUtil.formatDurationSmart(totalPatrolTime) + "</b>"
-                            ), Html.FROM_HTML_MODE_LEGACY
-                )
-                val contentTitle = "正在巡护"
-                nfc?.setContentTitle(contentTitle)
-                nfc?.setContentText(contentText)
-                nfc?.setStyle(
-                    NotificationCompat.BigTextStyle().bigText(contentText)
-                        .setBigContentTitle(contentTitle)
-                )
-            }
-            return nfc!!.build()
-        }
-
-
     }
 
     override fun onDestroy() {
