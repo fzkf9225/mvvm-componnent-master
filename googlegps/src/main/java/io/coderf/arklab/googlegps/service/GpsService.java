@@ -31,9 +31,9 @@ import io.coderf.arklab.googlegps.logger.FileLoggerFactory;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 import io.coderf.arklab.googlegps.utils.EsriUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * GPS 定位服务
@@ -146,7 +146,12 @@ public class GpsService extends Service {
     /**
      * 位置观察者列表，用于通知外部组件位置更新
      */
-    private final List<Observer<Location>> observers = new ArrayList<>();
+    private final List<Observer<Location>> observers = new CopyOnWriteArrayList<>();
+
+    /**
+     * 最后一次通过过滤并被接受的位置（用于 observer 延迟注册时的补发）
+     */
+    private volatile Location lastAcceptedLocation = null;
 
     /**
      * 添加位置观察者
@@ -154,10 +159,25 @@ public class GpsService extends Service {
      * @param observer 位置观察者
      */
     public void addLocationObserver(Observer<Location> observer) {
-        if (!observers.isEmpty() && observers.contains(observer)) {
+        if (observer == null) {
+            return;
+        }
+        if (observers.contains(observer)) {
             return;
         }
         observers.add(observer);
+
+        // 解决“位置先到、观察者后注册”的竞态：注册时补发最近一次位置
+        final Location last = lastAcceptedLocation;
+        if (last != null) {
+            handler.post(() -> {
+                try {
+                    observer.onChanged(last);
+                } catch (Throwable t) {
+                    LogUtil.logger(TAG, "observer 补发 lastLocation 异常: " + t.getMessage());
+                }
+            });
+        }
     }
 
     /**
@@ -178,8 +198,28 @@ public class GpsService extends Service {
         if (observers.isEmpty()) {
             return;
         }
-        for (Observer<Location> observer : observers) {
-            observer.onChanged(locationUpdate);
+        // 统一投递到主线程，避免不同线程回调导致的时序/并发问题
+        handler.post(() -> {
+            for (Observer<Location> observer : observers) {
+                try {
+                    observer.onChanged(locationUpdate);
+                } catch (Throwable t) {
+                    LogUtil.logger(TAG, "observer 通知异常: " + t.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 统一分发“已接受的位置”：补发缓存、通知 observer、回调外部
+     */
+    private void dispatchAcceptedLocation(Location loc) {
+        lastAcceptedLocation = loc;
+        notifyLocationObservers(loc);
+        try {
+            gpsCallback.onLocationAccepted(loc);
+        } catch (Throwable t) {
+            LogUtil.logger(TAG, "gpsCallback.onLocationAccepted 异常: " + t.getMessage());
         }
     }
 
@@ -253,6 +293,7 @@ public class GpsService extends Service {
         stopLogging();
         // 强制清空，防止 Service 停止后依然持有 Activity 的引用
         observers.clear();
+        lastAcceptedLocation = null;
         super.onDestroy();
     }
 
@@ -628,8 +669,7 @@ public class GpsService extends Service {
         stopManagerAndResetAlarm();
 
         // 通知观察者
-        notifyLocationObservers(loc);
-        gpsCallback.onLocationAccepted(loc);
+        dispatchAcceptedLocation(loc);
         if (gpsCallback.getConfig().getMaxTrackDurationMinutes() > 0 &&
                 (System.currentTimeMillis() - session.getStartTimeStamp()) >= gpsCallback.getConfig().getMaxTrackDurationMinutes() * 60_000L) {
             gpsCallback.toLimitTracking(gpsCallback.getConfig().getMaxTrackDurationMinutes());
@@ -734,7 +774,12 @@ public class GpsService extends Service {
     private void setAlarmForNextPoint() {
         Intent i = new Intent(this, GpsService.class);
         i.putExtra(GpsSettingConfig.GET_NEXT_POINT, true);
-        PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_MUTABLE);
+        PendingIntent pi = PendingIntent.getService(
+                this,
+                0,
+                i,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
         nextPointAlarmManager.cancel(pi);
 
         long triggerTime = SystemClock.elapsedRealtime() + gpsCallback.getConfig().getMinTimeInterval();
@@ -750,7 +795,12 @@ public class GpsService extends Service {
     private void stopAlarm() {
         Intent i = new Intent(this, GpsService.class);
         i.putExtra(GpsSettingConfig.GET_NEXT_POINT, true);
-        PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_MUTABLE);
+        PendingIntent pi = PendingIntent.getService(
+                this,
+                0,
+                i,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
         nextPointAlarmManager.cancel(pi);
     }
 

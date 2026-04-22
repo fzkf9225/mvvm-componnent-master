@@ -39,35 +39,36 @@ public class GpsCallback {
     }
 
     public Notification getNotification(Context context) {
+        final GpsSettingConfig cfg = getConfig();
         if (nfc == null) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(
-                    config.getNotificationChannelId(),
-                    config.getNotificationChannelName()
+                    cfg.getNotificationChannelId(),
+                    cfg.getNotificationChannelName()
                     , NotificationManager.IMPORTANCE_HIGH);
             channel.enableLights(false);
             channel.enableVibration(false);
             channel.setSound(null, null);
             channel.setShowBadge(true);
             manager.createNotificationChannel(channel);
-            nfc = new NotificationCompat.Builder(context, config.getNotificationChannelId())
-                    .setSmallIcon(config.getNotificationSmallIconResId() != 0 ?
-                            config.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(context))
-                    .setLargeIcon(config.getNotificationLargeIconResId() != 0 ?
-                            BitmapFactory.decodeResource(context.getResources(), config.getNotificationLargeIconResId()) :
+            nfc = new NotificationCompat.Builder(context, cfg.getNotificationChannelId())
+                    .setSmallIcon(cfg.getNotificationSmallIconResId() != 0 ?
+                            cfg.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(context))
+                    .setLargeIcon(cfg.getNotificationLargeIconResId() != 0 ?
+                            BitmapFactory.decodeResource(context.getResources(), cfg.getNotificationLargeIconResId()) :
                             BitmapFactory.decodeResource(context.getResources(), AppUtil.getAppManager().getAppIcon(context)))
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setContentTitle(config.getNotificationTitle())
-                    .setContentText(config.getNotificationContent())
-                    .setOngoing(config.isNotificationOngoing())
+                    .setContentTitle(cfg.getNotificationTitle())
+                    .setContentText(cfg.getNotificationContent())
+                    .setOngoing(cfg.isNotificationOngoing())
                     .setOnlyAlertOnce(true);
         }
 
         // 使用固定的标题和内容，不动态更新
-        nfc.setContentTitle(config.getNotificationTitle());
-        nfc.setContentText(config.getNotificationContent());
+        nfc.setContentTitle(cfg.getNotificationTitle());
+        nfc.setContentText(cfg.getNotificationContent());
 
         return nfc.build();
     }
@@ -87,9 +88,10 @@ public class GpsCallback {
      * 日志文件名称
      */
     public String getLogFileName() {
+        final GpsSettingConfig cfg = getConfig();
         if (TextUtils.isEmpty(logFileName)) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-            logFileName = config.getEffectiveFileNamePrefix() + "_" + sdf.format(new Date()) + "." + config.getFileLogType();
+            logFileName = cfg.getEffectiveFileNamePrefix() + "_" + sdf.format(new Date()) + "." + cfg.getFileLogType();
         }
         return logFileName;
     }
