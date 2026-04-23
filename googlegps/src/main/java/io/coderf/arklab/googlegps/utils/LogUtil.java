@@ -27,7 +27,6 @@ public class LogUtil {
     private static boolean sShowThreadInfo = true;
     private static int sMethodCount = 0;
     private static int sMethodOffset = 0;
-    private static String sGlobalTag = GLOBAL_TAG;
 
     // 静态初始化块 - 类加载时自动执行
     static {
@@ -39,7 +38,7 @@ public class LogUtil {
      * 默认配置：显示线程信息、方法层数2层、偏移量1、全局标签"Arklab_Framework"
      */
     public static void init() {
-        init(sShowThreadInfo, sMethodCount, sMethodOffset, sGlobalTag);
+        init(sShowThreadInfo, sMethodCount, sMethodOffset);
     }
 
     /**
@@ -48,14 +47,12 @@ public class LogUtil {
      * @param showThreadInfo 是否显示线程信息
      * @param methodCount    方法调用层数（建议2层，层数过多会导致Logcat视觉压力大）
      * @param methodOffset   跳过封装层数（设置为1可跳过LogUtil这一层，直接定位业务代码）
-     * @param globalTag      全局默认标签
      */
-    public static void init(boolean showThreadInfo, int methodCount, int methodOffset, String globalTag) {
+    public static void init(boolean showThreadInfo, int methodCount, int methodOffset) {
         // 保存配置供重载方法使用
         sShowThreadInfo = showThreadInfo;
         sMethodCount = methodCount;
         sMethodOffset = methodOffset;
-        sGlobalTag = isEmpty(globalTag) ? GLOBAL_TAG : globalTag;
 
         // 避免重复 add 导致同一条日志打印多次
         Logger.clearLogAdapters();
@@ -64,7 +61,6 @@ public class LogUtil {
                 .showThreadInfo(showThreadInfo)      // 显示线程信息
                 .methodCount(methodCount)            // 方法调用层数
                 .methodOffset(methodOffset)          // 跳过封装层数
-                .tag(sGlobalTag)                     // 默认全局标签
                 .build();
 
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
@@ -196,11 +192,11 @@ public class LogUtil {
     }
 
     private static String resolveTag(String tag) {
-        // 配置了全局tag时，统一使用全局tag，避免各业务tag分散
-        if (!isEmpty(sGlobalTag)) {
-            return sGlobalTag;
+        // 如果传入了自定义tag，优先使用自定义tag
+        if (!isEmpty(tag)) {
+            return tag;
         }
-        return isEmpty(tag) ? GLOBAL_TAG : tag;
+        return GLOBAL_TAG;
     }
 
     private static boolean isEmpty(String value) {
