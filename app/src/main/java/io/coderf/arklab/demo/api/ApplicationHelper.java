@@ -52,7 +52,7 @@ public class ApplicationHelper extends BaseApplication {
         Config.getInstance().setResponseBodyLogConverterJson(true);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
-            DebugUtil.enableDebug(true);
+            DebugUtil.enableDebug(this,true);
         }
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()

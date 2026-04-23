@@ -30,17 +30,17 @@ public class GpsSockerUtils {
     public static String getUniqueCode(Context mContext) {
         String deviceId = getDeviceId(mContext);
         if (!TextUtils.isEmpty(deviceId)) {
-            LogUtil.logger(TAG, "deviceId唯一识别号：" + deviceId);
+            LogUtil.loggerI(TAG, "deviceId唯一识别号：" + deviceId);
             return deviceId;
         }
         String mac = getMac().replaceAll(":", "");
         //02:00:00:00:00:00系统默认的mac地址
         if (!TextUtils.isEmpty(mac) && "020000000000".equals(mac)) {
-            LogUtil.logger(TAG, "mac唯一识别号：" + deviceId);
+            LogUtil.loggerI(TAG, "mac唯一识别号：" + deviceId);
             return mac;
         }
         String timestamp = String.valueOf(System.currentTimeMillis()) + new Random().nextInt(999);
-        LogUtil.logger(TAG, "timestamp唯一识别号：" + timestamp);
+        LogUtil.loggerI(TAG, "timestamp唯一识别号：" + timestamp);
         return timestamp;
     }
 
@@ -66,7 +66,7 @@ public class GpsSockerUtils {
             return deviceId;
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.logger(TAG, "获取deviceId异常：" + e);
+            LogUtil.loggerI(TAG, "获取deviceId异常：" + e);
         }
         return "";
     }

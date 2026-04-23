@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.location.Location
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -93,28 +96,38 @@ class GpsStarter(
     /** GPS 回调配置 */
     private var gpsCallback: GpsCallback? = null
 
-    /**
-     * Service连接回调
-     *
-     * <p>当服务连接成功时，获取服务实例并设置回调配置，
-     * 同时注册所有待处理的位置观察者。</p>
-     */
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            gpsService = (service as? GpsService.GpsBinder)?.service
-            gpsCallback?.let {
-                (service as? GpsService.GpsBinder)?.setGpsOptions(it)
-            }
-            gpsService?.let {
-                locationObservers.forEach { observer ->
-                    gpsService?.addLocationObserver(observer)
-                }
-            }
-        }
+    private val reconnectHandler = Handler(Looper.getMainLooper())
+    private var reconnectFailCount = 0
+    private val reconnectDelaysMs = longArrayOf(1000L, 3000L, 10000L, 10000L, 10000L)
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            gpsService = null
-            serviceBound = false
+    /** 仅用于 removeCallbacks/postDelayed，具体逻辑在 [performServiceReconnectAttempt] */
+    private val reconnectRunnable = Runnable { performServiceReconnectAttempt() }
+
+    private lateinit var serviceConnection: ServiceConnection
+
+    private fun scheduleServiceReconnect() {
+        if (!isRunning || serviceBound) return
+        if (reconnectFailCount >= reconnectDelaysMs.size) return
+        reconnectHandler.removeCallbacks(reconnectRunnable)
+        val delay = reconnectDelaysMs[reconnectFailCount]
+        reconnectHandler.postDelayed(reconnectRunnable, delay)
+    }
+
+    private fun performServiceReconnectAttempt() {
+        if (!isRunning || serviceBound) return
+        if (reconnectFailCount >= reconnectDelaysMs.size) {
+            Log.e(TAG, "GpsService reconnect aborted after $reconnectFailCount failed attempts")
+            return
+        }
+        try {
+            val intent = buildServiceIntent(currentOnceMode)
+            context.startForegroundService(intent)
+            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            serviceBound = true
+        } catch (e: Exception) {
+            Log.w(TAG, "Reconnect attempt failed: ${e.message}")
+            reconnectFailCount++
+            scheduleServiceReconnect()
         }
     }
 
@@ -148,6 +161,30 @@ class GpsStarter(
     )
 
     init {
+        serviceConnection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                reconnectFailCount = 0
+                reconnectHandler.removeCallbacks(reconnectRunnable)
+                gpsService = (service as? GpsService.GpsBinder)?.service
+                gpsCallback?.let {
+                    (service as? GpsService.GpsBinder)?.setGpsOptions(it)
+                }
+                gpsService?.let { svc ->
+                    locationObservers.forEach { observer ->
+                        svc.addLocationObserver(observer)
+                    }
+                }
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                gpsService = null
+                serviceBound = false
+                if (isRunning) {
+                    scheduleServiceReconnect()
+                }
+            }
+        }
+
         // 在初始化时就注册 LifecycleObserver，避免生命周期状态问题
         gpsObserver = GpsLifecycleObserver(
             activity = lifecycleOwner as? ComponentActivity,
@@ -324,6 +361,8 @@ class GpsStarter(
 
         locationObservers.add(locationObserver)
         isRunning = true
+        reconnectFailCount = 0
+        reconnectHandler.removeCallbacks(reconnectRunnable)
         startServiceAndBind(gpsCallback, request.once)
         clearPendingRequest()
     }
@@ -365,14 +404,23 @@ class GpsStarter(
      * @param gpsCallback GPS回调配置
      * @param once 是否为单次定位模式
      */
-    private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
+    private fun buildServiceIntent(once: Boolean): Intent {
         val intent = Intent(context, GpsService::class.java)
         if (once) {
             intent.putExtra("once", true)
         }
+        return intent
+    }
+
+    private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
+        val intent = buildServiceIntent(once)
         context.startForegroundService(intent)
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         serviceBound = true
+    }
+
+    companion object {
+        private const val TAG = "GpsStarter"
     }
 
     /**
@@ -424,6 +472,8 @@ class GpsStarter(
      * <p>移除位置观察者、解绑服务、停止服务。</p>
      */
     private fun cleanup() {
+        reconnectHandler.removeCallbacks(reconnectRunnable)
+        reconnectFailCount = 0
         // 移除所有位置观察者
         locationObservers.forEach {
             gpsService?.removeLocationObserver(it)

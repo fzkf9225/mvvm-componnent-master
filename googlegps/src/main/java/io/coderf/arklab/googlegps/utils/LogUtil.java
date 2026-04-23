@@ -55,13 +55,16 @@ public class LogUtil {
         sShowThreadInfo = showThreadInfo;
         sMethodCount = methodCount;
         sMethodOffset = methodOffset;
-        sGlobalTag = globalTag;
+        sGlobalTag = isEmpty(globalTag) ? GLOBAL_TAG : globalTag;
+
+        // 避免重复 add 导致同一条日志打印多次
+        Logger.clearLogAdapters();
 
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(showThreadInfo)      // 显示线程信息
                 .methodCount(methodCount)            // 方法调用层数
                 .methodOffset(methodOffset)          // 跳过封装层数
-                .tag(globalTag)                      // 默认全局标签
+                .tag(sGlobalTag)                     // 默认全局标签
                 .build();
 
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
@@ -80,74 +83,74 @@ public class LogUtil {
 
     public static void loggerV(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Logger.t(tag).v(str);
+        Logger.t(resolveTag(tag)).v(str);
     }
 
     public static void v(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Log.v(tag, str);
+        Log.v(resolveTag(tag), str);
     }
 
     // ==================== Debug 级别（仅Debug模式） ====================
 
     public static void loggerD(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Logger.t(tag).d(str);
+        Logger.t(resolveTag(tag)).d(str);
     }
 
     public static void d(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Log.d(tag, str);
+        Log.d(resolveTag(tag), str);
     }
 
     public static void logger(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Logger.t(tag).d(str); // Logger内部默认logger即为debug
+        Logger.t(resolveTag(tag)).d(str); // Logger内部默认logger即为debug
     }
 
     public static void show(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Log.d(tag, str);
+        Log.d(resolveTag(tag), str);
     }
 
     // ==================== Info 级别（仅Debug模式） ====================
 
     public static void loggerI(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Logger.t(tag).i(str);
+        Logger.t(resolveTag(tag)).i(str);
     }
 
     public static void i(String tag, String str) {
         if (!DebugUtil.enableDebug) return;
-        Log.i(tag, str);
+        Log.i(resolveTag(tag), str);
     }
 
     // ==================== Warn 级别（始终记录） ====================
 
     public static void loggerW(String tag, String msg) {
-        Logger.t(tag).w(msg);
+        Logger.t(resolveTag(tag)).w(msg);
     }
 
     public static void w(String tag, String msg) {
-        Log.w(tag, msg);
+        Log.w(resolveTag(tag), msg);
     }
 
     public static void loggerW(String tag, String msg, Throwable throwable) {
-        Logger.t(tag).w(msg, throwable);
+        Logger.t(resolveTag(tag)).w(msg, throwable);
     }
 
     public static void w(String tag, String msg, Throwable throwable) {
-        Log.w(tag, msg, throwable);
+        Log.w(resolveTag(tag), msg, throwable);
     }
 
     // ==================== Error 级别（始终记录） ====================
 
     public static void e(String tag, String error) {
-        Log.e(tag, error);
+        Log.e(resolveTag(tag), error);
     }
 
     public static void loggerE(String tag, String error) {
-        Logger.t(tag).e(error);
+        Logger.t(resolveTag(tag)).e(error);
     }
 
     public static void e(Throwable exception) {
@@ -156,11 +159,11 @@ public class LogUtil {
     }
 
     public static void loggerE(String tag, String msg, Throwable throwable) {
-        Logger.t(tag).e(throwable, msg);
+        Logger.t(resolveTag(tag)).e(throwable, msg);
     }
 
     public static void e(String tag, String msg, Throwable throwable) {
-        Log.e(tag, msg, throwable);
+        Log.e(resolveTag(tag), msg, throwable);
     }
 
     // ==================== 特殊格式日志（仅Debug模式） ====================
@@ -179,7 +182,7 @@ public class LogUtil {
      */
     public static void json(String tag,String json) {
         if (!DebugUtil.enableDebug) return;
-        Logger.t(tag).json(json);
+        Logger.t(resolveTag(tag)).json(json);
     }
 
     public static void xml(String xml) {
@@ -189,6 +192,18 @@ public class LogUtil {
 
     public static void xml(String tag,String xml) {
         if (!DebugUtil.enableDebug) return;
-        Logger.xml(xml);
+        Logger.t(resolveTag(tag)).xml(xml);
+    }
+
+    private static String resolveTag(String tag) {
+        // 配置了全局tag时，统一使用全局tag，避免各业务tag分散
+        if (!isEmpty(sGlobalTag)) {
+            return sGlobalTag;
+        }
+        return isEmpty(tag) ? GLOBAL_TAG : tag;
+    }
+
+    private static boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

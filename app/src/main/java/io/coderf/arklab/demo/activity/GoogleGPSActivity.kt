@@ -19,18 +19,11 @@ import io.coderf.arklab.demo.bean.UseCase
 import io.coderf.arklab.demo.databinding.ActivityGoogleGpsBinding
 import io.coderf.arklab.demo.viewmodel.GoogleGpsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.coderf.arklab.common.api.AppManager
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.MathUtil
 import io.coderf.arklab.demo.impl.GpsCallbackImpl
-import io.coderf.arklab.googlegps.common.GpsSettingConfig
-import io.coderf.arklab.googlegps.common.Session
-import io.coderf.arklab.googlegps.common.GpsCallback
 import io.coderf.arklab.googlegps.common.GpsStarter
-import io.coderf.arklab.googlegps.service.GpsService
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {
@@ -54,6 +47,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
     override fun initView(savedInstanceState: Bundle?) {
         binding.setGoogleGPSViewModel(mViewModel)
         gpsStarter = GpsStarter(this, this)
+        setupHighPowerModeUi()
         binding.checkPermission.setOnClickListener { v: View? ->
             gpsStarter.checkPermissionsOnly { bool, message ->
                 binding.tvMessage.text = "权限检测结果：$bool, $message"
@@ -63,6 +57,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         binding.startService.setOnClickListener { v: View? ->
             flowJob?.cancel()
             gpsStarter.stop()
+            applyHighPowerConfigFromUi()
             binding.tvMessage.text = "正在开启service服务..."
             // 直接调用 startLocationFlow
             flowJob = gpsStarter.startLocationFlow(
@@ -88,6 +83,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         binding.startServiceOnce.setOnClickListener { v: View? ->
             // 先停止其他定位方式
             stopAllLocation()
+            applyHighPowerConfigFromUi()
 
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             gpsStarter.getSingleLocation { location ->
@@ -99,6 +95,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         binding.startServiceAlways.setOnClickListener { v: View? ->
             // 先停止其他定位方式
             stopAllLocation()
+            applyHighPowerConfigFromUi()
 
             binding.tvMessage.text = "正在开启监听，等待结果返回"
             stopContinuous = gpsStarter.startContinuousLocation { location ->
@@ -130,6 +127,32 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         // 取消 Flow 协程
         flowJob?.cancel()
         flowJob = null
+    }
+
+    private fun setupHighPowerModeUi() {
+        binding.switchHighPower.isChecked = GpsCallbackImpl.HIGH_POWER_MODE_ENABLED
+        binding.rgInterval.isEnabled = binding.switchHighPower.isChecked
+        setIntervalOptionsEnabled(binding.switchHighPower.isChecked)
+        binding.switchHighPower.setOnCheckedChangeListener { _, isChecked ->
+            setIntervalOptionsEnabled(isChecked)
+            val mode = if (isChecked) "高功耗" else "低功耗"
+            binding.tvMessage.text = "当前定位模式：$mode"
+        }
+    }
+
+    private fun setIntervalOptionsEnabled(enabled: Boolean) {
+        binding.rbInterval500ms.isEnabled = enabled
+        binding.rbInterval1s.isEnabled = enabled
+        binding.rbInterval2s.isEnabled = enabled
+    }
+
+    private fun applyHighPowerConfigFromUi() {
+        val intervalMillis = when (binding.rgInterval.checkedRadioButtonId) {
+            R.id.rb_interval_500ms -> 500L
+            R.id.rb_interval_2s -> 2000L
+            else -> 1000L
+        }
+        gpsCallback.updateHighPowerMode(binding.switchHighPower.isChecked, intervalMillis)
     }
 
     private fun formatLocation(location: Location?): String {

@@ -100,36 +100,40 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param loc 新的位置对象
      */
     @Override
-    public void onLocationChanged(Location loc) {
-        LogUtil.logger(GpsService.TAG, "位置变化回调: " + loc);
+    public void onLocationChanged(@NonNull Location loc) {
+        LogUtil.loggerI(GpsService.TAG, "位置变化回调: " + loc);
         try {
-            if (loc != null) {
-                Bundle b = new Bundle();
-                // 附加从 NMEA 解析出的精度因子数据
-                b.putString(GpsSettingConfig.HDOP, this.latestHdop);
-                b.putString(GpsSettingConfig.PDOP, this.latestPdop);
-                b.putString(GpsSettingConfig.VDOP, this.latestVdop);
-                b.putString(GpsSettingConfig.GEOIDHEIGHT, this.geoIdHeight);
-                b.putString(GpsSettingConfig.AGEOFDGPSDATA, this.ageOfDgpsData);
-                b.putString(GpsSettingConfig.DGPSID, this.dgpsId);
+            Bundle b = getBundle();
+            b.putInt(GpsSettingConfig.SATELLITES_FIX, satellitesUsedInFix);
 
-                // 附加监听器元数据
-                b.putBoolean(GpsSettingConfig.PASSIVE, listenerName.equalsIgnoreCase(GpsSettingConfig.PASSIVE));
-                b.putString(GpsSettingConfig.LISTENER, listenerName);
-                b.putInt(GpsSettingConfig.SATELLITES_FIX, satellitesUsedInFix);
+            loc.setExtras(b);
+            loggingService.onLocationChanged(loc);
 
-                loc.setExtras(b);
-                loggingService.onLocationChanged(loc);
-
-                // 清空已使用的 NMEA 数据，等待下一次更新
-                this.latestHdop = "";
-                this.latestPdop = "";
-                this.latestVdop = "";
-            }
+            // 清空已使用的 NMEA 数据，等待下一次更新
+            this.latestHdop = "";
+            this.latestPdop = "";
+            this.latestVdop = "";
 
         } catch (Exception ex) {
-            LogUtil.logger(GpsService.TAG, "位置变化回调异常: " + ex);
+            LogUtil.loggerI(GpsService.TAG, "位置变化回调异常: " + ex);
         }
+    }
+
+    @NonNull
+    private Bundle getBundle() {
+        Bundle b = new Bundle();
+        // 附加从 NMEA 解析出的精度因子数据
+        b.putString(GpsSettingConfig.HDOP, this.latestHdop);
+        b.putString(GpsSettingConfig.PDOP, this.latestPdop);
+        b.putString(GpsSettingConfig.VDOP, this.latestVdop);
+        b.putString(GpsSettingConfig.GEOIDHEIGHT, this.geoIdHeight);
+        b.putString(GpsSettingConfig.AGEOFDGPSDATA, this.ageOfDgpsData);
+        b.putString(GpsSettingConfig.DGPSID, this.dgpsId);
+
+        // 附加监听器元数据
+        b.putBoolean(GpsSettingConfig.PASSIVE, listenerName.equalsIgnoreCase(GpsSettingConfig.PASSIVE));
+        b.putString(GpsSettingConfig.LISTENER, listenerName);
+        return b;
     }
 
     /**
@@ -140,7 +144,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     @Override
     public void onStopped() {
         super.onStopped();
-        LogUtil.logger(GpsService.TAG, "GNSS 定位已停止");
+        LogUtil.loggerI(GpsService.TAG, "GNSS 定位已停止");
         loggingService.restartGpsManagers();
     }
 
@@ -152,7 +156,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param provider 被禁用的定位提供者（如 "gps" 或 "network"）
      */
     public void onProviderDisabled(@NonNull String provider) {
-        LogUtil.logger(GpsService.TAG, "定位提供者已禁用: " + provider);
+        LogUtil.loggerI(GpsService.TAG, "定位提供者已禁用: " + provider);
         loggingService.restartGpsManagers();
     }
 
@@ -164,7 +168,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param provider 被启用的定位提供者（如 "gps" 或 "network"）
      */
     public void onProviderEnabled(@NonNull String provider) {
-        LogUtil.logger(GpsService.TAG, "定位提供者已启用: " + provider);
+        LogUtil.loggerI(GpsService.TAG, "定位提供者已启用: " + provider);
         loggingService.restartGpsManagers();
     }
 
@@ -178,17 +182,17 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      * @param extras   附加信息
      */
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        LogUtil.logger(GpsService.TAG, "定位提供者状态变化: " + provider);
+        LogUtil.loggerI(GpsService.TAG, "定位提供者状态变化: " + provider);
         if (status == LocationProvider.OUT_OF_SERVICE) {
-            LogUtil.logger(GpsService.TAG, provider + " 服务已中断");
+            LogUtil.loggerI(GpsService.TAG, provider + " 服务已中断");
         }
 
         if (status == LocationProvider.AVAILABLE) {
-            LogUtil.logger(GpsService.TAG, provider + " 已可用");
+            LogUtil.loggerI(GpsService.TAG, provider + " 已可用");
         }
 
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-            LogUtil.logger(GpsService.TAG, provider + " 临时不可用");
+            LogUtil.loggerI(GpsService.TAG, provider + " 临时不可用");
         }
     }
 
@@ -202,7 +206,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
     @Override
     public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
         super.onSatelliteStatusChanged(status);
-        LogUtil.logger(GpsService.TAG, "卫星状态变化:" + status.toString());
+        LogUtil.loggerI(GpsService.TAG, "卫星状态变化:" + status.toString());
         int maxSatellites = status.getSatelliteCount();
         loggingService.setSatelliteInfo(maxSatellites);
     }
@@ -218,7 +222,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      */
     @Override
     public void onNmeaMessage(String message, long timestamp) {
-        LogUtil.logger(GpsService.TAG, "NMEA 消息:" + message + ", 时间戳：" + timestamp);
+        LogUtil.loggerI(GpsService.TAG, "NMEA 消息:" + message + ", 时间戳：" + timestamp);
         loggingService.onNmeaSentence(timestamp, message);
         if (message == null || message.isEmpty()) {
             return;

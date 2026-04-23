@@ -36,6 +36,13 @@ import java.util.Locale
 class GpsCallbackImpl (val activity: GoogleGPSActivity):GpsCallback() {
     private var gpsSettingConfig: GpsSettingConfig? = null
 
+    companion object {
+        // 高功耗模式默认关闭，保持现有低功耗闹钟策略
+        const val HIGH_POWER_MODE_ENABLED = true
+        // 高功耗模式下可改为 500L / 1000L / 2000L 等
+        const val HIGH_POWER_INTERVAL_MS = 1000L
+    }
+
     override fun getConfig(): GpsSettingConfig {
         if (gpsSettingConfig == null) {
             gpsSettingConfig = GpsSettingConfig(activity.application)
@@ -49,12 +56,20 @@ class GpsCallbackImpl (val activity: GoogleGPSActivity):GpsCallback() {
                 .setFileLogEnabled(true)
                 .setCustomFileNamePrefix("gps_track")
                 .setMinTimeInterval(2000)
-                .setMinDistanceInterval(1f)
+                .setMinDistanceInterval(0f)
                 .setFilterLargeJump(true)
-                .setMinAccuracy(100f)
+                .setMinAccuracy(200f)
                 .setFilterStaleLocation(true)
+                .setHighPowerMode(HIGH_POWER_MODE_ENABLED, HIGH_POWER_INTERVAL_MS)
         }
         return gpsSettingConfig!!
+    }
+
+    /**
+     * 运行时更新高功耗模式配置
+     */
+    fun updateHighPowerMode(enabled: Boolean, intervalMillis: Long) {
+        config.setHighPowerMode(enabled, intervalMillis)
     }
 
     override fun getNotification(context: Context?): Notification? {

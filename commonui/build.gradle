@@ -129,7 +129,7 @@ afterEvaluate {
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.ui'
                 artifactId = 'ui'
-                version = '3.0.0'
+                version = '3.0.1'
             }
         }
         repositories {

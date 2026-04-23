@@ -42,6 +42,10 @@ public class GpsSettingConfig {
     // ========== 定位频率配置 ==========
     /** 最小定位时间间隔（毫秒），默认 1 秒 */
     private long minTimeInterval = 1000L;
+    /** 高功耗连续定位模式开关，默认 false（保持原有闹钟模式） */
+    private boolean highPowerModeEnabled = false;
+    /** 高功耗连续定位间隔（毫秒），默认 1000ms */
+    private long highPowerIntervalMillis = 1000L;
     /** 最小距离间隔（米），0 表示不限制，默认 0 */
     private float minDistanceInterval = 0f;
 
@@ -339,6 +343,41 @@ public class GpsSettingConfig {
 
     public GpsSettingConfig setMinTimeInterval(long minTimeIntervalMillis) {
         this.minTimeInterval = minTimeIntervalMillis;
+        return this;
+    }
+
+    public boolean isHighPowerModeEnabled() {
+        return highPowerModeEnabled;
+    }
+
+    public GpsSettingConfig setHighPowerModeEnabled(boolean highPowerModeEnabled) {
+        this.highPowerModeEnabled = highPowerModeEnabled;
+        return this;
+    }
+
+    public long getHighPowerIntervalMillis() {
+        return highPowerIntervalMillis;
+    }
+
+    public GpsSettingConfig setHighPowerIntervalMillis(long highPowerIntervalMillis) {
+        if (highPowerIntervalMillis < 200L) {
+            this.highPowerIntervalMillis = 200L;
+        } else {
+            this.highPowerIntervalMillis = highPowerIntervalMillis;
+        }
+        return this;
+    }
+
+    /**
+     * 设置高功耗连续定位模式（默认关闭）
+     *
+     * @param enabled 是否启用高功耗连续定位
+     * @param intervalMillis 连续定位间隔（毫秒），如 500/1000/2000
+     * @return this
+     */
+    public GpsSettingConfig setHighPowerMode(boolean enabled, long intervalMillis) {
+        this.highPowerModeEnabled = enabled;
+        setHighPowerIntervalMillis(intervalMillis);
         return this;
     }
 

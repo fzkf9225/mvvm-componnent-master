@@ -8,9 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -65,25 +70,39 @@ public class LogcatHelper {
     }
 
     private static class LogDumper extends Thread {
+        private static final Set<String> ALLOWED_LEVELS = new HashSet<>();
+        private static final Pattern THREADTIME_PATTERN = Pattern.compile(
+                "^\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+(\\d+)\\s+\\d+\\s+([VDIWEAF])\\s+.*$"
+        );
 
         private Process logcatProc;
         private BufferedReader mReader = null;
         private boolean mRunning = true;
-        private final String cmds;
+        private final String[] cmds;
         private final String mPID;
         private FileOutputStream out = null;
+
+        static {
+            ALLOWED_LEVELS.add("E");
+            ALLOWED_LEVELS.add("I");
+            ALLOWED_LEVELS.add("W");
+        }
 
         public LogDumper(String pid, String dir) {
             mPID = pid;
             try {
+                File logDir = new File(dir);
+                if (!logDir.exists()) {
+                    boolean ignored = logDir.mkdirs();
+                }
                 Calendar calendar = Calendar.getInstance();
 
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                String today = String.format(Locale.getDefault(),"%d-%02d-%02d", year, month, day);
-                out = new FileOutputStream(new File(dir, "gps-log-" + today + ".log"));
+                String today = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, day);
+                out = new FileOutputStream(new File(logDir, "gps-log-" + today + ".log"), true);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -96,10 +115,7 @@ public class LogcatHelper {
              *
              * */
 
-            // cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";
-            // cmds = "logcat  | grep \"(" + mPID + ")\"";//打印所有日志信息
-            // cmds = "logcat -s way";//打印标签过滤信息
-            cmds = "logcat *:e *:i | grep \"(" + mPID + ")\"";
+            cmds = new String[]{"logcat", "-v", "threadtime"};
 
         }
 
@@ -112,7 +128,7 @@ public class LogcatHelper {
             try {
                 logcatProc = Runtime.getRuntime().exec(cmds);
                 mReader = new BufferedReader(new InputStreamReader(
-                        logcatProc.getInputStream()), 1024);
+                        logcatProc.getInputStream(), StandardCharsets.UTF_8), 1024);
                 String line;
                 while (mRunning && (line = mReader.readLine()) != null) {
                     if (!mRunning) {
@@ -121,8 +137,9 @@ public class LogcatHelper {
                     if (line.isEmpty()) {
                         continue;
                     }
-                    if (out != null && line.contains(mPID)) {
-                        out.write((line + "\n").getBytes());
+                    if (out != null && shouldWrite(line)) {
+                        out.write((line + "\n").getBytes(StandardCharsets.UTF_8));
+                        out.flush();
                     }
                 }
 
@@ -152,6 +169,16 @@ public class LogcatHelper {
 
             }
 
+        }
+
+        private boolean shouldWrite(String line) {
+            Matcher matcher = THREADTIME_PATTERN.matcher(line);
+            if (!matcher.matches()) {
+                return false;
+            }
+            String pid = matcher.group(1);
+            String level = matcher.group(2);
+            return mPID.equals(pid) && ALLOWED_LEVELS.contains(level);
         }
 
     }

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,6 +42,47 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_high_power"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="高功耗连续定位模式"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/check_permission" />
+
+            <RadioGroup
+                android:id="@+id/rg_interval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switch_high_power">
+
+                <RadioButton
+                    android:id="@+id/rb_interval_500ms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="500ms" />
+
+                <RadioButton
+                    android:id="@+id/rb_interval_1s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="1s" />
+
+                <RadioButton
+                    android:id="@+id/rb_interval_2s"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2s" />
+            </RadioGroup>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/startService"
                 android:layout_width="wrap_content"
@@ -51,7 +92,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/check_permission" />
+                app:layout_constraintTop_toBottomOf="@+id/rg_interval" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/endService"

@@ -186,7 +186,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.common'
                 artifactId = 'common'
-                version = '4.0.0'
+                version = '4.0.1'
             }
         }
 
