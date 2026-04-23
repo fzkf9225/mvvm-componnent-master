@@ -20,13 +20,14 @@ import com.orhanobut.logger.PrettyFormatStrategy;
  */
 public class LogUtil {
 
-    private final static String GLOBAL_TAG = "GpsService";
+    private final static String GLOBAL_TAG = "ArkLab";
 
 
     // 默认配置参数
     private static boolean sShowThreadInfo = true;
     private static int sMethodCount = 0;
     private static int sMethodOffset = 0;
+    private static String sGlobalTag = GLOBAL_TAG;
 
     // 静态初始化块 - 类加载时自动执行
     static {
@@ -35,10 +36,10 @@ public class LogUtil {
 
     /**
      * 初始化Logger库（使用默认配置）
-     * 默认配置：显示线程信息、方法层数2层、偏移量1、全局标签"Arklab_Framework"
+     * 默认配置：显示线程信息、方法层数2层、偏移量1、全局标签"GpsService"
      */
     public static void init() {
-        init(sShowThreadInfo, sMethodCount, sMethodOffset);
+        init(sShowThreadInfo, sMethodCount, sMethodOffset, sGlobalTag);
     }
 
     /**
@@ -47,12 +48,14 @@ public class LogUtil {
      * @param showThreadInfo 是否显示线程信息
      * @param methodCount    方法调用层数（建议2层，层数过多会导致Logcat视觉压力大）
      * @param methodOffset   跳过封装层数（设置为1可跳过LogUtil这一层，直接定位业务代码）
+     * @param globalTag      全局默认标签
      */
-    public static void init(boolean showThreadInfo, int methodCount, int methodOffset) {
+    public static void init(boolean showThreadInfo, int methodCount, int methodOffset, String globalTag) {
         // 保存配置供重载方法使用
         sShowThreadInfo = showThreadInfo;
         sMethodCount = methodCount;
         sMethodOffset = methodOffset;
+        sGlobalTag = isEmpty(globalTag) ? GLOBAL_TAG : globalTag;
 
         // 避免重复 add 导致同一条日志打印多次
         Logger.clearLogAdapters();
@@ -61,6 +64,7 @@ public class LogUtil {
                 .showThreadInfo(showThreadInfo)      // 显示线程信息
                 .methodCount(methodCount)            // 方法调用层数
                 .methodOffset(methodOffset)          // 跳过封装层数
+                .tag(sGlobalTag)                     // 默认全局标签
                 .build();
 
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
