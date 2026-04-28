@@ -319,6 +319,16 @@ public class GpsService extends Service {
     protected void startLogging() {
         LogUtil.loggerI(TAG, "-------------------开始记录位置--------------------");
 
+        // 已在同一次 Service 生命周期中启动时，不要重复初始化会话，
+        // 避免因重复 startService 导致 session 里的运行态数据被重置。
+        if (session.isStarted()) {
+            LogUtil.loggerI(TAG, "会话已在运行，跳过重新初始化，仅确保定位管理器处于工作状态");
+            showNotification();
+            startPassiveManager();
+            restartGpsManagers();
+            return;
+        }
+
         // 根据配置初始化文件记录器
         if (gpsCallback.getConfig().isFileLogEnabled()) {
             String fileType = gpsCallback.getConfig().getFileLogType();
