@@ -61,6 +61,10 @@ class GpsCallbackImpl (val activity: GoogleGPSActivity):GpsCallback() {
                 .setMinAccuracy(200f)
                 .setFilterStaleLocation(true)
                 .setHighPowerMode(HIGH_POWER_MODE_ENABLED, HIGH_POWER_INTERVAL_MS)
+                .setEnableStationaryJitterFilter(true)
+                .setStationaryMinDurationSeconds(60)
+                .setStationaryMinMoveMeters(20f)
+                .setStationaryRadiusMeters(10f)
         }
         return gpsSettingConfig!!
     }

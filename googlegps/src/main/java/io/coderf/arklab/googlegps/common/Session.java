@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2016 mendhak
- *
- * This file is part of GPSLogger for Android.
- *
- * GPSLogger for Android is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * GPSLogger for Android is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GPSLogger for Android.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package io.coderf.arklab.googlegps.common;
 
 import android.location.Location;
@@ -43,6 +24,8 @@ public class Session {
 
     /** 在获取最佳精度过程中临时保存的最佳精度位置 */
     private Location temporaryLocationForBestAccuracy;
+    /** 静止抖动过滤使用的锚点位置 */
+    private Location stationaryAnchorLocation;
 
     /** 所有记录的轨迹点列表 */
     private final List<Location> locationHistory = new ArrayList<>();
@@ -99,6 +82,8 @@ public class Session {
 
     /** 首次重试获取位置的时间戳（用于精度超时重试） */
     private long firstRetryTimeStamp = 0;
+    /** 静止状态的起始时间戳（用于静止抖动过滤） */
+    private long stationarySinceTimeStamp = 0;
 
     // ========== 数值 ==========
 
@@ -113,6 +98,8 @@ public class Session {
 
     /** 自动发送延迟（秒） */
     private float autoSendDelay = 0;
+    /** 当前是否已进入静止抖动抑制状态 */
+    private boolean inStationaryState = false;
 
     // ========== 字符串 ==========
 
@@ -251,9 +238,12 @@ public class Session {
         previousLocationInfo = null;
         currentLocationInfo = null;
         temporaryLocationForBestAccuracy = null;
+        stationaryAnchorLocation = null;
 
         // ========== 轨迹点历史记录 ==========
         locationHistory.clear();
+        stationarySinceTimeStamp = 0;
+        inStationaryState = false;
 
         // 注意：startTimeStamp 不应该被重置，因为它是会话开始时间
         // 如果需要在 reset 时也重置，可以添加：startTimeStamp = 0;
@@ -814,5 +804,29 @@ public class Session {
      */
     public void setTemporaryLocationForBestAccuracy(Location loc) {
         this.temporaryLocationForBestAccuracy = loc;
+    }
+
+    public Location getStationaryAnchorLocation() {
+        return stationaryAnchorLocation;
+    }
+
+    public void setStationaryAnchorLocation(Location stationaryAnchorLocation) {
+        this.stationaryAnchorLocation = stationaryAnchorLocation;
+    }
+
+    public long getStationarySinceTimeStamp() {
+        return stationarySinceTimeStamp;
+    }
+
+    public void setStationarySinceTimeStamp(long stationarySinceTimeStamp) {
+        this.stationarySinceTimeStamp = stationarySinceTimeStamp;
+    }
+
+    public boolean isInStationaryState() {
+        return inStationaryState;
+    }
+
+    public void setInStationaryState(boolean inStationaryState) {
+        this.inStationaryState = inStationaryState;
     }
 }

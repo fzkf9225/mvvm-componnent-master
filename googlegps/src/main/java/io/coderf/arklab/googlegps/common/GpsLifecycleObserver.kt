@@ -131,9 +131,10 @@ class GpsLifecycleObserver constructor(
         val isOpenGps: Boolean = isOpen(context!!)
         if (!isOpenGps) {
             //未打开GPS
-            GPSConfirmDialog(context!!)
-                .setMessage("GPS未打开，是否前往设置打开")
-                .setPositiveText("前往打开")
+            configuredDialog()
+                .setMessage(configOrDefault(GpsSettingConfig.getInstance().gpsEnableDialogMessage, "GPS未打开，是否前往设置打开"))
+                .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().gpsEnablePositiveText, "前往打开"))
+                .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().gpsEnableNegativeText, "取消"))
                 .setCanOutSide(false)
                 .setOnNegativeClickListener {
                     callback(false, "请先打开GPS")
@@ -172,9 +173,10 @@ class GpsLifecycleObserver constructor(
                     *GpsSettingConfig.PERMISSIONS_LOCATION
                 )
         ) {
-            GPSConfirmDialog(context!!)
-                .setMessage("使用该功能需要您同意授权定位权限,并建议到系统设置中将“位置信息”修改为“始终允许”,若定位失败可以前往设置中手动开启")
-                .setPositiveText("授权")
+            configuredDialog()
+                .setMessage(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionDialogMessage, "使用该功能需要您同意授权定位权限,并建议到系统设置中将“位置信息”修改为“始终允许”,若定位失败可以前往设置中手动开启"))
+                .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionPositiveText, "授权"))
+                .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionNegativeText, "取消"))
                 .setCanOutSide(false)
                 .setOnNegativeClickListener {
                     callback(false, "请同意定位权限，否则无法获取经纬度信息")
@@ -226,10 +228,10 @@ class GpsLifecycleObserver constructor(
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
             ) {
-                GPSConfirmDialog(context!!)
-                    .setMessage("为了您更好的体验，应用需要访问后台定位权限，需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”")
-                    .setPositiveText("前往设置")
-                    .setNegativeText("稍后再说")
+                configuredDialog()
+                    .setMessage(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionDialogMessage, "为了您更好的体验，应用需要访问后台定位权限，需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”"))
+                    .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionPositiveText, "前往设置"))
+                    .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionNegativeText, "稍后再说"))
                     .setCanOutSide(false)
                     .setOnNegativeClickListener {
                         callback(true, "后台定位权限被拒绝")
@@ -248,6 +250,14 @@ class GpsLifecycleObserver constructor(
             return
         }
         callback(true, "已授权")
+    }
+
+    private fun configuredDialog(): GPSConfirmDialog {
+        return GPSConfirmDialog(context!!).applySettingConfig(GpsSettingConfig.getInstance())
+    }
+
+    private fun configOrDefault(value: String?, defaultValue: String): String {
+        return if (value.isNullOrBlank()) defaultValue else value
     }
 
 

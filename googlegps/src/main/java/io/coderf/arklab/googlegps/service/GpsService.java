@@ -115,11 +115,6 @@ public class GpsService extends Service {
     private Session session;
 
     /**
-     * 开始记录时间戳（毫秒）
-     */
-    private Long startTime = null;
-
-    /**
      * 主线程处理器，用于延时任务
      */
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -329,6 +324,10 @@ public class GpsService extends Service {
             return;
         }
 
+        // 每次新会话启动前统一清空 Session 运行态，
+        // 确保单例 Session 在不同 Service 启停之间不会残留状态。
+        session.reset();
+
         // 根据配置初始化文件记录器
         if (gpsCallback.getConfig().isFileLogEnabled()) {
             String fileType = gpsCallback.getConfig().getFileLogType();
@@ -342,13 +341,8 @@ public class GpsService extends Service {
             LogUtil.loggerI(TAG, "文件记录已禁用");
         }
 
-        // 重置会话状态
+        // 标记新会话已启动
         session.setStarted(true);
-        session.setAddNewTrackSegment(true);
-        session.setTotalTravelled(0);
-        session.setPreviousLocationInfo(null);
-        session.setLatestTimeStamp(0);
-        session.setFirstRetryTimeStamp(0);
 
         showNotification();
         startPassiveManager();
@@ -368,10 +362,8 @@ public class GpsService extends Service {
         // ========== 新增：停止超时定时器 ==========
         stopAbsoluteTimer();
 
+        // 停止当前会话；完整字段清理由下一次 startLogging 的 session.reset() 统一处理
         session.setStarted(false);
-        session.setCurrentLocationInfo(null);
-        session.setPreviousLocationInfo(null);
-        session.setTemporaryLocationForBestAccuracy(null);
 
         stopForeground(true);
         stopSelf();
@@ -661,8 +653,10 @@ public class GpsService extends Service {
             }
         }
 
-        if (startTime == null) {
-            startTime = System.currentTimeMillis();
+        // ========== 7. 静止抖动过滤 ==========
+        if (!isPassiveLocation && shouldSuppressStationaryJitter(loc, locationTimeStamp)) {
+            stopManagerAndResetAlarm();
+            return;
         }
 
         // ========== 所有过滤通过，记录点位 ==========
@@ -724,6 +718,83 @@ public class GpsService extends Service {
 
         session.setPreviousLocationInfo(loc);
         session.setTotalTravelled(session.getTotalTravelled() + distance);
+    }
+
+    /**
+     * 静止抖动过滤
+     *
+     * <p>用于过滤“长时间原地不动但定位坐标轻微抖动”的无效点位。</p>
+     *
+     * @param loc 新位置
+     * @param locationTimeStamp 点位时间戳
+     * @return true 表示应抑制该点；false 表示可继续后续流程
+     */
+    private boolean shouldSuppressStationaryJitter(Location loc, long locationTimeStamp) {
+        if (!gpsCallback.getConfig().isEnableStationaryJitterFilter()) {
+            session.setStationaryAnchorLocation(null);
+            session.setStationarySinceTimeStamp(0);
+            session.setInStationaryState(false);
+            return false;
+        }
+
+        Location anchor = session.getStationaryAnchorLocation();
+        if (anchor == null) {
+            session.setStationaryAnchorLocation(loc);
+            session.setStationarySinceTimeStamp(locationTimeStamp);
+            session.setInStationaryState(false);
+            return false;
+        }
+
+        double distanceFromAnchor = EsriUtil.calculateDistance(
+                anchor.getLatitude(),
+                anchor.getLongitude(),
+                loc.getLatitude(),
+                loc.getLongitude()
+        );
+
+        float stationaryRadius = gpsCallback.getConfig().getStationaryRadiusMeters();
+        float minMoveToExit = gpsCallback.getConfig().getStationaryMinMoveMeters();
+        long stationaryMinDurationMillis =
+                gpsCallback.getConfig().getStationaryMinDurationSeconds() * 1000L;
+
+        if (distanceFromAnchor <= stationaryRadius) {
+            if (session.getStationarySinceTimeStamp() == 0) {
+                session.setStationarySinceTimeStamp(locationTimeStamp);
+                return false;
+            }
+
+            long stillDuration = locationTimeStamp - session.getStationarySinceTimeStamp();
+            if (stillDuration >= stationaryMinDurationMillis) {
+                if (!session.isInStationaryState()) {
+                    session.setInStationaryState(true);
+                    LogUtil.loggerI(TAG, String.format(Locale.getDefault(),
+                            "进入静止抖动抑制状态：半径 %.1f 米，静止时长 %d 秒",
+                            stationaryRadius, gpsCallback.getConfig().getStationaryMinDurationSeconds()));
+                    return false;
+                }
+                LogUtil.loggerI(TAG, String.format(Locale.getDefault(),
+                        "静止抖动点已过滤，距锚点 %.1f 米", distanceFromAnchor));
+                return true;
+            }
+            return false;
+        }
+
+        if (session.isInStationaryState() && distanceFromAnchor < minMoveToExit) {
+            LogUtil.loggerI(TAG, String.format(Locale.getDefault(),
+                    "仍处于静止区附近，继续抑制：距锚点 %.1f 米（退出阈值 %.1f 米）",
+                    distanceFromAnchor, minMoveToExit));
+            return true;
+        }
+
+        // 离开静止区：重置锚点并恢复正常记录
+        session.setStationaryAnchorLocation(loc);
+        session.setStationarySinceTimeStamp(locationTimeStamp);
+        if (session.isInStationaryState()) {
+            LogUtil.loggerI(TAG, String.format(Locale.getDefault(),
+                    "检测到有效移动，退出静止抖动抑制：距旧锚点 %.1f 米", distanceFromAnchor));
+        }
+        session.setInStationaryState(false);
+        return false;
     }
 
     // ========== 新增：检查用户是否静止太久 ==========

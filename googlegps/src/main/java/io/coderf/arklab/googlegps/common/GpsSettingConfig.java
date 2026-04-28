@@ -58,6 +58,14 @@ public class GpsSettingConfig {
     private float maxSpeedMps = 300f;
     /** 是否过滤时间倒退的点位，默认 true */
     private boolean filterStaleLocation = true;
+    /** 是否启用静止抖动过滤，默认 false（保持兼容） */
+    private boolean enableStationaryJitterFilter = false;
+    /** 判定“仍在原地”的半径阈值（米），默认 10m */
+    private float stationaryRadiusMeters = 10f;
+    /** 连续静止多久后进入抖动抑制（秒），默认 60s */
+    private int stationaryMinDurationSeconds = 60;
+    /** 退出静止状态的最小移动距离（米），默认 20m */
+    private float stationaryMinMoveMeters = 20f;
 
     // ========== 重试机制 ==========
     /** 重试周期（秒），在达到精度要求前可重试多久，默认 60 秒 */
@@ -92,6 +100,38 @@ public class GpsSettingConfig {
     private String customFileNamePrefix = "";
     /** 是否启用文件记录，默认 true */
     private boolean fileLogEnabled = true;
+
+    // ========== 确认弹窗配置 ==========
+    /** GPS 开关引导文案，空则使用内置默认文案 */
+    private String gpsEnableDialogMessage = "";
+    /** GPS 开关引导确认按钮文案，空则使用内置默认文案 */
+    private String gpsEnablePositiveText = "";
+    /** GPS 开关引导取消按钮文案，空则使用内置默认文案 */
+    private String gpsEnableNegativeText = "";
+    /** 前台定位权限引导文案，空则使用内置默认文案 */
+    private String foregroundPermissionDialogMessage = "";
+    /** 前台定位权限引导确认按钮文案，空则使用内置默认文案 */
+    private String foregroundPermissionPositiveText = "";
+    /** 前台定位权限引导取消按钮文案，空则使用内置默认文案 */
+    private String foregroundPermissionNegativeText = "";
+    /** 后台定位权限引导文案，空则使用内置默认文案 */
+    private String backgroundPermissionDialogMessage = "";
+    /** 后台定位权限引导确认按钮文案，空则使用内置默认文案 */
+    private String backgroundPermissionPositiveText = "";
+    /** 后台定位权限引导取消按钮文案，空则使用内置默认文案 */
+    private String backgroundPermissionNegativeText = "";
+    /** 弹窗内容文字颜色，null 表示使用默认样式 */
+    private Integer confirmDialogTextColor = null;
+    /** 弹窗确认按钮文字颜色，null 表示使用默认样式 */
+    private Integer confirmDialogPositiveTextColor = null;
+    /** 弹窗取消按钮文字颜色，null 表示使用默认样式 */
+    private Integer confirmDialogNegativeTextColor = null;
+    /** 弹窗内容文字大小（sp），<=0 表示使用默认样式 */
+    private float confirmDialogContentTextSizeSp = 0f;
+    /** 弹窗确认按钮文字大小（sp），<=0 表示使用默认样式 */
+    private float confirmDialogPositiveTextSizeSp = 0f;
+    /** 弹窗取消按钮文字大小（sp），<=0 表示使用默认样式 */
+    private float confirmDialogNegativeTextSizeSp = 0f;
 
     // ========== 常量定义 ==========
 
@@ -426,6 +466,42 @@ public class GpsSettingConfig {
         return this;
     }
 
+    public boolean isEnableStationaryJitterFilter() {
+        return enableStationaryJitterFilter;
+    }
+
+    public GpsSettingConfig setEnableStationaryJitterFilter(boolean enableStationaryJitterFilter) {
+        this.enableStationaryJitterFilter = enableStationaryJitterFilter;
+        return this;
+    }
+
+    public float getStationaryRadiusMeters() {
+        return stationaryRadiusMeters;
+    }
+
+    public GpsSettingConfig setStationaryRadiusMeters(float stationaryRadiusMeters) {
+        this.stationaryRadiusMeters = Math.max(0f, stationaryRadiusMeters);
+        return this;
+    }
+
+    public int getStationaryMinDurationSeconds() {
+        return stationaryMinDurationSeconds;
+    }
+
+    public GpsSettingConfig setStationaryMinDurationSeconds(int stationaryMinDurationSeconds) {
+        this.stationaryMinDurationSeconds = Math.max(0, stationaryMinDurationSeconds);
+        return this;
+    }
+
+    public float getStationaryMinMoveMeters() {
+        return stationaryMinMoveMeters;
+    }
+
+    public GpsSettingConfig setStationaryMinMoveMeters(float stationaryMinMoveMeters) {
+        this.stationaryMinMoveMeters = Math.max(0f, stationaryMinMoveMeters);
+        return this;
+    }
+
     public int getRetryPeriodSeconds() {
         return retryPeriodSeconds;
     }
@@ -535,6 +611,141 @@ public class GpsSettingConfig {
 
     public boolean isFileLogEnabled() {
         return fileLogEnabled;
+    }
+
+    public String getGpsEnableDialogMessage() {
+        return gpsEnableDialogMessage;
+    }
+
+    public GpsSettingConfig setGpsEnableDialogMessage(String gpsEnableDialogMessage) {
+        this.gpsEnableDialogMessage = gpsEnableDialogMessage != null ? gpsEnableDialogMessage : "";
+        return this;
+    }
+
+    public String getGpsEnablePositiveText() {
+        return gpsEnablePositiveText;
+    }
+
+    public GpsSettingConfig setGpsEnablePositiveText(String gpsEnablePositiveText) {
+        this.gpsEnablePositiveText = gpsEnablePositiveText != null ? gpsEnablePositiveText : "";
+        return this;
+    }
+
+    public String getGpsEnableNegativeText() {
+        return gpsEnableNegativeText;
+    }
+
+    public GpsSettingConfig setGpsEnableNegativeText(String gpsEnableNegativeText) {
+        this.gpsEnableNegativeText = gpsEnableNegativeText != null ? gpsEnableNegativeText : "";
+        return this;
+    }
+
+    public String getForegroundPermissionDialogMessage() {
+        return foregroundPermissionDialogMessage;
+    }
+
+    public GpsSettingConfig setForegroundPermissionDialogMessage(String foregroundPermissionDialogMessage) {
+        this.foregroundPermissionDialogMessage = foregroundPermissionDialogMessage != null ? foregroundPermissionDialogMessage : "";
+        return this;
+    }
+
+    public String getForegroundPermissionPositiveText() {
+        return foregroundPermissionPositiveText;
+    }
+
+    public GpsSettingConfig setForegroundPermissionPositiveText(String foregroundPermissionPositiveText) {
+        this.foregroundPermissionPositiveText = foregroundPermissionPositiveText != null ? foregroundPermissionPositiveText : "";
+        return this;
+    }
+
+    public String getForegroundPermissionNegativeText() {
+        return foregroundPermissionNegativeText;
+    }
+
+    public GpsSettingConfig setForegroundPermissionNegativeText(String foregroundPermissionNegativeText) {
+        this.foregroundPermissionNegativeText = foregroundPermissionNegativeText != null ? foregroundPermissionNegativeText : "";
+        return this;
+    }
+
+    public String getBackgroundPermissionDialogMessage() {
+        return backgroundPermissionDialogMessage;
+    }
+
+    public GpsSettingConfig setBackgroundPermissionDialogMessage(String backgroundPermissionDialogMessage) {
+        this.backgroundPermissionDialogMessage = backgroundPermissionDialogMessage != null ? backgroundPermissionDialogMessage : "";
+        return this;
+    }
+
+    public String getBackgroundPermissionPositiveText() {
+        return backgroundPermissionPositiveText;
+    }
+
+    public GpsSettingConfig setBackgroundPermissionPositiveText(String backgroundPermissionPositiveText) {
+        this.backgroundPermissionPositiveText = backgroundPermissionPositiveText != null ? backgroundPermissionPositiveText : "";
+        return this;
+    }
+
+    public String getBackgroundPermissionNegativeText() {
+        return backgroundPermissionNegativeText;
+    }
+
+    public GpsSettingConfig setBackgroundPermissionNegativeText(String backgroundPermissionNegativeText) {
+        this.backgroundPermissionNegativeText = backgroundPermissionNegativeText != null ? backgroundPermissionNegativeText : "";
+        return this;
+    }
+
+    public Integer getConfirmDialogTextColor() {
+        return confirmDialogTextColor;
+    }
+
+    public GpsSettingConfig setConfirmDialogTextColor(Integer confirmDialogTextColor) {
+        this.confirmDialogTextColor = confirmDialogTextColor;
+        return this;
+    }
+
+    public Integer getConfirmDialogPositiveTextColor() {
+        return confirmDialogPositiveTextColor;
+    }
+
+    public GpsSettingConfig setConfirmDialogPositiveTextColor(Integer confirmDialogPositiveTextColor) {
+        this.confirmDialogPositiveTextColor = confirmDialogPositiveTextColor;
+        return this;
+    }
+
+    public Integer getConfirmDialogNegativeTextColor() {
+        return confirmDialogNegativeTextColor;
+    }
+
+    public GpsSettingConfig setConfirmDialogNegativeTextColor(Integer confirmDialogNegativeTextColor) {
+        this.confirmDialogNegativeTextColor = confirmDialogNegativeTextColor;
+        return this;
+    }
+
+    public float getConfirmDialogContentTextSizeSp() {
+        return confirmDialogContentTextSizeSp;
+    }
+
+    public GpsSettingConfig setConfirmDialogContentTextSizeSp(float confirmDialogContentTextSizeSp) {
+        this.confirmDialogContentTextSizeSp = confirmDialogContentTextSizeSp;
+        return this;
+    }
+
+    public float getConfirmDialogPositiveTextSizeSp() {
+        return confirmDialogPositiveTextSizeSp;
+    }
+
+    public GpsSettingConfig setConfirmDialogPositiveTextSizeSp(float confirmDialogPositiveTextSizeSp) {
+        this.confirmDialogPositiveTextSizeSp = confirmDialogPositiveTextSizeSp;
+        return this;
+    }
+
+    public float getConfirmDialogNegativeTextSizeSp() {
+        return confirmDialogNegativeTextSizeSp;
+    }
+
+    public GpsSettingConfig setConfirmDialogNegativeTextSizeSp(float confirmDialogNegativeTextSizeSp) {
+        this.confirmDialogNegativeTextSizeSp = confirmDialogNegativeTextSizeSp;
+        return this;
     }
 
     /**

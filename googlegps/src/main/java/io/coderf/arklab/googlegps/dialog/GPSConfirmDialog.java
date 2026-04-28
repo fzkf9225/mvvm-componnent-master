@@ -21,10 +21,10 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.R;
 import io.coderf.arklab.googlegps.databinding.DialogGpsConfirmBinding;
 import io.coderf.arklab.googlegps.utils.AppUtil;
-import io.coderf.arklab.googlegps.listener.OnDialogInterfaceClickListener;
 
 import java.util.Objects;
 
@@ -270,6 +270,38 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog applySettingConfig(GpsSettingConfig config) {
+        if (config == null) {
+            return this;
+        }
+
+        Integer contentColor = config.getConfirmDialogTextColor();
+        if (contentColor != null) {
+            setTextColor(contentColor);
+        }
+
+        Integer positiveColor = config.getConfirmDialogPositiveTextColor();
+        if (positiveColor != null) {
+            setPositiveTextColor(positiveColor);
+        }
+
+        Integer negativeColor = config.getConfirmDialogNegativeTextColor();
+        if (negativeColor != null) {
+            setNegativeTextColor(negativeColor);
+        }
+
+        if (config.getConfirmDialogContentTextSizeSp() > 0) {
+            setContentTextSize(config.getConfirmDialogContentTextSizeSp());
+        }
+        if (config.getConfirmDialogPositiveTextSizeSp() > 0) {
+            setPositiveTextSize(config.getConfirmDialogPositiveTextSizeSp());
+        }
+        if (config.getConfirmDialogNegativeTextSizeSp() > 0) {
+            setNegativeTextSize(config.getConfirmDialogNegativeTextSizeSp());
+        }
+        return this;
+    }
+
     public GPSConfirmDialog builder() {
         initView();
         return this;
@@ -448,4 +480,7 @@ public class GPSConfirmDialog extends Dialog {
         )));
     }
 
+    public interface OnDialogInterfaceClickListener {
+        void onDialogClick(Dialog dialog);
+    }
 }
