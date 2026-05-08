@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.AnyRes;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
@@ -27,7 +26,6 @@ import io.coderf.arklab.common.adapter.PagingFooterAdapter;
 import io.coderf.arklab.common.listener.PagingAdapterListener;
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
-import io.coderf.arklab.common.widget.recyclerview.RecyclerEmptyHostView;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
@@ -38,7 +36,6 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener {
     protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
-    protected RecyclerEmptyHostView recyclerEmptyHost;
     protected SmartRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
 
@@ -54,10 +51,8 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        recyclerEmptyHost = binding.getRoot().findViewById(R.id.recyclerEmptyHost);
-        recyclerEmptyHost.setContentBackgroundResource(getRecyclerEmptyBackgroundRes());
-        mRecyclerView = recyclerEmptyHost.getRecyclerView();
-        emptyLayout = recyclerEmptyHost.getEmptyLayout();
+        mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
+        emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
         refreshLayout = binding.getRoot().findViewById(R.id.smartFreshLayout);
         adapter = getRecyclerAdapter();
         getRecyclerView().setLayoutManager(createLayoutManager());
@@ -129,14 +124,6 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     }
 
     protected abstract BasePagingAdapter<T, ?> getRecyclerAdapter();
-
-    /**
-     * {@link RecyclerEmptyHostView} 内容区背景（颜色或 drawable 资源）。子类重写即可。
-     */
-    @AnyRes
-    protected int getRecyclerEmptyBackgroundRes() {
-        return R.color.default_background;
-    }
 
     @Override
     public void onAuthSuccess(Bundle bundle) {

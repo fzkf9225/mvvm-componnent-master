@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.ColorInt;
@@ -18,8 +18,10 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 
 /**
- * 承载 {@link RecyclerView} 与 {@link EmptyLayout} 的容器，叠放并统一内容区背景，
- * 适用于任意带空态的列表页（分页、Smart 刷新、SwipeRefresh 等），与是否使用 Paging 无关。
+ * 与 {@code base_smart_paging.xml} 中列表区域等价的容器：{@link FrameLayout} 内自下而上叠放
+ * {@link RecyclerView} 与 {@link EmptyLayout}，子 View 均通过代码创建（不依赖 merge 布局）。
+ * <p>
+ * 供新业务按需引用；基类与现有 XML 布局保持不变。
  */
 public class RecyclerEmptyHostView extends FrameLayout {
 
@@ -36,9 +38,21 @@ public class RecyclerEmptyHostView extends FrameLayout {
 
     public RecyclerEmptyHostView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.merge_recycler_empty_host, this, true);
-        recyclerView = findViewById(R.id.mRecyclerview);
-        emptyLayout = findViewById(R.id.mEmptyLayout);
+        recyclerView = new RecyclerView(context);
+        recyclerView.setId(R.id.mRecyclerview);
+        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        FrameLayout.LayoutParams rvLp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        addView(recyclerView, rvLp);
+
+        emptyLayout = new EmptyLayout(context);
+        emptyLayout.setId(R.id.mEmptyLayout);
+        FrameLayout.LayoutParams emptyLp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        emptyLp.gravity = android.view.Gravity.CENTER;
+        addView(emptyLayout, emptyLp);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecyclerEmptyHostView, defStyleAttr, 0);
         int bgRes = a.getResourceId(R.styleable.RecyclerEmptyHostView_recyclerEmptyBackground, 0);
@@ -60,9 +74,6 @@ public class RecyclerEmptyHostView extends FrameLayout {
         return emptyLayout;
     }
 
-    /**
-     * 使用颜色或 drawable 资源设置列表区域与占位层背景（与原先双控件分别设背景一致）。
-     */
     public void setContentBackgroundResource(@DrawableRes int resId) {
         setBackgroundResource(resId);
         emptyLayout.setBackgroundResource(resId);
@@ -85,9 +96,6 @@ public class RecyclerEmptyHostView extends FrameLayout {
                 : background.mutate());
     }
 
-    /**
-     * 使用主题中的颜色资源解析为 {@link ColorInt} 后设置背景。
-     */
     public void setContentBackgroundColorRes(int colorRes) {
         setContentBackgroundColor(ContextCompat.getColor(getContext(), colorRes));
     }
