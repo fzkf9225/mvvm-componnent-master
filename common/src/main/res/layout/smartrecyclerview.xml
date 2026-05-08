@@ -17,26 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <FrameLayout
-            android:id="@+id/fl_container"
+        <io.coderf.arklab.common.widget.recyclerview.RecyclerEmptyHostView
+            android:id="@+id/recyclerEmptyHost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/default_background">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never" />
-
-            <io.coderf.arklab.common.widget.empty.EmptyLayout
-                android:id="@+id/emptyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@color/default_background"
-                android:gravity="center" />
-        </FrameLayout>
+            app:recyclerEmptyBackground="@color/default_background" />
 
         <com.scwang.smart.refresh.footer.ClassicsFooter
             android:id="@+id/v_footer"

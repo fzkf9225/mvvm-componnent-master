@@ -4,14 +4,14 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.Navigation.findNavController
-import io.coderf.arklab.demo.adapter.PagingHeaderDemoAdapter
-import io.coderf.arklab.demo.bean.NotificationMessageBean
-import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BasePagingAdapter
 import io.coderf.arklab.common.base.BasePagingFragment
 import io.coderf.arklab.common.databinding.PagingRecyclerViewBinding
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog
+import io.coderf.arklab.demo.adapter.PagingHeaderDemoAdapter
+import io.coderf.arklab.demo.bean.NotificationMessageBean
+import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel
 
 /**
  * Created by fz on 2023/12/1 16:40
@@ -31,6 +31,7 @@ class DemoPagingFragment :
     override fun initData(bundle: Bundle?) {
         super.initData(bundle)
         mViewModel?.items?.observe(this, observer)
+        onRefresh()
     }
 
     override fun onItemClick(view: View, item: NotificationMessageBean, position: Int) {

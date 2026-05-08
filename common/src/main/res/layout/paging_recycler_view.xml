@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,26 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/fl_container"
+        <io.coderf.arklab.common.widget.recyclerview.RecyclerEmptyHostView
+            android:id="@+id/recyclerEmptyHost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/default_background">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mRecyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never" />
-
-            <io.coderf.arklab.common.widget.empty.EmptyLayout
-                android:id="@+id/mEmptyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@color/default_background"
-                android:gravity="center" />
-        </FrameLayout>
+            app:recyclerEmptyBackground="@color/default_background" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

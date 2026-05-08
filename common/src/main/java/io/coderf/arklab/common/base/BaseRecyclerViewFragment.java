@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.AnyRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
@@ -26,6 +27,7 @@ import io.coderf.arklab.common.bean.base.PageBean;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
+import io.coderf.arklab.common.widget.recyclerview.RecyclerEmptyHostView;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
@@ -36,6 +38,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         BaseRecyclerViewAdapter.OnItemLongClickListener, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener, OnLoadMoreListener {
     private RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
+    protected RecyclerEmptyHostView recyclerEmptyHost;
     protected SmartRefreshLayout refreshLayout;
     protected boolean isCanRefresh = true;
     protected boolean isCanLoadMore = true;
@@ -62,8 +65,15 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mRecyclerView = binding.getRoot().findViewById(R.id.recyclerview);
-        emptyLayout = binding.getRoot().findViewById(R.id.emptyLayout);
+        recyclerEmptyHost = binding.getRoot().findViewById(R.id.recyclerEmptyHost);
+        if (recyclerEmptyHost != null) {
+            recyclerEmptyHost.setContentBackgroundResource(getRecyclerEmptyBackgroundRes());
+            mRecyclerView = recyclerEmptyHost.getRecyclerView();
+            emptyLayout = recyclerEmptyHost.getEmptyLayout();
+        } else {
+            mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
+            emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
+        }
         refreshLayout = binding.getRoot().findViewById(R.id.smartFreshLayout);
         adapter = getRecyclerAdapter();
         getRecyclerView().setAdapter(adapter);
@@ -147,6 +157,16 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     protected abstract BaseRecyclerViewAdapter<T, ?> getRecyclerAdapter();
+
+    /**
+     * 列表与空态占位共用背景（颜色或 drawable 资源）。子类重写即可。
+     * 使用 {@link R.layout#search_smartrecyclerview} 等未包含 {@code recyclerEmptyHost} 的布局时不会调用；
+     * 其中列表与空态仍使用 {@code mRecyclerview} / {@code mEmptyLayout}，与 {@link RecyclerEmptyHostView} 内 merge 一致。
+     */
+    @AnyRes
+    protected int getRecyclerEmptyBackgroundRes() {
+        return R.color.default_background;
+    }
 
     @Override
     public void onAuthSuccess(Bundle bundle) {

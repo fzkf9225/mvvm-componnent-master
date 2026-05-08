@@ -29,6 +29,7 @@ public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingV
     protected void initData(Bundle bundle) {
         super.initData(bundle);
         mViewModel.getItems().observe(this, responseBean -> adapter.submitData(getLifecycle(), responseBean));
+        onRefresh(binding.smartFreshLayout);
     }
 
     @Override

@@ -34,7 +34,7 @@ class KtDemoPagingRepositoryImpl :
         pageSize: Int
     ): Observable<List<NotificationMessageBean>> {
         val notificationMessageBean: NotificationMessageBean = NotificationMessageBean().apply {
-            type = "1"
+            type = "5"
         }
         return sendRequest(
             apiService.getNewList(currentPage, pageSize, notificationMessageBean).map {
