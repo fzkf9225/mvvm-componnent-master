@@ -163,9 +163,6 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         this.compressImageSize = compressImageSize;
     }
 
-
-
-
     @Override
     public String[] defaultFileType() {
         return new String[]{"image/*"};

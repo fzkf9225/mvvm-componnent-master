@@ -501,7 +501,7 @@ public abstract class FormMedia extends ConstraintLayout {
             }
         });
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
-        params.setMarginStart((int) textEndMargin);
+        params.setMarginStart((int) textStartMargin);
         params.setMarginEnd((int) textEndMargin);
         //如果不是当行显示的话
         params.topMargin = (int) defaultTextMargin;
