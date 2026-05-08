@@ -82,14 +82,6 @@ dependencies {
     implementation project(':common')
     implementation project(':commonmedia')
 
-    implementation libs.androidx.room.ktx
-    implementation libs.androidx.room.runtime
-    ksp libs.room.compiler
-    // optional - RxJava3 support for Room
-    implementation libs.room.rxjava3
-    // optional - Paging 3 Integration
-    implementation libs.room.paging
-
     //上传文件使用
     implementation libs.okhttp
     implementation libs.retrofit
@@ -129,7 +121,7 @@ afterEvaluate {
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.ui'
                 artifactId = 'ui'
-                version = '3.0.1'
+                version = '3.1.0'
             }
         }
         repositories {
