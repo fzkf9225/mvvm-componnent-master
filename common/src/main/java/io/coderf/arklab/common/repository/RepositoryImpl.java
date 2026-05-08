@@ -19,11 +19,14 @@ import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
 
 /**
  * Created by fz on 2023/12/1 10:19
  * describe :
+ * <p>
+ * 网络请求的加载与错误展示仅通过 {@link BaseRepository#getRequestUi()}，由 {@link io.coderf.arklab.common.base.BaseViewModel} 统一注入。
  */
 public abstract class RepositoryImpl<API extends BaseApiService, BV extends BaseView> extends BaseRepository<BV> {
 
@@ -81,45 +84,45 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(observable, apiRequestOptions, liveData, null, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(observable, apiRequestOptions, liveData, null, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(observable, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(observable, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, @NotNull Consumer<T> consumer) {
-        return sendRequest(observable, apiRequestOptions, null, null, consumer, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(observable, apiRequestOptions, null, null, consumer, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(observable, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(observable, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(observable, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(observable, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, @NotNull Consumer<T> consumer) {
-        return sendRequest(observable, ApiRequestOptions.getDefault(), null, null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(observable, ApiRequestOptions.getDefault(), null, null, consumer, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, MutableStateFlow<T> stateFlow, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
         if (consumer == null && liveData != null) {
             return sendRequest(observable, apiRequestOptions)
                     .subscribe(liveData::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else if (consumer == null && stateFlow != null) {
 
             return sendRequest(observable, apiRequestOptions)
                     .subscribe(stateFlow::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else {
             return sendRequest(observable, apiRequestOptions)
                     .subscribe(consumer == null ? t -> {
 
                             } : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         }
     }
 
@@ -131,13 +134,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                             apiService.getRetrofit().getBuilder().getRetryService().handleObservableError(throwableObservable))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());
@@ -145,13 +150,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
             return observable.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());
@@ -172,50 +179,50 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(flowable, apiRequestOptions, liveData, null, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(flowable, apiRequestOptions, liveData, null, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(flowable, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(flowable, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, @NotNull Consumer<T> consumer) {
-        return sendRequest(flowable, apiRequestOptions, null, null, consumer, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(flowable, apiRequestOptions, null, null, consumer, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(flowable, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(flowable, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(flowable, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(flowable, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, @NotNull Consumer<T> consumer) {
-        return sendRequest(flowable, ApiRequestOptions.getDefault(), null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(flowable, ApiRequestOptions.getDefault(), null, consumer, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
         return sendRequest(flowable, apiRequestOptions)
                 .subscribe(consumer == null ? (liveData::setValue) : consumer,
-                        throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                        throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, MutableStateFlow<T> stateFlow, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
         if (consumer == null && liveData != null) {
             return sendRequest(flowable, apiRequestOptions)
                     .subscribe(liveData::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else if (consumer != null && stateFlow != null) {
             return sendRequest(flowable, apiRequestOptions)
                     .subscribe(stateFlow::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else {
             return sendRequest(flowable, apiRequestOptions)
                     .subscribe(consumer == null ? t -> {
 
                             } : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         }
     }
 
@@ -228,13 +235,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                                     apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());
@@ -242,13 +251,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
             return flowable.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());
@@ -271,44 +282,44 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
     }
 
     public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(single, apiRequestOptions, liveData, null, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(single, apiRequestOptions, liveData, null, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(single, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(single, apiRequestOptions, null, stateFlow, null, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, @NotNull Consumer<T> consumer) {
-        return sendRequest(single, apiRequestOptions, null, null, consumer, new ErrorConsumer(baseView, apiRequestOptions));
+        return sendRequest(single, apiRequestOptions, null, null, consumer, new ErrorConsumer(getRequestUi(), apiRequestOptions));
     }
 
     public <T> Disposable sendRequest(Single<T> single, @NotNull MutableLiveData<T> liveData) {
-        return sendRequest(single, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(single, ApiRequestOptions.getDefault(), liveData, null, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Single<T> single, @NotNull MutableStateFlow<T> stateFlow) {
-        return sendRequest(single, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(single, ApiRequestOptions.getDefault(), null, stateFlow, null, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Single<T> single, @NotNull Consumer<T> consumer) {
-        return sendRequest(single, ApiRequestOptions.getDefault(), null, null, consumer, new ErrorConsumer(baseView, ApiRequestOptions.getDefault()));
+        return sendRequest(single, ApiRequestOptions.getDefault(), null, null, consumer, new ErrorConsumer(getRequestUi(), ApiRequestOptions.getDefault()));
     }
 
     public <T> Disposable sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions, MutableLiveData<T> liveData, MutableStateFlow<T> stateFlow, Consumer<T> consumer, Consumer<Throwable> throwableConsumer) {
         if (consumer == null && liveData != null) {
             return sendRequest(single, apiRequestOptions)
                     .subscribe(liveData::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else if (consumer == null && stateFlow != null) {
             return sendRequest(single, apiRequestOptions)
                     .subscribe(stateFlow::setValue,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         } else {
             return sendRequest(single, apiRequestOptions)
                     .subscribe(consumer == null ? t -> {
 
                             } : consumer,
-                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(baseView, apiRequestOptions));
+                            throwableConsumer != null ? throwableConsumer : new ErrorConsumer(getRequestUi(), apiRequestOptions));
         }
     }
 
@@ -322,13 +333,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
                                     apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());
@@ -336,13 +349,15 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
             return single.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        if (baseView != null && apiRequestOptions.isShowDialog()) {
-                            baseView.hideLoading();
+                        RequestUiCallback ui = getRequestUi();
+                        if (ui != null && apiRequestOptions.isShowDialog()) {
+                            ui.hideLoading();
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread());

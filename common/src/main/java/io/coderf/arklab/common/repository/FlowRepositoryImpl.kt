@@ -31,6 +31,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 /**
  * created by fz on 2023/12/17 14:00
  * Kotlin Flow版本的Repository，简化版，只保留核心方法
+ *
+ * 与 [RepositoryImpl] 相同：请求过程中的 UI 只走 [io.coderf.arklab.common.base.BaseRepository.getRequestUi]，不在此处直接调用 [baseView]。
  */
 abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRepository<BV> {
 
@@ -95,7 +97,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             .onStart {
                 withContext(Dispatchers.Main) {
                     if (apiRequestOptions.isShowDialog) {
-                        baseView?.showLoading(
+                        getRequestUi()?.showLoading(
                             apiRequestOptions.dialogMessage,
                             apiRequestOptions.isEnableDynamicEllipsis
                         )
@@ -105,7 +107,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             .onCompletion {
                 withContext(Dispatchers.Main) {
                     if (apiRequestOptions.isShowDialog) {
-                        baseView?.hideLoading()
+                        getRequestUi()?.hideLoading()
                     }
                 }
             }
@@ -163,7 +165,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             sendRequest(request, options)
                 .catch { throwable ->
                     (onError ?: { error ->
-                        ErrorConsumer(baseView, options).accept(throwable)
+                        ErrorConsumer(getRequestUi(), options).accept(throwable)
 //                        FlowErrorHandler(baseView, options).handleError(error)
                     }).invoke(throwable)
                 }
@@ -194,7 +196,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             sendRequest(request, options)
                 .catch { throwable ->
                     (onError ?: { error ->
-                        ErrorConsumer(baseView, options).accept(throwable)
+                        ErrorConsumer(getRequestUi(), options).accept(throwable)
                     }).invoke(throwable)
                 }
                 .collect { result ->
@@ -230,7 +232,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
         apiRequestOptions: ApiRequestOptions
     ) {
         withContext(Dispatchers.Main) {
-            ErrorConsumer(baseView, apiRequestOptions).accept(throwable)
+            ErrorConsumer(getRequestUi(), apiRequestOptions).accept(throwable)
         }
     }
 
@@ -316,7 +318,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             .onStart {
                 withContext(Dispatchers.Main) {
                     if (options.isShowDialog) {
-                        baseView?.showLoading(
+                        getRequestUi()?.showLoading(
                             options.dialogMessage,
                             options.isEnableDynamicEllipsis
                         )
@@ -326,7 +328,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
             .onCompletion {
                 withContext(Dispatchers.Main) {
                     if (options.isShowDialog) {
-                        baseView?.hideLoading()
+                        getRequestUi()?.hideLoading()
                     }
                 }
             }
@@ -362,6 +364,6 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
      * 更新Loading对话框文本
      */
     fun updateLoadingMessage(message: String) {
-        baseView?.refreshLoading(message)
+        getRequestUi()?.refreshLoading(message)
     }
 }

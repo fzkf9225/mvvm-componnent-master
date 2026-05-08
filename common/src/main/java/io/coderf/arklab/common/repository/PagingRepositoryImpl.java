@@ -9,6 +9,7 @@ import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
 
 /**
@@ -59,12 +60,13 @@ public abstract class PagingRepositoryImpl<API extends BaseApiService,T, BV exte
     }
 
     public ErrorConsumer catchException() {
-        return new ErrorConsumer(baseView, getApiRequestOptions());
+        return new ErrorConsumer(getRequestUi(), getApiRequestOptions());
     }
 
     public void onError(Exception exception) {
-        if (baseView != null) {
-            baseView.onErrorCode(new BaseResponse(BaseException.ErrorType.OTHER.getCode(), exception.getMessage()));
+        RequestUiCallback ui = getRequestUi();
+        if (ui != null) {
+            ui.onErrorCode(new BaseResponse(BaseException.ErrorType.OTHER.getCode(), exception.getMessage()));
         }
     }
 

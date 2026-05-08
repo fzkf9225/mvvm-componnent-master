@@ -35,13 +35,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在插入数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在插入数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -57,9 +57,9 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在插入数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在插入数据,请稍后...", enableDynamicEllipsis)
             }
-            .doFinally { baseView?.hideLoading() }
+            .doFinally { getRequestUi()?.hideLoading() }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -74,13 +74,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -96,13 +96,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在更新数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在更新数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -118,13 +118,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在更新数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在更新数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -143,7 +143,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -152,13 +152,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -180,7 +180,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -189,13 +189,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -217,7 +217,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -226,13 +226,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在删除数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -251,7 +251,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .switchIfEmpty { throw RuntimeException("暂未查询到数据") }
@@ -261,13 +261,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -287,13 +287,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -313,13 +313,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -340,13 +340,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -367,13 +367,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -398,7 +398,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -407,13 +407,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -440,7 +440,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -449,13 +449,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -480,7 +480,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .doOnSubscribe { onSubscribe ->
@@ -488,13 +488,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -572,7 +572,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnNext
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .timeout(30, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
@@ -581,13 +581,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
                 if (!showLoading) {
                     return@doOnSubscribe
                 }
-                baseView?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
+                getRequestUi()?.showLoading("正在查询数据,请稍后...", enableDynamicEllipsis)
             }
             .doFinally {
                 if (!showLoading) {
                     return@doFinally
                 }
-                baseView?.hideLoading()
+                getRequestUi()?.hideLoading()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }

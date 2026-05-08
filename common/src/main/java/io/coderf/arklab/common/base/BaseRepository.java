@@ -5,15 +5,23 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 
 /**
- * created by fz on 2025/6/24 15:38
- * describe:
+ * Repository 基类。
+ * <p>
+ * <b>请求相关 UI（加载、Toast、onErrorCode）</b>：只通过 {@link #getRequestUi()} 非空引用触发；
+ * 由 {@link BaseViewModel#attachRepositoryRequestUi()} 在创建 Repository 后注入，业务侧不要与 {@link #baseView} 混用两套。
+ * <p>
+ * <b>{@link #baseView}</b>：仍随 {@link IRepository} 存在，表示「当前绑定的页面」，供尚未改造的代码读取；
+ * 新代码请勿在子类里对 {@code baseView} 调用 showLoading / onErrorCode，应统一走 {@link RequestUiCallback}。
  */
 public abstract class BaseRepository<BV extends BaseView> implements IRepository<BV> {
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -24,6 +32,12 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
      * 这个相当于单独的retryService配置只在当前中生效
      */
     protected RetryService retryService;
+
+    /**
+     * 由 ViewModel 注入；Repository 内所有 sendRequest / Flow 请求的 UI 反馈只使用此对象（可为 null，例如无 UI 的后台仓库）。
+     */
+    @Nullable
+    private RequestUiCallback requestUi;
 
     public BaseRepository() {
     }
@@ -49,6 +63,18 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
 
     public void setBaseView(BV baseView) {
         this.baseView = baseView;
+    }
+
+    /**
+     * 由 {@link BaseViewModel} 调用；若自行 new Repository 且需要加载框，须在发起请求前调用一次。
+     */
+    public void setRequestUi(@Nullable RequestUiCallback requestUi) {
+        this.requestUi = requestUi;
+    }
+
+    @Nullable
+    public RequestUiCallback getRequestUi() {
+        return requestUi;
     }
 
     /**
@@ -97,6 +123,6 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
             subscriptionList.forEach(Subscription::cancel);
             subscriptionList.clear();
         }
+        requestUi = null;
     }
 }
-

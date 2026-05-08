@@ -89,7 +89,7 @@
 全面使用``ksp``
 
 # 五分钟快读开始
-[五分钟快读开始](QuickStart.md)
+[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI 与 `BaseView` 分工（`RequestUiCallback`）** 说明与示例。）
 
 ## MVVM架构示例代码，重构版本
 

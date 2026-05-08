@@ -42,7 +42,7 @@ abstract class PagingFlowRepositoryImpl<API : BaseApiService, T : Any, BV : Base
     abstract suspend fun requestPaging(currentPage: Int, pageSize: Int): Flow<List<T>>?
 
     fun onError(exception: Throwable) {
-        baseView?.onErrorCode(
+        getRequestUi()?.onErrorCode(
             BaseResponse<Any?>(
                 BaseException.ErrorType.OTHER.code,
                 exception.message

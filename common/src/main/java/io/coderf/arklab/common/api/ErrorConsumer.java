@@ -2,8 +2,12 @@ package io.coderf.arklab.common.api;
 
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import io.coderf.arklab.common.impl.DefaultExceptionConverter;
+import io.coderf.arklab.common.impl.RequestUiAdapters;
 import io.coderf.arklab.common.inter.ExceptionConverter;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 
 import io.reactivex.rxjava3.functions.Consumer;
 import io.coderf.arklab.common.base.BaseException;
@@ -14,54 +18,57 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
  * Created by fz on 2023/11/30 15:52
- * describe : 统一错误处理消费者
+ * describe : 统一错误处理消费者；内部只依赖 {@link RequestUiCallback}，与数据层约定一致。
  */
 public class ErrorConsumer implements Consumer<Throwable> {
-    private final BaseView baseView;
+    @Nullable
+    private final RequestUiCallback requestUi;
     private final ApiRequestOptions apiRequestOptions;
     private final ExceptionConverter exceptionConverter;
 
-    public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions) {
-        this(baseView, apiRequestOptions, new DefaultExceptionConverter());
+    public ErrorConsumer(@Nullable RequestUiCallback requestUi, ApiRequestOptions apiRequestOptions) {
+        this(requestUi, apiRequestOptions, new DefaultExceptionConverter());
     }
 
-    public ErrorConsumer(BaseView baseView, ApiRequestOptions apiRequestOptions, ExceptionConverter converter) {
-        this.baseView = baseView;
+    public ErrorConsumer(@Nullable RequestUiCallback requestUi, ApiRequestOptions apiRequestOptions, ExceptionConverter converter) {
+        this.requestUi = requestUi;
         this.apiRequestOptions = apiRequestOptions != null ? apiRequestOptions : ApiRequestOptions.getDefault();
         this.exceptionConverter = converter != null ? converter : new DefaultExceptionConverter();
     }
+
+    /**
+     * 兼容旧调用方（如 commonui）：内部转为 {@link RequestUiCallback}。
+     */
+    public ErrorConsumer(@Nullable BaseView baseView, ApiRequestOptions apiRequestOptions) {
+        this(RequestUiAdapters.fromBaseView(baseView), apiRequestOptions);
+    }
+
+    public ErrorConsumer(@Nullable BaseView baseView, ApiRequestOptions apiRequestOptions, ExceptionConverter converter) {
+        this(RequestUiAdapters.fromBaseView(baseView), apiRequestOptions, converter);
+    }
+
     @Override
     public void accept(Throwable e) throws Throwable {
         LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
 
-        // 隐藏加载框
         hideLoadingIfNeeded();
         BaseException be = (e instanceof BaseException) ? (BaseException) e : exceptionConverter.convert(e);
 
         LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + be.getErrorMsg());
 
-        // 处理异常回调
         handleException(be);
     }
 
-    /**
-     * 处理 BaseException
-     */
     private void handleException(BaseException be) {
-        if (baseView == null) {
+        if (requestUi == null) {
             return;
         }
 
-        // 回调错误码
-        baseView.onErrorCode(createErrorResponse(be));
+        requestUi.onErrorCode(createErrorResponse(be));
 
-        // 显示Toast提示
         showToastIfNeeded(be);
     }
 
-    /**
-     * 创建错误响应
-     */
     private BaseResponse<?> createErrorResponse(BaseException be) {
         return new BaseResponse<>(
                 be.getErrorCode(),
@@ -70,21 +77,15 @@ public class ErrorConsumer implements Consumer<Throwable> {
         );
     }
 
-    /**
-     * 显示Toast提示
-     */
     private void showToastIfNeeded(BaseException be) {
         if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
             String toastMsg = getToastMessage(be);
             if (!TextUtils.isEmpty(toastMsg)) {
-                baseView.showToast(toastMsg);
+                requestUi.showToast(toastMsg);
             }
         }
     }
 
-    /**
-     * 获取Toast显示消息
-     */
     private String getToastMessage(BaseException be) {
         if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
             return apiRequestOptions.getToastMsg();
@@ -93,12 +94,9 @@ public class ErrorConsumer implements Consumer<Throwable> {
         }
     }
 
-    /**
-     * 隐藏加载框
-     */
     private void hideLoadingIfNeeded() {
-        if (baseView != null && apiRequestOptions != null && apiRequestOptions.isShowDialog()) {
-            baseView.hideLoading();
+        if (requestUi != null && apiRequestOptions != null && apiRequestOptions.isShowDialog()) {
+            requestUi.hideLoading();
         }
     }
 }
