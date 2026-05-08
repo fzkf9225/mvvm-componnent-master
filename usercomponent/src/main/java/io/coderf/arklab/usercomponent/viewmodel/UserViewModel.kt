@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import io.coderf.arklab.userapi.bean.UserInfo
 import io.coderf.arklab.usercomponent.api.UserApiService
+import io.coderf.arklab.usercomponent.domain.usecase.RefreshUserProfileUseCase
 import io.coderf.arklab.usercomponent.repository.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.api.RepositoryFactory
@@ -16,7 +17,10 @@ import javax.inject.Inject
  * describe:
  */
 @HiltViewModel
-class UserViewModel @Inject constructor(application: Application) : io.coderf.arklab.common.base.BaseViewModel<UserRepositoryImpl, BaseView>(application) {
+class UserViewModel @Inject constructor(
+    application: Application,
+    private val refreshUserProfile: RefreshUserProfileUseCase
+) : BaseViewModel<UserRepositoryImpl, BaseView>(application) {
 
     @Inject
     lateinit var userApiService: UserApiService
@@ -25,13 +29,11 @@ class UserViewModel @Inject constructor(application: Application) : io.coderf.ar
         MutableLiveData<UserInfo>()
     }
 
-
     override fun createRepository(): UserRepositoryImpl {
-        return RepositoryFactory.create(UserRepositoryImpl::class.java,userApiService)
+        return RepositoryFactory.create(UserRepositoryImpl::class.java, userApiService)
     }
 
-    public fun refreshUserInfo() {
-        iRepository.refreshUserInfo(userInfoLiveData)
+    fun refreshUserInfo() {
+        refreshUserProfile.execute(iRepository, userInfoLiveData)
     }
-
 }

@@ -7,14 +7,17 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.ApiRequestOptions
 import io.coderf.arklab.common.repository.RepositoryImpl
+import io.coderf.arklab.usercomponent.domain.repository.UserProfileRepository
 
 /**
  * Created by fz on 2024/11/4 13:47
  * describe :
  */
-class UserRepositoryImpl(apiService: UserApiService?) : io.coderf.arklab.common.repository.RepositoryImpl<UserApiService, BaseView>(apiService) {
+class UserRepositoryImpl(apiService: UserApiService?) :
+    RepositoryImpl<UserApiService, BaseView>(apiService),
+    UserProfileRepository {
 
-    fun refreshUserInfo(liveData: MutableLiveData<UserInfo>): Disposable {
+    override fun refreshUserInfo(liveData: MutableLiveData<UserInfo>): Disposable {
         return sendRequest(
             apiService.getUserInfo(),
             ApiRequestOptions.Builder()

@@ -7,6 +7,8 @@ import android.text.InputType
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
+import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +19,13 @@ import io.coderf.arklab.userapi.bean.UserInfo
 import io.coderf.arklab.usercomponent.R
 import io.coderf.arklab.usercomponent.api.UserAccountHelper
 import io.coderf.arklab.usercomponent.databinding.ActivityLoginBinding
+import io.coderf.arklab.usercomponent.domain.model.LoginSubmitResult
+import io.coderf.arklab.usercomponent.ui.LoginAgreementMarkup
 import io.coderf.arklab.usercomponent.view.UserView
 import io.coderf.arklab.usercomponent.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import io.coderf.arklab.common.R as CommonR
 import io.coderf.arklab.common.api.AppManager
 import io.coderf.arklab.common.api.ConstantsHelper
 import io.coderf.arklab.common.base.BaseActivity
@@ -28,6 +33,7 @@ import io.coderf.arklab.common.base.BaseResponse
 import io.coderf.arklab.common.inter.ErrorService
 import io.coderf.arklab.common.utils.common.KeyBoardUtil
 import io.coderf.arklab.common.utils.common.RxView
+import io.coderf.arklab.common.widget.dialog.ConfirmDialog
 import io.coderf.arklab.common.widget.dialog.MessageDialog
 import javax.inject.Inject
 
@@ -62,44 +68,76 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
 
     override fun initView(savedInstanceState: Bundle?) {
         binding.cbAgreement.isChecked = UserAccountHelper.isAgree()
-        // 设置CheckBox的文本和点击事件
-        binding.cbAgreement.text = mViewModel.agreementSpannableString()
+        binding.cbAgreement.text = LoginAgreementMarkup.build(
+            ContextCompat.getColor(this, CommonR.color.themeColor)
+        )
         binding.cbAgreement.movementMethod = LinkMovementMethod.getInstance()
-        //防止快速点击
         RxView.setOnClickListener(binding.loginSubmit) {
-            mViewModel.loginClick(this, binding.editPassword.text?.toString(), binding.cbAgreement)
+            submitLogin(binding.editPassword.text?.toString(), binding.cbAgreement.isChecked)
         }
         binding.switchPasswordType.setOnClickListener {
             if (it.isSelected) {
-                it.isSelected = false;
+                it.isSelected = false
                 binding.editPassword.inputType =
-                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT;//设置密码不可见
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
             } else {
-                it.isSelected = true;
+                it.isSelected = true
                 binding.editPassword.inputType =
-                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;//设置密码可见
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
         }
-        // 1. ViewModel → UI：监听状态变化并更新UI
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.loginState.collect { state ->
-                    binding.editAccount.setText(state.userName)
-                    binding.editVerificationCode.setText(state.code)
+                    // 仅在外部状态与输入框不一致时写入，避免每次 StateFlow 回灌都 setText 把光标顶到开头
+                    syncEditTextIfChanged(binding.editAccount, state.userName.orEmpty())
+                    syncEditTextIfChanged(binding.editVerificationCode, state.code.orEmpty())
                 }
             }
         }
 
-        // 2. UI → ViewModel：监听用户输入
-        binding.editAccount.doAfterTextChanged  { text ->
+        binding.editAccount.doAfterTextChanged { text ->
             mViewModel.updateUserName(text.toString())
         }
-        binding.editVerificationCode.doAfterTextChanged  { text->
+        binding.editVerificationCode.doAfterTextChanged { text ->
             mViewModel.updateCode(text.toString())
         }
         binding.imageVerificationCode.setOnClickListener {
-            mViewModel.getImageCode()
+            mViewModel.refreshCaptchaAndLoadImage()
         }
+    }
+
+    /**
+     * 与 [io.coderf.arklab.usercomponent.viewmodel.LoginViewModel.loginState] 同步展示；内容已一致则不再 setText。
+     */
+    private fun syncEditTextIfChanged(edit: EditText, newText: String) {
+        if (edit.text?.toString() == newText) return
+        edit.setText(newText)
+        edit.setSelection(newText.length)
+    }
+
+    private fun submitLogin(rawPassword: String?, agreementChecked: Boolean) {
+        when (val result = mViewModel.attemptLogin(rawPassword, agreementChecked)) {
+            is LoginSubmitResult.Toast -> showToast(result.message)
+            LoginSubmitResult.NeedAgreementDialog -> showAgreementConsentDialog(rawPassword)
+            LoginSubmitResult.Submitted -> { /* 网络结果走 liveData */ }
+        }
+    }
+
+    private fun showAgreementConsentDialog(rawPassword: String?) {
+        val themeColor = ContextCompat.getColor(this, CommonR.color.themeColor)
+        ConfirmDialog(this)
+            .setSpannableContent(LoginAgreementMarkup.build(themeColor))
+            .setNegativeText("拒绝")
+            .setPositiveText("同意")
+            .setCanOutSide(false)
+            .setPositiveTextColor(themeColor)
+            .setOnPositiveClickListener {
+                binding.cbAgreement.isChecked = true
+                submitLogin(rawPassword, agreementChecked = true)
+            }
+            .builder()
+            .show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -108,18 +146,20 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         binding.tvAppVersion.text =
             "版本 ${AppManager.getAppManager().getVersion(this@LoginActivity)}"
         mViewModel.liveData.observe(this) { userInfo: UserInfo? ->
-            mViewModel.loginCallback(
+            mViewModel.onLoginSuccess(
                 userInfo,
-                binding.editAccount.text.toString()
+                binding.editAccount.text.toString(),
+                AppManager.getAppManager().activityStack.size,
+                hasTarget()
             )
         }
         mViewModel.imageLiveData.observe(this) { data ->
             Glide.with(this).load(data.imageBase64).apply(
-                RequestOptions().error(io.coderf.arklab.common.R.mipmap.ic_default_image)
-                    .placeholder(io.coderf.arklab.common.R.mipmap.ic_default_image)
+                RequestOptions().error(CommonR.mipmap.ic_default_image)
+                    .placeholder(CommonR.mipmap.ic_default_image)
             ).into(binding.imageVerificationCode)
         }
-        mViewModel.getImageCode()
+        mViewModel.refreshCaptchaAndLoadImage()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -155,12 +195,11 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         if (TextUtils.isEmpty(targetActivity)) {
             return false
         }
-        try {
-            //是否报错，不报错说明目标页面存在
+        return try {
             Class.forName(targetActivity)
-            return true
+            true
         } catch (e: ClassNotFoundException) {
-            return false
+            false
         }
     }
 
@@ -171,7 +210,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
             return
         }
         try {
-            //是否报错，不报错说明目标页面存在
             val intent = Intent(this, Class.forName(targetActivity))
             intent.putExtras(bundle!!)
             startActivity(intent)

@@ -17,7 +17,7 @@ import io.coderf.arklab.common.repository.RepositoryImpl
  * Created by fz on 2023/12/1 10:47
  * describe :
  */
-class LoginRepositoryImpl constructor(apiService: UserApiService?) : io.coderf.arklab.common.repository.RepositoryImpl<UserApiService, UserView>(apiService) {
+class LoginRepositoryImpl constructor(apiService: UserApiService?) : RepositoryImpl<UserApiService, UserView>(apiService) {
 
     fun getImageCode(
         randomNumber: String,
