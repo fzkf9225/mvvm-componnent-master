@@ -19,8 +19,12 @@ import io.coderf.arklab.googlegps.permission.PermissionsChecker
 import kotlin.collections.iterator
 
 /**
- * created by fz on 2024/11/21 16:49
- * describe:
+ * gps权限、隐私流程一键检测的lifecycle
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/5/12 17:05
  */
 class GpsLifecycleObserver constructor(
     private val fragment: Fragment? = null,
@@ -73,6 +77,9 @@ class GpsLifecycleObserver constructor(
     private var gpsLauncher: ActivityResultLauncher<Intent>? = null
     private var locationPermissionLauncher: ActivityResultLauncher<Array<String>>? = null
     private var backPermissionLauncher: ActivityResultLauncher<String>? = null
+
+    /** 当前由本 Observer 展示的确认框，用于避免连续 [startCheck] 叠两层弹窗 */
+    private var activeGpsConfirmDialog: GPSConfirmDialog? = null
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
@@ -131,7 +138,7 @@ class GpsLifecycleObserver constructor(
         val isOpenGps: Boolean = isOpen(context!!)
         if (!isOpenGps) {
             //未打开GPS
-            configuredDialog()
+            val dialog = configuredDialog()
                 .setMessage(configOrDefault(GpsSettingConfig.getInstance().gpsEnableDialogMessage, "GPS未打开，是否前往设置打开"))
                 .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().gpsEnablePositiveText, "前往打开"))
                 .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().gpsEnableNegativeText, "取消"))
@@ -141,7 +148,9 @@ class GpsLifecycleObserver constructor(
                 }
                 .setOnPositiveClickListener { _ -> gpsLauncher?.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
                 .builder()
-                .show()
+            if (!showGpsConfirmDialogIfIdle(dialog)) {
+                return
+            }
             return
         }
         checkForegroundPermission(checkBackPermission, callback)
@@ -157,6 +166,7 @@ class GpsLifecycleObserver constructor(
                 callback?.let { it(false, "请先打开GPS") }
                 return@ActivityResultCallback
             }
+            dismissActiveGpsConfirmIfShowing()
             callback?.let { checkForegroundPermission(checkBackPermission, it) }
         }
 
@@ -173,7 +183,7 @@ class GpsLifecycleObserver constructor(
                     *GpsSettingConfig.PERMISSIONS_LOCATION
                 )
         ) {
-            configuredDialog()
+            val dialog = configuredDialog()
                 .setMessage(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionDialogMessage, "使用该功能需要您同意授权定位权限,并建议到系统设置中将“位置信息”修改为“始终允许”,若定位失败可以前往设置中手动开启"))
                 .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionPositiveText, "授权"))
                 .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().foregroundPermissionNegativeText, "取消"))
@@ -185,7 +195,9 @@ class GpsLifecycleObserver constructor(
                     locationPermissionLauncher?.launch(GpsSettingConfig.PERMISSIONS_LOCATION)
                 }
                 .builder()
-                .show()
+            if (!showGpsConfirmDialogIfIdle(dialog)) {
+                return
+            }
             return
         }
         if (!checkBackPermission) {
@@ -228,7 +240,7 @@ class GpsLifecycleObserver constructor(
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
             ) {
-                configuredDialog()
+                val dialog = configuredDialog()
                     .setMessage(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionDialogMessage, "为了您更好的体验，应用需要访问后台定位权限，需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”"))
                     .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionPositiveText, "前往设置"))
                     .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionNegativeText, "稍后再说"))
@@ -243,7 +255,9 @@ class GpsLifecycleObserver constructor(
                         backPermissionLauncher?.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     }
                     .builder()
-                    .show()
+                if (!showGpsConfirmDialogIfIdle(dialog)) {
+                    return
+                }
                 return
             }
             callback(true, "已授权")
@@ -254,6 +268,31 @@ class GpsLifecycleObserver constructor(
 
     private fun configuredDialog(): GPSConfirmDialog {
         return GPSConfirmDialog(context!!).applySettingConfig(GpsSettingConfig.getInstance())
+    }
+
+    /**
+     * 若本 Observer 已有确认框在显示，则不再调用 [GPSConfirmDialog.show]，避免连续 [startCheck] 叠两层。
+     *
+     * @return 本次是否成功执行了 show
+     */
+    private fun showGpsConfirmDialogIfIdle(dialog: GPSConfirmDialog): Boolean {
+        if (activeGpsConfirmDialog?.isShowing == true) {
+            return false
+        }
+        activeGpsConfirmDialog?.dismiss()
+        activeGpsConfirmDialog = dialog
+        dialog.setOnDismissListener {
+            if (activeGpsConfirmDialog === dialog) {
+                activeGpsConfirmDialog = null
+            }
+        }
+        dialog.show()
+        return true
+    }
+
+    /** GPS 已打开并继续后续流程时，关掉可能仍挂在窗口上的确认框，避免挡住下一步权限提示 */
+    private fun dismissActiveGpsConfirmIfShowing() {
+        activeGpsConfirmDialog?.takeIf { it.isShowing }?.dismiss()
     }
 
     private fun configOrDefault(value: String?, defaultValue: String): String {
@@ -278,6 +317,8 @@ class GpsLifecycleObserver constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
+        activeGpsConfirmDialog?.dismiss()
+        activeGpsConfirmDialog = null
         gpsLauncher?.unregister()
         locationPermissionLauncher?.unregister()
         backPermissionLauncher?.unregister()
