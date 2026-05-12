@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/demo_smart_paging_header_fragment_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/demo_smart_paging_header_navigation"
+        tools:context=".activity.DemoSmartPagingHeaderActivity" />
+</layout>
