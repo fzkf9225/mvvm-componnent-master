@@ -63,6 +63,18 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     private boolean wrapSelectorWheel = true;    // 是否循环滚动
     private int visibility = View.VISIBLE;       // 是否可见
 
+    private float titleTextSizeSp = 0f;
+    private @ColorInt int titleTextColor = -1;
+    private int titlePaddingTopPx = -1;
+    private int titlePaddingBottomPx = -1;
+    private int rootPaddingStartPx = -1;
+    private int rootPaddingEndPx = -1;
+    private int pickerMarginTopPx = -1;
+    private int pickerMarginBottomPx = -1;
+    private float confirmButtonTextSizeSp = 0f;
+    private float cancelButtonTextSizeSp = 0f;
+    private int buttonBarMarginTopPx = -1;
+
     // 对话框属性
     private boolean showTitle = true;               // 是否允许点击外部取消
     // 对话框属性
@@ -332,6 +344,49 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    public PickerDialog<T> setTitleTextSize(float spSize) {
+        this.titleTextSizeSp = spSize;
+        return this;
+    }
+
+    public PickerDialog<T> setTitleTextColor(@ColorInt int color) {
+        this.titleTextColor = color;
+        return this;
+    }
+
+    public PickerDialog<T> setTitleVerticalPaddingDp(int paddingTopDp, int paddingBottomDp) {
+        this.titlePaddingTopPx = paddingTopDp >= 0 ? DensityUtil.dp2px(context, paddingTopDp) : -1;
+        this.titlePaddingBottomPx = paddingBottomDp >= 0 ? DensityUtil.dp2px(context, paddingBottomDp) : -1;
+        return this;
+    }
+
+    public PickerDialog<T> setRootHorizontalPaddingDp(int paddingStartDp, int paddingEndDp) {
+        this.rootPaddingStartPx = paddingStartDp >= 0 ? DensityUtil.dp2px(context, paddingStartDp) : -1;
+        this.rootPaddingEndPx = paddingEndDp >= 0 ? DensityUtil.dp2px(context, paddingEndDp) : -1;
+        return this;
+    }
+
+    public PickerDialog<T> setPickerVerticalMarginDp(int marginTopDp, int marginBottomDp) {
+        this.pickerMarginTopPx = marginTopDp >= 0 ? DensityUtil.dp2px(context, marginTopDp) : -1;
+        this.pickerMarginBottomPx = marginBottomDp >= 0 ? DensityUtil.dp2px(context, marginBottomDp) : -1;
+        return this;
+    }
+
+    public PickerDialog<T> setConfirmButtonTextSize(float spSize) {
+        this.confirmButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public PickerDialog<T> setCancelButtonTextSize(float spSize) {
+        this.cancelButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public PickerDialog<T> setButtonBarMarginTopDp(int marginTopDp) {
+        this.buttonBarMarginTopPx = DensityUtil.dp2px(context, marginTopDp);
+        return this;
+    }
+
     public PickerDialog<T> builder() {
         initView();
         return this;
@@ -358,6 +413,8 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
             binding.vLine.setVisibility(View.GONE);
         }
 
+        applyLayoutAppearance();
+
         // 设置对话框属性
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
@@ -381,6 +438,52 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
 
     }
 
+    private void applyLayoutAppearance() {
+        if (rootPaddingStartPx >= 0 || rootPaddingEndPx >= 0) {
+            int start = rootPaddingStartPx >= 0 ? rootPaddingStartPx : binding.clPicker.getPaddingStart();
+            int end = rootPaddingEndPx >= 0 ? rootPaddingEndPx : binding.clPicker.getPaddingEnd();
+            binding.clPicker.setPaddingRelative(start, binding.clPicker.getPaddingTop(), end, binding.clPicker.getPaddingBottom());
+        }
+        if (titleTextSizeSp > 0f) {
+            binding.tvTitle.setTextSize(titleTextSizeSp);
+        }
+        if (titleTextColor != -1) {
+            binding.tvTitle.setTextColor(titleTextColor);
+        }
+        if (titlePaddingTopPx >= 0 || titlePaddingBottomPx >= 0) {
+            int top = titlePaddingTopPx >= 0 ? titlePaddingTopPx : binding.tvTitle.getPaddingTop();
+            int bottom = titlePaddingBottomPx >= 0 ? titlePaddingBottomPx : binding.tvTitle.getPaddingBottom();
+            binding.tvTitle.setPaddingRelative(binding.tvTitle.getPaddingStart(), top, binding.tvTitle.getPaddingEnd(), bottom);
+        }
+        if (pickerMarginTopPx >= 0 || pickerMarginBottomPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dataPicker.getLayoutParams();
+            if (pickerMarginTopPx >= 0) {
+                lp.topMargin = pickerMarginTopPx;
+            }
+            if (pickerMarginBottomPx >= 0) {
+                lp.bottomMargin = pickerMarginBottomPx;
+            }
+            binding.dataPicker.setLayoutParams(lp);
+        }
+        if (confirmButtonTextSizeSp > 0f) {
+            binding.dialogConfirm.setTextSize(confirmButtonTextSizeSp);
+        }
+        if (cancelButtonTextSizeSp > 0f) {
+            binding.dialogCancel.setTextSize(cancelButtonTextSizeSp);
+        }
+        if (buttonBarMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams lpCancel =
+                    (ViewGroup.MarginLayoutParams) binding.dialogCancel.getLayoutParams();
+            lpCancel.topMargin = buttonBarMarginTopPx;
+            binding.dialogCancel.setLayoutParams(lpCancel);
+            ViewGroup.MarginLayoutParams lpConfirm =
+                    (ViewGroup.MarginLayoutParams) binding.dialogConfirm.getLayoutParams();
+            lpConfirm.topMargin = buttonBarMarginTopPx;
+            binding.dialogConfirm.setLayoutParams(lpConfirm);
+        }
+    }
+
     /**
      * 设置NumberPicker
      */
@@ -389,8 +492,12 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
             binding.dataPicker.setVisibility(View.GONE);
             return;
         }
-        binding.dataPicker.setTextSize(textSize);
-        binding.dataPicker.setTextColor(textColor);
+        if (textSize > 0f) {
+            binding.dataPicker.setTextSize(textSize);
+        }
+        if (textColor != -1) {
+            binding.dataPicker.setTextColor(textColor);
+        }
         binding.dataPicker.setSelectionDividerHeight(dividerHeight);
         binding.dataPicker.setVisibility(visibility);
         binding.dataPicker.setMinValue(0);

@@ -19,6 +19,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.constant.RefreshState;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import io.coderf.arklab.common.utils.common.DensityUtil;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import io.coderf.arklab.common.R;
@@ -69,8 +70,17 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
 
-    protected ConcatAdapter createdHeaderFootAdapter(){
-        return adapter.withLoadStateFooter(new PagingFooterAdapter(() -> adapter.retry()));
+    protected ConcatAdapter createdHeaderFootAdapter() {
+        ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(
+                new PagingFooterAdapter(() -> adapter.retry()));
+        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
+        if (header != null) {
+            ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                    .setIsolateViewTypes(true)
+                    .build();
+            return new ConcatAdapter(config, header, mainWithFooter);
+        }
+        return mainWithFooter;
     }
 
    protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
@@ -87,7 +97,9 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
             }
         } else if (refresh instanceof LoadState.Error) {
             refreshLayout.finishRefresh(false);
-//            setViewState(EmptyLayout.LOADING_ERROR);
+            if (shouldShowEmptyLayoutOnRefreshError()) {
+                setViewState(EmptyLayout.State.LOADING_ERROR);
+            }
         }
 
 //        if (append instanceof LoadState.Loading) {
@@ -104,6 +116,16 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         return null;
     };
 
+    /**
+     * 仅在「尚无列表数据」且空布局处于首刷/重试加载态时展示错误页，避免有数据时遮挡列表观感。
+     */
+    protected boolean shouldShowEmptyLayoutOnRefreshError() {
+        return adapter != null
+                && adapter.getItemCount() == 0
+                && emptyLayout != null
+                && emptyLayout.isLoading();
+    }
+
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
 
     protected RecyclerView getRecyclerView() {
@@ -115,7 +137,9 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     }
 
     protected RecyclerView.ItemDecoration createDivider() {
-        return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
+        return new RecycleViewDivider(requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                DensityUtil.dp2px(requireActivity(), 1),
                 ContextCompat.getColor(requireActivity(), R.color.h_line_color));
     }
 
@@ -145,9 +169,10 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     @Override
     public void onErrorCode(BaseResponse model) {
         try {
-            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING ||
-                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading;
-            if (refreshError) {
+            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing
+                    || (emptyLayout != null && emptyLayout.isLoading())
+                    || refreshLayout.getState() == RefreshState.Loading;
+            if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
                 setViewState(EmptyLayout.State.LOADING_ERROR);
             }
             onRefreshFinish(false);

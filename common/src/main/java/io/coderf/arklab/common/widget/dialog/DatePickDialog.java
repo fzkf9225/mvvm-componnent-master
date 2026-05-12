@@ -116,6 +116,27 @@ public class DatePickDialog extends Dialog {
      */
     private int gravity = Gravity.BOTTOM;
 
+    /** 标题文字大小 (sp)，小于等于 0 沿用 XML */
+    private float titleTextSizeSp = 0f;
+    /** 标题文字颜色，null 沿用 XML */
+    private ColorStateList titleTextColor = null;
+    /** 标题 layout_marginTop (px)，小于 0 沿用 XML */
+    private int titleMarginTopPx = -1;
+    /** 「今天/当月…」文字大小 (sp)，小于等于 0 沿用 XML */
+    private float todayTextSizeSp = 0f;
+    /** 确定 / 取消按钮文字大小 (sp)，小于等于 0 沿用 XML */
+    private float positiveButtonTextSizeSp = 0f;
+    private float negativeButtonTextSizeSp = 0f;
+    /** 根布局水平 padding (px)，小于 0 沿用 XML */
+    private int rootPaddingStartPx = -1;
+    private int rootPaddingEndPx = -1;
+    /** 年/月/日等标签文字颜色，null 沿用 XML */
+    private ColorStateList unitLabelTextColor = null;
+    /** 单位标签文字大小 (sp)，小于等于 0 沿用 XML */
+    private float unitLabelTextSizeSp = 0f;
+    /** 底部按钮 layout_marginTop (px)，小于 0 沿用 XML */
+    private int buttonBarMarginTopPx = -1;
+
     public DatePickDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
         this.context = context;
@@ -260,6 +281,73 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
+    public DatePickDialog setTitleTextSize(float spSize) {
+        this.titleTextSizeSp = spSize;
+        return this;
+    }
+
+    public DatePickDialog setTitleTextColor(@ColorInt int color) {
+        this.titleTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public DatePickDialog setTitleMarginTopPx(int marginTopPx) {
+        this.titleMarginTopPx = marginTopPx;
+        return this;
+    }
+
+    public DatePickDialog setTitleMarginTopDp(int marginTopDp) {
+        this.titleMarginTopPx = DensityUtil.dp2px(context, marginTopDp);
+        return this;
+    }
+
+    public DatePickDialog setTodayTextSize(float spSize) {
+        this.todayTextSizeSp = spSize;
+        return this;
+    }
+
+    public DatePickDialog setPositiveButtonTextSize(float spSize) {
+        this.positiveButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public DatePickDialog setNegativeButtonTextSize(float spSize) {
+        this.negativeButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public DatePickDialog setRootHorizontalPaddingPx(int paddingStartPx, int paddingEndPx) {
+        this.rootPaddingStartPx = paddingStartPx;
+        this.rootPaddingEndPx = paddingEndPx;
+        return this;
+    }
+
+    public DatePickDialog setRootHorizontalPaddingDp(int paddingStartDp, int paddingEndDp) {
+        this.rootPaddingStartPx = paddingStartDp >= 0 ? DensityUtil.dp2px(context, paddingStartDp) : -1;
+        this.rootPaddingEndPx = paddingEndDp >= 0 ? DensityUtil.dp2px(context, paddingEndDp) : -1;
+        return this;
+    }
+
+    public DatePickDialog setUnitLabelTextColor(@ColorInt int color) {
+        this.unitLabelTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public DatePickDialog setUnitLabelTextSize(float spSize) {
+        this.unitLabelTextSizeSp = spSize;
+        return this;
+    }
+
+    public DatePickDialog setButtonBarMarginTopPx(int marginTopPx) {
+        this.buttonBarMarginTopPx = marginTopPx;
+        return this;
+    }
+
+    public DatePickDialog setButtonBarMarginTopDp(int marginTopDp) {
+        this.buttonBarMarginTopPx = DensityUtil.dp2px(context, marginTopDp);
+        return this;
+    }
+
     public DatePickDialog builder() {
         initView();
         return this;
@@ -337,6 +425,7 @@ public class DatePickDialog extends Dialog {
         binding.dialogMessageType.setText(title);
         binding.dialogMessageType.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
         binding.tvToday.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
+        applyDynamicAppearance();
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
@@ -355,6 +444,61 @@ public class DatePickDialog extends Dialog {
                 0,
                 0
         )));
+    }
+
+    private void applyDynamicAppearance() {
+        if (rootPaddingStartPx >= 0 || rootPaddingEndPx >= 0) {
+            int start = rootPaddingStartPx >= 0 ? rootPaddingStartPx : binding.clDate.getPaddingStart();
+            int end = rootPaddingEndPx >= 0 ? rootPaddingEndPx : binding.clDate.getPaddingEnd();
+            binding.clDate.setPaddingRelative(start, binding.clDate.getPaddingTop(), end, binding.clDate.getPaddingBottom());
+        }
+        if (titleTextColor != null) {
+            binding.dialogMessageType.setTextColor(titleTextColor);
+        }
+        if (titleTextSizeSp > 0f) {
+            binding.dialogMessageType.setTextSize(titleTextSizeSp);
+        }
+        if (titleMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogMessageType.getLayoutParams();
+            lp.topMargin = titleMarginTopPx;
+            binding.dialogMessageType.setLayoutParams(lp);
+        }
+        if (todayTextSizeSp > 0f) {
+            binding.tvToday.setTextSize(todayTextSizeSp);
+        }
+        if (positiveButtonTextSizeSp > 0f) {
+            binding.dialogConfirm.setTextSize(positiveButtonTextSizeSp);
+        }
+        if (negativeButtonTextSizeSp > 0f) {
+            binding.dialogCancel.setTextSize(negativeButtonTextSizeSp);
+        }
+        if (unitLabelTextColor != null) {
+            binding.tvYearLabel.setTextColor(unitLabelTextColor);
+            binding.tvMonthLabel.setTextColor(unitLabelTextColor);
+            binding.tvDayLabel.setTextColor(unitLabelTextColor);
+            binding.tvHourLabel.setTextColor(unitLabelTextColor);
+            binding.tvMinuteLabel.setTextColor(unitLabelTextColor);
+            binding.tvSecondLabel.setTextColor(unitLabelTextColor);
+        }
+        if (unitLabelTextSizeSp > 0f) {
+            binding.tvYearLabel.setTextSize(unitLabelTextSizeSp);
+            binding.tvMonthLabel.setTextSize(unitLabelTextSizeSp);
+            binding.tvDayLabel.setTextSize(unitLabelTextSizeSp);
+            binding.tvHourLabel.setTextSize(unitLabelTextSizeSp);
+            binding.tvMinuteLabel.setTextSize(unitLabelTextSizeSp);
+            binding.tvSecondLabel.setTextSize(unitLabelTextSizeSp);
+        }
+        if (buttonBarMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams lpCancel =
+                    (ViewGroup.MarginLayoutParams) binding.dialogCancel.getLayoutParams();
+            lpCancel.topMargin = buttonBarMarginTopPx;
+            binding.dialogCancel.setLayoutParams(lpCancel);
+            ViewGroup.MarginLayoutParams lpConfirm =
+                    (ViewGroup.MarginLayoutParams) binding.dialogConfirm.getLayoutParams();
+            lpConfirm.topMargin = buttonBarMarginTopPx;
+            binding.dialogConfirm.setLayoutParams(lpConfirm);
+        }
     }
 
     private void initPickValue() {

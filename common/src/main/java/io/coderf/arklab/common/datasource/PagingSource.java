@@ -39,9 +39,10 @@ public class PagingSource<T, BV extends BaseView> extends RxPagingSource<Integer
     public Single<LoadResult<Integer, T>> loadSingle(@NonNull LoadParams<Integer> loadParams) {
         try {
             int currentPage = loadParams.getKey() == null ? startPage : loadParams.getKey();
+            int loadSize = loadParams.getLoadSize();
             return Single.fromObservable(
-                    pagingRepository.requestPaging(currentPage, loadParams.getLoadSize())
-                            .map(mBeans -> toLoadResult(mBeans, currentPage))
+                    pagingRepository.requestPaging(currentPage, loadSize)
+                            .map(mBeans -> toLoadResult(mBeans, currentPage, loadSize))
                             .doOnError(pagingRepository.catchException())
                             .onErrorReturn(LoadResult.Error::new));
         } catch (Exception e) {
@@ -57,12 +58,14 @@ public class PagingSource<T, BV extends BaseView> extends RxPagingSource<Integer
      *
      * @param mBeans 待加载的实体
      * @param page  对应的页数
+     * @param requestedLoadSize 本次请求的条数上限，用于判断末页（少于该条数则无下一页）
      * @return: androidx.paging.PagingSource.LoadResult<java.lang.Integer, com.xxx.xxx.Bean>
      * @since 1.0
      */
-    private LoadResult<Integer, T> toLoadResult(@NonNull List<T> mBeans, Integer page) {
+    private LoadResult<Integer, T> toLoadResult(@NonNull List<T> mBeans, Integer page, int requestedLoadSize) {
         Integer prevKey = page == 1 ? null : page - 1;
-        Integer nextKey = mBeans.isEmpty() ? null : page + 1;
+        boolean endReached = mBeans.isEmpty() || mBeans.size() < requestedLoadSize;
+        Integer nextKey = endReached ? null : page + 1;
         return new LoadResult.Page<>(mBeans, prevKey, nextKey, LoadResult.Page.COUNT_UNDEFINED,
                 LoadResult.Page.COUNT_UNDEFINED);
     }

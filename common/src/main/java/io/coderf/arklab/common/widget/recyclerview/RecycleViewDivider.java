@@ -64,17 +64,28 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.set(0, 0, 0, mDividerHeight);
+        int adapterPos = parent.getChildAdapterPosition(view);
+        int itemCount = parent.getAdapter() == null ? 0 : parent.getAdapter().getItemCount();
+        boolean isLastItem = itemCount > 0 && adapterPos == itemCount - 1;
+        boolean skipInsetForLast = !isShowLastDivider && isLastItem;
+        if (mOrientation == LinearLayoutManager.VERTICAL) {
+            int bottom = skipInsetForLast ? 0 : mDividerHeight;
+            outRect.set(0, 0, 0, bottom);
+        } else {
+            int right = skipInsetForLast ? 0 : mDividerHeight;
+            outRect.set(0, 0, right, 0);
+        }
     }
 
     // 绘制分割线
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
+        // 与 LinearLayoutManager 方向一致：纵向列表在 item 底边画「横线」；横向列表在 item 右侧画「竖线」
         if (mOrientation == LinearLayoutManager.VERTICAL) {
-            drawVertical(c, parent);
-        } else {
             drawHorizontal(c, parent);
+        } else {
+            drawVertical(c, parent);
         }
     }
 
@@ -83,9 +94,11 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         final int left = parent.getPaddingLeft();
         final int right = parent.getMeasuredWidth() - parent.getPaddingRight();
         final int childSize = parent.getChildCount();
-        int itemCount = isShowLastDivider ? childSize : (childSize - 1);
-        for (int i = 0; i < (Math.max(itemCount, 0)); i++) {
+        for (int i = 0; i < childSize; i++) {
             final View child = parent.getChildAt(i);
+            if (shouldSkipDividerForChild(parent, child)) {
+                continue;
+            }
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
             final int top = child.getBottom() + layoutParams.bottomMargin;
             final int bottom = top + mDividerHeight;
@@ -98,13 +111,28 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getMeasuredHeight() - parent.getPaddingBottom();
         final int childSize = parent.getChildCount();
-        int itemCount = isShowLastDivider ? childSize : (childSize - 1);
-        for (int i = 0; i < Math.max(itemCount, 0); i++) {
+        for (int i = 0; i < childSize; i++) {
             final View child = parent.getChildAt(i);
+            if (shouldSkipDividerForChild(parent, child)) {
+                continue;
+            }
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
             final int left = child.getRight() + layoutParams.rightMargin;
             final int right = left + mDividerHeight;
             canvas.drawRect(left, top, right, bottom, mPaint);
         }
+    }
+
+    /** 与 {@link #isShowLastDivider} 一致：最后一项之后不绘制分割线 */
+    private boolean shouldSkipDividerForChild(RecyclerView parent, View child) {
+        if (isShowLastDivider) {
+            return false;
+        }
+        int pos = parent.getChildAdapterPosition(child);
+        if (pos == RecyclerView.NO_POSITION) {
+            return true;
+        }
+        int count = parent.getAdapter() == null ? 0 : parent.getAdapter().getItemCount();
+        return count > 0 && pos == count - 1;
     }
 }

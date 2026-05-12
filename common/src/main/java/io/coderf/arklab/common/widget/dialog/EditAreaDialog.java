@@ -87,6 +87,19 @@ public class EditAreaDialog extends Dialog {
      */
     private Drawable bgDrawable;
 
+    private float tipsTextSizeSp = 0f;
+    private int tipsMarginTopPx = -1;
+    private int tipsMarginStartPx = -1;
+    private int tipsMarginEndPx = -1;
+    private float inputTextSizeSp = 0f;
+    private int inputMarginTopPx = -1;
+    private int inputMarginStartPx = -1;
+    private int inputMarginEndPx = -1;
+    /** 输入框四边统一 padding (px)，小于 0 不改 */
+    private int inputPaddingAllPx = -1;
+    private float positiveTextSizeSp = 0f;
+    private float negativeTextSizeSp = 0f;
+
     private final LayoutInflater layoutInflater;
 
     public EditAreaDialog(@NonNull Context context) {
@@ -169,6 +182,72 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
+    public EditAreaDialog setTipsTextSize(float spSize) {
+        this.tipsTextSizeSp = spSize;
+        return this;
+    }
+
+    public EditAreaDialog setTipsMarginTopPx(int marginTopPx) {
+        this.tipsMarginTopPx = marginTopPx;
+        return this;
+    }
+
+    public EditAreaDialog setTipsMarginTopDp(int marginTopDp) {
+        this.tipsMarginTopPx = DensityUtil.dp2px(getContext(), marginTopDp);
+        return this;
+    }
+
+    public EditAreaDialog setTipsHorizontalMarginPx(int marginStartPx, int marginEndPx) {
+        this.tipsMarginStartPx = marginStartPx;
+        this.tipsMarginEndPx = marginEndPx;
+        return this;
+    }
+
+    public EditAreaDialog setTipsHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        this.tipsMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
+        this.tipsMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+        return this;
+    }
+
+    public EditAreaDialog setInputTextSize(float spSize) {
+        this.inputTextSizeSp = spSize;
+        return this;
+    }
+
+    public EditAreaDialog setInputMarginPx(int topPx, int startPx, int endPx) {
+        this.inputMarginTopPx = topPx;
+        this.inputMarginStartPx = startPx;
+        this.inputMarginEndPx = endPx;
+        return this;
+    }
+
+    public EditAreaDialog setInputMarginDp(int topDp, int startDp, int endDp) {
+        this.inputMarginTopPx = topDp >= 0 ? DensityUtil.dp2px(getContext(), topDp) : -1;
+        this.inputMarginStartPx = startDp >= 0 ? DensityUtil.dp2px(getContext(), startDp) : -1;
+        this.inputMarginEndPx = endDp >= 0 ? DensityUtil.dp2px(getContext(), endDp) : -1;
+        return this;
+    }
+
+    public EditAreaDialog setInputPaddingAllPx(int paddingPx) {
+        this.inputPaddingAllPx = paddingPx;
+        return this;
+    }
+
+    public EditAreaDialog setInputPaddingAllDp(int paddingDp) {
+        this.inputPaddingAllPx = DensityUtil.dp2px(getContext(), paddingDp);
+        return this;
+    }
+
+    public EditAreaDialog setPositiveTextSize(float spSize) {
+        this.positiveTextSizeSp = spSize;
+        return this;
+    }
+
+    public EditAreaDialog setNegativeTextSize(float spSize) {
+        this.negativeTextSizeSp = spSize;
+        return this;
+    }
+
     public EditAreaDialog builder() {
         initView();
         return this;
@@ -212,6 +291,7 @@ public class EditAreaDialog extends Dialog {
         } else {
             binding.dialogTips.setText(tipsStr);
         }
+        applyAppearanceOverrides();
 
         binding.dialogConfirm.setOnClickListener(v -> {
             if (onPositiveClickListener != null) {
@@ -249,6 +329,52 @@ public class EditAreaDialog extends Dialog {
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f)
         )));
+    }
+
+    private void applyAppearanceOverrides() {
+        if (tipsTextSizeSp > 0f) {
+            binding.dialogTips.setTextSize(tipsTextSizeSp);
+        }
+        if (tipsMarginTopPx >= 0 || tipsMarginStartPx >= 0 || tipsMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogTips.getLayoutParams();
+            if (tipsMarginTopPx >= 0) {
+                lp.topMargin = tipsMarginTopPx;
+            }
+            if (tipsMarginStartPx >= 0) {
+                lp.setMarginStart(tipsMarginStartPx);
+            }
+            if (tipsMarginEndPx >= 0) {
+                lp.setMarginEnd(tipsMarginEndPx);
+            }
+            binding.dialogTips.setLayoutParams(lp);
+        }
+        if (inputTextSizeSp > 0f) {
+            binding.dialogInput.setTextSize(inputTextSizeSp);
+        }
+        if (inputMarginTopPx >= 0 || inputMarginStartPx >= 0 || inputMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogInput.getLayoutParams();
+            if (inputMarginTopPx >= 0) {
+                lp.topMargin = inputMarginTopPx;
+            }
+            if (inputMarginStartPx >= 0) {
+                lp.setMarginStart(inputMarginStartPx);
+            }
+            if (inputMarginEndPx >= 0) {
+                lp.setMarginEnd(inputMarginEndPx);
+            }
+            binding.dialogInput.setLayoutParams(lp);
+        }
+        if (inputPaddingAllPx >= 0) {
+            binding.dialogInput.setPadding(inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx);
+        }
+        if (positiveTextSizeSp > 0f) {
+            binding.dialogConfirm.setTextSize(positiveTextSizeSp);
+        }
+        if (negativeTextSizeSp > 0f) {
+            binding.dialogCancel.setTextSize(negativeTextSizeSp);
+        }
     }
 
 }

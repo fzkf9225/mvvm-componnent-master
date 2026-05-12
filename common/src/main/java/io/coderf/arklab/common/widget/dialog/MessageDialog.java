@@ -67,6 +67,18 @@ public class MessageDialog extends Dialog {
      * 弹框文字颜色
      */
     private ColorStateList textColor = null;
+    private ColorStateList messageTypeTextColor = null;
+    private float messageTypeTextSizeSp = 0f;
+    private int messageTypeMarginTopPx = -1;
+    private int messageTypeMarginStartPx = -1;
+    private int messageTypeMarginEndPx = -1;
+    private float contentTextSizeSp = 0f;
+    private int contentPaddingTopPx = -1;
+    private int contentPaddingBottomPx = -1;
+    private int contentMarginStartPx = -1;
+    private int contentMarginEndPx = -1;
+    private ColorStateList optionTextColor = null;
+    private float optionTextSizeSp = 0f;
 
     /**
      * 弹框布局
@@ -118,6 +130,54 @@ public class MessageDialog extends Dialog {
         return this;
     }
 
+    public MessageDialog setMessageTypeTextColor(@ColorInt int color) {
+        this.messageTypeTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public MessageDialog setMessageTypeTextSize(float spSize) {
+        this.messageTypeTextSizeSp = spSize;
+        return this;
+    }
+
+    public MessageDialog setMessageTypeMarginTopDp(int marginTopDp) {
+        this.messageTypeMarginTopPx = DensityUtil.dp2px(getContext(), marginTopDp);
+        return this;
+    }
+
+    public MessageDialog setMessageTypeHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        this.messageTypeMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
+        this.messageTypeMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+        return this;
+    }
+
+    public MessageDialog setContentTextSize(float spSize) {
+        this.contentTextSizeSp = spSize;
+        return this;
+    }
+
+    public MessageDialog setContentVerticalPaddingDp(int paddingTopDp, int paddingBottomDp) {
+        this.contentPaddingTopPx = paddingTopDp >= 0 ? DensityUtil.dp2px(getContext(), paddingTopDp) : -1;
+        this.contentPaddingBottomPx = paddingBottomDp >= 0 ? DensityUtil.dp2px(getContext(), paddingBottomDp) : -1;
+        return this;
+    }
+
+    public MessageDialog setContentHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        this.contentMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
+        this.contentMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+        return this;
+    }
+
+    public MessageDialog setOptionTextColor(@ColorInt int color) {
+        this.optionTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public MessageDialog setOptionTextSize(float spSize) {
+        this.optionTextSizeSp = spSize;
+        return this;
+    }
+
     public MessageDialog builder() {
         initView();
         return this;
@@ -158,6 +218,7 @@ public class MessageDialog extends Dialog {
             binding.dialogTextView.setText(spannableContent);
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+        applyAppearanceOverrides();
 
         setCancelable(outSide);
         setCanceledOnTouchOutside(outSide);
@@ -184,6 +245,58 @@ public class MessageDialog extends Dialog {
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f)
         )));
+    }
+
+    private void applyAppearanceOverrides() {
+        if (messageTypeTextColor != null) {
+            binding.dialogMessageType.setTextColor(messageTypeTextColor);
+        }
+        if (messageTypeTextSizeSp > 0f) {
+            binding.dialogMessageType.setTextSize(messageTypeTextSizeSp);
+        }
+        if (messageTypeMarginTopPx >= 0 || messageTypeMarginStartPx >= 0 || messageTypeMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogMessageType.getLayoutParams();
+            if (messageTypeMarginTopPx >= 0) {
+                lp.topMargin = messageTypeMarginTopPx;
+            }
+            if (messageTypeMarginStartPx >= 0) {
+                lp.setMarginStart(messageTypeMarginStartPx);
+            }
+            if (messageTypeMarginEndPx >= 0) {
+                lp.setMarginEnd(messageTypeMarginEndPx);
+            }
+            binding.dialogMessageType.setLayoutParams(lp);
+        }
+        if (contentTextSizeSp > 0f) {
+            binding.dialogTextView.setTextSize(contentTextSizeSp);
+        }
+        if (contentPaddingTopPx >= 0 || contentPaddingBottomPx >= 0) {
+            int top = contentPaddingTopPx >= 0 ? contentPaddingTopPx : binding.dialogTextView.getPaddingTop();
+            int bottom = contentPaddingBottomPx >= 0 ? contentPaddingBottomPx : binding.dialogTextView.getPaddingBottom();
+            binding.dialogTextView.setPaddingRelative(
+                    binding.dialogTextView.getPaddingStart(),
+                    top,
+                    binding.dialogTextView.getPaddingEnd(),
+                    bottom);
+        }
+        if (contentMarginStartPx >= 0 || contentMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogTextView.getLayoutParams();
+            if (contentMarginStartPx >= 0) {
+                lp.setMarginStart(contentMarginStartPx);
+            }
+            if (contentMarginEndPx >= 0) {
+                lp.setMarginEnd(contentMarginEndPx);
+            }
+            binding.dialogTextView.setLayoutParams(lp);
+        }
+        if (optionTextColor != null) {
+            binding.dialogOption.setTextColor(optionTextColor);
+        }
+        if (optionTextSizeSp > 0f) {
+            binding.dialogOption.setTextSize(optionTextSizeSp);
+        }
     }
 
 }

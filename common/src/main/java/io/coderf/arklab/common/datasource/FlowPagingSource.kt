@@ -27,7 +27,7 @@ class FlowPagingSource<T : Any, BV : BaseView>(
             val flow: Flow<List<T>>? = pagingRepository.requestPaging(currentPage, params.loadSize)
 
             flow?.map { mBeans ->
-                toLoadResult(mBeans, currentPage)
+                toLoadResult(mBeans, currentPage, params.loadSize)
             }?.catch { e ->
                 // 相当于 doOnError：执行副作用
                 pagingRepository.handleFlowError(e,pagingRepository.apiRequestOptions)
@@ -47,9 +47,10 @@ class FlowPagingSource<T : Any, BV : BaseView>(
     /**
      * 将获取的集合对象转化为需加载的结果对象
      */
-    private fun toLoadResult(mBeans: List<T>, page: Int): LoadResult<Int, T> {
+    private fun toLoadResult(mBeans: List<T>, page: Int, requestedLoadSize: Int): LoadResult<Int, T> {
         val prevKey = if (page == 1) null else page - 1
-        val nextKey = if (mBeans.isEmpty()) null else page + 1
+        val endReached = mBeans.isEmpty() || mBeans.size < requestedLoadSize
+        val nextKey = if (endReached) null else page + 1
         return LoadResult.Page(
             data = mBeans,
             prevKey = prevKey,

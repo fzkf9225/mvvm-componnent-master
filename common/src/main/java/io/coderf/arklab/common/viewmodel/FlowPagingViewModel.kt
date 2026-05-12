@@ -7,6 +7,7 @@ import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.datasource.FlowPagingSource
 import io.coderf.arklab.common.repository.FlowRepositoryImpl
 import io.coderf.arklab.common.repository.PagingFlowRepositoryImpl
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,12 +35,14 @@ abstract class FlowPagingViewModel<IR : FlowRepositoryImpl<*, V>, T : Any, V : B
    open var pagingConfig: PagingConfig = PagingConfig(
         pageSize = DEFAULT_PAGE_SIZE,
         prefetchDistance = DEFAULT_PREFETCH_DISTANCE,
-        enablePlaceholders = true,
+        enablePlaceholders = false,
         initialLoadSize = DEFAULT_PAGE_SIZE
     )
 
     // 起始页码
     open var startPage: Int = DEFAULT_START_PAGE
+
+    private var pagingCollectJob: Job? = null
 
     override fun createRepository(baseView: V?) {
         super.createRepository(baseView)
@@ -47,7 +50,8 @@ abstract class FlowPagingViewModel<IR : FlowRepositoryImpl<*, V>, T : Any, V : B
     }
 
     override fun refreshData() {
-        viewModelScope.launch {
+        pagingCollectJob?.cancel()
+        pagingCollectJob = viewModelScope.launch {
             createPagingData().collect { pagingData ->
                 _pagingDataFlow.value = pagingData
             }

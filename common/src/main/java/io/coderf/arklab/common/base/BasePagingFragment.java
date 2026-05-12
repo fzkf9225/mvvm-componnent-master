@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import io.coderf.arklab.common.utils.common.DensityUtil;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import io.coderf.arklab.common.R;
@@ -65,8 +66,17 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
 
-    protected ConcatAdapter createdHeaderFootAdapter(){
-        return adapter.withLoadStateFooter(new PagingFooterAdapter(() -> adapter.retry()));
+    protected ConcatAdapter createdHeaderFootAdapter() {
+        ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(
+                new PagingFooterAdapter(() -> adapter.retry()));
+        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
+        if (header != null) {
+            ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                    .setIsolateViewTypes(true)
+                    .build();
+            return new ConcatAdapter(config, header, mainWithFooter);
+        }
+        return mainWithFooter;
     }
 
     protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
@@ -81,12 +91,23 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         } else if (loadStates.getRefresh() instanceof LoadState.Loading) {
 //            refreshLayout.setRefreshing(true);
         } else if (loadStates.getRefresh() instanceof LoadState.Error) {
-            LoadState.Error state = (LoadState.Error) loadStates.getRefresh();
             refreshLayout.setRefreshing(false);
-//            setViewState(EmptyLayout.LOADING_ERROR);
+            if (shouldShowEmptyLayoutOnRefreshError()) {
+                setViewState(EmptyLayout.State.LOADING_ERROR);
+            }
         }
         return null;
     };
+
+    /**
+     * 仅在「尚无列表数据」且空布局处于首刷/重试加载态时展示错误页，避免有数据时遮挡列表观感。
+     */
+    protected boolean shouldShowEmptyLayoutOnRefreshError() {
+        return adapter != null
+                && adapter.getItemCount() == 0
+                && emptyLayout != null
+                && emptyLayout.isLoading();
+    }
 
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
 
@@ -99,7 +120,9 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     }
 
     protected RecyclerView.ItemDecoration createDivider() {
-        return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
+        return new RecycleViewDivider(requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                DensityUtil.dp2px(requireActivity(), 1),
                 ContextCompat.getColor(requireContext(), R.color.h_line_color));
     }
 
@@ -129,9 +152,12 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     @Override
     public void onErrorCode(BaseResponse model) {
         try {
-            if (mViewModel != null) {
+            boolean refreshError = refreshLayout.isRefreshing()
+                    || (emptyLayout != null && emptyLayout.isLoading());
+            if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
                 setViewState(EmptyLayout.State.LOADING_ERROR);
             }
+            refreshLayout.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

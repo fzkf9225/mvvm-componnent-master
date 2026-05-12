@@ -74,12 +74,24 @@ public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.Vi
         this.binding = binding;
         itemView.setOnClickListener(v -> {
             if (adapter.onPagingAdapterListener != null) {
-                adapter.onPagingAdapterListener.onItemClick(v, adapter.getAdapterItem(getAbsoluteAdapterPosition()), getAbsoluteAdapterPosition());
+                int absPos = getAbsoluteAdapterPosition();
+                int lead = adapter.getPagingLeadingExtraItemCount();
+                if (absPos == RecyclerView.NO_POSITION || absPos < lead) {
+                    return;
+                }
+                int pagingPos = absPos - lead;
+                adapter.onPagingAdapterListener.onItemClick(v, adapter.getAdapterItem(pagingPos), pagingPos);
             }
         });
         itemView.setOnLongClickListener(v -> {
             if (adapter.onPagingAdapterListener != null) {
-                adapter.onPagingAdapterListener.onItemLongClick(v, adapter.getAdapterItem(getAbsoluteAdapterPosition()), getAbsoluteAdapterPosition());
+                int absPos = getAbsoluteAdapterPosition();
+                int lead = adapter.getPagingLeadingExtraItemCount();
+                if (absPos == RecyclerView.NO_POSITION || absPos < lead) {
+                    return true;
+                }
+                int pagingPos = absPos - lead;
+                adapter.onPagingAdapterListener.onItemLongClick(v, adapter.getAdapterItem(pagingPos), pagingPos);
                 return true;
             }
             return false;

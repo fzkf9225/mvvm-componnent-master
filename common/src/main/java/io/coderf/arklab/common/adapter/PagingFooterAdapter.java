@@ -29,23 +29,32 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
             holder.getBinding().progressBar.setVisibility(View.GONE);
             holder.getBinding().progressBar.hide();
             holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+            holder.getBinding().retryButton.setClickable(true);
+            holder.getBinding().retryButton.setFocusable(true);
             holder.getBinding().setMessage("加载失败，点击重试");
             holder.getBinding().retryButton.setOnClickListener(v -> {
+                holder.getBinding().retryButton.setClickable(false);
+                holder.getBinding().retryButton.setFocusable(false);
                 holder.getBinding().progressBar.setVisibility(View.VISIBLE);
-                holder.getBinding().retryButton.setVisibility(View.VISIBLE);
                 holder.getBinding().progressBar.show();
                 holder.getBinding().setMessage("正在加载...");
                 retry.run();
             });
         } else if (loadState instanceof LoadState.Loading) {
-            holder.getBinding().progressBar.setVisibility(View.VISIBLE);
             holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+            holder.getBinding().retryButton.setClickable(false);
+            holder.getBinding().retryButton.setFocusable(false);
+            holder.getBinding().retryButton.setOnClickListener(null);
+            holder.getBinding().progressBar.setVisibility(View.VISIBLE);
             holder.getBinding().progressBar.show();
             holder.getBinding().setMessage("正在加载...");
         } else if (loadState instanceof LoadState.NotLoading) {
             if (loadState.getEndOfPaginationReached()) {
                 holder.getBinding().progressBar.setVisibility(View.GONE);
                 holder.getBinding().retryButton.setVisibility(View.VISIBLE);
+                holder.getBinding().retryButton.setClickable(false);
+                holder.getBinding().retryButton.setFocusable(false);
+                holder.getBinding().retryButton.setOnClickListener(null);
                 holder.getBinding().setMessage("暂无更多数据");
                 holder.getBinding().progressBar.hide();
             } else {

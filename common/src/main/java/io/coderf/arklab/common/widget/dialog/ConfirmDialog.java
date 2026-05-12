@@ -104,6 +104,12 @@ public class ConfirmDialog extends Dialog {
     /** 按钮高度资源ID */
     @DimenRes
     private int buttonHeightRes = -1;
+    /** 内容区左右外边距 (px)，-1 表示沿用 XML */
+    private int contentMarginStartPx = -1;
+    private int contentMarginEndPx = -1;
+    /** 内容区左右内边距 (px)，-1 表示不修改该侧 */
+    private int contentPaddingStartPx = -1;
+    private int contentPaddingEndPx = -1;
 
     /**
      * 布局填充器
@@ -271,6 +277,36 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 设置提示文案左右外边距（px），任一侧小于 0 则保持 XML 该侧数值。
+     */
+    public ConfirmDialog setContentHorizontalMarginPx(int marginStartPx, int marginEndPx) {
+        this.contentMarginStartPx = marginStartPx;
+        this.contentMarginEndPx = marginEndPx;
+        return this;
+    }
+
+    public ConfirmDialog setContentHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        this.contentMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
+        this.contentMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+        return this;
+    }
+
+    /**
+     * 设置提示文案左右内边距（px），任一侧小于 0 则不改该侧。
+     */
+    public ConfirmDialog setContentHorizontalPaddingPx(int paddingStartPx, int paddingEndPx) {
+        this.contentPaddingStartPx = paddingStartPx;
+        this.contentPaddingEndPx = paddingEndPx;
+        return this;
+    }
+
+    public ConfirmDialog setContentHorizontalPaddingDp(int paddingStartDp, int paddingEndDp) {
+        this.contentPaddingStartPx = paddingStartDp >= 0 ? DensityUtil.dp2px(getContext(), paddingStartDp) : -1;
+        this.contentPaddingEndPx = paddingEndDp >= 0 ? DensityUtil.dp2px(getContext(), paddingEndDp) : -1;
+        return this;
+    }
+
     public ConfirmDialog builder() {
         initView();
         return this;
@@ -330,22 +366,25 @@ public class ConfirmDialog extends Dialog {
             binding.dialogCancel.setBackground(negativeBtnBackground);
         }
 
-        // 设置内容上边距
-        if (textPaddingTop >= 0) {
-            binding.dialogTextView.setPadding(
-                    binding.dialogTextView.getPaddingStart(),
-                    textPaddingTop,
-                    binding.dialogTextView.getPaddingEnd(),
-                    binding.dialogTextView.getPaddingBottom());
+        // 内容区内边距：先处理上下，再处理左右（避免互相覆盖）
+        int padTop = textPaddingTop >= 0 ? textPaddingTop : binding.dialogTextView.getPaddingTop();
+        int padBottom = textPaddingBottom >= 0 ? textPaddingBottom : binding.dialogTextView.getPaddingBottom();
+        int padStart = contentPaddingStartPx >= 0 ? contentPaddingStartPx : binding.dialogTextView.getPaddingStart();
+        int padEnd = contentPaddingEndPx >= 0 ? contentPaddingEndPx : binding.dialogTextView.getPaddingEnd();
+        if (textPaddingTop >= 0 || textPaddingBottom >= 0 || contentPaddingStartPx >= 0 || contentPaddingEndPx >= 0) {
+            binding.dialogTextView.setPadding(padStart, padTop, padEnd, padBottom);
         }
 
-        // 设置分割线上边距
-        if (textPaddingBottom >= 0) {
-            binding.dialogTextView.setPadding(binding.dialogTextView.getPaddingStart(),
-                    binding.dialogTextView.getPaddingTop(),
-                    binding.dialogTextView.getPaddingEnd(),
-                    textPaddingBottom);
-
+        if (contentMarginStartPx >= 0 || contentMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams mlp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogTextView.getLayoutParams();
+            if (contentMarginStartPx >= 0) {
+                mlp.setMarginStart(contentMarginStartPx);
+            }
+            if (contentMarginEndPx >= 0) {
+                mlp.setMarginEnd(contentMarginEndPx);
+            }
+            binding.dialogTextView.setLayoutParams(mlp);
         }
 
         // 设置按钮高度

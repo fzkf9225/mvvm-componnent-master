@@ -83,12 +83,27 @@ public class InputDialog extends Dialog {
      * 提示标题颜色
      */
     private ColorStateList tipColor = null;
+    /** 输入框文字颜色（与 XML 默认独立配置） */
+    private ColorStateList inputTextColor = null;
 
     private final LayoutInflater layoutInflater;
     /**
      * 背景
      */
     private Drawable bgDrawable;
+
+    private float tipsTextSizeSp = 0f;
+    private int tipsMarginTopPx = -1;
+    private int tipsMarginStartPx = -1;
+    private int tipsMarginEndPx = -1;
+    private float inputTextSizeSp = 0f;
+    private int inputMarginTopPx = -1;
+    private int inputMarginStartPx = -1;
+    private int inputMarginEndPx = -1;
+    private int inputPaddingStartPx = -1;
+    private int inputPaddingEndPx = -1;
+    private float positiveTextSizeSp = 0f;
+    private float negativeTextSizeSp = 0f;
 
     public InputDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
@@ -135,6 +150,14 @@ public class InputDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 设置输入框内文字颜色（不影响确定按钮；若需改确定按钮请用 {@link #setPositiveTextColor}）。
+     */
+    public InputDialog setInputTextColor(@ColorInt int color) {
+        this.inputTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
     public InputDialog setHintStr(String hintStr) {
         this.hintStr = hintStr;
         return this;
@@ -170,6 +193,50 @@ public class InputDialog extends Dialog {
         return this;
     }
 
+    public InputDialog setTipsTextSize(float spSize) {
+        this.tipsTextSizeSp = spSize;
+        return this;
+    }
+
+    public InputDialog setTipsMarginTopDp(int marginTopDp) {
+        this.tipsMarginTopPx = DensityUtil.dp2px(getContext(), marginTopDp);
+        return this;
+    }
+
+    public InputDialog setTipsHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        this.tipsMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
+        this.tipsMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+        return this;
+    }
+
+    public InputDialog setInputTextSize(float spSize) {
+        this.inputTextSizeSp = spSize;
+        return this;
+    }
+
+    public InputDialog setInputMarginDp(int topDp, int startDp, int endDp) {
+        this.inputMarginTopPx = topDp >= 0 ? DensityUtil.dp2px(getContext(), topDp) : -1;
+        this.inputMarginStartPx = startDp >= 0 ? DensityUtil.dp2px(getContext(), startDp) : -1;
+        this.inputMarginEndPx = endDp >= 0 ? DensityUtil.dp2px(getContext(), endDp) : -1;
+        return this;
+    }
+
+    public InputDialog setInputHorizontalPaddingDp(int paddingStartDp, int paddingEndDp) {
+        this.inputPaddingStartPx = paddingStartDp >= 0 ? DensityUtil.dp2px(getContext(), paddingStartDp) : -1;
+        this.inputPaddingEndPx = paddingEndDp >= 0 ? DensityUtil.dp2px(getContext(), paddingEndDp) : -1;
+        return this;
+    }
+
+    public InputDialog setPositiveTextSize(float spSize) {
+        this.positiveTextSizeSp = spSize;
+        return this;
+    }
+
+    public InputDialog setNegativeTextSize(float spSize) {
+        this.negativeTextSizeSp = spSize;
+        return this;
+    }
+
     public InputDialog builder() {
         initView();
         return this;
@@ -188,14 +255,14 @@ public class InputDialog extends Dialog {
         if (textColor != null) {
             binding.dialogConfirm.setTextColor(textColor);
         }
-
-
         if (negativeTextColor != null) {
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
-
         if (tipColor != null) {
             binding.dialogTips.setTextColor(tipColor);
+        }
+        if (inputTextColor != null) {
+            binding.dialogInput.setTextColor(inputTextColor);
         }
 
         binding.dialogInput.setHint(hintStr);
@@ -217,6 +284,7 @@ public class InputDialog extends Dialog {
         } else {
             binding.dialogTips.setText(tipsStr);
         }
+        applyAppearanceOverrides();
 
         binding.dialogConfirm.setOnClickListener(v -> {
             if (onPositiveClickListener != null) {
@@ -254,6 +322,54 @@ public class InputDialog extends Dialog {
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f)
         )));
+    }
+
+    private void applyAppearanceOverrides() {
+        if (tipsTextSizeSp > 0f) {
+            binding.dialogTips.setTextSize(tipsTextSizeSp);
+        }
+        if (tipsMarginTopPx >= 0 || tipsMarginStartPx >= 0 || tipsMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogTips.getLayoutParams();
+            if (tipsMarginTopPx >= 0) {
+                lp.topMargin = tipsMarginTopPx;
+            }
+            if (tipsMarginStartPx >= 0) {
+                lp.setMarginStart(tipsMarginStartPx);
+            }
+            if (tipsMarginEndPx >= 0) {
+                lp.setMarginEnd(tipsMarginEndPx);
+            }
+            binding.dialogTips.setLayoutParams(lp);
+        }
+        if (inputTextSizeSp > 0f) {
+            binding.dialogInput.setTextSize(inputTextSizeSp);
+        }
+        if (inputMarginTopPx >= 0 || inputMarginStartPx >= 0 || inputMarginEndPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogInput.getLayoutParams();
+            if (inputMarginTopPx >= 0) {
+                lp.topMargin = inputMarginTopPx;
+            }
+            if (inputMarginStartPx >= 0) {
+                lp.setMarginStart(inputMarginStartPx);
+            }
+            if (inputMarginEndPx >= 0) {
+                lp.setMarginEnd(inputMarginEndPx);
+            }
+            binding.dialogInput.setLayoutParams(lp);
+        }
+        if (inputPaddingStartPx >= 0 || inputPaddingEndPx >= 0) {
+            int start = inputPaddingStartPx >= 0 ? inputPaddingStartPx : binding.dialogInput.getPaddingStart();
+            int end = inputPaddingEndPx >= 0 ? inputPaddingEndPx : binding.dialogInput.getPaddingEnd();
+            binding.dialogInput.setPaddingRelative(start, binding.dialogInput.getPaddingTop(), end, binding.dialogInput.getPaddingBottom());
+        }
+        if (positiveTextSizeSp > 0f) {
+            binding.dialogConfirm.setTextSize(positiveTextSizeSp);
+        }
+        if (negativeTextSizeSp > 0f) {
+            binding.dialogCancel.setTextSize(negativeTextSizeSp);
+        }
     }
 
 }

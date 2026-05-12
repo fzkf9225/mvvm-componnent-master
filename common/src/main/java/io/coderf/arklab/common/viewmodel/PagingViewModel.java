@@ -63,6 +63,6 @@ public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends Ba
      * 不然PagerSource中的分页offset不太好计算，因为可能会每页的loadSize不相同，如果这两个值设置为相同是最方便的，不然的话你需要计算上一页的offset
      */
     public PagingConfig getPagingConfig() {
-        return new PagingConfig(DEFAULT_PAGE_SIZE, DEFAULT_PREFETCH_DISTANCE, true, DEFAULT_PAGE_SIZE);
+        return new PagingConfig(DEFAULT_PAGE_SIZE, DEFAULT_PREFETCH_DISTANCE, false, DEFAULT_PAGE_SIZE);
     }
 }

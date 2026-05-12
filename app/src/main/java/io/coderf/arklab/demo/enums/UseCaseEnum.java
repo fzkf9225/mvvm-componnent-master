@@ -8,6 +8,7 @@ import io.coderf.arklab.demo.activity.CustomCameraActivity;
 import io.coderf.arklab.demo.activity.DemoPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartFlowPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingActivity;
+import io.coderf.arklab.demo.activity.DemoSmartPagingHeaderActivity;
 import io.coderf.arklab.demo.activity.DialogActivity;
 import io.coderf.arklab.demo.activity.DownloadActivity;
 import io.coderf.arklab.demo.activity.FormDetailActivity;
@@ -49,6 +50,7 @@ public enum UseCaseEnum {
     CHECK_BOX(CheckBoxActivity.class, "单选复选框Adapter", "封装支持单选复选的选择框", null),
     PAGING(DemoPagingActivity.class, "Paging列表示例", "Jetpack Paging3列表封装", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
+    SMART_PAGING_HEADER(DemoSmartPagingHeaderActivity.class, "SmartPaging带头布局", "Paging3 + Smart + 可选列表头（示例 16:9 图）", null),
     SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),
     ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3综合列表封装", null),
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),

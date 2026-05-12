@@ -3,7 +3,9 @@ package io.coderf.arklab.demo.fragment
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import io.coderf.arklab.common.base.BaseSmartPagingFragment
 import io.coderf.arklab.common.databinding.BaseSmartPagingBinding
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog
@@ -24,9 +26,11 @@ class DemoSmartFlowPagingFragment :
 
     override fun initData(bundle: Bundle?) {
         super.initData(bundle)
-        lifecycleScope.launch {
-            mViewModel.dataFlow.collect { pagingData ->
-                adapter.submitData(pagingData)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.dataFlow.collect { pagingData ->
+                    adapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
+                }
             }
         }
     }

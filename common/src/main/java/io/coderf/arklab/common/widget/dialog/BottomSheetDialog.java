@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -127,6 +128,13 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
      * 背景样式
      */
     private Drawable bgDrawable;
+
+    /** 底部取消按钮 layout_marginTop (px)，小于 0 沿用 XML */
+    private int cancelButtonMarginTopPx = -1;
+    private int recyclerPaddingStartPx = -1;
+    private int recyclerPaddingTopPx = -1;
+    private int recyclerPaddingEndPx = -1;
+    private int recyclerPaddingBottomPx = -1;
 
     /**
      * 取消按钮背景颜色
@@ -303,6 +311,19 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         return this;
     }
 
+    public BottomSheetDialog<T> setCancelButtonMarginTopDp(int marginTopDp) {
+        this.cancelButtonMarginTopPx = DensityUtil.dp2px(getContext(), marginTopDp);
+        return this;
+    }
+
+    public BottomSheetDialog<T> setRecyclerViewPaddingDp(int startDp, int topDp, int endDp, int bottomDp) {
+        this.recyclerPaddingStartPx = startDp >= 0 ? DensityUtil.dp2px(getContext(), startDp) : -1;
+        this.recyclerPaddingTopPx = topDp >= 0 ? DensityUtil.dp2px(getContext(), topDp) : -1;
+        this.recyclerPaddingEndPx = endDp >= 0 ? DensityUtil.dp2px(getContext(), endDp) : -1;
+        this.recyclerPaddingBottomPx = bottomDp >= 0 ? DensityUtil.dp2px(getContext(), bottomDp) : -1;
+        return this;
+    }
+
     /**
      * 批量设置菜单项样式
      */
@@ -352,6 +373,8 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         binding.mRecyclerViewOption.setAdapter(optionBottomMenuListAdapter);
         binding.mRecyclerViewOption.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        applyRecyclerViewPadding();
+
         // 设置分割线
         setupDivider();
 
@@ -394,6 +417,12 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         if (cancelButtonBackgroundColor != -1) {
             binding.buttonCancel.setBackgroundColor(cancelButtonBackgroundColor);
         }
+        if (cancelButtonMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.buttonCancel.getLayoutParams();
+            lp.topMargin = cancelButtonMarginTopPx;
+            binding.buttonCancel.setLayoutParams(lp);
+        }
     }
 
     /**
@@ -434,6 +463,17 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
             int left = Math.max(leftPadding, 0);
             int right = Math.max(rightPadding, 0);
             optionBottomMenuListAdapter.setHorizontalPadding(left, right);
+        }
+    }
+
+    private void applyRecyclerViewPadding() {
+        if (recyclerPaddingStartPx >= 0 || recyclerPaddingTopPx >= 0
+                || recyclerPaddingEndPx >= 0 || recyclerPaddingBottomPx >= 0) {
+            int start = recyclerPaddingStartPx >= 0 ? recyclerPaddingStartPx : binding.mRecyclerViewOption.getPaddingStart();
+            int top = recyclerPaddingTopPx >= 0 ? recyclerPaddingTopPx : binding.mRecyclerViewOption.getPaddingTop();
+            int end = recyclerPaddingEndPx >= 0 ? recyclerPaddingEndPx : binding.mRecyclerViewOption.getPaddingEnd();
+            int bottom = recyclerPaddingBottomPx >= 0 ? recyclerPaddingBottomPx : binding.mRecyclerViewOption.getPaddingBottom();
+            binding.mRecyclerViewOption.setPaddingRelative(start, top, end, bottom);
         }
     }
 

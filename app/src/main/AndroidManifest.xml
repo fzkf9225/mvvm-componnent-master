@@ -149,6 +149,9 @@
             android:name=".activity.HiltActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.DemoSmartPagingHeaderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DemoSmartPagingActivity"
             android:exported="false" />
         <activity

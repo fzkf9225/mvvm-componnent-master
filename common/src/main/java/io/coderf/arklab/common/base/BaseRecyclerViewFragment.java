@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.base.PageBean;
+import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
@@ -85,7 +86,9 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         }
     }
     protected RecyclerView.ItemDecoration createDivider() {
-        return new RecycleViewDivider(requireContext(), LinearLayoutManager.HORIZONTAL, 1,
+        return new RecycleViewDivider(requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                DensityUtil.dp2px(requireActivity(), 1),
                 ContextCompat.getColor(requireActivity(), R.color.h_line_color));
     }
 
