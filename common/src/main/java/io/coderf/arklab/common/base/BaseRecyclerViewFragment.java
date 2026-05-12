@@ -87,7 +87,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
     protected RecyclerView.ItemDecoration createDivider() {
         return new RecycleViewDivider(requireContext(),
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 DensityUtil.dp2px(requireActivity(), 1),
                 ContextCompat.getColor(requireActivity(), R.color.h_line_color));
     }

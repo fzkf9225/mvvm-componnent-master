@@ -152,7 +152,7 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         binding.mRecyclerviewOptions.addItemDecoration(
                 new RecycleViewDivider(
                         context,
-                        LinearLayoutManager.HORIZONTAL,
+                        LinearLayoutManager.VERTICAL,
                         DensityUtil.dp2px(context, 1f),
                         ContextCompat.getColor(context, R.color.h_line_color)
                 )

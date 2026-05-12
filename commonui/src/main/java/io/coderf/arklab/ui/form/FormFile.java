@@ -167,7 +167,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         });
         mediaRecyclerView.setAdapter(fileAddAdapter);
         mediaRecyclerView.addItemDecoration(
-                new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, (int) columnMargin,
+                new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, (int) columnMargin,
                         0x00000000)
         );
         if (mediaHelper != null) {

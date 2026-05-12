@@ -128,7 +128,7 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.recyclerCategory.setLayoutManager(new LinearLayoutManager(context));
         binding.recyclerCategory.setAdapter(popupWindowAdapter);
         binding.recyclerCategory.addItemDecoration(
-                new RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(context, 1),
+                new RecycleViewDivider(context, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(context, 1),
                         ContextCompat.getColor(context, R.color.h_line_color)));
 
         // 延迟测量 RecyclerView 高度

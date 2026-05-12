@@ -325,7 +325,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.parentCategory.setLayoutManager(new LinearLayoutManager(activity));
         binding.parentCategory.setAdapter(popupWindowAdapter);
         binding.parentCategory.addItemDecoration(
-                new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(activity, 1),
+                new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
                         ContextCompat.getColor(activity, R.color.h_line_color)));
 
         // 延迟测量 RecyclerView 高度
@@ -371,7 +371,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.childrenCategory.setLayoutManager(new LinearLayoutManager(activity));
         binding.childrenCategory.setAdapter(childAdapter);
         binding.childrenCategory.addItemDecoration(
-                new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(activity, 1),
+                new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
                         ContextCompat.getColor(activity, R.color.h_line_color)));
     }
 

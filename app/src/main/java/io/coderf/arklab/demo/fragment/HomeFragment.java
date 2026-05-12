@@ -45,7 +45,8 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
         useCaseAdapter = new UseCaseAdapter(UseCaseEnum.toUseCaseList());
         useCaseAdapter.setOnItemClickListener(this);
         binding.mRecyclerViewUseCase.addItemDecoration(
-                new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, DensityUtil.dp2px(getContext(), 8),
+                new RecycleViewDivider(getContext(),
+                        LinearLayoutManager.VERTICAL, DensityUtil.dp2px(getContext(), 8),
                         0x00000000)
         );
         binding.mRecyclerViewUseCase.setAdapter(useCaseAdapter);

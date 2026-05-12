@@ -511,7 +511,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
      */
     private void setupDivider() {
         if (isShowLine) {
-            binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL,
+            binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL,
                     DensityUtil.dp2px(getContext(), 1),
                     lineColor == -1 ? ContextCompat.getColor(getContext(), R.color.h_line_color) : lineColor, false));
         }

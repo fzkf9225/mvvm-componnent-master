@@ -124,7 +124,7 @@ public class FormFilePreview extends FormMedia {
             fileShowAdapter.setShowFileDrawable(isShowFileDrawable);
         }
         mediaRecyclerView.addItemDecoration(
-                new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, (int) columnMargin,
+                new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, (int) columnMargin,
                         0x00000000)
         );
         mediaRecyclerView.setLayoutManager(new FullyLinearLayoutManager(getContext()) {
