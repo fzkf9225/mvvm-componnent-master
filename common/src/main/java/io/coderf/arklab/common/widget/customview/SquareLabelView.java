@@ -62,7 +62,11 @@ public class SquareLabelView extends AppCompatTextView {
     private Paint squarePaint;
     private RectF squareRect;
 
-    private boolean paddingAdjusted = false; // 标记是否已经调整过内边距
+    private int basePaddingStart;
+    private int basePaddingTop;
+    private int basePaddingEnd;
+    private int basePaddingBottom;
+    private boolean basePaddingCaptured;
 
     public SquareLabelView(Context context) {
         this(context, null);
@@ -106,130 +110,149 @@ public class SquareLabelView extends AppCompatTextView {
 
         squareRect = new RectF();
 
-        // 在初始化时调整内边距，而不是在绘制时
-        adjustPaddingIfNeeded();
+        applySquarePadding();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        // 视图大小变化时重新调整内边距
-        adjustPaddingIfNeeded();
+        applySquarePadding();
     }
 
-    private void adjustPaddingIfNeeded() {
-        // 仅在start位置且未调整过内边距时进行调整
-        if (squarePosition == 0 && !paddingAdjusted) {
-            int newPaddingStart = (int) (getPaddingStart() + squareWidth + squareSpacing);
-            setPaddingRelative(newPaddingStart, getPaddingTop(), getPaddingEnd(), getPaddingBottom());
-            paddingAdjusted = true;
+    private void captureBasePaddingIfNeeded() {
+        if (!basePaddingCaptured) {
+            basePaddingStart = getPaddingStart();
+            basePaddingTop = getPaddingTop();
+            basePaddingEnd = getPaddingEnd();
+            basePaddingBottom = getPaddingBottom();
+            basePaddingCaptured = true;
         }
+    }
+
+    private void applySquarePadding() {
+        captureBasePaddingIfNeeded();
+        int extraStart = 0;
+        int extraTop = 0;
+        int extraEnd = 0;
+        int extraBottom = 0;
+        if (hasVisibleSquare()) {
+            switch (squarePosition) {
+                case 1:
+                    extraTop = (int) (squareHeight + squareSpacing);
+                    break;
+                case 2:
+                    extraEnd = (int) (squareWidth + squareSpacing);
+                    break;
+                case 3:
+                    extraBottom = (int) (squareHeight + squareSpacing);
+                    break;
+                default:
+                    extraStart = (int) (squareWidth + squareSpacing);
+                    break;
+            }
+        }
+        setPaddingRelative(
+                basePaddingStart + extraStart,
+                basePaddingTop + extraTop,
+                basePaddingEnd + extraEnd,
+                basePaddingBottom + extraBottom
+        );
+    }
+
+    private boolean hasVisibleSquare() {
+        return squareWidth > 0 || squareHeight > 0;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 先绘制方块
         drawSquare(canvas);
-        // 再绘制文本（父类方法）
         super.onDraw(canvas);
     }
 
     private void drawSquare(Canvas canvas) {
-        // 计算方块的位置
-        float left, top;
+        if (!hasVisibleSquare()) {
+            return;
+        }
+
+        float left;
+        float top;
         int width = getWidth();
         int height = getHeight();
 
-        // 根据位置计算方块坐标
-        top = switch (squarePosition) {
-            case 1 -> {
-                left = (width - squareWidth) / 2;
-                yield getPaddingTop();
-            }
-            case 2 -> {
-                left = width - getPaddingEnd() - squareWidth;
-                yield (height - squareHeight) / 2;
-            }
-            case 3 -> {
-                left = (width - squareWidth) / 2;
-                yield height - getPaddingBottom() - squareHeight;
-            }
-            default -> {
-                left = getPaddingStart();
-                yield (height - squareHeight) / 2;
-            }
-        };
-
-        // 对于start位置，需要考虑已经调整的内边距
-        if (squarePosition == 0 && paddingAdjusted) {
-            left = getPaddingStart() - squareWidth - squareSpacing;
+        switch (squarePosition) {
+            case 1:
+                left = (width - squareWidth) / 2f;
+                top = basePaddingTop;
+                break;
+            case 2:
+                left = width - basePaddingEnd - squareWidth;
+                top = (height - squareHeight) / 2f;
+                break;
+            case 3:
+                left = (width - squareWidth) / 2f;
+                top = height - basePaddingBottom - squareHeight;
+                break;
+            default:
+                left = basePaddingStart;
+                top = (height - squareHeight) / 2f;
+                break;
         }
 
         squareRect.set(left, top, left + squareWidth, top + squareHeight);
 
-        // 根据形状绘制方块
         switch (squareShape) {
-            case 0: // rectangle
+            case 0:
                 canvas.drawRect(squareRect, squarePaint);
                 break;
-            case 1: // oval
+            case 1:
                 canvas.drawOval(squareRect, squarePaint);
                 break;
-            case 2: // round_rectangle
+            case 2:
                 canvas.drawRoundRect(squareRect, squareCornerRadius, squareCornerRadius, squarePaint);
+                break;
+            default:
                 break;
         }
     }
 
-    // 设置方块颜色
     public void setSquareColor(int color) {
         this.squareColor = color;
         squarePaint.setColor(color);
         invalidate();
     }
 
-    // 设置方块大小
     public void setSquareSize(float width, float height) {
         this.squareWidth = width;
         this.squareHeight = height;
-        paddingAdjusted = false; // 重置标记
-        adjustPaddingIfNeeded();
+        applySquarePadding();
         invalidate();
     }
 
-    // 设置方块形状
     public void setSquareShape(int shape) {
         this.squareShape = shape;
         invalidate();
     }
 
-    // 设置方块位置
     public void setSquarePosition(int position) {
         this.squarePosition = position;
-        paddingAdjusted = false; // 重置标记
-        adjustPaddingIfNeeded();
+        applySquarePadding();
         invalidate();
     }
 
-    // 设置方块与文本间距
     public void setSquareSpacing(float spacing) {
         this.squareSpacing = spacing;
-        paddingAdjusted = false; // 重置标记
-        adjustPaddingIfNeeded();
+        applySquarePadding();
         invalidate();
     }
 
-    // 获取当前方块颜色
     public int getSquareColor() {
         return squareColor;
     }
 
-    // 获取方块宽度
     public float getSquareWidth() {
         return squareWidth;
     }
 
-    // 获取方块高度
     public float getSquareHeight() {
         return squareHeight;
     }
