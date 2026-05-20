@@ -42,6 +42,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import java.lang.ref.WeakReference;
 
+import io.coderf.arklab.common.widget.gallery.PreviewGalleryConfig;
+import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.gestures.EclairGestureDetector;
 import io.coderf.arklab.common.widget.gallery.gestures.OnGestureListener;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
@@ -58,6 +60,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     static final int EDGE_LEFT = 0;
     static final int EDGE_RIGHT = 1;
     static final int EDGE_BOTH = 2;
+
+    private PreviewGalleryZoomConfig mZoomConfig = PreviewGalleryConfig.getGlobalZoomConfig();
 
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
@@ -169,7 +173,23 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 });
 
         mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
+        applyZoomConfig(mZoomConfig);
         setZoomable(true);
+    }
+
+    /**
+     * 应用缩放配置；{@link PreviewPhotoDialog} 单次配置或全局配置通过此方法生效。
+     */
+    public void applyZoomConfig(PreviewGalleryZoomConfig zoomConfig) {
+        if (zoomConfig == null) {
+            zoomConfig = PreviewGalleryConfig.getGlobalZoomConfig();
+        }
+        mZoomConfig = zoomConfig;
+        mMaxScale = zoomConfig.getDefaultMaxScale();
+    }
+
+    public PreviewGalleryZoomConfig getZoomConfig() {
+        return mZoomConfig;
     }
 
     @Override
@@ -792,7 +812,40 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
         }
 
+        updateMaxScaleForDrawable(drawableWidth, drawableHeight, viewWidth, viewHeight);
         resetMatrix();
+    }
+
+    /**
+     * 根据图片与视图尺寸动态计算最大缩放倍数。
+     * 低像素图使用配置中的 defaultMaxScale；高像素图至少可放大到 1:1，再乘以 extraMaxZoomRatio。
+     */
+    private void updateMaxScaleForDrawable(int drawableWidth, int drawableHeight,
+                                           float viewWidth, float viewHeight) {
+        final float defaultMaxScale = mZoomConfig.getDefaultMaxScale();
+        final float extraMaxZoomRatio = mZoomConfig.getExtraMaxZoomRatio();
+        if (drawableWidth <= 0 || drawableHeight <= 0 || viewWidth <= 0 || viewHeight <= 0) {
+            mMaxScale = defaultMaxScale;
+            return;
+        }
+        final float widthScale = viewWidth / drawableWidth;
+        final float heightScale = viewHeight / drawableHeight;
+        final float baseScale;
+        if (mScaleType == ScaleType.CENTER_CROP) {
+            baseScale = Math.max(widthScale, heightScale);
+        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
+            baseScale = Math.min(1.0f, Math.min(widthScale, heightScale));
+        } else if (mScaleType == ScaleType.CENTER) {
+            baseScale = 1.0f;
+        } else {
+            baseScale = Math.min(widthScale, heightScale);
+        }
+        if (baseScale <= 0f) {
+            mMaxScale = defaultMaxScale;
+            return;
+        }
+        float scaleForFullSize = 1.0f / baseScale;
+        mMaxScale = Math.max(defaultMaxScale, scaleForFullSize * extraMaxZoomRatio);
     }
 
     private int getImageViewWidth(ImageView imageView) {

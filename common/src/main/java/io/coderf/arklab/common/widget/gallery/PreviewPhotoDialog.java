@@ -3,6 +3,7 @@ package io.coderf.arklab.common.widget.gallery;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.widget.dialog.ImageSaveDialogConfig;
 import io.coderf.arklab.common.widget.gallery.adapter.PreviewViewPagerAdapter;
 
 /**
@@ -84,6 +86,14 @@ public class PreviewPhotoDialog extends Dialog {
      * 错误图
      */
     protected Drawable errorImage;
+    /**
+     * 单次预览缩放配置，为 null 时使用 {@link PreviewGalleryConfig} 全局配置
+     */
+    private PreviewGalleryZoomConfig zoomConfig;
+    /**
+     * 单次「保存图片」弹窗配置，为 null 时使用全局或内置默认
+     */
+    private ImageSaveDialogConfig imageSaveDialogConfig;
 
     public PreviewPhotoDialog(Context context) {
         this(context, R.style.PreviewPhotoDialog);
@@ -222,12 +232,50 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 设置本次预览的缩放配置，仅当前 Dialog 生效；未设置时使用全局配置。
+     */
+    public PreviewPhotoDialog setZoomConfig(PreviewGalleryZoomConfig zoomConfig) {
+        this.zoomConfig = zoomConfig;
+        return this;
+    }
+
+    /**
+     * 返回本次预览实际使用的缩放配置（单次优先，否则全局）。
+     */
+    public PreviewGalleryZoomConfig getEffectiveZoomConfig() {
+        return zoomConfig != null ? zoomConfig : PreviewGalleryConfig.getGlobalZoomConfig();
+    }
+
+    /**
+     * 设置本次预览长按保存弹窗的样式/文案，仅当前 Dialog 生效。
+     */
+    public PreviewPhotoDialog setImageSaveDialogConfig(ImageSaveDialogConfig imageSaveDialogConfig) {
+        this.imageSaveDialogConfig = imageSaveDialogConfig;
+        return this;
+    }
+
+    /**
+     * 返回本次预览实际使用的保存弹窗配置（单次优先，其次全局，最后内置默认）。
+     */
+    public ImageSaveDialogConfig getEffectiveImageSaveDialogConfig() {
+        if (imageSaveDialogConfig != null) {
+            return imageSaveDialogConfig;
+        }
+        ImageSaveDialogConfig global = PreviewGalleryConfig.getGlobalImageSaveDialogConfig();
+        return global != null ? global : ImageSaveDialogConfig.empty();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_dialog_pic);
         if (getWindow() != null) {
             getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
+        View root = findViewById(R.id.fl_pic);
+        if (root != null) {
+            root.setBackgroundColor(Color.BLACK);
         }
         viewPager = findViewById(R.id.preview_viewPager);
         llPoint = findViewById(R.id.ll_point);

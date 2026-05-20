@@ -1,6 +1,7 @@
 package io.coderf.arklab.common.widget.gallery.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -59,6 +60,8 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
     @Override
     public void onBindHolder(BaseViewHolder<ItemPicShowBinding> holder, int pos) {
         holder.getBinding().picPv.setAllowParentInterceptOnEdge(true);
+        holder.getBinding().picPv.applyZoomConfig(previewPhotoDialog.getEffectiveZoomConfig());
+        holder.getBinding().clPic.setBackgroundColor(Color.BLACK);
         AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(holder.getBinding().getRoot().getContext(), mList.get(pos).getFileType(), mList.get(pos).getPath());
         if (AttachmentTypeEnum.VIDEO == attachmentTypeEnum) {
             holder.getBinding().videoPlay.setVisibility(View.VISIBLE);
@@ -84,6 +87,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
                     return false;
                 }
                 new ImageSaveDialog(itemView.getContext())
+                        .setConfig(previewPhotoDialog.getEffectiveImageSaveDialogConfig())
                         .setOnImageSaveListener(dialog -> {
                             dialog.dismiss();
                             try {

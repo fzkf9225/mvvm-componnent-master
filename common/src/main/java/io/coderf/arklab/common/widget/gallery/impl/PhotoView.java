@@ -27,6 +27,7 @@ import android.view.GestureDetector;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
+import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 
@@ -128,6 +129,13 @@ public class PhotoView extends AppCompatImageView implements IPhotoView {
     @Override
     public void setMaximumScale(float maximumScale) {
         mAttacher.setMaximumScale(maximumScale);
+    }
+
+    /**
+     * 应用预览缩放配置（全局或 {@link io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog} 单次配置）。
+     */
+    public void applyZoomConfig(PreviewGalleryZoomConfig zoomConfig) {
+        mAttacher.applyZoomConfig(zoomConfig);
     }
 
     @Override

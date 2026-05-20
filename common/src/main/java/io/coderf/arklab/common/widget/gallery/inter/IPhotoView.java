@@ -22,12 +22,14 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
+import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 
 
 public interface IPhotoView {
 
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
+    /** 与 {@link io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig#DEFAULT_MAX_SCALE} 保持一致 */
+    public static final float DEFAULT_MAX_SCALE = PreviewGalleryZoomConfig.DEFAULT_MAX_SCALE;
     public static final float DEFAULT_MID_SCALE = 1.75f;
     public static final float DEFAULT_MIN_SCALE = 1.0f;
     public static final int DEFAULT_ZOOM_DURATION = 200;

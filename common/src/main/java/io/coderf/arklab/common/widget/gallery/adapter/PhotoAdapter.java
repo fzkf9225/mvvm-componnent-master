@@ -58,6 +58,7 @@ public class PhotoAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         PhotoView photoView = new PhotoView(container.getContext());
+        photoView.applyZoomConfig(previewPhotoDialog.getEffectiveZoomConfig());
         Glide.with(container.getContext())
                 .asBitmap()
                 .load(imageInfoList.get(position))
@@ -68,6 +69,7 @@ public class PhotoAdapter extends PagerAdapter {
                 return false;
             }
             new ImageSaveDialog(container.getContext())
+                    .setConfig(previewPhotoDialog.getEffectiveImageSaveDialogConfig())
                     .setOnImageSaveListener(dialog -> {
                         dialog.dismiss();
                         if (imageInfoList.get(position) instanceof String ||
