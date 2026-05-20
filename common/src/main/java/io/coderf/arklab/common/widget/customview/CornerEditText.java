@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 
@@ -34,6 +33,14 @@ public class CornerEditText extends AppCompatEditText {
      */
     protected float strokeWidth;
     /**
+     * 是否已指定背景色（XML 或代码）
+     */
+    protected boolean hasBgColor = false;
+    /**
+     * 是否设置了描边
+     */
+    protected boolean hasStroke = false;
+    /**
      * 背景样式
      */
     private GradientDrawable gradientDrawable = new GradientDrawable();
@@ -44,21 +51,48 @@ public class CornerEditText extends AppCompatEditText {
 
     public CornerEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
-            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
+
+        boolean hasStrokeColor = typedArray.hasValue(R.styleable.CornerTextView_strokeColor);
+        boolean hasStrokeWidthAttr = typedArray.hasValue(R.styleable.CornerTextView_strokeWidth);
+        hasBgColor = typedArray.hasValue(R.styleable.CornerTextView_bgColor);
+        boolean hasRadiusAttr = typedArray.hasValue(R.styleable.CornerTextView_radius);
+
+        if (hasStrokeColor) {
+            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, 0);
+        }
+        if (hasBgColor) {
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, 0);
+        }
+        if (hasStrokeWidthAttr) {
             strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, 0);
+        }
+        if (hasRadiusAttr) {
             radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
-            typedArray.recycle();
-        } else {
-            strokeColor = ContextCompat.getColor(context, R.color.white);
-            circleBackColor = ContextCompat.getColor(context, R.color.white);
         }
 
-        gradientDrawable.setColor(circleBackColor);
+        typedArray.recycle();
+
+        hasStroke = strokeWidth > 0;
+        if (hasBgColor || hasRadiusAttr || hasStrokeWidthAttr || hasStrokeColor) {
+            applyBackground();
+        }
+    }
+
+    private void applyBackground() {
+        gradientDrawable = new GradientDrawable();
+        if (hasBgColor) {
+            gradientDrawable.setColor(circleBackColor);
+        }
         gradientDrawable.setCornerRadius(radius);
-        if (strokeWidth > 0) {
+        if (hasStroke) {
             gradientDrawable.setStroke((int) strokeWidth, strokeColor);
         }
         this.setBackground(gradientDrawable);
@@ -66,27 +100,21 @@ public class CornerEditText extends AppCompatEditText {
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
-        gradientDrawable.setColor(circleBackColor);
-        gradientDrawable.setCornerRadius(radius);
-        this.setBackground(gradientDrawable);
+        this.hasBgColor = true;
+        applyBackground();
     }
 
-    public void setStroke(int strokeWidth,int color) {
+    public void setStroke(int strokeWidth, int color) {
         this.strokeColor = color;
         this.strokeWidth = strokeWidth;
-        gradientDrawable.setColor(circleBackColor);
-        gradientDrawable.setCornerRadius(radius);
-        if (strokeWidth > 0) {
-            gradientDrawable.setStroke(strokeWidth, strokeColor);
-        }
-        this.setBackground(gradientDrawable);
+        this.hasStroke = strokeWidth > 0;
+        applyBackground();
     }
 
     public void setBgColor(int color) {
         this.circleBackColor = color;
-        gradientDrawable.setColor(this.circleBackColor);
-        gradientDrawable.setCornerRadius(this.radius);
-        this.setBackground(gradientDrawable);
+        this.hasBgColor = true;
+        applyBackground();
     }
 
     public void setGradientDrawable(GradientDrawable gradientDrawable) {
@@ -96,16 +124,14 @@ public class CornerEditText extends AppCompatEditText {
 
     public void setRadius(float radius) {
         this.radius = radius;
-        gradientDrawable.setCornerRadius(this.radius);
-        this.setBackground(gradientDrawable);
+        applyBackground();
     }
 
     public void setBgColorAndRadius(int color, float radius) {
         this.radius = radius;
         this.circleBackColor = color;
-        gradientDrawable.setColor(this.circleBackColor);
-        gradientDrawable.setCornerRadius(this.radius);
-        this.setBackground(gradientDrawable);
+        this.hasBgColor = true;
+        applyBackground();
     }
 
     public float getRadius() {

@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 
@@ -58,6 +57,14 @@ public class CornerButton extends AppCompatButton {
      * 是否设置了描边
      */
     protected boolean hasStroke = false;
+    /**
+     * 是否已指定背景色（XML 或代码）
+     */
+    protected boolean hasBgColor = false;
+    /**
+     * 是否应用自定义圆角背景
+     */
+    protected boolean customBackgroundEnabled = false;
 
     public CornerButton(Context context) {
         this(context, null);
@@ -69,45 +76,63 @@ public class CornerButton extends AppCompatButton {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        if (attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
+        if (attrs == null) {
+            return;
+        }
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
 
-            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor,
-                    ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor,
-                    ContextCompat.getColor(context, R.color.white));
+        boolean hasStrokeColor = typedArray.hasValue(R.styleable.CornerTextView_strokeColor);
+        boolean hasStrokeWidthAttr = typedArray.hasValue(R.styleable.CornerTextView_strokeWidth);
+        hasBgColor = typedArray.hasValue(R.styleable.CornerTextView_bgColor);
+        boolean hasRadiusAttr = typedArray.hasValue(R.styleable.CornerTextView_radius);
+        boolean hasLeftTop = typedArray.hasValue(R.styleable.CornerTextView_leftTopRadius);
+        boolean hasRightTop = typedArray.hasValue(R.styleable.CornerTextView_rightTopRadius);
+        boolean hasRightBottom = typedArray.hasValue(R.styleable.CornerTextView_rightBottomRadius);
+        boolean hasLeftBottom = typedArray.hasValue(R.styleable.CornerTextView_leftBottomRadius);
+
+        if (hasStrokeColor) {
+            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, 0);
+        }
+        if (hasBgColor) {
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, 0);
+        }
+        if (hasStrokeWidthAttr) {
             strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, 0);
-
-            // 读取统一的圆角半径
-            radius = typedArray.getDimension(R.styleable.CornerTextView_radius, 0);
-
-            // 读取四个角的单独设置
-            leftTopRadius = typedArray.getDimension(R.styleable.CornerTextView_leftTopRadius, radius);
-            rightTopRadius = typedArray.getDimension(R.styleable.CornerTextView_rightTopRadius, radius);
-            rightBottomRadius = typedArray.getDimension(R.styleable.CornerTextView_rightBottomRadius, radius);
-            leftBottomRadius = typedArray.getDimension(R.styleable.CornerTextView_leftBottomRadius, radius);
-
-            typedArray.recycle();
-        } else {
-            strokeColor = ContextCompat.getColor(context, R.color.white);
-            circleBackColor = ContextCompat.getColor(context, R.color.white);
-            radius = 0;
-            leftTopRadius = radius;
-            rightTopRadius = radius;
-            rightBottomRadius = radius;
-            leftBottomRadius = radius;
         }
 
+        radius = hasRadiusAttr ? typedArray.getDimension(R.styleable.CornerTextView_radius, 0) : 0;
+        leftTopRadius = hasLeftTop
+                ? typedArray.getDimension(R.styleable.CornerTextView_leftTopRadius, 0)
+                : radius;
+        rightTopRadius = hasRightTop
+                ? typedArray.getDimension(R.styleable.CornerTextView_rightTopRadius, 0)
+                : radius;
+        rightBottomRadius = hasRightBottom
+                ? typedArray.getDimension(R.styleable.CornerTextView_rightBottomRadius, 0)
+                : radius;
+        leftBottomRadius = hasLeftBottom
+                ? typedArray.getDimension(R.styleable.CornerTextView_leftBottomRadius, 0)
+                : radius;
+
+        typedArray.recycle();
+
         hasStroke = strokeWidth > 0;
-        applyBackground();
+        customBackgroundEnabled = hasBgColor || hasRadiusAttr || hasLeftTop || hasRightTop
+                || hasRightBottom || hasLeftBottom || hasStrokeWidthAttr || hasStrokeColor;
+        if (customBackgroundEnabled) {
+            applyBackground();
+        }
     }
 
     /**
      * 应用背景（圆角+描边）
      */
     private void applyBackground() {
+        customBackgroundEnabled = true;
         gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(circleBackColor);
+        if (hasBgColor) {
+            gradientDrawable.setColor(circleBackColor);
+        }
 
         // 设置圆角
         if (leftTopRadius == radius && rightTopRadius == radius &&
@@ -152,6 +177,7 @@ public class CornerButton extends AppCompatButton {
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
+        this.hasBgColor = true;
         applyBackground();
     }
 
@@ -195,6 +221,7 @@ public class CornerButton extends AppCompatButton {
         this.rightBottomRadius = radius;
         this.leftBottomRadius = radius;
         this.circleBackColor = bgColor;
+        this.hasBgColor = true;
         applyBackground();
     }
 
@@ -204,6 +231,7 @@ public class CornerButton extends AppCompatButton {
     public void setBgColorAndCornerRadii(@ColorInt int bgColor, float leftTop, float rightTop,
                                          float rightBottom, float leftBottom) {
         this.circleBackColor = bgColor;
+        this.hasBgColor = true;
         this.leftTopRadius = leftTop;
         this.rightTopRadius = rightTop;
         this.rightBottomRadius = rightBottom;
@@ -221,6 +249,7 @@ public class CornerButton extends AppCompatButton {
         this.rightBottomRadius = radius;
         this.leftBottomRadius = radius;
         this.circleBackColor = bgColor;
+        this.hasBgColor = true;
         this.hasStroke = strokeWidth > 0;
         applyBackground();
     }

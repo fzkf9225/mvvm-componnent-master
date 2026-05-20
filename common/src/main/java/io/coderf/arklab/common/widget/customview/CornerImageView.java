@@ -3,6 +3,7 @@ package io.coderf.arklab.common.widget.customview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
@@ -12,7 +13,6 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
  * created by fz on 2019/9/3 0003
@@ -47,17 +47,23 @@ public class CornerImageView extends AppCompatImageView {
      * 背景颜色
      */
     protected int bgColor;
+    /**
+     * 是否已指定背景色（XML 或代码）
+     */
+    protected boolean hasBgColor = false;
+    /**
+     * 是否启用圆角裁剪
+     */
+    protected boolean cornerClipEnabled = false;
     protected Paint mPaint;
     protected final Path mPath = new Path();
 
     public CornerImageView(Context context) {
         this(context, null);
-        init(context, null);
     }
 
     public CornerImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        init(context, attrs);
     }
 
     public CornerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -73,37 +79,49 @@ public class CornerImageView extends AppCompatImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        int defaultRadius = DensityUtil.dp2px(context, 4);
-        if (attrs != null) {
-            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
-            radius = array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_radius, defaultRadius);
-            leftTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftTopRadius, defaultRadius);
-            bgColor = array.getColor(R.styleable.Custom_Round_Image_View_bgColor, 0xFFe4e4e4);
-            rightTopRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightTopRadius, defaultRadius);
-            rightBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightBottomRadius, defaultRadius);
-            leftBottomRadius = array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftBottomRadius, defaultRadius);
-            array.recycle();
-        } else {
-            bgColor = 0xFFe4e4e4;
-        }
-
-        //如果四个角的值没有设置，那么就使用通用的radius的值。
-        if (defaultRadius == leftTopRadius) {
-            leftTopRadius = radius;
-        }
-        if (defaultRadius == rightTopRadius) {
-            rightTopRadius = radius;
-        }
-        if (defaultRadius == rightBottomRadius) {
-            rightBottomRadius = radius;
-        }
-        if (defaultRadius == leftBottomRadius) {
-            leftBottomRadius = radius;
-        }
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(bgColor);
+
+        if (attrs == null) {
+            return;
+        }
+
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Custom_Round_Image_View);
+        boolean hasRadiusAttr = array.hasValue(R.styleable.Custom_Round_Image_View_radius);
+        boolean hasLeftTop = array.hasValue(R.styleable.Custom_Round_Image_View_leftTopRadius);
+        boolean hasRightTop = array.hasValue(R.styleable.Custom_Round_Image_View_rightTopRadius);
+        boolean hasRightBottom = array.hasValue(R.styleable.Custom_Round_Image_View_rightBottomRadius);
+        boolean hasLeftBottom = array.hasValue(R.styleable.Custom_Round_Image_View_leftBottomRadius);
+        hasBgColor = array.hasValue(R.styleable.Custom_Round_Image_View_bgColor);
+
+        radius = hasRadiusAttr ? array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_radius, 0) : 0;
+        leftTopRadius = hasLeftTop
+                ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftTopRadius, 0)
+                : radius;
+        rightTopRadius = hasRightTop
+                ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightTopRadius, 0)
+                : radius;
+        rightBottomRadius = hasRightBottom
+                ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_rightBottomRadius, 0)
+                : radius;
+        leftBottomRadius = hasLeftBottom
+                ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftBottomRadius, 0)
+                : radius;
+        if (hasBgColor) {
+            bgColor = array.getColor(R.styleable.Custom_Round_Image_View_bgColor, Color.TRANSPARENT);
+            mPaint.setColor(bgColor);
+        }
+        array.recycle();
+
+        cornerClipEnabled = hasRadiusAttr || hasLeftTop || hasRightTop || hasRightBottom || hasLeftBottom;
+        if (cornerClipEnabled) {
+            updateCornerClipEnabled();
+        }
+    }
+
+    private void updateCornerClipEnabled() {
+        cornerClipEnabled = leftTopRadius > 0 || rightTopRadius > 0
+                || rightBottomRadius > 0 || leftBottomRadius > 0;
     }
 
     /**
@@ -115,6 +133,7 @@ public class CornerImageView extends AppCompatImageView {
         rightTopRadius = radius;
         rightBottomRadius = radius;
         leftBottomRadius = radius;
+        updateCornerClipEnabled();
         invalidate();
     }
 
@@ -123,6 +142,7 @@ public class CornerImageView extends AppCompatImageView {
      */
     public void setLeftTopRadius(int leftTopRadius) {
         this.leftTopRadius = leftTopRadius;
+        updateCornerClipEnabled();
         invalidate();
     }
 
@@ -131,6 +151,7 @@ public class CornerImageView extends AppCompatImageView {
      */
     public void setLeftBottomRadius(int leftBottomRadius) {
         this.leftBottomRadius = leftBottomRadius;
+        updateCornerClipEnabled();
         invalidate();
     }
 
@@ -139,6 +160,7 @@ public class CornerImageView extends AppCompatImageView {
      */
     public void setRightBottomRadius(int rightBottomRadius) {
         this.rightBottomRadius = rightBottomRadius;
+        updateCornerClipEnabled();
         invalidate();
     }
 
@@ -147,21 +169,19 @@ public class CornerImageView extends AppCompatImageView {
      */
     public void setRightTopRadius(int rightTopRadius) {
         this.rightTopRadius = rightTopRadius;
+        updateCornerClipEnabled();
         invalidate();
     }
 
     /**
      * 设置所有圆角半径（分别设置）
-     * @param leftTop 左上角半径
-     * @param rightTop 右上角半径
-     * @param rightBottom 右下角半径
-     * @param leftBottom 左下角半径
      */
     public void setCornerRadii(int leftTop, int rightTop, int rightBottom, int leftBottom) {
         this.leftTopRadius = leftTop;
         this.rightTopRadius = rightTop;
         this.rightBottomRadius = rightBottom;
         this.leftBottomRadius = leftBottom;
+        updateCornerClipEnabled();
         invalidate();
     }
 
@@ -174,10 +194,10 @@ public class CornerImageView extends AppCompatImageView {
 
     /**
      * 设置背景颜色
-     * @param color 颜色值，如 0xFFe4e4e4
      */
     public void setBgColor(int color) {
         this.bgColor = color;
+        this.hasBgColor = true;
         if (mPaint != null) {
             mPaint.setColor(color);
         }
@@ -186,10 +206,6 @@ public class CornerImageView extends AppCompatImageView {
 
     /**
      * 设置背景颜色（ARGB分量）
-     * @param alpha 透明度 0-255
-     * @param red 红色 0-255
-     * @param green 绿色 0-255
-     * @param blue 蓝色 0-255
      */
     public void setBgColor(int alpha, int red, int green, int blue) {
         int color = (alpha << 24) | (red << 16) | (green << 8) | blue;
@@ -222,7 +238,11 @@ public class CornerImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //这里做下判断，只有图片的宽高大于设置的圆角距离的时候才进行裁剪
+        if (!cornerClipEnabled) {
+            super.onDraw(canvas);
+            return;
+        }
+
         int maxLeft = Math.max(leftTopRadius, leftBottomRadius);
         int maxRight = Math.max(rightTopRadius, rightBottomRadius);
         int minWidth = maxLeft + maxRight;
@@ -231,7 +251,6 @@ public class CornerImageView extends AppCompatImageView {
         int minHeight = maxTop + maxBottom;
         if (width >= minWidth && height > minHeight) {
             mPath.reset();
-            //四个角：右上，右下，左下，左上
             mPath.moveTo(leftTopRadius, 0);
             mPath.lineTo(width - rightTopRadius, 0);
             mPath.quadTo(width, 0, width, rightTopRadius);
@@ -250,7 +269,9 @@ public class CornerImageView extends AppCompatImageView {
             } else {
                 canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
-            canvas.drawPath(mPath, mPaint);
+            if (hasBgColor && Color.alpha(bgColor) > 0) {
+                canvas.drawPath(mPath, mPaint);
+            }
         }
         super.onDraw(canvas);
     }

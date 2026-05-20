@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
  * Created by fz on 2023/8/14 10:12
@@ -57,6 +56,10 @@ public class CornerConstraintLayout extends ConstraintLayout {
      * 是否设置了描边（用于判断是否应用描边）
      */
     protected boolean hasStroke = false;
+    /**
+     * 是否已指定背景色（XML 或代码）
+     */
+    protected boolean hasBgColor = false;
 
     public CornerConstraintLayout(@NonNull Context context) {
         super(context);
@@ -74,49 +77,49 @@ public class CornerConstraintLayout extends ConstraintLayout {
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
-        float defaultRadius = DensityUtil.dp2px(getContext(), 8);
+        if (attrs == null) {
+            return;
+        }
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
 
-        if (attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerTextView);
+        boolean hasStrokeColor = typedArray.hasValue(R.styleable.CornerTextView_strokeColor);
+        boolean hasStrokeWidthAttr = typedArray.hasValue(R.styleable.CornerTextView_strokeWidth);
+        hasBgColor = typedArray.hasValue(R.styleable.CornerTextView_bgColor);
+        boolean hasRadiusAttr = typedArray.hasValue(R.styleable.CornerTextView_radius);
+        boolean hasLeftTop = typedArray.hasValue(R.styleable.CornerTextView_leftTopRadius);
+        boolean hasRightTop = typedArray.hasValue(R.styleable.CornerTextView_rightTopRadius);
+        boolean hasRightBottom = typedArray.hasValue(R.styleable.CornerTextView_rightBottomRadius);
+        boolean hasLeftBottom = typedArray.hasValue(R.styleable.CornerTextView_leftBottomRadius);
 
-            // 读取背景颜色
-            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor,
-                    ContextCompat.getColor(context, R.color.white));
-
-            // 读取统一的圆角半径
-            radius = typedArray.getDimension(R.styleable.CornerTextView_radius, defaultRadius);
-
-            // 读取四个角的单独设置
-            leftTopRadius = typedArray.getDimension(R.styleable.CornerTextView_leftTopRadius, radius);
-            rightTopRadius = typedArray.getDimension(R.styleable.CornerTextView_rightTopRadius, radius);
-            rightBottomRadius = typedArray.getDimension(R.styleable.CornerTextView_rightBottomRadius, radius);
-            leftBottomRadius = typedArray.getDimension(R.styleable.CornerTextView_leftBottomRadius, radius);
-
-            // 读取描边相关属性
-            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor,
-                    ContextCompat.getColor(context, android.R.color.transparent));
+        if (hasBgColor) {
+            circleBackColor = typedArray.getColor(R.styleable.CornerTextView_bgColor, 0);
+        }
+        if (hasStrokeColor) {
+            strokeColor = typedArray.getColor(R.styleable.CornerTextView_strokeColor, 0);
+        }
+        if (hasStrokeWidthAttr) {
             strokeWidth = typedArray.getDimension(R.styleable.CornerTextView_strokeWidth, 0f);
+        }
 
-            // 判断是否设置了描边（宽度大于0且颜色不是透明）
-            hasStroke = strokeWidth > 0 && strokeColor != ContextCompat.getColor(context, android.R.color.transparent);
+        radius = hasRadiusAttr ? typedArray.getDimension(R.styleable.CornerTextView_radius, 0) : 0;
+        leftTopRadius = hasLeftTop
+                ? typedArray.getDimension(R.styleable.CornerTextView_leftTopRadius, 0)
+                : radius;
+        rightTopRadius = hasRightTop
+                ? typedArray.getDimension(R.styleable.CornerTextView_rightTopRadius, 0)
+                : radius;
+        rightBottomRadius = hasRightBottom
+                ? typedArray.getDimension(R.styleable.CornerTextView_rightBottomRadius, 0)
+                : radius;
+        leftBottomRadius = hasLeftBottom
+                ? typedArray.getDimension(R.styleable.CornerTextView_leftBottomRadius, 0)
+                : radius;
 
-            typedArray.recycle();
+        typedArray.recycle();
 
-            // 应用圆角和描边设置
-            applyBackground();
-        } else {
-            circleBackColor = ContextCompat.getColor(context, R.color.white);
-            radius = defaultRadius;
-            leftTopRadius = radius;
-            rightTopRadius = radius;
-            rightBottomRadius = radius;
-            leftBottomRadius = radius;
-
-            // 默认没有描边
-            strokeColor = ContextCompat.getColor(context, android.R.color.transparent);
-            strokeWidth = 0f;
-            hasStroke = false;
-
+        hasStroke = strokeWidth > 0 && hasStrokeColor;
+        if (hasBgColor || hasRadiusAttr || hasLeftTop || hasRightTop || hasRightBottom || hasLeftBottom
+                || hasStrokeWidthAttr || hasStrokeColor) {
             applyBackground();
         }
     }
@@ -126,7 +129,9 @@ public class CornerConstraintLayout extends ConstraintLayout {
      */
     private void applyBackground() {
         GradientDrawable gd = new GradientDrawable();
-        gd.setColor(circleBackColor);
+        if (hasBgColor) {
+            gd.setColor(circleBackColor);
+        }
 
         // 设置圆角
         if (leftTopRadius == radius && rightTopRadius == radius &&
@@ -154,11 +159,13 @@ public class CornerConstraintLayout extends ConstraintLayout {
 
     public void setBackColor(@ColorInt int color) {
         this.circleBackColor = color;
+        this.hasBgColor = true;
         applyBackground();
     }
 
     public void setBgColor(int color) {
         this.circleBackColor = color;
+        this.hasBgColor = true;
         applyBackground();
     }
 
@@ -193,6 +200,7 @@ public class CornerConstraintLayout extends ConstraintLayout {
         this.rightBottomRadius = radius;
         this.leftBottomRadius = radius;
         this.circleBackColor = color;
+        this.hasBgColor = true;
         applyBackground();
     }
 
@@ -202,6 +210,7 @@ public class CornerConstraintLayout extends ConstraintLayout {
     public void setBgColorAndCornerRadii(int color, float leftTop, float rightTop,
                                          float rightBottom, float leftBottom) {
         this.circleBackColor = color;
+        this.hasBgColor = true;
         this.leftTopRadius = leftTop;
         this.rightTopRadius = rightTop;
         this.rightBottomRadius = rightBottom;
