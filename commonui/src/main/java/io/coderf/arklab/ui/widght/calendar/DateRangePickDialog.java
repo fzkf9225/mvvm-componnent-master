@@ -1,8 +1,10 @@
 package io.coderf.arklab.ui.widght.calendar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
@@ -108,11 +112,33 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
     private Lifecycle lifecycle;
 
+    private boolean lifecycleObserverRegistered;
+
     private Drawable bgDrawable;
 
+    /**
+     * Dialog 必须绑定 Activity 的 Window token。Fragment 的 {@link Fragment#requireContext()} /
+     * {@link Fragment#getContext()} 通常是 {@link ContextWrapper}，不能直接强转为 Activity。
+     */
+    @NonNull
+    private static Activity requireActivityContext(@NonNull Context context) {
+        Context current = context;
+        while (current instanceof ContextWrapper) {
+            if (current instanceof Activity) {
+                return (Activity) current;
+            }
+            current = ((ContextWrapper) current).getBaseContext();
+        }
+        if (context instanceof Activity) {
+            return (Activity) context;
+        }
+        throw new IllegalArgumentException(
+                "DateRangePickDialog requires an Activity context, but was: " + context.getClass().getName());
+    }
+
     public DateRangePickDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        this.context = context;
+        super(requireActivityContext(context), R.style.ActionSheetDialogStyle);
+        this.context = requireActivityContext(context);
         textSize = (float) DensityUtil.sp2px(context, 14f);
         itemWidth = DensityUtil.dp2px(context, 36f);
         itemHeight = DensityUtil.dp2px(context, 36f);
@@ -131,6 +157,16 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
         shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.transparent));
         normalBg = shapeDrawableNormal;
+    }
+
+    /**
+     * 在 Fragment 中创建时推荐使用此构造，会自动解析 Activity Context 并绑定 FragmentManager / Lifecycle。
+     */
+    public DateRangePickDialog(@NonNull Fragment fragment) {
+        this(fragment.requireActivity());
+        FragmentActivity activity = fragment.requireActivity();
+        this.fragmentManager = activity.getSupportFragmentManager();
+        this.lifecycle = fragment.getLifecycle();
     }
 
     public DateRangePickDialog setOnPositiveClickListener(CalendarView.OnSelectedChangedListener onPositiveClickListener) {
@@ -271,6 +307,33 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     public DateRangePickDialog builder(FragmentManager fragmentManager, Lifecycle lifecycle) {
         this.fragmentManager = fragmentManager;
         this.lifecycle = lifecycle;
+        registerLifecycleObserver();
+        initView();
+        return this;
+    }
+
+    /**
+     * 在 Fragment 中调用，自动使用宿主 Activity 的 {@link FragmentManager} 与 Fragment 的 {@link Lifecycle}。
+     */
+    public DateRangePickDialog builder(@NonNull Fragment fragment) {
+        return builder(fragment.requireActivity().getSupportFragmentManager(), fragment.getLifecycle());
+    }
+
+    private void registerLifecycleObserver() {
+        if (lifecycle != null && !lifecycleObserverRegistered) {
+            lifecycle.addObserver(this);
+            lifecycleObserverRegistered = true;
+        }
+    }
+
+    /**
+     * 使用 {@link #DateRangePickDialog(Fragment)} 或已手动设置 FragmentManager / Lifecycle 后调用。
+     */
+    public DateRangePickDialog builder() {
+        if (fragmentManager == null || lifecycle == null) {
+            throw new IllegalStateException("fragmentManager and lifecycle must be set before builder()");
+        }
+        registerLifecycleObserver();
         initView();
         return this;
     }
@@ -416,6 +479,8 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
-        DefaultLifecycleObserver.super.onDestroy(owner);
+        if (isShowing()) {
+            dismiss();
+        }
     }
 }
