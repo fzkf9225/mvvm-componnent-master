@@ -383,6 +383,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .bindLifeCycle(lifecycleOwner)
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
+                .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setVideoType(fileType)
                 .setMaxVideoTime(maxVideoDuration)

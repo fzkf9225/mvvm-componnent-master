@@ -25,6 +25,7 @@ class MediaModule {
     fun provideActivityMediaHelper(activity: Activity): MediaHelper {
         return MediaBuilder(activity)
             .bindLifeCycle(activity as ComponentActivity)
+            .setWriteCaptureExifMetadata(true)
             .setImageMaxSelectedCount(MediaHelper.DEFAULT_ALBUM_MAX_COUNT)
             .setVideoMaxSelectedCount(MediaHelper.DEFAULT_VIDEO_MAX_COUNT)
             .setFileMaxSelectedCount(MediaHelper.DEFAULT_FILE_MAX_COUNT)
@@ -39,6 +40,7 @@ class MediaModule {
     fun provideFragmentMediaHelper(fragment: Fragment): MediaHelper {
         return MediaBuilder(fragment.requireContext())
             .bindLifeCycle(fragment)
+            .setWriteCaptureExifMetadata(true)
             .setImageMaxSelectedCount(MediaHelper.DEFAULT_ALBUM_MAX_COUNT)
             .setVideoMaxSelectedCount(MediaHelper.DEFAULT_VIDEO_MAX_COUNT)
             .setFileMaxSelectedCount(MediaHelper.DEFAULT_FILE_MAX_COUNT)

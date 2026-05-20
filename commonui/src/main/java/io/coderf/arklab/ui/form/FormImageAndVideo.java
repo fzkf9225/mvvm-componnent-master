@@ -395,6 +395,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 .setMediaMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setImageQualityCompress(compressImageSize)
+                .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setMaxVideoTime(maxVideoDuration)
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setShowPermissionDialog(protocolDialog)

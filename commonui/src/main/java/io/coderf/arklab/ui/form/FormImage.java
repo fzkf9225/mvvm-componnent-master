@@ -372,6 +372,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 .setImageMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setShowPermissionDialog(protocolDialog)
+                .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setImageType(fileType)
                 .setImageSelectedListener(new MediaListener() {
                     @Override
