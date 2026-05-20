@@ -161,6 +161,30 @@ public class MediaBuilder {
      * 选择器类型，默认为DEFAULT，枚举MediaPickerTypeEnum
      */
     private MediaPickerTypeEnum chooseType = MediaPickerTypeEnum.DEFAULT;
+    /**
+     * 系统相机拍照完成后是否写入姿态/GPS 等到 EXIF（失败则跳过，不影响回调）
+     */
+    private boolean writeCaptureExifMetadata = false;
+    /**
+     * 开启拍照 EXIF 时，是否在打开相机前申请定位权限（用于写入经纬度/海拔）
+     */
+    private boolean requestCaptureExifLocationPermission = true;
+    /**
+     * 拍照 EXIF 定位权限：是否展示授权前说明弹窗（与 {@link #isShowPermissionDialog} 独立）
+     */
+    private boolean showCaptureExifPermissionDialog = true;
+    private String captureExifPermissionPositiveText = "前往授权";
+    private String captureExifPermissionNegativeText = "暂不授权";
+    private SpannableString captureExifPermissionSpannableContent;
+    private String captureExifPermissionMessage =
+            "拍照写入位置信息需要定位权限，用于将经纬度与海拔写入照片 EXIF，仅用于当前拍照分析，不会用于其他用途。";
+    private String captureExifPermissionDeniedMessage =
+            "您拒绝了定位权限，照片仍将保存，但可能无法写入经纬度与海拔信息。";
+    private boolean showCaptureExifPermissionDeniedTip = true;
+    private OnDialogInterfaceClickListener onCaptureExifPermissionPositiveClickListener;
+    private OnDialogInterfaceClickListener onCaptureExifPermissionNegativeClickListener;
+    private @ColorInt int captureExifPermissionPositiveTextColor = 0xFF333333;
+    private @ColorInt int captureExifPermissionNegativeTextColor = 0xFF666666;
 
     public MediaBuilder(@NotNull Context context) {
         this.mContext = context;
@@ -810,6 +834,129 @@ public class MediaBuilder {
      */
     public MediaPickerTypeEnum getChooseType() {
         return chooseType;
+    }
+
+    /**
+     * 是否在系统相机拍照成功后写入俯仰/偏航/翻滚角及经纬度海拔到 EXIF。
+     * 默认 false，需显式开启；写入失败不阻断原有流程。
+     */
+    public boolean isWriteCaptureExifMetadata() {
+        return writeCaptureExifMetadata;
+    }
+
+    public MediaBuilder setWriteCaptureExifMetadata(boolean writeCaptureExifMetadata) {
+        this.writeCaptureExifMetadata = writeCaptureExifMetadata;
+        return this;
+    }
+
+    public boolean isRequestCaptureExifLocationPermission() {
+        return requestCaptureExifLocationPermission;
+    }
+
+    public MediaBuilder setRequestCaptureExifLocationPermission(boolean requestCaptureExifLocationPermission) {
+        this.requestCaptureExifLocationPermission = requestCaptureExifLocationPermission;
+        return this;
+    }
+
+    public boolean isShowCaptureExifPermissionDialog() {
+        return showCaptureExifPermissionDialog;
+    }
+
+    public MediaBuilder setShowCaptureExifPermissionDialog(boolean showCaptureExifPermissionDialog) {
+        this.showCaptureExifPermissionDialog = showCaptureExifPermissionDialog;
+        return this;
+    }
+
+    public String getCaptureExifPermissionPositiveText() {
+        return captureExifPermissionPositiveText;
+    }
+
+    public MediaBuilder setCaptureExifPermissionPositiveText(String captureExifPermissionPositiveText) {
+        this.captureExifPermissionPositiveText = captureExifPermissionPositiveText;
+        return this;
+    }
+
+    public String getCaptureExifPermissionNegativeText() {
+        return captureExifPermissionNegativeText;
+    }
+
+    public MediaBuilder setCaptureExifPermissionNegativeText(String captureExifPermissionNegativeText) {
+        this.captureExifPermissionNegativeText = captureExifPermissionNegativeText;
+        return this;
+    }
+
+    public SpannableString getCaptureExifPermissionSpannableContent() {
+        return captureExifPermissionSpannableContent;
+    }
+
+    public MediaBuilder setCaptureExifPermissionSpannableContent(SpannableString captureExifPermissionSpannableContent) {
+        this.captureExifPermissionSpannableContent = captureExifPermissionSpannableContent;
+        return this;
+    }
+
+    public String getCaptureExifPermissionMessage() {
+        return captureExifPermissionMessage;
+    }
+
+    public MediaBuilder setCaptureExifPermissionMessage(String captureExifPermissionMessage) {
+        this.captureExifPermissionMessage = captureExifPermissionMessage;
+        return this;
+    }
+
+    public String getCaptureExifPermissionDeniedMessage() {
+        return captureExifPermissionDeniedMessage;
+    }
+
+    public MediaBuilder setCaptureExifPermissionDeniedMessage(String captureExifPermissionDeniedMessage) {
+        this.captureExifPermissionDeniedMessage = captureExifPermissionDeniedMessage;
+        return this;
+    }
+
+    public boolean isShowCaptureExifPermissionDeniedTip() {
+        return showCaptureExifPermissionDeniedTip;
+    }
+
+    public MediaBuilder setShowCaptureExifPermissionDeniedTip(boolean showCaptureExifPermissionDeniedTip) {
+        this.showCaptureExifPermissionDeniedTip = showCaptureExifPermissionDeniedTip;
+        return this;
+    }
+
+    public OnDialogInterfaceClickListener getOnCaptureExifPermissionPositiveClickListener() {
+        return onCaptureExifPermissionPositiveClickListener;
+    }
+
+    public MediaBuilder setOnCaptureExifPermissionPositiveClickListener(
+            OnDialogInterfaceClickListener onCaptureExifPermissionPositiveClickListener) {
+        this.onCaptureExifPermissionPositiveClickListener = onCaptureExifPermissionPositiveClickListener;
+        return this;
+    }
+
+    public OnDialogInterfaceClickListener getOnCaptureExifPermissionNegativeClickListener() {
+        return onCaptureExifPermissionNegativeClickListener;
+    }
+
+    public MediaBuilder setOnCaptureExifPermissionNegativeClickListener(
+            OnDialogInterfaceClickListener onCaptureExifPermissionNegativeClickListener) {
+        this.onCaptureExifPermissionNegativeClickListener = onCaptureExifPermissionNegativeClickListener;
+        return this;
+    }
+
+    public @ColorInt int getCaptureExifPermissionPositiveTextColor() {
+        return captureExifPermissionPositiveTextColor;
+    }
+
+    public MediaBuilder setCaptureExifPermissionPositiveTextColor(@ColorInt int captureExifPermissionPositiveTextColor) {
+        this.captureExifPermissionPositiveTextColor = captureExifPermissionPositiveTextColor;
+        return this;
+    }
+
+    public @ColorInt int getCaptureExifPermissionNegativeTextColor() {
+        return captureExifPermissionNegativeTextColor;
+    }
+
+    public MediaBuilder setCaptureExifPermissionNegativeTextColor(@ColorInt int captureExifPermissionNegativeTextColor) {
+        this.captureExifPermissionNegativeTextColor = captureExifPermissionNegativeTextColor;
+        return this;
     }
 
     /**

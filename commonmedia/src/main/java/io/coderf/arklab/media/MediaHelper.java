@@ -25,6 +25,7 @@ import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenMediaDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.dialog.PermissionReminderDialog;
+import io.coderf.arklab.media.dialog.TipDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.handler.ImageCompressHandler;
@@ -84,6 +85,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private final MediaLifecycleObserver mediaLifecycleObserver = new MediaLifecycleObserver(this);
     private static final String THREAD_NAME = "mediaHelperThread";
     private final HandlerThread handlerThread = new HandlerThread(THREAD_NAME, 10);
+    /** 拍照 EXIF 定位权限申请完成后继续打开相机的动作 */
+    private Runnable pendingCaptureExifPermissionAction;
 
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
@@ -187,6 +190,90 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 .setOnNegativeClickListener(mediaBuilder.getOnPermissionNegativeClickListener() == null ? Dialog::dismiss : mediaBuilder.getOnPermissionNegativeClickListener())
                 .builder()
                 .show();
+    }
+
+    /**
+     * 是否已具备拍照 EXIF 所需的定位权限（精确或粗略任一即可）
+     */
+    public boolean hasCaptureExifLocationPermission() {
+        Context context = mediaBuilder.getContext();
+        return !lacksPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                || !lacksPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    /**
+     * 打开相机前确保拍照 EXIF 定位权限已处理：无权限则弹窗/系统授权，授权与否均会继续 {@code onReady}。
+     */
+    public void ensureCaptureExifLocationPermission(Runnable onReady) {
+        if (!mediaBuilder.isWriteCaptureExifMetadata()
+                || !mediaBuilder.isRequestCaptureExifLocationPermission()
+                || hasCaptureExifLocationPermission()) {
+            onReady.run();
+            return;
+        }
+        pendingCaptureExifPermissionAction = onReady;
+        requestCaptureExifLocationPermission();
+    }
+
+    private void requestCaptureExifLocationPermission() {
+        String[] permissions = ConstantsHelper.PERMISSIONS_CAPTURE_EXIF_LOCATION;
+        if (!mediaBuilder.isShowCaptureExifPermissionDialog()) {
+            mediaLifecycleObserver.getCaptureExifPermissionLauncher().launch(permissions);
+            return;
+        }
+        new PermissionReminderDialog(mediaBuilder.getContext())
+                .setMessage(mediaBuilder.getCaptureExifPermissionMessage())
+                .setSpannableContent(mediaBuilder.getCaptureExifPermissionSpannableContent())
+                .setNegativeText(mediaBuilder.getCaptureExifPermissionNegativeText())
+                .setPositiveText(mediaBuilder.getCaptureExifPermissionPositiveText())
+                .setNegativeTextColor(mediaBuilder.getCaptureExifPermissionNegativeTextColor())
+                .setPositiveTextColor(mediaBuilder.getCaptureExifPermissionPositiveTextColor())
+                .setOnPositiveClickListener(mediaBuilder.getOnCaptureExifPermissionPositiveClickListener() == null
+                        ? dialog -> {
+                    dialog.dismiss();
+                    mediaLifecycleObserver.getCaptureExifPermissionLauncher().launch(permissions);
+                } : mediaBuilder.getOnCaptureExifPermissionPositiveClickListener())
+                .setOnNegativeClickListener(mediaBuilder.getOnCaptureExifPermissionNegativeClickListener() == null
+                        ? dialog -> {
+                    dialog.dismiss();
+                    continueAfterCaptureExifPermissionResult(false);
+                } : mediaBuilder.getOnCaptureExifPermissionNegativeClickListener())
+                .builder()
+                .show();
+    }
+
+    /**
+     * 拍照 EXIF 定位权限申请结束（含用户点「暂不授权」），继续挂起的打开相机流程。
+     */
+    public void continueAfterCaptureExifPermissionResult(boolean allGranted) {
+        Runnable action = pendingCaptureExifPermissionAction;
+        pendingCaptureExifPermissionAction = null;
+        if (!allGranted && mediaBuilder.isShowCaptureExifPermissionDeniedTip()) {
+            new TipDialog(mediaBuilder.getContext())
+                    .setMessage(mediaBuilder.getCaptureExifPermissionDeniedMessage())
+                    .setNegativeText(mediaBuilder.getCaptureExifPermissionNegativeText())
+                    .setPositiveText("知道了")
+                    .setOnPositiveClickListener(Dialog::dismiss)
+                    .setOnNegativeClickListener(Dialog::dismiss)
+                    .builder()
+                    .show();
+        }
+        if (action != null) {
+            action.run();
+        }
+    }
+
+    private boolean ensureCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                return false;
+            }
+        } else if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
+            checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -482,36 +569,22 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 打开摄像机
      */
     public void camera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
-                return;
-            }
-        } else {
-            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
-                return;
-            }
+        if (!ensureCameraPermission()) {
+            return;
         }
-        mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE);
+        ensureCaptureExifLocationPermission(() ->
+                mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE));
     }
 
     /**
      * 打开摄像机
      */
     public void mediaCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
-                return;
-            }
-        } else {
-            if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
-                return;
-            }
+        if (!ensureCameraPermission()) {
+            return;
         }
-        mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE_AND_VIDEO);
+        ensureCaptureExifLocationPermission(() ->
+                mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE_AND_VIDEO));
     }
     /**
      * 开始压缩

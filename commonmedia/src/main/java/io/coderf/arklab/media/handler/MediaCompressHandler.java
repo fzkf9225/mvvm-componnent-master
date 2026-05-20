@@ -25,6 +25,7 @@ import io.coderf.arklab.media.compressor.video.CompressListener;
 import io.coderf.arklab.media.compressor.video.VideoCompress;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
 import io.coderf.arklab.media.utils.MediaUtil;
 
@@ -53,7 +54,12 @@ public class MediaCompressHandler extends Handler {
         super.handleMessage(msg);
         try {
             if (msg.what > 0 && msg.obj != null) {
-                compressedList.add((Uri) msg.obj);
+                Uri outputUri = (Uri) msg.obj;
+                int sourceIndex = msg.what - 1;
+                if (sourceIndex >= 0 && sourceIndex < srcUriList.size()) {
+                    syncCaptureMetadataFromSource(sourceIndex, outputUri);
+                }
+                compressedList.add(outputUri);
             }
 
             if (srcUriList == null || srcUriList.isEmpty() || msg.what >= srcUriList.size()) {
@@ -86,6 +92,15 @@ public class MediaCompressHandler extends Handler {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
+        }
+    }
+
+    private void syncCaptureMetadataFromSource(int sourceIndex, Uri outputUri) {
+        Uri sourceUri = srcUriList.get(sourceIndex);
+        boolean copied = ExifUtil.copyCaptureMetadataIfPresent(
+                mediaHelper.getMediaBuilder().getContext(), sourceUri, outputUri);
+        if (copied) {
+            LogUtil.show(MediaHelper.TAG, "压缩后同步拍照元数据：" + sourceUri + " -> " + outputUri);
         }
     }
 

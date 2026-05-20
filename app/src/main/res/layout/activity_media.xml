@@ -204,6 +204,21 @@
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_water_mark_image" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_capture_exif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:layout_marginBottom="@dimen/vertical_margin_l"
+                android:text="拍照元数据：拍照或选图后显示"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

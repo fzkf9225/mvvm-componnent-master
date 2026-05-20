@@ -87,6 +87,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setVideoMaxSelectedCount(2)
                 .setMediaMaxSelectedCount(6)
                 .setChooseType(MediaPickerTypeEnum.PICK)
+                .setWriteCaptureExifMetadata(true)
                 .setWaterMark("仅测试使用")
                 .setImageSelectedListener(new MediaListener() {
                     @Override
@@ -139,11 +140,13 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                if (mediaBean.getMediaList() != null && mediaBean.getMediaList().size() > 0) {
+                if (mediaBean.getMediaList() != null && !mediaBean.getMediaList().isEmpty()) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 }
-                ExifUtil.ExifData exifUtil = ExifUtil.getExifData(this,mediaBean.getMediaList().get(0));
-                LogUtil.logger(TAG,"经纬度等图片信息："+(exifUtil==null?null:exifUtil.toString()));
+                Uri imageUri = mediaBean.getMediaList().get(0);
+                ExifUtil.ExifData exifData = ExifUtil.getExifData(this, imageUri);
+                LogUtil.logger(TAG, "拍照元数据：" + exifData);
+                binding.tvCaptureExif.setText("拍照元数据（" + imageUri + "）\n" + exifData.toDisplayString());
                 imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
                 imageAddAdapter.notifyDataSetChanged();
                 percentage = 0;

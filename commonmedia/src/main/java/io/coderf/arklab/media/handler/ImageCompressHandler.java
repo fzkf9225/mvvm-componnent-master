@@ -18,6 +18,7 @@ import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.compressor.image.ImgCompressor;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
+import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
@@ -45,7 +46,12 @@ public class ImageCompressHandler extends Handler {
         super.handleMessage(msg);
         try {
             if (msg.what > 0 && msg.obj != null) {
-                boolean isSuccess = imagesCompressList.add((Uri) msg.obj);
+                Uri outputUri = (Uri) msg.obj;
+                int sourceIndex = msg.what - 1;
+                if (sourceIndex >= 0 && sourceIndex < srcUriList.size()) {
+                    syncCaptureMetadataFromSource(sourceIndex, outputUri);
+                }
+                imagesCompressList.add(outputUri);
             }
             if (srcUriList == null || srcUriList.isEmpty() ||
                     msg.what >= srcUriList.size()) {
@@ -82,6 +88,18 @@ public class ImageCompressHandler extends Handler {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
+        }
+    }
+
+    /**
+     * 压缩输出 Uri 与源 Uri 不同时，将源图已写入的拍照元数据同步到输出图。
+     */
+    private void syncCaptureMetadataFromSource(int sourceIndex, Uri outputUri) {
+        Uri sourceUri = srcUriList.get(sourceIndex);
+        boolean copied = ExifUtil.copyCaptureMetadataIfPresent(
+                mediaHelper.getMediaBuilder().getContext(), sourceUri, outputUri);
+        if (copied) {
+            LogUtil.show(MediaHelper.TAG, "压缩后同步拍照元数据：" + sourceUri + " -> " + outputUri);
         }
     }
 

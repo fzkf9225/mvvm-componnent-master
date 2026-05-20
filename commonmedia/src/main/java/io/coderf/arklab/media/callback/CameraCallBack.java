@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import androidx.activity.result.ActivityResultCallback;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.FileNotFoundException;
@@ -15,8 +16,10 @@ import io.coderf.arklab.media.MediaBuilder;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
+import io.coderf.arklab.media.helper.CaptureMetadataHelper;
 import io.coderf.arklab.media.helper.TakeCameraUri;
 import io.coderf.arklab.media.helper.TakeVideoUri;
+import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
 
 
@@ -32,15 +35,22 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
 
     private TakeVideoUri takeVideoUri;
 
-    public CameraCallBack(MediaBuilder mediaBuilder, TakeCameraUri takeCameraUri, MutableLiveData<MediaBean> mutableLiveData) {
+    @Nullable
+    private final CaptureMetadataHelper captureMetadataHelper;
+
+    public CameraCallBack(MediaBuilder mediaBuilder, TakeCameraUri takeCameraUri,
+                          @Nullable CaptureMetadataHelper captureMetadataHelper,
+                          MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaBuilder = mediaBuilder;
         this.takeCameraUri = takeCameraUri;
+        this.captureMetadataHelper = captureMetadataHelper;
         this.mutableLiveData = mutableLiveData;
     }
 
     public CameraCallBack(MediaBuilder mediaBuilder, TakeVideoUri takeVideoUri, MutableLiveData<MediaBean> mutableLiveData) {
         this.mediaBuilder = mediaBuilder;
         this.takeVideoUri = takeVideoUri;
+        this.captureMetadataHelper = null;
         this.mutableLiveData = mutableLiveData;
     }
 
@@ -54,6 +64,7 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
             if (!isFileUriExists(result)) {
                 return;
             }
+            writeCaptureExifIfEnabled(result);
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == getMediaType()) {
             if (!isFileUriExists(result)) {
@@ -66,6 +77,15 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
             }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
         }
+    }
+
+    private void writeCaptureExifIfEnabled(Uri uri) {
+        if (!mediaBuilder.isWriteCaptureExifMetadata() || captureMetadataHelper == null) {
+            return;
+        }
+        ExifUtil.CaptureMetadata metadata = captureMetadataHelper.snapshot();
+        boolean written = ExifUtil.tryWriteCaptureMetadata(mediaBuilder.getContext(), uri, metadata);
+        LogUtil.show(MediaHelper.TAG, "拍照EXIF写入" + (written ? "成功" : "跳过/失败") + "：" + metadata);
     }
 
     public MediaTypeEnum getMediaType() {

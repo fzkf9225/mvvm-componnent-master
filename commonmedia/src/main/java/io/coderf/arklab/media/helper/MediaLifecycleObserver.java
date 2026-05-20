@@ -35,6 +35,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
     private final MediaHelper mediaHelper;
 
     private ActivityResultLauncher<String[]> permissionLauncher = null;
+    private ActivityResultLauncher<String[]> captureExifPermissionLauncher = null;
 
     private ActivityResultLauncher<MediaTypeEnum> cameraLauncher = null;
     private ActivityResultLauncher<MediaTypeEnum> shootLauncher = null;
@@ -53,6 +54,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
 
     private TakeVideoUri takeVideoUri;
     private TakeCameraUri takeCameraUri;
+    private CaptureMetadataHelper captureMetadataHelper;
 
     private OpenPickMediaSelector pickMediaSelector;
     private OpenPickMultipleMediaSelector pickMuLtiVideoSelector;
@@ -123,15 +125,35 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
 
         //权限
         permissionLauncher = registry.register("permission" + UUID.randomUUID().toString(), owner, new ActivityResultContracts.RequestMultiplePermissions(), permissionCallback);
+        captureExifPermissionLauncher = registry.register("captureExifPermission" + UUID.randomUUID().toString(), owner,
+                new ActivityResultContracts.RequestMultiplePermissions(), captureExifPermissionCallback);
+        captureMetadataHelper = new CaptureMetadataHelper(mediaHelper.getMediaBuilder().getContext());
+        if (mediaHelper.getMediaBuilder().isWriteCaptureExifMetadata()) {
+            captureMetadataHelper.start();
+        }
         //拍照
         takeCameraUri = new TakeCameraUri(mediaHelper.getMediaBuilder());
         cameraLauncher = registry.register("camera" + UUID.randomUUID().toString(), owner, takeCameraUri,
-                new CameraCallBack(mediaHelper.getMediaBuilder(), takeCameraUri, mediaHelper.getMutableLiveData()));
+                new CameraCallBack(mediaHelper.getMediaBuilder(), takeCameraUri, captureMetadataHelper,
+                        mediaHelper.getMutableLiveData()));
         //录像
         takeVideoUri = new TakeVideoUri(mediaHelper.getMediaBuilder(), mediaHelper.getMediaBuilder().getMaxVideoTime());
         shootLauncher = registry.register("shoot" + UUID.randomUUID().toString(), owner, takeVideoUri,
                 new CameraCallBack(mediaHelper.getMediaBuilder(), takeVideoUri, mediaHelper.getMutableLiveData()));
     }
+
+    /**
+     * 拍照 EXIF 定位权限回调（与通用权限回调独立）
+     */
+    ActivityResultCallback<Map<String, Boolean>> captureExifPermissionCallback = new ActivityResultCallback<>() {
+        @Override
+        public void onActivityResult(Map<String, Boolean> result) {
+            for (Map.Entry<String, Boolean> entry : result.entrySet()) {
+                LogUtil.show(MediaHelper.TAG, "拍照EXIF定位权限 " + entry.getKey() + ":" + entry.getValue());
+            }
+            mediaHelper.continueAfterCaptureExifPermissionResult(mediaHelper.hasCaptureExifLocationPermission());
+        }
+    };
 
     /**
      * 权限回调
@@ -164,6 +186,10 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
 
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
+        if (captureMetadataHelper != null) {
+            captureMetadataHelper.stop();
+            captureMetadataHelper = null;
+        }
         DefaultLifecycleObserver.super.onDestroy(owner);
         //取消pick监听
         if (pickMuLtiImageSelectorLauncher != null) {
@@ -194,6 +220,9 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         if (permissionLauncher != null) {
             permissionLauncher.unregister();
         }
+        if (captureExifPermissionLauncher != null) {
+            captureExifPermissionLauncher.unregister();
+        }
         if (singleLauncher != null) {
             singleLauncher.unregister();
         }
@@ -223,6 +252,10 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
 
     public ActivityResultLauncher<String[]> getPermissionLauncher() {
         return permissionLauncher;
+    }
+
+    public ActivityResultLauncher<String[]> getCaptureExifPermissionLauncher() {
+        return captureExifPermissionLauncher;
     }
 
     public ActivityResultLauncher<MediaTypeEnum> getCameraLauncher() {

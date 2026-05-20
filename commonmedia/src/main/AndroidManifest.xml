@@ -52,6 +52,10 @@
     <!-- 相机访问权限 -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 访问相机设备，用于扫描二维码、拍照、视频通话、人脸识别等功能 -->
 
+    <!-- 拍照 EXIF 写入经纬度/海拔（可选，需业务侧 setWriteCaptureExifMetadata(true)） -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <!-- 闪光灯控制权限 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" /> <!-- 控制相机闪光灯作为手电筒使用 -->
 
