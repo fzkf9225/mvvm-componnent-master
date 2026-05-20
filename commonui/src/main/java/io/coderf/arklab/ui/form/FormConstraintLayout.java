@@ -53,6 +53,10 @@ public class FormConstraintLayout extends ConstraintLayout {
      */
     protected int formTextColor;
     /**
+     * 右侧或者正文也就是输入框、选择框正文提示文字颜色
+     */
+    protected int formHintTextColor;
+    /**
      * 底部边框颜色
      */
     protected int borderBottomColor;
@@ -231,6 +235,7 @@ public class FormConstraintLayout extends ConstraintLayout {
 
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
             borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), R.color.line));
             labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
@@ -251,6 +256,7 @@ public class FormConstraintLayout extends ConstraintLayout {
             typedArray.recycle();
         } else {
             formTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            formHintTextColor =ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color)；
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -384,11 +390,10 @@ public class FormConstraintLayout extends ConstraintLayout {
         AppCompatTextView tvText = new AppCompatTextView(getContext());
         tvText.setId(View.generateViewId());
         tvText.setHint(hintString);
-        tvText.setTextColor(formTextColor);
 
         tvText.setEllipsize(android.text.TextUtils.TruncateAt.END);
         tvText.setTextColor(formTextColor);
-        tvText.setHintTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
+        tvText.setHintTextColor(formHintTextColor);
         tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
 
         // 设置水平权重
