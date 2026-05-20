@@ -256,7 +256,7 @@ public class FormConstraintLayout extends ConstraintLayout {
             typedArray.recycle();
         } else {
             formTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            formHintTextColor =ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color)；
+            formHintTextColor =ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color);
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
