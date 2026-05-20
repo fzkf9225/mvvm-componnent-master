@@ -31,7 +31,7 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
      */
     protected int defaultMaxCount = -1;
     /**
-     * 背景颜色，默认为null也就是不添加任何北京
+     * 背景颜色，默认为null也就是不添加任何背景
      */
     protected @ColorInt Integer bgColor;
     /**
