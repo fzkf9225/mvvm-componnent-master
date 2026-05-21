@@ -62,6 +62,10 @@ public abstract class FormMedia extends ConstraintLayout {
      */
     protected float formRequiredSize;
     /**
+     * 系统相机拍照完成后是否写入姿态/GPS 等到 EXIF（失败则跳过，不影响回调）
+     */
+    protected boolean writeCaptureExifMetadata;
+    /**
      * label文字控件
      */
     protected AppCompatTextView tvLabel;
@@ -86,7 +90,7 @@ public abstract class FormMedia extends ConstraintLayout {
      */
     protected float labelIconWidth;
     /**
-     *左侧文字的图标宽高
+     * 左侧文字的图标宽高
      */
     protected float labelIconHeight;
     /**
@@ -247,6 +251,7 @@ public abstract class FormMedia extends ConstraintLayout {
             bgColor = typedArray.getColor(R.styleable.FormUI_bgColor, 0xFFF1F3F2);
             labelString = typedArray.getString(R.styleable.FormUI_label);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+            writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
             requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
             protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
             labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
@@ -317,6 +322,7 @@ public abstract class FormMedia extends ConstraintLayout {
             radius = DensityUtil.dp2px(getContext(), 8);
             fileType = defaultFileType();
             protocolDialog = true;
+            writeCaptureExifMetadata = true;
             requireUriPermission = true;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -360,6 +366,7 @@ public abstract class FormMedia extends ConstraintLayout {
 
     /**
      * 设置视频自动上传接口地址
+     *
      * @param uploadUrl 上传接口地址，相对地址
      */
     public void setUploadUrl(String uploadUrl) {
@@ -368,6 +375,7 @@ public abstract class FormMedia extends ConstraintLayout {
 
     /**
      * 回调
+     *
      * @param baseView 回调
      */
     public void setBaseView(BaseView baseView) {
@@ -376,6 +384,7 @@ public abstract class FormMedia extends ConstraintLayout {
 
     /**
      * 设置文件上传接口服务
+     *
      * @param fileApiService 代理
      */
     public void setFileApiService(FileApiService fileApiService) {
