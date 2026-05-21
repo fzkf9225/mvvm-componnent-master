@@ -314,19 +314,19 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         return maxCount;
     }
 
-    public List<AttachmentBean> getImages() {
+    public List<AttachmentBean> getVideos() {
         return videoAddAdapter.getList();
     }
 
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setUriImages(List<Uri> images) {
-        if (images == null) {
+    public void setUriVideos(List<Uri> videos) {
+        if (videos == null) {
             videoAddAdapter.setList(new ArrayList<>());
             videoAddAdapter.notifyDataSetChanged();
             return;
         }
-        videoAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(images));
+        videoAddAdapter.setList(AttachmentUtil.uriListToAttachmentList(videos));
         videoAddAdapter.notifyDataSetChanged();
         refreshCountLabel();
     }
