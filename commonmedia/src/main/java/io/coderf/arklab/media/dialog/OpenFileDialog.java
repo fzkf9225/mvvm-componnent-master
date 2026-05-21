@@ -66,13 +66,13 @@ public class OpenFileDialog extends Dialog {
             if (!TextUtils.isEmpty(buttonMessage)) {
                 binding.chooseFile.setText(buttonMessage);
             } else {
-                binding.chooseFile.setText(getContext().getResources().getString(R.string.audio));
+                binding.chooseFile.setText(getContext().getResources().getString(R.string.media_audio));
             }
         } else if (chooseType == FILE) {
             if (!TextUtils.isEmpty(buttonMessage)) {
                 binding.chooseFile.setText(buttonMessage);
             } else {
-                binding.chooseFile.setText(getContext().getResources().getString(R.string.file));
+                binding.chooseFile.setText(getContext().getResources().getString(R.string.media_file));
             }
         }
         binding.chooseFile.setOnClickListener(v -> {

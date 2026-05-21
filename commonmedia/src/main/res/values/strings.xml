@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="album">album</string>
-    <string name="camera">camera</string>
-    <string name="shoot">shoot</string>
-    <string name="file">file manager</string>
-    <string name="audio">audio</string>
-    <string name="cancel" tools:ignore="ButtonCase">cancel</string>
+    <string name="media_album">album</string>
+    <string name="media_camera">camera</string>
+    <string name="media_shoot">shoot</string>
+    <string name="media_file">file manager</string>
+    <string name="media_audio">audio</string>
+    <string name="media_cancel" tools:ignore="ButtonCase">cancel</string>
     <string name="media_manage">Select from the multimedia file</string>
-    <string name="confirm">OK</string>
-    <string name="go_to_authorization">Go to Authorization</string>
+    <string name="media_confirm">OK</string>
+    <string name="media_go_to_authorization">Go to Authorization</string>
 </resources>

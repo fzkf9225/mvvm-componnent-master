@@ -23,7 +23,7 @@
                 android:layout_height="@dimen/height_xxl"
                 android:background="@null"
                 android:gravity="center"
-                android:text="@string/shoot"
+                android:text="@string/media_shoot"
                 android:textColor="@color/autoColor"
                 android:textSize="@dimen/font_size_xxl" />
 
@@ -49,7 +49,7 @@
             android:layout_marginTop="@dimen/horizontal_margin_m"
             android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="@string/cancel"
+            android:text="@string/media_cancel"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl" />
 

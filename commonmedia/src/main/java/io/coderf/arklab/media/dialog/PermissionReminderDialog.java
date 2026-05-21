@@ -115,12 +115,12 @@ public class PermissionReminderDialog extends Dialog {
         binding = DialogPermissionReminderBinding.inflate(layoutInflater, null, false);
 
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.go_to_authorization));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.media_go_to_authorization));
         } else {
             binding.dialogConfirm.setText(positiveText);
         }
         if (TextUtils.isEmpty(negativeText)) {
-            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.media_cancel));
         } else {
             binding.dialogCancel.setText(negativeText);
         }

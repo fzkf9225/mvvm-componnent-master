@@ -23,7 +23,7 @@
                 android:layout_height="@dimen/height_xxl"
                 android:background="@null"
                 android:gravity="center"
-                android:text="@string/camera"
+                android:text="@string/media_camera"
                 android:textColor="@color/autoColor"
                 android:textSize="@dimen/font_size_xxl" />
 
@@ -37,7 +37,7 @@
                 android:layout_height="@dimen/height_xxl"
                 android:background="@null"
                 android:gravity="center"
-                android:text="@string/album"
+                android:text="@string/media_album"
                 android:textColor="@color/autoColor"
                 android:textSize="@dimen/font_size_xxl" />
         </LinearLayout>
@@ -49,7 +49,7 @@
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="@string/cancel"
+            android:text="@string/media_cancel"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl" />
 

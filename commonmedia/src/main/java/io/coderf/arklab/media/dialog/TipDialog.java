@@ -129,12 +129,12 @@ public class TipDialog extends Dialog {
         binding = MediaTipDialogBinding.inflate(layoutInflater, null, false);
 
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.media_confirm));
         } else {
             binding.dialogConfirm.setText(positiveText);
         }
         if (TextUtils.isEmpty(negativeText)) {
-            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.media_cancel));
         } else {
             binding.dialogCancel.setText(negativeText);
         }

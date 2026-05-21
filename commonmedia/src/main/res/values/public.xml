@@ -14,14 +14,14 @@
     <public name="shoot_dialog" type="layout"/>
 
     <!--字符串资源-->
-    <public name="go_to_authorization" type="string"/>
-    <public name="album" type="string"/>
-    <public name="camera" type="string"/>
-    <public name="shoot" type="string"/>
-    <public name="file" type="string"/>
-    <public name="audio" type="string"/>
-    <public name="cancel" type="string"/>
-    <public name="media_manage" type="string"/>
-    <public name="confirm" type="string"/>
+    <public name="media_go_to_authorization" type="string"/>
+    <public name="media_album" type="string"/>
+    <public name="media_camera" type="string"/>
+    <public name="media_shoot" type="string"/>
+    <public name="media_file" type="string"/>
+    <public name="media_audio" type="string"/>
+    <public name="media_cancel" type="string"/>
+    <public name="media_media_manage" type="string"/>
+    <public name="media_confirm" type="string"/>
 
 </resources>

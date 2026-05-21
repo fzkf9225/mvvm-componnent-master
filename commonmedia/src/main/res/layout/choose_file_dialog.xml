@@ -18,7 +18,7 @@
             android:layout_height="@dimen/height_xxl"
             android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="@string/file"
+            android:text="@string/media_file"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xxl" />
 
@@ -29,7 +29,7 @@
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:background="@drawable/rounded_white"
             android:gravity="center"
-            android:text="@string/cancel"
+            android:text="@string/media_cancel"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl" />
 
