@@ -68,7 +68,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
 
     protected ConcatAdapter createdHeaderFootAdapter() {
         ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(
-                new PagingFooterAdapter(() -> adapter.retry()));
+                new PagingFooterAdapter(() -> adapter.retry(), adapter));
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
         if (header != null) {
             ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
