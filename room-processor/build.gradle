@@ -30,7 +30,7 @@ afterEvaluate {
                 artifact("$buildDir/libs/room-processor.jar")
                 groupId = 'io.coderf.arklab.room'
                 artifactId = 'room-processor'
-                version = libs.versions.roomProcessor.get()
+                version = '1.0.0'
             }
         }
         repositories {

@@ -6,7 +6,6 @@ targetSdkVersion = "34"
 agp = "8.13.0"
 kotlin = "2.1.20"
 kspVersion = "2.1.20-1.0.31"
-roomProcessor = "1.0.0"
 
 kotlinxCoroutinesCoreVersion = "1.9.0"
 roomVersion = "2.6.1"
@@ -194,7 +193,6 @@ auto-service ={ module = "com.google.auto.service:auto-service", version.ref = "
 auto-service-annotation ={ module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceVersion"}
 squareup-javapoet ={ module = "com.squareup:javapoet", version.ref = "javapoetVersion"}
 squareup-javawriter ={ module = "com.squareup:javawriter", version.ref = "javawriterVersion"}
-room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref = "roomProcessor" }
 
 #camera
 camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
