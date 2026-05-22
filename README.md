@@ -157,7 +157,7 @@
 #### 数据存储和网络请求相关
 1. 网络请求相关`Repository`常用的话直接继承`RepositoryImpl`，在`ViewModel1`中创建`Repository`对象，可以使用构造方法创建也可以使用`RepositoryFactory`工厂工具类创建
 2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
-3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`和`RoomRepositoryImpl`，提供常见的一些Api方法，附件表已经提供了基础的模版`AttachmentDao`和`AttachmentDatabase`和`AttachmentRepositoryImpl`
+3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`和`RoomRepositoryImpl`，提供常见的一些Api方法，附件表已经提供了基础的模版`AttachmentDao`和`AttachmentDatabase`和`AttachmentRepositoryImpl`。DAO 上添加 `@RoomObservedEntity(实体.class)` 后 KSP 会生成 `XxxDaoRawQueryBridge`，将 `extends BaseRoomDao` 改为 `extends XxxDaoRawQueryBridge` 即可，无需手写 6 个 RawQuery。协程/Flow 见 `RoomRepositoryCoroutineExt`、`RoomRepositoryFlowExt`。**外部工程**需同时依赖 `common`（含注解）与 KSP 处理器 `io.coderf.arklab.room:room-processor`（本仓库 `:room-processor` 模块，`./gradlew :room-processor:publish` 发布，版本见 `libs.versions.toml` 的 `roomProcessor`）
 4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
 5. 网络请求分页`PagingSource`继承`PagingSource`，协程`flow`方式继承`FlowPagingSource`，数据库存储分页继承`RxRoomPagingSource`
 6. `RetryService`：封装了网络请求拦截重试机制，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置

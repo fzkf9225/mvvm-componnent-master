@@ -6,6 +6,7 @@ targetSdkVersion = "34"
 agp = "8.13.0"
 kotlin = "2.1.20"
 kspVersion = "2.1.20-1.0.31"
+roomProcessor = "1.0.0"
 
 kotlinxCoroutinesCoreVersion = "1.9.0"
 roomVersion = "2.6.1"
@@ -125,6 +126,7 @@ reactivex-rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref =
 rxjava3-rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjavaVersion" }
 com-trello-rxlifecycle2-rxlifecycle-components = { module = "com.trello.rxlifecycle2:rxlifecycle-components", version.ref = "rxlifecycleVersion" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
+kotlinx-coroutines-rx3 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3", version.ref = "kotlinxCoroutinesCoreVersion" }
 
 # Dependency Injection
 google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
@@ -192,6 +194,7 @@ auto-service ={ module = "com.google.auto.service:auto-service", version.ref = "
 auto-service-annotation ={ module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceVersion"}
 squareup-javapoet ={ module = "com.squareup:javapoet", version.ref = "javapoetVersion"}
 squareup-javawriter ={ module = "com.squareup:javawriter", version.ref = "javawriterVersion"}
+room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref = "roomProcessor" }
 
 #camera
 camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
@@ -205,6 +208,7 @@ camera-extensions = { group = "androidx.camera", name = "camera-extensions", ver
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 google-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationVersion" }

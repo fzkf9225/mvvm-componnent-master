@@ -34,6 +34,7 @@
 打开`libs.versions.toml`文件，添加基础库配置
 ```toml
 annotation = "2.0.0"
+roomProcessor = "1.0.0"
 commonui = "2.0.11"
 commongps = "2.0.3"
 commonmedia = "2.0.3"
@@ -45,7 +46,18 @@ base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmed
 base-commonui = { module = "io.coderf.arklab.ui:commonui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
 base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
+# Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（需已发布 room-processor）
+room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref = "roomProcessor" }
 ```
+
+使用 `@RoomObservedEntity` 时，在 **app / 含 @Dao 的模块** 的 `build.gradle` 增加：
+
+```groovy
+ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.0.0"
+```
+
+并确保已依赖 `common`（注解 `RoomObservedEntity` 在 common 模块内）。
+
 在需要的模块引入即可，比如，在`user模块`引入`common`,示例： 打开`user模块`的`build.gradle`
 ```groovy
 implementation libs.base.common

@@ -1,0 +1,53 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+dependencies {
+    // 与 libs.versions.toml 中 kspVersion 保持一致
+    implementation "com.google.devtools.ksp:symbol-processing-api:${libs.versions.kspVersion.get()}"
+}
+
+// 执行以下命令完成制品推送
+// 推送命令：gradle :room-processor:publish
+// 使用 wrapper：./gradlew :room-processor:publish
+// 环境变量：ALIYUN_USER_NAME、ALIYUN_PASSWORD
+apply plugin: 'maven-publish'
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            plugin(MavenPublication) {
+                artifact sourcesJar
+                artifact("$buildDir/libs/room-processor.jar")
+                groupId = 'io.coderf.arklab.room'
+                artifactId = 'room-processor'
+                version = libs.versions.roomProcessor.get()
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+        }
+    }
+}

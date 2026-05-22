@@ -149,6 +149,7 @@ dependencies {
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
     ksp libs.room.compiler
+    ksp project(':room-processor')
     // optional - RxJava3 support for Room
     implementation libs.room.rxjava3
     // optional - Paging 3 Integration
@@ -186,7 +187,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.common'
                 artifactId = 'common'
-                version = '4.2.2'
+                version = '4.2.3'
             }
         }
 
