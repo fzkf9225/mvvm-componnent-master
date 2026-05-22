@@ -23,6 +23,9 @@
             android:paddingBottom="@dimen/padding_xl"
             android:textSize="@dimen/font_18"
             android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -64,7 +67,7 @@
             app:layout_constraintEnd_toStartOf="@+id/dialog_confirm"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yearPicker" />
+            app:layout_constraintTop_toBottomOf="@+id/data_picker" />
 
         <io.coderf.arklab.common.widget.customview.CornerButton
             android:id="@+id/dialog_confirm"
