@@ -420,10 +420,10 @@ public abstract class FormMedia extends ConstraintLayout {
                 tvLabel.setVisibility(VISIBLE);
             }
             if (ivLabelIcon != null) {
-                ivLabelIcon.setVisibility(VISIBLE);
+                ivLabelIcon.setVisibility(showLabelIcon && labelIcon != null ? VISIBLE : GONE);
             }
             if (tvRequired != null) {
-                tvRequired.setVisibility(VISIBLE);
+                tvRequired.setVisibility(required ? VISIBLE : GONE);
             }
         }
     }
