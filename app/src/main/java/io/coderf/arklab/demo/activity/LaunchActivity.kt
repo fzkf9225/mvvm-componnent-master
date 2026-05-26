@@ -26,6 +26,8 @@ import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityLaunchBinding
 import io.coderf.arklab.usercomponent.api.UserAccountHelper
 import dagger.hilt.android.AndroidEntryPoint
+import io.coderf.arklab.common.activity.WebViewActivity
+import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -133,12 +135,6 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
     }
 
     override fun initData(bundle: Bundle?) {
-        // 检查用户协议同意状态
-        if (UserAccountHelper.isAgree()) {
-            checkPermissionsAndProceed()
-        } else {
-            showUserAgreementDialog()
-        }
     }
 
     /**
@@ -251,8 +247,16 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
         // 设置用户协议点击
         val userAgreementSpan: ClickableSpan = object : android.text.style.ClickableSpan() {
             override fun onClick(widget: View) {
-                showToast("用户协议")
                 // 这里可以跳转到用户协议页面
+                WebViewActivity.show(
+                    widget.context,
+                    "用户协议.html",
+                    "用户协议",
+                    true,
+                    false,
+                    "io.coderf.arklab.demo",
+                    WebViewUrlTypeEnum.ASSETS.type
+                )
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -270,8 +274,16 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
         // 设置隐私保护政策点击
         val privacyPolicySpan: ClickableSpan = object : android.text.style.ClickableSpan() {
             override fun onClick(widget: View) {
-                showToast("隐私保护协议")
                 // 这里可以跳转到隐私协议页面
+                WebViewActivity.show(
+                    widget.context,
+                    "隐私保护政策.html",
+                    "隐私保护政策",
+                    true,
+                    false,
+                    "io.coderf.arklab.demo",
+                    WebViewUrlTypeEnum.ASSETS.type
+                )
             }
 
             override fun updateDrawState(ds: TextPaint) {

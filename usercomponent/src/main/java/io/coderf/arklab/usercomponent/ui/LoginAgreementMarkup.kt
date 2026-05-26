@@ -7,6 +7,7 @@ import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.view.View
 import io.coderf.arklab.common.activity.WebViewActivity
+import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 
 /**
  * 登录页协议富文本（纯 UI 侧，不进入 ViewModel）。
@@ -25,7 +26,7 @@ object LoginAgreementMarkup {
             AGREEMENT_TEXT,
             "用户协议",
             effectiveLinkColor,
-            "file:///android_asset/用户协议.html",
+            "用户协议.html",
             "用户协议"
         )
         addLink(
@@ -33,7 +34,7 @@ object LoginAgreementMarkup {
             AGREEMENT_TEXT,
             "隐私政策",
             effectiveLinkColor,
-            "file:///android_asset/隐私政策.html",
+            "隐私政策.html",
             "隐私政策"
         )
         return spannable
@@ -53,7 +54,15 @@ object LoginAgreementMarkup {
         spannable.setSpan(
             object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    WebViewActivity.show(widget.context, assetUrl, title)
+                    WebViewActivity.show(
+                        widget.context,
+                        assetUrl,
+                        title,
+                        true,
+                        false,
+                        "io.coderf.arklab.demo",
+                        WebViewUrlTypeEnum.ASSETS.type
+                    )
                 }
 
                 override fun updateDrawState(ds: TextPaint) {
