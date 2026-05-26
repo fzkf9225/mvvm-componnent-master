@@ -76,6 +76,7 @@ public class OpenFileDialog extends Dialog {
             }
         }
         binding.chooseFile.setOnClickListener(v -> {
+            ActionSheetDismissTracker.markUserChoseAction(OpenFileDialog.this);
             dismiss();
             if (openFileClickListener != null) {
                 openFileClickListener.fileClick(chooseType);

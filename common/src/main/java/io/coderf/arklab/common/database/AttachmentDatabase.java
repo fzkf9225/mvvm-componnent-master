@@ -88,7 +88,7 @@ public abstract class AttachmentDatabase extends RoomDatabase {
     public static synchronized AttachmentDatabase getInstance(Context context, String attachmentDatabaseName) {
         if (attachmentDatabase == null) {
             if (TextUtils.isEmpty(attachmentDatabaseName)) {
-                attachmentDatabaseName = "casic_titan_attachment";
+                attachmentDatabaseName = "io_coderf_arklab_attachment";
             }
 
             // 数据库的名字

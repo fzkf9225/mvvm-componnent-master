@@ -40,7 +40,11 @@ public class WaterMarkHandlerCallback implements Handler.Callback {
         }
         Bitmap bitmapOld = (Bitmap) msg.obj;
         int alpha = msg.arg1;
-        Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld, mediaHelper.getMediaBuilder().getWaterMark(), alpha);
+        Bitmap bitmapNew = MediaUtil.createWatermark(bitmapOld,
+                mediaHelper.getMediaBuilder().getWaterMark(),
+                alpha,
+                mediaHelper.getMediaBuilder().getWaterMarkTextSize(),
+                mediaHelper.getMediaBuilder().getWaterMarkTextColor());
         String outputPath = MediaUtil.getNoRepeatFileName(mediaHelper.getMediaBuilder().getImageOutPutPath(), "IMAGE_WM_", ".jpg");
         File outputFile = new File(mediaHelper.getMediaBuilder().getImageOutPutPath(), outputPath + ".jpg");
         MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ResourceName">
+    <!--应用内部 cache（WebView 拍照/录像临时文件等）-->
+    <cache-path
+        name="cache"
+        path="." />
+    <!--应用内部 files-->
+    <files-path
+        name="files"
+        path="." />
     <!--外部存储根目录,如 /sdcard/-->
     <external-path
         name="files_root"

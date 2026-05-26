@@ -20,6 +20,9 @@ import io.coderf.arklab.demo.activity.MediaCompressActivity;
 import io.coderf.arklab.demo.activity.RecyclerViewSampleActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
+import io.coderf.arklab.demo.activity.WebViewBasicDemoActivity;
+import io.coderf.arklab.demo.activity.WebViewHybridDemoActivity;
+import io.coderf.arklab.demo.activity.WebViewNetworkDemoActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
 import io.coderf.arklab.demo.activity.VerifyTopActivity;
@@ -31,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
-import io.coderf.arklab.common.activity.WebViewActivity;
+import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 
 /**
  * Created by fz on 2023/8/14 10:19
@@ -60,11 +63,13 @@ public enum UseCaseEnum {
     ANNOTATION_TOP(VerifyTopActivity.class, "自定义注解测试-Top", "通过自定义注解验证实体类参数问题，表单对齐方式为top，分组验证方式为Create", null),
     FORM_UI(FormDetailActivity.class, "表单样式-Left", "封装的表单样式，表单对齐方式为left，也是默认方式", null),
     FORM_UI_TOP(FormTopDetailActivity.class, "表单样式-Top", "封装的表单样式，表单对齐方式为top", null),
-    SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "基于ZXING的扫描二维码、识别图片中二维码、生成二维码图片和生成带logo的二维码图片", null),
+    SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "ZXING 扫码/相册识码/生成二维码；相册识别与 WebView 文件选择共用 CaptureActivity", null),
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
     LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
-    WEB_VIEW(WebViewActivity.class, "WebView示例", "测试WebView基本功能和toolbar", getWebViewBundle()),
+    WEB_VIEW(WebViewNetworkDemoActivity.class, "WebView 网络示例", "加载 https 页面，Toolbar 菜单复制/浏览器打开", null),
+    WEB_VIEW_BASIC(WebViewBasicDemoActivity.class, "WebView 基础能力", "仅 common：原生选文件/定位/扫码 JSBridge，assets+沙盒演示页", null),
+    WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "commonui：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
     CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
 
     ;
@@ -74,12 +79,6 @@ public enum UseCaseEnum {
         bundle.putString(VideoPlayerActivity.VIDEO_TITLE, "测试标题");
         bundle.putBoolean(VideoPlayerActivity.CACHE_ENABLE, false);
         bundle.putString(VideoPlayerActivity.VIDEO_PATH, "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248");
-        return bundle;
-    }
-    private static Bundle getWebViewBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putString(WebViewActivity.TITLE, "测试标题");
-        bundle.putString(WebViewActivity.LOAD_URL, "https://blog.csdn.net/fzkf9225");
         return bundle;
     }
 

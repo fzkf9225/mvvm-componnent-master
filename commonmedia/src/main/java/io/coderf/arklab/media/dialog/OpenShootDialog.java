@@ -90,14 +90,15 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (isShowing()) {
-            dismiss();
-        }
         int id = v.getId();
         if (id == R.id.choosePhoto) {
             if (mediaType == CAMERA) {
                 Toast.makeText(getContext(), "暂不支持拍摄视频！", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            ActionSheetDismissTracker.markUserChoseAction(this);
+            if (isShowing()) {
+                dismiss();
             }
             if (onOpenVideoClickListener != null) {
                 onOpenVideoClickListener.shootClick(ALBUM);
@@ -106,6 +107,10 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
             if (mediaType == ALBUM) {
                 Toast.makeText(getContext(), "暂不支持打开媒体文件！", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            ActionSheetDismissTracker.markUserChoseAction(this);
+            if (isShowing()) {
+                dismiss();
             }
             if (onOpenVideoClickListener != null) {
                 onOpenVideoClickListener.shootClick(CAMERA);

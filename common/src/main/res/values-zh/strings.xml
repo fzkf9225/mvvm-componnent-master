@@ -22,6 +22,11 @@
     <string name="state_loading">正在加载…</string>
     <string name="state_not_more">没有更多数据</string>
     <string name="state_load_error">加载失败</string>
+    <string name="webview_menu_more">更多</string>
+    <string name="webview_sheet_provider">此网页由 %1$s 提供</string>
+    <string name="webview_sheet_local_provider">本地内容</string>
+    <string name="webview_action_open_browser">在浏览器中打开</string>
+    <string name="webview_action_copy_link">复制链接</string>
     <string name="state_refreshing">正在刷新</string>
     <string name="state_loading_error">数据加载中&#8230;</string>
     <string name="state_submit">正在提交中&#8230;</string>

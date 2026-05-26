@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WebView 能力演示入口</title>
+    <style>
+        body { font-family: sans-serif; padding: 16px; line-height: 1.6; }
+        h1 { font-size: 20px; }
+        a, button { display: block; margin: 12px 0; padding: 12px; background: #1976d2; color: #fff;
+            text-decoration: none; border: none; border-radius: 6px; text-align: center; font-size: 16px; }
+        .hint { color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+<h1>WebView 能力演示</h1>
+<p class="hint">本页位于 APK assets/webview/，用于 Demo 模块验收网络、本地、Bridge 等能力。</p>
+
+<a href="hybrid_demo.html">混合能力页（扫码 / 定位 / 文件 / Dialog）</a>
+<a href="../用户协议.html">Assets：用户协议（上级目录）</a>
+
+<button type="button" onclick="loadSandbox()">沙盒 HTML（local://webview/sandbox_page.html）</button>
+<button type="button" onclick="loadDownloadHint()">查看下载目录说明</button>
+
+<p id="out" class="hint"></p>
+
+<script>
+    /** 通过虚拟域名跳转到应用 files 目录下的页面（需 Demo 预置文件） */
+    function loadSandbox() {
+        window.location.href = 'local://webview/sandbox_page.html';
+    }
+    function loadDownloadHint() {
+        document.getElementById('out').textContent =
+            '将 html/pdf 放入系统「下载」目录后，可用 local://download/文件名 或 WebViewUrlTypeEnum.LOCAL 加载。';
+    }
+</script>
+</body>
+</html>

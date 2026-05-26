@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.ColorInt;
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
@@ -978,9 +979,24 @@ public class MediaUtil {
      *
      * @param originalBitmap 图片
      * @param watermarkText  水印文字，默认添加时间水印，在mark内容的上一行
+     * @param alpha          水印透明度，0-255
      * @return 添加水印后的图片
      */
     public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText, int alpha) {
+        return createWatermark(originalBitmap, watermarkText, alpha, 32f, Color.rgb(169, 169, 169));
+    }
+
+    /**
+     * 添加图片水印
+     *
+     * @param originalBitmap 图片
+     * @param watermarkText  水印文字
+     * @param alpha          水印透明度，0-255
+     * @param textSize       水印文字大小，单位 px
+     * @param textColor      水印文字颜色
+     * @return 添加水印后的图片
+     */
+    public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText, int alpha, float textSize, @ColorInt int textColor) {
         if (watermarkText == null) {
             return originalBitmap;
         }
@@ -989,15 +1005,16 @@ public class MediaUtil {
         } else if (alpha > 255) {
             alpha = 255;
         }
+        if (textSize <= 0) {
+            textSize = 32f;
+        }
         int width = originalBitmap.getWidth();
         int height = originalBitmap.getHeight();
         Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(resultBitmap);
         Paint p = new Paint();
-        // 水印颜色,先不透明
-        p.setColor(Color.argb(255, 169, 169, 169));
-        // 水印字体大小
-        p.setTextSize(32);
+        p.setColor(textColor);
+        p.setTextSize(textSize);
         // 抗锯齿
         p.setAntiAlias(true);
         // 绘制图像

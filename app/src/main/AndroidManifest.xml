@@ -164,6 +164,15 @@
             android:name=".activity.ScanQrCodeActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.WebViewNetworkDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.WebViewBasicDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.WebViewHybridDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.VerifyActivity"
             android:exported="false" />
         <activity

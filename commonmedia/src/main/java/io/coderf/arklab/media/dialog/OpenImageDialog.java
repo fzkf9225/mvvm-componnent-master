@@ -85,14 +85,15 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (isShowing()) {
-            dismiss();
-        }
         int id = v.getId();
         if (id == R.id.choosePhoto) {
             if (mediaType == CAMERA) {
                 Toast.makeText(getContext(), "暂不支持拍照！", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            ActionSheetDismissTracker.markUserChoseAction(this);
+            if (isShowing()) {
+                dismiss();
             }
             if (onOpenImageClickListener != null) {
                 onOpenImageClickListener.imageClick(ALBUM);
@@ -101,6 +102,10 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
             if (mediaType == ALBUM) {
                 Toast.makeText(getContext(), "暂不支持打开相册！", Toast.LENGTH_SHORT).show();
                 return;
+            }
+            ActionSheetDismissTracker.markUserChoseAction(this);
+            if (isShowing()) {
+                dismiss();
             }
             if (onOpenImageClickListener != null) {
                 onOpenImageClickListener.imageClick(CAMERA);

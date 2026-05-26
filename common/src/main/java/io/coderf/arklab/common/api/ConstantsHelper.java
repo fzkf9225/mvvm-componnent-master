@@ -17,7 +17,7 @@ public class ConstantsHelper {
      * 跳转目标Activity页面，目前用于自动检测登录的作用
      */
     public static final String TARGET_ACTIVITY = "targetActivity";
-    public static final String TAG = "casic";
+    public static final String TAG = "codef";
     public static boolean isSuccessRequestUpdate = false;//更新请求是否成功了
 
     public static boolean hasNewAppVersion = false;//是否有新版本

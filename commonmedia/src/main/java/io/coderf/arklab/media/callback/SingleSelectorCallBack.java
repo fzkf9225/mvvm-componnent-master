@@ -5,6 +5,7 @@ import android.net.Uri;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaHelper;
@@ -39,6 +40,7 @@ public class SingleSelectorCallBack implements ActivityResultCallback<Uri> {
     public void onActivityResult(Uri result) {
         LogUtil.show(MediaHelper.TAG, "单选回调：" + result);
         if (result == null) {
+            mutableLiveData.postValue(new MediaBean(Collections.emptyList(), getMediaType()));
             return;
         }
         if (MediaTypeEnum.IMAGE == getMediaType()) {

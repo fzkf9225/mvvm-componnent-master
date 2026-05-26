@@ -89,6 +89,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWriteCaptureExifMetadata(true)
                 .setWaterMark("仅测试使用")
+                .setWaterMarkTextSize(DensityUtil.dp2px(this,24))
                 .setImageSelectedListener(new MediaListener() {
                     @Override
                     public int onSelectedCount() {

@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaBuilder;
@@ -57,26 +58,27 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
     @Override
     public void onActivityResult(Uri result) {
         if (result == null) {
+            notifySelectionCancelled();
             return;
         }
         LogUtil.show(MediaHelper.TAG, "拍照录像：" + getMediaType() + "，回调：" + result.toString());
+        if (!isFileUriExists(result)) {
+            // 系统拍照/录像取消时仍可能带回占位 Uri，需通知上层释放 file chooser
+            notifySelectionCancelled();
+            return;
+        }
         if (MediaTypeEnum.IMAGE == getMediaType()) {
-            if (!isFileUriExists(result)) {
-                return;
-            }
             writeCaptureExifIfEnabled(result);
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == getMediaType()) {
-            if (!isFileUriExists(result)) {
-                return;
-            }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.VIDEO));
         } else if (MediaTypeEnum.IMAGE_AND_VIDEO == getMediaType()) {
-            if (!isFileUriExists(result)) {
-                return;
-            }
             mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
         }
+    }
+
+    private void notifySelectionCancelled() {
+        mutableLiveData.postValue(new MediaBean(Collections.emptyList(), getMediaType()));
     }
 
     private void writeCaptureExifIfEnabled(Uri uri) {

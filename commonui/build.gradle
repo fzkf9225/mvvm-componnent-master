@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.hilt.android)
 }
 
 android {
@@ -81,6 +82,9 @@ dependencies {
     implementation libs.gson
     implementation project(':common')
     implementation project(':commonmedia')
+
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
 
     //上传文件使用
     implementation libs.okhttp

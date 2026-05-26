@@ -1,6 +1,7 @@
 package io.coderf.arklab.media;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Environment;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -65,6 +66,14 @@ public class MediaBuilder {
      * 水印文字
      */
     private String waterMark;
+    /**
+     * 水印文字大小，单位 px，默认 32
+     */
+    private float waterMarkTextSize = 32f;
+    /**
+     * 水印文字颜色，默认浅灰色
+     */
+    private @ColorInt int waterMarkTextColor = Color.rgb(169, 169, 169);
     /**
      * 文件格式，默认所有，只在file类型选择时才有效
      */
@@ -653,7 +662,49 @@ public class MediaBuilder {
     }
 
     /**
-     * 图片子目录，示例：/casic/image
+     * 设置水印文字大小
+     *
+     * @param waterMarkTextSize 文字大小，单位 px
+     * @return this
+     */
+    public MediaBuilder setWaterMarkTextSize(float waterMarkTextSize) {
+        if (waterMarkTextSize > 0) {
+            this.waterMarkTextSize = waterMarkTextSize;
+        }
+        return this;
+    }
+
+    /**
+     * 水印文字大小
+     *
+     * @return 文字大小，单位 px
+     */
+    public float getWaterMarkTextSize() {
+        return waterMarkTextSize;
+    }
+
+    /**
+     * 设置水印文字颜色
+     *
+     * @param waterMarkTextColor 文字颜色
+     * @return this
+     */
+    public MediaBuilder setWaterMarkTextColor(@ColorInt int waterMarkTextColor) {
+        this.waterMarkTextColor = waterMarkTextColor;
+        return this;
+    }
+
+    /**
+     * 水印文字颜色
+     *
+     * @return 文字颜色
+     */
+    public @ColorInt int getWaterMarkTextColor() {
+        return waterMarkTextColor;
+    }
+
+    /**
+     * 图片子目录，示例：/coderf/image
      * @return 子目录
      */
     public String getImageSubPath() {
@@ -661,7 +712,7 @@ public class MediaBuilder {
     }
 
     /**
-     * 视频子目录，示例：/casic/video
+     * 视频子目录，示例：/coderf/video
      * @return 子目录
      */
     public String getVideoSubPath() {

@@ -20,6 +20,11 @@
     <string name="state_loading">loading…</string>
     <string name="state_not_more">no more data</string>
     <string name="state_load_error">load error</string>
+    <string name="webview_menu_more">更多More</string>
+    <string name="webview_sheet_provider">This webpage is provided by %1$s</string>
+    <string name="webview_sheet_local_provider">Local content</string>
+    <string name="webview_action_open_browser">Open it in a browser</string>
+    <string name="webview_action_copy_link">Copy the link</string>
     <string name="state_refreshing">refreshing</string>
     <string name="state_loading_error">data loading&#8230;</string>
     <string name="state_submit">being submitted&#8230;</string>

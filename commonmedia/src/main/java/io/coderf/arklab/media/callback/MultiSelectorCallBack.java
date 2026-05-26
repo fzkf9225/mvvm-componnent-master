@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import androidx.activity.result.ActivityResultCallback;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaHelper;
@@ -37,6 +38,9 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
     public void onActivityResult(List<Uri> result) {
         LogUtil.show(MediaHelper.TAG, "多选回调：" + result);
         if (result == null || result.isEmpty()) {
+            mediaHelper.getMutableLiveData().postValue(
+                    new MediaBean(Collections.emptyList(), getMediaType())
+            );
             return;
         }
         if (MediaTypeEnum.IMAGE == getMediaType()) {

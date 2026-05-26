@@ -15,7 +15,7 @@ import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 object LoginAgreementMarkup {
 
     private const val AGREEMENT_TEXT =
-        "登录/注册表示您同意 《用户协议》 和 《隐私政策》"
+        "登录/注册表示您同意 《用户协议》 和 《隐私保护政策》"
 
     fun build(themeColor: Int, linkColorFallback: Int = Color.BLACK): SpannableString {
         val spannable = SpannableString(AGREEMENT_TEXT)
@@ -32,10 +32,10 @@ object LoginAgreementMarkup {
         addLink(
             spannable,
             AGREEMENT_TEXT,
-            "隐私政策",
+            "隐私保护政策",
             effectiveLinkColor,
-            "隐私政策.html",
-            "隐私政策"
+            "隐私保护政策.html",
+            "隐私保护政策"
         )
         return spannable
     }

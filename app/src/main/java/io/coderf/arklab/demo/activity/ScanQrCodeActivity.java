@@ -15,11 +15,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.common.utils.download.DownloadManager;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.ActivityQrCodeBinding;
-import io.coderf.arklab.demo.view.ScanQrCodeView;
-import io.coderf.arklab.demo.viewmodel.ScanQrCodeViewModel;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.Intents;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -31,24 +26,36 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.disposables.Disposable;
+import io.coderf.arklab.common.activity.CaptureActivity;
+import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.utils.common.QRCodeUtil;
+import io.coderf.arklab.common.utils.download.DownloadManager;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.ActivityQrCodeBinding;
+import io.coderf.arklab.demo.view.ScanQrCodeView;
+import io.coderf.arklab.demo.viewmodel.ScanQrCodeViewModel;
 import io.coderf.arklab.media.MediaBuilder;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.common.activity.CaptureActivity;
-import io.coderf.arklab.common.base.BaseActivity;
-import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.utils.common.QRCodeUtil;
+import io.reactivex.rxjava3.disposables.Disposable;
 
-
+/**
+ * 二维码能力演示：实时扫码、相册识码、Base64/URL/本地路径识别、生成二维码。
+ * <p>扫码页统一使用 {@link CaptureActivity}（支持相册选图识码），与 {@link io.coderf.arklab.common.activity.WebViewActivity} JSBridge 一致。</p>
+ */
 @AndroidEntryPoint
-public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding> implements ScanQrCodeView {
+public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding>
+        implements ScanQrCodeView {
 
-    private ActivityResultLauncher<ScanOptions> barcodeLauncher = null;
+    private ActivityResultLauncher<ScanOptions> barcodeLauncher;
     private MediaHelper mediaHelper;
-    private String base64Image;
+
+    /** 相册识码时复用，与 {@link #identifyUri} 配合 */
+    private CallbackContext callbackContext;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_qr_code;
@@ -61,255 +68,247 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        callbackContext = new CallbackContext() {
+            @Override
+            public void success(String data) {
+                binding.tvScanInfo.setText("识别成功: " + data);
+            }
+
+            @Override
+            public void error(String msg) {
+                binding.tvScanInfo.setText(msg);
+            }
+        };
+
         mediaHelper = new MediaBuilder(this)
                 .bindLifeCycle(this)
                 .setImageMaxSelectedCount(1)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .builder();
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                identifyUri(mediaBean.getMediaList().get(0).toString(),callbackContext);
-//                base64Image = uriToBase64(mediaBean.getMediaList().get(0));
-//                binding.editBase64.setText(base64Image);
+            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE
+                    && mediaBean.getMediaList() != null
+                    && !mediaBean.getMediaList().isEmpty()) {
+                identifyUri(mediaBean.getMediaList().get(0).toString(), callbackContext);
             }
         });
-        barcodeLauncher = registerForActivityResult(
-                new ScanContract(),
-                result -> {
-                    if (result.getContents() == null) {
-                        Intent originalIntent = result.getOriginalIntent();
-                        if (originalIntent == null) {
-                            binding.tvScanInfo.setText("取消扫码");
-                        } else if (originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
-                            binding.tvScanInfo.setText("无摄像头权限");
-                        }
-                    } else {
-                        binding.tvScanInfo.setText("扫码结果：" + result.getContents());
-                    }
+
+        barcodeLauncher = registerForActivityResult(new ScanContract(), result -> {
+            if (result.getContents() == null) {
+                Intent originalIntent = result.getOriginalIntent();
+                if (originalIntent == null) {
+                    binding.tvScanInfo.setText("取消扫码");
+                } else if (originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
+                    binding.tvScanInfo.setText("无摄像头权限");
+                } else {
+                    binding.tvScanInfo.setText("未识别到内容");
                 }
-        );
+            } else {
+                binding.tvScanInfo.setText("扫码结果：" + result.getContents());
+            }
+        });
     }
 
     @Override
     public void initData(Bundle bundle) {
-        binding.buttonScan.setOnClickListener(v -> {
-            ScanOptions scanOptions = new ScanOptions();
-            scanOptions.setBeepEnabled(true);
-            //设置是否在扫描成功时保存条形码图像
-            scanOptions.setBarcodeImageEnabled(false);
-            // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
-            scanOptions.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-            // Use a specific camera of the device
-            scanOptions.setCameraId(0);
-            //底部的提示文字，设为""可以置空
-            scanOptions.setPrompt("");
-            //设置是否启用闪光灯
-            scanOptions.setTorchEnabled(false);
-            scanOptions.setOrientationLocked(false);
-            scanOptions.setCaptureActivity(CaptureActivity.class);
-            barcodeLauncher.launch(scanOptions);
-        });
-
-        binding.buttonCustomScan.setOnClickListener(v -> {
-            ScanOptions scanOptions = new ScanOptions();
-            scanOptions.setBeepEnabled(true);
-            //设置是否在扫描成功时保存条形码图像
-            scanOptions.setBarcodeImageEnabled(false);
-            // 设置要扫描的条码类型，ONE_D_CODE_TYPES：一维码，QR_CODE_TYPES-二维码
-            scanOptions.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-            // Use a specific camera of the device
-            scanOptions.setCameraId(0);
-            //底部的提示文字，设为""可以置空
-            scanOptions.setPrompt("");
-            //设置是否启用闪光灯
-            scanOptions.setTorchEnabled(false);
-            scanOptions.setOrientationLocked(false);
-            scanOptions.addExtra(CaptureActivity.SCAN_COLOR, ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_red));
-            scanOptions.setCaptureActivity(CaptureActivity.class);
-            barcodeLauncher.launch(scanOptions);
-        });
-
+        binding.buttonScan.setOnClickListener(v -> barcodeLauncher.launch(buildQrScanOptions(false)));
+        binding.buttonCustomScan.setOnClickListener(v -> barcodeLauncher.launch(buildQrScanOptions(true)));
         binding.createQrCode.setOnClickListener(v -> {
-            Bitmap bitmap = QRCodeUtil.createQRCodeBitmap("https://www.baidu.com",
-                    Color.parseColor("#FFFF0000"));
-            if (bitmap == null) {
-                showToast("生成二维码失败");
-            }
-            binding.imageQrCode.setImageBitmap(bitmap);
+            String content = binding.editCreateQrcode.getText() != null
+                    ? binding.editCreateQrcode.getText().toString().trim()
+                    : "https://www.baidu.com";
+            createQrCode(content);
         });
-        binding.buttonUri.setOnClickListener(v-> mediaHelper.openImageDialog(v, OpenImageDialog.ALBUM));
-        binding.buttonBase64.setOnClickListener(v-> identifyBase64(binding.editBase64.getText().toString(),callbackContext));
-        binding.buttonUrl.setOnClickListener(v-> identifyUrl(binding.editUrl.getText().toString(),callbackContext));
-        binding.buttonString.setOnClickListener(v-> identifyLocalString("/sdcard/Pictures/微信图片_20231110141942.jpg",callbackContext));
+        binding.buttonUri.setOnClickListener(v ->
+                mediaHelper.openImageDialog(v, OpenImageDialog.ALBUM));
+        binding.buttonBase64.setOnClickListener(v ->
+                identifyBase64(binding.editBase64.getText().toString(), callbackContext));
+        binding.buttonUrl.setOnClickListener(v ->
+                identifyUrl(binding.editUrl.getText().toString(), callbackContext));
+        binding.buttonString.setOnClickListener(v -> {
+            String path = binding.editLocalPath.getText() != null
+                    ? binding.editLocalPath.getText().toString().trim()
+                    : "";
+            if (TextUtils.isEmpty(path)) {
+                showToast("请输入本地图片绝对路径");
+                return;
+            }
+            identifyLocalString(path, callbackContext);
+        });
     }
-    CallbackContext callbackContext = new CallbackContext() {
-        @Override
-        public void success(String data) {
-            binding.tvScanInfo.setText("识别成功:"+data);
-        }
 
-        @Override
-        public void error(String msg) {
-            binding.tvScanInfo.setText(msg);
+    /**
+     * 构建扫码参数，统一跳转 {@link CaptureActivity}。
+     *
+     * @param customColor 是否使用自定义扫描框颜色
+     */
+    private ScanOptions buildQrScanOptions(boolean customColor) {
+        ScanOptions options = new ScanOptions();
+        options.setBeepEnabled(true);
+        options.setBarcodeImageEnabled(false);
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setCameraId(0);
+        options.setPrompt("");
+        options.setTorchEnabled(false);
+        options.setOrientationLocked(false);
+        options.setCaptureActivity(CaptureActivity.class);
+        if (customColor) {
+            options.addExtra(
+                    CaptureActivity.SCAN_COLOR,
+                    ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_red)
+            );
         }
-    };
+        return options;
+    }
 
+    /** 根据输入内容生成二维码（红色前景） */
+    private void createQrCode(String content) {
+        if (TextUtils.isEmpty(content)) {
+            showToast("请输入要编码的内容");
+            return;
+        }
+        Bitmap bitmap = QRCodeUtil.createQRCodeBitmap(
+                content,
+                Color.parseColor("#FFFF0000")
+        );
+        if (bitmap == null) {
+            showToast("生成二维码失败");
+            return;
+        }
+        binding.imageQrCode.setImageBitmap(bitmap);
+    }
+
+    /**
+     * 将 Uri 对应图片转为 Base64（演示用，非扫码主流程）。
+     */
     public String uriToBase64(Uri uri) {
         try {
-            ContentResolver contentResolver = getContentResolver();
-            InputStream inputStream = contentResolver.openInputStream(uri);
-
-            if (inputStream != null) {
+            ContentResolver resolver = getContentResolver();
+            try (InputStream inputStream = resolver.openInputStream(uri)) {
+                if (inputStream == null) {
+                    return null;
+                }
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                inputStream.close();
-
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                return Base64.encodeToString(byteArray, Base64.DEFAULT);
+                if (bitmap == null) {
+                    return null;
+                }
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                return Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
+
     /**
-     * 识别uri格式图片
+     * 识别 content:// 或 file:// Uri 图片中的二维码。
      */
     private void identifyUri(String image, CallbackContext callbackContext) {
         try {
             if (TextUtils.isEmpty(image)) {
-                callbackContext.error("识别失败");
+                callbackContext.error("识别失败：地址为空");
                 return;
             }
             Uri imageUri = Uri.parse(image);
-            if (imageUri == null) {
-                callbackContext.error("识别失败");
-                return;
-            }
             ContentResolver contentResolver = getContentResolver();
-            if (contentResolver == null) {
-                callbackContext.error("识别失败");
-                return;
+            try (ParcelFileDescriptor pfd = contentResolver.openFileDescriptor(imageUri, "r")) {
+                if (pfd == null) {
+                    callbackContext.error("识别失败：无法打开文件");
+                    return;
+                }
+                Bitmap bitmap = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
+                decodeBitmapAndCallback(bitmap, callbackContext);
             }
-            ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(imageUri, "r");
-            if (parcelFileDescriptor == null) {
-                callbackContext.error("识别失败");
-                return;
-            }
-            Bitmap bitmap = BitmapFactory.decodeFileDescriptor(parcelFileDescriptor.getFileDescriptor());
-            if (bitmap == null) {
-                callbackContext.error("未识别二维码");
-                return;
-            }
-            Result result = QRCodeUtil.getRawResult(bitmap);
-            if (result == null) {
-                Toast.makeText(ScanQrCodeActivity.this, "未识别二维码", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            callbackContext.success(result.getText());
         } catch (Exception e) {
             e.printStackTrace();
-            callbackContext.error("识别失败," + e);
+            callbackContext.error("识别失败: " + e.getMessage());
         }
     }
 
     /**
-     * 识别本地String格式图片
+     * 识别本地绝对路径图片中的二维码。
      */
-    private void identifyLocalString(String image, CallbackContext callbackContext) {
+    private void identifyLocalString(String imagePath, CallbackContext callbackContext) {
         try {
-            if (TextUtils.isEmpty(image)) {
-                callbackContext.error("识别失败");
+            if (TextUtils.isEmpty(imagePath)) {
+                callbackContext.error("识别失败：路径为空");
                 return;
             }
-            File imageFile = new File(image);
+            File imageFile = new File(imagePath);
             if (!imageFile.exists()) {
-                callbackContext.error("图片不存在");
+                callbackContext.error("图片不存在: " + imagePath);
                 return;
             }
-            Bitmap bitmap = BitmapFactory.decodeFile(image);
-            if (bitmap == null) {
-                callbackContext.error("未识别二维码");
-                return;
-            }
-            Result result = QRCodeUtil.getRawResult(bitmap);
-            if (result == null) {
-                Toast.makeText(ScanQrCodeActivity.this, "未识别二维码", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            callbackContext.success(result.getText());
+            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            decodeBitmapAndCallback(bitmap, callbackContext);
         } catch (Exception e) {
             e.printStackTrace();
-            callbackContext.error("识别失败," + e);
+            callbackContext.error("识别失败: " + e.getMessage());
         }
     }
 
     /**
-     * 识别本地String格式图片
+     * 识别 Base64 编码图片中的二维码。
      */
     private void identifyBase64(String image, CallbackContext callbackContext) {
         try {
             if (TextUtils.isEmpty(image)) {
-                callbackContext.error("识别失败");
+                callbackContext.error("识别失败：Base64 为空");
                 return;
             }
             byte[] decodedBytes = Base64.decode(image, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-            if (bitmap == null) {
-                callbackContext.error("未识别二维码");
-                return;
-            }
-            Result result = QRCodeUtil.getRawResult(bitmap);
-            if (result == null) {
-                Toast.makeText(ScanQrCodeActivity.this, "未识别二维码", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            callbackContext.success(result.getText());
+            decodeBitmapAndCallback(bitmap, callbackContext);
         } catch (Exception e) {
             e.printStackTrace();
-            callbackContext.error("识别失败," + e);
+            callbackContext.error("识别失败: " + e.getMessage());
         }
     }
 
     /**
-     * 识别在线图片
+     * 下载网络图片后识别二维码。
      */
-    private void identifyUrl(String image, CallbackContext callbackContext) {
-        try {
-            if (TextUtils.isEmpty(image)) {
-                callbackContext.error("识别失败");
-                return;
-            }
-            Disposable disposable = DownloadManager.getInstance().download(this, binding.editUrl.getText().toString().trim())
-                    .subscribe(file -> {
-                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                        if (bitmap == null) {
-                            callbackContext.error("未识别到二维码");
-                            return;
-                        }
-                        Result result = QRCodeUtil.getRawResult(bitmap);
-                        if (result == null) {
-                            Toast.makeText(ScanQrCodeActivity.this, "未识别到二维码", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        callbackContext.success(result.getText());
-                    }, throwable -> {
-                        if (throwable instanceof BaseException baseException) {
-                            callbackContext.error("识别失败," + baseException.getErrorMsg());
-                            return;
-                        }
-                        callbackContext.error("识别失败," + throwable.getMessage());
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.error("识别失败," + e);
+    private void identifyUrl(String imageUrl, CallbackContext callbackContext) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            callbackContext.error("识别失败：URL 为空");
+            return;
         }
+        Disposable disposable = DownloadManager.getInstance()
+                .download(this, imageUrl.trim())
+                .subscribe(
+                        file -> {
+                            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                            decodeBitmapAndCallback(bitmap, callbackContext);
+                        },
+                        throwable -> {
+                            if (throwable instanceof BaseException baseException) {
+                                callbackContext.error("识别失败: " + baseException.getErrorMsg());
+                            } else {
+                                callbackContext.error("识别失败: " + throwable.getMessage());
+                            }
+                        }
+                );
     }
 
-    private interface CallbackContext{
+    private void decodeBitmapAndCallback(Bitmap bitmap, CallbackContext callbackContext) {
+        if (bitmap == null) {
+            callbackContext.error("未识别二维码：无法解码图片");
+            return;
+        }
+        Result result = QRCodeUtil.getRawResult(bitmap);
+        if (result == null) {
+            Toast.makeText(this, "未识别二维码", Toast.LENGTH_SHORT).show();
+            callbackContext.error("未识别二维码");
+            return;
+        }
+        callbackContext.success(result.getText());
+    }
+
+    private interface CallbackContext {
         void success(String data);
+
         void error(String msg);
     }
 }

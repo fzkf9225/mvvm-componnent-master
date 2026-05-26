@@ -6,6 +6,7 @@ import android.widget.Toast;
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
@@ -18,16 +19,29 @@ import java.util.function.Consumer;
  * describe:
  */
 public class PermissionManager {
+
+    /**
+     * {@link #ALL_GRANTED}：全部授权才算成功；{@link #ANY_GRANTED}：任一授权即成功（用于定位等）。
+     */
+    public enum GrantMode {
+        ALL_GRANTED,
+        ANY_GRANTED
+    }
+
     private final ActivityResultLauncher<String[]> launcher;
     private Consumer<Map<String, Boolean>> onGrantedCallback;
     private Consumer<Map<String, Boolean>> onDeniedCallback = new Consumer<>() {
         @Override
         public void accept(Map<String, Boolean> stringBooleanMap) {
-            Toast.makeText(mContext, "拒绝权限可能会导致应用软件运行异常", Toast.LENGTH_SHORT).show();
+            if (notifyDeniedToast) {
+                Toast.makeText(mContext, "拒绝权限可能会导致应用软件运行异常", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
     private final Context mContext;
+    private GrantMode grantMode = GrantMode.ALL_GRANTED;
+    private boolean notifyDeniedToast = true;
 
     public PermissionManager(ComponentActivity activity) {
         this.mContext = activity;
@@ -69,15 +83,25 @@ public class PermissionManager {
         this.onDeniedCallback = callback;
     }
 
+    public void setGrantMode(@NonNull GrantMode grantMode) {
+        this.grantMode = grantMode;
+    }
+
+    public void setNotifyDeniedToast(boolean notifyDeniedToast) {
+        this.notifyDeniedToast = notifyDeniedToast;
+    }
+
     private void handlePermissionResult(Map<String, Boolean> result) {
-        if (result.values().stream().allMatch(Boolean::booleanValue)) {
+        boolean approved = grantMode == GrantMode.ANY_GRANTED
+                ? result.values().stream().anyMatch(Boolean::booleanValue)
+                : result.values().stream().allMatch(Boolean::booleanValue);
+        grantMode = GrantMode.ALL_GRANTED;
+        if (approved) {
             if (onGrantedCallback != null) {
                 onGrantedCallback.accept(result);
             }
-        } else {
-            if (onDeniedCallback != null) {
-                onDeniedCallback.accept(result);
-            }
+        } else if (onDeniedCallback != null) {
+            onDeniedCallback.accept(result);
         }
     }
 

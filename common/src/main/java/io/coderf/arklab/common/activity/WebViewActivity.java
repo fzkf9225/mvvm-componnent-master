@@ -5,14 +5,27 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.R;
@@ -20,64 +33,67 @@ import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.databinding.WebViewBinding;
 import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 import io.coderf.arklab.common.helper.CordovaDialogsHelper;
-import io.coderf.arklab.common.utils.common.SystemWebChromeClient;
+import io.coderf.arklab.common.helper.WebViewLocalUrlResolver;
+import io.coderf.arklab.common.helper.WebViewNativeLocationHelper;
+import io.coderf.arklab.common.utils.common.ConfigurableWebViewClient;
+import io.coderf.arklab.common.utils.common.NativeWebChromeClient;
+import io.coderf.arklab.common.webview.WebViewBridgeCallback;
+import io.coderf.arklab.common.webview.WebViewJsBridge;
+import io.coderf.arklab.common.webview.WebViewMenuAction;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.common.widget.dialog.WebViewActionSheetDialog;
 
 /**
- * 基于ConfigurableWebView的WebViewActivity
- * 功能：
- * 1. 支持加载网络/本地/自动判断URL类型
- * 2. 支持自定义Toolbar显示
- * 3. 提供复制链接和浏览器打开功能
- * 4. 支持返回键控制网页后退
+ * 通用 WebView 容器（<b>仅依赖 common 模块</b>，无 commonmedia / googlegps）。
+ * <p>能力：</p>
+ * <ul>
+ *     <li>网络 / assets / 沙盒 / 下载目录（{@link WebViewUrlTypeEnum}）</li>
+ *     <li>JS alert/confirm/prompt（{@link CordovaDialogsHelper}）</li>
+ *     <li>原生文件选择与拍照（{@link NativeWebChromeClient}）</li>
+ *     <li>原生单次定位（{@link WebViewNativeLocationHelper}）与扫码 JSBridge</li>
+ * </ul>
+ * <p>需要 MediaHelper / GpsStarter 增强能力请使用 commonui 的 {@code UiWebViewActivity}。</p>
  */
 @AndroidEntryPoint
-public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding> {
-    /**
-     * 页面标题,Intent参数Key
-     */
-    public final static String TITLE = "titleText";
-    /**
-     * URL类型(0:网络,1:本地,2:自动)
-      */
-    public final static String URL_TYPE = "urlType";
-    /**
-     * 加载的URL
-     */
-    public final static String LOAD_URL = "loadUrl";
-    /**
-     * 是否显示Toolbar
-     */
-    public final static String TOOLBAR = "toolbar";
-    /**
-     * 是否显示右上角菜单
-     */
-    public final static String HAS_MENU = "hasMenu";
-    /**
-     * 自定义域名(用于加载本地资源)
-     */
-    public final static String DOMAIN = "domain";
+public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding>
+        implements WebViewBridgeCallback {
 
-    /**
-     * 当前加载的URL
-     */
+    /** Intent：页面标题 */
+    public static final String TITLE = "titleText";
+    /** Intent：URL 类型，见 {@link WebViewUrlTypeEnum#type} */
+    public static final String URL_TYPE = "urlType";
+    /** Intent：加载地址 */
+    public static final String LOAD_URL = "loadUrl";
+    /** Intent：是否显示 Toolbar */
+    public static final String TOOLBAR = "toolbar";
+    /** Intent：是否显示右上角菜单 */
+    public static final String HAS_MENU = "hasMenu";
+    /** Intent：本地/assets 虚拟域名 */
+    public static final String DOMAIN = "domain";
+    /** Intent：是否注入 {@link WebViewJsBridge}，默认 true */
+    public static final String ENABLE_JS_BRIDGE = "enableJsBridge";
+
+    /** 底部菜单：在系统浏览器中打开 */
+    public static final int WEB_MENU_OPEN_BROWSER = 1;
+    /** 底部菜单：复制链接 */
+    public static final int WEB_MENU_COPY_LINK = 2;
+
     protected String url;
-    /**
-     * URL类型
-     */
     protected int urlType;
-    /**
-     * 是否显示Toolbar
-     */
     protected boolean hasToolbar;
-    /**
-     * 是否显示菜单
-     */
     protected boolean hasMenu;
-    /**
-     * 自定义域名
-     */
     protected String domain;
+    protected boolean enableJsBridge;
+
+    protected CordovaDialogsHelper dialogsHelper;
+    @Nullable
+    protected NativeWebChromeClient nativeWebChromeClient;
+    @Nullable
+    protected WebViewNativeLocationHelper nativeLocationHelper;
+    @Nullable
+    protected WebViewJsBridge jsBridge;
+    @Nullable
+    private ActivityResultLauncher<ScanOptions> scanLauncher;
 
     @Override
     protected int getLayoutId() {
@@ -101,13 +117,110 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initView(Bundle savedInstanceState) {
-        // 设置WebChromeClient显示进度条和标题
-        binding.webView.setWebChromeClient(new SystemWebChromeClient(
+        dialogsHelper = new CordovaDialogsHelper(this);
+        nativeLocationHelper = createLocationHelper();
+        nativeWebChromeClient = createWebChromeClient();
+        binding.webView.setWebChromeClient(nativeWebChromeClient);
+
+        scanLauncher = registerForActivityResult(new ScanContract(), result -> {
+            if (jsBridge == null) {
+                return;
+            }
+            jsBridge.dispatchScanResult(
+                    result.getContents() != null ? result.getContents() : ""
+            );
+        });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (binding.webView.canGoBack()) {
+                    binding.webView.goBack();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    }
+
+    /**
+     * 创建 WebChromeClient，默认 {@link NativeWebChromeClient}。子类可覆盖以接入 commonui 增强实现。
+     */
+    @NonNull
+    protected NativeWebChromeClient createWebChromeClient() {
+        return new NativeWebChromeClient(
                 this,
-                new CordovaDialogsHelper(this),
+                dialogsHelper,
                 binding.progressBar,
-                toolbarBind == null ? null : toolbarBind.tvTitle
-        ));
+                getWebTitleTextView()
+        );
+    }
+
+    /**
+     * 创建定位助手，默认 {@link WebViewNativeLocationHelper}。返回 null 表示由子类自行实现定位（如 GpsStarter）。
+     */
+    @Nullable
+    protected WebViewNativeLocationHelper createLocationHelper() {
+        return new WebViewNativeLocationHelper(this);
+    }
+
+    @Nullable
+    protected TextView getWebTitleTextView() {
+        return toolbarBind == null ? null : toolbarBind.tvTitle;
+    }
+
+    @Override
+    public void initData(Bundle bundle) {
+        urlType = bundle.getInt(URL_TYPE, WebViewUrlTypeEnum.AUTO.type);
+        url = bundle.getString(LOAD_URL);
+        hasMenu = bundle.getBoolean(HAS_MENU, true);
+        domain = bundle.getString(DOMAIN);
+        enableJsBridge = bundle.getBoolean(ENABLE_JS_BRIDGE, true);
+
+        if (TextUtils.isEmpty(url)) {
+            showToast("目标地址不存在！");
+            return;
+        }
+
+        if (hasToolbar && toolbarBind != null) {
+            toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
+        }
+
+        binding.webView.setUrlType(urlType);
+        if (!TextUtils.isEmpty(domain)) {
+            binding.webView.setDomain(domain);
+        }
+
+        binding.webView.setOnPageLoadListener(new ConfigurableWebViewClient.OnPageLoadListener() {
+            @Override
+            public void onPageStarted(@NonNull String pageUrl) {
+            }
+
+            @Override
+            public void onPageFinished(@NonNull String pageUrl) {
+                if (jsBridge != null) {
+                    jsBridge.ensureCallbacksInitialized();
+                }
+            }
+
+            @Override
+            public void onMainFrameError(int errorCode, @NonNull String description) {
+                showToast(describeLoadError(errorCode, description));
+            }
+
+            @Override
+            public void onSslError(@NonNull android.net.http.SslError error) {
+                showToast("SSL 证书校验失败");
+            }
+        });
+
+        if (enableJsBridge) {
+            jsBridge = new WebViewJsBridge(binding.webView, this);
+            binding.webView.addJavascriptInterface(jsBridge, WebViewJsBridge.BRIDGE_NAME);
+        }
+
+        binding.webView.loadConfiguredUrl(url);
     }
 
     @Override
@@ -124,104 +237,206 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         if (!hasToolbar || !hasMenu) {
             return super.onOptionsItemSelected(item);
         }
-
-        if (TextUtils.isEmpty(url)) {
-            showToast("目标地址为空！");
-            return super.onOptionsItemSelected(item);
-        }
-
-        int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_browser) {
-            // 在浏览器中打开
-            openInBrowser();
-        } else if (itemId == R.id.toolbar_copy) {
-            // 复制链接
-            copyUrlToClipboard();
+        if (item.getItemId() == R.id.toolbar_web_menu) {
+            showWebViewActionSheet();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void initData(Bundle bundle) {
-        // 初始化参数
-        urlType = bundle.getInt(URL_TYPE, WebViewUrlTypeEnum.AUTO.type);
-        url = bundle.getString(LOAD_URL);
-        hasMenu = bundle.getBoolean(HAS_MENU, true);
-        domain = bundle.getString(DOMAIN);
-        if (TextUtils.isEmpty(url)) {
-            showToast("目标地址不存在！");
+    /**
+     * 展示微信风格底部操作面板。子类可覆盖 {@link #buildWebViewMenuActions()} 增删菜单项。
+     */
+    protected void showWebViewActionSheet() {
+        List<WebViewMenuAction> actions = buildWebViewMenuActions();
+        if (actions.isEmpty()) {
             return;
         }
-        // 设置标题
-        if (hasToolbar) {
-            toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
-        }
+        String hint = getString(R.string.webview_sheet_provider, resolveWebViewProviderLabel());
+        new WebViewActionSheetDialog(this, hint, actions, this::onWebViewMenuActionSelected).show();
+    }
 
-        // 检查URL有效性
+    /**
+     * 构建底部菜单项，子类可 super 后追加或完全重写。
+     */
+    @NonNull
+    protected List<WebViewMenuAction> buildWebViewMenuActions() {
+        List<WebViewMenuAction> list = new ArrayList<>(2);
+        list.add(new WebViewMenuAction(
+                WEB_MENU_OPEN_BROWSER,
+                R.drawable.ic_webview_action_browser,
+                getString(R.string.webview_action_open_browser)
+        ));
+        list.add(new WebViewMenuAction(
+                WEB_MENU_COPY_LINK,
+                R.drawable.ic_webview_action_copy,
+                getString(R.string.webview_action_copy_link)
+        ));
+        return list;
+    }
+
+    /**
+     * 底部菜单点击，默认处理内置项；子类可先处理自定义 id 再 super。
+     */
+    protected void onWebViewMenuActionSelected(@NonNull WebViewMenuAction action) {
         if (TextUtils.isEmpty(url)) {
             showToast("目标地址为空！");
             return;
         }
-
-        // 获取ConfigurableWebView实例并配置
-        binding.webView.setUrlType(urlType);
-        if (!TextUtils.isEmpty(domain)) {
-            binding.webView.setDomain(domain);
+        int id = action.getId();
+        if (id == WEB_MENU_OPEN_BROWSER) {
+            openInBrowser();
+        } else if (id == WEB_MENU_COPY_LINK) {
+            copyUrlToClipboard();
         }
-        binding.webView.loadConfiguredUrl(url);
     }
 
     /**
-     * 在浏览器中打开当前URL
+     * 面板顶部「此网页由 xxx 提供」中的 xxx。
      */
+    @NonNull
+    protected String resolveWebViewProviderLabel() {
+        if (WebViewLocalUrlResolver.isNetworkUrl(url)) {
+            try {
+                Uri uri = Uri.parse(url);
+                String host = uri.getHost();
+                if (!TextUtils.isEmpty(host)) {
+                    return host;
+                }
+            } catch (Exception ignored) {
+                // fall through
+            }
+            return url;
+        }
+        if (!TextUtils.isEmpty(domain)) {
+            return domain;
+        }
+        return getString(R.string.webview_sheet_local_provider);
+    }
+
     private void openInBrowser() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+        String openUrl = url;
+        if (!WebViewLocalUrlResolver.isNetworkUrl(url)) {
+            openUrl = WebViewLocalUrlResolver.resolveLoadUrl(this, binding.webView.getDomain(), urlType, url);
+        }
+        if (!WebViewLocalUrlResolver.isNetworkUrl(openUrl)) {
+            showToast("本地页面无法在浏览器中打开");
+            return;
+        }
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(openUrl)));
     }
 
-    /**
-     * 复制当前URL到剪贴板
-     */
     private void copyUrlToClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("网页链接", url);
-        clipboard.setPrimaryClip(clipData);
+        clipboard.setPrimaryClip(ClipData.newPlainText("网页链接", url));
         showToast("复制成功");
     }
 
+    @NonNull
+    private static String describeLoadError(int errorCode, @NonNull String description) {
+        if (errorCode == WebViewClient.ERROR_HOST_LOOKUP) {
+            return "无法解析域名，请检查网络连接或更换访问地址";
+        }
+        if (errorCode == WebViewClient.ERROR_CONNECT) {
+            return "无法连接服务器，请检查网络";
+        }
+        if (errorCode == WebViewClient.ERROR_TIMEOUT) {
+            return "连接超时，请稍后重试";
+        }
+        return "页面加载失败：" + description;
+    }
+
+    @Override
+    protected void onPause() {
+        binding.webView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.webView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (dialogsHelper != null) {
+            dialogsHelper.destroyLastDialog();
+        }
+        if (nativeWebChromeClient != null) {
+            nativeWebChromeClient.cancelPendingFileChooser();
+        }
+        releaseLocationHelper();
+        if (jsBridge != null) {
+            binding.webView.removeJavascriptInterface(WebViewJsBridge.BRIDGE_NAME);
+        }
+        binding.webView.release();
+        super.onDestroy();
+    }
+
     /**
-     * 显示WebView页面
-     *
-     * @param context   上下文
-     * @param loadUrl   要加载的URL
-     * @param titleText 页面标题
+     * 释放定位资源，子类若使用 GpsStarter 需覆盖此方法。
      */
+    protected void releaseLocationHelper() {
+        if (nativeLocationHelper != null) {
+            nativeLocationHelper.cancel();
+            nativeLocationHelper = null;
+        }
+    }
+
+    // region WebViewBridgeCallback
+
+    @Override
+    public void startQrScan() {
+        if (scanLauncher == null) {
+            return;
+        }
+        ScanOptions options = new ScanOptions();
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setCaptureActivity(CaptureActivity.class);
+        options.setOrientationLocked(false);
+        options.setPrompt("");
+        scanLauncher.launch(options);
+    }
+
+    @Override
+    public void requestSingleLocation(@NonNull String requestId) {
+        if (nativeLocationHelper == null) {
+            dispatchLocationToJs(requestId, null);
+            return;
+        }
+        nativeLocationHelper.requestSingleLocation(
+                location -> dispatchLocationToJs(requestId, location)
+        );
+    }
+
+    @Override
+    public void evaluateJavascript(@NonNull String script) {
+        String js = script.startsWith("javascript:") ? script.substring("javascript:".length()) : script;
+        binding.webView.post(() -> binding.webView.evaluateJavascript(js, null));
+    }
+
+    protected void dispatchLocationToJs(@NonNull String requestId, @Nullable Location location) {
+        if (jsBridge == null) {
+            return;
+        }
+        String json = location == null ? null : WebViewJsBridge.buildLocationJson(
+                location.getLatitude(), location.getLongitude(), location.getAccuracy());
+        jsBridge.dispatchLocationResult(requestId, json);
+    }
+
+    // endregion
+
+    // region 静态启动（保持原有签名）
+
     public static void show(Context context, String loadUrl, String titleText) {
         show(context, loadUrl, titleText, true, true);
     }
 
-    /**
-     * 显示WebView页面（带Toolbar配置）
-     *
-     * @param context    上下文
-     * @param loadUrl    要加载的URL
-     * @param titleText  页面标题
-     * @param hasToolbar 是否显示Toolbar
-     */
     public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar) {
         show(context, loadUrl, titleText, hasToolbar, true);
     }
 
-    /**
-     * 显示WebView页面（完整配置）
-     *
-     * @param context    上下文
-     * @param loadUrl    要加载的URL
-     * @param titleText  页面标题
-     * @param hasToolbar 是否显示Toolbar
-     * @param hasMenu    是否显示菜单
-     */
     public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar, boolean hasMenu) {
         Intent intent = new Intent(context, WebViewActivity.class);
         Bundle bundle = new Bundle();
@@ -233,9 +448,6 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         context.startActivity(intent);
     }
 
-    /**
-     * 显示WebView页面（完整配置+自定义域名）
-     */
     public static void show(Context context, String loadUrl, String titleText, boolean hasToolbar,
                             boolean hasMenu, String domain, int urlType) {
         Intent intent = new Intent(context, WebViewActivity.class);
@@ -250,25 +462,23 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         context.startActivity(intent);
     }
 
-    /**
-     * 显示WebView页面（使用Bundle传递参数）
-     */
     public static void show(Context context, Bundle bundle) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
+    // endregion
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // 处理返回键，优先网页后退
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.webView.canGoBack()) {
                 binding.webView.goBack();
                 return true;
-            } else {
-                finish();
             }
+            finish();
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }

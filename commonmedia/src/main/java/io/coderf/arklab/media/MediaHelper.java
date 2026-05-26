@@ -13,6 +13,8 @@ import android.view.View;
 
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
@@ -88,6 +90,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     /** 拍照 EXIF 定位权限申请完成后继续打开相机的动作 */
     private Runnable pendingCaptureExifPermissionAction;
 
+    /** 权限弹窗授权后继续执行的动作（如 openImg / camera） */
+    @Nullable
+    private Runnable pendingPermissionContinuation;
+
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
         uiController = new UIController(mediaBuilder.getContext(), this.mediaBuilder.getLifecycleOwner().getLifecycle());
@@ -113,37 +119,71 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         return mutableLiveDataCompress;
     }
 
+    /**
+     * 取出并清空权限申请通过后需要继续执行的动作（供 {@link io.coderf.arklab.media.helper.MediaLifecycleObserver} 回调）。
+     */
+    @Nullable
+    public Runnable drainPendingPermissionContinuation() {
+        Runnable continuation = pendingPermissionContinuation;
+        pendingPermissionContinuation = null;
+        return continuation;
+    }
+
+    @Nullable
+    private Runnable actionSheetDismissWithoutPicker;
+
+    /**
+     * WebView 等场景：用户关闭底部 ActionSheet 且未点「相册/拍照」时回调，用于释放 file chooser。
+     */
+    public MediaHelper setActionSheetDismissWithoutPicker(@Nullable Runnable runnable) {
+        actionSheetDismissWithoutPicker = runnable;
+        return this;
+    }
+
     public void openImageDialog(View v, int mediaType) {
-        new OpenImageDialog(v.getContext())
+        OpenImageDialog dialog = new OpenImageDialog(v.getContext())
                 .setMediaType(mediaType)
                 .setOnOpenImageClickListener(this)
-                .builder()
-                .show();
+                .builder();
+        bindActionSheetDismiss(dialog);
+        dialog.show();
     }
 
     public void openFileDialog(View v, String buttonMessage, int chooseType) {
-        new OpenFileDialog(v.getContext())
+        OpenFileDialog dialog = new OpenFileDialog(v.getContext())
                 .setChooseType(chooseType)
                 .setButtonMessage(buttonMessage)
                 .setOnOpenFileClickListener(this)
-                .builder()
-                .show();
+                .builder();
+        bindActionSheetDismiss(dialog);
+        dialog.show();
     }
 
     public void openShootDialog(View v, int mediaType) {
-        new OpenShootDialog(v.getContext())
+        OpenShootDialog dialog = new OpenShootDialog(v.getContext())
                 .setMediaType(mediaType)
                 .setOnOpenVideoClickListener(this)
-                .builder()
-                .show();
+                .builder();
+        bindActionSheetDismiss(dialog);
+        dialog.show();
     }
 
     public void openMediaDialog(View v, int mediaType) {
-        new OpenMediaDialog(v.getContext())
+        OpenMediaDialog dialog = new OpenMediaDialog(v.getContext())
                 .setMediaType(mediaType)
                 .setOnOpenMediaClickListener(this)
-                .builder()
-                .show();
+                .builder();
+        bindActionSheetDismiss(dialog);
+        dialog.show();
+    }
+
+    private void bindActionSheetDismiss(@NonNull Dialog dialog) {
+        if (actionSheetDismissWithoutPicker != null) {
+            io.coderf.arklab.media.dialog.ActionSheetDismissTracker.attach(
+                    dialog,
+                    actionSheetDismissWithoutPicker
+            );
+        }
     }
 
     /**
@@ -166,12 +206,41 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 PackageManager.PERMISSION_DENIED;
     }
 
+    private boolean hasImageReadAccess() {
+        Context context = mediaBuilder.getContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return !lacksPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES)
+                    || !lacksPermission(context, android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return !lacksPermission(context, android.Manifest.permission.READ_MEDIA_IMAGES);
+        }
+        return !lacksPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+
+    private boolean hasVideoReadAccess() {
+        Context context = mediaBuilder.getContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return !lacksPermission(context, android.Manifest.permission.READ_MEDIA_VIDEO)
+                    || !lacksPermission(context, android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return !lacksPermission(context, android.Manifest.permission.READ_MEDIA_VIDEO);
+        }
+        return !lacksPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+
     /**
      * 权限检测
      *
      * @param permissions 权限
      */
     private void checkPermission(String[] permissions) {
+        checkPermission(permissions, null);
+    }
+
+    private void checkPermission(String[] permissions, @Nullable Runnable continuation) {
+        pendingPermissionContinuation = continuation;
         if (!mediaBuilder.isShowPermissionDialog()) {
             mediaLifecycleObserver.getPermissionLauncher().launch(permissions);
             return;
@@ -263,14 +332,14 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         }
     }
 
-    private boolean ensureCameraPermission() {
+    private boolean ensureCameraPermission(@NonNull Runnable onReady) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R, onReady);
                 return false;
             }
         } else if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
-            checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+            checkPermission(ConstantsHelper.PERMISSIONS_CAMERA, onReady);
             return false;
         }
         return true;
@@ -409,6 +478,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
         return mutableLiveDataWaterMark;
     }
+
     private boolean isMoreThanMaxMedia() {
         if (mediaBuilder.getImageAndVideoSelectedListener() != null) {
             if (mediaBuilder.getMediaMaxSelectedCount() <= mediaBuilder.getImageAndVideoSelectedListener().onSelectedCount()) {
@@ -478,21 +548,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         .build());
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE);
-                    return;
+            if (!hasImageReadAccess()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE,
+                            () -> openImg(customImageType));
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU,
+                            () -> openImg(customImageType));
+                } else {
+                    checkPermission(ConstantsHelper.PERMISSIONS_READ, () -> openImg(customImageType));
                 }
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU);
-                    return;
-                }
-            } else {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_READ);
-                    return;
-                }
+                return;
             }
             String[] imageType;
             if (customImageType == null || customImageType.length == 0) {
@@ -531,21 +597,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         .build());
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE);
-                    return;
+            if (!hasImageReadAccess() && !hasVideoReadAccess()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_UPSIDE_DOWN_CAKE,
+                            () -> openMedia(customMediaType));
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU,
+                            () -> openMedia(customMediaType));
+                } else {
+                    checkPermission(ConstantsHelper.PERMISSIONS_READ, () -> openMedia(customMediaType));
                 }
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_IMAGE_READ_TIRAMISU);
-                    return;
-                }
-            } else {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_READ);
-                    return;
-                }
+                return;
             }
             String[] mediaType;
             if (customMediaType == null || customMediaType.length == 0) {
@@ -569,7 +631,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 打开摄像机
      */
     public void camera() {
-        if (!ensureCameraPermission()) {
+        if (!ensureCameraPermission(() -> camera())) {
             return;
         }
         ensureCaptureExifLocationPermission(() ->
@@ -580,7 +642,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 打开摄像机
      */
     public void mediaCamera() {
-        if (!ensureCameraPermission()) {
+        if (!ensureCameraPermission(() -> mediaCamera())) {
             return;
         }
         ensureCaptureExifLocationPermission(() ->
@@ -624,12 +686,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public void shoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R, this::shoot);
                 return;
             }
         } else {
             if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA, this::shoot);
                 return;
             }
         }
@@ -641,12 +703,12 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     public void mediaShoot() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA_R)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R);
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA_R, this::mediaShoot);
                 return;
             }
         } else {
             if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_CAMERA)) {
-                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA);
+                checkPermission(ConstantsHelper.PERMISSIONS_CAMERA, this::mediaShoot);
                 return;
             }
         }
@@ -672,21 +734,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                         .build());
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE);
-                    return;
+            if (!hasVideoReadAccess()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_UPSIDE_DOWN_CAKE,
+                            () -> openShoot(customVideoType));
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+                    checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU,
+                            () -> openShoot(customVideoType));
+                } else {
+                    checkPermission(ConstantsHelper.PERMISSIONS_READ, () -> openShoot(customVideoType));
                 }
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_VIDEO_READ_TIRAMISU);
-                    return;
-                }
-            } else {
-                if (lacksPermissions(mediaBuilder.getContext(), ConstantsHelper.PERMISSIONS_READ)) {
-                    checkPermission(ConstantsHelper.PERMISSIONS_READ);
-                    return;
-                }
+                return;
             }
             String[] videoType;
             if (customVideoType == null || customVideoType.length == 0) {

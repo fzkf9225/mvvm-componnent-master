@@ -15,13 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import javax.inject.Inject;
 
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
+import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 
 /**
@@ -80,14 +78,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      */
     public void createViewModel() {
         if (mViewModel == null) {
-            Class modelClass;
-            Type type = getClass().getGenericSuperclass();
-            if (type instanceof ParameterizedType) {
-                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[0];
-            } else {
-                //如果没有指定泛型参数，则默认使用BaseViewModel
-                modelClass = BaseViewModel.class;
-            }
+            Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
             mViewModel.createRepository(useActivityViewModel() ? ((BaseActivity) requireActivity()) : this);
         }

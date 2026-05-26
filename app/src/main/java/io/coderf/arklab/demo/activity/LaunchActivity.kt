@@ -234,15 +234,15 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
 
     private fun getSpannableContent(): SpannableString {
         val content =
-            "为了保护您的个人信息权益，我们将遵循合法、正当、必要和诚信原则，按照《用户信息保护指引》和《隐私保护协议》收集、使用您的信息。我们将收集相机权限、设备信息、位置权限、存储权限等，用于提供个性化内容推荐、本地文件存储、拍照、录音、录像、推送等功能。您可以在【系统设置】中管理、修改权限，拒绝提供仅会影响相关功能，相关功能可能会无法正常使用，但不会影响其他功能的使用。请仔细阅读相关协议内容了解详细信息，您也可以在【我的】右上角齿轮【设置】中找到相关协议详细信息。如您同意，请点击\"同意并继续\"开始使用我们的服务。"
+            "为了保护您的个人信息权益，我们将遵循合法、正当、必要和诚信原则，按照《用户信息保护指引》和《隐私保护政策》收集、使用您的信息。我们将收集相机权限、设备信息、位置权限、存储权限等，用于提供个性化内容推荐、本地文件存储、拍照、录音、录像、推送等功能。您可以在【系统设置】中管理、修改权限，拒绝提供仅会影响相关功能，相关功能可能会无法正常使用，但不会影响其他功能的使用。请仔细阅读相关协议内容了解详细信息，您也可以在【我的】右上角齿轮【设置】中找到相关协议详细信息。如您同意，请点击\"同意并继续\"开始使用我们的服务。"
         val spannableString = SpannableString(content)
 
         // 找到关键文本的位置
         val userAgreementStart = content.indexOf("《用户信息保护指引》")
         val userAgreementEnd = userAgreementStart + "《用户信息保护指引》".length
 
-        val privacyPolicyStart = content.indexOf("《隐私保护协议》")
-        val privacyPolicyEnd = privacyPolicyStart + "《隐私保护协议》".length
+        val privacyPolicyStart = content.indexOf("《隐私保护政策》")
+        val privacyPolicyEnd = privacyPolicyStart + "《隐私保护政策》".length
 
         // 设置用户协议点击
         val userAgreementSpan: ClickableSpan = object : android.text.style.ClickableSpan() {

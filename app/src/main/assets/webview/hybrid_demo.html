@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WebView 混合能力</title>
+    <style>
+        body { font-family: sans-serif; padding: 16px; }
+        button { margin: 8px 0; padding: 10px 16px; width: 100%; font-size: 15px; }
+        pre { background: #f5f5f5; padding: 8px; white-space: pre-wrap; word-break: break-all; }
+        input[type=file] { margin: 12px 0; width: 100%; display: block; }
+        label { display: block; margin: 10px 0; font-size: 14px; }
+        .hint { color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+<h1>混合能力演示</h1>
+<p>依赖原生注入的 <code>ArkWebView</code> Bridge 与 WebView 文件/定位能力。</p>
+
+<h2>JSBridge</h2>
+<button type="button" onclick="doScan()">原生扫码（CaptureActivity）</button>
+<button type="button" onclick="doLocation()">单次定位（原生 LocationManager）</button>
+
+<h2>系统 Dialog</h2>
+<button type="button" onclick="alert('这是 alert 示例')">alert</button>
+<button type="button" onclick="confirm('确认继续？')">confirm</button>
+<button type="button" onclick="prompt('请输入昵称','访客')">prompt</button>
+
+<h2>文件选择</h2>
+<label>图片：<input type="file" accept="image/*" onchange="onFilePicked(event)"/></label>
+<label>视频：<input type="file" accept="video/*" onchange="onFilePicked(event)"/></label>
+<label>图片或视频：<input type="file" accept="image/*,video/*" onchange="onFilePicked(event)"/></label>
+<label>任意文件：<input type="file" accept="*/*" onchange="onFilePicked(event)"/></label>
+<label>拍照 capture：<input type="file" accept="image/*" capture="environment" onchange="onFilePicked(event)"/></label>
+<label>录像 capture：<input type="file" accept="video/*" capture="environment" onchange="onFilePicked(event)"/></label>
+
+<h2>浏览器 Geolocation API</h2>
+<p class="hint">本地 assets 页以 <b>https</b> 虚拟域名加载，方可使用浏览器定位；亦可使用上方 JSBridge 定位。</p>
+<button type="button" onclick="doBrowserGeo()">navigator.geolocation</button>
+
+<h2>结果</h2>
+<pre id="log">等待操作…</pre>
+
+<script>
+    var logEl = document.getElementById('log');
+    function log(msg) {
+        logEl.textContent = typeof msg === 'string' ? msg : JSON.stringify(msg, null, 2);
+    }
+
+    window.__arkWebViewCallbacks = {
+        onScanResult: function (text) {
+            log('扫码结果：' + (text || '(空/取消)'));
+        },
+        onLocationResult: function (requestId, data) {
+            if (data == null) {
+                log('定位 [' + requestId + '] 失败：请确认已授予定位权限且系统定位已开启');
+                return;
+            }
+            log('定位 [' + requestId + ']：' + JSON.stringify(data));
+        }
+    };
+
+    function onFilePicked(event) {
+        var input = event.target;
+        var files = input.files;
+        if (!files || files.length === 0) {
+            log('未选择文件');
+            return;
+        }
+        var names = [];
+        for (var i = 0; i < files.length; i++) {
+            names.push(files[i].name + ' (' + files[i].type + ')');
+        }
+        log('已选择：\n' + names.join('\n'));
+    }
+
+    function doScan() {
+        if (typeof ArkWebView === 'undefined') {
+            log('ArkWebView 未注入，请确认 ENABLE_JS_BRIDGE=true');
+            return;
+        }
+        ArkWebView.startScan();
+    }
+
+    function doLocation() {
+        if (typeof ArkWebView === 'undefined') {
+            log('ArkWebView 未注入');
+            return;
+        }
+        var id = 'demo-' + Date.now();
+        log('正在请求定位…');
+        ArkWebView.requestLocation(id);
+    }
+
+    function doBrowserGeo() {
+        if (!navigator.geolocation) {
+            log('当前环境不支持 geolocation');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            function (pos) {
+                log({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy
+                });
+            },
+            function (err) {
+                log('geolocation 失败：' + err.message + '（需授予定位权限）');
+            },
+            { enableHighAccuracy: true, timeout: 15000 }
+        );
+    }
+</script>
+</body>
+</html>

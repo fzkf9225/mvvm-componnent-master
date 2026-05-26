@@ -90,16 +90,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_qr_code" />
 
+            <EditText
+                android:id="@+id/edit_local_path"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="本地图片绝对路径，如 /sdcard/Pictures/xxx.jpg"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintTop_toBottomOf="@+id/button_uri" />
+
             <Button
                 android:id="@+id/button_string"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:text="识别本地String图片"
+                android:text="识别本地路径图片"
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_uri" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_local_path" />
 
             <io.coderf.arklab.common.widget.customview.CornerEditText
                 android:id="@+id/edit_base64"

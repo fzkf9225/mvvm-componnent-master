@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- 点击后直接弹出底部操作面板，不再使用系统 Overflow 列表 -->
     <item
-        android:id="@+id/toolbar_browser"
-        android:title="外部浏览器打开"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/toolbar_copy"
-        android:title="复制链接地址"
-        app:showAsAction="never" />
+        android:id="@+id/toolbar_web_menu"
+        android:icon="@drawable/ic_webview_toolbar_more"
+        android:title="@string/webview_menu_more"
+        app:showAsAction="always" />
 </menu>

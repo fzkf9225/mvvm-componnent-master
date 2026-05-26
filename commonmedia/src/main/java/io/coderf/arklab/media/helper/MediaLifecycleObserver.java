@@ -163,23 +163,28 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         public void onActivityResult(Map<String, Boolean> result) {
             for (Map.Entry<String, Boolean> entry : result.entrySet()) {
                 LogUtil.show(MediaHelper.TAG, entry.getKey() + ":" + entry.getValue());
-                if (Boolean.FALSE.equals(entry.getValue())) {
-                    new TipDialog(mediaHelper.getMediaBuilder().getContext())
-                            .setMessage("您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改")
-                            .setNegativeText("取消")
-                            .setPositiveText("前往设置")
-                            .setOnPositiveClickListener(dialog -> {
-                                dialog.dismiss();
-                                Intent intent = new Intent();
-                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package", mediaHelper.getMediaBuilder().getContext().getPackageName(), null);
-                                intent.setData(uri);
-                                mediaHelper.getMediaBuilder().getContext().startActivity(intent);
-                            })
-                            .builder()
-                            .show();
-                    return;
-                }
+            }
+            Runnable continuation = mediaHelper.drainPendingPermissionContinuation();
+            boolean allGranted = !result.containsValue(Boolean.FALSE);
+            if (continuation != null) {
+                continuation.run();
+                return;
+            }
+            if (!allGranted) {
+                new TipDialog(mediaHelper.getMediaBuilder().getContext())
+                        .setMessage("您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改")
+                        .setNegativeText("取消")
+                        .setPositiveText("前往设置")
+                        .setOnPositiveClickListener(dialog -> {
+                            dialog.dismiss();
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", mediaHelper.getMediaBuilder().getContext().getPackageName(), null);
+                            intent.setData(uri);
+                            mediaHelper.getMediaBuilder().getContext().startActivity(intent);
+                        })
+                        .builder()
+                        .show();
             }
         }
     };

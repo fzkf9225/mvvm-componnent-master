@@ -3,42 +3,45 @@ package io.coderf.arklab.common.widget.customview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.http.SslError;
 import android.os.Build;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.webkit.WebViewAssetLoader;
 
+import java.io.File;
+
+import io.coderf.arklab.common.BuildConfig;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 import io.coderf.arklab.common.helper.JavaScriptAssetsPathHandler;
+import io.coderf.arklab.common.helper.StoragePathHandler;
+import io.coderf.arklab.common.helper.WebViewLocalUrlResolver;
+import io.coderf.arklab.common.utils.common.ConfigurableWebViewClient;
 import io.coderf.arklab.common.utils.common.WebViewUtil;
 
 /**
- * created by fz on 2025/6/27 9:33
- * describe:
+ * 可配置 URL 类型的 WebView：支持网络、APK assets、应用沙盒/下载目录本地文件。
+ * <p>本地与 assets 均通过 {@link WebViewAssetLoader} 映射为 <b>https</b> 虚拟域名（安全源，支持 Geolocation 等 API）。</p>
  */
 public class ConfigurableWebView extends WebView {
 
     private WebViewAssetLoader assetLoader;
-    /**
-     * url类型，0：网络地址，1：本地assets地址，2：自动
-     */
+    private ConfigurableWebViewClient webViewClient;
+
+    /** url 类型，见 {@link WebViewUrlTypeEnum} */
     private int urlType = WebViewUrlTypeEnum.AUTO.type;
-    /**
-     * url地址
-     */
+
+    /** 业务传入的原始地址 */
     private String loadUrl;
-    private final String DEFAULT_DOMAIN = "casic.otitan.com";
-    /**
-     * 自定义域名
-     */
+
+    private static final String DEFAULT_DOMAIN = "arklab.coderf.com";
+
+    /** 与 WebViewAssetLoader 一致的虚拟域名 */
     private String domain = DEFAULT_DOMAIN;
 
     public ConfigurableWebView(Context context) {
@@ -57,131 +60,127 @@ public class ConfigurableWebView extends WebView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void init(AttributeSet attrs) {
+    private void init(@Nullable AttributeSet attrs) {
         if (attrs != null) {
             TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.ConfigurableWebView);
             domain = ta.getString(R.styleable.ConfigurableWebView_domain);
             if (TextUtils.isEmpty(domain)) {
                 domain = DEFAULT_DOMAIN;
             }
+            ta.recycle();
         } else {
             domain = DEFAULT_DOMAIN;
         }
         WebViewUtil.setDefaultSetting(this);
-        // 初始化AssetLoader用于加载本地资源
-        assetLoader = new WebViewAssetLoader.Builder()
-                .setHttpAllowed(true)
-                .setDomain(domain)
-                .addPathHandler("/assets/", new JavaScriptAssetsPathHandler(getContext()))
-                .build();
+        rebuildAssetLoader(domain);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, true);
         }
-
-        setWebViewClient(new Api29WebViewClient());
-        // 根据Android版本设置不同的WebViewClient
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             getSettings().setAllowUniversalAccessFromFileURLs(true);
             getSettings().setAllowFileAccessFromFileURLs(true);
-            getSettings().setEnableSmoothTransition(true);
         }
+
+        webViewClient = new ConfigurableWebViewClient(assetLoader);
+        webViewClient.setLocalNavigationContext(getContext(), domain);
+        setWebViewClient(webViewClient);
 
         setInitialScale(1);
         requestFocusFromTouch();
-        WebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
     }
 
     /**
-     * 设置URL类型
-     *
-     * @param urlType 0：网络地址，1：本地assets地址，2：自动判断
+     * 按域名重建 AssetLoader（assets + 沙盒 files + external + 下载目录）。
+     */
+    private void rebuildAssetLoader(@NonNull String domainName) {
+        // 使用 https 虚拟源（默认），满足 H5 Geolocation 等「仅安全源」限制
+        WebViewAssetLoader.Builder builder = new WebViewAssetLoader.Builder()
+                .setDomain(domainName)
+                .addPathHandler("/assets/", new JavaScriptAssetsPathHandler(getContext()));
+
+        File filesDir = getContext().getFilesDir();
+        if (filesDir != null) {
+            builder.addPathHandler("/files/", new StoragePathHandler(filesDir));
+        }
+        File externalDir = getContext().getExternalFilesDir(null);
+        if (externalDir != null) {
+            builder.addPathHandler("/external/", new StoragePathHandler(externalDir));
+        }
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        if (downloadDir != null) {
+            builder.addPathHandler("/download/", new StoragePathHandler(downloadDir));
+        }
+        assetLoader = builder.build();
+        if (webViewClient != null) {
+            webViewClient = new ConfigurableWebViewClient(assetLoader);
+            webViewClient.setLocalNavigationContext(getContext(), domain);
+            setWebViewClient(webViewClient);
+        }
+    }
+
+    /**
+     * 设置 URL 类型，见 {@link WebViewUrlTypeEnum}。
      */
     public void setUrlType(int urlType) {
         this.urlType = urlType;
     }
 
     /**
-     * 本地的话需要设置域名
-     *
-     * @param domain 自定义域名
+     * 设置虚拟域名（加载 assets / 本地文件时必须与 {@link #loadConfiguredUrl} 生成的域名一致）。
      */
-    public void setDomain(String domain) {
+    public void setDomain(@NonNull String domain) {
         this.domain = domain;
-        // 初始化AssetLoader用于加载本地资源
-        assetLoader = new WebViewAssetLoader.Builder()
-                .setHttpAllowed(true)
-                .setDomain(domain)
-                .addPathHandler("/assets/", new JavaScriptAssetsPathHandler(getContext()))
-                .build();
+        rebuildAssetLoader(domain);
     }
 
-    public void setAssetLoader(WebViewAssetLoader assetLoader) {
+    public void setAssetLoader(@NonNull WebViewAssetLoader assetLoader) {
         this.assetLoader = assetLoader;
+        webViewClient = new ConfigurableWebViewClient(assetLoader);
+        setWebViewClient(webViewClient);
+    }
+
+    public void setOnPageLoadListener(@Nullable ConfigurableWebViewClient.OnPageLoadListener listener) {
+        if (webViewClient != null) {
+            webViewClient.setOnPageLoadListener(listener);
+        }
     }
 
     /**
-     * 加载URL，如果是本地的地址的话，只需要写asset后面的路径即可，如果没有子目录，那就是文件名
-     *
-     * @param url 要加载的URL
+     * 加载 URL。assets 类型只需传 assets 下相对路径；本地类型支持 {@link WebViewLocalUrlResolver} 约定协议。
      */
-    public void loadConfiguredUrl(String url) {
+    public void loadConfiguredUrl(@Nullable String url) {
         this.loadUrl = url;
-
         if (url == null || url.isEmpty()) {
             return;
         }
-
-        if (urlType == WebViewUrlTypeEnum.INTERNET.type) {// 直接加载网络URL
-            loadUrl(url);
-        } else if (urlType == WebViewUrlTypeEnum.ASSETS.type) {// 加载本地assets文件
-            loadUrl("http://" + domain + "/assets/" + url);
-        } else if (urlType == WebViewUrlTypeEnum.AUTO.type) {// 自动判断URL类型
-            if (url.startsWith("http://") || url.startsWith("https://")) {
-                loadUrl(url);
-            } else {
-                loadUrl("http://" + domain + "/assets/" + url);
-            }
-        }
+        String target = WebViewLocalUrlResolver.resolveLoadUrl(getContext(), domain, urlType, url);
+        loadUrl(target);
     }
 
-    /**
-     * 获取当前设置的URL
-     *
-     * @return 当前URL
-     */
+    @Nullable
     public String getLoadUrl() {
         return loadUrl;
     }
 
-    /**
-     * 获取当前URL类型
-     *
-     * @return URL类型
-     */
     public int getUrlType() {
         return urlType;
     }
 
-    /**
-     * 用于API 29+的WebViewClient
-     */
-    private class Api29WebViewClient extends WebViewClient {
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            return assetLoader.shouldInterceptRequest(request.getUrl());
-        }
-
-        @SuppressLint("WebViewClientOnReceivedSslError")
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed(); // 忽略SSL错误
-        }
+    @NonNull
+    public String getDomain() {
+        return domain;
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+    /**
+     * 在 Activity {@code onDestroy} 中调用，释放 WebView 资源（勿在 {@code onDetachedFromWindow} 自动 destroy，避免配置变更误销毁）。
+     */
+    public void release() {
+        stopLoading();
+        loadUrl("about:blank");
+        onPause();
+        removeAllViews();
         destroy();
     }
 }
-

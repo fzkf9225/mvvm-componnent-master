@@ -28,7 +28,7 @@ public abstract class PersonDatabase extends RoomDatabase {
         if (personDatabase == null) {
             // 数据库的名字
             personDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                            PersonDatabase.class, "casic_titan_demo")
+                            PersonDatabase.class, "io_coderf_arklab_titan_demo")
                     // 强制开启在主线程中操作数据库
                     .allowMainThreadQueries()
                     .build();

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_webview_sheet_top"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/vertical_margin_xl"
+        android:paddingBottom="@dimen/vertical_margin_xl">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvProviderHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="@dimen/horizontal_margin_l"
+            android:paddingEnd="@dimen/horizontal_margin_l"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_size_l" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvWebViewActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingStart="@dimen/horizontal_margin_l"
+            android:paddingEnd="@dimen/horizontal_margin_l" />
+    </LinearLayout>
+    <View
+        android:id="@+id/v_line"
+        android:background="@color/h_line_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_xxl"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/autoColor"
+        android:textSize="@dimen/font_size_xl" />
+</LinearLayout>

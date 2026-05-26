@@ -25,8 +25,10 @@ import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
+import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
+import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 
 /**
  * Create by fz on 2019/8/1
@@ -135,22 +137,22 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建viewModel
+     * 创建 viewModel。沿继承链向上查找 {@code BaseActivity<VM, VDB>} 的 VM 泛型，
+     * 避免子类（如 {@code WebViewBasicDemoActivity extends WebViewActivity}）仅声明父类时解析失败。
      */
+    @SuppressWarnings("unchecked")
     public void createViewModel() {
         if (mViewModel == null) {
-            Class modelClass;
-            Type type = getClass().getGenericSuperclass();
-            if (type instanceof ParameterizedType) {
-                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[0];
-            } else {
-                //如果没有指定泛型参数，则默认使用BaseViewModel
-                modelClass = BaseViewModel.class;
-            }
+            Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
             mViewModel.createRepository(this);
         }
     }
+
+    /**
+     * 从当前类沿继承链向上查找 {@link BaseActivity} / {@link BaseFragment} 声明的 ViewModel 泛型。
+     * Hilt 会在中间插入 {@code Hilt_Xxx}，子类也可能只写 {@code extends WebViewActivity} 而不重复泛型。
+     */
 
     @Override
     public void onAuthSuccess(@Nullable Bundle data) {

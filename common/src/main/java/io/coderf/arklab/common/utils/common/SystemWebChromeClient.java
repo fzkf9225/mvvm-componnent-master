@@ -35,7 +35,7 @@ public class SystemWebChromeClient extends WebChromeClient {
     private final static int MAX_PROGRESS = 100;
     private final CordovaDialogsHelper dialogsHelper;
     private final ProgressBar progressBar;
-    private final Context mContext;
+    protected final Context mContext;
     private TextView tvBarTitle;
     /**
      * 文件服务
@@ -162,6 +162,9 @@ public class SystemWebChromeClient extends WebChromeClient {
         return true;
     }
 
+    /**
+     * 默认实现：直接授权（子类 {@link NativeWebChromeClient} 会改为运行时权限校验）。
+     */
     @Override
     public void onPermissionRequest(final PermissionRequest request) {
         request.grant(request.getResources());
@@ -171,6 +174,9 @@ public class SystemWebChromeClient extends WebChromeClient {
      * Android API >= 21(Android 5.0) 版本的回调处理
      */
     public void chooseFileCallback(int resultCode, Intent data) {
+        if (mUploadCallbackAboveL == null) {
+            return;
+        }
         try {
             if (Activity.RESULT_OK != resultCode) {
                 mUploadCallbackAboveL.onReceiveValue(null);
