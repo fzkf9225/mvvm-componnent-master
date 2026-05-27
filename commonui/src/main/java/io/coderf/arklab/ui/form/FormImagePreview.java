@@ -93,6 +93,7 @@ public class FormImagePreview extends FormMedia {
         if (adapter == null) {
             adapter = new ImageShowAdapter();
             ((ImageShowAdapter) adapter).setRadius(radius);
+            ((ImageShowAdapter) adapter).setBgColor(bgColor);
             ((ImageShowAdapter) adapter).setErrorImage(errorImage);
             ((ImageShowAdapter) adapter).setPlaceholderImage(placeholderImage);
         }

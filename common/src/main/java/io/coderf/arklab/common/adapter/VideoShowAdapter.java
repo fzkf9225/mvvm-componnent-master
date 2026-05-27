@@ -14,6 +14,8 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.common.api.Config;
@@ -29,18 +31,10 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * Created by fz on 2024/10/20.
  * describe:视频列表
  */
-public class VideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterVideoShowItemBinding> {
-    private @ColorInt int bgColor = Color.WHITE;
-    private float radius = 8;
-
-    protected Drawable placeholderImage;
-    protected Drawable errorImage;
+public class VideoShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterVideoShowItemBinding> {
 
     public VideoShowAdapter() {
         super();
-        if (Config.getInstance().getApplication() != null) {
-            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
-        }
     }
 
     @Override
@@ -48,28 +42,12 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
         return R.layout.adapter_video_show_item;
     }
 
-    public void setBgColor(@ColorInt int bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
-    public void setPlaceholderImage(Drawable placeholderImage) {
-        this.placeholderImage = placeholderImage;
-    }
-
-    public void setErrorImage(Drawable errorImage) {
-        this.errorImage = errorImage;
-    }
-
     @Override
     public void onBindHolder(BaseViewHolder<AdapterVideoShowItemBinding> holder, int pos) {
         Glide.with(holder.getBinding().imageVideo.getContext())
                 .load(mList.get(pos).getPath())
-                .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
-                        .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
+                        .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().imageVideo);
     }
 
@@ -83,7 +61,7 @@ public class VideoShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
         public <T> ViewHolder(@NotNull AdapterVideoShowItemBinding binding, VideoShowAdapter adapter) {
             super(binding, adapter);
             binding.imageVideo.setRadius((int) adapter.radius);
-            binding.imageVideo.setBackgroundColor(adapter.bgColor);
+            binding.imageVideo.setBgColor(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.videoPlay.setOnClickListener(v -> {
                 try {
                     Bundle bundleVideo = new Bundle();

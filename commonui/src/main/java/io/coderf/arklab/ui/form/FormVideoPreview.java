@@ -92,6 +92,7 @@ public class FormVideoPreview extends FormMedia {
         if (adapter == null) {
             adapter = new VideoShowAdapter();
             ((VideoShowAdapter) adapter).setRadius(radius);
+            ((VideoShowAdapter) adapter).setBgColor(bgColor);
             ((VideoShowAdapter) adapter).setErrorImage(errorImage);
             ((VideoShowAdapter) adapter).setPlaceholderImage(placeholderImage);
         }

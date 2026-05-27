@@ -12,6 +12,8 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
@@ -25,18 +27,10 @@ import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
  * Created by fz on 2025/10/20.
  * describe:展示图片适配器
  */
-public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, AdapterImageShowItemBinding> {
-    private @ColorInt int bgColor = Color.WHITE;
-    private float radius = 8;
-
-    protected Drawable placeholderImage;
-    protected Drawable errorImage;
+public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterImageShowItemBinding> {
 
     public ImageShowAdapter() {
         super();
-        if (Config.getInstance().getApplication() != null) {
-            radius = DensityUtil.dp2px(Config.getInstance().getApplication(), 8);
-        }
     }
 
     @Override
@@ -44,28 +38,12 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
         return R.layout.adapter_image_show_item;
     }
 
-    public void setBgColor( @ColorInt int bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
-    public void setPlaceholderImage(Drawable placeholderImage) {
-        this.placeholderImage = placeholderImage;
-    }
-
-    public void setErrorImage(Drawable errorImage) {
-        this.errorImage = errorImage;
-    }
-
     @Override
     public void onBindHolder(BaseViewHolder<AdapterImageShowItemBinding> holder, int pos) {
         Glide.with(holder.getBinding().cornerImage.getContext())
                 .load(mList.get(pos).getPath())
-                .apply(new RequestOptions().placeholder(placeholderImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : placeholderImage)
-                        .error(errorImage == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : errorImage))
+                .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
+                        .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().cornerImage);
     }
 
@@ -79,7 +57,7 @@ public class ImageShowAdapter extends BaseRecyclerViewAdapter<AttachmentBean, Ad
         public <T> ViewHolder(@NotNull AdapterImageShowItemBinding binding, ImageShowAdapter adapter) {
             super(binding, adapter);
             binding.cornerImage.setRadius((int) adapter.radius);
-            binding.cornerImage.setBackgroundColor(adapter.bgColor);
+            binding.cornerImage.setBgColor(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.cornerImage.setOnClickListener(v -> {
                 try {
                     new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
