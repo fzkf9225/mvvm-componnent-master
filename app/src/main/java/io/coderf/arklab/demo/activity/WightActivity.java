@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+
+import io.coderf.arklab.common.base.BaseStatefulActivity;
 import io.coderf.arklab.ui.fragment.CalendarMonthFragment;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
@@ -52,7 +54,7 @@ import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 
 
 @AndroidEntryPoint
-public class WightActivity extends BaseActivity<WightViewModel, ActivityWightBinding> {
+public class WightActivity extends BaseStatefulActivity<WightViewModel, ActivityWightBinding> {
     private UseCase useCase;
     private String imageUrl = "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800";
     private ImageShowAdapter imageShowAdapter;

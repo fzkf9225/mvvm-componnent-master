@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,8 +13,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -28,35 +27,40 @@ import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
-import io.coderf.arklab.common.viewmodel.EmptyViewModel;
-
 /**
- * Create by fz on 2019/8/1
- * describe:BaseActivity封装
+ * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
+ * <p>
+ * <b>生命周期约定（与历史行为兼容）</b>
+ * <ul>
+ *   <li>{@link #initView(Bundle)}：每次 {@code onCreate} 都会调用；可用 {@code savedInstanceState} 恢复 View 状态。</li>
+ *   <li>{@link #initData(Bundle)}：默认每次 {@code onCreate} 都会调用（含旋转、进程恢复），参数来自 {@link #resolvePageArguments()}。</li>
+ *   <li>若只需「首次进入」拉数，重写 {@link #shouldRunInitData(Bundle)} 或继承 {@link BaseStatefulActivity}。</li>
+ * </ul>
+ *
+ * @param <VM>  ViewModel 类型
+ * @param <VDB> 页面 DataBinding 类型
+ * @see BaseStatefulActivity
  */
-public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity implements BaseView, AuthManager.AuthCallback {
+public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
+        implements BaseView, AuthManager.AuthCallback {
+
     protected String TAG = this.getClass().getSimpleName();
-    /**
-     * viewModel
-     */
+
+    /** 页面 ViewModel，由 {@link #createViewModel()} 惰性创建。 */
     protected VM mViewModel;
-    /**
-     * 正文布局
-     */
+
+    /** 正文 DataBinding。 */
     protected VDB binding;
-    /**
-     * toolbar布局
-     */
+
+    /** 带 Toolbar 外壳时的根 Binding；{@link #hasToolBar()} 为 false 时为 null。 */
+    @Nullable
     protected BaseActivityConstraintBinding toolbarBind;
+
     @Inject
     public ErrorService errorService;
-    /**
-     * 认证管理，管理登录相关
-     */
+
     protected AuthManager authManager;
-    /**
-     * UI控制器。管理弹框、toast之类
-     */
+
     protected UIController uiController;
 
     protected abstract int getLayoutId();
@@ -70,7 +74,40 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         initToolbar();
         createViewModel();
         initView(savedInstanceState);
-        initData((getIntent() == null || getIntent().getExtras() == null) ? new Bundle() : getIntent().getExtras());
+        if (shouldRunInitData(savedInstanceState)) {
+            initData(resolvePageArguments());
+        }
+    }
+
+    /**
+     * 是否在 {@code onCreate} 中调用 {@link #initData(Bundle)}。
+     * <p>
+     * 默认 {@code true}，与历史版本一致。子类可改为仅首次创建时加载，例如：
+     * {@code return savedInstanceState == null;}
+     */
+    protected boolean shouldRunInitData(@Nullable Bundle savedInstanceState) {
+        return true;
+    }
+
+    /**
+     * 传给 {@link #initData(Bundle)} 的页面参数，默认取自 {@link #getIntent()} extras。
+     * 子类可重写以统一处理深链、路由等参数来源。
+     */
+    @NonNull
+    protected Bundle resolvePageArguments() {
+        Intent intent = getIntent();
+        Bundle extras = intent != null ? intent.getExtras() : null;
+        return extras != null ? extras : new Bundle();
+    }
+
+    /** 是否为首次创建（非配置变更/进程恢复后的重建）。 */
+    protected final boolean isFirstCreation(@Nullable Bundle savedInstanceState) {
+        return savedInstanceState == null;
+    }
+
+    /** 当前是否适合展示 Dialog/Toast（未 finish 且未 destroy）。 */
+    protected boolean isUiSafe() {
+        return !isFinishing() && !isDestroyed();
     }
 
     protected void createAuthManager() {
@@ -87,8 +124,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 特性开关：点击空白区域关闭键盘
-     * 子类可以重写此方法改变行为
+     * 特性开关：点击空白区域关闭键盘。
      */
     protected boolean hideKeyboardOnTouchOutside() {
         return Config.getInstance().isHideKeyboardOnTouchOutside();
@@ -97,7 +133,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (hideKeyboardOnTouchOutside()) {
-            // 调用工具类处理键盘收起
             KeyBoardUtil.handleDispatchTouchEvent(this, ev);
         }
         return super.dispatchTouchEvent(ev);
@@ -123,22 +158,20 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
+    /**
+     * 获取 Toolbar；{@link #hasToolBar()} 为 false 时返回 null，避免 NPE。
+     */
+    @Nullable
     public Toolbar getToolbar() {
-        return toolbarBind.mainBar;
+        return toolbarBind != null ? toolbarBind.mainBar : null;
     }
 
-    /**
-     * 设置toolbar默认样式
-     *
-     * @return toolbar配置
-     */
     public ToolbarConfig createdToolbarConfig() {
         return new ToolbarConfig(this).setEnableImmersionBar(enableImmersionBar()).setLightMode(false).setTitle(setTitleBar()).setBgColor(R.color.white).applyStatusBar();
     }
 
     /**
-     * 创建 viewModel。沿继承链向上查找 {@code BaseActivity<VM, VDB>} 的 VM 泛型，
-     * 避免子类（如 {@code WebViewBasicDemoActivity extends WebViewActivity}）仅声明父类时解析失败。
+     * 创建 ViewModel。沿继承链解析泛型，兼容 Hilt 生成类与子类只写 {@code extends XxxActivity} 的场景。
      */
     @SuppressWarnings("unchecked")
     public void createViewModel() {
@@ -149,29 +182,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
     }
 
-    /**
-     * 从当前类沿继承链向上查找 {@link BaseActivity} / {@link BaseFragment} 声明的 ViewModel 泛型。
-     * Hilt 会在中间插入 {@code Hilt_Xxx}，子类也可能只写 {@code extends WebViewActivity} 而不重复泛型。
-     */
-
     @Override
     public void onAuthSuccess(@Nullable Bundle data) {
-
     }
 
     @Override
     public void onAuthFail(int resultCode, @Nullable Bundle data) {
-
     }
 
     protected boolean hasToolBar() {
         return true;
     }
 
-    /**
-     * 是否启用沉浸式状态栏
-     * @return true:沉浸式状态栏
-     */
     protected boolean enableImmersionBar() {
         return false;
     }
@@ -179,19 +201,23 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public abstract String setTitleBar();
 
     /**
-     * 初始化布局
+     * 初始化 View 与事件绑定；配置变更后会再次调用。
      */
     public abstract void initView(Bundle savedInstanceState);
 
     /**
-     * 设置数据
+     * 加载页面数据；是否在重建时调用由 {@link #shouldRunInitData(Bundle)} 控制。
      */
     public abstract void initData(Bundle bundle);
 
     @Override
     protected void onDestroy() {
+        if (uiController != null) {
+            uiController.hideLoading();
+        }
         super.onDestroy();
-        AppManager.getAppManager().finishActivity(this);
+        // 仅从栈移除；不可 finish()，否则旋转屏等配置变更后 Activity 无法重建
+        AppManager.getAppManager().removeActivity(this);
         if (authManager != null) {
             authManager.unregister();
         }
@@ -199,32 +225,39 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
         uiController.showLoading(dialogMessage, enableDynamicEllipsis, false);
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
         uiController.refreshLoading(dialogMessage);
     }
 
     @Override
     public void hideLoading() {
+        if (uiController == null) {
+            return;
+        }
         uiController.hideLoading();
     }
 
     @Override
     public void showToast(String msg) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
         uiController.showToast(msg);
     }
 
-    /**
-     * 注意判断空，根据自己需求更改
-     *
-     * @param model 错误吗实体
-     */
     @Override
     public void onErrorCode(BaseResponse model) {
-        if (errorService == null || model == null) {
+        if (errorService == null || model == null || !isUiSafe()) {
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {

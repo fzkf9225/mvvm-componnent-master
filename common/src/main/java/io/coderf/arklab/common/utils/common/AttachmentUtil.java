@@ -3,6 +3,7 @@ package io.coderf.arklab.common.utils.common;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -505,10 +506,11 @@ public class AttachmentUtil {
                         .setData("下载", "下载并预览")
                         .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                             dialog.dismiss();
-                            if (AppManager.getAppManager().currentActivity() == null || AppManager.getAppManager().currentActivity().isFinishing()) {
+                            Activity host = AppManager.getAppManager().currentActivity();
+                            if (host == null || host.isFinishing()) {
                                 return;
                             }
-                            Disposable disposable = DownloadManager.getInstance().download(AppManager.getAppManager().currentActivity(), url)
+                            Disposable disposable = DownloadManager.getInstance().download(host, url)
                                     .subscribe(file -> {
                                         if (pos == 1) {
                                             viewAbsoluteFile(mContext, file.getAbsolutePath());

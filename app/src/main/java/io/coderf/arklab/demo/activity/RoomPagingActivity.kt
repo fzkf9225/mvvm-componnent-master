@@ -32,7 +32,7 @@ class RoomPagingActivity : BaseSearchActivity<EmptyViewModel>() {
         } else {
             bundle?.getParcelable<UseCase>("args")
         }
-        toolbarBind.toolbarConfig?.setTitle(useCase?.name)
+        toolbarBind?.toolbarConfig?.setTitle(useCase?.name)
 
         keywordsLiveData.observe(this){
             mCurrentFragment.searcher(it)

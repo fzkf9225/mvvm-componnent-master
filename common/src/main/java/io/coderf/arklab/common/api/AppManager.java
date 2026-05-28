@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,9 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  *  * <p>
  *  * 添加Activity到堆栈
  *  * AppManager.getAppManager().addActivity(this);
- *  * 结束Activity&从堆栈中移除
- *  * AppManager.getAppManager().finishActivity(this);
+ *  * onDestroy 中仅从堆栈移除（勿再次 finish，否则配置变更后无法重建）：
+ *  * AppManager.getAppManager().removeActivity(this);
+ *  * 主动结束页面：AppManager.getAppManager().finishActivity(activity);
  *
  * @author fz
  * @version 1.0
@@ -73,28 +75,46 @@ public class AppManager {
     }
 
     /**
-     * 获取当前Activity（堆栈中最后一个压入的）
+     * 获取当前 Activity（堆栈顶）。栈为空时返回 null，避免 {@link java.util.EmptyStackException}。
      */
+    @Nullable
     public Activity currentActivity() {
+        if (activityStack == null || activityStack.isEmpty()) {
+            return null;
+        }
         return activityStack.lastElement();
     }
 
     /**
-     * 结束当前Activity（堆栈中最后一个压入的）
+     * 结束当前 Activity（堆栈顶）；栈为空时不做任何事。
      */
     public void finishActivity() {
-        Activity activity = activityStack.lastElement();
-        finishActivity(activity);
+        Activity activity = currentActivity();
+        if (activity != null) {
+            finishActivity(activity);
+        }
     }
 
     /**
-     * 结束指定的Activity
+     * 从堆栈移除 Activity，不调用 {@link Activity#finish()}。
+     * <p>
+     * 用于 {@link android.app.Activity#onDestroy()}：此时系统已在销毁页面，
+     * 若再 finish 会导致配置变更（旋转屏）后无法重建，露出栈内上一个 Activity。
+     */
+    public void removeActivity(Activity activity) {
+        if (activity != null && activityStack != null) {
+            activityStack.remove(activity);
+        }
+    }
+
+    /**
+     * 结束指定的 Activity：先从堆栈移除，再 {@link Activity#finish()}。
+     * 勿在 {@code onDestroy} 中调用，请使用 {@link #removeActivity(Activity)}。
      */
     public void finishActivity(Activity activity) {
         if (activity != null) {
-            activityStack.remove(activity);
+            removeActivity(activity);
             activity.finish();
-            activity = null;
         }
     }
 

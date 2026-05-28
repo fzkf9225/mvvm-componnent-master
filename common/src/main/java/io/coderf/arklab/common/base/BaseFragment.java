@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -23,8 +24,11 @@ import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 
 /**
- * Created by fz on 2025/11/22.
- * BaseFragment封装
+ * Fragment MVVM 基类，生命周期约定与 {@link BaseActivity} 对齐。
+ * <p>
+ * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}。
+ *
+ * @see BaseStatefulFragment
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
@@ -56,8 +60,31 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         binding.setLifecycleOwner(this);
         createViewModel();
         initView(savedInstanceState);
-        initData(getArguments() == null ? new Bundle() : getArguments());
+        if (shouldRunInitData(savedInstanceState)) {
+            initData(resolvePageArguments());
+        }
         return binding.getRoot();
+    }
+
+    /**
+     * 是否在 {@code onCreateView} 中调用 {@link #initData(Bundle)}。默认 true，与历史行为一致。
+     */
+    protected boolean shouldRunInitData(@Nullable Bundle savedInstanceState) {
+        return true;
+    }
+
+    @NonNull
+    protected Bundle resolvePageArguments() {
+        Bundle args = getArguments();
+        return args != null ? args : new Bundle();
+    }
+
+    protected final boolean isFirstCreation(@Nullable Bundle savedInstanceState) {
+        return savedInstanceState == null;
+    }
+
+    protected boolean isUiSafe() {
+        return isAdded() && getActivity() != null && !requireActivity().isFinishing() && !requireActivity().isDestroyed();
     }
 
     protected void createAuthManager() {
@@ -120,6 +147,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     @Override
+    public void onDestroyView() {
+        if (uiController != null) {
+            uiController.hideLoading();
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (authManager != null) {
@@ -129,7 +164,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
-        if (requireActivity().isFinishing()) {
+        if (!isUiSafe() || uiController == null) {
             return;
         }
         uiController.showLoading(requireActivity(), dialogMessage, enableDynamicEllipsis, false);
@@ -137,7 +172,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
-        if (requireActivity().isFinishing()) {
+        if (uiController == null) {
             return;
         }
         uiController.hideLoading();
@@ -145,7 +180,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        if (requireActivity().isFinishing()) {
+        if (!isUiSafe() || uiController == null) {
             return;
         }
         uiController.refreshLoading(dialogMessage);
@@ -153,12 +188,15 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showToast(String msg) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
         uiController.showToast(msg);
     }
 
     @Override
     public void onErrorCode(BaseResponse model) {
-        if (errorService == null || model == null) {
+        if (errorService == null || model == null || !isUiSafe()) {
             return;
         }
         if (errorService.isLoginPast(model.getCode())) {

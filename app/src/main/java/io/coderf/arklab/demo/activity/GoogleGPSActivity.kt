@@ -110,7 +110,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
         } else {
             bundle.getParcelable<UseCase?>("args")
         }
-        toolbarBind.getToolbarConfig()?.setTitle(useCase?.name)
+        toolbarBind?.getToolbarConfig()?.setTitle(useCase?.name)
     }
 
     /**

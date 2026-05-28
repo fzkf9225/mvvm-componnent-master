@@ -30,6 +30,6 @@ class DemoPagingActivity : BaseActivity<EmptyViewModel?, ActivityDemoPagingBindi
         } else {
             useCase = bundle.getParcelable("args")
         }
-        toolbarBind.toolbarConfig?.title = useCase?.name
+        toolbarBind?.toolbarConfig?.title = useCase?.name
     }
 }
