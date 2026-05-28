@@ -46,6 +46,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.common.utils.common.RxView;
+import io.coderf.arklab.common.widget.customview.BannerView;
 import io.coderf.arklab.common.widget.customview.Code;
 import io.coderf.arklab.common.widget.customview.utils.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
@@ -76,11 +77,14 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         binding.setImageUrl(imageUrl);
         binding.autoTextView.setText("这是AutoTextView测试文字");
         binding.starBar.setOnStarChangeListener(mark -> binding.tvStarBar.setText(String.valueOf(mark)));
-        binding.customBannerPicture.initView(Arrays.asList(
+        List<BannerBean> bannerData = Arrays.asList(
                 new BannerBean("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"),
                 new BannerBean("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg"),
                 new BannerBean("https://bkimg.cdn.bcebos.com/pic/21a4462309f7905298220197bda2c0ca7bcb0a467f42"),
-                new BannerBean(R.mipmap.ic_launcher)));
+                new BannerBean(R.mipmap.ic_launcher));
+        initBannerDemo(binding.customBannerPicture, bannerData, BannerView.IndicatorStyle.DOT);
+        initBannerDemo(binding.customBannerText, bannerData, BannerView.IndicatorStyle.TEXT);
+        initBannerDemo(binding.customBannerTextCenter, bannerData, BannerView.IndicatorStyle.TEXT);
         binding.cornersImageView.setOnClickListener(v -> new PreviewPhotoDialog(this)
                 .createImageInfo(imageUrl)
                 .currentPosition(0)
@@ -196,6 +200,11 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         ));
         binding.homeMenuView.setOnMenuClickListener(menuClickListener);
         binding.iconDotTextView.setDotText("66");
+    }
+
+    private void initBannerDemo(BannerView<BannerBean> bannerView, List<BannerBean> bannerData, int indicatorStyle) {
+        bannerView.setIndicatorStyle(indicatorStyle);
+        bannerView.initView(bannerData);
     }
 
     OnMenuClickListener menuClickListener = new OnMenuClickListener() {

@@ -324,6 +324,21 @@
     <declare-styleable name="BannerView">
         <!--是否可以点击浏览大图-->
         <attr name="bgColor" />
+        <!--底部指示器样式：圆点 / 文字页码-->
+        <attr name="indicatorStyle" format="enum">
+            <enum name="dot" value="0" />
+            <enum name="text" value="1" />
+        </attr>
+        <!--文字指示器字号-->
+        <attr name="indicatorTextSize" format="dimension" />
+        <!--文字指示器：当前页颜色-->
+        <attr name="indicatorCurrentTextColor" format="color" />
+        <!--文字指示器：总页数颜色-->
+        <attr name="indicatorTotalTextColor" format="color" />
+        <!--文字指示器：分隔符，默认 / -->
+        <attr name="indicatorSeparatorText" format="string" />
+        <!--文字指示器：分隔符颜色，未设置时与总页数颜色一致-->
+        <attr name="indicatorSeparatorTextColor" format="color" />
         <!--是否可以点击浏览大图-->
         <attr name="previewLarger" format="boolean" />
         <!--自动轮播间隔时间，默认为3000毫秒，单位为毫秒-->

@@ -197,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:text="自定义轮播图"
+                android:text="自定义轮播图（圆点指示器）"
                 app:layout_constraintTop_toBottomOf="@+id/roundTextView" />
 
             <io.coderf.arklab.common.widget.customview.BannerView
@@ -207,8 +207,68 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 app:autoLoop="true"
                 app:dotPosition="inner_bottom_center"
+                app:indicatorStyle="dot"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/tv_banner"
+                app:leftBottomRadius="@dimen/radius_l"
+                app:leftTopRadius="@dimen/radius_l"
+                app:previewLarger="true"
+                app:rightBottomRadius="@dimen/radius_l"
+                app:rightTopRadius="@dimen/radius_l" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_banner_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="自定义轮播图（文字页码，右下角）"
+                app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
+
+            <io.coderf.arklab.common.widget.customview.BannerView
+                android:id="@+id/customBannerText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:autoLoop="true"
+                app:dotBottomMargin="10dp"
+                app:dotLeftMargin="12dp"
+                app:dotPosition="inner_bottom_right"
+                app:dotRightMargin="12dp"
+                app:indicatorCurrentTextColor="@color/theme_yellow"
+                app:indicatorSeparatorText="/"
+                app:indicatorSeparatorTextColor="@color/white"
+                app:indicatorStyle="text"
+                app:indicatorTextSize="@dimen/font_size_xl"
+                app:indicatorTotalTextColor="@color/white"
+                app:layout_constraintDimensionRatio="h,16:9"
+                app:layout_constraintTop_toBottomOf="@+id/tv_banner_text"
+                app:leftBottomRadius="@dimen/radius_l"
+                app:leftTopRadius="@dimen/radius_l"
+                app:previewLarger="true"
+                app:rightBottomRadius="@dimen/radius_l"
+                app:rightTopRadius="@dimen/radius_l" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_banner_text_center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="自定义轮播图（文字页码，底部居中）"
+                app:layout_constraintTop_toBottomOf="@+id/customBannerText" />
+
+            <io.coderf.arklab.common.widget.customview.BannerView
+                android:id="@+id/customBannerTextCenter"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:autoLoop="true"
+                app:dotPosition="inner_bottom_center"
+                app:indicatorCurrentTextColor="@color/theme_green"
+                app:indicatorStyle="text"
+                app:indicatorTextSize="@dimen/font_size_l"
+                app:indicatorTotalTextColor="@color/white"
+                app:layout_constraintDimensionRatio="h,16:9"
+                app:layout_constraintTop_toBottomOf="@+id/tv_banner_text_center"
                 app:leftBottomRadius="@dimen/radius_l"
                 app:leftTopRadius="@dimen/radius_l"
                 app:previewLarger="true"
@@ -221,7 +281,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:text="自定义ImageView"
-                app:layout_constraintTop_toBottomOf="@+id/customBannerPicture" />
+                app:layout_constraintTop_toBottomOf="@+id/customBannerTextCenter" />
 
             <io.coderf.arklab.common.widget.customview.CornerImageView
                 android:id="@+id/cornersImageView"
