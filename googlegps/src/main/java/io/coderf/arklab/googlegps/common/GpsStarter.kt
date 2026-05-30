@@ -413,10 +413,16 @@ class GpsStarter(
     }
 
     private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
-        val intent = buildServiceIntent(once)
-        context.startForegroundService(intent)
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        serviceBound = true
+        try {
+            val intent = buildServiceIntent(once)
+            context.startForegroundService(intent)
+            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            serviceBound = true
+            reconnectFailCount = 0
+        } catch (e: Exception) {
+            Log.w(TAG, "startForegroundService failed: ${e.message}")
+            scheduleServiceReconnect()
+        }
     }
 
     companion object {
