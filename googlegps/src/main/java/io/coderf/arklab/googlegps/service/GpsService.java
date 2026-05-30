@@ -3,6 +3,7 @@ package io.coderf.arklab.googlegps.service;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -19,6 +20,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Observer;
 
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
@@ -47,6 +49,9 @@ public class GpsService extends Service {
      * 日志标签
      */
     public final static String TAG = GpsService.class.getSimpleName();
+
+    private static final int BOOTSTRAP_NOTIFICATION_ID = 8291;
+    private static final String BOOTSTRAP_CHANNEL_ID = "gps_service_bootstrap";
 
     /**
      * 通知管理器实例
@@ -108,6 +113,16 @@ public class GpsService extends Service {
      * GPS 回调配置，可外部扩展实现上传等逻辑
      */
     private GpsCallback gpsCallback = new GpsCallback();
+
+    /** 在 bind 完成前先注入自定义回调，避免 onCreate 使用默认通知配置 */
+    private static volatile GpsCallback pendingGpsCallback;
+
+    /**
+     * 在 startForegroundService 之前调用，确保 Service 创建时即可使用业务侧 GpsCallback。
+     */
+    public static void setPendingGpsCallback(GpsCallback callback) {
+        pendingGpsCallback = callback;
+    }
 
     /**
      * 会话管理单例，存储运行时状态
@@ -224,20 +239,68 @@ public class GpsService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        if (pendingGpsCallback != null) {
+            gpsCallback = pendingGpsCallback;
+            pendingGpsCallback = null;
+        }
+        // 必须在 onCreate 最初尽快调用 startForeground，避免 Activity 初始化阻塞主线程时触发超时崩溃
+        promoteToForegroundImmediately();
         session = Session.getInstance();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // 初始化超时 Runnable
         initTimeoutRunnable();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(gpsCallback.getConfig().getNotificationId(),
-                    gpsCallback.getNotification(getApplicationContext()),
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
-        } else {
-            startForeground(gpsCallback.getConfig().getNotificationId(),
-                    gpsCallback.getNotification(getApplicationContext()));
-        }
         nextPointAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+    }
+
+    /**
+     * 使用轻量通知立即进入前台，不依赖 Bitmap 解码或业务侧复杂通知构建。
+     */
+    private void promoteToForegroundImmediately() {
+        try {
+            Notification notification = buildBootstrapNotification();
+            int notificationId = resolveForegroundNotificationId();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
+            } else {
+                startForeground(notificationId, notification);
+            }
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "bootstrap startForeground failed: " + t.getMessage());
+        }
+    }
+
+    private int resolveForegroundNotificationId() {
+        try {
+            return gpsCallback.getConfig().getNotificationId();
+        } catch (Throwable t) {
+            return BOOTSTRAP_NOTIFICATION_ID;
+        }
+    }
+
+    private Notification buildBootstrapNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    BOOTSTRAP_CHANNEL_ID,
+                    "位置服务",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            channel.setSound(null, null);
+            channel.setShowBadge(false);
+            manager.createNotificationChannel(channel);
+        }
+        return new NotificationCompat.Builder(this, BOOTSTRAP_CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.ic_menu_mylocation)
+                .setContentTitle("正在启动定位服务")
+                .setContentText("请稍候")
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .build();
     }
 
     // ========== 新增：初始化超时 Runnable ==========

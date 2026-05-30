@@ -120,6 +120,7 @@ class GpsStarter(
             return
         }
         try {
+            gpsCallback?.let { GpsService.setPendingGpsCallback(it) }
             val intent = buildServiceIntent(currentOnceMode)
             context.startForegroundService(intent)
             context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -414,6 +415,7 @@ class GpsStarter(
 
     private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
         try {
+            gpsCallback?.let { GpsService.setPendingGpsCallback(it) }
             val intent = buildServiceIntent(once)
             context.startForegroundService(intent)
             context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
