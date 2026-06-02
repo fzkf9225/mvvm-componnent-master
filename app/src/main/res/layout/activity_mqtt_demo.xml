@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:fillViewport="true"
+        tools:context=".activity.MqttDemoActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/vertical_margin_l">
+
+            <TextView
+                android:id="@+id/tv_mqtt_hint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="填写 Broker 与账号后连接。本页以 Java 调用 mqttcomponent 核心 API（MqttConnection）为例；在线心跳见 PresenceMqttClient。"
+                android:textColor="@color/hint_text_color"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_broker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="Broker 地址（可不带 tcp://）"
+                android:padding="@dimen/padding_m"
+                android:text="tcp://broker.emqx.io:1883"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_mqtt_hint"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_client_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="Client ID"
+                android:padding="@dimen/padding_m"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_broker"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="用户名"
+                android:padding="@dimen/padding_m"
+                android:text="demo"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_client_id"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="密码"
+                android:inputType="textPassword"
+                android:padding="@dimen/padding_m"
+                android:text="demo"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_username"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_subscribe_topic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="订阅主题（可空）"
+                android:padding="@dimen/padding_m"
+                android:text="mvvm/demo/in"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_password"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_publish_topic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="发布主题"
+                android:padding="@dimen/padding_m"
+                android:text="mvvm/demo/out"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_subscribe_topic"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_publish_message"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:gravity="top"
+                android:hint="发布消息体（JSON 或纯文本）"
+                android:padding="@dimen/padding_m"
+                android:text='{"hello":"mqttcomponent"}'
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_publish_topic"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="连接"
+                app:layout_constraintEnd_toStartOf="@id/btn_disconnect"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_publish_message" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_disconnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="断开"
+                app:layout_constraintEnd_toStartOf="@id/btn_publish"
+                app:layout_constraintStart_toEndOf="@id/btn_connect"
+                app:layout_constraintTop_toTopOf="@id/btn_connect" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_publish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="发布"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_disconnect"
+                app:layout_constraintTop_toTopOf="@id/btn_connect" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_presence_heartbeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="Presence 心跳示例"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_connect" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="状态：未连接"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_m"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_presence_heartbeat" />
+
+            <TextView
+                android:id="@+id/tv_log_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="运行日志"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_status" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_clear_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="清空"
+                app:layout_constraintBottom_toBottomOf="@id/tv_log_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_log_label" />
+
+            <TextView
+                android:id="@+id/tv_log"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@color/white"
+                android:minHeight="180dp"
+                android:padding="@dimen/padding_m"
+                android:textColor="@color/hint_text_color"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_log_label"
+                tools:text="[12:00:00] 等待连接..." />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

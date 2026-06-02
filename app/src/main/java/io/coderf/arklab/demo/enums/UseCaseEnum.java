@@ -17,6 +17,7 @@ import io.coderf.arklab.demo.activity.GoogleGPSActivity;
 import io.coderf.arklab.demo.activity.HiltActivity;
 import io.coderf.arklab.demo.activity.MediaActivity;
 import io.coderf.arklab.demo.activity.MediaCompressActivity;
+import io.coderf.arklab.demo.activity.MqttDemoActivity;
 import io.coderf.arklab.demo.activity.RecyclerViewSampleActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
@@ -71,6 +72,7 @@ public enum UseCaseEnum {
     WEB_VIEW_BASIC(WebViewBasicDemoActivity.class, "WebView 基础能力", "仅 common：原生选文件/定位/扫码 JSBridge，assets+沙盒演示页", null),
     WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "commonui：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
     CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
+    MQTT(MqttDemoActivity.class, "MQTT 组件", "mqttcomponent：Java 接入 MqttConnection / Presence 心跳示例", null),
 
     ;
 

@@ -217,6 +217,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.MqttDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
