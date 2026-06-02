@@ -58,6 +58,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.BottomSheetDialog;
+import io.coderf.arklab.common.widget.dialog.ChoiceSelectDialog;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
 import io.coderf.arklab.common.widget.dialog.EditAreaDialog;
@@ -194,6 +195,74 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                         dialog.dismiss();
                         baseView.showToast(list.get(pos).getPopupName());
                     })
+                    .builder()
+                    .show();
+        } else if (R.id.choiceSelectDialogSingle == view.getId()) {
+            List<PopupWindowBean> singleChoiceData = buildChoiceSelectData(false);
+            singleChoiceData.get(0).setSelected(true);
+            int themeColor = ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.themeColor);
+            new ChoiceSelectDialog<PopupWindowBean>(view.getContext())
+                    .setSelectionMode(ChoiceSelectDialog.MODE_SINGLE)
+                    .setData(singleChoiceData)
+                    .setTitleText("请选择城市（单选）")
+                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.black))
+                    .setTitleTextSize(17f)
+                    .setConfirmButtonText("确定")
+                    .setCancelButtonText("取消")
+                    .setConfirmButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
+                    .setCancelButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
+                    .setConfirmButtonBgColor(themeColor)
+                    .setConfirmButtonTextSize(15f)
+                    .setCancelButtonTextSize(15f)
+                    .setTextSizeSp(13f)
+                    .setTextColor(themeColor)
+                    .setItemHeightDp(48f)
+                    .setTextMarginDp(16f, 8f, 8f, 8f)
+                    .setIconMarginDp(8f, 16f)
+                    .setCheckedDrawable(DrawableUtil.createCheckedDrawable(view.getContext(), themeColor, DensityUtil.dp2px(view.getContext(), 16f)))
+                    .setUncheckedDrawable(DrawableUtil.createUncheckedDrawable(
+                            DensityUtil.dp2px(view.getContext(), 1),
+                            themeColor,
+                            DensityUtil.dp2px(view.getContext(), 16f)))
+                    .setMaxListHeightDp(320f)
+                    .setShowDivider(true)
+                    .setOnChoiceSelectListener((dialog, selected) ->
+                            baseView.showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
+                    .builder()
+                    .show();
+        } else if (R.id.choiceSelectDialogMulti == view.getId()) {
+            int themeColor = ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.themeColor);
+            new ChoiceSelectDialog<PopupWindowBean>(view.getContext())
+                    .setSelectionMode(ChoiceSelectDialog.MODE_MULTI)
+                    .setData(buildChoiceSelectData(false))
+                    .setShowSelectAllHeader(true)
+                    .setSelectAllHeaderText("全部")
+                    .setHeaderTextSizeSp(13f)
+                    .setHeaderTextColor(themeColor)
+                    .setTitleText("请选择城市（多选）")
+                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.black))
+                    .setTitleTextSize(17f)
+                    .setConfirmButtonText("确定")
+                    .setCancelButtonText("取消")
+                    .setConfirmButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
+                    .setCancelButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
+                    .setConfirmButtonBgColor(themeColor)
+                    .setConfirmButtonTextSize(15f)
+                    .setCancelButtonTextSize(15f)
+                    .setTextSizeSp(13f)
+                    .setTextColor(themeColor)
+                    .setItemHeightDp(48f)
+                    .setTextMarginDp(16f, 8f, 8f, 8f)
+                    .setIconMarginDp(8f, 16f)
+                    .setCheckedDrawable(DrawableUtil.createCheckedDrawable(view.getContext(), themeColor, DensityUtil.dp2px(view.getContext(), 16f)))
+                    .setUncheckedDrawable(DrawableUtil.createUncheckedDrawable(
+                            DensityUtil.dp2px(view.getContext(), 1),
+                            themeColor,
+                            DensityUtil.dp2px(view.getContext(), 16f)))
+                    .setMaxListHeightDp(360f)
+                    .setShowDivider(true)
+                    .setOnChoiceSelectListener((dialog, selected) ->
+                            baseView.showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
                     .builder()
                     .show();
         } else if (R.id.messageDialog == view.getId()) {
@@ -463,6 +532,16 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
 
             return item;
         }
+    }
+
+    private List<PopupWindowBean> buildChoiceSelectData(boolean defaultSelected) {
+        List<PopupWindowBean> list = new ArrayList<>();
+        for (PopupWindowBean bean : dataList) {
+            PopupWindowBean item = new PopupWindowBean(bean.getPopupId(), bean.getPopupName());
+            item.setSelected(defaultSelected);
+            list.add(item);
+        }
+        return list;
     }
 
     public static String loadJSONFromAsset(Context context, String fileName) {

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_l"
+        android:paddingEnd="@dimen/padding_l">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/padding_xl"
+            android:paddingBottom="@dimen/padding_m"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_18"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/v_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/h_line_color"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toBottomOf="@+id/v_title_line" />
+
+        <io.coderf.arklab.common.widget.customview.CornerButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/hint_text_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_confirm"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_options"
+            app:radius="20dp"
+            app:strokeColor="@color/hint_text_color"
+            app:strokeWidth="0dp" />
+
+        <io.coderf.arklab.common.widget.customview.CornerButton
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xl"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xl"
+            android:layout_marginBottom="@dimen/vertical_margin_l"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/rv_options"
+            app:radius="20dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
