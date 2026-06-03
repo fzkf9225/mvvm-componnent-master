@@ -65,6 +65,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
                         LogUtil.logger(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
                         showToast("下载成功！");
                     }, throwable -> {
+                        LogUtil.logger(ApiRetrofit.TAG, "下载失败：" + throwable.getMessage());
                         if (throwable instanceof BaseException baseException) {
                             showToast(baseException.getErrorMsg());
                             return;
@@ -117,7 +118,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
 //                    true);
 
 // 方式3：使用扩展配置类（更清晰）
-            UpdateConfig updateConfig = new UpdateConfig.Builder(this,  binding.editUrl.getText().toString().trim())
+            UpdateConfig updateConfig = new UpdateConfig.Builder(this, binding.editApk.getText().toString().trim())
                     .setSaveFileName("app_v2.0.apk")
                     .setUpdateMessage("1. 修复已知问题\n2. 优化用户体验")
                     .setCurrentVersionName("1.0.0")
@@ -142,7 +143,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
 
                         @Override
                         public void onError(Exception e) {
-
+                            LogUtil.logger(ApiRetrofit.TAG, "下载失败：" + e.getMessage());
                         }
                     })
                     .build();
@@ -170,6 +171,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
                     .subscribe(file -> {
                         showToast("下载成功！");
                     }, throwable -> {
+                        LogUtil.logger(ApiRetrofit.TAG, "下载失败：" + throwable.getMessage());
                         if (throwable instanceof BaseException baseException) {
                             showToast(baseException.getErrorMsg());
                             return;

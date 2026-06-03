@@ -132,9 +132,7 @@ public class DownloadManager {
     }
 
     public Single<List<File>> downloadBatch(Activity context, List<String> urlList) {
-        return downloadBatch(context, urlList,
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() +
-                        File.separator + FileUtil.getDefaultBasePath(context) + File.separator);
+        return downloadBatch(context, urlList, FileUtil.getDefaultDownloadDir(context));
     }
 
     public Observable<File> download(Activity context, String fileUrl) {

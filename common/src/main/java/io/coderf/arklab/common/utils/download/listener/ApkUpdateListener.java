@@ -77,7 +77,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                 return;
             }
         }
-        String saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator;
+        String saveBasePath = FileUtil.getDefaultDownloadDir(mContext);
         if(!TextUtils.isEmpty(saveFileName)){
             File targetFile = new File(saveBasePath,saveFileName);
             if(targetFile.exists()&&targetFile.isFile()){
@@ -103,7 +103,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
         DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
         Disposable disposable = DownloadRetrofitFactory.enqueue(
                         apkUrl,
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator,
+                        FileUtil.getDefaultDownloadDir(mContext),
                         saveFileName,
                         headers,
                         downloadListener

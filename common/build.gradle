@@ -108,7 +108,9 @@ dependencies {
     implementation libs.refresh.header.classics
     implementation libs.refresh.footer.classics
 
-    implementation libs.androidx.lifecycle.lifecycle.extensions
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.common.java8
     //放着没有及时回收造成RxJava内存泄漏
     implementation libs.com.trello.rxlifecycle2.rxlifecycle.components
     //是否需要ExoPlayer模式
@@ -139,7 +141,6 @@ dependencies {
     testImplementation libs.androidx.paging.common
 // [可选] RxJava 支持
     implementation libs.paging.rxjava3
-    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
     implementation libs.androidx.paging.runtime.ktx
     implementation libs.kotlinx.coroutines.core
 

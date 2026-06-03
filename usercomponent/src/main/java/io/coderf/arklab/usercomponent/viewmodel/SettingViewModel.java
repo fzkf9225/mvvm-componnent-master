@@ -51,8 +51,8 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
                 UpdateManager.getInstance().checkUpdateInfo((Activity) view.getContext(),
-                        "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk",
-                        "qq_hd_mini_1.4.apk",
+                        "https://github.com/square/leakcanary/releases/download/v2.14/leakcanary-android-release.apk",
+                        "leakcanary-android-release.apk",
                         "1、修复已知bug",
                         "1.0.1");
                 baseView.hideLoading();

@@ -126,8 +126,7 @@ public class UpdateManager {
         mDownloadingUrls.add(apkUrl);
         DownloadNotificationUtil notificationUtil = new DownloadNotificationUtil(context.getApplicationContext());
 
-        String saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                .getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(context) + File.separator;
+        String saveBasePath = FileUtil.getDefaultDownloadDir(context);
 
         return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener)
                 .map(file -> {

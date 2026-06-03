@@ -41,6 +41,11 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     }
 
     @Override
+    protected boolean shouldApplyEdgeToEdge() {
+        return false;
+    }
+
+    @Override
     public String setTitleBar() {
         return null;
     }

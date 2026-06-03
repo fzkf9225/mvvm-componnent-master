@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -779,6 +781,24 @@ public final class FileUtil {
             return packageArr[0];
         }
         return packageArr[1];
+    }
+
+    /**
+     * 应用专属下载目录（无需 WRITE_EXTERNAL_STORAGE，兼容 Android 10+）。
+     */
+    @NonNull
+    public static String getDefaultDownloadDir(@NonNull Context context) {
+        File baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if (baseDir == null) {
+            baseDir = new File(context.getFilesDir(), Environment.DIRECTORY_DOWNLOADS);
+        }
+        File appDir = new File(baseDir, getDefaultBasePath(context));
+        if (!appDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            appDir.mkdirs();
+        }
+        String path = appDir.getAbsolutePath();
+        return path.endsWith(File.separator) ? path : path + File.separator;
     }
 
     /**

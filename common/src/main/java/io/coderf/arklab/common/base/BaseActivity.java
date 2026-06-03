@@ -27,6 +27,7 @@ import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
+import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 /**
  * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
@@ -67,6 +68,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (shouldApplyEdgeToEdge()) {
+            EdgeToEdgeHelper.enable(this);
+        }
         super.onCreate(savedInstanceState);
         createAuthManager();
         AppManager.getAppManager().addActivity(this);
@@ -149,13 +153,33 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbarBind.setToolbarConfig(createdToolbarConfig());
-            toolbarBind.mainBar.getLayoutParams().height = toolbarBind.getToolbarConfig().getHeight();
+            if (shouldApplyEdgeToEdge()) {
+                EdgeToEdgeHelper.applyToolbarInsets(
+                        toolbarBind.mainBar, toolbarBind.getToolbarConfig().getHeight());
+                EdgeToEdgeHelper.applyNavigationBarInsets(toolbarBind.mainContainer);
+            } else {
+                toolbarBind.mainBar.getLayoutParams().height = toolbarBind.getToolbarConfig().getHeight();
+            }
             toolbarBind.mainBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
             createdToolbarConfig();
             binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);
+            if (shouldApplyEdgeToEdge()) {
+                if (enableImmersionBar()) {
+                    EdgeToEdgeHelper.applyNavigationBarInsets(binding.getRoot());
+                } else {
+                    EdgeToEdgeHelper.applySystemBarInsets(binding.getRoot());
+                }
+            }
         }
+    }
+
+    /**
+     * 是否启用 Android 15 Edge-to-Edge（全屏视频等页面可返回 false）。
+     */
+    protected boolean shouldApplyEdgeToEdge() {
+        return true;
     }
 
     /**

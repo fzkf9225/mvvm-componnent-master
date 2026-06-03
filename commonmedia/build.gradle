@@ -71,7 +71,8 @@ dependencies {
     implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
     implementation libs.activity
-    implementation libs.androidx.lifecycle.lifecycle.extensions
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.common.java8
     implementation libs.org.aspectj.aspectjrt
     implementation libs.googlecode.isoparser
     implementation libs.com.squareup.picasso.picasso

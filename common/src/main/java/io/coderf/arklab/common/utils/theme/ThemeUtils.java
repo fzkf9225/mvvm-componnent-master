@@ -9,6 +9,8 @@ import android.view.WindowManager;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -160,18 +162,14 @@ public class ThemeUtils {
      */
     public static void setupStatusBar(Activity activity, @ColorInt int statusBarColor, boolean lightStatusBar) {
         try {
-            // 设置状态栏背景色
-            activity.getWindow().setStatusBarColor(statusBarColor);
-
-            // 设置状态栏文字颜色
-            View decorView = activity.getWindow().getDecorView();
-            int flags = decorView.getSystemUiVisibility();
-            if (lightStatusBar) {
-                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            Window window = activity.getWindow();
+            WindowInsetsControllerCompat insetsController =
+                    WindowCompat.getInsetsController(window, window.getDecorView());
+            if (insetsController != null) {
+                insetsController.setAppearanceLightStatusBars(!lightStatusBar);
             }
-            decorView.setSystemUiVisibility(flags);
+            // Edge-to-Edge 下状态栏透明，由 Toolbar 背景色呈现
+            window.setStatusBarColor(Color.TRANSPARENT);
 
             // 处理MIUI和Flyme的特殊情况
             if (lightStatusBar) {

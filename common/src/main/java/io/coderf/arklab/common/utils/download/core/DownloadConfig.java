@@ -1,7 +1,6 @@
 package io.coderf.arklab.common.utils.download.core;
 
 import android.app.Activity;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -147,8 +146,7 @@ public class DownloadConfig {
         public DownloadConfig build() {
             // 设置默认值
             if (TextUtils.isEmpty(saveBasePath)) {
-                saveBasePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                        .getAbsolutePath() + File.separator + FileUtil.getDefaultBasePath(mContext) + File.separator;
+                saveBasePath = FileUtil.getDefaultDownloadDir(mContext);
             }
             return new DownloadConfig(this);
         }
