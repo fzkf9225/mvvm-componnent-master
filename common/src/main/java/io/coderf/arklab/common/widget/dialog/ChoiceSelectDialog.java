@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -416,6 +417,19 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    @Override
+    public void show() {
+        Window window = getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.gravity = gravity;
+            window.setAttributes(lp);
+        }
+        super.show();
+    }
+
     public DialogChoiceSelectBinding getBinding() {
         return binding;
     }
@@ -548,14 +562,44 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
             ));
         }
 
-        if (maxListHeightPx > 0) {
-            binding.rvOptions.post(() -> {
-                int contentHeight = binding.rvOptions.computeVerticalScrollRange();
-                ViewGroup.LayoutParams lp = binding.rvOptions.getLayoutParams();
-                lp.height = Math.min(contentHeight, maxListHeightPx);
-                binding.rvOptions.setLayoutParams(lp);
-            });
+        applyListHeight();
+    }
+
+    /**
+     * 在 show 之前同步确定列表高度，避免 post 异步改高度导致弹窗先居中再跳到底部。
+     */
+    private void applyListHeight() {
+        int listHeight = computeListHeightPx();
+        if (listHeight <= 0) {
+            return;
         }
+        ViewGroup.LayoutParams lp = binding.rvOptions.getLayoutParams();
+        lp.height = listHeight;
+        binding.rvOptions.setLayoutParams(lp);
+    }
+
+    private int getListItemCount() {
+        int count = menuData != null ? menuData.size() : 0;
+        if (showSelectAllHeader && selectionMode == MODE_MULTI) {
+            count += 1;
+        }
+        return count;
+    }
+
+    private int computeListHeightPx() {
+        int itemCount = getListItemCount();
+        if (itemCount == 0) {
+            return 0;
+        }
+        int singleItemHeight = itemHeightPx > 0
+                ? itemHeightPx
+                : DensityUtil.dp2px(context, 35f);
+        int dividerHeight = showDivider ? DensityUtil.dp2px(context, 1) * (itemCount - 1) : 0;
+        int totalHeight = singleItemHeight * itemCount + dividerHeight;
+        if (maxListHeightPx > 0) {
+            return Math.min(totalHeight, maxListHeightPx);
+        }
+        return totalHeight;
     }
 
     private void applyAdapterStyles() {
