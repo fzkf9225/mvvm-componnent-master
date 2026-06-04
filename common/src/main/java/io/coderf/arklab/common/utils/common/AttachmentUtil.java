@@ -367,21 +367,21 @@ public class AttachmentUtil {
         if (TextUtils.isEmpty(mineType)) {
             return false;
         }
-        return mineType.startsWith("image/") || mineType.startsWith("IMAGE/");
+        return mineType.startsWith("image/") || mineType.startsWith("IMAGE/") || ConstantsHelper.IMAGE_TYPE.contains(mineType);
     }
 
     public static boolean isVideoType(String mineType) {
         if (TextUtils.isEmpty(mineType)) {
             return false;
         }
-        return mineType.startsWith("video/") || mineType.startsWith("VIDEO/");
+        return mineType.startsWith("video/") || mineType.startsWith("VIDEO/") || ConstantsHelper.VIDEO_TYPE.contains(mineType);
     }
 
     public static boolean isAudioType(String mineType) {
         if (TextUtils.isEmpty(mineType)) {
             return false;
         }
-        return mineType.startsWith("audio/") || mineType.startsWith("AUDIO/");
+        return mineType.startsWith("audio/") || mineType.startsWith("AUDIO/") || ConstantsHelper.AUDIO_TYPE.contains(mineType);
     }
 
     public static AttachmentTypeEnum getMediaType(Context context, String path) {

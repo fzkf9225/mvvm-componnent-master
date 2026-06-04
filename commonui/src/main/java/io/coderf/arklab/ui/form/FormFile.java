@@ -113,7 +113,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             fileAddSrc = typedArray.getResourceId(R.styleable.FormUI_fileAddSrc, R.mipmap.ic_add_theme_color);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
-            formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 14));
+            formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 12));
             emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
@@ -128,7 +128,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
             typedArray.recycle();
         } else {
-            formTextSize = DensityUtil.sp2px(getContext(), 14);
+            formTextSize = DensityUtil.sp2px(getContext(), 12);
             itemTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -157,6 +157,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         fileAddAdapter = new FileAddAdapter();
         fileAddAdapter.setRadius(radius);
         fileAddAdapter.setBgColor(bgColor);
+        fileAddAdapter.setItemTextSize(formTextSize);
         fileAddAdapter.setTextColor(itemTextColor);
         fileAddAdapter.setFileClearListener(this);
         mediaRecyclerView.setLayoutManager(new FullyLinearLayoutManager(getContext()) {

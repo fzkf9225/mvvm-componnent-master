@@ -65,6 +65,15 @@ public class FormFilePreview extends FormMedia {
      */
     protected Drawable fileDrawable;
     /**
+     * 左侧图标宽高
+     */
+    protected float fileIconWidth;
+    /**
+     * 左侧图标宽高
+     */
+    protected float fileIconHeight;
+
+    /**
      * 是否展示文件图标
      */
     protected boolean isShowFileDrawable;
@@ -81,7 +90,6 @@ public class FormFilePreview extends FormMedia {
         super(context, attrs, defStyleAttr);
     }
 
-
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
@@ -95,6 +103,8 @@ public class FormFilePreview extends FormMedia {
             if (TextUtils.isEmpty(emptyText)) {
                 emptyText = "暂无附件";
             }
+            fileIconWidth = typedArray.getDimension(R.styleable.FormUI_fileIconWidth, 0);
+            fileIconHeight = typedArray.getDimension(R.styleable.FormUI_fileIconHeight, 0);
             itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
         } else {
             itemTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
@@ -102,6 +112,8 @@ public class FormFilePreview extends FormMedia {
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件";
             isShowFileDrawable = true;
+            fileIconWidth = 0;
+            fileIconHeight = 0;
         }
         if (fileDrawable == null) {
             fileDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.icon_file);
@@ -119,6 +131,9 @@ public class FormFilePreview extends FormMedia {
             FileShowAdapter fileShowAdapter = (FileShowAdapter) adapter;
             fileShowAdapter.setRadius(radius);
             fileShowAdapter.setBgColor(bgColor);
+            fileShowAdapter.setItemTextSize(formTextSize);
+            fileShowAdapter.setFileIconWidth((int) fileIconWidth);
+            fileShowAdapter.setFileIconHeight((int) fileIconHeight);
             fileShowAdapter.setTextColor(itemTextColor);
             fileShowAdapter.setFileDrawable(fileDrawable);
             fileShowAdapter.setShowFileDrawable(isShowFileDrawable);

@@ -119,6 +119,10 @@
         <attr name="labelIconWidth" format="dimension"/>
         <!-- label左侧图标高度 -->
         <attr name="labelIconHeight" format="dimension"/>
+        <!-- 文件左侧图标宽度 -->
+        <attr name="fileIconWidth" format="dimension"/>
+        <!-- 文件左侧图标高度 -->
+        <attr name="fileIconHeight" format="dimension"/>
         <!-- label左侧图标endMargin -->
         <attr name="labelIconEndMargin" format="dimension"/>
         <!-- label左侧图标startMargin -->

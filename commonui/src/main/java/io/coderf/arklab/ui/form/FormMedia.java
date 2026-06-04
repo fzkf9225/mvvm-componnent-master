@@ -62,6 +62,10 @@ public abstract class FormMedia extends ConstraintLayout {
      */
     protected float formRequiredSize;
     /**
+     * 文本大小
+     */
+    protected float formTextSize;
+    /**
      * 系统相机拍照完成后是否写入姿态/GPS 等到 EXIF（失败则跳过，不影响回调）
      */
     protected boolean writeCaptureExifMetadata;
@@ -258,6 +262,7 @@ public abstract class FormMedia extends ConstraintLayout {
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
+            formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 14));
 
             radius = typedArray.getDimension(R.styleable.FormUI_mediaItemRadius, DensityUtil.dp2px(getContext(), 8));
 
@@ -327,7 +332,7 @@ public abstract class FormMedia extends ConstraintLayout {
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
-
+            formTextSize = DensityUtil.sp2px(getContext(), 14);
             borderBottomStartMargin = DensityUtil.dp2px(getContext(), 16f);
             borderBottomEndMargin = 0;
             labelStartMargin = DensityUtil.dp2px(getContext(), 16f);
