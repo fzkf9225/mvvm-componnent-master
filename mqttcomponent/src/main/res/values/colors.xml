@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mqtt_green_color">#FF19CE58</color>
+    <color name="mqtt_green_color_1f">#1F19CE58</color>
+    <color name="mqtt_reconnect_track">#FFD7F3E3</color>
+    <color name="mqtt_text_secondary">#FF696969</color>
+    <color name="mqtt_text_hint">#FF9C9C9C</color>
+    <color name="mqtt_exit_red">#FFFF2D2E</color>
+</resources>
