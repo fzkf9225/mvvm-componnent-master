@@ -107,6 +107,75 @@
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
 
+            <TextView
+                android:id="@+id/tv_reconnect_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="断连自动重连（自定义策略示例）"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_m"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_password" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_max_reconnect_attempts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_s"
+                android:hint="最大重连次数"
+                android:inputType="number"
+                android:padding="@dimen/padding_m"
+                android:text="20"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toStartOf="@id/edit_reconnect_interval_seconds"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_reconnect_section"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.CornerEditText
+                android:id="@+id/edit_reconnect_interval_seconds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:hint="重连间隔（秒）"
+                android:inputType="number"
+                android:padding="@dimen/padding_m"
+                android:text="5"
+                android:textSize="@dimen/font_size_m"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/edit_max_reconnect_attempts"
+                app:layout_constraintTop_toTopOf="@id/edit_max_reconnect_attempts"
+                app:radius="@dimen/radius_l"
+                app:strokeColor="@color/h_line_color"
+                app:strokeWidth="1dp" />
+
+            <TextView
+                android:id="@+id/tv_reconnect_hint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="连接成功后关闭 WiFi/移动网络可模拟意外断连；重连过程会弹出 MqttReconnectDialog。"
+                android:textColor="@color/hint_text_color"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_max_reconnect_attempts" />
+
             <io.coderf.arklab.common.widget.customview.CornerEditText
                 android:id="@+id/edit_subscribe_topic"
                 android:layout_width="0dp"
@@ -121,7 +190,7 @@
                 app:bgColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_password"
+                app:layout_constraintTop_toBottomOf="@id/tv_reconnect_hint"
                 app:radius="@dimen/radius_l"
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />

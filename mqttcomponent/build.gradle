@@ -32,10 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
     api libs.paho.org.eclipse.paho.mqttv5.client
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

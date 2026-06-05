@@ -24,6 +24,7 @@ import io.coderf.arklab.mqttcomponent.presence.HeartbeatScheduler;
 import io.coderf.arklab.mqttcomponent.presence.PresenceConnectionInfo;
 import io.coderf.arklab.mqttcomponent.presence.PresenceConnectionListener;
 import io.coderf.arklab.mqttcomponent.presence.PresenceMqttClient;
+import io.coderf.arklab.mqttcomponent.widget.MqttReconnectDialog;
 
 /**
  * MQTT 组件演示页（Java 接入示例）。
@@ -32,6 +33,8 @@ import io.coderf.arklab.mqttcomponent.presence.PresenceMqttClient;
  * <ul>
  *     <li>{@link MqttConnection} + {@link MqttConnectionConfig.Builder} 建立连接、订阅、发布</li>
  *     <li>{@link AbstractMqttConnectionListener} 接收连接与下行消息</li>
+ *     <li>意外断连后的自定义自动重连（{@code maxReconnectAttempts} / {@code reconnectIntervalSeconds}）</li>
+ *     <li>{@link MqttReconnectDialog} 展示重连进度，支持「直接退出」</li>
  *     <li>{@link PresenceMqttClient} + {@link HeartbeatScheduler} 在线心跳（独立通道示例）</li>
  * </ul>
  * <p>
@@ -49,6 +52,9 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
 
     @Nullable
     private HeartbeatScheduler heartbeatScheduler;
+
+    @Nullable
+    private MqttReconnectDialog reconnectDialog;
 
     private final StringBuilder logBuffer = new StringBuilder();
     private final SimpleDateFormat timeFormat =
@@ -68,6 +74,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     public void initView(Bundle savedInstanceState) {
         binding.editClientId.setText("android_demo_" + System.currentTimeMillis());
         appendLog("请填写 Broker 与账号，点击「连接」开始演示。");
+        appendLog("连接后可关闭网络模拟断连，观察自动重连与弹窗。");
 
         binding.btnConnect.setOnClickListener(v -> connectMqtt());
         binding.btnDisconnect.setOnClickListener(v -> disconnectMqtt());
@@ -86,6 +93,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
 
     /**
      * 核心层示例：Java 通过 Builder 组装 {@link MqttConnectionConfig} 并连接。
+     * 配置自定义重连策略后，意外断连将自动重试并在 UI 展示 {@link MqttReconnectDialog}。
      */
     private void connectMqtt() {
         String broker = textOf(binding.editBroker);
@@ -93,6 +101,8 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         String username = textOf(binding.editUsername);
         String password = textOf(binding.editPassword);
         String subscribeTopic = textOf(binding.editSubscribeTopic);
+        int maxReconnectAttempts = parsePositiveInt(textOf(binding.editMaxReconnectAttempts), 20);
+        int reconnectIntervalSeconds = parsePositiveInt(textOf(binding.editReconnectIntervalSeconds), 5);
 
         if (TextUtils.isEmpty(broker) || TextUtils.isEmpty(clientId)
                 || TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
@@ -107,6 +117,8 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
                 .password(password)
                 .keepAliveSeconds(60)
                 .automaticReconnect(true)
+                .maxReconnectAttempts(maxReconnectAttempts)
+                .reconnectIntervalSeconds(reconnectIntervalSeconds)
                 .resubscribeOnReconnect(true)
                 .dispatchConnectOnMainThread(true);
 
@@ -120,20 +132,38 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
             mqttConnection = new MqttConnection("MqttDemo", (tag, message) -> appendLog("[Paho] " + message));
         }
 
+        dismissReconnectDialog();
         appendLog("正在连接 " + broker + " ...");
+        appendLog("重连策略: 最多 " + maxReconnectAttempts + " 次, 间隔 " + reconnectIntervalSeconds + " 秒");
         updateStatus("连接中...");
 
         mqttConnection.connect(config, new AbstractMqttConnectionListener() {
             @Override
             public void onConnected(boolean reconnect) {
+                dismissReconnectDialog();
                 appendLog(reconnect ? "自动重连成功" : "连接成功");
                 updateStatus("已连接");
             }
 
             @Override
             public void onDisconnected() {
-                appendLog("连接已断开");
-                updateStatus("已断开");
+                appendLog("意外断连，即将自动重连...");
+                updateStatus("重连中...");
+            }
+
+            @Override
+            public void onReconnecting(int attempt, int maxAttempts, int nextRetryDelaySeconds) {
+                appendLog("安排第 " + attempt + "/" + maxAttempts + " 次重连，"
+                        + nextRetryDelaySeconds + " 秒后尝试");
+                showOrUpdateReconnectDialog(attempt, maxAttempts, nextRetryDelaySeconds);
+            }
+
+            @Override
+            public void onReconnectExhausted() {
+                dismissReconnectDialog();
+                appendLog("已达最大重连次数，停止重连");
+                updateStatus("重连失败");
+                showToast("MQTT 重连失败，请检查网络后重新连接");
             }
 
             @Override
@@ -155,6 +185,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     }
 
     private void disconnectMqtt() {
+        dismissReconnectDialog();
         stopPresenceDemo();
         if (mqttConnection != null) {
             mqttConnection.disconnect();
@@ -176,6 +207,29 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         }
         boolean ok = mqttConnection.publish(topic, payload, 1, false);
         appendLog(ok ? "发布成功 -> " + topic : "发布失败");
+    }
+
+    private void showOrUpdateReconnectDialog(int attempt, int maxAttempts, int nextRetryDelaySeconds) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (reconnectDialog == null || !reconnectDialog.isShowing()) {
+            reconnectDialog = new MqttReconnectDialog(this)
+                    .setOnExitClickListener(() -> {
+                        appendLog("用户取消重连，主动断开");
+                        disconnectMqtt();
+                    })
+                    .builder();
+            reconnectDialog.show();
+        }
+        reconnectDialog.updateReconnectState(attempt, maxAttempts, nextRetryDelaySeconds);
+    }
+
+    private void dismissReconnectDialog() {
+        if (reconnectDialog != null) {
+            reconnectDialog.dismiss();
+            reconnectDialog = null;
+        }
     }
 
     /**
@@ -268,8 +322,21 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         return editText.getText() == null ? "" : editText.getText().toString().trim();
     }
 
+    private static int parsePositiveInt(String value, int defaultValue) {
+        if (TextUtils.isEmpty(value)) {
+            return defaultValue;
+        }
+        try {
+            int parsed = Integer.parseInt(value);
+            return parsed > 0 ? parsed : defaultValue;
+        } catch (NumberFormatException ignored) {
+            return defaultValue;
+        }
+    }
+
     @Override
     protected void onDestroy() {
+        dismissReconnectDialog();
         stopPresenceDemo();
         if (mqttConnection != null) {
             mqttConnection.disconnect();

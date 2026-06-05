@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="mqtt_reconnect_dialog_title">Network disconnected</string>
+    <string name="mqtt_reconnect_dialog_status">Reconnecting automatically, please wait</string>
+    <string name="mqtt_reconnect_dialog_exit">Exit</string>
+    <string name="mqtt_reconnect_detail_retrying">Attempt %1$d/%2$d · connecting…</string>
+    <string name="mqtt_reconnect_detail_countdown">Attempt %1$d/%2$d · retry in %3$d s</string>
 </resources>

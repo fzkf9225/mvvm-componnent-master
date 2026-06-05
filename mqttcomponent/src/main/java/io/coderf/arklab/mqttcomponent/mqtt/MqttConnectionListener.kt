@@ -11,11 +11,29 @@ import org.eclipse.paho.mqttv5.common.MqttException
  */
 interface MqttConnectionListener {
 
-    /** 连接建立完成（含 Paho 自动重连成功） */
+    /** 连接建立完成（含 Paho / 自定义自动重连成功） */
     fun onConnected(reconnect: Boolean) {}
 
-    /** 连接断开（含网络中断；自动重连期间也会触发） */
+    /**
+     * 意外断连（网络中断等）；若配置了重连，后续还会收到 [onReconnecting]。
+     * 主动 [MqttConnection.disconnect] 不会触发。
+     */
     fun onDisconnected() {}
+
+    /**
+     * 正在安排下一次重连（自定义重连策略下每次重试前触发；Paho 无限重连模式不触发）。
+     *
+     * @param attempt 当前为第几次重连（从 1 开始）
+     * @param maxAttempts 最大重连次数
+     * @param nextRetryDelaySeconds 距离下次发起连接还有多少秒
+     */
+    fun onReconnecting(attempt: Int, maxAttempts: Int, nextRetryDelaySeconds: Int) {}
+
+    /**
+     * 已达最大重连次数，不再重连（彻底断连）。
+     * 仅当 [MqttConnectionConfig.maxReconnectAttempts] 非 null 时可能触发。
+     */
+    fun onReconnectExhausted() {}
 
     /** MQTT 协议级错误 */
     fun onError(exception: MqttException?) {}

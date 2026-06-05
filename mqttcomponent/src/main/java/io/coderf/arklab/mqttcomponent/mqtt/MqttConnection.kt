@@ -18,28 +18,8 @@ import java.nio.charset.StandardCharsets
  *
  * ## 设计要点
  * - 每个实例拥有独立的 [MqttClient] 与 clientId，多实例互不影响
- * - 支持自动重连、地址规范化、线程安全的 connect / publish / disconnect
+ * - 支持 Paho 自动重连、可配置自定义重连、地址规范化、线程安全的 connect / publish / disconnect
  * - 连接参数全部来自 [MqttConnectionConfig]，库内无硬编码业务配置
- *
- * ## Java 接入示例
- * ```
- * MqttConnection connection = new MqttConnection();
- * MqttConnectionConfig config = MqttConnectionConfig.builder()
- *     .brokerAddress("192.168.1.100:1883")
- *     .clientId("android_001")
- *     .username("user")
- *     .password("token")
- *     .subscribeTopics("app/notify")
- *     .build();
- * connection.connect(config, new AbstractMqttConnectionListener() {
- *     @Override
- *     public void onConnected(boolean reconnect) { }
- *     @Override
- *     public void onMessage(String topic, String payload) { }
- * });
- * connection.publish("app/notify", "{\"hello\":1}");
- * connection.disconnect();
- * ```
  *
  * @param tag    日志 Tag，便于多实例区分
  * @param logger 日志实现，默认 [MqttLogger.DEFAULT]
@@ -54,6 +34,11 @@ class MqttConnection @JvmOverloads constructor(
     private var currentConfig: MqttConnectionConfig? = null
     private var listener: MqttConnectionListener? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+
+    private var manualDisconnect = false
+    private var hasConnectedOnce = false
+    private var reconnectAttempt = 0
+    private var reconnectRunnable: Runnable? = null
 
     /** 当前是否已连接 Broker */
     fun isConnected(): Boolean = mqttClient?.isConnected == true
@@ -80,6 +65,9 @@ class MqttConnection @JvmOverloads constructor(
         synchronized(lock) {
             this.listener = listener
             currentConfig = config
+            manualDisconnect = false
+            cancelReconnectLocked()
+            reconnectAttempt = 0
             try {
                 if (mqttClient?.isConnected == true) {
                     dispatchConnected(config, reconnect = false)
@@ -93,7 +81,7 @@ class MqttConnection @JvmOverloads constructor(
             } catch (e: MqttException) {
                 logger.log(tag, "MQTT 连接失败: ${e.message}")
                 closeClientLocked()
-                listener.onError(e)
+                dispatchError(config, e)
             }
         }
     }
@@ -103,9 +91,14 @@ class MqttConnection @JvmOverloads constructor(
      */
     fun disconnect() {
         synchronized(lock) {
-            val topics = currentConfig?.subscribeTopics
+            manualDisconnect = true
+            cancelReconnectLocked()
+            val config = currentConfig
+            val topics = config?.subscribeTopics
             listener = null
             currentConfig = null
+            hasConnectedOnce = false
+            reconnectAttempt = 0
             try {
                 val client = mqttClient
                 if (client != null && client.isConnected && !topics.isNullOrEmpty()) {
@@ -122,11 +115,6 @@ class MqttConnection @JvmOverloads constructor(
 
     /**
      * 发布文本消息。
-     *
-     * @param topic    目标主题
-     * @param payload  消息体（UTF-8）
-     * @param qos      QoS，默认取 [MqttConnectionConfig.defaultPublishQos]
-     * @param retained 是否保留，默认取 [MqttConnectionConfig.defaultPublishRetained]
      */
     @JvmOverloads
     fun publish(
@@ -163,13 +151,21 @@ class MqttConnection @JvmOverloads constructor(
     }
 
     private fun buildOptions(config: MqttConnectionConfig): MqttConnectionOptions {
+        val usePahoAutoReconnect = config.automaticReconnect && !config.usesCustomReconnect()
         return MqttConnectionOptions().apply {
             isCleanStart = config.cleanStart
             userName = config.username
             setPassword(config.password.toByteArray(StandardCharsets.UTF_8))
-            isAutomaticReconnect = config.automaticReconnect
+            isAutomaticReconnect = usePahoAutoReconnect
             connectionTimeout = config.connectionTimeoutSeconds
             keepAliveInterval = config.keepAliveSeconds
+            if (usePahoAutoReconnect) {
+                val minDelay = config.reconnectMinDelaySeconds
+                    ?: MqttConnectionConfig.PAHO_DEFAULT_RECONNECT_MIN_DELAY_SECONDS
+                val maxDelay = config.reconnectMaxDelaySeconds
+                    ?: MqttConnectionConfig.PAHO_DEFAULT_RECONNECT_MAX_DELAY_SECONDS
+                setAutomaticReconnectDelay(minDelay, maxDelay)
+            }
             config.lwt?.let { lwt ->
                 val willMsg = MqttMessage(lwt.message.toByteArray(StandardCharsets.UTF_8)).apply {
                     qos = lwt.qos
@@ -194,9 +190,101 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    private fun scheduleCustomReconnectLocked(config: MqttConnectionConfig) {
+        if (manualDisconnect || !config.usesCustomReconnect()) {
+            return
+        }
+        val maxAttempts = config.maxReconnectAttempts ?: return
+        cancelReconnectLocked()
+        reconnectAttempt++
+        if (reconnectAttempt > maxAttempts) {
+            logger.log(tag, "MQTT 已达最大重连次数: $maxAttempts")
+            dispatchReconnectExhausted(config)
+            return
+        }
+        val delaySeconds = config.effectiveReconnectIntervalSeconds()
+        logger.log(
+            tag,
+            "MQTT 安排重连: attempt=$reconnectAttempt/$maxAttempts delay=${delaySeconds}s",
+        )
+        dispatchReconnecting(config, reconnectAttempt, maxAttempts, delaySeconds)
+        val runnable = Runnable {
+            synchronized(lock) {
+                attemptCustomReconnectLocked(config)
+            }
+        }
+        reconnectRunnable = runnable
+        mainHandler.postDelayed(runnable, delaySeconds * 1000L)
+    }
+
+    private fun attemptCustomReconnectLocked(config: MqttConnectionConfig) {
+        reconnectRunnable = null
+        if (manualDisconnect) {
+            return
+        }
+        val client = mqttClient
+        if (client == null) {
+            scheduleCustomReconnectLocked(config)
+            return
+        }
+        try {
+            if (client.isConnected) {
+                reconnectAttempt = 0
+                return
+            }
+            client.connect(buildOptions(config))
+        } catch (e: MqttException) {
+            logger.log(tag, "MQTT 重连失败: ${e.message}")
+            scheduleCustomReconnectLocked(config)
+        }
+    }
+
+    private fun cancelReconnectLocked() {
+        reconnectRunnable?.let { mainHandler.removeCallbacks(it) }
+        reconnectRunnable = null
+    }
+
+    private fun resetReconnectStateLocked() {
+        cancelReconnectLocked()
+        reconnectAttempt = 0
+    }
+
     private fun dispatchConnected(config: MqttConnectionConfig, reconnect: Boolean) {
         val target = listener ?: return
         val action = { target.onConnected(reconnect) }
+        dispatchOnMainThread(config, action)
+    }
+
+    private fun dispatchDisconnected(config: MqttConnectionConfig) {
+        val target = listener ?: return
+        val action = { target.onDisconnected() }
+        dispatchOnMainThread(config, action)
+    }
+
+    private fun dispatchReconnecting(
+        config: MqttConnectionConfig,
+        attempt: Int,
+        maxAttempts: Int,
+        delaySeconds: Int,
+    ) {
+        val target = listener ?: return
+        val action = { target.onReconnecting(attempt, maxAttempts, delaySeconds) }
+        dispatchOnMainThread(config, action)
+    }
+
+    private fun dispatchReconnectExhausted(config: MqttConnectionConfig) {
+        val target = listener ?: return
+        val action = { target.onReconnectExhausted() }
+        dispatchOnMainThread(config, action)
+    }
+
+    private fun dispatchError(config: MqttConnectionConfig, exception: MqttException) {
+        val target = listener ?: return
+        val action = { target.onError(exception) }
+        dispatchOnMainThread(config, action)
+    }
+
+    private fun dispatchOnMainThread(config: MqttConnectionConfig, action: () -> Unit) {
         if (config.dispatchConnectOnMainThread) {
             mainHandler.post(action)
         } else {
@@ -228,12 +316,27 @@ class MqttConnection @JvmOverloads constructor(
 
     override fun disconnected(disconnectResponse: MqttDisconnectResponse?) {
         logger.log(tag, "MQTT 已断开: $disconnectResponse")
-        listener?.onDisconnected()
+        val config = synchronized(lock) { currentConfig } ?: return
+        if (manualDisconnect) {
+            return
+        }
+        dispatchDisconnected(config)
+        synchronized(lock) {
+            if (manualDisconnect || currentConfig == null) {
+                return
+            }
+            if (hasConnectedOnce && config.usesCustomReconnect()) {
+                scheduleCustomReconnectLocked(config)
+            }
+        }
     }
 
     override fun mqttErrorOccurred(exception: MqttException?) {
         logger.log(tag, "MQTT 错误: ${exception?.message}")
-        listener?.onError(exception)
+        val config = synchronized(lock) { currentConfig } ?: return
+        if (exception != null) {
+            dispatchError(config, exception)
+        }
     }
 
     override fun messageArrived(topic: String?, message: MqttMessage?) {
@@ -250,8 +353,11 @@ class MqttConnection @JvmOverloads constructor(
 
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
         logger.log(tag, "MQTT 连接完成 reconnect=$reconnect uri=$serverURI")
+        synchronized(lock) {
+            hasConnectedOnce = true
+            resetReconnectStateLocked()
+        }
         val config = synchronized(lock) { currentConfig } ?: return
-        // cleanStart 时会话订阅会丢失，重连后需重新订阅
         if (!reconnect || config.resubscribeOnReconnect) {
             subscribeIfNeeded(config)
         }
