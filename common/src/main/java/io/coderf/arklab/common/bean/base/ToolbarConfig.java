@@ -113,7 +113,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setHeight(int height) {
         this.height = height;
-        notifyPropertyChanged(BR.title);
+        notifyPropertyChanged(BR.height);
         return this;
     }
 

@@ -153,12 +153,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbarBind.setToolbarConfig(createdToolbarConfig());
+            applyToolbarHeight();
             if (shouldApplyEdgeToEdge()) {
-                EdgeToEdgeHelper.applyToolbarInsets(
-                        toolbarBind.mainBar, toolbarBind.getToolbarConfig().getHeight());
                 EdgeToEdgeHelper.applyNavigationBarInsets(toolbarBind.mainContainer);
-            } else {
-                toolbarBind.mainBar.getLayoutParams().height = toolbarBind.getToolbarConfig().getHeight();
             }
             toolbarBind.mainBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
@@ -180,6 +177,22 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      */
     protected boolean shouldApplyEdgeToEdge() {
         return true;
+    }
+
+    /**
+     * 应用 {@link ToolbarConfig#getHeight()} 到 Toolbar。
+     * 若在 {@link #initView} / {@link #initData} 中调用 {@code setHeight()}，请在此后再次调用本方法。
+     */
+    protected void applyToolbarHeight() {
+        if (!hasToolBar() || toolbarBind == null) {
+            return;
+        }
+        int height = toolbarBind.getToolbarConfig().getHeight();
+        if (shouldApplyEdgeToEdge()) {
+            EdgeToEdgeHelper.applyToolbarInsets(toolbarBind.mainBar, height);
+        } else {
+            EdgeToEdgeHelper.applyToolbarHeight(toolbarBind.mainBar, height);
+        }
     }
 
     /**
