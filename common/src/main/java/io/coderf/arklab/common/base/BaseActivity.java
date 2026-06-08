@@ -155,7 +155,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             toolbarBind.setToolbarConfig(createdToolbarConfig());
             applyToolbarHeight();
             if (shouldApplyEdgeToEdge()) {
-                EdgeToEdgeHelper.applyNavigationBarInsets(toolbarBind.mainContainer);
+                EdgeToEdgeHelper.applyNavigationBarInsets(toolbarBind.mainContainer, shouldAdjustBottomForIme());
             }
             toolbarBind.mainBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         } else {
@@ -163,10 +163,11 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             binding = DataBindingUtil.setContentView(this, getLayoutId());
             binding.setLifecycleOwner(this);
             if (shouldApplyEdgeToEdge()) {
+                boolean adjustForIme = shouldAdjustBottomForIme();
                 if (enableImmersionBar()) {
-                    EdgeToEdgeHelper.applyNavigationBarInsets(binding.getRoot());
+                    EdgeToEdgeHelper.applyNavigationBarInsets(binding.getRoot(), adjustForIme);
                 } else {
-                    EdgeToEdgeHelper.applySystemBarInsets(binding.getRoot());
+                    EdgeToEdgeHelper.applySystemBarInsets(binding.getRoot(), adjustForIme);
                 }
             }
         }
@@ -177,6 +178,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      */
     protected boolean shouldApplyEdgeToEdge() {
         return true;
+    }
+
+    /**
+     * 软键盘弹出时，是否将底部内容顶起以避开输入法。
+     * <p>
+     * 默认 {@code false}：贴底控件（如协议勾选框）位置不变，可能被键盘遮挡。
+     * 表单页需要输入框随键盘上移时，子类可返回 {@code true}。
+     * <p>
+     * 无需修改 {@code AndroidManifest.xml} 的 {@code windowSoftInputMode}，由框架统一处理。
+     */
+    protected boolean shouldAdjustBottomForIme() {
+        return false;
     }
 
     /**

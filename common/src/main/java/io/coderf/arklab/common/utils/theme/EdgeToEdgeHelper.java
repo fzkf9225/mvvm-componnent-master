@@ -66,31 +66,66 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * 正文容器：底部留出导航栏 / 输入法区域。
+     * 正文容器：底部留出导航栏；默认不随软键盘上顶。
+     *
+     * @see #applyNavigationBarInsets(View, boolean)
      */
     public static void applyNavigationBarInsets(@NonNull View content) {
+        applyNavigationBarInsets(content, false);
+    }
+
+    /**
+     * 正文容器：底部留出导航栏，可选是否随软键盘上顶。
+     *
+     * @param adjustForIme {@code true} 时底部内容随输入法上移；{@code false} 时贴底控件保持原位。
+     */
+    public static void applyNavigationBarInsets(@NonNull View content, boolean adjustForIme) {
         ViewCompat.setOnApplyWindowInsetsListener(content, (v, windowInsets) -> {
             Insets navBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
             Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-            int bottom = Math.max(navBars.bottom, ime.bottom);
+            int bottom = adjustForIme ? Math.max(navBars.bottom, ime.bottom) : navBars.bottom;
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bottom);
-            return windowInsets;
+            return stripImeInsets(windowInsets, adjustForIme);
         });
         ViewCompat.requestApplyInsets(content);
     }
 
     /**
-     * 无 Toolbar 页面：同时处理顶部状态栏与底部导航栏。
+     * 无 Toolbar 页面：同时处理顶部状态栏与底部导航栏；默认不随软键盘上顶。
+     *
+     * @see #applySystemBarInsets(View, boolean)
      */
     public static void applySystemBarInsets(@NonNull View root) {
+        applySystemBarInsets(root, false);
+    }
+
+    /**
+     * 无 Toolbar 页面：同时处理顶部状态栏与底部导航栏，可选是否随软键盘上顶。
+     *
+     * @param adjustForIme {@code true} 时底部内容随输入法上移；{@code false} 时贴底控件保持原位。
+     */
+    public static void applySystemBarInsets(@NonNull View root, boolean adjustForIme) {
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
             Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
             Insets navBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
             Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-            int bottom = Math.max(navBars.bottom, ime.bottom);
+            int bottom = adjustForIme ? Math.max(navBars.bottom, ime.bottom) : navBars.bottom;
             v.setPadding(statusBars.left, statusBars.top, statusBars.right, bottom);
-            return windowInsets;
+            return stripImeInsets(windowInsets, adjustForIme);
         });
         ViewCompat.requestApplyInsets(root);
+    }
+
+    private static WindowInsetsCompat stripImeInsets(WindowInsetsCompat windowInsets, boolean adjustForIme) {
+        if (adjustForIme) {
+            return windowInsets;
+        }
+        Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+        if (ime.bottom <= 0 && ime.top <= 0 && ime.left <= 0 && ime.right <= 0) {
+            return windowInsets;
+        }
+        return new WindowInsetsCompat.Builder(windowInsets)
+                .setInsets(WindowInsetsCompat.Type.ime(), Insets.NONE)
+                .build();
     }
 }
