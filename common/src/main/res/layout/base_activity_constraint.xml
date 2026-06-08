@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <io.coderf.arklab.common.widget.customview.ActionToolbar
             android:id="@+id/main_bar"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
@@ -31,6 +31,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
             android:theme="@style/ToolBarStyle_black"
+            app:buttonGravity="center_vertical"
             app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
             app:popupTheme="@style/OverflowMenuStyle">
 
@@ -38,14 +39,14 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:ellipsize="end"
                 android:lines="1"
                 android:text="@{toolbarConfig.title}"
                 android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
                 android:textSize="@dimen/font_size_xxl" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </io.coderf.arklab.common.widget.customview.ActionToolbar>
 
         <FrameLayout
             android:id="@+id/main_container"

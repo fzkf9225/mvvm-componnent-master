@@ -187,11 +187,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (!hasToolBar() || toolbarBind == null) {
             return;
         }
-        int height = toolbarBind.getToolbarConfig().getHeight();
+        ToolbarConfig toolbarConfig = toolbarBind.getToolbarConfig();
+        int height = toolbarConfig.getHeight();
+        boolean customHeight = toolbarConfig.hasCustomHeight();
         if (shouldApplyEdgeToEdge()) {
-            EdgeToEdgeHelper.applyToolbarInsets(toolbarBind.mainBar, height);
+            EdgeToEdgeHelper.applyToolbarInsets(toolbarBind.mainBar, height, customHeight);
         } else {
-            EdgeToEdgeHelper.applyToolbarHeight(toolbarBind.mainBar, height);
+            EdgeToEdgeHelper.applyToolbarHeight(toolbarBind.mainBar, height, customHeight);
         }
     }
 

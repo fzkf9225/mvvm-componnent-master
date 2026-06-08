@@ -117,6 +117,11 @@ public class ToolbarConfig extends BaseObservable {
         return this;
     }
 
+    /** 是否通过 {@link #setHeight(int)} 显式指定了 Toolbar 内容区高度。 */
+    public boolean hasCustomHeight() {
+        return height > 0;
+    }
+
     @Bindable
     public String getTitleHint() {
         return titleHint;

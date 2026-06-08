@@ -28,11 +28,12 @@
             app:layout_scrollFlags="scroll|enterAlways"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-            <androidx.appcompat.widget.Toolbar
+            <io.coderf.arklab.common.widget.customview.ActionToolbar
                 android:id="@+id/main_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
+                app:buttonGravity="center_vertical"
                 app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
                 android:theme="@style/ToolBarStyle_black"
                 app:popupTheme="@style/OverflowMenuStyle">
@@ -41,14 +42,14 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center"
                     android:ellipsize="end"
                     android:lines="1"
                     android:text="@{toolbarConfig.title}"
                     android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
                     android:textSize="18sp" />
 
-            </androidx.appcompat.widget.Toolbar>
+            </io.coderf.arklab.common.widget.customview.ActionToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
