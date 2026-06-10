@@ -58,11 +58,11 @@ public class MMKVHelper {
         } else if (object instanceof List) {
             mmkv.encode(key, new Gson().toJson(object));
         } else {
-            mmkv.encode(key, object.toString());
+            mmkv.encode(key, object == null ? null : object.toString());
         }
     }
 
-    public <T> void setArray( String name,List<T> list) {
+    public <T> void setArray(String name, List<T> list) {
         if (list == null || list.isEmpty()) {
             mmkv.putInt(name + "size", 0);
             int size = mmkv.getInt(name + "size", 0);
