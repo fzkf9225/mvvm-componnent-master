@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.api.FileApiService;
 import io.coderf.arklab.ui.api.MediaUploadConfig;
@@ -31,7 +32,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 
-public abstract class FormMedia extends ConstraintLayout {
+public abstract class FormMedia extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
     /**
      * 主要用于适配器中图片item、视频item等背景颜色

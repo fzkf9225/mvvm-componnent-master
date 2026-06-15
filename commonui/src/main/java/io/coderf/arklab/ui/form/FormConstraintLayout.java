@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
+import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
 import io.coderf.arklab.ui.enums.LabelTextStyleEnum;
@@ -30,7 +31,7 @@ import io.coderf.arklab.ui.inter.FormTextWatcherAfter;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
-public class FormConstraintLayout extends ConstraintLayout {
+public class FormConstraintLayout extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
     /**
      * label文字内容
