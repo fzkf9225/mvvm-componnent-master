@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cancel">Cancel</string>
-    <string name="confirm">OK</string>
+    <string name="gps_cancel">Cancel</string>
+    <string name="gps_confirm">OK</string>
     <string name="gps_background_permission_message">For a better experience, this app needs background location access. Tap \"Go to settings\" to choose \"Allow all the time\", or open \"App info\" to enable it manually.</string>
     <string name="gps_background_permission_go_settings">Go to settings</string>
     <string name="gps_background_permission_app_details">App info</string>
@@ -383,7 +383,7 @@
     <string name="points">points</string>
     <string name="started_at">started at</string>
     <string name="txt_number_of_points">Number of points</string>
-    <string name="save">Save</string>
+    <string name="gps_save">Save</string>
 
     <string name="pref_filedetails_title">File and Folder Details</string>
     <string name="absolute_timeout_title">Absolute time to GPS fix</string>
@@ -456,7 +456,7 @@
     <string name="gpslogger_permissions_rationale_message_battery_optimization"><![CDATA[<b>Ignore battery optimization</b> - Allow this app to run in the background by reducing battery optimization. ]]></string>
     <string name="gpslogger_permissions_permanently_denied"><![CDATA[You have denied one or more permissions that this app requires.  You will need to relaunch, or go to the system settings screen to grant these permissions.  <br /><br />If you have permanently denied permissions you can reset them in the system settings. ]]></string>
     <string name="gpslogger_permissions_background_location"><![CDATA[To allow GPSLogger to run in the background, you will need to grant it an additional permission.  On the next screen please select: ]]></string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="gps_privacy_policy">Privacy Policy</string>
     <string name="debuglog_attach_to_email">Attach debug log to email</string>
     <string name="debuglog_attach_to_email_summary">Attaches debug log to an email along with some diagnostic information</string>
     <string name="change_language_title">Change language</string>

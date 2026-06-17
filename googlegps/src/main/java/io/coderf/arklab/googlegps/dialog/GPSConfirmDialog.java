@@ -453,12 +453,12 @@ public class GPSConfirmDialog extends Dialog {
                 ? View.VISIBLE : View.GONE);
 
         if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.gps_confirm));
         } else {
             binding.dialogConfirm.setText(positiveText);
         }
         if (TextUtils.isEmpty(negativeText)) {
-            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.gps_cancel));
         } else {
             binding.dialogCancel.setText(negativeText);
         }

@@ -84,6 +84,9 @@ class GpsLifecycleObserver constructor(
     /** 当前由本 Observer 展示的确认框，用于避免连续 [startCheck] 叠两层弹窗 */
     private var activeGpsConfirmDialog: GPSConfirmDialog? = null
 
+    /** 最近一次 [startCheck] 传入的回调，ActivityResult 等异步路径统一走这里 */
+    private var activeCheckCallback: ((Boolean, String) -> Unit)? = null
+
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
 
@@ -119,7 +122,6 @@ class GpsLifecycleObserver constructor(
             ActivityResultContracts.StartActivityForResult(),
             appSettingsCallback
         )
-        callback?.let { startCheck(it) }
     }
 
     public fun startCheck(
@@ -136,6 +138,7 @@ class GpsLifecycleObserver constructor(
         callback: (Boolean, String) -> Unit
     ) {
         this.checkBackPermission = checkBackPermission
+        activeCheckCallback = callback
         //检查gps 是否打开
         val isOpenGps: Boolean = isOpen(context!!)
         if (!isOpenGps) {
@@ -165,11 +168,11 @@ class GpsLifecycleObserver constructor(
         ActivityResultCallback { result: ActivityResult ->
             val isOpenGps: Boolean = isOpen(context!!)
             if (!isOpenGps) {
-                callback?.let { it(false, "请先打开GPS") }
+                notifyCheckResult(false, "请先打开GPS")
                 return@ActivityResultCallback
             }
             dismissActiveGpsConfirmIfShowing()
-            callback?.let { checkForegroundPermission(checkBackPermission, it) }
+            activeCheckCallback?.let { checkForegroundPermission(checkBackPermission, it) }
         }
 
     /**
@@ -217,11 +220,11 @@ class GpsLifecycleObserver constructor(
         ActivityResultCallback<Map<String, @JvmSuppressWildcards Boolean>> { result ->
             for ((_, value) in result) {
                 if (java.lang.Boolean.FALSE == value) {
-                    callback?.let { it(false, "请先同意定位权限") }
+                    notifyCheckResult(false, "请先同意定位权限")
                     return@ActivityResultCallback
                 }
             }
-            callback?.let { checkBackgroundPermission(checkBackPermission, it) }
+            activeCheckCallback?.let { checkBackgroundPermission(checkBackPermission, it) }
         }
 
     /**
@@ -263,7 +266,7 @@ class GpsLifecycleObserver constructor(
                     ))
                     .setCanOutSide(false)
                     .setOnNegativeClickListener {
-                        callback(true, "后台定位权限被拒绝")
+                        notifyCheckResult(true, "后台定位权限被拒绝")
                     }
                     .setOnNeutralClickListener { _ ->
                         openAppPermissionSettings()
@@ -289,10 +292,10 @@ class GpsLifecycleObserver constructor(
      */
     private val backgroundPermissionCallback = ActivityResultCallback<Boolean> { granted ->
         if (granted) {
-            callback?.invoke(true, "已授权后台定位权限")
+            notifyCheckResult(true, "已授权后台定位权限")
             return@ActivityResultCallback
         }
-        callback?.invoke(true, "后台定位权限被拒绝")
+        notifyCheckResult(true, "后台定位权限被拒绝")
     }
 
     /** 从应用详情返回后重新检测后台定位权限 */
@@ -303,10 +306,14 @@ class GpsLifecycleObserver constructor(
             PermissionsChecker.getInstance()
                 .lacksPermissions(ctx, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) {
-            callback?.invoke(true, "后台定位权限被拒绝")
+            notifyCheckResult(true, "后台定位权限被拒绝")
         } else {
-            callback?.invoke(true, "已授权后台定位权限")
+            notifyCheckResult(true, "已授权后台定位权限")
         }
+    }
+
+    private fun notifyCheckResult(isGranted: Boolean, message: String) {
+        activeCheckCallback?.invoke(isGranted, message)
     }
 
     private fun openAppPermissionSettings() {
@@ -328,9 +335,8 @@ class GpsLifecycleObserver constructor(
      */
     private fun showGpsConfirmDialogIfIdle(dialog: GPSConfirmDialog): Boolean {
         if (activeGpsConfirmDialog?.isShowing == true) {
-            return false
+            activeGpsConfirmDialog?.dismiss()
         }
-        activeGpsConfirmDialog?.dismiss()
         activeGpsConfirmDialog = dialog
         dialog.setOnDismissListener {
             if (activeGpsConfirmDialog === dialog) {
@@ -370,6 +376,7 @@ class GpsLifecycleObserver constructor(
         super.onDestroy(owner)
         activeGpsConfirmDialog?.dismiss()
         activeGpsConfirmDialog = null
+        activeCheckCallback = null
         gpsLauncher?.unregister()
         locationPermissionLauncher?.unregister()
         backPermissionLauncher?.unregister()
