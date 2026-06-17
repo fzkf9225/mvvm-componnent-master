@@ -2,6 +2,10 @@
 <resources>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
+    <string name="gps_background_permission_message">为了您更好的体验，应用需要访问后台定位权限。请点击「前往设置」选择「始终允许」，或在「应用详情」中手动开启。</string>
+    <string name="gps_background_permission_go_settings">前往设置</string>
+    <string name="gps_background_permission_app_details">应用详情</string>
+    <string name="gps_background_permission_later">稍后再说</string>
     <string name="title_drawer_uploadsettings">上传设置</string>
     <string name="navigation_drawer_open">打开导航栏</string>
     <string name="navigation_drawer_close">关闭导航栏</string>

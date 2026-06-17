@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -16,6 +17,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import io.coderf.arklab.googlegps.dialog.GPSConfirmDialog
 import io.coderf.arklab.googlegps.permission.PermissionsChecker
+import io.coderf.arklab.googlegps.R
 import kotlin.collections.iterator
 
 /**
@@ -77,6 +79,7 @@ class GpsLifecycleObserver constructor(
     private var gpsLauncher: ActivityResultLauncher<Intent>? = null
     private var locationPermissionLauncher: ActivityResultLauncher<Array<String>>? = null
     private var backPermissionLauncher: ActivityResultLauncher<String>? = null
+    private var appSettingsLauncher: ActivityResultLauncher<Intent>? = null
 
     /** 当前由本 Observer 展示的确认框，用于避免连续 [startCheck] 叠两层弹窗 */
     private var activeGpsConfirmDialog: GPSConfirmDialog? = null
@@ -102,21 +105,20 @@ class GpsLifecycleObserver constructor(
         )
 
         backPermissionLauncher = fragment?.registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { grantResult ->
-            if (grantResult) {
-                callback?.let { it(true, "后台定位权限被拒绝") }
-                return@registerForActivityResult
-            }
-            callback?.let { it(true, "已授权后台定位权限") }
-        }
-            ?: activity?.registerForActivityResult(ActivityResultContracts.RequestPermission()) { grantResult ->
-                if (grantResult) {
-                    callback?.let { it(true, "后台定位权限被拒绝") }
-                    return@registerForActivityResult
-                }
-                callback?.let { it(true, "已授权后台定位权限") }
-            }
+            ActivityResultContracts.RequestPermission(),
+            backgroundPermissionCallback
+        ) ?: activity?.registerForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+            backgroundPermissionCallback
+        )
+
+        appSettingsLauncher = fragment?.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            appSettingsCallback
+        ) ?: activity?.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            appSettingsCallback
+        )
         callback?.let { startCheck(it) }
     }
 
@@ -240,18 +242,33 @@ class GpsLifecycleObserver constructor(
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
             ) {
+                val config = GpsSettingConfig.getInstance()
                 val dialog = configuredDialog()
-                    .setMessage(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionDialogMessage, "为了您更好的体验，应用需要访问后台定位权限，需要您前往“设置/权限管理”，手动将“位置信息”修改为“始终允许”"))
-                    .setPositiveText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionPositiveText, "前往设置"))
-                    .setNegativeText(configOrDefault(GpsSettingConfig.getInstance().backgroundPermissionNegativeText, "稍后再说"))
+                    .setThreeButtonMode(true)
+                    .setMessage(configOrDefault(
+                        config.backgroundPermissionDialogMessage,
+                        context!!.getString(R.string.gps_background_permission_message)
+                    ))
+                    .setPositiveText(configOrDefault(
+                        config.backgroundPermissionPositiveText,
+                        context!!.getString(R.string.gps_background_permission_go_settings)
+                    ))
+                    .setNeutralText(configOrDefault(
+                        config.backgroundPermissionNeutralText,
+                        context!!.getString(R.string.gps_background_permission_app_details)
+                    ))
+                    .setNegativeText(configOrDefault(
+                        config.backgroundPermissionNegativeText,
+                        context!!.getString(R.string.gps_background_permission_later)
+                    ))
                     .setCanOutSide(false)
                     .setOnNegativeClickListener {
                         callback(true, "后台定位权限被拒绝")
                     }
+                    .setOnNeutralClickListener { _ ->
+                        openAppPermissionSettings()
+                    }
                     .setOnPositiveClickListener { _ ->
-//                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//                        val uri = Uri.fromParts("package", context!!.packageName, null)
-//                        intent.setData(uri)
                         backPermissionLauncher?.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     }
                     .builder()
@@ -264,6 +281,40 @@ class GpsLifecycleObserver constructor(
             return
         }
         callback(true, "已授权")
+    }
+
+    /**
+     * 后台定位授权回调。
+     * 优先走系统「始终允许」选择页；用户拒绝后再次点击会改走应用详情。
+     */
+    private val backgroundPermissionCallback = ActivityResultCallback<Boolean> { granted ->
+        if (granted) {
+            callback?.invoke(true, "已授权后台定位权限")
+            return@ActivityResultCallback
+        }
+        callback?.invoke(true, "后台定位权限被拒绝")
+    }
+
+    /** 从应用详情返回后重新检测后台定位权限 */
+    private val appSettingsCallback = ActivityResultCallback<ActivityResult> {
+        dismissActiveGpsConfirmIfShowing()
+        val ctx = context ?: return@ActivityResultCallback
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            PermissionsChecker.getInstance()
+                .lacksPermissions(ctx, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        ) {
+            callback?.invoke(true, "后台定位权限被拒绝")
+        } else {
+            callback?.invoke(true, "已授权后台定位权限")
+        }
+    }
+
+    private fun openAppPermissionSettings() {
+        val ctx = context ?: return
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", ctx.packageName, null)
+        }
+        appSettingsLauncher?.launch(intent)
     }
 
     private fun configuredDialog(): GPSConfirmDialog {
@@ -322,5 +373,6 @@ class GpsLifecycleObserver constructor(
         gpsLauncher?.unregister()
         locationPermissionLauncher?.unregister()
         backPermissionLauncher?.unregister()
+        appSettingsLauncher?.unregister()
     }
 }

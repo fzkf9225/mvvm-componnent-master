@@ -120,18 +120,24 @@ public class GpsSettingConfig {
     private String backgroundPermissionPositiveText = "";
     /** 后台定位权限引导取消按钮文案，空则使用内置默认文案 */
     private String backgroundPermissionNegativeText = "";
+    /** 后台定位权限引导「应用详情」按钮文案，空则使用内置默认文案 */
+    private String backgroundPermissionNeutralText = "";
     /** 弹窗内容文字颜色，null 表示使用默认样式 */
     private Integer confirmDialogTextColor = null;
     /** 弹窗确认按钮文字颜色，null 表示使用默认样式 */
     private Integer confirmDialogPositiveTextColor = null;
     /** 弹窗取消按钮文字颜色，null 表示使用默认样式 */
     private Integer confirmDialogNegativeTextColor = null;
+    /** 弹窗第三按钮（如应用详情）文字颜色，null 表示使用默认样式 */
+    private Integer confirmDialogNeutralTextColor = null;
     /** 弹窗内容文字大小（sp），<=0 表示使用默认样式 */
     private float confirmDialogContentTextSizeSp = 0f;
     /** 弹窗确认按钮文字大小（sp），<=0 表示使用默认样式 */
     private float confirmDialogPositiveTextSizeSp = 0f;
     /** 弹窗取消按钮文字大小（sp），<=0 表示使用默认样式 */
     private float confirmDialogNegativeTextSizeSp = 0f;
+    /** 弹窗第三按钮文字大小（sp），<=0 表示使用默认样式 */
+    private float confirmDialogNeutralTextSizeSp = 0f;
 
     // ========== 常量定义 ==========
 
@@ -694,6 +700,15 @@ public class GpsSettingConfig {
         return this;
     }
 
+    public String getBackgroundPermissionNeutralText() {
+        return backgroundPermissionNeutralText;
+    }
+
+    public GpsSettingConfig setBackgroundPermissionNeutralText(String backgroundPermissionNeutralText) {
+        this.backgroundPermissionNeutralText = backgroundPermissionNeutralText != null ? backgroundPermissionNeutralText : "";
+        return this;
+    }
+
     public Integer getConfirmDialogTextColor() {
         return confirmDialogTextColor;
     }
@@ -721,6 +736,15 @@ public class GpsSettingConfig {
         return this;
     }
 
+    public Integer getConfirmDialogNeutralTextColor() {
+        return confirmDialogNeutralTextColor;
+    }
+
+    public GpsSettingConfig setConfirmDialogNeutralTextColor(Integer confirmDialogNeutralTextColor) {
+        this.confirmDialogNeutralTextColor = confirmDialogNeutralTextColor;
+        return this;
+    }
+
     public float getConfirmDialogContentTextSizeSp() {
         return confirmDialogContentTextSizeSp;
     }
@@ -745,6 +769,15 @@ public class GpsSettingConfig {
 
     public GpsSettingConfig setConfirmDialogNegativeTextSizeSp(float confirmDialogNegativeTextSizeSp) {
         this.confirmDialogNegativeTextSizeSp = confirmDialogNegativeTextSizeSp;
+        return this;
+    }
+
+    public float getConfirmDialogNeutralTextSizeSp() {
+        return confirmDialogNeutralTextSizeSp;
+    }
+
+    public GpsSettingConfig setConfirmDialogNeutralTextSizeSp(float confirmDialogNeutralTextSizeSp) {
+        this.confirmDialogNeutralTextSizeSp = confirmDialogNeutralTextSizeSp;
         return this;
     }
 

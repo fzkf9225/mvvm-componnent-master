@@ -45,7 +45,7 @@ public class GPSConfirmDialog extends Dialog {
     /**
      * 弹框按钮点击监听
      */
-    private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
+    private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener, onNeutralClickListener;
     /**
      * 是否允许点击外部取消
      */
@@ -59,9 +59,17 @@ public class GPSConfirmDialog extends Dialog {
      */
     private String negativeText = null;
     /**
+     * 弹框中间第三按钮文字（如「应用详情」）
+     */
+    private String neutralText = null;
+    /**
      * 是否显示按钮和分割线
      */
-    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowSLineView = true, isShowHLineView = true;
+    private boolean isShowPositiveView = true, isShowNegativeView = true, isShowNeutralView = false, isShowSLineView = true, isShowHLineView = true;
+    /**
+     * 是否使用三按钮纵向布局
+     */
+    private boolean isThreeButtonMode = false;
     /**
      * 弹框右侧确认按钮文字颜色
      */
@@ -70,6 +78,10 @@ public class GPSConfirmDialog extends Dialog {
      * 弹框右侧取消按钮文字颜色
      */
     private ColorStateList negativeTextColor = null;
+    /**
+     * 弹框第三按钮文字颜色
+     */
+    private ColorStateList neutralTextColor = null;
     /**
      * 弹框内容文字颜色
      */
@@ -88,6 +100,8 @@ public class GPSConfirmDialog extends Dialog {
     private float positiveTextSize = 0;
     /** 取消按钮文字大小 (sp) */
     private float negativeTextSize = 0;
+    /** 第三按钮文字大小 (sp) */
+    private float neutralTextSize = 0;
     /** 内容文字大小 (sp) */
     private float contentTextSize = 0;
     /** 确定按钮背景 */
@@ -133,6 +147,11 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog setOnNeutralClickListener(OnDialogInterfaceClickListener onNeutralClickListener) {
+        this.onNeutralClickListener = onNeutralClickListener;
+        return this;
+    }
+
     public GPSConfirmDialog setMessage(String message) {
         this.content = message;
         return this;
@@ -168,6 +187,11 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog setNeutralTextColor(@ColorInt int color) {
+        neutralTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
     public GPSConfirmDialog setTextColor(@ColorInt int color) {
         textColor = ColorStateList.valueOf(color);
         return this;
@@ -188,6 +212,11 @@ public class GPSConfirmDialog extends Dialog {
         return this;
     }
 
+    public GPSConfirmDialog setNeutralText(String neutralText) {
+        this.neutralText = neutralText;
+        return this;
+    }
+
     public GPSConfirmDialog setShowPositiveView(boolean isShowPositiveView) {
         this.isShowPositiveView = isShowPositiveView;
         return this;
@@ -195,6 +224,18 @@ public class GPSConfirmDialog extends Dialog {
 
     public GPSConfirmDialog setShowNegativeView(boolean isShowNegativeView) {
         this.isShowNegativeView = isShowNegativeView;
+        return this;
+    }
+
+    public GPSConfirmDialog setShowNeutralView(boolean isShowNeutralView) {
+        this.isShowNeutralView = isShowNeutralView;
+        this.isThreeButtonMode = isShowNeutralView;
+        return this;
+    }
+
+    public GPSConfirmDialog setThreeButtonMode(boolean threeButtonMode) {
+        this.isThreeButtonMode = threeButtonMode;
+        this.isShowNeutralView = threeButtonMode;
         return this;
     }
 
@@ -207,6 +248,11 @@ public class GPSConfirmDialog extends Dialog {
 
     public GPSConfirmDialog setNegativeTextSize(float spSize) {
         this.negativeTextSize = spSize;
+        return this;
+    }
+
+    public GPSConfirmDialog setNeutralTextSize(float spSize) {
+        this.neutralTextSize = spSize;
         return this;
     }
 
@@ -290,6 +336,11 @@ public class GPSConfirmDialog extends Dialog {
             setNegativeTextColor(negativeColor);
         }
 
+        Integer neutralColor = config.getConfirmDialogNeutralTextColor();
+        if (neutralColor != null) {
+            setNeutralTextColor(neutralColor);
+        }
+
         if (config.getConfirmDialogContentTextSizeSp() > 0) {
             setContentTextSize(config.getConfirmDialogContentTextSizeSp());
         }
@@ -298,6 +349,9 @@ public class GPSConfirmDialog extends Dialog {
         }
         if (config.getConfirmDialogNegativeTextSizeSp() > 0) {
             setNegativeTextSize(config.getConfirmDialogNegativeTextSizeSp());
+        }
+        if (config.getConfirmDialogNeutralTextSizeSp() > 0) {
+            setNeutralTextSize(config.getConfirmDialogNeutralTextSizeSp());
         }
         return this;
     }
@@ -314,54 +368,23 @@ public class GPSConfirmDialog extends Dialog {
     private void initView() {
         binding = DialogGpsConfirmBinding.inflate(layoutInflater, null, false);
 
-        // 设置文字
-        if (TextUtils.isEmpty(positiveText)) {
-            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
-        } else {
-            binding.dialogConfirm.setText(positiveText);
-        }
-        if (TextUtils.isEmpty(negativeText)) {
-            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
-        } else {
-            binding.dialogCancel.setText(negativeText);
-        }
+        int defaultLineColor = ContextCompat.getColor(getContext(), R.color.h_line_color);
+        int lineColorValue = lineColor == null ? defaultLineColor : lineColor;
 
-        // 设置文字颜色
-        if (positiveTextColor != null) {
-            binding.dialogConfirm.setTextColor(positiveTextColor);
-        }
-
-        if (negativeTextColor != null) {
-            binding.dialogCancel.setTextColor(negativeTextColor);
+        if (isThreeButtonMode) {
+            initThreeButtonLayout(lineColorValue);
+        } else {
+            initTwoButtonLayout(lineColorValue);
         }
 
         if (textColor != null) {
             binding.dialogTextView.setTextColor(textColor);
         }
 
-        // 设置文字大小
-        if (positiveTextSize > 0) {
-            binding.dialogConfirm.setTextSize(positiveTextSize);
-        }
-
-        if (negativeTextSize > 0) {
-            binding.dialogCancel.setTextSize(negativeTextSize);
-        }
-
         if (contentTextSize > 0) {
             binding.dialogTextView.setTextSize(contentTextSize);
         }
 
-        // 设置按钮背景
-        if (positiveBtnBackground != null) {
-            binding.dialogConfirm.setBackground(positiveBtnBackground);
-        }
-
-        if (negativeBtnBackground != null) {
-            binding.dialogCancel.setBackground(negativeBtnBackground);
-        }
-
-        // 设置内容上边距
         if (textPaddingTop >= 0) {
             binding.dialogTextView.setPadding(
                     binding.dialogTextView.getPaddingStart(),
@@ -370,79 +393,23 @@ public class GPSConfirmDialog extends Dialog {
                     binding.dialogTextView.getPaddingBottom());
         }
 
-        // 设置分割线上边距
         if (textPaddingBottom >= 0) {
             binding.dialogTextView.setPadding(binding.dialogTextView.getPaddingStart(),
                     binding.dialogTextView.getPaddingTop(),
                     binding.dialogTextView.getPaddingEnd(),
                     textPaddingBottom);
-
         }
 
-        // 设置按钮高度
-        int targetButtonHeight = -1;
-        if (buttonHeightRes != -1) {
-            targetButtonHeight = getContext().getResources().getDimensionPixelSize(buttonHeightRes);
-        } else if (buttonHeight >= 0) {
-            targetButtonHeight = buttonHeight;
-        }
-
-        if (targetButtonHeight >= 0) {
-            ViewGroup.LayoutParams cancelParams = binding.dialogCancel.getLayoutParams();
-            cancelParams.height = targetButtonHeight;
-            binding.dialogCancel.setLayoutParams(cancelParams);
-
-            ViewGroup.LayoutParams confirmParams = binding.dialogConfirm.getLayoutParams();
-            confirmParams.height = targetButtonHeight;
-            binding.dialogConfirm.setLayoutParams(confirmParams);
-        }
-
-        // 控制视图显示
-        if (!isShowSLineView) {
-            binding.sLine.setVisibility(View.GONE);
-        }
-        // 控制视图显示
         if (!isShowHLineView) {
             binding.hLine.setVisibility(View.GONE);
         }
-        if (!isShowNegativeView) {
-            binding.dialogCancel.setVisibility(View.GONE);
-        }
-        if (!isShowPositiveView) {
-            binding.dialogConfirm.setVisibility(View.GONE);
-        }
-
-        // 设置点击事件
-        binding.dialogConfirm.setOnClickListener(v -> {
-            dismiss();
-            if (onPositiveClickListener != null) {
-                onPositiveClickListener.onDialogClick(this);
-            }
-        });
-
-        binding.dialogCancel.setOnClickListener(v -> {
-            dismiss();
-            if (onNegativeClickListener != null) {
-                onNegativeClickListener.onDialogClick(this);
-            }
-        });
-
-        // 设置分割线颜色
-        int defaultLineColor = ContextCompat.getColor(getContext(), R.color.h_line_color);
-        int lineColorValue = lineColor == null ? defaultLineColor : lineColor;
 
         binding.hLine.setBackground(AppUtil.createRectDrawable(
                 lineColorValue,
                 0,
                 AppUtil.dp2px(getContext(), 1f)
         ));
-        binding.sLine.setBackground(AppUtil.createRectDrawable(
-                lineColorValue,
-                AppUtil.dp2px(getContext(), 1f),
-                0
-        ));
 
-        // 设置内容
         if (spannableContent == null) {
             binding.dialogTextView.setText(content);
         } else {
@@ -450,7 +417,6 @@ public class GPSConfirmDialog extends Dialog {
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-        // 设置Dialog属性
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
@@ -469,7 +435,6 @@ public class GPSConfirmDialog extends Dialog {
                     ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
-        // 设置Dialog从窗体中间弹出
         dialogWindow.setGravity(Gravity.CENTER);
         dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> AppUtil.createRectDrawable(
                 Color.WHITE,
@@ -478,6 +443,166 @@ public class GPSConfirmDialog extends Dialog {
                 AppUtil.dp2px(getContext(), 8f),
                 AppUtil.dp2px(getContext(), 8f)
         )));
+    }
+
+    private void initTwoButtonLayout(int lineColorValue) {
+        binding.threeButtonContainer.setVisibility(View.GONE);
+        binding.dialogCancel.setVisibility(isShowNegativeView ? View.VISIBLE : View.GONE);
+        binding.dialogConfirm.setVisibility(isShowPositiveView ? View.VISIBLE : View.GONE);
+        binding.sLine.setVisibility(isShowSLineView && isShowNegativeView && isShowPositiveView
+                ? View.VISIBLE : View.GONE);
+
+        if (TextUtils.isEmpty(positiveText)) {
+            binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
+        } else {
+            binding.dialogConfirm.setText(positiveText);
+        }
+        if (TextUtils.isEmpty(negativeText)) {
+            binding.dialogCancel.setText(ContextCompat.getString(getContext(), R.string.cancel));
+        } else {
+            binding.dialogCancel.setText(negativeText);
+        }
+
+        if (positiveTextColor != null) {
+            binding.dialogConfirm.setTextColor(positiveTextColor);
+        }
+        if (negativeTextColor != null) {
+            binding.dialogCancel.setTextColor(negativeTextColor);
+        }
+        if (positiveTextSize > 0) {
+            binding.dialogConfirm.setTextSize(positiveTextSize);
+        }
+        if (negativeTextSize > 0) {
+            binding.dialogCancel.setTextSize(negativeTextSize);
+        }
+        if (positiveBtnBackground != null) {
+            binding.dialogConfirm.setBackground(positiveBtnBackground);
+        }
+        if (negativeBtnBackground != null) {
+            binding.dialogCancel.setBackground(negativeBtnBackground);
+        }
+
+        applyButtonHeight(binding.dialogCancel, binding.dialogConfirm);
+
+        binding.dialogConfirm.setOnClickListener(v -> {
+            dismiss();
+            if (onPositiveClickListener != null) {
+                onPositiveClickListener.onDialogClick(this);
+            }
+        });
+        binding.dialogCancel.setOnClickListener(v -> {
+            dismiss();
+            if (onNegativeClickListener != null) {
+                onNegativeClickListener.onDialogClick(this);
+            }
+        });
+
+        binding.sLine.setBackground(AppUtil.createRectDrawable(
+                lineColorValue,
+                AppUtil.dp2px(getContext(), 1f),
+                0
+        ));
+    }
+
+    private void initThreeButtonLayout(int lineColorValue) {
+        binding.dialogCancel.setVisibility(View.GONE);
+        binding.dialogConfirm.setVisibility(View.GONE);
+        binding.sLine.setVisibility(View.GONE);
+        binding.threeButtonContainer.setVisibility(View.VISIBLE);
+
+        String positiveLabel = TextUtils.isEmpty(positiveText)
+                ? ContextCompat.getString(getContext(), R.string.gps_background_permission_go_settings)
+                : positiveText;
+        String neutralLabel = TextUtils.isEmpty(neutralText)
+                ? ContextCompat.getString(getContext(), R.string.gps_background_permission_app_details)
+                : neutralText;
+        String negativeLabel = TextUtils.isEmpty(negativeText)
+                ? ContextCompat.getString(getContext(), R.string.gps_background_permission_later)
+                : negativeText;
+
+        binding.dialogConfirmVertical.setText(positiveLabel);
+        binding.dialogNeutral.setText(neutralLabel);
+        binding.dialogCancelVertical.setText(negativeLabel);
+
+        binding.dialogConfirmVertical.setVisibility(isShowPositiveView ? View.VISIBLE : View.GONE);
+        binding.dialogNeutral.setVisibility(isShowNeutralView ? View.VISIBLE : View.GONE);
+        binding.dialogCancelVertical.setVisibility(isShowNegativeView ? View.VISIBLE : View.GONE);
+
+        if (positiveTextColor != null) {
+            binding.dialogConfirmVertical.setTextColor(positiveTextColor);
+        }
+        if (neutralTextColor != null) {
+            binding.dialogNeutral.setTextColor(neutralTextColor);
+        }
+        if (negativeTextColor != null) {
+            binding.dialogCancelVertical.setTextColor(negativeTextColor);
+        }
+        if (positiveTextSize > 0) {
+            binding.dialogConfirmVertical.setTextSize(positiveTextSize);
+        }
+        if (neutralTextSize > 0) {
+            binding.dialogNeutral.setTextSize(neutralTextSize);
+        }
+        if (negativeTextSize > 0) {
+            binding.dialogCancelVertical.setTextSize(negativeTextSize);
+        }
+        if (positiveBtnBackground != null) {
+            binding.dialogConfirmVertical.setBackground(positiveBtnBackground);
+        }
+        if (negativeBtnBackground != null) {
+            binding.dialogCancelVertical.setBackground(negativeBtnBackground);
+        }
+
+        applyButtonHeight(
+                binding.dialogConfirmVertical,
+                binding.dialogNeutral,
+                binding.dialogCancelVertical
+        );
+
+        binding.lineConfirmNeutral.setBackgroundColor(lineColorValue);
+        binding.lineNeutralCancel.setBackgroundColor(lineColorValue);
+        binding.lineConfirmNeutral.setVisibility(
+                isShowPositiveView && isShowNeutralView ? View.VISIBLE : View.GONE
+        );
+        binding.lineNeutralCancel.setVisibility(
+                isShowNeutralView && isShowNegativeView ? View.VISIBLE : View.GONE
+        );
+
+        binding.dialogConfirmVertical.setOnClickListener(v -> {
+            dismiss();
+            if (onPositiveClickListener != null) {
+                onPositiveClickListener.onDialogClick(this);
+            }
+        });
+        binding.dialogNeutral.setOnClickListener(v -> {
+            dismiss();
+            if (onNeutralClickListener != null) {
+                onNeutralClickListener.onDialogClick(this);
+            }
+        });
+        binding.dialogCancelVertical.setOnClickListener(v -> {
+            dismiss();
+            if (onNegativeClickListener != null) {
+                onNegativeClickListener.onDialogClick(this);
+            }
+        });
+    }
+
+    private void applyButtonHeight(View... buttons) {
+        int targetButtonHeight = -1;
+        if (buttonHeightRes != -1) {
+            targetButtonHeight = getContext().getResources().getDimensionPixelSize(buttonHeightRes);
+        } else if (buttonHeight >= 0) {
+            targetButtonHeight = buttonHeight;
+        }
+        if (targetButtonHeight < 0) {
+            return;
+        }
+        for (View button : buttons) {
+            ViewGroup.LayoutParams params = button.getLayoutParams();
+            params.height = targetButtonHeight;
+            button.setLayoutParams(params);
+        }
     }
 
     public interface OnDialogInterfaceClickListener {

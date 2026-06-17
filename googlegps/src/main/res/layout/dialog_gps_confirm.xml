@@ -16,46 +16,48 @@
             android:id="@+id/dialog_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
-            android:paddingTop="29dp"
-            android:paddingBottom="23dp"
+            android:lineSpacingExtra="4dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="20dp"
             android:textColor="#333333"
-            android:textSize="14sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="tel:055165555744" />
+            tools:text="为了您更好的体验，应用需要访问后台定位权限。" />
 
         <View
             android:id="@+id/h_line"
+            android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_width="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
 
+        <!-- 双按钮：取消 | 确定 -->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="@string/cancel"
-            android:textColor="#666666"
+            android:layout_height="44dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:textSize="14sp"
-            app:layout_constraintHorizontal_weight="1"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="#666666"
+            android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@id/s_line"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/h_line" />
 
         <View
             android:id="@+id/s_line"
-            android:layout_height="0dp"
             android:layout_width="1dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
             app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
@@ -64,17 +66,75 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:gravity="center"
+            android:layout_height="44dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
             android:text="@string/confirm"
-            app:layout_constraintHorizontal_weight="1"
             android:textColor="#333333"
-            android:textSize="14sp"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/s_line"
             app:layout_constraintTop_toBottomOf="@id/h_line" />
+
+        <!-- 三按钮：纵向排列，用于后台定位等场景 -->
+        <LinearLayout
+            android:id="@+id/three_button_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/h_line">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dialog_confirm_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:textColor="#1677FF"
+                android:textSize="16sp"
+                tools:text="Go to settings" />
+
+            <View
+                android:id="@+id/line_confirm_neutral"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dialog_neutral"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                tools:text="App info" />
+
+            <View
+                android:id="@+id/line_neutral_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dialog_cancel_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:textColor="#999999"
+                android:textSize="16sp"
+                tools:text="Not now" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,6 +2,10 @@
 <resources>
     <string name="cancel">Cancel</string>
     <string name="confirm">OK</string>
+    <string name="gps_background_permission_message">For a better experience, this app needs background location access. Tap \"Go to settings\" to choose \"Allow all the time\", or open \"App info\" to enable it manually.</string>
+    <string name="gps_background_permission_go_settings">Go to settings</string>
+    <string name="gps_background_permission_app_details">App info</string>
+    <string name="gps_background_permission_later">Not now</string>
 
     <string name="title_drawer_uploadsettings">Upload settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
