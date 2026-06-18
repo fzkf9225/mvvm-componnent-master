@@ -12,20 +12,101 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
- * Created by fz on 2018/9/25.
+ * 网格布局 Item 间距装饰器，支持绘制分割线并分配 item 间距。
+ * <p>
+ * <b>使用示例：</b>
+ * <pre>
+ * // 1. 仅设置间距，不绘制分割线（无需传颜色，推荐替代 0x00000000 写法）
+ * recyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(context, 8)));
+ *
+ * // 2. 横纵间距不同，且不绘制分割线（静态工厂，避免与两参数 color 构造冲突）
+ * recyclerView.addItemDecoration(GridSpacingItemDecoration.spacingOnly(columnGap, rowGap));
+ *
+ * // 3. 间距 + 可见分割线（兼容历史用法）
+ * recyclerView.addItemDecoration(new GridSpacingItemDecoration(gap, Color.parseColor("#EEEEEE")));
+ *
+ * // 4. 横纵间距不同 + 可见分割线
+ * recyclerView.addItemDecoration(new GridSpacingItemDecoration(columnGap, rowGap, dividerColor));
+ * </pre>
+ * </p>
+ *
+ * @author fz
+ * @since 2018/9/25
  */
-
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-    private final Paint mPaint;
-    private final int mDividerWidth;
 
-    public GridSpacingItemDecoration(int mDividerWidth, @ColorInt int color) {
-        this.mDividerWidth = mDividerWidth;
+    /** 列与列之间的间距（影响 left / right offset 及垂直分割线宽度） */
+    private final int mHorizontalSpacing;
+
+    /** 行与行之间的间距（影响 bottom offset 及水平分割线高度） */
+    private final int mVerticalSpacing;
+
+    /** 是否绘制可见分割线；为 false 时仅通过 getItemOffsets 保留间距 */
+    private final boolean mDrawDivider;
+
+    private final Paint mPaint;
+
+    /**
+     * 仅设置 item 间距，不绘制可见分割线（无需传颜色）。
+     * <p>
+     * 等价于 {@code new GridSpacingItemDecoration(dividerWidth, 0x00000000)}，但语义更清晰。
+     * </p>
+     *
+     * @param dividerWidth 横向、纵向共用的间距（px）
+     */
+    public GridSpacingItemDecoration(int dividerWidth) {
+        this(dividerWidth, dividerWidth, false);
+    }
+
+    /**
+     * 分别指定横向、纵向间距，不绘制可见分割线（无需传颜色）。
+     * <p>
+     * 使用静态工厂而非双参数构造，是为了与 {@link #GridSpacingItemDecoration(int, int)}（间距 + 颜色）
+     * 的签名区分，避免编译歧义。
+     * </p>
+     *
+     * @param horizontalSpacing 列间距（px）
+     * @param verticalSpacing   行间距（px）
+     */
+    public static GridSpacingItemDecoration spacingOnly(int horizontalSpacing, int verticalSpacing) {
+        return new GridSpacingItemDecoration(horizontalSpacing, verticalSpacing, false);
+    }
+
+    /**
+     * 使用相同横纵间距创建装饰器，并绘制可见分割线（兼容旧版 API）。
+     *
+     * @param dividerWidth 横向、纵向共用的间距（px）
+     * @param color        分割线颜色；传透明色时仅保留间距、不显示分割线
+     */
+    public GridSpacingItemDecoration(int dividerWidth, @ColorInt int color) {
+        this(dividerWidth, dividerWidth, color);
+    }
+
+    /**
+     * 分别指定横向、纵向间距，并绘制可见分割线。
+     *
+     * @param horizontalSpacing 列间距（px），对应 item 的 left / right offset
+     * @param verticalSpacing   行间距（px），对应 item 的 bottom offset
+     * @param color             分割线颜色；传透明色时仅保留间距、不显示分割线
+     */
+    public GridSpacingItemDecoration(int horizontalSpacing, int verticalSpacing, @ColorInt int color) {
+        mHorizontalSpacing = horizontalSpacing;
+        mVerticalSpacing = verticalSpacing;
+        mDrawDivider = true;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
     }
 
+    /**
+     * 内部构造：仅间距模式，不初始化绘制用的 Paint。
+     */
+    private GridSpacingItemDecoration(int horizontalSpacing, int verticalSpacing, boolean drawDivider) {
+        mHorizontalSpacing = horizontalSpacing;
+        mVerticalSpacing = verticalSpacing;
+        mDrawDivider = drawDivider;
+        mPaint = null;
+    }
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -40,29 +121,35 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         boolean isLastRow = isLastRow(parent, itemPosition, spanCount, childCount);
 
+        // 横向：将列间距均分到相邻 item 的 left / right，保证每列宽度一致
         int top = 0;
         int left;
         int right;
-        int eachWidth = (spanCount - 1) * mDividerWidth / spanCount;
-        int dl = mDividerWidth - eachWidth;
+        int eachWidth = (spanCount - 1) * mHorizontalSpacing / spanCount;
+        int dl = mHorizontalSpacing - eachWidth;
 
         left = itemPosition % spanCount * dl;
         right = eachWidth - left;
-        int bottom = mDividerWidth;
+
+        // 纵向：非最后一行保留行间距
+        int bottom = mVerticalSpacing;
         if (isLastRow) {
             bottom = 0;
         }
         outRect.set(left, top, right, bottom);
-
     }
 
     @Override
     public void onDraw(@NonNull Canvas canvas, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(canvas, parent, state);
-        draw(canvas, parent);
+        if (mDrawDivider && mPaint != null) {
+            draw(canvas, parent);
+        }
     }
 
-    //绘制item分割线
+    /**
+     * 绘制 item 之间的分割线；仅在使用带 color 参数的构造方法时调用。
+     */
     private void draw(Canvas canvas, RecyclerView parent) {
         int spanCount = getSpanCount(parent);
         if (spanCount <= 0) {
@@ -78,20 +165,22 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             }
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
 
-            //画水平分隔线（与 getItemOffsets 一致：最后一行不再向下占位则不绘制底部分割线）
+            // 水平分割线：与 getItemOffsets 一致，最后一行不绘制
             if (!isLastRow(parent, pos, spanCount, adapterCount)) {
                 int left = child.getLeft();
                 int right = child.getRight();
                 int top = child.getBottom() + layoutParams.bottomMargin;
-                int bottom = top + mDividerWidth;
+                int bottom = top + mVerticalSpacing;
                 canvas.drawRect(left, top, right, bottom, mPaint);
             }
-            //画垂直分割线（最后一列不绘制右侧分割线，避免与 offsets 语义不一致）
+
+            // 垂直分割线：最后一列不绘制，避免与 offset 语义不一致
             if (!isLastColumn(parent, pos, spanCount, adapterCount)) {
                 int top2 = child.getTop();
-                int bottom2 = child.getBottom() + mDividerWidth;
+                // 向下延伸 mVerticalSpacing，与水平分割线在交叉处对齐
+                int bottom2 = child.getBottom() + mVerticalSpacing;
                 int left2 = child.getRight() + layoutParams.rightMargin;
-                int right2 = left2 + mDividerWidth;
+                int right2 = left2 + mHorizontalSpacing;
                 canvas.drawRect(left2, top2, right2, bottom2, mPaint);
             }
         }
@@ -161,7 +250,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         return false;
     }
 
-    //获取列数
+    /** 获取列数（GridLayoutManager / StaggeredGridLayoutManager） */
     private int getSpanCount(RecyclerView parent) {
         int spanCount = -1;
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();

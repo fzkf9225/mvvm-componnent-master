@@ -14,6 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.R;
 
+/**
+ * 线性列表（{@link LinearLayoutManager}）分割线装饰器。
+ * <p>
+ * <b>使用示例：</b>
+ * <pre>
+ * // 1. 默认高度 1px + 主题分割线颜色（无需传颜色）
+ * recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.VERTICAL));
+ *
+ * // 2. 自定义高度 + 主题分割线颜色（无需传颜色，推荐替代手动取 R.color.h_line_color）
+ * recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.VERTICAL, dividerHeight));
+ *
+ * // 3. 自定义高度 + 是否显示最后一项分割线 + 主题颜色（无需传颜色）
+ * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, false));
+ *
+ * // 4. 自定义高度与颜色（兼容历史用法）
+ * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, dividerColor));
+ *
+ * // 5. 自定义高度、颜色及最后一项分割线（兼容历史用法）
+ * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, dividerColor, false));
+ * </pre>
+ * </p>
+ */
 public class RecycleViewDivider extends RecyclerView.ItemDecoration {
 
     private final Paint mPaint;
@@ -22,26 +44,56 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     private boolean isShowLastDivider = true; // 是否展示最后一行的分隔符
 
     /**
-     * 默认分割线：高度为1px，颜色为灰色
+     * 默认分割线：高度为 1px，颜色为主题色 {@link R.color#h_line_color}（无需传颜色）。
      *
-     * @param context
-     * @param orientation 列表方向
+     * @param context     上下文，用于读取主题分割线颜色
+     * @param orientation 列表方向，{@link LinearLayoutManager#VERTICAL} 或 {@link LinearLayoutManager#HORIZONTAL}
      */
     public RecycleViewDivider(Context context, int orientation) {
         this(context, orientation, 1, ContextCompat.getColor(context, R.color.h_line_color));
     }
 
+    /**
+     * 默认分割线 + 控制最后一项是否绘制分割线（无需传颜色）。
+     *
+     * @param context             上下文
+     * @param orientation         列表方向
+     * @param isShowLastDivider     是否在最后一项之后绘制分割线
+     */
     public RecycleViewDivider(Context context, int orientation, boolean isShowLastDivider) {
         this(context, orientation);
         this.isShowLastDivider = isShowLastDivider;
     }
 
     /**
-     * 自定义分割线
+     * 自定义分割线高度，颜色使用主题色 {@link R.color#h_line_color}（无需传颜色）。
      *
-     * @param context
+     * @param context       上下文
      * @param orientation   列表方向
-     * @param dividerHeight 分割线高度
+     * @param dividerHeight 分割线高度（px）
+     */
+    public RecycleViewDivider(Context context, int orientation, int dividerHeight) {
+        this(context, orientation, dividerHeight, ContextCompat.getColor(context, R.color.h_line_color));
+    }
+
+    /**
+     * 自定义分割线高度，颜色使用主题色，并可控制最后一项是否绘制分割线（无需传颜色）。
+     *
+     * @param context             上下文
+     * @param orientation         列表方向
+     * @param dividerHeight       分割线高度（px）
+     * @param isShowLastDivider   是否在最后一项之后绘制分割线
+     */
+    public RecycleViewDivider(Context context, int orientation, int dividerHeight, boolean isShowLastDivider) {
+        this(context, orientation, dividerHeight, ContextCompat.getColor(context, R.color.h_line_color), isShowLastDivider);
+    }
+
+    /**
+     * 自定义分割线高度与颜色（兼容历史 API）。
+     *
+     * @param context       上下文
+     * @param orientation   列表方向
+     * @param dividerHeight 分割线高度（px）
      * @param dividerColor  分割线颜色
      */
     public RecycleViewDivider(Context context, int orientation, int dividerHeight, @ColorInt int dividerColor) {
@@ -55,6 +107,15 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         mPaint.setStyle(Paint.Style.FILL);
     }
 
+    /**
+     * 自定义分割线高度、颜色，并控制最后一项是否绘制分割线（兼容历史 API）。
+     *
+     * @param context             上下文
+     * @param orientation         列表方向
+     * @param dividerHeight       分割线高度（px）
+     * @param dividerColor        分割线颜色
+     * @param isShowLastDivider   是否在最后一项之后绘制分割线
+     */
     public RecycleViewDivider(Context context, int orientation, int dividerHeight, @ColorInt int dividerColor, boolean isShowLastDivider) {
         this(context, orientation, dividerHeight, dividerColor);
         this.isShowLastDivider = isShowLastDivider;
