@@ -156,7 +156,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         });
         fileAddAdapter = new FileAddAdapter();
         fileAddAdapter.setRadius(radius);
-        fileAddAdapter.setBgColor(bgColor);
+        fileAddAdapter.setBgColor(itemBgColor);
         fileAddAdapter.setItemTextSize(formTextSize);
         fileAddAdapter.setTextColor(itemTextColor);
         fileAddAdapter.setFileClearListener(this);

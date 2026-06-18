@@ -35,6 +35,13 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  */
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
+    /**
+     * 按 item 位置判断是否选中，用于绘制选中/未选中两种间距颜色。
+     */
+    public interface SelectionProvider {
+        boolean isSelected(int position);
+    }
+
     /** 列与列之间的间距（影响 left / right offset 及垂直分割线宽度） */
     private final int mHorizontalSpacing;
 
@@ -45,6 +52,16 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     private final boolean mDrawDivider;
 
     private final Paint mPaint;
+
+    /** 未选中时间距颜色；null 表示不绘制该状态的分割线 */
+    @ColorInt
+    private final Integer mUnselectedGapColor;
+
+    /** 选中时间距颜色；null 表示不绘制该状态的分割线 */
+    @ColorInt
+    private final Integer mSelectedGapColor;
+
+    private final SelectionProvider mSelectionProvider;
 
     /**
      * 仅设置 item 间距，不绘制可见分割线（无需传颜色）。
@@ -96,6 +113,9 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.FILL);
+        mUnselectedGapColor = null;
+        mSelectedGapColor = null;
+        mSelectionProvider = null;
     }
 
     /**
@@ -106,6 +126,84 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         mVerticalSpacing = verticalSpacing;
         mDrawDivider = drawDivider;
         mPaint = null;
+        mUnselectedGapColor = null;
+        mSelectedGapColor = null;
+        mSelectionProvider = null;
+    }
+
+    private GridSpacingItemDecoration(Builder builder) {
+        mHorizontalSpacing = builder.horizontalSpacing;
+        mVerticalSpacing = builder.verticalSpacing;
+        mUnselectedGapColor = builder.unselectedGapColor;
+        mSelectedGapColor = builder.selectedGapColor;
+        mSelectionProvider = builder.selectionProvider;
+        mDrawDivider = builder.unselectedGapColor != null
+                || builder.selectedGapColor != null
+                || builder.legacyGapColor != null;
+        if (mDrawDivider) {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setStyle(Paint.Style.FILL);
+            if (builder.legacyGapColor != null) {
+                mPaint.setColor(builder.legacyGapColor);
+            }
+        } else {
+            mPaint = null;
+        }
+    }
+
+    /**
+     * 构建支持横/纵独立间距，以及选中/未选中两种间距颜色的装饰器。
+     */
+    public static class Builder {
+        private int horizontalSpacing;
+        private int verticalSpacing;
+        @ColorInt
+        private Integer unselectedGapColor;
+        @ColorInt
+        private Integer selectedGapColor;
+        @ColorInt
+        private Integer legacyGapColor;
+        private SelectionProvider selectionProvider;
+
+        public Builder horizontalSpacing(int horizontalSpacing) {
+            this.horizontalSpacing = horizontalSpacing;
+            return this;
+        }
+
+        public Builder verticalSpacing(int verticalSpacing) {
+            this.verticalSpacing = verticalSpacing;
+            return this;
+        }
+
+        public Builder spacing(int horizontalSpacing, int verticalSpacing) {
+            this.horizontalSpacing = horizontalSpacing;
+            this.verticalSpacing = verticalSpacing;
+            return this;
+        }
+
+        public Builder unselectedGapColor(@ColorInt Integer unselectedGapColor) {
+            this.unselectedGapColor = unselectedGapColor;
+            return this;
+        }
+
+        public Builder selectedGapColor(@ColorInt Integer selectedGapColor) {
+            this.selectedGapColor = selectedGapColor;
+            return this;
+        }
+
+        public Builder gapColor(@ColorInt int gapColor) {
+            this.legacyGapColor = gapColor;
+            return this;
+        }
+
+        public Builder selectionProvider(SelectionProvider selectionProvider) {
+            this.selectionProvider = selectionProvider;
+            return this;
+        }
+
+        public GridSpacingItemDecoration build() {
+            return new GridSpacingItemDecoration(this);
+        }
     }
 
     @Override
@@ -167,23 +265,54 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
             // 水平分割线：与 getItemOffsets 一致，最后一行不绘制
             if (!isLastRow(parent, pos, spanCount, adapterCount)) {
-                int left = child.getLeft();
-                int right = child.getRight();
-                int top = child.getBottom() + layoutParams.bottomMargin;
-                int bottom = top + mVerticalSpacing;
-                canvas.drawRect(left, top, right, bottom, mPaint);
+                Integer gapColor = resolveGapColor(pos, pos + spanCount, adapterCount);
+                if (gapColor != null) {
+                    mPaint.setColor(gapColor);
+                    int left = child.getLeft();
+                    int right = child.getRight();
+                    int top = child.getBottom() + layoutParams.bottomMargin;
+                    int bottom = top + mVerticalSpacing;
+                    canvas.drawRect(left, top, right, bottom, mPaint);
+                }
             }
 
             // 垂直分割线：最后一列不绘制，避免与 offset 语义不一致
             if (!isLastColumn(parent, pos, spanCount, adapterCount)) {
-                int top2 = child.getTop();
-                // 向下延伸 mVerticalSpacing，与水平分割线在交叉处对齐
-                int bottom2 = child.getBottom() + mVerticalSpacing;
-                int left2 = child.getRight() + layoutParams.rightMargin;
-                int right2 = left2 + mHorizontalSpacing;
-                canvas.drawRect(left2, top2, right2, bottom2, mPaint);
+                Integer gapColor = resolveGapColor(pos, pos + 1, adapterCount);
+                if (gapColor != null) {
+                    mPaint.setColor(gapColor);
+                    int top2 = child.getTop();
+                    // 向下延伸 mVerticalSpacing，与水平分割线在交叉处对齐
+                    int bottom2 = child.getBottom() + mVerticalSpacing;
+                    int left2 = child.getRight() + layoutParams.rightMargin;
+                    int right2 = left2 + mHorizontalSpacing;
+                    canvas.drawRect(left2, top2, right2, bottom2, mPaint);
+                }
             }
         }
+    }
+
+    @ColorInt
+    private Integer resolveGapColor(int currentPos, int adjacentPos, int adapterCount) {
+        if (mSelectionProvider != null) {
+            boolean selected = isPositionSelected(currentPos, adapterCount)
+                    || isPositionSelected(adjacentPos, adapterCount);
+            if (selected) {
+                return mSelectedGapColor;
+            }
+            return mUnselectedGapColor;
+        }
+        if (mPaint != null) {
+            return mPaint.getColor();
+        }
+        return null;
+    }
+
+    private boolean isPositionSelected(int position, int adapterCount) {
+        if (mSelectionProvider == null || position < 0 || position >= adapterCount) {
+            return false;
+        }
+        return mSelectionProvider.isSelected(position);
     }
 
     private boolean isLastColumn(RecyclerView parent, int pos, int spanCount,

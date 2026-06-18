@@ -168,7 +168,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             layoutCountLabel();
         }
         videoAddAdapter = new VideoAddAdapter(maxCount);
-        videoAddAdapter.setBgColor(bgColor);
+        videoAddAdapter.setBgColor(itemBgColor);
         videoAddAdapter.setRadius(radius);
         videoAddAdapter.setErrorImage(errorImage);
         videoAddAdapter.setPlaceholderImage(placeholderImage);

@@ -59,6 +59,64 @@
     <attr name="labelTextColor" format="reference|color" />
     <!--确认按钮颜色-->
     <attr name="confirmTextColor" format="reference|color" />
+    <!--DatePickDialog 右上角「今天/此刻」文字颜色-->
+    <attr name="todayTextColor" format="reference|color" />
+    <!--DatePickDialog 左上角清空按钮文字颜色-->
+    <attr name="clearTextColor" format="reference|color" />
+    <!--DatePickDialog 右上角「今天/此刻」文字大小 (sp)-->
+    <attr name="todayTextSize" format="float" />
+    <!--DatePickDialog 左上角清空按钮文字大小 (sp)-->
+    <attr name="clearTextSize" format="float" />
+    <!--DatePickDialog 左上角清空按钮文字-->
+    <attr name="clearText" format="string" />
+    <!--DatePickDialog 取消按钮文字颜色-->
+    <attr name="negativeTextColor" format="reference|color" />
+    <!--DatePickDialog 标题-->
+    <attr name="datePickTitle" format="string" />
+    <!--DatePickDialog 标题文字颜色-->
+    <attr name="datePickTitleTextColor" format="reference|color" />
+    <!--DatePickDialog 标题文字大小 (sp)-->
+    <attr name="datePickTitleTextSize" format="float" />
+    <!--DatePickDialog 标题顶部间距-->
+    <attr name="datePickTitleMarginTop" format="dimension" />
+    <!--DateRangePickDialog 月份文字颜色-->
+    <attr name="calendarMonthTextColor" format="reference|color" />
+    <!--DateRangePickDialog 月份文字大小 (sp)-->
+    <attr name="calendarMonthTextSize" format="float" />
+    <!--DatePickDialog 确定按钮文字大小 (sp)-->
+    <attr name="positiveButtonTextSize" format="float" />
+    <!--DatePickDialog 取消按钮文字大小 (sp)-->
+    <attr name="negativeButtonTextSize" format="float" />
+    <!--DatePickDialog 年/月/日等单位标签文字颜色-->
+    <attr name="unitLabelTextColor" format="reference|color" />
+    <!--DatePickDialog 年/月/日等单位标签文字大小 (sp)-->
+    <attr name="unitLabelTextSize" format="float" />
+    <!--DatePickDialog 底部按钮栏顶部间距-->
+    <attr name="buttonBarMarginTop" format="dimension" />
+    <!--DatePickDialog 根布局水平内边距 (start/end)-->
+    <attr name="dialogPaddingHorizontal" format="dimension" />
+    <!--DatePickDialog 滚轮分割线高度-->
+    <attr name="dividerHeight" format="dimension" />
+    <!--DatePickDialog 确定按钮文字-->
+    <attr name="positiveText" format="string" />
+    <!--DatePickDialog 取消按钮文字-->
+    <attr name="negativeText" format="string" />
+    <!--DatePickDialog 起始月份-->
+    <attr name="startMonth" format="integer" />
+    <!--DatePickDialog 结束月份-->
+    <attr name="endMonth" format="integer" />
+    <!--DatePickDialog 是否允许点击外部关闭-->
+    <attr name="canOutSideDialog" format="boolean" />
+    <!--DatePickDialog 是否显示确定按钮-->
+    <attr name="showPositiveButton" format="boolean" />
+    <!--DatePickDialog 是否显示取消按钮-->
+    <attr name="showNegativeButton" format="boolean" />
+    <!--DatePickDialog 弹出位置-->
+    <attr name="datePickGravity" format="enum">
+        <enum name="top" value="48" />
+        <enum name="center" value="17" />
+        <enum name="bottom" value="80" />
+    </attr>
     <!--label文字大小-->
     <attr name="formLabelTextSize" format="dimension" />
     <!--输入框、选择框、文本内容文字颜色-->
@@ -100,7 +158,7 @@
         <!--字段名，AttachmentUtil自动转换-->
         <attr name="field" format="string"/>
         <!--添加图片视频的时候，框框背景色-->
-        <attr name="bgColor" format="color" />
+        <attr name="itemBgColor" format="color" />
         <!-- 右上角占位按钮图片 -->
         <attr name="clearImage" format="reference"/>
         <!-- 默认右上角占位按钮图片宽度 -->
@@ -252,6 +310,38 @@
         <attr name="textEndMargin" />
         <!--确认按钮文字颜色-->
         <attr name="confirmTextColor" />
+        <!--DatePickDialog 右上角「今天/此刻」-->
+        <attr name="todayTextColor" />
+        <attr name="todayTextSize" />
+        <!--DatePickDialog 左上角清空-->
+        <attr name="clearTextColor" />
+        <attr name="clearTextSize" />
+        <attr name="clearText" />
+        <!--DatePickDialog 取消按钮-->
+        <attr name="negativeTextColor" />
+        <attr name="negativeButtonTextSize" />
+        <attr name="negativeText" />
+        <!--DatePickDialog 标题与确定按钮-->
+        <attr name="datePickTitle" />
+        <attr name="datePickTitleTextColor" />
+        <attr name="datePickTitleTextSize" />
+        <attr name="datePickTitleMarginTop" />
+        <attr name="calendarMonthTextColor" />
+        <attr name="calendarMonthTextSize" />
+        <attr name="positiveButtonTextSize" />
+        <attr name="positiveText" />
+        <!--DatePickDialog 单位标签与布局-->
+        <attr name="unitLabelTextColor" />
+        <attr name="unitLabelTextSize" />
+        <attr name="buttonBarMarginTop" />
+        <attr name="dialogPaddingHorizontal" />
+        <attr name="dividerHeight" />
+        <attr name="startMonth" />
+        <attr name="endMonth" />
+        <attr name="canOutSideDialog" />
+        <attr name="showPositiveButton" />
+        <attr name="showNegativeButton" />
+        <attr name="datePickGravity" />
         <!--开始年份-->
         <attr name="startYear" />
         <!--结束年份-->
@@ -601,15 +691,37 @@
         <!--工作日文字颜色-->
         <attr name="workingDayTextColor"/>
         <!--开始日期，日历开始的可选日期-->
-        <attr name="startDate"/>
+        <attr name="selectableStartDate"/>
         <!--结束日期，日历结束的可选日期-->
-        <attr name="endDate"/>
+        <attr name="selectableEndDate"/>
         <!--选中样式-->
         <attr name="selectedBg"/>
         <!--默认背景颜色-->
         <attr name="normalBg"/>
         <!--选中文字颜色-->
         <attr name="selectedTextColor"/>
+        <!--日历网格横向间距-->
+        <attr name="itemHorizontalSpacing"/>
+        <!--日历网格纵向间距-->
+        <attr name="itemVerticalSpacing"/>
+        <!--日历网格未选中时间距颜色-->
+        <attr name="itemGapColorUnselected"/>
+        <!--日历网格选中时间距颜色-->
+        <attr name="itemGapColorSelected"/>
+        <!--底部标签与日期数字之间的间距-->
+        <attr name="bottomTagMarginTop"/>
+        <!--范围选择时起始日底部标签-->
+        <attr name="rangeStartLabel"/>
+        <!--范围选择时截止日底部标签-->
+        <attr name="rangeEndLabel"/>
+        <!--底部标签文字颜色-->
+        <attr name="bottomTagTextColor"/>
+        <!--底部标签文字大小-->
+        <attr name="bottomTagTextSize"/>
+        <!--底部标签文字大小 (sp)-->
+        <attr name="bottomTagTextSizeSp"/>
+        <!--是否显示弹窗左上角清空按钮，默认 true -->
+        <attr name="showClearButton" format="boolean"/>
     </declare-styleable>
     <!--日历宽度，不包括圆点-->
     <attr name="itemWidth" format="dimension"/>
@@ -619,16 +731,36 @@
     <attr name="weekTextColor" format="reference|color" />
     <!--工作日文字颜色-->
     <attr name="workingDayTextColor" format="reference|color" />
-    <!--开始日期，日历开始的可选日期-->
-    <attr name="startDate" format="string" />
-    <!--结束日期，日历结束的可选日期-->
-    <attr name="endDate" format="string" />
+    <!--可选日期范围起始，格式 yyyy-MM-dd-->
+    <attr name="selectableStartDate" format="string" />
+    <!--可选日期范围截止，格式 yyyy-MM-dd-->
+    <attr name="selectableEndDate" format="string" />
+    <!--范围选择时起始日底部标签文字-->
+    <attr name="rangeStartLabel" format="string" />
+    <!--范围选择时截止日底部标签文字-->
+    <attr name="rangeEndLabel" format="string" />
+    <!--底部标签文字颜色-->
+    <attr name="bottomTagTextColor" format="reference|color" />
+    <!--底部标签文字大小-->
+    <attr name="bottomTagTextSize" format="dimension" />
+    <!--底部标签文字大小 (sp)，与 bottomTagTextSize 二选一-->
+    <attr name="bottomTagTextSizeSp" format="float" />
     <!--选中样式-->
     <attr name="selectedBg" format="reference" />
     <!--默认背景颜色-->
     <attr name="normalBg" format="reference" />
     <!--选中文字颜色-->
     <attr name="selectedTextColor" format="reference|color" />
+    <!--日历网格横向间距-->
+    <attr name="itemHorizontalSpacing" format="dimension" />
+    <!--日历网格纵向间距-->
+    <attr name="itemVerticalSpacing" format="dimension" />
+    <!--日历网格未选中时间距颜色-->
+    <attr name="itemGapColorUnselected" format="color" />
+    <!--日历网格选中时间距颜色-->
+    <attr name="itemGapColorSelected" format="color" />
+    <!--底部标签与日期数字之间的间距-->
+    <attr name="bottomTagMarginTop" format="dimension" />
     <declare-styleable name="CalendarView">
         <!--圆点文字大小-->
         <attr name="textSize" />
@@ -644,10 +776,18 @@
         <attr name="weekTextColor" />
         <!--工作日文字颜色-->
         <attr name="workingDayTextColor"/>
-        <!--开始日期，日历开始的可选日期-->
-        <attr name="startDate"/>
-        <!--结束日期，日历结束的可选日期-->
-        <attr name="endDate"/>
+        <!--可选日期范围起始-->
+        <attr name="selectableStartDate"/>
+        <!--可选日期范围截止-->
+        <attr name="selectableEndDate"/>
+        <!--范围选择起始日底部标签-->
+        <attr name="rangeStartLabel"/>
+        <!--范围选择截止日底部标签-->
+        <attr name="rangeEndLabel"/>
+        <!--底部标签文字颜色-->
+        <attr name="bottomTagTextColor"/>
+        <!--底部标签文字大小-->
+        <attr name="bottomTagTextSize"/>
         <!--是否显示底部圆点-->
         <attr name="showDot" format="boolean" />
         <!--选中样式-->
@@ -656,6 +796,16 @@
         <attr name="normalBg"/>
         <!--选中文字颜色-->
         <attr name="selectedTextColor"/>
+        <!--日历网格横向间距-->
+        <attr name="itemHorizontalSpacing"/>
+        <!--日历网格纵向间距-->
+        <attr name="itemVerticalSpacing"/>
+        <!--日历网格未选中时间距颜色-->
+        <attr name="itemGapColorUnselected"/>
+        <!--日历网格选中时间距颜色-->
+        <attr name="itemGapColorSelected"/>
+        <!--底部标签与日期数字之间的间距-->
+        <attr name="bottomTagMarginTop"/>
         <!--日历模式：0-单选，1-范围-->
         <attr name="calendarMode" format="enum">
             <enum name="single" value="0" />

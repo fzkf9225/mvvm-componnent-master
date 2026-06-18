@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 
 import io.coderf.arklab.common.base.BaseStatefulActivity;
-import io.coderf.arklab.ui.fragment.CalendarMonthFragment;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityWightBinding;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -169,20 +167,14 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         shapeDrawable.getPaint().setColor(ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_green));
         binding.calendarViewSingle.registerOnPageChangeCallback((calendarData, pos) -> {
             calendarData.getCalendarDataList().forEach(item -> item.setDrawable(shapeDrawable));
-            CalendarMonthFragment fragment = Objects.requireNonNull(binding.calendarViewSingle.getCalendarPagerAdapter()).getItem(pos);
-            if (fragment != null) {
-                fragment.getAdapter().notifyDataSetChanged();
-            }
+            binding.calendarViewSingle.notifyAllMonthsChanged();
             binding.tvCalendarViewSingle.setText(calendarData.getYear() + "-" + NumberUtil.formatMonthOrDay(calendarData.getMonth()) + "（单选模式）");
         });
         binding.calendarViewSingle.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate));
         //多选日历
         binding.calendarViewMulti.initData(getLifecycle(), getSupportFragmentManager());
         binding.calendarViewMulti.registerOnPageChangeCallback((calendarData, pos) -> {
-            CalendarMonthFragment fragmentMulti = Objects.requireNonNull(binding.calendarViewMulti.getCalendarPagerAdapter()).getItem(pos);
-            if (fragmentMulti != null) {
-                fragmentMulti.getAdapter().notifyDataSetChanged();
-            }
+            binding.calendarViewMulti.notifyAllMonthsChanged();
             binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtil.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");
         });
         binding.calendarViewMulti.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate + "~" + endDate));

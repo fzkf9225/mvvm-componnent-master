@@ -29,7 +29,7 @@ public class FormDateTime extends FormSelection {
      */
     protected String format;
     /**
-     * 确认按钮背景色
+     * 确认按钮文字颜色
      */
     protected int confirmTextColor;
     /**
@@ -68,19 +68,22 @@ public class FormDateTime extends FormSelection {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
+        boolean showClearButton;
+        TypedArray typedArray = null;
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY_HOUR_MINUTE.model);
             startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
             endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
-            typedArray.recycle();
+            showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.YEAR_MONTH_DAY.model;
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
+            showClearButton = true;
         }
         if (TextUtils.isEmpty(format)) {
             format = DateUtil.DEFAULT_DATE_TIME_FORMAT;
@@ -88,8 +91,6 @@ public class FormDateTime extends FormSelection {
         datePickDialog = new DatePickDialog(getContext())
                 .setStartYear(this.startYear)
                 .setEndYear(this.endYear)
-                .setPositiveTextColor(this.confirmTextColor)
-                .setTodayTextColor(this.confirmTextColor)
                 .setDateMode(DateMode.getMode(this.datePickModel))
                 .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                     String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day)
@@ -100,7 +101,14 @@ public class FormDateTime extends FormSelection {
                     }
                     ((AppCompatTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
                 })
-                .builder();
+                .setOnClearClickListener(dialog -> ((AppCompatTextView) tvSelection).setText(null));
+        if (typedArray != null) {
+            FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
+            typedArray.recycle();
+        } else {
+            FormDatePickDialogHelper.applyDefaultStyle(getContext(), confirmTextColor, showClearButton, datePickDialog);
+        }
+        datePickDialog.builder();
     }
 
     public DatePickDialog getDatePickDialog() {
@@ -121,7 +129,7 @@ public class FormDateTime extends FormSelection {
                 datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
                 datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
                 datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
-                datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
+                datePickDialog.setDefaultSecond(calendar.get(Calendar.SECOND));
             }
             datePickDialog.show();
         });

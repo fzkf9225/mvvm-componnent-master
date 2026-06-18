@@ -37,7 +37,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     /**
      * 主要用于适配器中图片item、视频item等背景颜色
      */
-    protected int bgColor;
+    protected int itemBgColor;
     /**
      * label文字内容
      */
@@ -253,7 +253,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
 
-            bgColor = typedArray.getColor(R.styleable.FormUI_bgColor, 0xFFF1F3F2);
+            itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor, 0xFFF1F3F2);
             labelString = typedArray.getString(R.styleable.FormUI_label);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
@@ -265,7 +265,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
             formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 14));
 
-            radius = typedArray.getDimension(R.styleable.FormUI_mediaItemRadius, DensityUtil.dp2px(getContext(), 8));
+            radius = typedArray.getDimension(R.styleable.FormUI_mediaItemRadius, DensityUtil.dp2px(getContext(), 4));
 
             columnCount = typedArray.getInt(R.styleable.FormUI_columnCount, 4);
             borderBottomStartMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomStartMargin, DensityUtil.dp2px(getContext(), 16f));
@@ -324,8 +324,8 @@ public abstract class FormMedia extends CornerConstraintLayout {
             requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
             typedArray.recycle();
         } else {
-            bgColor = 0xFFF1F3F2;
-            radius = DensityUtil.dp2px(getContext(), 8);
+            itemBgColor = 0xFFF1F3F2;
+            radius = DensityUtil.dp2px(getContext(), 4);
             fileType = defaultFileType();
             protocolDialog = true;
             writeCaptureExifMetadata = true;

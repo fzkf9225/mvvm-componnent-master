@@ -27,9 +27,11 @@ import com.google.gson.Gson
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import android.text.TextUtils
 import io.coderf.arklab.common.utils.common.DateUtil
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.log.LogUtil
+import java.text.ParseException
 import io.coderf.arklab.common.widget.empty.EmptyLayout
 import androidx.core.content.withStyledAttributes
 
@@ -54,14 +56,14 @@ class CalendarView : ConstraintLayout {
     var workingDayTextColor: Int? = null
 
     /**
-     * 可选时间范围开始时间，默认为365天前
+     * 可选时间范围起始日期，格式 yyyy-MM-dd；未设置时不限制
      */
-    var startDate: String? = null
+    var selectableStartDate: String? = null
 
     /**
-     * 可选时间范围结束时间，默认为365天后
+     * 可选时间范围截止日期，格式 yyyy-MM-dd；未设置时不限制
      */
-    var endDate: String? = null
+    var selectableEndDate: String? = null
 
     /**
      * 选中的开始时间，单击的时候他就是当前时间
@@ -111,14 +113,55 @@ class CalendarView : ConstraintLayout {
     var itemHeight: Int? = null
 
     /**
-     * 日历下面圆点的大小
+     * 日历下面圆点宽度
+     */
+    var dotWidth: Int? = null
+
+    /**
+     * 日历下面圆点高度
      */
     var dotHeight: Int? = null
 
     /**
-     * 日历下面圆点的大小
+     * 范围选择时起始日底部标签，默认「起」
      */
-    var dotWidth: Int? = null
+    var rangeStartLabel: String? = "起"
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyAllMonthsChanged()
+        }
+
+    /**
+     * 范围选择时截止日底部标签，默认「止」
+     */
+    var rangeEndLabel: String? = "止"
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyAllMonthsChanged()
+        }
+
+    /**
+     * 底部标签文字颜色
+     */
+    @ColorInt
+    var bottomTagTextColor: Int? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyAllMonthsChanged()
+        }
+
+    /**
+     * 底部标签文字大小（px）
+     */
+    var bottomTagTextSize: Float? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            notifyAllMonthsChanged()
+        }
 
     /**
      * 选中文字颜色
@@ -126,17 +169,47 @@ class CalendarView : ConstraintLayout {
     @ColorInt
     var selectedTextColor: Int? = null
 
+    /**
+     * 日历网格横向间距（px）
+     */
+    var itemHorizontalSpacing: Int? = null
+
+    /**
+     * 日历网格纵向间距（px）
+     */
+    var itemVerticalSpacing: Int? = null
+
+    /**
+     * 日历网格未选中时的间距颜色；null 表示不绘制
+     */
+    @ColorInt
+    var itemGapColorUnselected: Int? = null
+
+    /**
+     * 日历网格选中时的间距颜色；null 表示不绘制
+     */
+    @ColorInt
+    var itemGapColorSelected: Int? = null
+
+    /**
+     * 底部标签与日期数字之间的间距（px）
+     */
+    var bottomTagMarginTop: Int? = null
+
     private var onViewPagerChangedListener: OnViewPagerChangedListener? = null
 
     companion object {
         const val TAG: String = "CalendarView"
 
+        const val MODE_SINGLE = 0
+        const val MODE_RANGE = 1
+
         object Mode {
             //正常默认样式，即日历样式
-            const val SINGLE = 0
+            const val SINGLE = MODE_SINGLE
 
             //范围选择模式，即日历+起止日期
-            const val RANGE = 1
+            const val RANGE = MODE_RANGE
         }
     }
 
@@ -181,16 +254,20 @@ class CalendarView : ConstraintLayout {
                     R.styleable.CalendarView_weekTextColor,
                     ContextCompat.getColor(context, R.color.auto_color)
                 )
-                startDate = getString(R.styleable.CalendarView_startDate)
-                endDate = getString(R.styleable.CalendarView_endDate)
-                if (startDate.isNullOrBlank()) {
-                    startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
-                }
-                if (endDate.isNullOrBlank()) {
-                    endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
-                }
+                selectableStartDate = getString(R.styleable.CalendarView_selectableStartDate)
+                selectableEndDate = getString(R.styleable.CalendarView_selectableEndDate)
                 mode = getInt(R.styleable.CalendarView_calendarMode, Mode.SINGLE)
                 showDot = getBoolean(R.styleable.CalendarView_showDot, false)
+                rangeStartLabel = getString(R.styleable.CalendarView_rangeStartLabel) ?: "起"
+                rangeEndLabel = getString(R.styleable.CalendarView_rangeEndLabel) ?: "止"
+                bottomTagTextColor = getColor(
+                    R.styleable.CalendarView_bottomTagTextColor,
+                    ContextCompat.getColor(context, R.color.theme_color)
+                )
+                bottomTagTextSize = getDimension(
+                    R.styleable.CalendarView_bottomTagTextSize,
+                    DensityUtil.sp2px(context, 10f).toFloat()
+                )
                 selectedTextColor =
                     getColor(
                         R.styleable.CalendarView_selectedTextColor,
@@ -213,26 +290,56 @@ class CalendarView : ConstraintLayout {
                 )
 
                 dotWidth = getDimensionPixelOffset(
-                    R.styleable.CalendarView_itemWidth,
+                    R.styleable.CalendarView_dotWidth,
                     DensityUtil.dp2px(context, 4f)
                 )
                 dotHeight = getDimensionPixelOffset(
-                    R.styleable.CalendarView_itemHeight,
+                    R.styleable.CalendarView_dotHeight,
                     DensityUtil.dp2px(context, 4f)
                 )
+                itemHorizontalSpacing = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemHorizontalSpacing,
+                    DensityUtil.dp2px(context, 8f)
+                )
+                itemVerticalSpacing = getDimensionPixelOffset(
+                    R.styleable.CalendarView_itemVerticalSpacing,
+                    DensityUtil.dp2px(context, 8f)
+                )
+                if (hasValue(R.styleable.CalendarView_itemGapColorUnselected)) {
+                    itemGapColorUnselected = getColor(
+                        R.styleable.CalendarView_itemGapColorUnselected,
+                        0
+                    )
+                }
+                if (hasValue(R.styleable.CalendarView_itemGapColorSelected)) {
+                    itemGapColorSelected = getColor(
+                        R.styleable.CalendarView_itemGapColorSelected,
+                        0
+                    )
+                }
+                if (hasValue(R.styleable.CalendarView_bottomTagMarginTop)) {
+                    bottomTagMarginTop = getDimensionPixelOffset(
+                        R.styleable.CalendarView_bottomTagMarginTop,
+                        DensityUtil.dp2px(context, 4f)
+                    )
+                }
             }
         } ?: run {
             workingDayTextColor = ContextCompat.getColor(context, R.color.auto_color)
             weekTextColor = ContextCompat.getColor(context, R.color.auto_color)
             selectedTextColor = ContextCompat.getColor(context, R.color.white)
             textSize = DensityUtil.sp2px(context, 14f).toFloat()
-            startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365)
-            endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365)
             mode = Mode.SINGLE
             itemWidth = DensityUtil.dp2px(context, 36f)
             itemHeight = DensityUtil.dp2px(context, 36f)
             dotWidth = DensityUtil.dp2px(context, 4f)
             dotHeight = DensityUtil.dp2px(context, 4f)
+            rangeStartLabel = "起"
+            rangeEndLabel = "止"
+            bottomTagTextColor = ContextCompat.getColor(context, R.color.theme_color)
+            bottomTagTextSize = DensityUtil.sp2px(context, 10f).toFloat()
+            itemHorizontalSpacing = DensityUtil.dp2px(context, 8f)
+            itemVerticalSpacing = DensityUtil.dp2px(context, 8f)
         }
         if (selectedBg == null) {
             selectedBg = ShapeDrawable(OvalShape()).apply {
@@ -321,13 +428,135 @@ class CalendarView : ConstraintLayout {
     }
 
     /**
-     * @param startDate 开始日期，格式：yyyy-MM-dd
-     * @param endDate 结束日期，格式：yyyy-MM-dd
-     * 设置日期可选范围
+     * @param selectableStartDate 可选起始日期，格式：yyyy-MM-dd；null 表示不限制
+     * @param selectableEndDate 可选截止日期，格式：yyyy-MM-dd；null 表示不限制
      */
-    public fun setDateRange(startDate: String?, endDate: String?) {
-        this.startDate = startDate;
-        this.endDate = endDate
+    public fun setSelectableDateRange(selectableStartDate: String?, selectableEndDate: String?) {
+        this.selectableStartDate = selectableStartDate
+        this.selectableEndDate = selectableEndDate
+        notifyAllMonthsChanged()
+    }
+
+    /**
+     * 设置日历网格间距及间距颜色。
+     *
+     * @param horizontalSpacing 横向间距（px）
+     * @param verticalSpacing 纵向间距（px）
+     * @param gapColorUnselected 未选中时的间距颜色，null 表示不绘制
+     * @param gapColorSelected 选中时的间距颜色，null 表示不绘制
+     */
+    fun setItemSpacing(
+        horizontalSpacing: Int,
+        verticalSpacing: Int,
+        @ColorInt gapColorUnselected: Int? = null,
+        @ColorInt gapColorSelected: Int? = null
+    ) {
+        itemHorizontalSpacing = horizontalSpacing
+        itemVerticalSpacing = verticalSpacing
+        itemGapColorUnselected = gapColorUnselected
+        itemGapColorSelected = gapColorSelected
+        notifyAllMonthsDecorationChanged()
+    }
+
+    /**
+     * 设置底部标签与日期数字之间的间距（px）。
+     */
+    fun setBottomTagMarginTop(marginTop: Int) {
+        bottomTagMarginTop = marginTop
+        notifyAllMonthsChanged()
+    }
+
+    /**
+     * 设置底部标签与日期数字之间的间距（dp）。
+     */
+    fun setBottomTagMarginTopDp(marginTopDp: Float) {
+        setBottomTagMarginTop(DensityUtil.dp2px(context, marginTopDp))
+    }
+
+    /**
+     * 设置底部标签文字大小（sp）。
+     */
+    fun setBottomTagTextSizeSp(sp: Float) {
+        bottomTagTextSize = DensityUtil.sp2px(context, sp).toFloat()
+    }
+
+    /**
+     * 一次性配置底部标签样式（颜色、字号、间距、起止文案）。
+     */
+    fun setBottomTagStyle(
+        @ColorInt textColor: Int? = null,
+        textSizePx: Float? = null,
+        marginTopPx: Int? = null,
+        startLabel: String? = null,
+        endLabel: String? = null
+    ) {
+        textColor?.let { bottomTagTextColor = it }
+        textSizePx?.let { bottomTagTextSize = it }
+        marginTopPx?.let { bottomTagMarginTop = it }
+        startLabel?.let { rangeStartLabel = it }
+        endLabel?.let { rangeEndLabel = it }
+        notifyAllMonthsChanged()
+    }
+
+    /**
+     * 判断指定日期是否处于选中态。
+     */
+    fun isDateSelected(day: String): Boolean {
+        if (mode == Mode.SINGLE) {
+            val start = selectedStartDate
+            if (start.isNullOrBlank()) {
+                return day == DateUtil.getToday()
+            }
+            return day == start
+        }
+        val start = selectedStartDate
+        val end = selectedEndDate
+        if (start.isNullOrBlank() && day == DateUtil.getToday()) {
+            return true
+        }
+        if (!start.isNullOrBlank() && end.isNullOrBlank()) {
+            return day == start
+        }
+        if (!start.isNullOrBlank() && !end.isNullOrBlank()) {
+            try {
+                val dayLong = DateUtil.stringToLong(day, DateUtil.DEFAULT_FORMAT_DATE)
+                var startLong = DateUtil.stringToLong(start, DateUtil.DEFAULT_FORMAT_DATE)
+                var endLong = DateUtil.stringToLong(end, DateUtil.DEFAULT_FORMAT_DATE)
+                if (startLong > endLong) {
+                    val temp = startLong
+                    startLong = endLong
+                    endLong = temp
+                }
+                return dayLong in startLong..endLong
+            } catch (e: ParseException) {
+                LogUtil.logger(TAG, "isDateSelected parse error: ${e.message}")
+            }
+        }
+        return false
+    }
+
+    /**
+     * 刷新所有月份页面的选中状态（跨月范围选择时必须刷新全部 Fragment）
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    public fun notifyAllMonthsChanged() {
+        val pagerAdapter = calendarPagerAdapter ?: return
+        val count = pagerAdapter.itemCount
+        for (i in 0 until count) {
+            pagerAdapter.getItem(i)?.adapter?.notifyDataSetChanged()
+            pagerAdapter.getItem(i)?.refreshItemDecoration()
+        }
+    }
+
+    /**
+     * 刷新所有月份页面的网格间距装饰器。
+     */
+    fun notifyAllMonthsDecorationChanged() {
+        val pagerAdapter = calendarPagerAdapter ?: return
+        val count = pagerAdapter.itemCount
+        for (i in 0 until count) {
+            pagerAdapter.getItem(i)?.refreshItemDecoration()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -23,15 +23,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
 
-        <View
-            android:id="@+id/v_circle"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_bottom_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_margin_s"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/day_number" />
+            app:layout_constraintTop_toBottomOf="@+id/day_number"
+            tools:text="起" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

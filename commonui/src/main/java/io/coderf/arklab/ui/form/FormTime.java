@@ -60,16 +60,19 @@ public class FormTime extends FormSelection {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
+        TypedArray typedArray = null;
+        boolean showClearButton;
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
-            typedArray.recycle();
+            showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
+            showClearButton = true;
         }
         if (TextUtils.isEmpty(separator)) {
             separator = ":";
@@ -89,7 +92,14 @@ public class FormTime extends FormSelection {
                     }
                     ((AppCompatTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
                 })
-                .builder();
+                .setOnClearClickListener(dialog -> ((AppCompatTextView) tvSelection).setText(null));
+        if (typedArray != null) {
+            FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
+            typedArray.recycle();
+        } else {
+            FormDatePickDialogHelper.applyDefaultStyle(getContext(), confirmTextColor, showClearButton, datePickDialog);
+        }
+        datePickDialog.builder();
     }
 
     public DatePickDialog getDatePickDialog() {

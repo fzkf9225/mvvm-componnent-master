@@ -274,7 +274,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             layoutCountLabel();
         }
         mediaAddAdapter = new MediaAddAdapter(maxCount);
-        mediaAddAdapter.setBgColor(bgColor);
+        mediaAddAdapter.setBgColor(itemBgColor);
         mediaAddAdapter.setRadius(radius);
         mediaAddAdapter.setErrorImage(errorImage);
         mediaAddAdapter.setPlaceholderImage(placeholderImage);

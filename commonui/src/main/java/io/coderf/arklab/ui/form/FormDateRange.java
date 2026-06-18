@@ -29,38 +29,13 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * describe :
  */
 public class FormDateRange extends FormSelection {
-    /**
-     * 默认起始位前一年1月1日，结束为后一年12月31日
-     */
-    protected String startDate;
-    /**
-     * 默认起始位前一年1月1日，结束为后一年12月31日
-     */
-    protected String endDate;
-    /**
-     * 时间格式分隔符，默认为 "-"，也就是yyyy-MM-dd中间的"-"。这里没有实现这个功能
-     */
+    protected String selectableStartDate;
+    protected String selectableEndDate;
     protected String separator;
-    /**
-     * 起始时间格式，默认yyyy-MM-dd
-     */
     protected String startFormat;
-    /**
-     * 结束时间格式，默认yyyy-MM-dd
-     */
     protected String endFormat;
-    /**
-     * 日期选择dialog
-     */
     protected DateRangePickDialog dateRangePickDialog;
-    /**
-     * fragment管理器
-     */
     protected FragmentManager fragmentManager;
-
-    /**
-     * lifecycle
-     */
     protected Lifecycle lifecycle;
 
     public FormDateRange(Context context) {
@@ -78,28 +53,43 @@ public class FormDateRange extends FormSelection {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
-        /*默认起始位前一年1月1日，结束为后一年12月31日*/
-        String startRangeDate;
-        String endRangeDate;
-        /*选中背景*/
+        String startRangeDate = null;
+        String endRangeDate = null;
         Drawable selectedBg = null;
-        /*选中文字颜色*/
         int selectedTextColor;
         int confirmTextColor;
-        /*日历文字可点击范围，也就是选中的大小，不包括下面的点*/
         int itemHeight;
-        /* 日历文字可点击范围，也就是选中的大小，不包括下面的点*/
         int itemWidth;
-        /*日历文字颜色大小*/
         float textSize;
-        /*默认背景*/
         Drawable normalBg;
-        /*周末的颜色*/
         int weekTextColor;
-        /*工作日的颜色*/
         int workingDayTextColor;
-        /*dialog背景*/
         Drawable dialogBgDrawable = null;
+        boolean showClearButton = true;
+        Integer itemHorizontalSpacing = null;
+        Integer itemVerticalSpacing = null;
+        Integer itemGapColorUnselected = null;
+        Integer itemGapColorSelected = null;
+        Integer bottomTagMarginTop = null;
+        String rangeStartLabel = null;
+        String rangeEndLabel = null;
+        Integer bottomTagTextColor = null;
+        Float bottomTagTextSize = null;
+        float bottomTagTextSizeSp = 0f;
+        String dialogTitle = null;
+        Integer dialogTitleTextColor = null;
+        float dialogTitleTextSize = 0f;
+        int dialogTitleMarginTop = -1;
+        String clearText = null;
+        Integer clearTextColor = null;
+        float clearTextSize = 0f;
+        Integer monthTextColor = null;
+        float monthTextSize = 0f;
+        float positiveButtonTextSize = 0f;
+        float negativeButtonTextSize = 0f;
+        String positiveText = null;
+        String negativeText = null;
+
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
             separator = typedArray.getString(R.styleable.FormUI_separator);
@@ -107,42 +97,83 @@ public class FormDateRange extends FormSelection {
             endFormat = typedArray.getString(R.styleable.FormUI_endFormat);
             dialogBgDrawable = typedArray.getDrawable(R.styleable.FormUI_dialogBgDrawable);
             confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
-            //日历
             workingDayTextColor = typedArray.getColor(R.styleable.FormUI_workingDayTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
-            // 如果没设置默认为工作日文字颜色
             weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
-            startRangeDate = typedArray.getString(R.styleable.FormUI_startDate);
-            endRangeDate = typedArray.getString(R.styleable.FormUI_endDate);
-            if (TextUtils.isEmpty(startRangeDate)) {
-                startRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365);
-            }
-
-            if (TextUtils.isEmpty(endRangeDate)) {
-                endRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365);
-            }
+            startRangeDate = typedArray.getString(R.styleable.FormUI_selectableStartDate);
+            endRangeDate = typedArray.getString(R.styleable.FormUI_selectableEndDate);
             selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.white));
             selectedBg = typedArray.getDrawable(R.styleable.FormUI_selectedBg);
             normalBg = typedArray.getDrawable(R.styleable.FormUI_normalBg);
             textSize = typedArray.getDimension(R.styleable.FormUI_textSize,
                     DensityUtil.sp2px(getContext(), 14f));
-
             itemWidth = typedArray.getDimensionPixelOffset(R.styleable.FormUI_itemWidth,
                     DensityUtil.dp2px(getContext(), 36f));
             itemHeight = typedArray.getDimensionPixelOffset(R.styleable.FormUI_itemHeight,
                     DensityUtil.dp2px(getContext(), 36f));
+            showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
+            if (typedArray.hasValue(R.styleable.FormUI_itemHorizontalSpacing)) {
+                itemHorizontalSpacing = typedArray.getDimensionPixelOffset(
+                        R.styleable.FormUI_itemHorizontalSpacing, 0);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_itemVerticalSpacing)) {
+                itemVerticalSpacing = typedArray.getDimensionPixelOffset(
+                        R.styleable.FormUI_itemVerticalSpacing, 0);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_itemGapColorUnselected)) {
+                itemGapColorUnselected = typedArray.getColor(
+                        R.styleable.FormUI_itemGapColorUnselected, 0);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_itemGapColorSelected)) {
+                itemGapColorSelected = typedArray.getColor(
+                        R.styleable.FormUI_itemGapColorSelected, 0);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_bottomTagMarginTop)) {
+                bottomTagMarginTop = typedArray.getDimensionPixelOffset(
+                        R.styleable.FormUI_bottomTagMarginTop, 0);
+            }
+            rangeStartLabel = typedArray.getString(R.styleable.FormUI_rangeStartLabel);
+            rangeEndLabel = typedArray.getString(R.styleable.FormUI_rangeEndLabel);
+            if (typedArray.hasValue(R.styleable.FormUI_bottomTagTextColor)) {
+                bottomTagTextColor = typedArray.getColor(
+                        R.styleable.FormUI_bottomTagTextColor, 0);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_bottomTagTextSize)) {
+                bottomTagTextSize = typedArray.getDimension(
+                        R.styleable.FormUI_bottomTagTextSize, 0f);
+            }
+            bottomTagTextSizeSp = typedArray.getFloat(R.styleable.FormUI_bottomTagTextSizeSp, 0f);
+            dialogTitle = typedArray.getString(R.styleable.FormUI_datePickTitle);
+            if (typedArray.hasValue(R.styleable.FormUI_datePickTitleTextColor)) {
+                dialogTitleTextColor = typedArray.getColor(
+                        R.styleable.FormUI_datePickTitleTextColor, 0);
+            }
+            dialogTitleTextSize = typedArray.getFloat(R.styleable.FormUI_datePickTitleTextSize, 0f);
+            if (typedArray.hasValue(R.styleable.FormUI_datePickTitleMarginTop)) {
+                dialogTitleMarginTop = typedArray.getDimensionPixelOffset(
+                        R.styleable.FormUI_datePickTitleMarginTop, 0);
+            }
+            clearText = typedArray.getString(R.styleable.FormUI_clearText);
+            if (typedArray.hasValue(R.styleable.FormUI_clearTextColor)) {
+                clearTextColor = typedArray.getColor(R.styleable.FormUI_clearTextColor, 0);
+            }
+            clearTextSize = typedArray.getFloat(R.styleable.FormUI_clearTextSize, 0f);
+            if (typedArray.hasValue(R.styleable.FormUI_calendarMonthTextColor)) {
+                monthTextColor = typedArray.getColor(R.styleable.FormUI_calendarMonthTextColor, 0);
+            }
+            monthTextSize = typedArray.getFloat(R.styleable.FormUI_calendarMonthTextSize, 0f);
+            positiveButtonTextSize = typedArray.getFloat(R.styleable.FormUI_positiveButtonTextSize, 0f);
+            negativeButtonTextSize = typedArray.getFloat(R.styleable.FormUI_negativeButtonTextSize, 0f);
+            positiveText = typedArray.getString(R.styleable.FormUI_positiveText);
+            negativeText = typedArray.getString(R.styleable.FormUI_negativeText);
             typedArray.recycle();
         } else {
             confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
             textSize = (float) DensityUtil.sp2px(getContext(), 14f);
-            startRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365);
-            endRangeDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365);
             itemWidth = DensityUtil.dp2px(getContext(), 36f);
             itemHeight = DensityUtil.dp2px(getContext(), 36f);
-
             selectedTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.white);
             weekTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
             workingDayTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
-
             ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
             shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(getContext(), io.coderf.arklab.ui.R.color.theme_color));
             selectedBg = shapeDrawableSelected;
@@ -160,22 +191,10 @@ public class FormDateRange extends FormSelection {
         if (TextUtils.isEmpty(endFormat)) {
             endFormat = DateUtil.DEFAULT_FORMAT_DATE;
         }
-        AppCompatActivity activity;
-        if (getContext() instanceof AppCompatActivity) {
-            activity = (AppCompatActivity) getContext();
-            setFragmentManager(activity.getSupportFragmentManager());
-            setLifecycle(activity.getLifecycle());
-        } else if (getContext() instanceof ContextWrapper) {
-            Context baseContext = ((ContextWrapper) getContext()).getBaseContext();
-            if (baseContext instanceof AppCompatActivity) {
-                activity = (AppCompatActivity) baseContext;
-                setFragmentManager(activity.getSupportFragmentManager());
-                setLifecycle(activity.getLifecycle());
-            }
-        }
-        dateRangePickDialog = new DateRangePickDialog(getContext())
-                .setStartDate(startRangeDate)
-                .setEndDate(endRangeDate)
+        resolveFragmentHost();
+        DateRangePickDialog dialogBuilder = new DateRangePickDialog(getContext())
+                .setSelectableStartDate(startRangeDate)
+                .setSelectableEndDate(endRangeDate)
                 .setSelectedTextColor(selectedTextColor)
                 .setWeekTextColor(weekTextColor)
                 .setWorkingDayTextColor(workingDayTextColor)
@@ -184,24 +203,96 @@ public class FormDateRange extends FormSelection {
                 .setTextSize(textSize)
                 .setSelectedBg(selectedBg)
                 .setNormalBg(normalBg)
-                .setClearTextColor(confirmTextColor)
+                .setShowClearView(showClearButton)
                 .setGravity(Gravity.BOTTOM)
                 .setBgDrawable(dialogBgDrawable)
                 .setPositiveTextColor(confirmTextColor)
+                .setItemHorizontalSpacing(itemHorizontalSpacing)
+                .setItemVerticalSpacing(itemVerticalSpacing)
+                .setItemGapColorUnselected(itemGapColorUnselected)
+                .setItemGapColorSelected(itemGapColorSelected)
+                .setBottomTagMarginTop(bottomTagMarginTop)
+                .setRangeStartLabel(rangeStartLabel)
+                .setRangeEndLabel(rangeEndLabel)
+                .setBottomTagTextColor(bottomTagTextColor);
+        if (bottomTagTextSizeSp > 0f) {
+            dialogBuilder.setBottomTagTextSizeSp(bottomTagTextSizeSp);
+        } else if (bottomTagTextSize != null) {
+            dialogBuilder.setBottomTagTextSize(bottomTagTextSize);
+        }
+        if (!TextUtils.isEmpty(dialogTitle)) {
+            dialogBuilder.setTitle(dialogTitle);
+        }
+        if (dialogTitleTextColor != null) {
+            dialogBuilder.setTitleTextColor(dialogTitleTextColor);
+        }
+        if (dialogTitleTextSize > 0f) {
+            dialogBuilder.setTitleTextSize(dialogTitleTextSize);
+        }
+        if (dialogTitleMarginTop >= 0) {
+            dialogBuilder.setTitleMarginTopPx(dialogTitleMarginTop);
+        }
+        if (!TextUtils.isEmpty(clearText)) {
+            dialogBuilder.setClearText(clearText);
+        }
+        if (clearTextColor != null) {
+            dialogBuilder.setClearTextColor(clearTextColor);
+        }
+        if (clearTextSize > 0f) {
+            dialogBuilder.setClearTextSize(clearTextSize);
+        }
+        if (monthTextColor != null) {
+            dialogBuilder.setMonthTextColor(monthTextColor);
+        }
+        if (monthTextSize > 0f) {
+            dialogBuilder.setMonthTextSize(monthTextSize);
+        }
+        if (positiveButtonTextSize > 0f) {
+            dialogBuilder.setPositiveButtonTextSize(positiveButtonTextSize);
+        }
+        if (negativeButtonTextSize > 0f) {
+            dialogBuilder.setNegativeButtonTextSize(negativeButtonTextSize);
+        }
+        if (!TextUtils.isEmpty(positiveText)) {
+            dialogBuilder.setPositiveText(positiveText);
+        }
+        if (!TextUtils.isEmpty(negativeText)) {
+            dialogBuilder.setNegativeText(negativeText);
+        }
+        dateRangePickDialog = dialogBuilder
                 .setOnPositiveClickListener((startDate, endDate) -> {
                     if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(endDate)) {
-                        FormDateRange.this.startDate = null;
-                        FormDateRange.this.endDate = null;
+                        FormDateRange.this.selectableStartDate = null;
+                        FormDateRange.this.selectableEndDate = null;
                         ((AppCompatTextView) tvSelection).setText(null);
                         return;
                     }
-                    FormDateRange.this.startDate = DateUtil.dateFormat(startDate, startFormat);
-                    FormDateRange.this.endDate = DateUtil.dateFormat(endDate, endFormat);
-                    ((AppCompatTextView) tvSelection).setText(FormDateRange.this.startDate + " ~ " + FormDateRange.this.endDate);
+                    FormDateRange.this.selectableStartDate = DateUtil.dateFormat(startDate, startFormat);
+                    FormDateRange.this.selectableEndDate = DateUtil.dateFormat(endDate, endFormat);
+                    ((AppCompatTextView) tvSelection).setText(FormDateRange.this.selectableStartDate + " ~ " + FormDateRange.this.selectableEndDate);
+                })
+                .setOnClearClickListener(dialog -> {
+                    FormDateRange.this.selectableStartDate = null;
+                    FormDateRange.this.selectableEndDate = null;
+                    ((AppCompatTextView) tvSelection).setText(null);
                 })
                 .builder(fragmentManager, lifecycle);
     }
 
+    private void resolveFragmentHost() {
+        if (getContext() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getContext();
+            setFragmentManager(activity.getSupportFragmentManager());
+            setLifecycle(activity.getLifecycle());
+        } else if (getContext() instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) getContext()).getBaseContext();
+            if (baseContext instanceof AppCompatActivity) {
+                AppCompatActivity activity = (AppCompatActivity) baseContext;
+                setFragmentManager(activity.getSupportFragmentManager());
+                setLifecycle(activity.getLifecycle());
+            }
+        }
+    }
 
     public void setFragmentManager(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
@@ -213,6 +304,68 @@ public class FormDateRange extends FormSelection {
 
     public DateRangePickDialog getDateRangePickDialog() {
         return dateRangePickDialog;
+    }
+
+    public FormDateRange setBottomTagMarginTop(int marginTopPx) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagMarginTop(marginTopPx);
+        }
+        return this;
+    }
+
+    public FormDateRange setBottomTagMarginTopDp(float marginTopDp) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagMarginTopDp(marginTopDp);
+        }
+        return this;
+    }
+
+    public FormDateRange setRangeStartLabel(String label) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setRangeStartLabel(label);
+        }
+        return this;
+    }
+
+    public FormDateRange setRangeEndLabel(String label) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setRangeEndLabel(label);
+        }
+        return this;
+    }
+
+    public FormDateRange setBottomTagTextColor(int color) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagTextColor(color);
+        }
+        return this;
+    }
+
+    public FormDateRange setBottomTagTextSize(float textSizePx) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagTextSize(textSizePx);
+        }
+        return this;
+    }
+
+    public FormDateRange setBottomTagTextSizeSp(float spSize) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagTextSizeSp(spSize);
+        }
+        return this;
+    }
+
+    public FormDateRange setBottomTagStyle(
+            Integer textColor,
+            Float textSizeSp,
+            Integer marginTopPx,
+            String startLabel,
+            String endLabel) {
+        if (dateRangePickDialog != null) {
+            dateRangePickDialog.setBottomTagStyle(
+                    textColor, textSizeSp, marginTopPx, startLabel, endLabel);
+        }
+        return this;
     }
 
     @Override
@@ -227,11 +380,11 @@ public class FormDateRange extends FormSelection {
         });
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getSelectableStartDate() {
+        return selectableStartDate;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getSelectableEndDate() {
+        return selectableEndDate;
     }
 }

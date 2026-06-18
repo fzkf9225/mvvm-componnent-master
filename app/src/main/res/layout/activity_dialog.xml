@@ -308,6 +308,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateRangePickDialog" />
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dateRangePickClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="时间范围选择（含清空按钮）"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customDateRangePickDialog" />
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/popupSingleDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -317,7 +328,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customDateRangePickDialog" />
+                app:layout_constraintTop_toBottomOf="@+id/dateRangePickClear" />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/popupMultiDialog"
                 android:layout_width="wrap_content"

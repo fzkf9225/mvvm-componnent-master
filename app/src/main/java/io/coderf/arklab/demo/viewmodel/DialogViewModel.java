@@ -442,8 +442,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             shapeDrawableBg.setCornerRadius(view.getContext().getResources().getDimension(io.coderf.arklab.common.R.dimen.radius_l)); // 设置圆角半径，单位为像素
             int daysInMonthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH); // 获取本月最大天数
             new DateRangePickDialog(view.getContext())
-                    .setStartDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
-                    .setEndDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
+                    .setSelectableStartDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
+                    .setSelectableEndDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
                     .setSelectedTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.white))
                     .setWeekTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
                     .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.auto_color))
@@ -459,6 +459,20 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setBgDrawable(shapeDrawableBg)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .builder(fragmentManager, lifecycle)
+                    .show();
+        } else if (R.id.dateRangePickClear == view.getId()) {
+            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
+            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            new DateRangePickDialog(view.getContext())
+                    .setTitle("请选择日期范围")
+                    .setShowClearView(true)
+                    .setClearText("清空")
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
+                    .setClearTextSize(14f)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .setOnClearClickListener(dialog -> baseView.showToast("已清空"))
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.popupSingleDialog == view.getId()) {

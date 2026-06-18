@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -28,11 +29,11 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
-import io.coderf.arklab.ui.fragment.CalendarMonthFragment;
+import io.coderf.arklab.ui.bean.CalendarData;
+import io.coderf.arklab.ui.widght.calendar.adapter.MonthViewPagerAdapter;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 
@@ -46,6 +47,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     private String title = null;
     private CalendarView.OnSelectedChangedListener onPositiveClickListener;
     private OnDialogInterfaceClickListener onNegativeClickListener;
+    private OnDialogInterfaceClickListener onClearClickListener;
     private boolean outSide = true;
     private String positiveText = null, negativeText = null;
     private boolean isShowPositiveView = true, isShowNegativeView = true;
@@ -54,10 +56,13 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     private ColorStateList negativeTextColor = null;
     private ColorStateList clearTextColor = null;
     /**
-     * 默认起始位前一年1月1日，结束为后一年12月31日
+     * 可选日期范围起始，未设置时不限制
      */
-    private String startDate;
-    private String endDate;
+    private String selectableStartDate;
+    /**
+     * 可选日期范围截止，未设置时不限制
+     */
+    private String selectableEndDate;
     /**
      * 周末的颜色
      */
@@ -116,6 +121,53 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
     private Drawable bgDrawable;
 
+    /** 是否显示左上角清空按钮，默认隐藏 */
+    private boolean isShowClearView = false;
+    /** 清空按钮文字 */
+    private String clearText = null;
+    /** 清空按钮文字大小 (sp)，小于等于 0 沿用 XML */
+    private float clearTextSizeSp = 0f;
+    /** 标题文字大小 (sp)，小于等于 0 沿用 XML */
+    private float titleTextSizeSp = 0f;
+    /** 标题文字颜色，null 沿用 XML */
+    private ColorStateList titleTextColor = null;
+    /** 是否显示标题，默认显示 */
+    private boolean isShowTitleView = true;
+    /** 标题 layout_marginTop (px)，小于 0 沿用 XML */
+    private int titleMarginTopPx = -1;
+    /** 月份文字大小 (sp)，小于等于 0 沿用 XML */
+    private float monthTextSizeSp = 0f;
+    /** 月份文字颜色，null 沿用 XML */
+    private ColorStateList monthTextColor = null;
+    /** 是否显示月份，默认显示 */
+    private boolean isShowMonthView = true;
+    /** 月份 layout_marginTop (px)，小于 0 沿用 XML */
+    private int monthMarginTopPx = -1;
+    /** 确定 / 取消按钮文字大小 (sp)，小于等于 0 沿用 XML */
+    private float positiveButtonTextSizeSp = 0f;
+    private float negativeButtonTextSizeSp = 0f;
+
+    /** 日历网格横向间距（px） */
+    private Integer itemHorizontalSpacing = null;
+    /** 日历网格纵向间距（px） */
+    private Integer itemVerticalSpacing = null;
+    /** 日历网格未选中时的间距颜色 */
+    private Integer itemGapColorUnselected = null;
+    /** 日历网格选中时的间距颜色 */
+    private Integer itemGapColorSelected = null;
+    /** 底部标签与日期数字之间的间距（px） */
+    private Integer bottomTagMarginTop = null;
+    /** 范围选择起始日底部标签 */
+    private String rangeStartLabel = null;
+    /** 范围选择截止日底部标签 */
+    private String rangeEndLabel = null;
+    /** 底部标签文字颜色 */
+    private Integer bottomTagTextColor = null;
+    /** 底部标签文字大小（px） */
+    private Float bottomTagTextSize = null;
+    /** 底部标签文字大小（sp），大于 0 时优先于 px */
+    private float bottomTagTextSizeSp = 0f;
+
     /**
      * Dialog 必须绑定 Activity 的 Window token。Fragment 的 {@link Fragment#requireContext()} /
      * {@link Fragment#getContext()} 通常是 {@link ContextWrapper}，不能直接强转为 Activity。
@@ -148,8 +200,6 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.ui.R.color.theme_color));
         selectedBg = shapeDrawableSelected;
 
-        startDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), -365);
-        endDate = DateUtil.getCalcDateFormat(DateUtil.getToday(), 365);
         selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white);
         weekTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
         workingDayTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
@@ -157,6 +207,8 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
         shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.transparent));
         normalBg = shapeDrawableNormal;
+        clearTextColor = ColorStateList.valueOf(
+                ContextCompat.getColor(context, io.coderf.arklab.ui.R.color.theme_red));
     }
 
     /**
@@ -189,13 +241,18 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         return this;
     }
 
-    public DateRangePickDialog setStartDate(String startDate) {
-        this.startDate = startDate;
+    public DateRangePickDialog setOnClearClickListener(OnDialogInterfaceClickListener onClearClickListener) {
+        this.onClearClickListener = onClearClickListener;
         return this;
     }
 
-    public DateRangePickDialog setEndDate(String endDate) {
-        this.endDate = endDate;
+    public DateRangePickDialog setSelectableStartDate(String selectableStartDate) {
+        this.selectableStartDate = selectableStartDate;
+        return this;
+    }
+
+    public DateRangePickDialog setSelectableEndDate(String selectableEndDate) {
+        this.selectableEndDate = selectableEndDate;
         return this;
     }
 
@@ -224,8 +281,83 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         return this;
     }
 
+    public DateRangePickDialog setClearText(String clearText) {
+        this.clearText = clearText;
+        return this;
+    }
+
+    public DateRangePickDialog setClearTextSize(float spSize) {
+        this.clearTextSizeSp = spSize;
+        return this;
+    }
+
+    public DateRangePickDialog setShowClearView(boolean isShowClearView) {
+        this.isShowClearView = isShowClearView;
+        return this;
+    }
+
     public DateRangePickDialog setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public DateRangePickDialog setTitleTextSize(float spSize) {
+        this.titleTextSizeSp = spSize;
+        return this;
+    }
+
+    public DateRangePickDialog setTitleTextColor(@ColorInt int color) {
+        this.titleTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public DateRangePickDialog setShowTitleView(boolean isShowTitleView) {
+        this.isShowTitleView = isShowTitleView;
+        return this;
+    }
+
+    public DateRangePickDialog setMonthTextSize(float spSize) {
+        this.monthTextSizeSp = spSize;
+        return this;
+    }
+
+    public DateRangePickDialog setMonthTextColor(@ColorInt int color) {
+        this.monthTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public DateRangePickDialog setShowMonthView(boolean isShowMonthView) {
+        this.isShowMonthView = isShowMonthView;
+        return this;
+    }
+
+    public DateRangePickDialog setMonthMarginTopPx(int marginTopPx) {
+        this.monthMarginTopPx = marginTopPx;
+        return this;
+    }
+
+    public DateRangePickDialog setMonthMarginTopDp(int marginTopDp) {
+        this.monthMarginTopPx = DensityUtil.dp2px(context, marginTopDp);
+        return this;
+    }
+
+    public DateRangePickDialog setPositiveButtonTextSize(float spSize) {
+        this.positiveButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public DateRangePickDialog setNegativeButtonTextSize(float spSize) {
+        this.negativeButtonTextSizeSp = spSize;
+        return this;
+    }
+
+    public DateRangePickDialog setTitleMarginTopPx(int marginTopPx) {
+        this.titleMarginTopPx = marginTopPx;
+        return this;
+    }
+
+    public DateRangePickDialog setTitleMarginTopDp(int marginTopDp) {
+        this.titleMarginTopPx = DensityUtil.dp2px(context, marginTopDp);
         return this;
     }
 
@@ -292,6 +424,115 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     public DateRangePickDialog setDotHeight(Integer dotHeight) {
         this.dotHeight = dotHeight;
         return this;
+    }
+
+    public DateRangePickDialog setItemHorizontalSpacing(Integer itemHorizontalSpacing) {
+        this.itemHorizontalSpacing = itemHorizontalSpacing;
+        return this;
+    }
+
+    public DateRangePickDialog setItemVerticalSpacing(Integer itemVerticalSpacing) {
+        this.itemVerticalSpacing = itemVerticalSpacing;
+        return this;
+    }
+
+    public DateRangePickDialog setItemGapColorUnselected(@ColorInt Integer itemGapColorUnselected) {
+        this.itemGapColorUnselected = itemGapColorUnselected;
+        return this;
+    }
+
+    public DateRangePickDialog setItemGapColorSelected(@ColorInt Integer itemGapColorSelected) {
+        this.itemGapColorSelected = itemGapColorSelected;
+        return this;
+    }
+
+    public DateRangePickDialog setBottomTagMarginTop(Integer bottomTagMarginTop) {
+        this.bottomTagMarginTop = bottomTagMarginTop;
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    public DateRangePickDialog setBottomTagMarginTopDp(float marginTopDp) {
+        this.bottomTagMarginTop = DensityUtil.dp2px(context, marginTopDp);
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    public DateRangePickDialog setRangeStartLabel(String rangeStartLabel) {
+        this.rangeStartLabel = rangeStartLabel;
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    public DateRangePickDialog setRangeEndLabel(String rangeEndLabel) {
+        this.rangeEndLabel = rangeEndLabel;
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    public DateRangePickDialog setBottomTagTextColor(@ColorInt Integer bottomTagTextColor) {
+        this.bottomTagTextColor = bottomTagTextColor;
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    public DateRangePickDialog setBottomTagTextSize(Float bottomTagTextSize) {
+        this.bottomTagTextSize = bottomTagTextSize;
+        this.bottomTagTextSizeSp = 0f;
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    /**
+     * 设置底部标签文字大小（sp）。
+     */
+    public DateRangePickDialog setBottomTagTextSizeSp(float spSize) {
+        this.bottomTagTextSizeSp = spSize;
+        if (spSize > 0f) {
+            this.bottomTagTextSize = (float) DensityUtil.sp2px(context, spSize);
+        }
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    /**
+     * 一次性配置底部标签样式。
+     *
+     * @param textColor   文字颜色，null 不修改
+     * @param textSizeSp  文字大小（sp），null 或 ≤0 不修改
+     * @param marginTopPx 与日期数字间距（px），null 不修改
+     * @param startLabel  起始日标签，null 不修改
+     * @param endLabel    截止日标签，null 不修改
+     */
+    public DateRangePickDialog setBottomTagStyle(
+            @ColorInt Integer textColor,
+            Float textSizeSp,
+            Integer marginTopPx,
+            String startLabel,
+            String endLabel) {
+        if (textColor != null) {
+            this.bottomTagTextColor = textColor;
+        }
+        if (textSizeSp != null && textSizeSp > 0f) {
+            setBottomTagTextSizeSp(textSizeSp);
+        }
+        if (marginTopPx != null) {
+            this.bottomTagMarginTop = marginTopPx;
+        }
+        if (startLabel != null) {
+            this.rangeStartLabel = startLabel;
+        }
+        if (endLabel != null) {
+            this.rangeEndLabel = endLabel;
+        }
+        applyBottomTagConfigIfReady();
+        return this;
+    }
+
+    private void applyBottomTagConfigIfReady() {
+        if (binding != null) {
+            applyCalendarTagConfig();
+        }
     }
 
     public DateRangePickDialog setLifecycle(Lifecycle lifecycle) {
@@ -363,10 +604,6 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
             binding.dialogCancel.setTextColor(negativeTextColor);
         }
 
-        if (clearTextColor != null) {
-            binding.tvClear.setTextColor(clearTextColor);
-        }
-
         if (!isShowNegativeView) {
             binding.dialogCancel.setVisibility(View.GONE);
         }
@@ -386,7 +623,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
                     return;
                 }
                 if (TextUtils.isEmpty(binding.calendarViewRange.getSelectedEndDate())) {
-                    Toast.makeText(context, "请选择截止日期日期", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请选择截止日期", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dismiss();
@@ -400,13 +637,23 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
             }
         });
 
-        binding.tvClear.setOnClickListener(view -> {
+        if (TextUtils.isEmpty(clearText)) {
+            binding.tvClear.setText(ContextCompat.getString(getContext(), R.string.clear));
+        } else {
+            binding.tvClear.setText(clearText);
+        }
+        if (clearTextColor != null) {
+            binding.tvClear.setTextColor(clearTextColor);
+        }
+        binding.tvClear.setVisibility(isShowClearView ? View.VISIBLE : View.GONE);
+        binding.tvClear.setOnClickListener(v -> {
             dismiss();
-            if (onPositiveClickListener != null) {
-                onPositiveClickListener.onDateSelected(null, null);
+            if (onClearClickListener != null) {
+                onClearClickListener.onDialogClick(this);
             }
         });
-        binding.calendarViewRange.setDateRange(startDate, endDate);
+
+        binding.calendarViewRange.setSelectableDateRange(selectableStartDate, selectableEndDate);
         if (textSize != null) {
             binding.calendarViewRange.setTextSize(textSize);
         }
@@ -431,16 +678,13 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         binding.calendarViewRange.setSelectedTextColor(selectedTextColor);
         binding.calendarViewRange.setWorkingDayTextColor(workingDayTextColor);
         binding.calendarViewRange.setWeekTextColor(weekTextColor);
-        //刷新布局
+        applyCalendarSpacingConfig();
+        applyCalendarTagConfig();
         binding.calendarViewRange.refreshTitle();
         binding.calendarViewRange.initData(lifecycle, fragmentManager);
-        if (TextUtils.isEmpty(title)) {
-            binding.dialogMessageType.setText(ContextCompat.getString(getContext(), io.coderf.arklab.ui.R.string.please_select_the_date_range));
-        } else {
-            binding.dialogMessageType.setText(title);
-        }
-        binding.dialogMessageType.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
-        binding.tvClear.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
+        applyTitleConfig();
+        applyDynamicAppearance();
+        refreshMonthLabel();
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
         setContentView(binding.getRoot());
@@ -452,23 +696,138 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dialogWindow.setGravity(gravity);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private final CalendarView.OnViewPagerChangedListener onViewPagerChangedListener = (calendarData, pos) -> {
-        String stringBuilder = calendarData.getYear() +
-                "-" +
-                NumberUtil.formatMonthOrDay(calendarData.getMonth());
-        binding.tvMonth.setText(stringBuilder);
-        CalendarMonthFragment fragment = binding.calendarViewRange.getCalendarPagerAdapter().getItem(pos);
-        if (fragment == null) {
+    private void applyTitleConfig() {
+        if (TextUtils.isEmpty(title)) {
+            binding.dialogMessageType.setText(ContextCompat.getString(
+                    getContext(), io.coderf.arklab.ui.R.string.please_select_the_date_range));
+        } else {
+            binding.dialogMessageType.setText(title);
+        }
+        binding.dialogMessageType.setVisibility(isShowTitleView ? View.VISIBLE : View.GONE);
+        if (titleTextColor != null) {
+            binding.dialogMessageType.setTextColor(titleTextColor);
+        }
+    }
+
+    private void applyCalendarSpacingConfig() {
+        int horizontalSpacing = itemHorizontalSpacing != null
+                ? itemHorizontalSpacing
+                : DensityUtil.dp2px(context, 8f);
+        int verticalSpacing = itemVerticalSpacing != null
+                ? itemVerticalSpacing
+                : DensityUtil.dp2px(context, 8f);
+        binding.calendarViewRange.setItemSpacing(
+                horizontalSpacing,
+                verticalSpacing,
+                itemGapColorUnselected,
+                itemGapColorSelected
+        );
+    }
+
+    private void applyCalendarTagConfig() {
+        if (bottomTagMarginTop != null) {
+            binding.calendarViewRange.setBottomTagMarginTop(bottomTagMarginTop);
+        }
+        if (rangeStartLabel != null) {
+            binding.calendarViewRange.setRangeStartLabel(rangeStartLabel);
+        }
+        if (rangeEndLabel != null) {
+            binding.calendarViewRange.setRangeEndLabel(rangeEndLabel);
+        }
+        if (bottomTagTextColor != null) {
+            binding.calendarViewRange.setBottomTagTextColor(bottomTagTextColor);
+        }
+        if (bottomTagTextSizeSp > 0f) {
+            binding.calendarViewRange.setBottomTagTextSizeSp(bottomTagTextSizeSp);
+        } else if (bottomTagTextSize != null) {
+            binding.calendarViewRange.setBottomTagTextSize(bottomTagTextSize);
+        }
+    }
+
+    private void applyDynamicAppearance() {
+        if (titleTextSizeSp > 0f) {
+            binding.dialogMessageType.setTextSize(titleTextSizeSp);
+        }
+        if (titleMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.dialogMessageType.getLayoutParams();
+            lp.topMargin = titleMarginTopPx;
+            binding.dialogMessageType.setLayoutParams(lp);
+        }
+        if (monthTextSizeSp > 0f) {
+            binding.tvMonth.setTextSize(monthTextSizeSp);
+        }
+        if (monthTextColor != null) {
+            binding.tvMonth.setTextColor(monthTextColor);
+        }
+        binding.tvMonth.setVisibility(isShowMonthView ? View.VISIBLE : View.GONE);
+        if (monthMarginTopPx >= 0) {
+            ViewGroup.MarginLayoutParams monthLp =
+                    (ViewGroup.MarginLayoutParams) binding.tvMonth.getLayoutParams();
+            monthLp.topMargin = monthMarginTopPx;
+            binding.tvMonth.setLayoutParams(monthLp);
+        }
+        if (positiveButtonTextSizeSp > 0f) {
+            binding.dialogConfirm.setTextSize(positiveButtonTextSizeSp);
+        }
+        if (negativeButtonTextSizeSp > 0f) {
+            binding.dialogCancel.setTextSize(negativeButtonTextSizeSp);
+        }
+        if (clearTextSizeSp > 0f) {
+            binding.tvClear.setTextSize(clearTextSizeSp);
+        }
+        if (isShowClearView && !isShowTitleView) {
+            ConstraintLayout.LayoutParams clearLp =
+                    (ConstraintLayout.LayoutParams) binding.tvClear.getLayoutParams();
+            clearLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+            clearLp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+            clearLp.topToBottom = ConstraintLayout.LayoutParams.UNSET;
+            clearLp.topMargin = titleMarginTopPx >= 0
+                    ? titleMarginTopPx
+                    : binding.dialogMessageType.getLayoutParams() instanceof ViewGroup.MarginLayoutParams
+                    ? ((ViewGroup.MarginLayoutParams) binding.dialogMessageType.getLayoutParams()).topMargin
+                    : 0;
+            binding.tvClear.setLayoutParams(clearLp);
+        }
+    }
+
+    private void refreshMonthLabel() {
+        if (binding == null || !isShowMonthView) {
             return;
         }
-        fragment.getAdapter().notifyDataSetChanged();
+        MonthViewPagerAdapter adapter = binding.calendarViewRange.getCalendarPagerAdapter();
+        if (adapter == null || adapter.getDateList() == null || adapter.getDateList().isEmpty()) {
+            binding.tvMonth.postDelayed(this::refreshMonthLabel, 100);
+            return;
+        }
+        androidx.viewpager2.widget.ViewPager2 viewPager = binding.calendarViewRange.getViewPager();
+        if (viewPager == null) {
+            return;
+        }
+        int pos = viewPager.getCurrentItem();
+        if (pos < 0 || pos >= adapter.getDateList().size()) {
+            Integer currentPos = io.coderf.arklab.ui.helper.CalendarDataSource.currentMonthPosField.get();
+            pos = currentPos != null ? currentPos : 0;
+        }
+        CalendarData calendarData = adapter.getDateList().get(pos);
+        binding.tvMonth.setText(calendarData.getYear() + "-"
+                + NumberUtil.formatMonthOrDay(calendarData.getMonth()));
+        binding.tvMonth.setVisibility(View.VISIBLE);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private final CalendarView.OnViewPagerChangedListener onViewPagerChangedListener = (calendarData, pos) -> {
+        binding.tvMonth.setText(calendarData.getYear() + "-"
+                + NumberUtil.formatMonthOrDay(calendarData.getMonth()));
+        binding.tvMonth.setVisibility(isShowMonthView ? View.VISIBLE : View.GONE);
+        binding.calendarViewRange.notifyAllMonthsChanged();
     };
 
     @Override
     public void show() {
         super.show();
         binding.calendarViewRange.registerOnPageChangeCallback(onViewPagerChangedListener);
+        binding.tvMonth.post(this::refreshMonthLabel);
     }
 
     @Override

@@ -138,8 +138,6 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             compressImageSize = 300;
             labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
         }
-
-
         isInitialized = true;
     }
 
@@ -189,7 +187,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             layoutCountLabel();
         }
         imageAddAdapter = new ImageAddAdapter(maxCount);
-        imageAddAdapter.setBgColor(bgColor);
+        imageAddAdapter.setBgColor(itemBgColor);
         imageAddAdapter.setRadius(radius);
         imageAddAdapter.setErrorImage(errorImage);
         imageAddAdapter.setPlaceholderImage(placeholderImage);

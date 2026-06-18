@@ -130,7 +130,7 @@ public class FormFilePreview extends FormMedia {
             adapter = new FileShowAdapter();
             FileShowAdapter fileShowAdapter = (FileShowAdapter) adapter;
             fileShowAdapter.setRadius(radius);
-            fileShowAdapter.setBgColor(bgColor);
+            fileShowAdapter.setBgColor(itemBgColor);
             fileShowAdapter.setItemTextSize(formTextSize);
             fileShowAdapter.setFileIconWidth((int) fileIconWidth);
             fileShowAdapter.setFileIconHeight((int) fileIconHeight);

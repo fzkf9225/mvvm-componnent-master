@@ -22,13 +22,16 @@ import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration
  */
 class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonthBinding>(),
     BaseRecyclerViewAdapter.OnItemClickListener {
+
+    private var calendarView: CalendarView? = null
+    private var monthOfYears: List<CalendarData>? = null
+    private var itemDecoration: GridSpacingItemDecoration? = null
+
     val adapter: CalendarPagerAdapter by lazy {
-        CalendarPagerAdapter(calendarView).apply {
+        CalendarPagerAdapter(calendarView!!).apply {
             setOnItemClickListener(this@CalendarMonthFragment)
         }
     }
-    private var calendarView: CalendarView? = null
-    private var monthOfYears: List<CalendarData>? = null
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_calendar_month
@@ -46,15 +49,33 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                     return false
                 }
             }
-        binding.recyclerCalendar.addItemDecoration(
-            GridSpacingItemDecoration(
-                DensityUtil.dp2px(
-                    requireContext(),
-                    8f
-                ), 0x00000000
-            ))
+        applyItemDecoration()
         adapter.list = monthOfYears
         binding.recyclerCalendar.adapter = adapter
+    }
+
+    fun refreshItemDecoration() {
+        if (!isAdded || view == null) {
+            return
+        }
+        applyItemDecoration()
+    }
+
+    private fun applyItemDecoration() {
+        val calendar = calendarView ?: return
+        itemDecoration?.let { binding.recyclerCalendar.removeItemDecoration(it) }
+        val horizontalSpacing = calendar.itemHorizontalSpacing
+            ?: DensityUtil.dp2px(requireContext(), 8f)
+        val verticalSpacing = calendar.itemVerticalSpacing
+            ?: DensityUtil.dp2px(requireContext(), 8f)
+        val builder = GridSpacingItemDecoration.Builder()
+            .spacing(horizontalSpacing, verticalSpacing)
+            .selectionProvider { position -> adapter.isSelectedPosition(position) }
+        calendar.itemGapColorUnselected?.let { builder.unselectedGapColor(it) }
+        calendar.itemGapColorSelected?.let { builder.selectedGapColor(it) }
+        itemDecoration = builder.build()
+        binding.recyclerCalendar.addItemDecoration(itemDecoration!!)
+        binding.recyclerCalendar.invalidateItemDecorations()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -73,24 +94,36 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
         }
         when (calendarView?.mode) {
             CalendarView.Companion.Mode.SINGLE -> {
-                calendarView?.getOnSelectedChangedListener()?.onDateSelected(selectedDay, null)
+                calendarView?.selectedEndDate = null
                 calendarView?.selectedStartDate = selectedDay
+                calendarView?.getOnSelectedChangedListener()?.onDateSelected(selectedDay, null)
                 adapter.notifyDataSetChanged()
+                binding.recyclerCalendar.invalidateItemDecorations()
+                calendarView?.notifyAllMonthsChanged()
             }
 
             CalendarView.Companion.Mode.RANGE -> {
                 if (calendarView?.selectedStartDate.isNullOrBlank()) {
                     calendarView?.selectedStartDate = selectedDay
-                    adapter.notifyDataSetChanged()
                 } else if (calendarView?.selectedEndDate.isNullOrBlank()) {
-                    calendarView?.selectedEndDate = selectedDay
-                    adapter.notifyDataSetChanged()
+                    val start = calendarView?.selectedStartDate
+                    if (start != null && selectedDay < start) {
+                        calendarView?.selectedEndDate = start
+                        calendarView?.selectedStartDate = selectedDay
+                    } else {
+                        calendarView?.selectedEndDate = selectedDay
+                    }
                 } else {
                     calendarView?.selectedStartDate = selectedDay
                     calendarView?.selectedEndDate = null
-                    adapter.notifyDataSetChanged()
                 }
-                calendarView?.getOnSelectedChangedListener()?.onDateSelected(calendarView?.selectedStartDate, calendarView?.selectedEndDate)
+                calendarView?.getOnSelectedChangedListener()?.onDateSelected(
+                    calendarView?.selectedStartDate,
+                    calendarView?.selectedEndDate
+                )
+                adapter.notifyDataSetChanged()
+                binding.recyclerCalendar.invalidateItemDecorations()
+                calendarView?.notifyAllMonthsChanged()
             }
         }
     }
@@ -108,4 +141,3 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
         }
     }
 }
-
