@@ -29,6 +29,21 @@
             tools:text="提示" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@string/clear"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_l"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_message_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialog_message_type"
+            tools:text="清空"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

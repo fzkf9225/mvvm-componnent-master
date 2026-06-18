@@ -52,6 +52,10 @@ public class DatePickDialog extends Dialog {
      */
     private OnDialogInterfaceClickListener onNegativeClickListener;
     /**
+     * 清空按钮点击监听
+     */
+    private OnDialogInterfaceClickListener onClearClickListener;
+    /**
      * 是否允许点击外部取消
      */
     private boolean outSide = true;
@@ -136,6 +140,14 @@ public class DatePickDialog extends Dialog {
     private float unitLabelTextSizeSp = 0f;
     /** 底部按钮 layout_marginTop (px)，小于 0 沿用 XML */
     private int buttonBarMarginTopPx = -1;
+    /** 是否显示左上角清空按钮，默认隐藏 */
+    private boolean isShowClearView = false;
+    /** 清空按钮文字 */
+    private String clearText = null;
+    /** 清空按钮文字颜色，null 沿用 XML */
+    private ColorStateList clearTextColor = null;
+    /** 清空按钮文字大小 (sp)，小于等于 0 沿用 XML */
+    private float clearTextSizeSp = 0f;
 
     public DatePickDialog(@NonNull Context context) {
         super(context, R.style.ActionSheetDialogStyle);
@@ -178,6 +190,11 @@ public class DatePickDialog extends Dialog {
 
     public DatePickDialog setOnNegativeClickListener(OnDialogInterfaceClickListener onNegativeClickListener) {
         this.onNegativeClickListener = onNegativeClickListener;
+        return this;
+    }
+
+    public DatePickDialog setOnClearClickListener(OnDialogInterfaceClickListener onClearClickListener) {
+        this.onClearClickListener = onClearClickListener;
         return this;
     }
 
@@ -348,6 +365,26 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
+    public DatePickDialog setShowClearView(boolean isShowClearView) {
+        this.isShowClearView = isShowClearView;
+        return this;
+    }
+
+    public DatePickDialog setClearText(String clearText) {
+        this.clearText = clearText;
+        return this;
+    }
+
+    public DatePickDialog setClearTextColor(@ColorInt int color) {
+        this.clearTextColor = ColorStateList.valueOf(color);
+        return this;
+    }
+
+    public DatePickDialog setClearTextSize(float spSize) {
+        this.clearTextSizeSp = spSize;
+        return this;
+    }
+
     public DatePickDialog builder() {
         initView();
         return this;
@@ -419,12 +456,40 @@ public class DatePickDialog extends Dialog {
                         binding.secondPicker.getValue());
             }
         });
+        if (TextUtils.isEmpty(clearText)) {
+            binding.tvClear.setText(ContextCompat.getString(getContext(), R.string.clear));
+        } else {
+            binding.tvClear.setText(clearText);
+        }
+        if (clearTextColor != null) {
+            binding.tvClear.setTextColor(clearTextColor);
+        }
+        binding.tvClear.setVisibility(isShowClearView ? View.VISIBLE : View.GONE);
+        binding.tvClear.setOnClickListener(v -> {
+            dismiss();
+            if (onClearClickListener != null) {
+                onClearClickListener.onDialogClick(this);
+            }
+        });
         initPickValue();
         initLabel();
         initDateModel();
         binding.dialogMessageType.setText(title);
         binding.dialogMessageType.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
         binding.tvToday.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
+        if (isShowClearView && TextUtils.isEmpty(title)) {
+            ConstraintLayout.LayoutParams clearLp =
+                    (ConstraintLayout.LayoutParams) binding.tvClear.getLayoutParams();
+            clearLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+            clearLp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+            clearLp.topToBottom = ConstraintLayout.LayoutParams.UNSET;
+            clearLp.topMargin = titleMarginTopPx >= 0
+                    ? titleMarginTopPx
+                    : binding.dialogMessageType.getLayoutParams() instanceof ViewGroup.MarginLayoutParams
+                    ? ((ViewGroup.MarginLayoutParams) binding.dialogMessageType.getLayoutParams()).topMargin
+                    : 0;
+            binding.tvClear.setLayoutParams(clearLp);
+        }
         applyDynamicAppearance();
         setCanceledOnTouchOutside(outSide);
         setCancelable(outSide);
@@ -466,6 +531,9 @@ public class DatePickDialog extends Dialog {
         }
         if (todayTextSizeSp > 0f) {
             binding.tvToday.setTextSize(todayTextSizeSp);
+        }
+        if (clearTextSizeSp > 0f) {
+            binding.tvClear.setTextSize(clearTextSizeSp);
         }
         if (positiveButtonTextSizeSp > 0f) {
             binding.dialogConfirm.setTextSize(positiveButtonTextSizeSp);

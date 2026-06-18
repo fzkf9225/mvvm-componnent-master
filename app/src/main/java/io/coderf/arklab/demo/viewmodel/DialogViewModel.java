@@ -400,6 +400,24 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     })
                     .builder()
                     .show();
+        } else if (R.id.datePickClear == view.getId()) {
+            new DatePickDialog(view.getContext())
+                    .setStartYear(1990)
+                    .setEndYear(2030)
+                    .setTitle("请选择日期")
+                    .setShowClearView(true)
+                    .setClearText("清空")
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
+                    .setClearTextSize(14f)
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setDateMode(DateMode.YEAR_MONTH_DAY)
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day);
+                        Toast.makeText(view.getContext(), text, Toast.LENGTH_SHORT).show();
+                    })
+                    .setOnClearClickListener(dialog -> Toast.makeText(view.getContext(), "已清空", Toast.LENGTH_SHORT).show())
+                    .builder()
+                    .show();
         } else if (R.id.dateRangePickDialog == view.getId()) {
             FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
             Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
