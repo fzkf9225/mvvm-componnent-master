@@ -808,7 +808,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
             super(binding, adapter);
 
             // 设置item高度
-            if (adapter.getItemHeight() != null && adapter.getItemHeight() > 0) {
+            if (adapter.getItemHeight() != null) {
                 ViewGroup.LayoutParams params = binding.clItem.getLayoutParams();
                 params.height = Math.round(adapter.getItemHeight());
                 binding.clItem.setLayoutParams(params);
@@ -828,7 +828,7 @@ public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerView
         public HeaderViewHolder(@NotNull AdapterCheckBoxItemBinding binding, CheckBoxAdapter<T> adapter) {
             super(binding, true, adapter);
             // 设置item高度
-            if (adapter.getItemHeight() != null && adapter.getItemHeight() > 0) {
+            if (adapter.getItemHeight() != null) {
                 ViewGroup.LayoutParams params = binding.clItem.getLayoutParams();
                 params.height = Math.round(adapter.getItemHeight());
                 binding.clItem.setLayoutParams(params);
