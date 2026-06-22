@@ -12,15 +12,25 @@ import java.util.List;
 import io.coderf.arklab.common.R;
 
 /**
- * Created by fz on 2017/10/30.
- * describe：自动换行
+ * 自动换行
+ * 修复：对齐逻辑错误，新增清除子View等API
+ *
+ * @author fz
+ * @version 1.1
+ * @since 1.0
+ * @update 2026/6/22 23:09
  */
-public class AutoNextLineLinearlayout extends ViewGroup  {
+public class AutoNextLineLinearlayout extends ViewGroup {
+
+    /**
+     * 对齐方式常量
+     */
+    public static final int GRAVITY_LEFT = 1;
+    public static final int GRAVITY_CENTER = 2;
+    public static final int GRAVITY_RIGHT = 0;
+
     private final Type mType;
     private final List<WarpLine> mWarpLineGroup = new ArrayList<>();
-    /*
-     * 根据计算出的宽度，计算出所需要的行数
-     */
     private final WarpLine warpLine = new WarpLine();
 
     public AutoNextLineLinearlayout(Context context) {
@@ -45,13 +55,10 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
         int with = 0;
         int height = 0;
         int childCount = getChildCount();
-        /*
-         * 在调用childView。getMeasure之前必须先调用该行代码，用于对子View大小的测量
-         */
+
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-        /*
-         * 计算宽度
-         */
+
+        // 计算宽度
         switch (withMode) {
             case MeasureSpec.AT_MOST:
                 for (int i = 0; i < childCount; i++) {
@@ -75,36 +82,52 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             default:
                 with = withSize;
                 break;
-
         }
-        /*
-         * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
-         */
+
+        // 重新计算换行
         mWarpLineGroup.clear();
+        warpLine.lineView.clear();
+        warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
+        warpLine.height = 0;
+
         for (int i = 0; i < childCount; i++) {
-            if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontalSpace > with) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE) {
+                continue;
+            }
+            int childWidth = child.getMeasuredWidth();
+            int childHeight = child.getMeasuredHeight();
+
+            // 判断是否需要换行：当前行宽度 + 间隔 + 子View宽度 > 总宽度
+            if (warpLine.lineWidth + mType.horizontalSpace + childWidth > with) {
+                // 如果当前行没有子View，强制放入（处理单个View宽度超过容器宽度的情况）
                 if (warpLine.lineView.isEmpty()) {
-                    warpLine.addView(getChildAt(i));
+                    warpLine.addView(child);
                     mWarpLineGroup.add(warpLine);
+                    // 重置当前行
                     warpLine.lineView.clear();
+                    warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
+                    warpLine.height = 0;
                 } else {
+                    // 保存当前行，开启新行
                     mWarpLineGroup.add(warpLine);
+                    // 重置当前行
                     warpLine.lineView.clear();
-                    warpLine.addView(getChildAt(i));
+                    warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
+                    warpLine.height = 0;
+                    warpLine.addView(child);
                 }
             } else {
-                warpLine.addView(getChildAt(i));
+                warpLine.addView(child);
             }
         }
-        /*
-         * 添加最后一行
-         */
-        if (!warpLine.lineView.isEmpty() && !mWarpLineGroup.contains(warpLine)) {
+
+        // 添加最后一行
+        if (!warpLine.lineView.isEmpty()) {
             mWarpLineGroup.add(warpLine);
         }
-        /* 
-         * 计算宽度
-         */
+
+        // 计算高度
         height = getPaddingTop() + getPaddingBottom();
         for (int i = 0; i < mWarpLineGroup.size(); i++) {
             if (i != 0) {
@@ -112,6 +135,7 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             }
             height += mWarpLineGroup.get(i).height;
         }
+
         switch (heightMode) {
             case MeasureSpec.EXACTLY:
                 height = heightSize;
@@ -122,52 +146,64 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             default:
                 break;
         }
+
         setMeasuredDimension(with, height);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        t = getPaddingTop();
+        int top = getPaddingTop();
+        int gravity = getGravity();
+
         for (int i = 0; i < mWarpLineGroup.size(); i++) {
-            int left = getPaddingLeft();
             WarpLine warpLine = mWarpLineGroup.get(i);
-            int lastWidth = getMeasuredWidth() - warpLine.lineWidth;
-            for (int j = 0; j < warpLine.lineView.size(); j++) {
-                View view = warpLine.lineView.get(j);
-                if (isFull()) {//需要充满当前行时
-                    view.layout(left, t, left + view.getMeasuredWidth() + lastWidth / warpLine.lineView.size(), t + view.getMeasuredHeight());
-                    left += (int) (view.getMeasuredWidth() + mType.horizontalSpace + (float) lastWidth / warpLine.lineView.size());
-                } else {
-                    switch (getGravity()) {
-                        case 0://右对齐
-                            view.layout(left + lastWidth, t, left + lastWidth + view.getMeasuredWidth(), t + view.getMeasuredHeight());
-                            break;
-                        case 2://居中对齐
-                            view.layout(left + lastWidth / 2, t, left + lastWidth / 2 + view.getMeasuredWidth(), t + view.getMeasuredHeight());
-                            break;
-                        default://左对齐
-                            view.layout(left, t, left + view.getMeasuredWidth(), t + view.getMeasuredHeight());
-                            break;
-                    }
-                    left += (int) (view.getMeasuredWidth() + mType.horizontalSpace);
+            List<View> lineViews = warpLine.lineView;
+
+            if (lineViews.isEmpty()) {
+                continue;
+            }
+
+            // 计算当前行剩余空间
+            int remainWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - warpLine.lineWidth;
+
+            // 如果是充满模式，每个子View平均分配剩余空间
+            if (isFull()) {
+                int extraSpace = remainWidth / lineViews.size();
+                int left = getPaddingLeft();
+                for (int j = 0; j < lineViews.size(); j++) {
+                    View view = lineViews.get(j);
+                    int width = view.getMeasuredWidth() + extraSpace;
+                    view.layout(left, top, left + width, top + view.getMeasuredHeight());
+                    left += width + (int) mType.horizontalSpace;
+                }
+            } else {
+                // 根据对齐方式计算起始偏移
+                int startOffset = 0;
+                if (gravity == GRAVITY_RIGHT) {
+                    startOffset = remainWidth;
+                } else if (gravity == GRAVITY_CENTER) {
+                    startOffset = remainWidth / 2;
+                }
+                // GRAVITY_LEFT: startOffset = 0
+
+                int left = getPaddingLeft() + startOffset;
+                for (int j = 0; j < lineViews.size(); j++) {
+                    View view = lineViews.get(j);
+                    view.layout(left, top, left + view.getMeasuredWidth(), top + view.getMeasuredHeight());
+                    left += view.getMeasuredWidth() + (int) mType.horizontalSpace;
                 }
             }
-            t += (int) (warpLine.height + mType.verticalSpace);
+
+            top += warpLine.height + (int) mType.verticalSpace;
         }
     }
 
     /**
-     * 用于存放一行子View
+     * 存放一行子View
      */
     private final class WarpLine {
-        private final List<View> lineView = new ArrayList<View>();
-        /**
-         * 当前行中所需要占用的宽度
-         */
+        private final List<View> lineView = new ArrayList<>();
         private int lineWidth = getPaddingLeft() + getPaddingRight();
-        /**
-         * 该行View中所需要占用的最大高度
-         */
         private int height = 0;
 
         private void addView(View view) {
@@ -178,44 +214,31 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
             lineWidth += view.getMeasuredWidth();
             lineView.add(view);
         }
-
-        public List<View> getLineView() {
-            return lineView;
-        }
     }
 
     /**
-     * 对样式的初始化
+     * 样式配置
      */
-    private final static class Type {
-        /*
-         *对齐方式 right 0，left 1，center 2
-        */
-        private int gravity;
-        /**
-         * 水平间距,单位px
-         */
-        private float horizontalSpace;
-        /**
-         * 垂直间距,单位px
-         */
-        private float verticalSpace;
-        /**
-         * 是否自动填满
-         */
-        private boolean isFull;
+    private static final class Type {
+        private int gravity = GRAVITY_LEFT;
+        private float horizontalSpace = 0;
+        private float verticalSpace = 0;
+        private boolean isFull = false;
 
         Type(Context context, AttributeSet attrs) {
             if (attrs == null) {
                 return;
             }
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WarpLinearLayout);
-            gravity = typedArray.getInt(R.styleable.WarpLinearLayout_gravity, gravity);
+            gravity = typedArray.getInt(R.styleable.WarpLinearLayout_gravity, GRAVITY_LEFT);
             horizontalSpace = typedArray.getDimension(R.styleable.WarpLinearLayout_horizontalSpace, horizontalSpace);
             verticalSpace = typedArray.getDimension(R.styleable.WarpLinearLayout_verticalSpace, verticalSpace);
             isFull = typedArray.getBoolean(R.styleable.WarpLinearLayout_isFull, isFull);
+            typedArray.recycle();
         }
     }
+
+    // ==================== Getter / Setter ====================
 
     public int getGravity() {
         return mType.gravity;
@@ -234,18 +257,232 @@ public class AutoNextLineLinearlayout extends ViewGroup  {
     }
 
     public void setGravity(int gravity) {
-        mType.gravity = gravity;
+        if (mType.gravity != gravity) {
+            mType.gravity = gravity;
+            requestLayout();
+        }
     }
 
     public void setHorizontalSpace(float horizontalSpace) {
-        mType.horizontalSpace = horizontalSpace;
+        if (mType.horizontalSpace != horizontalSpace) {
+            mType.horizontalSpace = horizontalSpace;
+            requestLayout();
+        }
     }
 
     public void setVerticalSpace(float verticalSpace) {
-        mType.verticalSpace = verticalSpace;
+        if (mType.verticalSpace != verticalSpace) {
+            mType.verticalSpace = verticalSpace;
+            requestLayout();
+        }
     }
 
     public void setIsFull(boolean isFull) {
-        mType.isFull = isFull;
+        if (mType.isFull != isFull) {
+            mType.isFull = isFull;
+            requestLayout();
+        }
+    }
+
+    // ==================== 新增API ====================
+
+    /**
+     * 清除所有子View
+     */
+    public void removeAllChildren() {
+        removeAllViews();
+        mWarpLineGroup.clear();
+        warpLine.lineView.clear();
+        warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
+        warpLine.height = 0;
+        requestLayout();
+    }
+
+    /**
+     * 移除指定位置的子View
+     * @param index 位置索引
+     * @return 被移除的View
+     */
+    public View removeChildAt(int index) {
+        if (index < 0 || index >= getChildCount()) {
+            return null;
+        }
+        View view = getChildAt(index);
+        removeViewAt(index);
+        requestLayout();
+        return view;
+    }
+
+    /**
+     * 移除指定的子View
+     * @param view 要移除的View
+     * @return 是否移除成功
+     */
+    public boolean removeChild(View view) {
+        if (view == null || view.getParent() != this) {
+            return false;
+        }
+        removeView(view);
+        requestLayout();
+        return true;
+    }
+
+    /**
+     * 移除所有可见的子View（保留GONE状态的View）
+     */
+    public void removeVisibleChildren() {
+        List<View> toRemove = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+                toRemove.add(child);
+            }
+        }
+        for (View view : toRemove) {
+            removeView(view);
+        }
+        requestLayout();
+    }
+
+    /**
+     * 移除所有不可见的子View（GONE状态的View）
+     */
+    public void removeGoneChildren() {
+        List<View> toRemove = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE) {
+                toRemove.add(child);
+            }
+        }
+        for (View view : toRemove) {
+            removeView(view);
+        }
+        requestLayout();
+    }
+
+    /**
+     * 获取当前所有子View（包括GONE）
+     */
+    public List<View> getAllChildren() {
+        List<View> children = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            children.add(getChildAt(i));
+        }
+        return children;
+    }
+
+    /**
+     * 获取可见的子View列表（不包括GONE）
+     */
+    public List<View> getVisibleChildren() {
+        List<View> visible = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+                visible.add(child);
+            }
+        }
+        return visible;
+    }
+
+    /**
+     * 获取当前行数
+     */
+    public int getLineCount() {
+        return mWarpLineGroup.size();
+    }
+
+    /**
+     * 获取指定行的子View列表
+     * @param lineIndex 行索引
+     * @return 该行的子View列表，如果索引无效返回空列表
+     */
+    public List<View> getLineChildren(int lineIndex) {
+        if (lineIndex < 0 || lineIndex >= mWarpLineGroup.size()) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(mWarpLineGroup.get(lineIndex).lineView);
+    }
+
+    /**
+     * 刷新布局（当子View内容变化时调用）
+     */
+    public void refreshLayout() {
+        requestLayout();
+    }
+
+    /**
+     * 批量添加子View
+     * @param views 要添加的View列表
+     */
+    public void addChildren(List<View> views) {
+        if (views == null || views.isEmpty()) {
+            return;
+        }
+        for (View view : views) {
+            if (view != null) {
+                addView(view);
+            }
+        }
+        requestLayout();
+    }
+
+    /**
+     * 在指定位置插入子View
+     * @param index 插入位置
+     * @param view 要插入的View
+     */
+    public void addChildAt(int index, View view) {
+        if (view == null) {
+            return;
+        }
+        if (index < 0 || index > getChildCount()) {
+            addView(view);
+        } else {
+            addView(view, index);
+        }
+        requestLayout();
+    }
+
+    /**
+     * 交换两个子View的位置
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 是否交换成功
+     */
+    public boolean swapChildren(int index1, int index2) {
+        int childCount = getChildCount();
+        if (index1 < 0 || index1 >= childCount || index2 < 0 || index2 >= childCount || index1 == index2) {
+            return false;
+        }
+        View view1 = getChildAt(index1);
+        View view2 = getChildAt(index2);
+        removeViewAt(Math.max(index1, index2));
+        removeViewAt(Math.min(index1, index2));
+        addView(view2, Math.min(index1, index2));
+        addView(view1, Math.max(index1, index2));
+        requestLayout();
+        return true;
+    }
+
+    /**
+     * 获取所有子View的数量（包括GONE）
+     */
+    public int getChildrenCount() {
+        return getChildCount();
+    }
+
+    /**
+     * 获取可见子View的数量（不包括GONE）
+     */
+    public int getVisibleChildrenCount() {
+        int count = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            if (getChildAt(i).getVisibility() != GONE) {
+                count++;
+            }
+        }
+        return count;
     }
 }
