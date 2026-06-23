@@ -2,6 +2,7 @@ package io.coderf.arklab.common.widget.recyclerview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
@@ -17,48 +18,48 @@ import io.coderf.arklab.common.R;
 /**
  * 线性列表（{@link LinearLayoutManager}）分割线装饰器。
  * <p>
+ * 「无需传颜色」的 API 仅通过 {@link #getItemOffsets} 占位，不绘制可见分割线，也不创建 Paint，
+ * 性能优于传 {@code 0x00000000} 后仍走绘制逻辑的旧写法。
+ * </p>
+ * <p>
  * <b>使用示例：</b>
  * <pre>
- * // 1. 默认高度 1px + 主题分割线颜色（无需传颜色）
+ * // 1. 仅占位间距，不绘制分割线（无需传颜色，推荐）
+ * recyclerView.addItemDecoration(
+ *     new RecycleViewDivider(context, LinearLayoutManager.VERTICAL, dividerHeight));
+ *
+ * // 2. 仅占位 + 控制最后一项是否保留间距（无需传颜色）
+ * recyclerView.addItemDecoration(
+ *     new RecycleViewDivider(context, orientation, dividerHeight, false));
+ *
+ * // 3. 默认 1px + 主题分割线颜色（历史 API，会绘制）
  * recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.VERTICAL));
  *
- * // 2. 自定义高度 + 主题分割线颜色（无需传颜色，推荐替代手动取 R.color.h_line_color）
- * recyclerView.addItemDecoration(new RecycleViewDivider(context, LinearLayoutManager.VERTICAL, dividerHeight));
- *
- * // 3. 自定义高度 + 是否显示最后一项分割线 + 主题颜色（无需传颜色）
- * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, false));
- *
- * // 4. 自定义高度与颜色（兼容历史用法）
- * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, dividerColor));
- *
- * // 5. 自定义高度、颜色及最后一项分割线（兼容历史用法）
- * recyclerView.addItemDecoration(new RecycleViewDivider(context, orientation, dividerHeight, dividerColor, false));
+ * // 4. 自定义高度与颜色（历史 API；传透明色时仅占位、跳过绘制）
+ * recyclerView.addItemDecoration(
+ *     new RecycleViewDivider(context, orientation, dividerHeight, dividerColor));
  * </pre>
  * </p>
  */
 public class RecycleViewDivider extends RecyclerView.ItemDecoration {
 
     private final Paint mPaint;
-    private int mDividerHeight = 1; // 分割线高度，默认为1px
-    private final int mOrientation; // 列表的方向：LinearLayoutManager.VERTICAL或LinearLayoutManager.HORIZONTAL
-    private boolean isShowLastDivider = true; // 是否展示最后一行的分隔符
+    private int mDividerHeight = 1;
+    private final int mOrientation;
+    private boolean isShowLastDivider = true;
+
+    /** 是否执行 onDraw；仅占位模式为 false，跳过 Canvas 绘制以提升性能 */
+    private final boolean mDrawDivider;
 
     /**
-     * 默认分割线：高度为 1px，颜色为主题色 {@link R.color#h_line_color}（无需传颜色）。
-     *
-     * @param context     上下文，用于读取主题分割线颜色
-     * @param orientation 列表方向，{@link LinearLayoutManager#VERTICAL} 或 {@link LinearLayoutManager#HORIZONTAL}
+     * 默认分割线：高度 1px，颜色为主题色 {@link R.color#h_line_color}（历史 API，会绘制）。
      */
     public RecycleViewDivider(Context context, int orientation) {
         this(context, orientation, 1, ContextCompat.getColor(context, R.color.h_line_color));
     }
 
     /**
-     * 默认分割线 + 控制最后一项是否绘制分割线（无需传颜色）。
-     *
-     * @param context             上下文
-     * @param orientation         列表方向
-     * @param isShowLastDivider     是否在最后一项之后绘制分割线
+     * 默认分割线 + 控制最后一项是否绘制分割线（历史 API，会绘制）。
      */
     public RecycleViewDivider(Context context, int orientation, boolean isShowLastDivider) {
         this(context, orientation);
@@ -66,62 +67,71 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     }
 
     /**
-     * 自定义分割线高度，颜色使用主题色 {@link R.color#h_line_color}（无需传颜色）。
+     * 仅保留 item 间距，不绘制可见分割线（无需传颜色）。
+     * <p>
+     * 等价于 {@code new RecycleViewDivider(context, orientation, dividerHeight, Color.TRANSPARENT)}，
+     * 但不创建 Paint、不进入 onDraw，性能更好。
+     * </p>
      *
-     * @param context       上下文
+     * @param context       上下文（与历史 API 签名保持一致，本构造中不使用）
      * @param orientation   列表方向
-     * @param dividerHeight 分割线高度（px）
+     * @param dividerHeight 占位高度（px）
      */
     public RecycleViewDivider(Context context, int orientation, int dividerHeight) {
-        this(context, orientation, dividerHeight, ContextCompat.getColor(context, R.color.h_line_color));
-    }
-
-    /**
-     * 自定义分割线高度，颜色使用主题色，并可控制最后一项是否绘制分割线（无需传颜色）。
-     *
-     * @param context             上下文
-     * @param orientation         列表方向
-     * @param dividerHeight       分割线高度（px）
-     * @param isShowLastDivider   是否在最后一项之后绘制分割线
-     */
-    public RecycleViewDivider(Context context, int orientation, int dividerHeight, boolean isShowLastDivider) {
-        this(context, orientation, dividerHeight, ContextCompat.getColor(context, R.color.h_line_color), isShowLastDivider);
-    }
-
-    /**
-     * 自定义分割线高度与颜色（兼容历史 API）。
-     *
-     * @param context       上下文
-     * @param orientation   列表方向
-     * @param dividerHeight 分割线高度（px）
-     * @param dividerColor  分割线颜色
-     */
-    public RecycleViewDivider(Context context, int orientation, int dividerHeight, @ColorInt int dividerColor) {
-        if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL) {
-            throw new IllegalArgumentException("请输入正确的参数！");
-        }
+        validateOrientation(orientation);
         mOrientation = orientation;
         mDividerHeight = dividerHeight;
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(dividerColor);
-        mPaint.setStyle(Paint.Style.FILL);
+        mDrawDivider = false;
+        mPaint = null;
     }
 
     /**
-     * 自定义分割线高度、颜色，并控制最后一项是否绘制分割线（兼容历史 API）。
+     * 仅保留 item 间距，不绘制可见分割线，并可控制最后一项是否占位（无需传颜色）。
      *
-     * @param context             上下文
+     * @param context             上下文（与历史 API 签名保持一致，本构造中不使用）
      * @param orientation         列表方向
-     * @param dividerHeight       分割线高度（px）
-     * @param dividerColor        分割线颜色
-     * @param isShowLastDivider   是否在最后一项之后绘制分割线
+     * @param dividerHeight       占位高度（px）
+     * @param isShowLastDivider   最后一项之后是否保留占位
+     */
+    public RecycleViewDivider(Context context, int orientation, int dividerHeight, boolean isShowLastDivider) {
+        this(context, orientation, dividerHeight);
+        this.isShowLastDivider = isShowLastDivider;
+    }
+
+    /**
+     * 自定义分割线高度与颜色（历史 API）。
+     * <p>
+     * 传透明色（如 {@code 0x00000000}）时行为与仅占位一致，但会跳过 onDraw，兼容旧代码。
+     * </p>
+     */
+    public RecycleViewDivider(Context context, int orientation, int dividerHeight, @ColorInt int dividerColor) {
+        validateOrientation(orientation);
+        mOrientation = orientation;
+        mDividerHeight = dividerHeight;
+        mDrawDivider = Color.alpha(dividerColor) != 0;
+        if (mDrawDivider) {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setColor(dividerColor);
+            mPaint.setStyle(Paint.Style.FILL);
+        } else {
+            mPaint = null;
+        }
+    }
+
+    /**
+     * 自定义分割线高度、颜色，并控制最后一项是否绘制/占位（历史 API）。
      */
     public RecycleViewDivider(Context context, int orientation, int dividerHeight, @ColorInt int dividerColor, boolean isShowLastDivider) {
         this(context, orientation, dividerHeight, dividerColor);
         this.isShowLastDivider = isShowLastDivider;
     }
 
-    // 获取分割线尺寸
+    private static void validateOrientation(int orientation) {
+        if (orientation != LinearLayoutManager.VERTICAL && orientation != LinearLayoutManager.HORIZONTAL) {
+            throw new IllegalArgumentException("请输入正确的参数！");
+        }
+    }
+
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
@@ -138,11 +148,12 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         }
     }
 
-    // 绘制分割线
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
-        // 与 LinearLayoutManager 方向一致：纵向列表在 item 底边画「横线」；横向列表在 item 右侧画「竖线」
+        if (!mDrawDivider || mPaint == null) {
+            return;
+        }
         if (mOrientation == LinearLayoutManager.VERTICAL) {
             drawHorizontal(c, parent);
         } else {
@@ -150,7 +161,6 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         }
     }
 
-    // 绘制横向 item 分割线
     private void drawHorizontal(Canvas canvas, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getMeasuredWidth() - parent.getPaddingRight();
@@ -167,7 +177,6 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         }
     }
 
-    // 绘制纵向 item 分割线
     private void drawVertical(Canvas canvas, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getMeasuredHeight() - parent.getPaddingBottom();

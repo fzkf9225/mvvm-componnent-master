@@ -1,6 +1,7 @@
 package io.coderf.arklab.common.widget.recyclerview;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
@@ -14,18 +15,22 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 /**
  * 网格布局 Item 间距装饰器，支持绘制分割线并分配 item 间距。
  * <p>
+ * 「无需传颜色」的 API 仅通过 {@link #getItemOffsets} 占位，不绘制可见分割线，也不创建 Paint；
+ * 历史写法传 {@code 0x00000000} 仍兼容，但会跳过 onDraw，性能不如直接使用无颜色构造。
+ * </p>
+ * <p>
  * <b>使用示例：</b>
  * <pre>
- * // 1. 仅设置间距，不绘制分割线（无需传颜色，推荐替代 0x00000000 写法）
+ * // 1. 仅占位间距，不绘制分割线（无需传颜色，推荐）
  * recyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(context, 8)));
  *
- * // 2. 横纵间距不同，且不绘制分割线（静态工厂，避免与两参数 color 构造冲突）
+ * // 2. 横纵不同间距，仅占位（无需传颜色）
  * recyclerView.addItemDecoration(GridSpacingItemDecoration.spacingOnly(columnGap, rowGap));
  *
- * // 3. 间距 + 可见分割线（兼容历史用法）
+ * // 3. 间距 + 可见分割线（历史 API）
  * recyclerView.addItemDecoration(new GridSpacingItemDecoration(gap, Color.parseColor("#EEEEEE")));
  *
- * // 4. 横纵间距不同 + 可见分割线
+ * // 4. 横纵不同 + 可见分割线（历史 API；透明色仅占位、跳过绘制）
  * recyclerView.addItemDecoration(new GridSpacingItemDecoration(columnGap, rowGap, dividerColor));
  * </pre>
  * </p>
@@ -66,7 +71,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * 仅设置 item 间距，不绘制可见分割线（无需传颜色）。
      * <p>
-     * 等价于 {@code new GridSpacingItemDecoration(dividerWidth, 0x00000000)}，但语义更清晰。
+     * 仅占位、不绘制；比 {@code new GridSpacingItemDecoration(dividerWidth, Color.TRANSPARENT)} 更省性能。
      * </p>
      *
      * @param dividerWidth 横向、纵向共用的间距（px）
@@ -93,26 +98,30 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
      * 使用相同横纵间距创建装饰器，并绘制可见分割线（兼容旧版 API）。
      *
      * @param dividerWidth 横向、纵向共用的间距（px）
-     * @param color        分割线颜色；传透明色时仅保留间距、不显示分割线
+     * @param color        分割线颜色；传透明色时仅占位、跳过绘制（兼容历史写法）
      */
     public GridSpacingItemDecoration(int dividerWidth, @ColorInt int color) {
         this(dividerWidth, dividerWidth, color);
     }
 
     /**
-     * 分别指定横向、纵向间距，并绘制可见分割线。
+     * 分别指定横向、纵向间距，并按颜色决定是否绘制分割线（历史 API）。
      *
      * @param horizontalSpacing 列间距（px），对应 item 的 left / right offset
      * @param verticalSpacing   行间距（px），对应 item 的 bottom offset
-     * @param color             分割线颜色；传透明色时仅保留间距、不显示分割线
+     * @param color             分割线颜色；传透明色时仅占位、跳过绘制（兼容历史写法）
      */
     public GridSpacingItemDecoration(int horizontalSpacing, int verticalSpacing, @ColorInt int color) {
         mHorizontalSpacing = horizontalSpacing;
         mVerticalSpacing = verticalSpacing;
-        mDrawDivider = true;
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(color);
-        mPaint.setStyle(Paint.Style.FILL);
+        mDrawDivider = Color.alpha(color) != 0;
+        if (mDrawDivider) {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setColor(color);
+            mPaint.setStyle(Paint.Style.FILL);
+        } else {
+            mPaint = null;
+        }
         mUnselectedGapColor = null;
         mSelectedGapColor = null;
         mSelectionProvider = null;
@@ -137,13 +146,17 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         mUnselectedGapColor = builder.unselectedGapColor;
         mSelectedGapColor = builder.selectedGapColor;
         mSelectionProvider = builder.selectionProvider;
-        mDrawDivider = builder.unselectedGapColor != null
-                || builder.selectedGapColor != null
-                || builder.legacyGapColor != null;
+        boolean hasVisibleLegacyColor = builder.legacyGapColor != null
+                && Color.alpha(builder.legacyGapColor) != 0;
+        boolean hasVisibleUnselected = builder.unselectedGapColor != null
+                && Color.alpha(builder.unselectedGapColor) != 0;
+        boolean hasVisibleSelected = builder.selectedGapColor != null
+                && Color.alpha(builder.selectedGapColor) != 0;
+        mDrawDivider = hasVisibleLegacyColor || hasVisibleUnselected || hasVisibleSelected;
         if (mDrawDivider) {
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setStyle(Paint.Style.FILL);
-            if (builder.legacyGapColor != null) {
+            if (hasVisibleLegacyColor) {
                 mPaint.setColor(builder.legacyGapColor);
             }
         } else {
@@ -298,14 +311,18 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
             boolean selected = isPositionSelected(currentPos, adapterCount)
                     || isPositionSelected(adjacentPos, adapterCount);
             if (selected) {
-                return mSelectedGapColor;
+                return isVisibleColor(mSelectedGapColor) ? mSelectedGapColor : null;
             }
-            return mUnselectedGapColor;
+            return isVisibleColor(mUnselectedGapColor) ? mUnselectedGapColor : null;
         }
         if (mPaint != null) {
             return mPaint.getColor();
         }
         return null;
+    }
+
+    private static boolean isVisibleColor(@ColorInt Integer color) {
+        return color != null && Color.alpha(color) != 0;
     }
 
     private boolean isPositionSelected(int position, int adapterCount) {
