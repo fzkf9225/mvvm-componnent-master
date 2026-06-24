@@ -1,6 +1,7 @@
 package io.coderf.arklab.common.base;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -28,6 +29,7 @@ import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
 import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
+import io.coderf.arklab.common.utils.theme.ThemeUtils;
 /**
  * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
@@ -81,6 +83,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (shouldRunInitData(savedInstanceState)) {
             initData(resolvePageArguments());
         }
+        applyHideStatusBarIfNeeded();
     }
 
     /**
@@ -248,6 +251,45 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     protected boolean enableImmersionBar() {
         return false;
+    }
+
+    /**
+     * 是否隐藏系统状态栏与导航栏，使内容铺满屏幕（全屏视频等）。
+     * <p>
+     * 默认 {@code false}，保持现有状态栏展示；返回 {@code true} 时进入沉浸式全屏。
+     * </p>
+     */
+    protected boolean shouldHideStatusBar() {
+        return false;
+    }
+
+    /**
+     * 按 {@link #shouldHideStatusBar()} 应用或维持系统栏隐藏。
+     */
+    protected void applyHideStatusBarIfNeeded() {
+        if (shouldHideStatusBar()) {
+            ThemeUtils.applyHideSystemBarsImmersive(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyHideStatusBarIfNeeded();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            applyHideStatusBarIfNeeded();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        applyHideStatusBarIfNeeded();
     }
 
     public abstract String setTitleBar();

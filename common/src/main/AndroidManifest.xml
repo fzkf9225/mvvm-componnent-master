@@ -107,8 +107,9 @@
 
         <activity
             android:name=".activity.VideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
+            android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <provider

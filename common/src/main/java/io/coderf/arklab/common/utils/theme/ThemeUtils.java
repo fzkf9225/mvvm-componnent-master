@@ -2,6 +2,7 @@ package io.coderf.arklab.common.utils.theme;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,6 +11,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -112,6 +114,54 @@ public class ThemeUtils {
             LogUtil.loggerE(TAG, "setImmersiveStatusBar异常：" + e);
         }
     }
+
+    /**
+     * 隐藏状态栏与导航栏，内容铺满屏幕（全屏视频等场景）。
+     * <p>
+     * 与 {@link #setImmersiveStatusBar(Activity)} 不同：本方法会完全隐藏系统栏，而非仅透明延伸布局。
+     * </p>
+     */
+    public static void applyHideSystemBarsImmersive(@NonNull Activity activity) {
+        try {
+            Window window = activity.getWindow();
+            if (window == null) {
+                return;
+            }
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.BLACK);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.layoutInDisplayCutoutMode =
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                window.setAttributes(lp);
+            }
+            View decorView = window.getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            WindowInsetsControllerCompat controller =
+                    WindowCompat.getInsetsController(window, decorView);
+            if (controller != null) {
+                controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+                controller.setSystemBarsBehavior(
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    applyHideSystemBarsImmersive(activity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.loggerE(TAG, "applyHideSystemBarsImmersive异常：" + e);
+        }
+    }
+
     /**
      * 设置沉浸式状态栏
      * @param activity 当前Activity

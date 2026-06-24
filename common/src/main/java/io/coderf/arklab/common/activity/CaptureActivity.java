@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -55,7 +56,12 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptur
             Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
     };
 
-    public final static String SCAN_COLOR = "scanColor";
+    /** Intent Extra：扫描框与扫描线颜色 */
+    public static final String SCAN_COLOR = "scanColor";
+    /** Intent Extra：是否显示底部闪光灯按钮，默认 true */
+    public static final String SHOW_FLASH_LIGHT = "showFlashLight";
+    /** Intent Extra：是否显示底部相册识码按钮，默认 true */
+    public static final String SHOW_GALLERY = "showGallery";
     private PermissionManager permissionManager;
 
     @Override
@@ -95,10 +101,14 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptur
     @Override
     public void initData(Bundle bundle) {
         int scanColor = bundle.getInt(SCAN_COLOR, ContextCompat.getColor(this, R.color.themeColor));
-        //修改框框颜色
         CustomViewfinderView customViewfinderView = binding.dbvCustom.findViewById(R.id.zxing_viewfinder_view);
         customViewfinderView.setLineColor(scanColor);
         customViewfinderView.setScanLineColor(scanColor);
+
+        boolean showFlashLight = bundle.getBoolean(SHOW_FLASH_LIGHT, true);
+        boolean showGallery = bundle.getBoolean(SHOW_GALLERY, true);
+        binding.scanFlashLight.setVisibility(showFlashLight && isSupportFlashLight() ? View.VISIBLE : View.GONE);
+        binding.scanPhoto.setVisibility(showGallery ? View.VISIBLE : View.GONE);
     }
 
     ActivityResultCallback<Uri> activityResultCallback = result -> {

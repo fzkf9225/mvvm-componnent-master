@@ -225,6 +225,9 @@
     <string name="share_failed">分享失败</string>
     <string name="share_canceled">取消分享</string>
 
+    <string name="video_dialog_close">关闭视频</string>
+    <string name="video_dialog_invalid_url">视频播放地址错误！</string>
+
     <!-- ========== 对话框 ========== -->
     <string name="dialog_title_tip">提示</string>
     <string name="dialog_title_warning">警告</string>

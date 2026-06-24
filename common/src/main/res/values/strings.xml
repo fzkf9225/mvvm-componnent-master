@@ -227,6 +227,8 @@
     <string name="share_canceled">Share canceled</string>
 
     <!-- ========== Dialog ========== -->
+    <string name="video_dialog_close">Close video</string>
+    <string name="video_dialog_invalid_url">Invalid video URL</string>
     <string name="dialog_title_tip">Tip</string>
     <string name="dialog_title_warning">Warning</string>
     <string name="dialog_title_error">Error</string>

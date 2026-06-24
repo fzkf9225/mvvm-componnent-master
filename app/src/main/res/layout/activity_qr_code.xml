@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:text="自定义扫码框扫码"
+                android:text="自定义扫码（红框/无闪光灯/无相册）"
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

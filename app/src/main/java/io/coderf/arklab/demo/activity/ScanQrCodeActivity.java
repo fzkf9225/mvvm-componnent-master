@@ -1,7 +1,6 @@
 package io.coderf.arklab.demo.activity;
 
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,13 +11,10 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.zxing.Result;
-import com.google.zxing.client.android.Intents;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,6 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.activity.CaptureActivity;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.helper.QrScanHelper;
+import io.coderf.arklab.common.helper.bean.QrScanConfig;
 import io.coderf.arklab.common.utils.common.QRCodeUtil;
 import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.demo.R;
@@ -50,7 +48,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding>
         implements ScanQrCodeView {
 
-    private ActivityResultLauncher<ScanOptions> barcodeLauncher;
+    private QrScanHelper qrScanHelper;
     private MediaHelper mediaHelper;
 
     /** 相册识码时复用，与 {@link #identifyUri} 配合 */
@@ -93,26 +91,33 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
             }
         });
 
-        barcodeLauncher = registerForActivityResult(new ScanContract(), result -> {
-            if (result.getContents() == null) {
-                Intent originalIntent = result.getOriginalIntent();
-                if (originalIntent == null) {
-                    binding.tvScanInfo.setText("取消扫码");
-                } else if (originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
-                    binding.tvScanInfo.setText("无摄像头权限");
-                } else {
-                    binding.tvScanInfo.setText("未识别到内容");
-                }
-            } else {
-                binding.tvScanInfo.setText("扫码结果：" + result.getContents());
+        qrScanHelper = new QrScanHelper(this, new QrScanHelper.Callback() {
+            @Override
+            public void onSuccess(@NonNull String content) {
+                binding.tvScanInfo.setText("扫码结果：" + content);
+            }
+
+            @Override
+            public void onCancel() {
+                binding.tvScanInfo.setText("取消扫码");
+            }
+
+            @Override
+            public void onError(@NonNull String message) {
+                binding.tvScanInfo.setText(message);
             }
         });
     }
 
     @Override
     public void initData(Bundle bundle) {
-        binding.buttonScan.setOnClickListener(v -> barcodeLauncher.launch(buildQrScanOptions(false)));
-        binding.buttonCustomScan.setOnClickListener(v -> barcodeLauncher.launch(buildQrScanOptions(true)));
+        binding.buttonScan.setOnClickListener(v -> qrScanHelper.launch());
+        binding.buttonCustomScan.setOnClickListener(v -> qrScanHelper.launch(
+                QrScanConfig.defaults()
+                        .setScanColor(ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_red))
+                        .setShowFlashLight(false)
+                        .setShowGallery(false)
+        ));
         binding.createQrCode.setOnClickListener(v -> {
             String content = binding.editCreateQrcode.getText() != null
                     ? binding.editCreateQrcode.getText().toString().trim()
@@ -135,30 +140,6 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
             }
             identifyLocalString(path, callbackContext);
         });
-    }
-
-    /**
-     * 构建扫码参数，统一跳转 {@link CaptureActivity}。
-     *
-     * @param customColor 是否使用自定义扫描框颜色
-     */
-    private ScanOptions buildQrScanOptions(boolean customColor) {
-        ScanOptions options = new ScanOptions();
-        options.setBeepEnabled(true);
-        options.setBarcodeImageEnabled(false);
-        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-        options.setCameraId(0);
-        options.setPrompt("");
-        options.setTorchEnabled(false);
-        options.setOrientationLocked(false);
-        options.setCaptureActivity(CaptureActivity.class);
-        if (customColor) {
-            options.addExtra(
-                    CaptureActivity.SCAN_COLOR,
-                    ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_red)
-            );
-        }
-        return options;
     }
 
     /** 根据输入内容生成二维码（红色前景） */

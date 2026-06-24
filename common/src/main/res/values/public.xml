@@ -104,6 +104,14 @@
     <public name="selector_button" type="drawable"/>
     <public name="selector_image_media_play" type="drawable"/>
     <public name="ic_camera" type="drawable"/>
+    <public name="ic_video_dialog_close_dark" type="drawable"/>
+    <public name="ic_video_dialog_play" type="drawable"/>
+    <public name="ic_video_dialog_pause" type="drawable"/>
+    <public name="ic_video_screen_rotate" type="drawable"/>
+    <public name="bg_dialog_video_player" type="drawable"/>
+    <public name="bg_dialog_video_play_button" type="drawable"/>
+    <public name="bg_dialog_video_top_gradient" type="drawable"/>
+    <public name="bg_dialog_video_bottom_gradient" type="drawable"/>
     <public name="ic_flash_auto" type="drawable"/>
     <public name="ic_flash_off" type="drawable"/>
     <public name="ic_flash_on" type="drawable"/>
@@ -121,6 +129,8 @@
     <public name="dialog_confirm" type="layout"/>
     <public name="dialog_date_pick" type="layout"/>
     <public name="dialog_message" type="layout"/>
+    <public name="dialog_video_player" type="layout"/>
+    <public name="video_layout_dialog" type="layout"/>
     <public name="dialog_edit_area" type="layout"/>
     <public name="dialog_input" type="layout"/>
     <public name="base_activity_constraint" type="layout"/>
@@ -367,6 +377,8 @@
     <public name="share_to" type="string" />
     <public name="dialog_title_tip" type="string" />
     <public name="dialog_confirm_delete" type="string" />
+    <public name="video_dialog_close" type="string" />
+    <public name="video_dialog_invalid_url" type="string" />
     <public name="permission_camera_rationale" type="string" />
     <public name="file_not_exist" type="string" />
     <public name="file_downloading" type="string" />
