@@ -69,7 +69,8 @@ import io.coderf.arklab.common.widget.dialog.MessageDialog;
 import io.coderf.arklab.common.widget.dialog.ProgressBarDialog;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
 import io.coderf.arklab.common.widget.dialog.VideoPlayerDialog;
-import io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig;
+import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
+import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 import io.coderf.arklab.common.widget.popupwindow.CascadeMultiPopupWindow;
 import io.coderf.arklab.common.widget.popupwindow.CascadeSinglePopupWindow;
@@ -477,15 +478,6 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setOnClearClickListener(dialog -> baseView.showToast("已清空"))
                     .builder(fragmentManager, lifecycle)
                     .show();
-        } else if (R.id.videoPlayerDialog == view.getId()) {
-            new VideoPlayerDialog(view.getContext())
-                    .setTitle("测试视频")
-                    .setVideoUrl("http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248")
-                    .setCacheEnable(false)
-                    .setIconConfig(new VideoPlayerDialogIconConfig()
-                            .setCloseIconRes(io.coderf.arklab.common.R.drawable.ic_video_dialog_close_dark))
-                    .builder()
-                    .show();
         } else if (R.id.popupSingleDialog == view.getId()) {
             String json = loadJSONFromAsset(view.getContext(), "aor.json");
             List<PopupWindowBean> dataList = new GsonBuilder()
@@ -539,6 +531,20 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             PopupWindowCompat.showAsDropDown(
                     cascadeMultiPopupWindow, view, 0, 0, Gravity.CENTER
             );
+        } else if (R.id.videoPlayerDialog == view.getId()) {
+            String demoUrl =
+                "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248";
+            new VideoPlayerDialog(view.getContext())
+                .setTitle("Dialog 小窗播放")
+                .setVideoUrl(demoUrl)
+                .setCacheEnable(false)
+                .setPlayerConfig(VideoPlayerConfig.dialogDefaults()
+                    .setClarityOptions(Arrays.asList(
+                        new VideoPlayerClarityOption("原画", demoUrl, "最高画质"),
+                        new VideoPlayerClarityOption("流畅", demoUrl, "节省流量")
+                    )))
+                .builder()
+                .show();
         }
     }
 

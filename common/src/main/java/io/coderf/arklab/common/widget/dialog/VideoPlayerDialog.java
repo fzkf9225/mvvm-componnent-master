@@ -2,16 +2,18 @@ package io.coderf.arklab.common.widget.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentCallbacks;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
+import android.content.ContextWrapper;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -23,386 +25,449 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.databinding.DialogVideoPlayerBinding;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig;
+import io.coderf.arklab.common.widget.video.ArkVideoPlayerView;
+import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
+import io.coderf.arklab.common.widget.video.VideoPlayerController;
+import io.coderf.arklab.common.widget.video.VideoPlayerViewHelper;
 
 /**
- * Dialog 样式视频播放器。
- * <p>
- * 默认以圆角卡片形式居中展示（约 16:9 画面）；点击全屏后旋转为横屏并铺满屏幕，
- * 再次点击全屏或按返回键恢复 Dialog 样式。
- * </p>
- * <p>
- * 基于 GSYVideoPlayer v9.x，兼容当前项目 jitpack 依赖，无需升级播放器库即可在 SDK 35 使用。
- * </p>
- *
- * <pre>{@code
- * new VideoPlayerDialog(context)
- *     .setVideoUrl(url)
- *     .setTitle("示例")
- *     .setCacheEnable(false)
- *     .builder()
- *     .show();
- * }</pre>
+ * Dialog 小窗视频播放器，基于 GSYVideoPlayer v13 定制 {@link ArkVideoPlayerView}。
  */
 public class VideoPlayerDialog extends Dialog {
 
-  /** 播放地址 */
-  private String videoUrl;
-  /** 标题 */
-  private String title;
-  /** 封面地址，默认与播放地址相同 */
-  private String thumbUrl;
-  /** 是否开启边播边缓存 */
-  private boolean cacheEnable = true;
-  /** 是否允许点击外部关闭 */
-  private boolean cancelOutside = true;
-  /** 控制栏图标配置 */
-  @Nullable
-  private VideoPlayerDialogIconConfig iconConfig;
-  /** Dialog 圆角背景 */
-  @Nullable
-  private Drawable dialogBackground;
-  /** 关闭按钮监听 */
-  @Nullable
-  private OnDialogInterfaceClickListener onCloseClickListener;
+    private String videoUrl;
+    private String title;
+    private String thumbUrl;
+    private boolean cacheEnable = true;
+    private boolean cancelOutside = true;
+    @Nullable
+    private VideoPlayerDialogIconConfig iconConfig;
+    @Nullable
+    private VideoPlayerConfig playerConfig;
+    @Nullable
+    private Drawable dialogBackground;
+    @Nullable
+    private OnDialogInterfaceClickListener onCloseClickListener;
 
-  private DialogVideoPlayerBinding binding;
-  @Nullable
-  private OrientationUtils orientationUtils;
-  /** 是否处于“铺满屏幕”的全屏态 */
-  private boolean expandedFullscreen;
-  /** 进入全屏前 Activity 的屏幕方向，用于恢复 */
-  private int savedScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-  /** Dialog 默认宽度占屏比 */
-  private float dialogWidthRatio = 0.88f;
-  /** builder 是否已成功初始化 */
-  private boolean readyToShow;
+    private View dialogRoot;
+    private ArkVideoPlayerView playerView;
+    private View closeButton;
+    @Nullable
+    private VideoPlayerController controller;
 
-  public VideoPlayerDialog(@NonNull Context context) {
-    super(context);
-  }
+    private boolean expandedFullscreen;
+    private float dialogWidthRatio = 0.88f;
+    private int compactDialogWidth;
+    private int compactDialogHeight;
+    private int compactPlayerHeight;
+    private boolean readyToShow;
+    @Nullable
+    private ComponentCallbacks configurationCallbacks;
+    @NonNull
+    private final Context hostContext;
 
-  public VideoPlayerDialog setVideoUrl(@Nullable String videoUrl) {
-    this.videoUrl = videoUrl;
-    return this;
-  }
-
-  public VideoPlayerDialog setTitle(@Nullable String title) {
-    this.title = title;
-    return this;
-  }
-
-  public VideoPlayerDialog setThumbUrl(@Nullable String thumbUrl) {
-    this.thumbUrl = thumbUrl;
-    return this;
-  }
-
-  public VideoPlayerDialog setCacheEnable(boolean cacheEnable) {
-    this.cacheEnable = cacheEnable;
-    return this;
-  }
-
-  public VideoPlayerDialog setCanOutSide(boolean cancelOutside) {
-    this.cancelOutside = cancelOutside;
-    return this;
-  }
-
-  public VideoPlayerDialog setIconConfig(@Nullable VideoPlayerDialogIconConfig iconConfig) {
-    this.iconConfig = iconConfig;
-    return this;
-  }
-
-  public VideoPlayerDialog setDialogBackground(@Nullable Drawable dialogBackground) {
-    this.dialogBackground = dialogBackground;
-    return this;
-  }
-
-  public VideoPlayerDialog setDialogWidthRatio(float dialogWidthRatio) {
-    this.dialogWidthRatio = dialogWidthRatio;
-    return this;
-  }
-
-  public VideoPlayerDialog setOnCloseClickListener(@Nullable OnDialogInterfaceClickListener listener) {
-    this.onCloseClickListener = listener;
-    return this;
-  }
-
-  /**
-   * 构建并初始化 Dialog，调用后可直接 {@link #show()}。
-   */
-  public VideoPlayerDialog builder() {
-    Context context = getContext();
-    if (TextUtils.isEmpty(videoUrl)) {
-      new MessageDialog(context)
-          .setCanOutSide(false)
-          .setMessage(context.getString(R.string.video_dialog_invalid_url))
-          .setPositiveText(context.getString(R.string.confirm))
-          .builder()
-          .show();
-      return this;
+    public VideoPlayerDialog(@NonNull Context context) {
+        super(context);
+        hostContext = context;
     }
 
-    binding = DialogVideoPlayerBinding.inflate(LayoutInflater.from(context));
-    setContentView(binding.getRoot());
-    setCancelable(cancelOutside);
-    setCanceledOnTouchOutside(cancelOutside);
-
-    applyDialogWindowStyle(false);
-    setupPlayer();
-    setupCloseButton();
-    setupBackKeyHandler();
-    readyToShow = true;
-    return this;
-  }
-
-  @Override
-  public void show() {
-    if (!readyToShow || binding == null) {
-      return;
-    }
-    super.show();
-  }
-
-  private void setupPlayer() {
-    DialogVideoPlayerView player = binding.dialogVideoPlayer;
-    VideoPlayerViewHelper.setupPlayer(player, videoUrl, cacheEnable, title, iconConfig, thumbUrl);
-    VideoPlayerViewHelper.applyDialogPlayerStyle(player, iconConfig);
-
-    Activity activity = resolveActivity();
-    if (activity != null) {
-      orientationUtils = new OrientationUtils(activity, player);
-      orientationUtils.setEnable(false);
+    public VideoPlayerDialog setVideoUrl(@Nullable String videoUrl) {
+        this.videoUrl = videoUrl;
+        return this;
     }
 
-    player.bindDialogFullscreenToggle(this::toggleExpandedFullscreen);
-    player.startPlayLogic();
-  }
-
-  private void setupCloseButton() {
-    if (iconConfig != null && iconConfig.getCloseIconRes() != 0) {
-      binding.btnDialogVideoClose.setImageResource(iconConfig.getCloseIconRes());
+    public VideoPlayerDialog setTitle(@Nullable String title) {
+        this.title = title;
+        return this;
     }
-    binding.btnDialogVideoClose.setOnClickListener(v -> {
-      if (onCloseClickListener != null) {
-        onCloseClickListener.onDialogClick(this);
-      }
-      dismiss();
-    });
-  }
 
-  private void setupBackKeyHandler() {
-    setOnKeyListener((dialog, keyCode, event) -> {
-      if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-        if (expandedFullscreen) {
-          exitExpandedFullscreen();
-          return true;
+    public VideoPlayerDialog setThumbUrl(@Nullable String thumbUrl) {
+        this.thumbUrl = thumbUrl;
+        return this;
+    }
+
+    public VideoPlayerDialog setCacheEnable(boolean cacheEnable) {
+        this.cacheEnable = cacheEnable;
+        return this;
+    }
+
+    public VideoPlayerDialog setCanOutSide(boolean cancelOutside) {
+        this.cancelOutside = cancelOutside;
+        return this;
+    }
+
+    public VideoPlayerDialog setIconConfig(@Nullable VideoPlayerDialogIconConfig iconConfig) {
+        this.iconConfig = iconConfig;
+        return this;
+    }
+
+    public VideoPlayerDialog setPlayerConfig(@Nullable VideoPlayerConfig playerConfig) {
+        this.playerConfig = playerConfig;
+        return this;
+    }
+
+    public VideoPlayerDialog setDialogBackground(@Nullable Drawable dialogBackground) {
+        this.dialogBackground = dialogBackground;
+        return this;
+    }
+
+    public VideoPlayerDialog setDialogWidthRatio(float dialogWidthRatio) {
+        this.dialogWidthRatio = dialogWidthRatio;
+        return this;
+    }
+
+    public VideoPlayerDialog setOnCloseClickListener(@Nullable OnDialogInterfaceClickListener listener) {
+        this.onCloseClickListener = listener;
+        return this;
+    }
+
+    public VideoPlayerDialog builder() {
+        Context context = getContext();
+        if (TextUtils.isEmpty(videoUrl)) {
+            new MessageDialog(context)
+                .setCanOutSide(false)
+                .setMessage(context.getString(R.string.video_dialog_invalid_url))
+                .setPositiveText(context.getString(R.string.confirm))
+                .builder()
+                .show();
+            return this;
         }
-      }
-      return false;
-    });
-  }
 
-  /**
-   * 切换 Dialog 默认样式与全屏铺满样式。
-   */
-  private void toggleExpandedFullscreen() {
-    if (expandedFullscreen) {
-      exitExpandedFullscreen();
-    } else {
-      enterExpandedFullscreen();
-    }
-  }
+        View content = android.view.LayoutInflater.from(context).inflate(R.layout.dialog_video_player, null);
+        setContentView(content);
+        dialogRoot = content.findViewById(R.id.dialog_video_root);
+        playerView = content.findViewById(R.id.dialog_video_player);
+        closeButton = content.findViewById(R.id.btn_dialog_video_close);
 
-  /** 进入全屏：横屏 + Dialog 窗口铺满 */
-  private void enterExpandedFullscreen() {
-    expandedFullscreen = true;
-    Activity activity = resolveActivity();
-    if (activity != null) {
-      savedScreenOrientation = activity.getRequestedOrientation();
-      activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-    }
-    applyDialogWindowStyle(true);
-    binding.dialogVideoRoot.setBackground(null);
-    binding.dialogVideoRoot.setPadding(0, 0, 0, 0);
-    binding.btnDialogVideoClose.setVisibility(View.GONE);
-    updatePlayerLayoutParams(true);
-    binding.dialogVideoPlayer.showShrinkFullscreenIcon();
-    // GSY v9 标准布局无独立旋转按钮，仅提供 OrientationUtils 编程接口，故全屏态不额外添加旋转按钮
-  }
+        setCancelable(cancelOutside);
+        setCanceledOnTouchOutside(cancelOutside);
 
-  /** 退出全屏：恢复 Dialog 卡片样式 */
-  private void exitExpandedFullscreen() {
-    expandedFullscreen = false;
-    Activity activity = resolveActivity();
-    if (activity != null) {
-      activity.setRequestedOrientation(savedScreenOrientation);
-    }
-    applyDialogWindowStyle(false);
-    applyDialogCardBackground();
-    binding.btnDialogVideoClose.setVisibility(View.VISIBLE);
-    updatePlayerLayoutParams(false);
-    binding.dialogVideoPlayer.showEnlargeFullscreenIcon();
-  }
+        VideoPlayerConfig config = playerConfig != null ? playerConfig : VideoPlayerConfig.dialogDefaults();
+        config.setHostMode(io.coderf.arklab.common.widget.video.VideoPlayerHostMode.DIALOG);
+        config.setCacheEnable(cacheEnable);
+        playerView.applyConfig(config);
 
-  private void applyDialogWindowStyle(boolean fullscreen) {
-    Window window = getWindow();
-    if (window == null) {
-      return;
-    }
-    if (fullscreen) {
-      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-      window.setGravity(Gravity.CENTER);
-      window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-      window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        WindowManager.LayoutParams lp = window.getAttributes();
-        lp.layoutInDisplayCutoutMode =
-            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-        window.setAttributes(lp);
-      }
-      hideSystemUi(window);
-    } else {
-      window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-      window.setDimAmount(0.55f);
-      applyDialogCardBackground();
-      int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-      int dialogWidth = (int) (screenWidth * dialogWidthRatio);
-      int dialogHeight = dialogWidth * 9 / 16;
-      window.setLayout(dialogWidth, dialogHeight + DensityUtil.dp2px(getContext(), 8f));
-      window.setGravity(Gravity.CENTER);
-      showSystemUi(window);
-    }
-  }
+        VideoPlayerViewHelper.setupPlayer(playerView, videoUrl, cacheEnable, title, iconConfig, thumbUrl);
+        playerView.bindDialogFullscreenToggle(this::toggleExpandedFullscreen);
 
-  private void applyDialogCardBackground() {
-    Window window = getWindow();
-    if (window == null) {
-      return;
-    }
-    Drawable background = dialogBackground != null ? dialogBackground : DrawableUtil.createRectDrawable(
-        ContextCompat.getColor(getContext(), R.color.black),
-        DensityUtil.dp2px(getContext(), 12f),
-        DensityUtil.dp2px(getContext(), 12f),
-        DensityUtil.dp2px(getContext(), 12f),
-        DensityUtil.dp2px(getContext(), 12f)
-    );
-    window.setBackgroundDrawable(background);
-    if (binding != null) {
-      binding.dialogVideoRoot.setBackground(background);
-      int padding = DensityUtil.dp2px(getContext(), 2f);
-      binding.dialogVideoRoot.setPadding(padding, padding, padding, padding);
-    }
-  }
+        ensureController(config);
 
-  private void updatePlayerLayoutParams(boolean fullscreen) {
-    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) binding.dialogVideoPlayer.getLayoutParams();
-    if (fullscreen) {
-      lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-      lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
-    } else {
-      lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-      int screenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-      int dialogWidth = (int) (screenWidth * dialogWidthRatio);
-      lp.height = dialogWidth * 9 / 16;
+        updateCompactDialogMetrics();
+        applyDialogWindowStyle(false);
+        setupCloseButton();
+        setupBackKeyHandler();
+        playerView.startPlayLogic();
+        readyToShow = true;
+        return this;
     }
-    binding.dialogVideoPlayer.setLayoutParams(lp);
-  }
 
-  private static void hideSystemUi(@NonNull Window window) {
-    View decorView = window.getDecorView();
-    decorView.setSystemUiVisibility(
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-  }
+    @Override
+    public void show() {
+        if (!readyToShow || playerView == null) {
+            return;
+        }
+        super.show();
+    }
 
-  private static void showSystemUi(@NonNull Window window) {
-    View decorView = window.getDecorView();
-    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-  }
+    private void registerConfigurationCallback(@NonNull Activity activity) {
+        unregisterConfigurationCallback(activity);
+        configurationCallbacks = new ComponentCallbacks() {
+            @Override
+            public void onConfigurationChanged(@NonNull Configuration newConfig) {
+                if (expandedFullscreen && controller != null) {
+                    controller.onConfigurationChanged(newConfig);
+                } else if (!expandedFullscreen) {
+                    applyCompactDialogLayout();
+                }
+            }
 
-  @Nullable
-  private Activity resolveActivity() {
-    Context context = getContext();
-    if (context instanceof Activity) {
-      return (Activity) context;
+            @Override
+            public void onLowMemory() {
+            }
+        };
+        activity.registerComponentCallbacks(configurationCallbacks);
     }
-    return null;
-  }
 
-  /**
-   * 在 dismiss 前暂停播放；建议在 Activity onPause 时若 Dialog 正在显示则调用。
-   */
-  public void onHostPause() {
-    if (binding != null) {
-      binding.dialogVideoPlayer.onVideoPause();
+    private void unregisterConfigurationCallback(@Nullable Activity activity) {
+        if (activity != null && configurationCallbacks != null) {
+            activity.unregisterComponentCallbacks(configurationCallbacks);
+        }
+        configurationCallbacks = null;
     }
-    if (orientationUtils != null) {
-      orientationUtils.setIsPause(true);
-    }
-  }
 
-  /**
-   * 在 Activity onResume 时恢复播放。
-   */
-  public void onHostResume() {
-    if (binding != null) {
-      binding.dialogVideoPlayer.onVideoResume();
+    private void setupCloseButton() {
+        VideoPlayerConfig config = playerView.getPlayerConfig();
+        if (iconConfig != null && iconConfig.getCloseIconRes() != 0 && closeButton instanceof android.widget.ImageView) {
+            ((android.widget.ImageView) closeButton).setImageResource(iconConfig.getCloseIconRes());
+        } else if (closeButton instanceof android.widget.ImageView) {
+            ((android.widget.ImageView) closeButton).setImageResource(config.getIconConfig().getCloseIconRes());
+        }
+        closeButton.setOnClickListener(v -> {
+            if (onCloseClickListener != null) {
+                onCloseClickListener.onDialogClick(this);
+            }
+            dismiss();
+        });
     }
-    if (orientationUtils != null) {
-      orientationUtils.setIsPause(false);
-    }
-  }
 
-  @Override
-  public void dismiss() {
-    releasePlayerResources();
-    if (expandedFullscreen) {
-      Activity activity = resolveActivity();
-      if (activity != null) {
-        activity.setRequestedOrientation(savedScreenOrientation);
-      }
-      expandedFullscreen = false;
+    private void setupBackKeyHandler() {
+        setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                if (expandedFullscreen) {
+                    exitExpandedFullscreen();
+                    return true;
+                }
+            }
+            return false;
+        });
     }
-    super.dismiss();
-  }
 
-  private void releasePlayerResources() {
-    if (binding == null) {
-      return;
+    private void toggleExpandedFullscreen() {
+        if (expandedFullscreen) {
+            exitExpandedFullscreen();
+        } else {
+            enterExpandedFullscreen();
+        }
     }
-    if (orientationUtils != null) {
-      orientationUtils.releaseListener();
-      orientationUtils = null;
-    }
-    if (binding != null) {
-      binding.dialogVideoPlayer.setVideoAllCallBack(null);
-      binding.dialogVideoPlayer.release();
-    }
-    GSYVideoManager.releaseAllVideos();
-    binding = null;
-    readyToShow = false;
-  }
 
-  /**
-   * 快捷展示。
-   */
-  public static void show(@NonNull Context context, @NonNull String title, @NonNull String url) {
-    new VideoPlayerDialog(context)
-        .setTitle(title)
-        .setVideoUrl(url)
-        .setCacheEnable(false)
-        .builder()
-        .show();
-  }
+    private void enterExpandedFullscreen() {
+        expandedFullscreen = true;
+        playerView.setExternalExpanded(true);
+        VideoPlayerConfig config = playerView.getPlayerConfig();
+        ensureController(config);
+        if (controller != null) {
+            controller.onEnterExpanded();
+        }
+        applyDialogWindowStyle(true);
+        dialogRoot.setBackground(null);
+        dialogRoot.setPadding(0, 0, 0, 0);
+        closeButton.setVisibility(View.GONE);
+        updatePlayerLayoutParams(true);
+        if (playerView.getFullscreenButton() != null) {
+            playerView.getFullscreenButton().setImageResource(
+                playerView.getPlayerConfig().getIconConfig().getFullscreenExitIconRes());
+        }
+        playerView.refreshToolbarVisibility();
+    }
+
+    private void exitExpandedFullscreen() {
+        expandedFullscreen = false;
+        playerView.setExternalExpanded(false);
+        if (controller != null) {
+            controller.onExitExpanded();
+        }
+        Window window = getWindow();
+        if (window != null) {
+            View decorView = window.getDecorView();
+            decorView.post(this::applyCompactDialogLayout);
+            decorView.postDelayed(this::applyCompactDialogLayout, 350);
+        } else {
+            applyCompactDialogLayout();
+        }
+    }
+
+    private void applyCompactDialogLayout() {
+        updateCompactDialogMetrics();
+        applyDialogWindowStyle(false);
+        applyDialogCardBackground();
+        if (closeButton != null) {
+            closeButton.setVisibility(View.VISIBLE);
+        }
+        updatePlayerLayoutParams(false);
+        if (playerView != null && playerView.getFullscreenButton() != null) {
+            playerView.getFullscreenButton().setImageResource(
+                playerView.getPlayerConfig().getIconConfig().getFullscreenIconRes());
+        }
+        if (playerView != null) {
+            playerView.refreshToolbarVisibility();
+        }
+    }
+
+    private void updateCompactDialogMetrics() {
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        int shortEdge = Math.min(dm.widthPixels, dm.heightPixels);
+        compactDialogWidth = (int) (shortEdge * dialogWidthRatio);
+        compactPlayerHeight = compactDialogWidth * 9 / 16;
+        compactDialogHeight = compactPlayerHeight + DensityUtil.dp2px(getContext(), 8f);
+    }
+
+    private void applyDialogWindowStyle(boolean fullscreen) {
+        Window window = getWindow();
+        if (window == null) {
+            return;
+        }
+        if (fullscreen) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            window.setGravity(Gravity.CENTER);
+            window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                window.setAttributes(lp);
+            }
+            hideSystemUi(window);
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            window.setDimAmount(0.55f);
+            applyDialogCardBackground();
+            if (compactDialogWidth <= 0 || compactDialogHeight <= 0) {
+                updateCompactDialogMetrics();
+            }
+            window.setLayout(compactDialogWidth, compactDialogHeight);
+            window.setGravity(Gravity.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+                window.setAttributes(lp);
+            }
+            showSystemUi(window);
+        }
+    }
+
+    private void applyDialogCardBackground() {
+        Window window = getWindow();
+        if (window == null) {
+            return;
+        }
+        Drawable background = dialogBackground != null ? dialogBackground : DrawableUtil.createRectDrawable(
+            ContextCompat.getColor(getContext(), R.color.black),
+            DensityUtil.dp2px(getContext(), 12f),
+            DensityUtil.dp2px(getContext(), 12f),
+            DensityUtil.dp2px(getContext(), 12f),
+            DensityUtil.dp2px(getContext(), 12f)
+        );
+        window.setBackgroundDrawable(background);
+        if (dialogRoot != null) {
+            dialogRoot.setBackground(background);
+            int padding = DensityUtil.dp2px(getContext(), 2f);
+            dialogRoot.setPadding(padding, padding, padding, padding);
+        }
+    }
+
+    private void updatePlayerLayoutParams(boolean fullscreen) {
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) playerView.getLayoutParams();
+        if (fullscreen) {
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        } else {
+            if (compactPlayerHeight <= 0) {
+                updateCompactDialogMetrics();
+            }
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lp.height = compactPlayerHeight;
+        }
+        playerView.setLayoutParams(lp);
+    }
+
+    private static void hideSystemUi(@NonNull Window window) {
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    private static void showSystemUi(@NonNull Window window) {
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
+
+    @Nullable
+    private Activity resolveActivity() {
+        Activity activity = unwrapActivity(getContext());
+        if (activity != null) {
+            return activity;
+        }
+        return unwrapActivity(hostContext);
+    }
+
+    private void ensureController(@NonNull VideoPlayerConfig config) {
+        if (controller != null) {
+            return;
+        }
+        Activity activity = resolveActivity();
+        if (activity == null || playerView == null) {
+            return;
+        }
+        controller = new VideoPlayerController(activity, playerView, config);
+        controller.attach(() -> dismiss());
+        registerConfigurationCallback(activity);
+    }
+
+    @Nullable
+    private static Activity unwrapActivity(@Nullable Context context) {
+        Context current = context;
+        while (current instanceof ContextWrapper) {
+            if (current instanceof Activity) {
+                return (Activity) current;
+            }
+            Context base = ((ContextWrapper) current).getBaseContext();
+            if (base == current) {
+                break;
+            }
+            current = base;
+        }
+        return current instanceof Activity ? (Activity) current : null;
+    }
+
+    public void onHostPause() {
+        if (controller != null) {
+            controller.onHostPause();
+        } else if (playerView != null) {
+            playerView.onVideoPause();
+        }
+    }
+
+    public void onHostResume() {
+        if (controller != null) {
+            controller.onHostResume();
+        } else if (playerView != null) {
+            playerView.onVideoResume();
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        releasePlayerResources();
+        if (expandedFullscreen && controller != null) {
+            controller.onExitExpanded();
+            expandedFullscreen = false;
+        }
+        super.dismiss();
+    }
+
+    private void releasePlayerResources() {
+        unregisterConfigurationCallback(resolveActivity());
+        if (controller != null) {
+            controller.release();
+            controller = null;
+        } else if (playerView != null) {
+            playerView.setVideoAllCallBack(null);
+            playerView.release();
+            GSYVideoManager.releaseAllVideos();
+        }
+        playerView = null;
+        readyToShow = false;
+    }
+
+    public static void show(@NonNull Context context, @NonNull String title, @NonNull String url) {
+        new VideoPlayerDialog(context)
+            .setTitle(title)
+            .setVideoUrl(url)
+            .setCacheEnable(false)
+            .builder()
+            .show();
+    }
 }

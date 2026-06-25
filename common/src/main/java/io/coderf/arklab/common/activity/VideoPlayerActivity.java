@@ -3,15 +3,14 @@ package io.coderf.arklab.common.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.R;
@@ -20,23 +19,25 @@ import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.TextureViewPlayerActivityBinding;
 import io.coderf.arklab.common.viewmodel.VideoPlayerViewModel;
 import io.coderf.arklab.common.widget.dialog.MessageDialog;
-import io.coderf.arklab.common.widget.dialog.VideoPlayerViewHelper;
+import java.util.Arrays;
+
+import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
+import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
+import io.coderf.arklab.common.widget.video.VideoPlayerController;
+import io.coderf.arklab.common.widget.video.VideoPlayerViewHelper;
 
 /**
- * Create by fz on 2019/11/27
- * describe: 全屏视频播放页，默认横屏；底部按钮仅用于横竖屏旋转，不触发 GSY 窗口全屏。
- * <p>
- * GSY 无独立旋转按钮，复用控制栏 {@code fullscreen} 位 + {@link OrientationUtils#resolveByClick()}。
- * </p>
+ * 横屏 Activity 视频播放页，使用定制 {@link io.coderf.arklab.common.widget.video.ArkVideoPlayerView}。
  */
 @AndroidEntryPoint
 public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, TextureViewPlayerActivityBinding> {
-    public final static String VIDEO_PATH = "videoPath";
-    public final static String VIDEO_TITLE = "videoTitle";
-    public final static String CACHE_ENABLE = "cacheEnable";
-    private boolean cacheEnable = true;
-    @Nullable
-    private OrientationUtils orientationUtils;
+
+    public static final String VIDEO_PATH = "videoPath";
+    public static final String VIDEO_TITLE = "videoTitle";
+    public static final String CACHE_ENABLE = "cacheEnable";
+
+    private VideoPlayerController controller;
+    private VideoPlayerConfig playerConfig = VideoPlayerConfig.activityDefaults();
 
     @Override
     protected int getLayoutId() {
@@ -54,11 +55,6 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
     }
 
     @Override
-    protected boolean enableImmersionBar() {
-        return false;
-    }
-
-    @Override
     protected boolean shouldHideStatusBar() {
         return true;
     }
@@ -70,98 +66,108 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
 
     @Override
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig(this)
-                .setStatusBarColor(android.R.color.black)
-                .setLightMode(false)
-                .setEnableImmersionBar(false)
-                .applyStatusBar();
+        return new ToolbarConfig(this).setStatusBarColor(android.R.color.black).setLightMode(false).applyStatusBar();
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+        if (playerConfig.isDefaultLandscape()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
     }
 
     @Override
     public void initData(Bundle bundle) {
         String videoPath = bundle.getString(VIDEO_PATH);
-        cacheEnable = bundle.getBoolean(CACHE_ENABLE, cacheEnable);
+        boolean cacheEnable = bundle.getBoolean(CACHE_ENABLE, playerConfig.isCacheEnable());
+        String title = bundle.getString(VIDEO_TITLE);
         if (TextUtils.isEmpty(videoPath)) {
             new MessageDialog(this)
-                    .setCanOutSide(false)
-                    .setMessage(getString(R.string.video_dialog_invalid_url))
-                    .setPositiveText(getString(R.string.confirm))
-                    .setOnPositiveClickListener(dialog -> {
-                        dialog.dismiss();
-                        VideoPlayerActivity.this.finish();
-                    })
-                    .builder()
-                    .show();
+                .setCanOutSide(false)
+                .setMessage(getString(R.string.video_dialog_invalid_url))
+                .setPositiveText(getString(R.string.confirm))
+                .setOnPositiveClickListener(dialog -> {
+                    dialog.dismiss();
+                    finish();
+                })
+                .builder()
+                .show();
             return;
         }
 
-        orientationUtils = new OrientationUtils(this, binding.videoPlayer);
-        orientationUtils.setEnable(false);
-
-        VideoPlayerViewHelper.prepareRotateButtonIcons(binding.videoPlayer, null);
-
-        String title = bundle.getString(VIDEO_TITLE);
-        VideoPlayerViewHelper.setupPlayer(binding.videoPlayer, videoPath, cacheEnable, title, null, videoPath);
-        VideoPlayerViewHelper.applyFullscreenActivityStyle(binding.videoPlayer, null);
-        VideoPlayerViewHelper.bindRotateButton(binding.videoPlayer, orientationUtils, null);
-        VideoPlayerViewHelper.bindBackButton(binding.videoPlayer, this::handlePlayerBack);
-
-        binding.videoPlayer.startPlayLogic();
+        binding.videoPlayer.applyConfig(playerConfig);
+        playerConfig.setClarityOptions(Arrays.asList(
+            new VideoPlayerClarityOption("原画", videoPath, "最高画质"),
+            new VideoPlayerClarityOption("流畅", videoPath, "节省流量")
+        ));
+        VideoPlayerViewHelper.setupPlayer(binding.videoPlayer, videoPath, cacheEnable, title, videoPath, playerConfig);
+        controller = new VideoPlayerController(this, binding.videoPlayer, playerConfig);
+        controller.attach(this::finish);
+        VideoPlayerViewHelper.startPlay(binding.videoPlayer);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        binding.videoPlayer.onVideoResume();
-        if (orientationUtils != null) {
-            orientationUtils.setIsPause(false);
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (controller != null) {
+            controller.onConfigurationChanged(newConfig);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        binding.videoPlayer.onVideoPause();
-        if (orientationUtils != null) {
-            orientationUtils.setIsPause(true);
+        if (controller != null) {
+            controller.onHostPause();
+        } else {
+            binding.videoPlayer.onVideoPause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (controller != null) {
+            controller.onHostResume();
+        } else {
+            binding.videoPlayer.onVideoResume();
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (orientationUtils != null) {
-            orientationUtils.releaseListener();
-            orientationUtils = null;
+        if (controller != null) {
+            controller.release();
+            controller = null;
+        } else {
+            GSYVideoManager.releaseAllVideos();
         }
         super.onDestroy();
-        GSYVideoManager.releaseAllVideos();
     }
 
-    private void handlePlayerBack() {
-        binding.videoPlayer.setVideoAllCallBack(null);
-        finish();
+    public VideoPlayerActivity setPlayerConfig(VideoPlayerConfig playerConfig) {
+        this.playerConfig = playerConfig;
+        return this;
     }
 
     private final OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            handlePlayerBack();
+            if (controller != null && controller.onBackPressed()) {
+                return;
+            }
+            finish();
         }
     };
 
-    public static void show(@NonNull Context context, @NonNull Bundle bundle) {
+    public static void show(Context context, Bundle bundle) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
-    public static void show(@NonNull Context context, @NonNull String title, @NonNull String url) {
+    public static void show(Context context, String title, String url) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(VIDEO_TITLE, title);
@@ -170,7 +176,7 @@ public class VideoPlayerActivity extends BaseActivity<VideoPlayerViewModel, Text
         context.startActivity(intent);
     }
 
-    public static void show(@NonNull Context context, @NonNull String title, @NonNull String url, boolean cacheEnable) {
+    public static void show(Context context, String title, String url, boolean cacheEnable) {
         Intent intent = new Intent(context, VideoPlayerActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(VIDEO_TITLE, title);

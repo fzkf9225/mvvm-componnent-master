@@ -180,6 +180,15 @@
     <string name="choose_from_album">Choose from Album</string>
     <string name="image_preview">Image Preview</string>
     <string name="video_preview">Video Preview</string>
+    <string name="video_dialog_close">Close player</string>
+    <string name="video_dialog_invalid_url">Invalid video URL</string>
+    <string name="video_rotate">Rotate screen</string>
+    <string name="video_lock">Lock screen</string>
+    <string name="video_speed">Playback speed</string>
+    <string name="video_clarity">Quality</string>
+    <string name="video_clarity_origin">Original</string>
+    <string name="video_clarity_hint">Select playback quality</string>
+    <string name="video_fullscreen">Fullscreen</string>
     <string name="compress_image">Compress Image</string>
     <string name="original_image">Original</string>
     <string name="image_selected_count">%1$d images selected</string>
@@ -227,8 +236,6 @@
     <string name="share_canceled">Share canceled</string>
 
     <!-- ========== Dialog ========== -->
-    <string name="video_dialog_close">Close video</string>
-    <string name="video_dialog_invalid_url">Invalid video URL</string>
     <string name="dialog_title_tip">Tip</string>
     <string name="dialog_title_warning">Warning</string>
     <string name="dialog_title_error">Error</string>

@@ -113,9 +113,8 @@ dependencies {
     implementation libs.androidx.lifecycle.common.java8
     //放着没有及时回收造成RxJava内存泄漏
     implementation libs.com.trello.rxlifecycle2.rxlifecycle.components
-    //是否需要ExoPlayer模式
-    implementation libs.gsyvideoplayer
-    //根据你的需求ijk模式的so
+    // GSYVideoPlayer 13.x：java 层 + 分架构 ijk so（勿与 gsyvideoplayer 完整包同用，会重复 libijkffmpeg.so）
+    implementation libs.gsyvideoplayer.java
     implementation libs.gsyvideoplayer.arm64
     implementation libs.gsyvideoplayer.armv7a
     implementation libs.github.gsyvideoplayer.x86
@@ -188,7 +187,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.common'
                 artifactId = 'common'
-                version = '4.4.2.3'
+                version = '4.4.3'
             }
         }
 

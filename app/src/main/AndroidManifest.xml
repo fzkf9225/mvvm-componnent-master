@@ -197,6 +197,11 @@
             android:exported="false" />
         <activity
             android:name=".activity.DialogActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VideoPlayerEmbedDemoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".activity.WightActivity"

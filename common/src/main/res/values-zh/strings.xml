@@ -179,6 +179,15 @@
     <string name="choose_from_album">从相册选择</string>
     <string name="image_preview">图片预览</string>
     <string name="video_preview">视频预览</string>
+    <string name="video_dialog_close">关闭播放器</string>
+    <string name="video_dialog_invalid_url">视频播放地址错误</string>
+    <string name="video_rotate">旋转屏幕</string>
+    <string name="video_lock">锁定屏幕</string>
+    <string name="video_speed">播放倍速</string>
+    <string name="video_clarity">清晰度</string>
+    <string name="video_clarity_origin">原画</string>
+    <string name="video_clarity_hint">选择播放清晰度</string>
+    <string name="video_fullscreen">全屏</string>
     <string name="compress_image">压缩图片</string>
     <string name="original_image">原图</string>
     <string name="image_selected_count">已选择%1$d张图片</string>
@@ -224,9 +233,6 @@
     <string name="share_success">分享成功</string>
     <string name="share_failed">分享失败</string>
     <string name="share_canceled">取消分享</string>
-
-    <string name="video_dialog_close">关闭视频</string>
-    <string name="video_dialog_invalid_url">视频播放地址错误！</string>
 
     <!-- ========== 对话框 ========== -->
     <string name="dialog_title_tip">提示</string>

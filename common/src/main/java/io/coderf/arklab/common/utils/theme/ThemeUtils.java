@@ -163,6 +163,37 @@ public class ThemeUtils {
     }
 
     /**
+     * 退出全屏沉浸式后恢复系统栏（与 {@link #applyHideSystemBarsImmersive} 配对使用）。
+     */
+    public static void restoreSystemBarsAfterImmersive(@NonNull Activity activity) {
+        try {
+            Window window = activity.getWindow();
+            if (window == null) {
+                return;
+            }
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WindowManager.LayoutParams lp = window.getAttributes();
+                lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+                window.setAttributes(lp);
+            }
+            View decorView = window.getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener(null);
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(window, decorView);
+            if (controller != null) {
+                controller.show(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_DEFAULT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.loggerE(TAG, "restoreSystemBarsAfterImmersive异常：" + e);
+        }
+    }
+
+    /**
      * 设置沉浸式状态栏
      * @param activity 当前Activity
      * @param color 状态栏背景颜色（可透明）

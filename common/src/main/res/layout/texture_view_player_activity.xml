@@ -11,9 +11,8 @@
         android:animateLayoutChanges="true"
         android:background="@color/black">
 
-        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        <io.coderf.arklab.common.widget.video.ArkVideoPlayerView
             android:id="@+id/videoPlayer"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true" />

@@ -27,6 +27,7 @@ import io.coderf.arklab.demo.activity.WebViewNetworkDemoActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
 import io.coderf.arklab.demo.activity.VerifyTopActivity;
+import io.coderf.arklab.demo.activity.VideoPlayerEmbedDemoActivity;
 import io.coderf.arklab.demo.activity.ViewPagerSampleActivity;
 import io.coderf.arklab.demo.activity.WightActivity;
 import io.coderf.arklab.demo.bean.UseCase;
@@ -58,7 +59,8 @@ public enum UseCaseEnum {
     SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),
     ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3综合列表封装", null),
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),
-    VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器", "在线视频播放器，集成自GSYVideoPlayer", getVideoBundle()),
+    VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器(Activity)", "横屏 Activity 定制播放器，默认展示全部控制按钮", getVideoBundle()),
+    VIDEO_PLAYER_EMBED(VideoPlayerEmbedDemoActivity.class, "视频播放器(嵌入)", "View 嵌入 Activity，非全屏仅全屏按钮", getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class, "CoordinatorLayout沉浸式", "侧滑标签页面", null),
     ANNOTATION(VerifyActivity.class, "自定义注解测试-Left", "通过自定义注解验证实体类参数问题，表单对齐方式为left，也是默认方式，分组验证方式为默认分组", null),
     ANNOTATION_TOP(VerifyTopActivity.class, "自定义注解测试-Top", "通过自定义注解验证实体类参数问题，表单对齐方式为top，分组验证方式为Create", null),

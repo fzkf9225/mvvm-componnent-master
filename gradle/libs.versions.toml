@@ -1,5 +1,5 @@
 [versions]
-compileSdkVersion = "35"
+compileSdkVersion = "36"
 exifinterfaceVersion = "1.4.2"
 minSdkVersion = "26"
 targetSdkVersion = "35"
@@ -57,7 +57,7 @@ pagingVersion = "3.3.6"
 viewpager2 = "1.1.0"
 zxingAndroidVersion = "4.3.0"
 zxingCoreVersion = "3.5.4"
-gsyVersion = "v9.0.0-release-jitpack"
+gsyVersion = "13.0.0"
 bcprov = "1.81"
 webkitVersion = "1.14.0"
 autoServiceVersion="1.1.1"
@@ -146,12 +146,12 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 amazonaws-aws-android-sdk-mobile-client = { module = "com.amazonaws:aws-android-sdk-mobile-client", version.ref = "awsAndroidSdkVersion" }
 amazonaws-aws-android-sdk-s3 = { module = "com.amazonaws:aws-android-sdk-s3", version.ref = "awsAndroidSdkVersion" }
 
-# Video Player
-github-gsyvideoplayer-x64 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x64", version.ref = "gsyVersion" }
-github-gsyvideoplayer-x86 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86", version.ref = "gsyVersion" }
-gsyvideoplayer-armv7a = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-armv7a", version.ref = "gsyVersion" }
-gsyvideoplayer-arm64 = { module = "com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64", version.ref = "gsyVersion" }
-gsyvideoplayer = { module = "com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer", version.ref = "gsyVersion" }
+# Video Player (GSYVideoPlayer 13.x — Maven Central, 方案 B: java + 分架构 so)
+gsyvideoplayer-java = { module = "io.github.carguo:gsyvideoplayer-java", version.ref = "gsyVersion" }
+github-gsyvideoplayer-x64 = { module = "io.github.carguo:gsyvideoplayer-x64", version.ref = "gsyVersion" }
+github-gsyvideoplayer-x86 = { module = "io.github.carguo:gsyvideoplayer-x86", version.ref = "gsyVersion" }
+gsyvideoplayer-armv7a = { module = "io.github.carguo:gsyvideoplayer-armv7a", version.ref = "gsyVersion" }
+gsyvideoplayer-arm64 = { module = "io.github.carguo:gsyvideoplayer-arm64", version.ref = "gsyVersion" }
 
 # Barcode Scanning
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCoreVersion" }
