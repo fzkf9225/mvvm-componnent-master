@@ -387,6 +387,8 @@
     </declare-styleable>
 
     <declare-styleable name="Custom_Round_Image_View">
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
         <attr name="radius" />
         <attr name="leftTopRadius" />
         <attr name="rightTopRadius" />

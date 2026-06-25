@@ -55,6 +55,20 @@ public class CornerImageView extends AppCompatImageView {
      * 是否启用圆角裁剪
      */
     protected boolean cornerClipEnabled = false;
+
+    /**
+     * 边框颜色
+     */
+    protected int strokeColor;
+    /**
+     * 边框宽度
+     */
+    protected float strokeWidth;
+    /**
+     * 是否设置了描边
+     */
+    protected boolean hasStroke = false;
+
     protected Paint mPaint;
     protected final Path mPath = new Path();
 
@@ -94,6 +108,9 @@ public class CornerImageView extends AppCompatImageView {
         boolean hasLeftBottom = array.hasValue(R.styleable.Custom_Round_Image_View_leftBottomRadius);
         hasBgColor = array.hasValue(R.styleable.Custom_Round_Image_View_bgColor);
 
+        boolean hasStrokeColor = array.hasValue(R.styleable.Custom_Round_Image_View_strokeColor);
+        boolean hasStrokeWidthAttr = array.hasValue(R.styleable.Custom_Round_Image_View_strokeWidth);
+
         radius = hasRadiusAttr ? array.getDimensionPixelOffset(R.styleable.Custom_Round_Image_View_radius, 0) : 0;
         leftTopRadius = hasLeftTop
                 ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftTopRadius, 0)
@@ -107,12 +124,21 @@ public class CornerImageView extends AppCompatImageView {
         leftBottomRadius = hasLeftBottom
                 ? array.getDimensionPixelSize(R.styleable.Custom_Round_Image_View_leftBottomRadius, 0)
                 : radius;
+
         if (hasBgColor) {
             bgColor = array.getColor(R.styleable.Custom_Round_Image_View_bgColor, Color.TRANSPARENT);
-            mPaint.setColor(bgColor);
         }
+
+        if (hasStrokeColor) {
+            strokeColor = array.getColor(R.styleable.Custom_Round_Image_View_strokeColor, 0);
+        }
+        if (hasStrokeWidthAttr) {
+            strokeWidth = array.getDimension(R.styleable.Custom_Round_Image_View_strokeWidth, 0);
+        }
+
         array.recycle();
 
+        hasStroke = strokeWidth > 0;
         cornerClipEnabled = hasRadiusAttr || hasLeftTop || hasRightTop || hasRightBottom || hasLeftBottom;
         if (cornerClipEnabled) {
             updateCornerClipEnabled();
@@ -198,9 +224,6 @@ public class CornerImageView extends AppCompatImageView {
     public void setBgColor(int color) {
         this.bgColor = color;
         this.hasBgColor = true;
-        if (mPaint != null) {
-            mPaint.setColor(color);
-        }
         invalidate();
     }
 
@@ -210,6 +233,30 @@ public class CornerImageView extends AppCompatImageView {
     public void setBgColor(int alpha, int red, int green, int blue) {
         int color = (alpha << 24) | (red << 16) | (green << 8) | blue;
         setBgColor(color);
+    }
+
+    /**
+     * 设置描边
+     */
+    public void setStroke(int strokeWidth, int color) {
+        this.strokeColor = color;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        invalidate();
+    }
+
+    /**
+     * 获取边框颜色
+     */
+    public int getStrokeColor() {
+        return strokeColor;
+    }
+
+    /**
+     * 获取边框宽度
+     */
+    public float getStrokeWidth() {
+        return strokeWidth;
     }
 
     /**
@@ -269,7 +316,19 @@ public class CornerImageView extends AppCompatImageView {
             } else {
                 canvas.clipPath(mPath, Region.Op.INTERSECT);
             }
+
+            // 绘制背景色
             if (hasBgColor && Color.alpha(bgColor) > 0) {
+                mPaint.setStyle(Paint.Style.FILL);
+                mPaint.setColor(bgColor);
+                canvas.drawPath(mPath, mPaint);
+            }
+
+            // 绘制描边
+            if (hasStroke) {
+                mPaint.setStyle(Paint.Style.STROKE);
+                mPaint.setStrokeWidth(strokeWidth);
+                mPaint.setColor(strokeColor);
                 canvas.drawPath(mPath, mPaint);
             }
         }
