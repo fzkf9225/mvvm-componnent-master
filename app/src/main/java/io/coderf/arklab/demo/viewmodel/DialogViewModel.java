@@ -356,7 +356,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new DatePickDialog(view.getContext())
                     .setStartYear(1990)
                     .setEndYear(2030)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                         String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day);
@@ -366,7 +366,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .show();
         } else if (R.id.timePick == view.getId()) {
             new DatePickDialog(view.getContext())
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.HOUR_MINUTE_SECOND)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                         String text = NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
@@ -378,7 +378,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new DatePickDialog(view.getContext())
                     .setStartYear(1990)
                     .setEndYear(2030)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                         String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day) + " " +
@@ -394,7 +394,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setDateLabel(" - ", " - ", "\u3000")
                     .setTimeLabel(" : ", "\u3000", "\u3000")
                     .setGravity(Gravity.CENTER)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY_HOUR_MINUTE)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                         String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day) + " " +
@@ -410,9 +410,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setTitle("请选择日期")
                     .setShowClearView(true)
                     .setClearText("清空")
-                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
                     .setClearTextSize(14f)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY)
                     .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                         String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day);
@@ -426,7 +426,6 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
             new DateRangePickDialog(view.getContext())
                     .setGravity(Gravity.BOTTOM)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
@@ -434,7 +433,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
             Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
             ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
-            shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green));
+            shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green));
             ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
             shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.transparent));
 
@@ -447,9 +446,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new DateRangePickDialog(view.getContext())
                     .setSelectableStartDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
                     .setSelectableEndDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
-                    .setSelectedTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.white))
-                    .setWeekTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
-                    .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.auto_color))
+                    .setSelectedTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
+                    .setWeekTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
+                    .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
                     .setDotWidth(DensityUtil.dp2px(view.getContext(), 6))
                     .setDotHeight(DensityUtil.dp2px(view.getContext(), 6))
                     .setItemWidth(DensityUtil.dp2px(view.getContext(), 42))
@@ -457,10 +456,10 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setTextSize((float) DensityUtil.sp2px(view.getContext(), 13f))
                     .setSelectedBg(shapeDrawableSelected)
                     .setNormalBg(shapeDrawableNormal)
-                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setGravity(Gravity.CENTER)
                     .setBgDrawable(shapeDrawableBg)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
@@ -471,9 +470,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setTitle("请选择日期范围")
                     .setShowClearView(true)
                     .setClearText("清空")
-                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_red))
+                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
                     .setClearTextSize(14f)
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.ui.R.color.theme_green))
+                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
                     .setOnClearClickListener(dialog -> baseView.showToast("已清空"))
                     .builder(fragmentManager, lifecycle)

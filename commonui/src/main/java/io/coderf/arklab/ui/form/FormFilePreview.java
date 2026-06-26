@@ -95,7 +95,7 @@ public class FormFilePreview extends FormMedia {
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
             fileDrawable = typedArray.getDrawable(R.styleable.FormUI_fileDrawable);
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
@@ -105,10 +105,10 @@ public class FormFilePreview extends FormMedia {
             }
             fileIconWidth = typedArray.getDimension(R.styleable.FormUI_fileIconWidth, 0);
             fileIconHeight = typedArray.getDimension(R.styleable.FormUI_fileIconHeight, 0);
-            itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
         } else {
-            itemTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            itemTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            emptyTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件";
             isShowFileDrawable = true;

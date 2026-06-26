@@ -136,7 +136,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
             countLabelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
             compress = true;
             compressImageSize = 300;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
         }
         isInitialized = true;
     }

@@ -259,7 +259,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
             writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
             requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
             protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
-            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
@@ -283,7 +283,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
 
             labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
 
-            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), R.color.line));
+            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color));
 
             placeholderImage = typedArray.getDrawable(R.styleable.FormUI_placeholderImage);
             if (placeholderImage == null) {
@@ -330,7 +330,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
             protocolDialog = true;
             writeCaptureExifMetadata = true;
             requireUriPermission = true;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             formTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -343,7 +343,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
             defaultTextMargin = DensityUtil.dp2px(getContext(), 12f);
             labelTextStyle = LabelTextStyleEnum.NORMAL.value;
             columnCount = 4;
-            borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
+            borderBottomColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color);
             columnMargin = DensityUtil.dp2px(getContext(), 16f);
             placeholderImage = ContextCompat.getDrawable(getContext(), io.coderf.arklab.common.R.mipmap.ic_default_image);
             errorImage = ContextCompat.getDrawable(getContext(), io.coderf.arklab.common.R.mipmap.ic_default_image);
@@ -495,7 +495,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
         tvRequired.setText("*");
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvRequired.setGravity(Gravity.CENTER);
-        tvRequired.setTextColor(ContextCompat.getColor(getContext(), R.color.theme_red));
+        tvRequired.setTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.theme_red));
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
 
         LayoutParams params = new LayoutParams(

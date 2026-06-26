@@ -146,7 +146,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             compressImageSize = 300;
             maxVideoDuration = 30;
             compressVideo = VideoQualityEnum.LOW.value;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
         }
     }
 

@@ -114,7 +114,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             fileAddSrc = typedArray.getResourceId(R.styleable.FormUI_fileAddSrc, R.mipmap.ic_add_theme_color);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 12));
-            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
             if (TextUtils.isEmpty(emptyText)) {
@@ -125,12 +125,12 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
             if (!TextUtils.isEmpty(fileTypeStr)) {
                 fileType = fileTypeStr.split(",");
             }
-            itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            itemTextColor = typedArray.getColor(R.styleable.FormUI_itemTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             typedArray.recycle();
         } else {
             formTextSize = DensityUtil.sp2px(getContext(), 12);
-            itemTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            itemTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            emptyTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件，请点击右上角添加附件";
             fileType = null;

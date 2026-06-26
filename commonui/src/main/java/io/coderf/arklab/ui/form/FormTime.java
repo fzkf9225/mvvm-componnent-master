@@ -67,11 +67,11 @@ public class FormTime extends FormSelection {
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
-            confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
+            confirmTextColor = ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black);
             showClearButton = true;
         }
         if (TextUtils.isEmpty(separator)) {

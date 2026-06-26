@@ -247,12 +247,12 @@ class CalendarView : ConstraintLayout {
             context.withStyledAttributes(attrs, R.styleable.CalendarView) {
                 workingDayTextColor = getColor(
                     R.styleable.CalendarView_workingDayTextColor,
-                    ContextCompat.getColor(context, R.color.auto_color)
+                    ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
                 )
                 //如果没设置默认为工作日文字颜色
                 weekTextColor = getColor(
                     R.styleable.CalendarView_weekTextColor,
-                    ContextCompat.getColor(context, R.color.auto_color)
+                    ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
                 )
                 selectableStartDate = getString(R.styleable.CalendarView_selectableStartDate)
                 selectableEndDate = getString(R.styleable.CalendarView_selectableEndDate)
@@ -262,7 +262,7 @@ class CalendarView : ConstraintLayout {
                 rangeEndLabel = getString(R.styleable.CalendarView_rangeEndLabel) ?: "止"
                 bottomTagTextColor = getColor(
                     R.styleable.CalendarView_bottomTagTextColor,
-                    ContextCompat.getColor(context, R.color.theme_color)
+                    ContextCompat.getColor(context,io.coderf.arklab.common.R.color.themeColor)
                 )
                 bottomTagTextSize = getDimension(
                     R.styleable.CalendarView_bottomTagTextSize,
@@ -271,7 +271,7 @@ class CalendarView : ConstraintLayout {
                 selectedTextColor =
                     getColor(
                         R.styleable.CalendarView_selectedTextColor,
-                        ContextCompat.getColor(context, R.color.white)
+                        ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white)
                     )
                 selectedBg = getDrawable(R.styleable.CalendarView_selectedBg)
                 normalBg = getDrawable(R.styleable.CalendarView_normalBg)
@@ -325,9 +325,9 @@ class CalendarView : ConstraintLayout {
                 }
             }
         } ?: run {
-            workingDayTextColor = ContextCompat.getColor(context, R.color.auto_color)
-            weekTextColor = ContextCompat.getColor(context, R.color.auto_color)
-            selectedTextColor = ContextCompat.getColor(context, R.color.white)
+            workingDayTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
+            weekTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
+            selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white)
             textSize = DensityUtil.sp2px(context, 14f).toFloat()
             mode = Mode.SINGLE
             itemWidth = DensityUtil.dp2px(context, 36f)
@@ -336,14 +336,14 @@ class CalendarView : ConstraintLayout {
             dotHeight = DensityUtil.dp2px(context, 4f)
             rangeStartLabel = "起"
             rangeEndLabel = "止"
-            bottomTagTextColor = ContextCompat.getColor(context, R.color.theme_color)
+            bottomTagTextColor = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.themeColor)
             bottomTagTextSize = DensityUtil.sp2px(context, 10f).toFloat()
             itemHorizontalSpacing = DensityUtil.dp2px(context, 8f)
             itemVerticalSpacing = DensityUtil.dp2px(context, 8f)
         }
         if (selectedBg == null) {
             selectedBg = ShapeDrawable(OvalShape()).apply {
-                paint.color = ContextCompat.getColor(context, R.color.theme_color)
+                paint.color = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.themeColor)
             }
         }
         if (normalBg == null) {

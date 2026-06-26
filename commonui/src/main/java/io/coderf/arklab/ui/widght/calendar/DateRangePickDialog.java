@@ -197,7 +197,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dotWidth = DensityUtil.dp2px(context, 4f);
         dotHeight = DensityUtil.dp2px(context, 4f);
         ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
-        shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.ui.R.color.theme_color));
+        shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.themeColor));
         selectedBg = shapeDrawableSelected;
 
         selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white);
@@ -208,7 +208,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.transparent));
         normalBg = shapeDrawableNormal;
         clearTextColor = ColorStateList.valueOf(
-                ContextCompat.getColor(context, io.coderf.arklab.ui.R.color.theme_red));
+                ContextCompat.getColor(context, io.coderf.arklab.common.R.color.theme_red));
     }
 
     /**

@@ -70,14 +70,14 @@ public class FormVideoPreview extends FormMedia {
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), R.color.dark_color));
+            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
             if (TextUtils.isEmpty(emptyText)) {
                 emptyText = "暂无附件";
             }
         } else {
-            emptyTextColor = ContextCompat.getColor(getContext(), R.color.dark_color);
+            emptyTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件";
         }

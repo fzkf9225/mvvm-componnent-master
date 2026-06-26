@@ -77,11 +77,11 @@ public class FormDate extends FormSelection {
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY.model);
             startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
             endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), R.color.theme_color));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.YEAR_MONTH_DAY.model;
-            confirmTextColor = ContextCompat.getColor(getContext(), R.color.theme_color);
+            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
             showClearButton = true;

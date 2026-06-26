@@ -238,6 +238,12 @@
         <attr name="label" />
         <!--下拉框图标-->
         <attr name="selectionIcon" format="reference"/>
+        <!--下拉框图标宽度，未设置时自适应图标原始尺寸-->
+        <attr name="selectionIconWidth" format="dimension"/>
+        <!--下拉框图标高度，未设置时自适应图标原始尺寸-->
+        <attr name="selectionIconHeight" format="dimension"/>
+        <!--下拉框图标与文字间距-->
+        <attr name="selectionIconPadding" format="dimension"/>
         <!--占位图片-->
         <attr name="placeholderImage" format="reference"/>
         <!--加载错误图片-->

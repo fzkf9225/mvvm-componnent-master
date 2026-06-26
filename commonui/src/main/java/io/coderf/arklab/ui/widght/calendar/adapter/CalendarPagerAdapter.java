@@ -58,14 +58,14 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         if (isEnable(day)) {
             if (isSelected) {
-                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.white) : calendarView.getSelectedTextColor());
+                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.white) : calendarView.getSelectedTextColor());
                 holder.getBinding().dayNumber.setBackground(calendarView.getSelectedBg());
             } else {
                 if (mList.get(pos).isWeekend()) {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.auto_color) : calendarView.getWeekTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.autoColor) : calendarView.getWeekTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 } else {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), R.color.auto_color) : calendarView.getWorkingDayTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.autoColor) : calendarView.getWorkingDayTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 }
             }

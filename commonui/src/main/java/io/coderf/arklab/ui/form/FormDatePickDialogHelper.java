@@ -18,8 +18,8 @@ final class FormDatePickDialogHelper {
     }
 
     static DatePickDialog applyFormStyle(Context context, TypedArray typedArray, DatePickDialog dialog) {
-        int themeColor = ContextCompat.getColor(context, R.color.theme_color);
-        int redColor = ContextCompat.getColor(context, R.color.theme_red);
+        int themeColor = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.black);
+        int redColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.theme_red);
         int confirmColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, themeColor);
         int todayColor = typedArray.hasValue(R.styleable.FormUI_todayTextColor)
                 ? typedArray.getColor(R.styleable.FormUI_todayTextColor, themeColor)
@@ -125,7 +125,7 @@ final class FormDatePickDialogHelper {
 
     static DatePickDialog applyDefaultStyle(Context context, int confirmColor, boolean showClearButton,
                                             DatePickDialog dialog) {
-        int themeColor = ContextCompat.getColor(context, R.color.theme_color);
+        int themeColor = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.black);
         int resolvedConfirmColor = confirmColor != 0 ? confirmColor : themeColor;
         return dialog.setPositiveTextColor(resolvedConfirmColor)
                 .setTodayTextColor(resolvedConfirmColor)

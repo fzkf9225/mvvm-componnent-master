@@ -17,7 +17,7 @@
             android:id="@+id/tv_args"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/auto_color"
+            android:textColor="@color/autoColor"
             android:textSize="@dimen/font_18"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,7 @@
         <Button
             android:id="@+id/button_login"
             android:text="前往登录"
-            android:textColor="@color/auto_color"
+            android:textColor="@color/autoColor"
             android:textSize="@dimen/font_18"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

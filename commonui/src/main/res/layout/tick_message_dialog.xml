@@ -17,7 +17,7 @@
         android:layout_height="75dp"
         android:layout_gravity="center"
         tick_view:check_tick_color="@color/default_background"
-        tick_view:check_base_color="@color/theme_color"
+        tick_view:check_base_color="@color/themeColor"
         tick_view:uncheck_base_color="@color/default_background"
         tick_view:clickable="false"
         tick_view:rate="normal" />

@@ -235,10 +235,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
 
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
-            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
-            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), R.color.line));
-            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), R.color.auto_color));
+            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color));
+            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormUI_line, 1);
@@ -256,10 +256,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
             typedArray.recycle();
         } else {
-            formTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            formTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
             formHintTextColor =ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
-            borderBottomColor = ContextCompat.getColor(getContext(), R.color.line);
+            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            borderBottomColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color);
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             borderBottomStartMargin = DensityUtil.dp2px(getContext(), 16f);
@@ -377,7 +377,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         tvRequired.setText("*");
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvRequired.setGravity(android.view.Gravity.CENTER);
-        tvRequired.setTextColor(ContextCompat.getColor(getContext(), R.color.theme_red));
+        tvRequired.setTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.theme_red));
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(

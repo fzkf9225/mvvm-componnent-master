@@ -143,7 +143,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             countLabelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
             compress = true;
             compressVideo = VideoQualityEnum.LOW.value;
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.auto_color);
+            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
         }
     }
 
