@@ -13,9 +13,13 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 /**
  * 屏幕旋转辅助：进入全屏保存方向、退出恢复；手动旋转与重力感应协同。
+ * <p>
+ * 由 {@link VideoPlayerController} 内部持有，业务侧一般无需直接使用。
+ * </p>
  */
 public class VideoPlayerOrientationHelper {
 
+    /** 手动旋转后延迟恢复 FULL_SENSOR，避免与 GSY OrientationUtils 冲突 */
     private static final long RESTORE_GRAVITY_DELAY_MS = 350L;
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());

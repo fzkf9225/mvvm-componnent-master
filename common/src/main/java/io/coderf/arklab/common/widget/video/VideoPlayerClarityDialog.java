@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 import io.coderf.arklab.common.R;
 
 /**
- * 清晰度选择弹窗。
+ * 清晰度选择弹窗，由 {@link VideoPlayerController} 在点击清晰度 Chip 时弹出。
  */
 public class VideoPlayerClarityDialog extends Dialog {
 
@@ -54,8 +54,8 @@ public class VideoPlayerClarityDialog extends Dialog {
         for (int i = 0; i < options.size(); i++) {
             VideoPlayerClarityOption option = options.get(i);
             View item = inflater.inflate(R.layout.item_video_clarity_option, container, false);
-            TextView nameView = item.findViewById(R.id.clarity_name);
-            TextView descView = item.findViewById(R.id.clarity_desc);
+            AppCompatTextView nameView = item.findViewById(R.id.clarity_name);
+            AppCompatTextView descView = item.findViewById(R.id.clarity_desc);
             View indicator = item.findViewById(R.id.clarity_indicator);
             nameView.setText(option.name());
             if (option.description().isEmpty()) {
@@ -91,6 +91,7 @@ public class VideoPlayerClarityDialog extends Dialog {
         return (int) (value * getContext().getResources().getDisplayMetrics().density + 0.5f);
     }
 
+    /** 选中某清晰度后的回调，index 与 {@link VideoPlayerConfig#getClarityOptions()} 下标一致 */
     public interface OnClaritySelectedListener {
         void onClaritySelected(int index, @NonNull VideoPlayerClarityOption option);
     }

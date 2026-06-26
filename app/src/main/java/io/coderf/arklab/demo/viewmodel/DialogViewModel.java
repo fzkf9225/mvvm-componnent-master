@@ -545,6 +545,21 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     )))
                 .builder()
                 .show();
+        } else if (R.id.videoPlayerFullscreenDialog == view.getId()) {
+            String demoUrl =
+                    "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248";
+            new VideoPlayerDialog(view.getContext())
+                    .setTitle("Dialog 全屏播放")
+                    .setVideoUrl(demoUrl)
+                    .setCacheEnable(false)
+                    .setPlayerConfig(VideoPlayerConfig.dialogDefaults()
+                            .setClarityOptions(Arrays.asList(
+                                    new VideoPlayerClarityOption("原画", demoUrl, "最高画质"),
+                                    new VideoPlayerClarityOption("流畅", demoUrl, "节省流量")
+                            )))
+                    .setStartExpanded(true)
+                    .builder()
+                    .show();
         }
     }
 

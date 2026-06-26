@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
@@ -24,7 +27,11 @@ import java.util.Map;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 
 /**
- * 绑定 Activity 与 {@link ArkVideoPlayerView}，处理全屏、重力旋转、倍速与清晰度切换。
+ * 绑定 Activity 与 {@link ArkVideoPlayerView}，统一处理全屏、重力旋转、倍速与清晰度切换。
+ * <p>
+ * 典型用法：{@code attach(onBack)} → {@link #bindLifecycle(LifecycleOwner)} →
+ * {@link #bindBackPressed(OnBackPressedDispatcher, LifecycleOwner)}。
+ * </p>
  */
 public class VideoPlayerController {
 
@@ -58,6 +65,12 @@ public class VideoPlayerController {
         attach(onBackAction, null);
     }
 
+    /**
+     * 初始化播放器交互：旋转、倍速、清晰度、全屏回调等。
+     *
+     * @param onBackAction       返回键或返回按钮回调（如 finish / dismiss）
+     * @param onSystemUiRestore  嵌入模式退出全屏后恢复宿主状态栏 / Toolbar（可选）
+     */
     public void attach(@Nullable Runnable onBackAction, @Nullable Runnable onSystemUiRestore) {
         this.onBackAction = onBackAction;
         this.onSystemUiRestore = onSystemUiRestore;
@@ -79,6 +92,31 @@ public class VideoPlayerController {
         bindToCurrentPlayer();
         player.setVideoAllCallBack(createVideoCallback());
         refreshToolbar();
+    }
+
+    /**
+     * 绑定宿主 Lifecycle，自动处理 pause / resume / destroy 与屏幕旋转。
+     */
+    public void bindLifecycle(@NonNull LifecycleOwner owner) {
+        Activity host = VideoPlayerLifecycleObserver.resolveActivity(owner, activity);
+        VideoPlayerLifecycleObserver.bind(this, owner, host);
+    }
+
+    /**
+     * 绑定返回键，优先处理播放器全屏退出。
+     */
+    public void bindBackPressed(@NonNull OnBackPressedDispatcher dispatcher,
+                                @NonNull LifecycleOwner owner) {
+        dispatcher.addCallback(owner, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (VideoPlayerController.this.onBackPressed()) {
+                    return;
+                }
+                setEnabled(false);
+                dispatcher.onBackPressed();
+            }
+        });
     }
 
     public void updateConfig(@NonNull VideoPlayerConfig config) {
@@ -103,6 +141,7 @@ public class VideoPlayerController {
         refreshToolbar();
     }
 
+    /** Dialog 进入全屏展开时调用 */
     public void onEnterExpanded() {
         orientationHelper.setExpanded(true);
         orientationHelper.onEnterExpanded(activity);
@@ -110,6 +149,7 @@ public class VideoPlayerController {
         refreshToolbar();
     }
 
+    /** Dialog 退出全屏展开时调用 */
     public void onExitExpanded() {
         orientationHelper.onExitExpanded(activity);
         orientationHelper.setExpanded(false);
@@ -117,6 +157,11 @@ public class VideoPlayerController {
         refreshToolbar();
     }
 
+    /**
+     * 处理返回：优先退出 GSY 全屏，否则执行 {@link #attach} 传入的 onBackAction。
+     *
+     * @return true 表示已消费
+     */
     public boolean onBackPressed() {
         if (GSYVideoManager.backFromWindowFull(activity)) {
             orientationHelper.onExitExpanded(activity);
@@ -133,6 +178,7 @@ public class VideoPlayerController {
         return false;
     }
 
+    /** 释放播放器与 OrientationUtils，在宿主 onDestroy 或 {@link #bindLifecycle} 自动触发 */
     public void release() {
         if (released) {
             return;
@@ -180,12 +226,12 @@ public class VideoPlayerController {
                 orientationHelper.toggleManualRotation(activity));
         }
 
-        TextView speedButton = target.getSpeedButton();
+        AppCompatTextView speedButton = target.getSpeedButton();
         if (speedButton != null) {
             speedButton.setOnClickListener(v -> cycleSpeed());
         }
 
-        TextView clarityButton = target.getClarityButton();
+        AppCompatTextView clarityButton = target.getClarityButton();
         if (clarityButton != null) {
             clarityButton.setOnClickListener(v -> showClarityDialog());
         }
@@ -239,12 +285,7 @@ public class VideoPlayerController {
     private void showClarityDialog() {
         List<VideoPlayerClarityOption> options = config.getClarityOptions();
         if (options.isEmpty()) {
-            Toast.makeText(activity, io.coderf.arklab.common.R.string.video_clarity_origin,
-                Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (options.size() == 1) {
-            Toast.makeText(activity, options.get(0).name(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, io.coderf.arklab.common.R.string.video_clarity_origin, Toast.LENGTH_SHORT).show();
             return;
         }
         new VideoPlayerClarityDialog(activity, options, config.getSelectedClarityIndex(),

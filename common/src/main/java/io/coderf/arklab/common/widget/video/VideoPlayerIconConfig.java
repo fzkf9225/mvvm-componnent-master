@@ -3,12 +3,19 @@ package io.coderf.arklab.common.widget.video;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
+
 import io.coderf.arklab.common.R;
 
 /**
  * 播放器控件图标配置，各功能图标独立，不可共用。
+ * <p>
+ * 默认值对应 {@code res/drawable/ic_ark_video_*} 系列矢量图。
+ * </p>
  */
-public class VideoPlayerIconConfig {
+public class VideoPlayerIconConfig implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @DrawableRes
     private int backIconRes = R.drawable.ic_ark_video_back;

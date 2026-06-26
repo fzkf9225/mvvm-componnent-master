@@ -3,14 +3,21 @@ package io.coderf.arklab.common.widget.video;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Ark 定制播放器统一配置。
+ * Ark 定制播放器统一配置，支持 Serializable 经 Intent Bundle 传递。
+ * <p>
+ * 请使用 {@link #embedDefaults()}、{@link #activityDefaults()}、{@link #dialogDefaults()} 作为各宿主场景的起点，
+ * 再按需链式修改显隐、倍速档位、清晰度列表等。
+ * </p>
  */
-public class VideoPlayerConfig {
+public class VideoPlayerConfig implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private VideoPlayerHostMode hostMode = VideoPlayerHostMode.EMBED;
     private VideoPlayerIconConfig iconConfig = VideoPlayerIconConfig.defaults();
@@ -32,6 +39,7 @@ public class VideoPlayerConfig {
     private final List<VideoPlayerClarityOption> clarityOptions = new ArrayList<>();
     private int selectedClarityIndex = 0;
 
+    /** 嵌入 View：非全屏仅全屏按钮，全屏后展示完整工具栏 */
     @NonNull
     public static VideoPlayerConfig embedDefaults() {
         return new VideoPlayerConfig()
@@ -40,6 +48,7 @@ public class VideoPlayerConfig {
             .setSpeedOptions(defaultSpeedOptions());
     }
 
+    /** 独立 Activity：默认横屏、完整工具栏、无全屏按钮 */
     @NonNull
     public static VideoPlayerConfig activityDefaults() {
         return new VideoPlayerConfig()
@@ -55,6 +64,7 @@ public class VideoPlayerConfig {
             .setSpeedOptions(defaultSpeedOptions());
     }
 
+    /** Dialog 小窗：默认仅全屏按钮，展开后展示完整工具栏 */
     @NonNull
     public static VideoPlayerConfig dialogDefaults() {
         return new VideoPlayerConfig()
@@ -276,6 +286,7 @@ public class VideoPlayerConfig {
         return 0;
     }
 
+    /** 倍速按钮循环切换时的下一档倍速 */
     public float nextSpeed(float currentSpeed) {
         List<Float> options = getSpeedOptions();
         int index = indexOfSpeed(currentSpeed);

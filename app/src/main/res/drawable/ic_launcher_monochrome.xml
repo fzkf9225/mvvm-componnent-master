@@ -4,12 +4,11 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- MVVM layered architecture: Model / ViewModel / View -->
     <path
-        android:fillColor="#CCFFFFFF"
+        android:fillColor="#FFFFFFFF"
         android:pathData="M30,58 L30,72 Q30,76 34,76 L62,76 Q66,76 66,72 L66,58 Q66,54 62,54 L34,54 Q30,54 30,58 Z" />
     <path
-        android:fillColor="#E6FFFFFF"
+        android:fillColor="#FFFFFFFF"
         android:pathData="M36,46 L36,60 Q36,64 40,64 L68,64 Q72,64 72,60 L72,46 Q72,42 68,42 L40,42 Q36,42 36,46 Z" />
     <path
         android:fillColor="#FFFFFFFF"

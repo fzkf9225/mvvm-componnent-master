@@ -1,10 +1,7 @@
 package io.coderf.arklab.demo.activity;
 
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
@@ -21,11 +18,6 @@ import io.coderf.arklab.demo.databinding.ActivityVideoPlayerEmbedBinding;
 
 /**
  * 嵌入模式播放器 Demo：View 嵌入 Activity，非全屏仅全屏按钮。
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @created 2026/6/25 16:29
  */
 public class VideoPlayerEmbedDemoActivity extends BaseActivity<VideoPlayerViewModel, ActivityVideoPlayerEmbedBinding> {
 
@@ -33,7 +25,6 @@ public class VideoPlayerEmbedDemoActivity extends BaseActivity<VideoPlayerViewMo
         "http://alvideo.ippzone.com/zyvd/98/90/b753-55fe-11e9-b0d8-00163e0c0248";
 
     private VideoPlayerController controller;
-    private UseCase useCase;
 
     @Override
     protected int getLayoutId() {
@@ -56,12 +47,15 @@ public class VideoPlayerEmbedDemoActivity extends BaseActivity<VideoPlayerViewMo
 
     @Override
     public void initData(Bundle bundle) {
+        UseCase useCase;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             useCase = bundle.getParcelable("args", UseCase.class);
         } else {
             useCase = bundle.getParcelable("args");
         }
-        toolbarBind.getToolbarConfig().setTitle(useCase.getName());
+        if (useCase != null) {
+            toolbarBind.getToolbarConfig().setTitle(useCase.getName());
+        }
         VideoPlayerConfig config = VideoPlayerConfig.embedDefaults()
             .setCornerRadiusDp(12f)
             .setClarityOptions(Arrays.asList(
@@ -75,47 +69,8 @@ public class VideoPlayerEmbedDemoActivity extends BaseActivity<VideoPlayerViewMo
             createdToolbarConfig().applyStatusBar();
             applyToolbarHeight();
         });
+        controller.bindLifecycle(this);
+        controller.bindBackPressed(getOnBackPressedDispatcher(), this);
         VideoPlayerViewHelper.startPlay(binding.embedVideoPlayer);
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (controller != null) {
-            controller.onConfigurationChanged(newConfig);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (controller != null) {
-            controller.onHostPause();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (controller != null) {
-            controller.onHostResume();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (controller != null) {
-            controller.release();
-            controller = null;
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (controller != null && controller.onBackPressed()) {
-            return;
-        }
-        super.onBackPressed();
     }
 }

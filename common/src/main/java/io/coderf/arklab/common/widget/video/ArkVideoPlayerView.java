@@ -6,25 +6,34 @@ import android.graphics.Outline;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 
 /**
  * Ark 定制 GSY 播放器 View，支持嵌入 / Activity / Dialog 三种宿主模式。
+ * <p>
+ * 工具栏显隐由 {@link VideoPlayerConfig} 与 {@link #isToolbarExpanded()} 共同决定：
+ * 嵌入模式非全屏仅展示全屏按钮；Activity 始终展示完整工具栏；Dialog 展开后展示完整工具栏。
+ * 业务侧需配合 {@link VideoPlayerController} 处理旋转、倍速、清晰度与生命周期。
+ * </p>
+ *
+ * @see VideoPlayerConfig
+ * @see VideoPlayerController
  */
 public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
 
+    /** 播放器行为与 UI 配置 */
     @NonNull
     private VideoPlayerConfig config = VideoPlayerConfig.embedDefaults();
 
@@ -37,7 +46,9 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
     @Nullable
     private AppCompatImageView btnBottomPlay;
 
+    /** Dialog 模式下由 {@link VideoPlayerDialog} 控制的全屏展开态（非 GSY Window 全屏） */
     private boolean externalExpanded;
+    /** 当前倍速，用于底部倍速 Chip 展示 */
     private float speedLabel = 1f;
 
     @Nullable
@@ -100,6 +111,9 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         applyConfigInternal();
     }
 
+    /**
+     * Dialog 宿主下设置外部全屏展开态，并刷新工具栏。
+     */
     public void setExternalExpanded(boolean externalExpanded) {
         this.externalExpanded = externalExpanded;
         refreshToolbarVisibility();
@@ -109,6 +123,9 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         return externalExpanded;
     }
 
+    /**
+     * 是否处于「工具栏展开」态：Activity 恒为 true；Dialog 看 {@link #externalExpanded}；嵌入看 GSY 全屏。
+     */
     public boolean isToolbarExpanded() {
         ensureConfig();
         if (config.getHostMode() == VideoPlayerHostMode.ACTIVITY) {
@@ -125,6 +142,9 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         updateSpeedChipText();
     }
 
+    /**
+     * Dialog 模式绑定全屏按钮切换，由 {@link VideoPlayerDialog} 实现窗口尺寸变化。
+     */
     public void bindDialogFullscreenToggle(@Nullable OnFullscreenToggleListener listener) {
         this.fullscreenToggleListener = listener;
         bindFullscreenClick();
@@ -139,6 +159,9 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         }
     }
 
+    /**
+     * 按 {@link VideoPlayerConfig} 刷新各控件显隐、图标与嵌入圆角。
+     */
     public void refreshToolbarVisibility() {
         ensureConfig();
         boolean expanded = isToolbarExpanded();
@@ -356,6 +379,26 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         }
     }
 
+    @Override
+    protected void showWifiDialog() {
+        if (!NetworkUtils.isAvailable(mContext)) {
+            startPlayLogic();
+            return;
+        }
+        new ConfirmDialog(mContext)
+                .setMessage(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi))
+                .setPositiveText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi_confirm))
+                .setNegativeText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi_cancel))
+                .setOnPositiveClickListener(dialog -> {
+                    dialog.dismiss();
+                    startPlayLogic();
+                })
+                .setOnNegativeClickListener(dialog -> dialog.dismiss())
+                .builder()
+                .show();
+
+    }
+
     @Nullable
     public AppCompatImageView getRotateButton() {
         return btnRotate;
@@ -382,6 +425,7 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         }
     }
 
+    /** Dialog 全屏按钮点击回调 */
     public interface OnFullscreenToggleListener {
         void onToggleFullscreen();
     }

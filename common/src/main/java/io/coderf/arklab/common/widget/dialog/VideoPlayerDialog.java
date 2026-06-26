@@ -37,10 +37,25 @@ import io.coderf.arklab.common.widget.video.VideoPlayerController;
 import io.coderf.arklab.common.widget.video.VideoPlayerViewHelper;
 
 /**
- * Dialog 小窗视频播放器，基于 GSYVideoPlayer v13 定制 {@link ArkVideoPlayerView}。
+ * Dialog 小窗视频播放器，基于 GSY v13 定制 {@link ArkVideoPlayerView}。
+ * <p>
+ * 默认以小窗（16:9）展示，点击全屏按钮或 {@link #setStartExpanded(boolean)} 可进入 Dialog 内全屏模式。
+ * 链式调用 {@link #builder()} 完成初始化后再 {@link #show()}。
+ * </p>
+ *
+ * <pre>{@code
+ * new VideoPlayerDialog(context)
+ *     .setTitle("标题")
+ *     .setVideoUrl(url)
+ *     .setPlayerConfig(VideoPlayerConfig.dialogDefaults())
+ *     .setStartExpanded(false)
+ *     .builder()
+ *     .show();
+ * }</pre>
  */
 public class VideoPlayerDialog extends Dialog {
 
+    /** 播放地址 */
     private String videoUrl;
     private String title;
     private String thumbUrl;
@@ -61,11 +76,17 @@ public class VideoPlayerDialog extends Dialog {
     @Nullable
     private VideoPlayerController controller;
 
+    /** 当前是否处于 Dialog 全屏展开态 */
     private boolean expandedFullscreen;
+    /** {@link #show()} 时是否直接进入全屏 */
+    private boolean startExpanded;
+    /** 小窗宽度占屏幕短边比例 */
     private float dialogWidthRatio = 0.88f;
+    /** 小窗模式缓存的窗口与播放器尺寸（基于短边计算，避免横屏退出全屏后尺寸异常） */
     private int compactDialogWidth;
     private int compactDialogHeight;
     private int compactPlayerHeight;
+    /** {@link #builder()} 完成后方可 show */
     private boolean readyToShow;
     @Nullable
     private ComponentCallbacks configurationCallbacks;
@@ -122,11 +143,22 @@ public class VideoPlayerDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 显示时直接进入 Dialog 全屏播放模式（跳过小窗）。
+     */
+    public VideoPlayerDialog setStartExpanded(boolean startExpanded) {
+        this.startExpanded = startExpanded;
+        return this;
+    }
+
     public VideoPlayerDialog setOnCloseClickListener(@Nullable OnDialogInterfaceClickListener listener) {
         this.onCloseClickListener = listener;
         return this;
     }
 
+    /**
+     * 构建 Dialog 内容与播放器，必须在 {@link #show()} 之前调用。
+     */
     public VideoPlayerDialog builder() {
         Context context = getContext();
         if (TextUtils.isEmpty(videoUrl)) {
@@ -173,6 +205,14 @@ public class VideoPlayerDialog extends Dialog {
             return;
         }
         super.show();
+        if (startExpanded && !expandedFullscreen) {
+            Window window = getWindow();
+            if (window != null) {
+                window.getDecorView().post(this::enterExpandedFullscreen);
+            } else {
+                enterExpandedFullscreen();
+            }
+        }
     }
 
     private void registerConfigurationCallback(@NonNull Activity activity) {
@@ -422,6 +462,9 @@ public class VideoPlayerDialog extends Dialog {
         return current instanceof Activity ? (Activity) current : null;
     }
 
+    /**
+     * 宿主 Activity onPause 时调用，暂停播放。
+     */
     public void onHostPause() {
         if (controller != null) {
             controller.onHostPause();
@@ -430,6 +473,9 @@ public class VideoPlayerDialog extends Dialog {
         }
     }
 
+    /**
+     * 宿主 Activity onResume 时调用，恢复播放。
+     */
     public void onHostResume() {
         if (controller != null) {
             controller.onHostResume();
@@ -462,6 +508,7 @@ public class VideoPlayerDialog extends Dialog {
         readyToShow = false;
     }
 
+    /** 快捷展示：默认小窗、不缓存 */
     public static void show(@NonNull Context context, @NonNull String title, @NonNull String url) {
         new VideoPlayerDialog(context)
             .setTitle(title)

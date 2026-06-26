@@ -10,18 +10,23 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
-import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
 import io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig;
 
 /**
- * 视频播放器通用配置工具。
+ * 视频播放器通用初始化工具。
+ * <p>
+ * 负责 setUp、封面图、标题显隐等一次性配置；播放控制与生命周期请用 {@link VideoPlayerController}。
+ * </p>
  */
 public final class VideoPlayerViewHelper {
 
     private VideoPlayerViewHelper() {
     }
 
+    /**
+     * 完整初始化：应用 config、setUp、封面与标题。
+     */
     public static void setupPlayer(@NonNull ArkVideoPlayerView player,
                                    @NonNull String videoUrl,
                                    boolean cacheEnable,
@@ -40,6 +45,9 @@ public final class VideoPlayerViewHelper {
         player.setIsTouchWiget(true);
     }
 
+    /**
+     * 兼容 {@link io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig} 的初始化重载。
+     */
     public static void setupPlayer(@NonNull ArkVideoPlayerView player,
                                    @NonNull String videoUrl,
                                    boolean cacheEnable,
@@ -61,6 +69,7 @@ public final class VideoPlayerViewHelper {
         return imageView;
     }
 
+    /** 开始播放（调用 GSY startPlayLogic） */
     public static void startPlay(@NonNull ArkVideoPlayerView player) {
         player.startPlayLogic();
     }
