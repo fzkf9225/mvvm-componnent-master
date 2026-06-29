@@ -4,8 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by fz on 2017/12/27.
  * 正则工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/6/29 15:23
  */
 public class RegexUtils {
 
