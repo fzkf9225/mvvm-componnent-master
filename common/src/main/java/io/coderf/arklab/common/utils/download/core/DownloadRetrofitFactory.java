@@ -1,134 +1,176 @@
-package io.coderf.arklab.common.utils.download.core;
-
-import java.io.File;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
-import io.coderf.arklab.common.api.BaseApiService;
-import io.coderf.arklab.common.api.BaseApplication;
-import io.coderf.arklab.common.utils.common.FileUtil;
-import io.coderf.arklab.common.utils.common.MapUtil;
-import io.coderf.arklab.common.utils.common.PropertiesUtil;
-import io.coderf.arklab.common.utils.download.listener.DownloadListener;
-
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-/**
- * updated by fz on 2024/11/7.
- * describe：rxJava+retrofit请求封装
- */
-public class DownloadRetrofitFactory {
-    private static final int TIME_OUT_SECOND = 120;
-    private static Retrofit builder;
-
-    private static Retrofit getDownloadRetrofit(DownloadInterceptor downloadInterceptor) {
-        return getDownloadRetrofit(downloadInterceptor, null);
-    }
-
-    private static Retrofit getDownloadRetrofit(DownloadInterceptor downloadInterceptor, Map<String, String> headers) {
-
-        OkHttpClient.Builder mBuilder = new OkHttpClient.Builder()
-                .connectTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
-                .readTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
-                .writeTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
-                .addInterceptor(chain -> {
-                    Request originalRequest = chain.request();
-                    Request.Builder requestBuilder = originalRequest.newBuilder()
-                            .addHeader("Accept-Encoding", "gzip")
-                            .method(originalRequest.method(), originalRequest.body());
-                    if (MapUtil.isNotEmpty(headers)) {
-                        headers.forEach(requestBuilder::addHeader);
-                    }
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                })
-                .addInterceptor(downloadInterceptor);
-        if (builder == null) {
-            builder = new Retrofit.Builder()
-                    .baseUrl(PropertiesUtil.getInstance().loadConfig(BaseApplication.getInstance()).getBaseUrl())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                    .client(mBuilder.build())
-                    .build();
-        } else {
-            builder = builder.newBuilder()
-                    .client(mBuilder.build())
-                    .build();
-        }
-        return builder;
-    }
-
-    /**
-     * 取消网络请求
-     */
-    public static void cancel(Disposable d) {
-        if (null != d && !d.isDisposed()) {
-            d.dispose();
-        }
-    }
-
-    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName) {
-        return enqueue(url, saveBasePath, saveFileName, null, null);
-    }
-
-    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, Map<String, String> headers) {
-        return enqueue(url, saveBasePath, saveFileName, headers, null);
-    }
-
-    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, DownloadListener listener) {
-        return enqueue(url, saveBasePath, saveFileName, null, listener);
-    }
-
-    /**
-     * 创建下载请求
-     * @param url 文件下载地址
-     * @param saveBasePath 保存路径
-     * @param headers 请求头信息
-     * @param listener 监听
-     * @return 观察者
-     */
-    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, Map<String, String> headers, DownloadListener listener) {
-        File tempFile = FileUtil.getTempFile(url, saveBasePath);
-        DownloadInterceptor interceptor = new DownloadInterceptor();
-        return getDownloadRetrofit(interceptor, headers)
-                .create(BaseApiService.class)
-                .downloadFile("bytes=" + tempFile.length() + "-", url)
-                .subscribeOn(Schedulers.io())
-                .flatMap(responseBody ->
-                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
-                )
-                .observeOn(AndroidSchedulers.mainThread());
-
-    }
-
-    /**
-     * 创建下载请求
-     * @param url 文件下载地址
-     * @param interceptor 自定义拦截器，可以继承DownloadInterceptor重写
-     * @param saveBasePath 保存路径
-     * @param headers 请求头信息
-     * @param listener 监听
-     * @return 观察者
-     */
-    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, DownloadInterceptor interceptor, Map<String, String> headers, DownloadListener listener) {
-        File tempFile = FileUtil.getTempFile(url, saveBasePath);
-        return getDownloadRetrofit(interceptor, headers)
-                .create(BaseApiService.class)
-                .downloadFile("bytes=" + tempFile.length() + "-", url)
-                .subscribeOn(Schedulers.io())
-                .flatMap(responseBody ->
-                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
-                )
-                .observeOn(AndroidSchedulers.mainThread());
-
-    }
-}
+package io.coderf.arklab.common.utils.download.core;
+
+import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
+import io.coderf.arklab.common.api.BaseApiService;
+import io.coderf.arklab.common.api.BaseApplication;
+import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.utils.common.MapUtil;
+import io.coderf.arklab.common.utils.common.PropertiesUtil;
+import io.coderf.arklab.common.utils.download.listener.DownloadListener;
+
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ * 基于 Retrofit + RxJava3 的文件下载网络层。
+ * <p>
+ * <b>设计要点</b>
+ * <ul>
+ *   <li>按请求头组合缓存 {@link OkHttpClient}，避免并发重建 Retrofit 的竞态问题</li>
+ *   <li>每次下载创建独立 {@link DownloadInterceptor}，用于断点续传与进度读取</li>
+ *   <li>断点续传：请求头 {@code Range: bytes=<tempFile.length>-}</li>
+ *   <li>IO 线程发起请求，主线程回调 {@link DownloadListener}</li>
+ * </ul>
+ *
+ * @author fz
+ * @see DownloadObservable
+ * @since 2024/11/7
+ */
+public class DownloadRetrofitFactory {
+
+    private static final int TIME_OUT_SECOND = 120;
+    private static final String DEFAULT_HEADER_KEY = "default";
+
+    /** 无自定义 headers 的 Retrofit 模板 */
+    private static volatile Retrofit sBaseRetrofit;
+
+    /** headers 签名 → 基础 OkHttpClient（不含进度拦截器） */
+    private static final ConcurrentHashMap<String, OkHttpClient> CLIENT_CACHE = new ConcurrentHashMap<>();
+
+    private DownloadRetrofitFactory() {
+    }
+
+    /** 取消 RxJava 订阅，中断进行中的下载 */
+    public static void cancel(Disposable d) {
+        if (d != null && !d.isDisposed()) {
+            d.dispose();
+        }
+    }
+
+    /** @see #enqueue(String, String, String, Map, DownloadListener) */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName) {
+        return enqueue(url, saveBasePath, saveFileName, null, null);
+    }
+
+    /** @see #enqueue(String, String, String, Map, DownloadListener) */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, Map<String, String> headers) {
+        return enqueue(url, saveBasePath, saveFileName, headers, null);
+    }
+
+    /** @see #enqueue(String, String, String, Map, DownloadListener) */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName, DownloadListener listener) {
+        return enqueue(url, saveBasePath, saveFileName, null, listener);
+    }
+
+    /**
+     * 创建下载请求（标准入口）。
+     *
+     * @param url          文件完整 URL（作为 Retrofit {@code @Url} 动态地址）
+     * @param saveBasePath 本地保存目录
+     * @param saveFileName 目标文件名，可为 null
+     * @param headers      附加 HTTP 请求头（如 Authorization）
+     * @param listener     进度监听，可为 null
+     * @return 下载完成后 emit 本地 {@link File}
+     */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName,
+                                           Map<String, String> headers, DownloadListener listener) {
+        File tempFile = FileUtil.getTempFile(url, saveBasePath);
+        DownloadInterceptor interceptor = new DownloadInterceptor();
+        return createRetrofit(interceptor, headers)
+                .create(BaseApiService.class)
+                .downloadFile("bytes=" + tempFile.length() + "-", url)
+                .subscribeOn(Schedulers.io())
+                .flatMap(responseBody ->
+                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
+                )
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 使用自定义 {@link DownloadInterceptor} 子类（可扩展响应处理逻辑）。
+     */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName,
+                                           DownloadInterceptor interceptor, Map<String, String> headers,
+                                           DownloadListener listener) {
+        File tempFile = FileUtil.getTempFile(url, saveBasePath);
+        return createRetrofit(interceptor, headers)
+                .create(BaseApiService.class)
+                .downloadFile("bytes=" + tempFile.length() + "-", url)
+                .subscribeOn(Schedulers.io())
+                .flatMap(responseBody ->
+                        Observable.create(new DownloadObservable(interceptor, url, tempFile, saveBasePath, saveFileName, listener))
+                )
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /** 为每次下载创建带独立进度拦截器的 Retrofit 实例 */
+    private static Retrofit createRetrofit(DownloadInterceptor downloadInterceptor, Map<String, String> headers) {
+        OkHttpClient baseClient = CLIENT_CACHE.computeIfAbsent(buildHeaderKey(headers), key -> buildBaseClient(headers));
+        OkHttpClient client = baseClient.newBuilder()
+                .addInterceptor(downloadInterceptor)
+                .build();
+        return getBaseRetrofit().newBuilder().client(client).build();
+    }
+
+    private static Retrofit getBaseRetrofit() {
+        if (sBaseRetrofit == null) {
+            synchronized (DownloadRetrofitFactory.class) {
+                if (sBaseRetrofit == null) {
+                    sBaseRetrofit = new Retrofit.Builder()
+                            .baseUrl(PropertiesUtil.getInstance()
+                                    .loadConfig(BaseApplication.getInstance()).getBaseUrl())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                            .client(buildBaseClient(null))
+                            .build();
+                }
+            }
+        }
+        return sBaseRetrofit;
+    }
+
+    /** 构建带通用 headers 与超时的基础 Client（不含 DownloadInterceptor） */
+    private static OkHttpClient buildBaseClient(Map<String, String> headers) {
+        return new OkHttpClient.Builder()
+                .connectTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
+                .readTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
+                .writeTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
+                .addInterceptor(chain -> {
+                    Request originalRequest = chain.request();
+                    Request.Builder requestBuilder = originalRequest.newBuilder()
+                            .addHeader("Accept-Encoding", "gzip")
+                            .method(originalRequest.method(), originalRequest.body());
+                    if (MapUtil.isNotEmpty(headers)) {
+                        headers.forEach(requestBuilder::addHeader);
+                    }
+                    return chain.proceed(requestBuilder.build());
+                })
+                .build();
+    }
+
+    /** 将 headers Map 序列化为缓存 Key，保证相同 headers 复用 Client */
+    private static String buildHeaderKey(Map<String, String> headers) {
+        if (MapUtil.isEmpty(headers)) {
+            return DEFAULT_HEADER_KEY;
+        }
+        Map<String, String> sorted = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        sorted.putAll(headers);
+        StringBuilder sb = new StringBuilder();
+        sorted.forEach((k, v) -> sb.append(k).append('=').append(v).append(';'));
+        return sb.toString();
+    }
+}
+

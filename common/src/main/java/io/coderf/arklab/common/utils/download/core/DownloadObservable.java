@@ -24,11 +24,24 @@ import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 
 /**
- * created by fz on 2024/11/7 14:41
- * describe:
+ * 文件下载的 RxJava {@link ObservableOnSubscribe} 实现。
+ * <p>
+ * 职责：
+ * <ol>
+ *   <li>从 {@link DownloadInterceptor} 读取响应体，追加写入临时文件（支持断点续传）</li>
+ *   <li>更新通知栏进度并回调 {@link DownloadListener}</li>
+ *   <li>下载完成后重命名临时文件为目标文件名（自动去重命名）</li>
+ * </ol>
+ * 取消订阅（dispose）时会关闭通知并触发 {@link DownloadListener#onCancel()}。
+ *
+ * @author fz
+ * @see DownloadRetrofitFactory
+ * @since 2024/11/7
  */
 public class DownloadObservable implements ObservableOnSubscribe<File> {
+    /** 断点续传临时文件（{@code .download} 后缀） */
     private final File tempFile;
+    /** 持有本次 HTTP 响应，供读取 body 与 headers */
     private final DownloadInterceptor interceptor;
     private final DownloadNotificationUtil downloadNotificationUtil;
     private final String saveBasePath;
@@ -60,6 +73,12 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
 
     @Override
     public void subscribe(ObservableEmitter<File> emitter) throws Exception {
+        emitter.setCancellable(() -> mainHandler.post(() -> {
+            downloadNotificationUtil.cancelNotification(fileUrl.hashCode());
+            if (downloadListener != null) {
+                downloadListener.onCancel();
+            }
+        }));
         try (BufferedSource source = interceptor.getResponseBody().source()) {
             long totalByte = interceptor.getResponseBody().contentLength();
             long downloadByte = 0;
@@ -135,8 +154,9 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
                     downloadListener.onError(e);
                 }
             });
-            emitter.onError(e);
-            emitter.onComplete();
+            if (!emitter.isDisposed()) {
+                emitter.onError(e);
+            }
         }
     }
 

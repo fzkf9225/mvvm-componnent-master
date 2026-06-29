@@ -148,10 +148,7 @@ public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDo
                     })
                     .build();
 
-            UpdateManager.getInstance().checkUpdateInfo(updateConfig,
-                    updateConfig.getUpdateMessage(),
-                    updateConfig.getCurrentVersionName(),
-                    updateConfig.isCancelEnable());
+            UpdateManager.getInstance().checkUpdateInfo(updateConfig);
         });
         binding.buttonMulti.setOnClickListener(v -> {
             if (TextUtils.isEmpty(binding.editMulti.getText().toString().trim())) {

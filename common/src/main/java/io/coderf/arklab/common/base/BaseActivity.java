@@ -30,6 +30,7 @@ import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
 import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
+import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 /**
  * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
@@ -389,5 +390,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     public void startForResult(ActivityResultLauncher<Intent> activityResultLauncher, Intent intent) {
         activityResultLauncher.launch(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (DownloadPermissionHelper.dispatchPermissionResult(this, requestCode, grantResults)) {
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

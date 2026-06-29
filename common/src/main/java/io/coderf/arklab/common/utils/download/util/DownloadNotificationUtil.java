@@ -20,12 +20,18 @@ import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.api.ConstantsHelper;
 
 /**
- * Created by fz on 2017/10/13.
- * describe: 更新通知
+ * 下载进度通知栏与 APK 安装全屏提醒。
+ * <p>
+ * 普通文件下载使用 {@link #showNotification} / {@link #updateNotification} / {@link #cancelNotification}；
+ * APK 更新完成或失败时使用 {@link #sendNotificationFullScreen}。
+ *
+ * @author fz
+ * @since 2017/10/13
  */
 public class DownloadNotificationUtil extends ContextWrapper {
 
     private final NotificationManager mManager;
+    /** 进度条通知 Builder，{@link #updateNotification} 复用同一实例 */
     private NotificationCompat.Builder mBuilder;
 
     public DownloadNotificationUtil(Context context) {
@@ -100,6 +106,11 @@ public class DownloadNotificationUtil extends ContextWrapper {
         }
     }
 
+    /**
+     * 发送高优先级全屏通知（用于 APK 下载完成/失败提醒）。
+     *
+     * @param apkFile 非 null 时通知可点击跳转安装；null 时仅展示文案
+     */
     public void sendNotificationFullScreen(int notifyId, String title, String content, File apkFile) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(ConstantsHelper.DOWNLOAD_CHANNEL_ID,

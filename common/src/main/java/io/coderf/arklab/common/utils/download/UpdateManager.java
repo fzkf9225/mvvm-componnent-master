@@ -1,23 +1,17 @@
 package io.coderf.arklab.common.utils.download;
 
-import android.Manifest;
 import android.app.Activity;
-import android.os.Build;
-import android.os.Environment;
-import android.text.TextUtils;
 import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
 
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.download.core.DownloadConfig;
 import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
+import io.coderf.arklab.common.utils.download.core.UpdateConfig;
 import io.coderf.arklab.common.utils.download.listener.ApkUpdateListener;
 import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.coderf.arklab.common.utils.download.util.DownloadUtil;
-import io.coderf.arklab.common.utils.permission.PermissionsChecker;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
 
 import java.io.File;
@@ -31,17 +25,37 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * 软件版本更新管理器
- * updated by fz on 2024/11/7.
+ * APK 版本更新管理器（单例）。
+ * <p>
+ * 提供两类能力：
+ * <ul>
+ *   <li><b>静默更新</b>：{@link #update(DownloadConfig)} — 直接下载并调起安装，不弹说明框</li>
+ *   <li><b>对话框更新</b>：{@link #checkUpdateInfo(UpdateConfig)} — 展示更新说明，用户确认后下载</li>
+ * </ul>
+ * {@link #getDownloadingUrls()} 返回的列表可与自定义更新 Dialog 共享，用于防重复下载
+ * （如业务方自行实现 Dialog 时传入 {@code setDownloadMap(...)}）。
+ * <p>
+ * <b>API 分层</b>
+ * <ul>
+ *   <li>推荐：{@link #update(DownloadConfig)}、{@link #checkUpdateInfo(UpdateConfig)}</li>
+ *   <li>兼容：多参数 {@code update(...)} / {@code checkUpdateInfo(...)} 重载</li>
+ * </ul>
+ *
+ * @author fz
+ * @see UpdateConfig
+ * @since 2024/11/7
  */
 public class UpdateManager {
 
     private static volatile UpdateManager sInstance;
+
+    /** 当前进行中的 APK 下载 URL，供对话框与静默更新共享 */
     private final List<String> mDownloadingUrls = new ArrayList<>();
 
     private UpdateManager() {
     }
 
+    /** @return 单例实例 */
     public static UpdateManager getInstance() {
         if (sInstance == null) {
             synchronized (UpdateManager.class) {
@@ -53,12 +67,55 @@ public class UpdateManager {
         return sInstance;
     }
 
+    /**
+     * 正在下载的 URL 列表（供更新对话框防重复下载）
+     */
     public List<String> getDownloadingUrls() {
         return mDownloadingUrls;
     }
 
-    // ========== 便捷更新方法（向后兼容） ==========
+    // ========== 推荐 API ==========
 
+    /**
+     * 静默下载并安装 APK（不弹更新说明框）。
+     * <p>
+     * 下载失败时通过通知栏全屏提醒；成功时调用 {@link DownloadUtil#installApk}。
+     *
+     * @param config 下载配置，推荐使用 {@link UpdateConfig.Builder} 以获取更新场景默认值
+     * @return 可 dispose 的订阅，用于页面销毁时取消下载
+     */
+    public Disposable update(DownloadConfig config) {
+        return executeUpdate(
+                config.getContext(),
+                config.getFileUrl(),
+                config.getSaveFileName(),
+                config.getSaveBasePath(),
+                config.isVerifyRepeatDownload(),
+                config.getHeaders(),
+                config.getDownloadListener());
+    }
+
+    /**
+     * 显示框架内置更新说明对话框（{@link UpdateMessageDialog}）。
+     *
+     * @param config 更新配置，包含 APK 地址、更新文案、版本号、是否可取消等
+     */
+    public void checkUpdateInfo(UpdateConfig config) {
+        showUpdateDialog(
+                config.getContext(),
+                config.getFileUrl(),
+                config.getSaveFileName(),
+                config.getUpdateMessage(),
+                config.getCurrentVersionName(),
+                config.isCancelEnable(),
+                config.isVerifyRepeatDownload(),
+                config.getHeaders(),
+                config.getDownloadListener());
+    }
+
+    // ========== 便捷方法（向后兼容） ==========
+
+    /** 静默更新，默认开启防重复下载，使用默认 APK 文件名 {@link UpdateConfig#DEFAULT_APK_FILE_NAME} */
     public Disposable update(Activity context, String apkUrl) {
         return update(context, apkUrl, true);
     }
@@ -83,81 +140,22 @@ public class UpdateManager {
         return update(context, apkUrl, null, verifyRepeatDownload, null, downloadListener);
     }
 
-    /**
-     * 直接版本更新，不需要显示更新提示框的方法
-     *
-     * @param context              上下文
-     * @param apkUrl               下载地址
-     * @param saveFileName         保存文件名
-     * @param verifyRepeatDownload 是否验证重复下载
-     * @param headers              请求头
-     * @param downloadListener     下载监听
-     */
     public Disposable update(Activity context, String apkUrl, String saveFileName,
                              boolean verifyRepeatDownload, Map<String, String> headers,
                              DownloadListener downloadListener) {
-        // 验证URL
-        if (TextUtils.isEmpty(apkUrl)) {
-            return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOAD_URL_404))
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> {
-                    }, throwable -> Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show());
-        }
-
-        // 权限检查（Android 10及以下）
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R
-                && PermissionsChecker.getInstance().lacksPermissions(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x02);
-            return Observable.error(new BaseException(BaseException.ErrorType.DOWNLOAD_NOT_PERMISSION))
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> {
-                    }, throwable -> Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show());
-        }
-
-        // 重复下载检查
-        if (mDownloadingUrls.contains(apkUrl) && verifyRepeatDownload) {
-            return Observable.error(new BaseException("新版本正在下载中，请勿重复下载！",
-                            BaseException.ErrorType.DOWNLOADING_ERROR.getMsg()))
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> {
-                    }, throwable -> Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show());
-        }
-
-        mDownloadingUrls.add(apkUrl);
-        DownloadNotificationUtil notificationUtil = new DownloadNotificationUtil(context.getApplicationContext());
-
-        String saveBasePath = FileUtil.getDefaultDownloadDir(context);
-
-        return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener)
-                .map(file -> {
-                    mDownloadingUrls.remove(apkUrl);
-                    return file;
-                })
-                .subscribe(file -> DownloadUtil.installApk(context.getApplicationContext(), file), throwable -> {
-                    mDownloadingUrls.remove(apkUrl);
-                    if (throwable instanceof BaseException) {
-                        BaseException baseException = (BaseException) throwable;
-                        notificationUtil.sendNotificationFullScreen(new Random().nextInt(),
-                                "新版本下载失败", baseException.getErrorMsg(), null);
-                    } else {
-                        notificationUtil.sendNotificationFullScreen(new Random().nextInt(),
-                                "新版本下载失败", throwable.getMessage(), null);
-                    }
-                });
+        return executeUpdate(context, apkUrl, saveFileName, null, verifyRepeatDownload, headers, downloadListener);
     }
 
-    /**
-     * 使用配置类进行版本更新（推荐使用）
-     *
-     * @param config 下载配置
-     * @return Disposable
-     */
-    public Disposable update(DownloadConfig config) {
-        return update(config.getContext(), config.getFileUrl(), config.getSaveFileName(),
-                config.isVerifyRepeatDownload(), config.getHeaders(), config.getDownloadListener());
+    public void checkUpdateInfo(DownloadConfig config, String updateMsg,
+                                String currentVersionName, boolean cancelEnable) {
+        checkUpdateInfo(config.getContext(), config.getFileUrl(), config.getSaveFileName(),
+                updateMsg, currentVersionName, cancelEnable, config.isVerifyRepeatDownload(),
+                config.getHeaders(), config.getDownloadListener());
     }
 
-    // ========== 带更新对话框的方法 ==========
+    public void checkUpdateInfo(DownloadConfig config, String updateMsg, String currentVersionName) {
+        checkUpdateInfo(config, updateMsg, currentVersionName, false);
+    }
 
     public void checkUpdateInfo(Activity context, String apkUrl, String saveFileName,
                                 String updateMsg, String currentVersionName, boolean verifyRepeatDownload) {
@@ -213,22 +211,65 @@ public class UpdateManager {
     }
 
     /**
-     * 显示更新程序对话框，供主程序调用
+     * 显示更新对话框（完整参数版，兼容旧代码）。
      *
      * @param context              上下文
-     * @param apkUrl               下载地址
-     * @param saveFileName         保存文件名
-     * @param updateMsg            更新内容
-     * @param currentVersionName   当前版本号
-     * @param cancelEnable         是否可以关闭dialog
-     * @param verifyRepeatDownload 是否验证重复下载
-     * @param headers              请求头信息
-     * @param downloadListener     下载监听
+     * @param apkUrl               APK 下载地址
+     * @param saveFileName         本地保存文件名，可为 null（使用默认名）
+     * @param updateMsg            更新说明
+     * @param currentVersionName   当前/目标版本号展示文案
+     * @param cancelEnable         对话框是否允许取消
+     * @param verifyRepeatDownload 是否拦截同一 URL 的重复下载
+     * @param headers              自定义请求头
+     * @param downloadListener     下载进度监听，可为 null
      */
     public void checkUpdateInfo(Activity context, String apkUrl, String saveFileName,
                                 String updateMsg, String currentVersionName,
                                 boolean cancelEnable, boolean verifyRepeatDownload,
                                 Map<String, String> headers, DownloadListener downloadListener) {
+        showUpdateDialog(context, apkUrl, saveFileName, updateMsg, currentVersionName,
+                cancelEnable, verifyRepeatDownload, headers, downloadListener);
+    }
+
+    // ========== 内部实现 ==========
+
+    /** 静默更新核心逻辑：校验 → 权限 defer → 下载 → 安装 */
+    private Disposable executeUpdate(Activity context, String apkUrl, String saveFileName, String saveBasePath,
+                                     boolean verifyRepeatDownload, Map<String, String> headers,
+                                     DownloadListener downloadListener) {
+        try {
+            DownloadSupport.validateUrl(apkUrl);
+            DownloadSupport.checkRepeatDownload(mDownloadingUrls, apkUrl, verifyRepeatDownload);
+        } catch (BaseException e) {
+            return notifyUpdateError(context, e);
+        }
+
+        final String fileName = saveFileName != null ? saveFileName : UpdateConfig.DEFAULT_APK_FILE_NAME;
+        final String basePath = saveBasePath != null
+                ? saveBasePath
+                : FileUtil.getDefaultDownloadDir(context.getApplicationContext());
+
+        return DownloadPermissionHelper.deferWithStoragePermission(
+                context,
+                DownloadPermissionHelper.REQUEST_CODE_UPDATE,
+                () -> enqueueUpdate(context, apkUrl, fileName, basePath, headers, downloadListener))
+                .subscribe(
+                        file -> DownloadUtil.installApk(context.getApplicationContext(), file),
+                        throwable -> handleUpdateFailure(context, throwable));
+    }
+
+    private Observable<File> enqueueUpdate(Activity context, String apkUrl, String saveFileName,
+                                           String saveBasePath, Map<String, String> headers,
+                                           DownloadListener downloadListener) {
+        mDownloadingUrls.add(apkUrl);
+        return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener)
+                .doFinally(() -> mDownloadingUrls.remove(apkUrl));
+    }
+
+    private void showUpdateDialog(Activity context, String apkUrl, String saveFileName,
+                                  String updateMsg, String currentVersionName,
+                                  boolean cancelEnable, boolean verifyRepeatDownload,
+                                  Map<String, String> headers, DownloadListener downloadListener) {
         new UpdateMessageDialog(context)
                 .setOnUpdateListener(new ApkUpdateListener(context, apkUrl, saveFileName,
                         mDownloadingUrls, verifyRepeatDownload, headers, downloadListener))
@@ -239,29 +280,22 @@ public class UpdateManager {
                 .show();
     }
 
-    /**
-     * 使用配置类显示更新对话框（推荐使用）
-     *
-     * @param config         下载配置
-     * @param updateMsg      更新内容
-     * @param currentVersionName 当前版本号
-     * @param cancelEnable   是否可以关闭dialog
-     */
-    public void checkUpdateInfo(DownloadConfig config, String updateMsg,
-                                String currentVersionName, boolean cancelEnable) {
-        checkUpdateInfo(config.getContext(), config.getFileUrl(), config.getSaveFileName(),
-                updateMsg, currentVersionName, cancelEnable, config.isVerifyRepeatDownload(),
-                config.getHeaders(), config.getDownloadListener());
+    private Disposable notifyUpdateError(Activity context, BaseException exception) {
+        return Observable.error(exception)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> {
+                }, throwable -> Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    /**
-     * 使用配置类显示更新对话框（推荐使用，默认不可取消）
-     *
-     * @param config         下载配置
-     * @param updateMsg      更新内容
-     * @param currentVersionName 当前版本号
-     */
-    public void checkUpdateInfo(DownloadConfig config, String updateMsg, String currentVersionName) {
-        checkUpdateInfo(config, updateMsg, currentVersionName, false);
+    private void handleUpdateFailure(Activity context, Throwable throwable) {
+        DownloadNotificationUtil notificationUtil = new DownloadNotificationUtil(context.getApplicationContext());
+        String message;
+        if (throwable instanceof BaseException) {
+            message = ((BaseException) throwable).getErrorMsg();
+        } else {
+            message = throwable.getMessage();
+        }
+        notificationUtil.sendNotificationFullScreen(new Random().nextInt(),
+                "新版本下载失败", message, null);
     }
 }
