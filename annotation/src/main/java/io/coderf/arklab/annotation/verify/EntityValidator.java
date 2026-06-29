@@ -2,154 +2,331 @@ package io.coderf.arklab.annotation.verify;
 
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import io.coderf.arklab.annotation.annotation.Valid;
 import io.coderf.arklab.annotation.annotation.VerifyArray;
+import io.coderf.arklab.annotation.annotation.VerifyCrossField;
+import io.coderf.arklab.annotation.annotation.VerifyCrossFields;
 import io.coderf.arklab.annotation.annotation.VerifyEntity;
 import io.coderf.arklab.annotation.annotation.VerifyField;
 import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.annotation.VerifySort;
+import io.coderf.arklab.annotation.annotation.VerifyWhen;
+import io.coderf.arklab.annotation.bean.FieldVerifyError;
 import io.coderf.arklab.annotation.bean.VerifyResult;
 import io.coderf.arklab.annotation.enums.VerifyType;
 import io.coderf.arklab.annotation.inter.VerifyGroup;
+import io.coderf.arklab.annotation.utils.CompareUtil;
 import io.coderf.arklab.annotation.utils.RegexUtils;
 import io.coderf.arklab.annotation.utils.ValidatorUtil;
 
 /**
- * Created by fz on 2023/9/5 16:25
- * describe :
+ * 实体类注解校验器。
  */
-public class EntityValidator {
-    private final static String TAG = EntityValidator.class.getSimpleName();
+public final class EntityValidator {
+
+    private EntityValidator() {
+    }
 
     public static VerifyResult validate(Object entity) {
         return validate(entity, VerifyGroup.Default.class);
     }
 
     public static VerifyResult validate(Object entity, Class<?> currentGroup) {
+        return validateInternal(entity, true, currentGroup);
+    }
+
+    public static VerifyResult validate(Object entity, Class<?>... currentGroups) {
+        if (currentGroups == null || currentGroups.length == 0) {
+            return validate(entity, VerifyGroup.Default.class);
+        }
+        if (currentGroups.length == 1) {
+            return validate(entity, currentGroups[0]);
+        }
+        return validateInternal(entity, true, currentGroups);
+    }
+
+    public static VerifyResult validateAll(Object entity) {
+        return validateAll(entity, VerifyGroup.Default.class);
+    }
+
+    public static VerifyResult validateAll(Object entity, Class<?> currentGroup) {
+        return validateInternal(entity, false, currentGroup);
+    }
+
+    public static VerifyResult validateAll(Object entity, Class<?>... currentGroups) {
+        if (currentGroups == null || currentGroups.length == 0) {
+            return validateAll(entity, VerifyGroup.Default.class);
+        }
+        return validateInternal(entity, false, currentGroups);
+    }
+
+    private static VerifyResult validateInternal(Object entity, boolean stopOnFirstError, Class<?>... currentGroups) {
+        if (entity == null) {
+            return VerifyResult.fail("校验对象不能为空");
+        }
+        if (currentGroups == null || currentGroups.length == 0) {
+            currentGroups = new Class<?>[]{VerifyGroup.Default.class};
+        }
         try {
-            if (currentGroup == null) {
-                currentGroup = VerifyGroup.Default.class;
-            }
             Class<?> clazz = entity.getClass();
             VerifyEntity validation = clazz.getAnnotation(VerifyEntity.class);
-            if (validation == null) {
+            if (validation == null || !validation.enable()) {
                 return VerifyResult.ok();
             }
-            if (!validation.enable()) {
-                return VerifyResult.ok();
-            }
-            // 无法保证获取的变量顺序与类文件中的声明顺序一致,是因为Java编译器在编译过程中可能会对类的字段进行优化和重排序，
-            // 导致反射获取的字段顺序与源代码中的声明顺序不同
-            // 排序只能另外自定义注解
-            Field[] fields = clazz.getDeclaredFields();
-            if (fields.length == 0) {
+
+            List<Field> fields = ValidatorUtil.collectDeclaredFields(clazz);
+            if (fields.isEmpty()) {
                 return VerifyResult.ok();
             }
             if (validation.sort()) {
-                sortField(fields);
+                sortFields(fields);
             }
+
+            Map<String, Field> fieldMap = CompareUtil.buildFieldMap(fields);
+            List<FieldVerifyError> errors = new ArrayList<>();
             for (Field field : fields) {
-                if (!field.isAnnotationPresent(VerifyParams.class) && !field.isAnnotationPresent(VerifyField.class) && !field.isAnnotationPresent(Valid.class)) {
+                if (!hasValidationAnnotations(field)) {
                     continue;
                 }
                 field.setAccessible(true);
-                //先判断是不是实体类或者集合
-                Valid[] validArray = getValid(field);
-                Object value = field.get(entity);
-
-                if (validArray != null && validArray.length != 0) {
-                    for (Valid validObj : validArray) {
-                        if (!ValidatorUtil.containsGroup(validObj.group(), currentGroup)) {
-                            continue;
-                        }
-                        //判断是否为空即只判断null，但是这里不判断空数据的情况，如果为空的话判断是否强制为空，强制不为空则报错，不限制为空则跳过
-                        if (validObj.notNull() && value == null) {
-                            return VerifyResult.fail(validObj.errorMsg());
-                        } else if (!validObj.notNull() && value == null) {
-                            continue;
-                        }
-                        //判断此对象是否为空对象，非null的空判断
-                        if (validObj.notEmpty() && (value instanceof Collection<?> collection && collection.isEmpty())) {
-                            return VerifyResult.fail(validObj.errorMsg());
-                        } else if (validObj.notEmpty() && (value instanceof Map<?, ?> map && map.isEmpty())) {
-                            return VerifyResult.fail(validObj.errorMsg());
-                        }
-                        //如果是集合则遍历验证
-                        if (value instanceof Collection<?> collection) {
-                            for (Object obj : collection) {
-                                VerifyResult verifyResult = validate(obj);
-                                if (!verifyResult.isOk()) {
-                                    return verifyResult;
-                                }
-                            }
-                        } else {
-                            VerifyResult verifyResult = validate(value);
-                            if (!verifyResult.isOk()) {
-                                return verifyResult;
-                            }
-                        }
+                VerifyResult fieldResult = validateField(entity, field, fieldMap, stopOnFirstError, currentGroups);
+                if (!fieldResult.isOk()) {
+                    if (stopOnFirstError) {
+                        return fieldResult;
                     }
-                    continue;
+                    errors.addAll(fieldResult.getErrors());
                 }
+            }
+            if (errors.isEmpty()) {
+                return VerifyResult.ok();
+            }
+            return VerifyResult.aggregate(errors);
+        } catch (Exception e) {
+            return VerifyResult.fail("验证过程发生异常：" + e.getMessage());
+        }
+    }
 
-                VerifyParams[] verifyParamsList = getValidParams(field);
+    private static boolean hasValidationAnnotations(Field field) {
+        return field.isAnnotationPresent(VerifyParams.class)
+                || field.isAnnotationPresent(VerifyField.class)
+                || field.isAnnotationPresent(Valid.class)
+                || field.isAnnotationPresent(VerifyWhen.class)
+                || field.isAnnotationPresent(VerifyCrossField.class)
+                || field.isAnnotationPresent(VerifyCrossFields.class);
+    }
 
-                if (verifyParamsList == null && verifyParamsList.length == 0) {
-                    continue;
-                }
+    private static VerifyResult validateField(Object entity, Field field, Map<String, Field> fieldMap,
+                                              boolean stopOnFirstError, Class<?>... currentGroups) {
+        String fieldName = field.getName();
+        Object value;
+        try {
+            value = field.get(entity);
+        } catch (IllegalAccessException e) {
+            return failField(fieldName, "无法读取字段值", stopOnFirstError);
+        }
 
-                for (VerifyParams params : verifyParamsList) {
-                    VerifyType verifyType = params.type();
-                    if (verifyType == null) {
-                        return VerifyResult.ok();
-                    }
-                    //获取当前分组，判断是不是当前要验证的分组
-                    if (!ValidatorUtil.containsGroup(params.group(), currentGroup)) {
-                        continue;
-                    }
-                    //当有VerifyType.NOTNULL、notNull为true时不管其他条件只要为空则返回错误
-                    boolean isVerifyNullValue = VerifyType.NOTNULL == verifyType && value == null;
-                    if (isVerifyNullValue) {
-                        return VerifyResult.fail(params.errorMsg());
-                    }
-                    //不为null切不为空字符串和空集合等
-                    if (VerifyType.NOT_EMPTY == verifyType) {
-                        //是否允许为空实现，空集合、空map等情况
-                        if (value instanceof Collection<?> collection && collection.isEmpty()) {
-                            return VerifyResult.fail(params.errorMsg());
-                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
-                            return VerifyResult.fail(params.errorMsg());
-                        } else if (ValidatorUtil.isEmpty(value)) {
-                            return VerifyResult.fail(params.errorMsg());
-                        }
-                    }
-                    //当不是NOTNULL但是又允许为空时，即判断某个条件时，有输入则判断，没有输入值则不判断
-                    if (VerifyType.NOTNULL != verifyType && VerifyType.NOT_EMPTY != verifyType) {
-                        if (value == null) {
-                            continue;
-                        } else if (value instanceof Collection<?> collection && collection.isEmpty()) {
-                            continue;
-                        } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
-                            continue;
-                        } else if (ValidatorUtil.isEmpty(value)) {
-                            continue;
-                        }
-                    }
-                    VerifyResult verifyResult = verifyParam(params, value);
+        if (!isFieldWhenMatched(entity, field, fieldMap, currentGroups)) {
+            return VerifyResult.ok();
+        }
+
+        Valid[] validArray = getValid(field);
+        if (validArray.length > 0) {
+            VerifyResult validResult = validateNested(entity, fieldName, value, validArray, stopOnFirstError, currentGroups);
+            if (!validResult.isOk()) {
+                return validResult;
+            }
+            if (hasOnlyValidAnnotations(field)) {
+                return validateCrossFields(entity, field, value, fieldMap, stopOnFirstError, currentGroups);
+            }
+        }
+
+        VerifyParams[] verifyParamsList = getValidParams(field);
+        if (verifyParamsList.length == 0) {
+            return validateCrossFields(entity, field, value, fieldMap, stopOnFirstError, currentGroups);
+        }
+
+        for (VerifyParams params : verifyParamsList) {
+            if (!matchesGroup(params.group(), currentGroups)) {
+                continue;
+            }
+            if (!CompareUtil.isWhenSkipped(params.when())
+                    && !CompareUtil.isConditionMet(entity, params.when(), fieldMap)) {
+                continue;
+            }
+            VerifyType verifyType = params.type();
+            if (verifyType == null) {
+                return failField(fieldName, "未配置校验类型", stopOnFirstError);
+            }
+
+            VerifyResult paramResult = validateParamRule(fieldName, params, value);
+            if (!paramResult.isOk()) {
+                return failField(fieldName, paramResult.getErrorMsg(), stopOnFirstError);
+            }
+        }
+
+        return validateCrossFields(entity, field, value, fieldMap, stopOnFirstError, currentGroups);
+    }
+
+    private static boolean hasOnlyValidAnnotations(Field field) {
+        return !field.isAnnotationPresent(VerifyParams.class)
+                && !field.isAnnotationPresent(VerifyField.class)
+                && !field.isAnnotationPresent(VerifyCrossField.class)
+                && !field.isAnnotationPresent(VerifyCrossFields.class);
+    }
+
+    private static VerifyResult validateNested(Object entity, String fieldName, Object value, Valid[] validArray,
+                                               boolean stopOnFirstError, Class<?>... currentGroups) {
+        for (Valid validObj : validArray) {
+            if (!matchesGroup(validObj.group(), currentGroups)) {
+                continue;
+            }
+            if (validObj.notNull() && value == null) {
+                return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+            } else if (!validObj.notNull() && value == null) {
+                continue;
+            }
+            if (validObj.notEmpty() && value instanceof Collection<?> collection && collection.isEmpty()) {
+                return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+            } else if (validObj.notEmpty() && value instanceof Map<?, ?> map && map.isEmpty()) {
+                return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+            }
+            if (value instanceof Collection<?> collection) {
+                for (Object obj : collection) {
+                    VerifyResult verifyResult = validateInternal(obj, stopOnFirstError, currentGroups);
                     if (!verifyResult.isOk()) {
                         return verifyResult;
                     }
                 }
+            } else if (value != null) {
+                VerifyResult verifyResult = validateInternal(value, stopOnFirstError, currentGroups);
+                if (!verifyResult.isOk()) {
+                    return verifyResult;
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return VerifyResult.ok("验证结果发生异常，将自动跳过验证！！！");
         }
         return VerifyResult.ok();
+    }
+
+    private static VerifyResult validateCrossFields(Object entity, Field field, Object value,
+                                                    Map<String, Field> fieldMap, boolean stopOnFirstError,
+                                                    Class<?>... currentGroups) {
+        if (shouldSkipCrossFieldValidation(value)) {
+            return VerifyResult.ok();
+        }
+        for (VerifyCrossField crossField : collectCrossFields(field)) {
+            if (!matchesGroup(crossField.group(), currentGroups)) {
+                continue;
+            }
+            Object refValue = CompareUtil.readFieldValue(entity, crossField.refField(), fieldMap);
+            if (refValue == null) {
+                continue;
+            }
+            if (!CompareUtil.isCrossFieldMatch(value, refValue, crossField.operator(),
+                    crossField.compareAs(), crossField.dateFormat())) {
+                return failField(field.getName(), crossField.errorMsg(), stopOnFirstError);
+            }
+        }
+        return VerifyResult.ok();
+    }
+
+    private static boolean shouldSkipCrossFieldValidation(Object value) {
+        if (value == null) {
+            return true;
+        }
+        if (value instanceof Collection<?> collection && collection.isEmpty()) {
+            return true;
+        }
+        if (value instanceof Map<?, ?> map && map.isEmpty()) {
+            return true;
+        }
+        return ValidatorUtil.isEmpty(value);
+    }
+
+    private static VerifyCrossField[] collectCrossFields(Field field) {
+        VerifyCrossField single = field.getAnnotation(VerifyCrossField.class);
+        VerifyCrossFields multiple = field.getAnnotation(VerifyCrossFields.class);
+        if (single != null && multiple != null) {
+            VerifyCrossField[] merged = Arrays.copyOf(multiple.value(), multiple.value().length + 1);
+            merged[merged.length - 1] = single;
+            return merged;
+        }
+        if (multiple != null) {
+            return multiple.value();
+        }
+        if (single != null) {
+            return new VerifyCrossField[]{single};
+        }
+        return new VerifyCrossField[0];
+    }
+
+    private static boolean isFieldWhenMatched(Object entity, Field field, Map<String, Field> fieldMap,
+                                              Class<?>... currentGroups) {
+        VerifyWhen[] whenConditions = CompareUtil.collectFieldWhenConditions(field);
+        if (whenConditions.length == 0) {
+            return true;
+        }
+        for (VerifyWhen when : whenConditions) {
+            if (!matchesGroup(when.group(), currentGroups)) {
+                continue;
+            }
+            if (!CompareUtil.isWhenSkipped(when) && !CompareUtil.isConditionMet(entity, when, fieldMap)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static VerifyResult validateParamRule(String fieldName, VerifyParams params, Object value) {
+        VerifyType verifyType = params.type();
+        if (VerifyType.NOTNULL == verifyType && value == null) {
+            return VerifyResult.fail(params.errorMsg());
+        }
+        if (VerifyType.NOT_EMPTY == verifyType) {
+            if (value instanceof Collection<?> collection && collection.isEmpty()) {
+                return VerifyResult.fail(params.errorMsg());
+            } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
+                return VerifyResult.fail(params.errorMsg());
+            } else if (ValidatorUtil.isEmpty(value)) {
+                return VerifyResult.fail(params.errorMsg());
+            }
+        }
+        if (VerifyType.NOTNULL != verifyType && VerifyType.NOT_EMPTY != verifyType) {
+            if (value == null) {
+                return VerifyResult.ok();
+            } else if (value instanceof Collection<?> collection && collection.isEmpty()) {
+                return VerifyResult.ok();
+            } else if (value instanceof Map<?, ?> map && map.isEmpty()) {
+                return VerifyResult.ok();
+            } else if (ValidatorUtil.isEmpty(value)) {
+                return VerifyResult.ok();
+            }
+        }
+        VerifyResult verifyResult = verifyParam(params, value);
+        if (!verifyResult.isOk()) {
+            return VerifyResult.fail(verifyResult.getErrorMsg());
+        }
+        return VerifyResult.ok();
+    }
+
+    private static VerifyResult failField(String fieldName, String errorMsg, boolean stopOnFirstError) {
+        if (stopOnFirstError) {
+            return VerifyResult.fail(fieldName, errorMsg);
+        }
+        VerifyResult result = VerifyResult.aggregate(List.of(new FieldVerifyError(fieldName, errorMsg)));
+        return result;
+    }
+
+    private static boolean matchesGroup(Class<?>[] fieldGroups, Class<?>... currentGroups) {
+        if (currentGroups.length == 1) {
+            return ValidatorUtil.containsGroup(fieldGroups, currentGroups[0]);
+        }
+        return ValidatorUtil.containsAnyGroup(fieldGroups, currentGroups);
     }
 
     public static Valid[] getValid(Field field) {
@@ -160,7 +337,7 @@ public class EntityValidator {
             validArray = new Valid[]{valid};
         } else if (valid == null && validObject != null) {
             validArray = validObject.value();
-        } else if (valid != null && validObject != null) {
+        } else if (valid != null) {
             validArray = Arrays.copyOf(validObject.value(), validObject.value().length + 1);
             validArray[validArray.length - 1] = valid;
         } else {
@@ -177,7 +354,7 @@ public class EntityValidator {
             validArray = new VerifyParams[]{validationParam};
         } else if (validationParam == null && validationField != null) {
             validArray = validationField.value();
-        } else if (validationField != null && validationParam != null) {
+        } else if (validationField != null) {
             validArray = Arrays.copyOf(validationField.value(), validationField.value().length + 1);
             validArray[validArray.length - 1] = validationParam;
         } else {
@@ -186,13 +363,8 @@ public class EntityValidator {
         return validArray;
     }
 
-    private static void sortField(Field[] fields) {
-        // 使用自定义注解的值进行排序
-        Arrays.sort(fields, (f1, f2) -> {
-            int order1 = getFieldOrder(f1);
-            int order2 = getFieldOrder(f2);
-            return Integer.compare(order1, order2);
-        });
+    private static void sortFields(List<Field> fields) {
+        fields.sort((f1, f2) -> Integer.compare(getFieldOrder(f1), getFieldOrder(f2)));
     }
 
     private static int getFieldOrder(Field field) {
@@ -200,7 +372,7 @@ public class EntityValidator {
         if (verifySort != null) {
             return verifySort.value();
         }
-        return Integer.MAX_VALUE; // 如果字段没有指定顺序，则将其放在最后
+        return Integer.MAX_VALUE;
     }
 
     private static VerifyResult verifyParam(VerifyParams validationParams, Object value) {
@@ -209,11 +381,11 @@ public class EntityValidator {
             return VerifyResult.ok();
         }
         if (verifyType == VerifyType.EQUALS) {
-            if (!value.equals(validationParams.equalStr())) {
+            if (!value.toString().equals(validationParams.equalStr())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NOT_EQUALS) {
-            if (value.equals(validationParams.equalStr())) {
+            if (value.toString().equals(validationParams.equalStr())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER) {
@@ -221,23 +393,14 @@ public class EntityValidator {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_INTEGER) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
             if (!RegexUtils.isInteger(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_DOUBLE) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
             if (!RegexUtils.isDouble(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_00) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
             if (!RegexUtils.isDoubleTwoDecimals(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
@@ -257,18 +420,28 @@ public class EntityValidator {
             if (!RegexUtils.isPhone(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-        } else if (verifyType == VerifyType.NUMBER_RANGE) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
+        } else if (verifyType == VerifyType.ID_CARD) {
+            if (!RegexUtils.isIdCard(value.toString())) {
+                return VerifyResult.fail(validationParams.errorMsg());
             }
+        } else if (verifyType == VerifyType.URL) {
+            if (!RegexUtils.isUrl(value.toString())) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else if (verifyType == VerifyType.POSTAL_CODE) {
+            if (!RegexUtils.isCode(value.toString())) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else if (verifyType == VerifyType.AGE) {
+            if (!RegexUtils.isAge(value.toString())) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else if (verifyType == VerifyType.NUMBER_RANGE) {
             double number = Double.parseDouble(value.toString());
             if (number <= validationParams.minNumber() || number >= validationParams.maxNumber()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_RANGE_EQUAL) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
             double number = Double.parseDouble(value.toString());
             if (number < validationParams.minNumber() || number > validationParams.maxNumber()) {
                 return VerifyResult.fail(validationParams.errorMsg());
@@ -277,23 +450,18 @@ public class EntityValidator {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
                 return VerifyResult.ok();
             }
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
             if (validationParams.minLength() < 0 && value.toString().length() >= validationParams.maxLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
             if (validationParams.maxLength() < 0 && value.toString().length() <= validationParams.minLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (value.toString().length() >= validationParams.maxLength() || value.toString().length() <= validationParams.minLength()) {
+            if (value.toString().length() >= validationParams.maxLength()
+                    || value.toString().length() <= validationParams.minLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.LENGTH_RANGE_EQUAL) {
             if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
-                return VerifyResult.ok();
-            }
-            if (ValidatorUtil.isEmpty(value)) {
                 return VerifyResult.ok();
             }
             if (validationParams.minLength() < 0 && value.toString().length() > validationParams.maxLength()) {
@@ -302,33 +470,26 @@ public class EntityValidator {
             if (validationParams.maxLength() < 0 && value.toString().length() < validationParams.minLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
-            if (value.toString().length() > validationParams.maxLength() || value.toString().length() < validationParams.minLength()) {
+            if (value.toString().length() > validationParams.maxLength()
+                    || value.toString().length() < validationParams.minLength()) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.REGEX) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
-            return RegexUtils.regular(value.toString(), validationParams.regex()) ?
-                    VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+            return RegexUtils.regular(value.toString(), validationParams.regex())
+                    ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
         } else if (verifyType == VerifyType.DATE) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
-            return ValidatorUtil.isValidDate(value.toString(), ValidatorUtil.isEmpty(validationParams.dateFormat()) ? "yyyy-MM-dd" : validationParams.dateFormat()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+            String format = ValidatorUtil.isEmpty(validationParams.dateFormat()) ? "yyyy-MM-dd" : validationParams.dateFormat();
+            return ValidatorUtil.isValidDate(value.toString(), format)
+                    ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
         } else if (verifyType == VerifyType.TIME) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
-            return ValidatorUtil.isValidTime(value.toString()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+            return ValidatorUtil.isValidTime(value.toString())
+                    ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
         } else if (verifyType == VerifyType.DATETIME) {
-            if (ValidatorUtil.isEmpty(value)) {
-                return VerifyResult.ok();
-            }
-            return ValidatorUtil.isValidDateTime(value.toString(), ValidatorUtil.isEmpty(validationParams.dateFormat()) ? "yyyy-MM-dd HH:mm:ss" : validationParams.dateFormat()) ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+            String format = ValidatorUtil.isEmpty(validationParams.dateFormat())
+                    ? "yyyy-MM-dd HH:mm:ss" : validationParams.dateFormat();
+            return ValidatorUtil.isValidDateTime(value.toString(), format)
+                    ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
         }
-
         return VerifyResult.ok();
     }
-
 }

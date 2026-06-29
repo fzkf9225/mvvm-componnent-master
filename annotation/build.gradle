@@ -1,11 +1,9 @@
 apply plugin: 'java-library'
 
 dependencies {
-    implementation fileTree(include: ["*.jar"], dir: "libs")
     annotationProcessor libs.auto.service
-    implementation libs.auto.service.annotation
-    implementation libs.squareup.javapoet
-    implementation libs.squareup.javawriter
+    compileOnly libs.auto.service.annotation
+    testImplementation libs.junit
 }
 sourceCompatibility = "17"
 targetCompatibility = "17"
@@ -33,7 +31,7 @@ afterEvaluate {
                 artifact("$buildDir/libs/${artifactId}.jar")
                 groupId = 'io.coderf.arklab.annotation'
                 artifactId = 'annotation'
-                version = '3.0.0'
+                version = '3.1.0'
             }
         }
         repositories {

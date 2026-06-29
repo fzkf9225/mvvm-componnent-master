@@ -5,7 +5,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class ValidatorUtil {
     /**
@@ -23,6 +27,33 @@ public class ValidatorUtil {
             return false;
         }
         return Arrays.asList(groups).contains(currentGroup);
+    }
+
+    public static boolean containsAnyGroup(Class<?>[] fieldGroups, Class<?>... currentGroups) {
+        if (fieldGroups == null || fieldGroups.length == 0 || currentGroups == null || currentGroups.length == 0) {
+            return false;
+        }
+        List<Class<?>> fieldGroupList = Arrays.asList(fieldGroups);
+        for (Class<?> currentGroup : currentGroups) {
+            if (currentGroup != null && fieldGroupList.contains(currentGroup)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<Field> collectDeclaredFields(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> current = clazz;
+        while (current != null && current != Object.class) {
+            for (Field field : current.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers()) && !field.isSynthetic()) {
+                    fields.add(field);
+                }
+            }
+            current = current.getSuperclass();
+        }
+        return fields;
     }
 
     public static boolean isEmpty(Object obj) {

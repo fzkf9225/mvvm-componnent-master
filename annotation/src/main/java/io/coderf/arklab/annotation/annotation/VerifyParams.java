@@ -50,4 +50,9 @@ public @interface VerifyParams {
      * @return 时间日期格式
      */
     String dateFormat() default "";
+
+    /**
+     * 单条规则生效条件；refField 为空（默认）时始终生效。
+     */
+    VerifyWhen when() default @VerifyWhen(refField = VerifyWhen.SKIP);
 }

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.annotation.bean.FieldVerifyError;
 import io.coderf.arklab.annotation.bean.VerifyResult;
 import io.coderf.arklab.annotation.verify.EntityValidator;
 import io.coderf.arklab.common.base.BaseActivity;
@@ -23,6 +24,14 @@ import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 
+/**
+ * Default 分组校验示例：
+ * <ul>
+ *     <li>{@link EntityValidator#validateAll(Object)} 收集全部错误</li>
+ *     <li>{@code @Ignore} 字段：教育经历 / 开学时间 / 上课时间（跨字段日期、TIME 类型）</li>
+ *     <li>Room 持久化字段 schema 不变，仅扩展非持久化演示字段</li>
+ * </ul>
+ */
 @AndroidEntryPoint
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
@@ -71,17 +80,19 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             }
         });
         binding.verifySubmit.setOnClickListener(v -> {
-            LogUtil.logger("FormUi","图片上传是否成功："+binding.formImage.getAdapter().isUploadingSuccess());
-            LogUtil.logger("FormUi","数据："+new Gson().toJson(binding.getData()));
-            showLoading("验证中...",true);
+            LogUtil.logger("FormUi", "图片上传是否成功：" + binding.formImage.getAdapter().isUploadingSuccess());
+            LogUtil.logger("FormUi", "数据：" + new Gson().toJson(binding.getData()));
+            showLoading("验证中...", true);
             binding.getData().setImageList(AttachmentUtil.toUriList(binding.formImage.getImages()));
-            VerifyResult verifyResult = EntityValidator.validate(binding.getData());
+            // Default 分组 + validateAll：一次返回所有失败项（含 fieldName）
+            VerifyResult verifyResult = EntityValidator.validateAll(binding.getData());
             hideLoading();
-            showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
+            showToast(formatVerifyResult(verifyResult));
             if (!verifyResult.isOk()) {
+                logVerifyErrors(verifyResult);
                 return;
             }
-            mViewModel.add(binding.getData(),binding.formImage.getImages());
+            mViewModel.add(binding.getData(), binding.formImage.getImages());
         });
         binding.tvSex.setOnClickListener(v ->
                 new MenuDialog<>(this)
@@ -102,7 +113,32 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             useCase = bundle.getParcelable("args");
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
-        binding.setData(new Person("张三","1999-06-05",  "15210230000", "055162260000", "18", "72.00", "172", "tencent@qq.com", null));
+        Person person = new Person("张三", "1999-06-05", "15210230000", "055162260000",
+                "18", "72.00", "172", "tencent@qq.com", null);
+        // @Ignore 演示字段：开学时间需 >= 生日；上课时间需符合 HH:mm 格式
+        person.setEducationalExperienceDate("2024-01-01 ~ 2024-12-31");
+        person.setSchoolStartTime("1999-09-01");
+        person.setClassStartTime("08:30");
+        binding.setData(person);
     }
 
+    private static String formatVerifyResult(VerifyResult verifyResult) {
+        if (verifyResult.isOk()) {
+            return "验证成功";
+        }
+        if (verifyResult.getErrors().isEmpty()) {
+            return "验证失败：" + StringUtil.filterNull(verifyResult.getErrorMsg());
+        }
+        StringBuilder builder = new StringBuilder("验证失败（共 ").append(verifyResult.getErrors().size()).append(" 项）：\n");
+        for (FieldVerifyError error : verifyResult.getErrors()) {
+            builder.append(error.getFieldName()).append("：").append(error.getErrorMsg()).append('\n');
+        }
+        return builder.toString().trim();
+    }
+
+    private static void logVerifyErrors(VerifyResult verifyResult) {
+        for (FieldVerifyError error : verifyResult.getErrors()) {
+            LogUtil.logger("VerifyDemo", error.getFieldName() + " -> " + error.getErrorMsg());
+        }
+    }
 }

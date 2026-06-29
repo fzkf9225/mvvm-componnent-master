@@ -2,6 +2,7 @@ package io.coderf.arklab.demo.bean;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -10,10 +11,15 @@ import androidx.room.TypeConverters;
 
 import java.util.List;
 
+import io.coderf.arklab.annotation.annotation.Valid;
+import io.coderf.arklab.annotation.annotation.VerifyCrossField;
 import io.coderf.arklab.annotation.annotation.VerifyEntity;
 import io.coderf.arklab.annotation.annotation.VerifyField;
 import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.annotation.VerifySort;
+import io.coderf.arklab.annotation.annotation.VerifyWhen;
+import io.coderf.arklab.annotation.enums.ConditionOperator;
+import io.coderf.arklab.annotation.enums.CrossFieldOperator;
 import io.coderf.arklab.annotation.enums.VerifyType;
 import io.coderf.arklab.annotation.inter.VerifyGroup;
 import io.coderf.arklab.common.bean.BaseDaoBean;
@@ -50,32 +56,51 @@ public class Person extends BaseDaoBean {
     @ColumnInfo
     private String birthday;
 
+    /** 非 Room 字段：VerifyActivity（Default 分组）演示条件/日期类校验 */
     @Ignore
+    @VerifySort(4)
+    @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请填写教育经历！")
     private String educationalExperienceDate;
 
+    /** 非 Room 字段：跨字段校验开学时间不能早于生日 */
     @Ignore
+    @VerifySort(5)
+    @VerifyCrossField(refField = "birthday", operator = CrossFieldOperator.GREATER_THAN_OR_EQUAL,
+            dateFormat = "yyyy-MM-dd", group = VerifyGroup.Default.class,
+            errorMsg = "开学时间不能早于生日！")
+    @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请选择开学时间！")
     private String schoolStartTime;
 
+    /** 非 Room 字段：演示 TIME 类型校验 */
     @Ignore
+    @VerifySort(6)
+    @VerifyField({
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请选择上课时间！"),
+            @VerifyParams(type = VerifyType.TIME, group = VerifyGroup.Default.class, errorMsg = "上课时间格式不正确！")
+    })
     private String classStartTime;
 
     @VerifyField({
             @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
             @VerifyParams(type = VerifyType.MOBILE_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
     })
-    @VerifySort(4)
+    @VerifySort(7)
     @ColumnInfo
     private String mobile;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
-            @VerifyParams(type = VerifyType.TEL_PHONE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请填写固话号码！"),
+            @VerifyParams(type = VerifyType.TEL_PHONE, group = VerifyGroup.Default.class, errorMsg = "固话号码格式输入不正确！"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Create.class, errorMsg = "女性用户请填写座机号码！",
+                    when = @VerifyWhen(refField = "sex", operator = ConditionOperator.EQUALS, value = "女")),
+            @VerifyParams(type = VerifyType.TEL_PHONE, group = VerifyGroup.Create.class, errorMsg = "座机号码格式输入不正确！",
+                    when = @VerifyWhen(refField = "sex", operator = ConditionOperator.EQUALS, value = "女"))
     })
-    @VerifySort(5)
+    @VerifySort(8)
     @ColumnInfo
     private String tel;
 
-    @VerifySort(6)
+    @VerifySort(9)
     @VerifyParams(type = VerifyType.NUMBER_RANGE,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     @ColumnInfo
     private String age;
@@ -86,7 +111,9 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "你该减肥了！！！"),
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
-    @VerifySort(7)
+    @VerifyCrossField(refField = "height", operator = CrossFieldOperator.LESS_THAN,
+            group = VerifyGroup.Create.class, errorMsg = "体重数值应小于身高（Create 分组跨字段数值比较演示）")
+    @VerifySort(10)
     @ColumnInfo
     private String weight;
     @VerifyField({
@@ -95,18 +122,26 @@ public class Person extends BaseDaoBean {
             @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
-    @VerifySort(8)
+    @VerifySort(11)
     @ColumnInfo
     private String height;
     @VerifyField({
             @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Create.class}, errorMsg = "邮箱地址为空！"),
             @VerifyParams(type = VerifyType.EMAIL,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "邮箱地址错误！")
     })
-    @VerifySort(9)
+    @VerifySort(12)
     @ColumnInfo
     private String email;
 
-    @VerifySort(10)
+    /** 非 Room 字段：VerifyTopActivity（Create 分组）演示 @VerifyWhen 条件校验 */
+    @Ignore
+    @VerifySort(13)
+    @VerifyWhen(refField = "age", operator = ConditionOperator.GREATER_THAN_OR_EQUAL, value = "18",
+            group = VerifyGroup.Create.class)
+    @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Create.class, errorMsg = "成年人请填写紧急联系人！")
+    private String emergencyContact;
+
+    @VerifySort(14)
     @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "您填填写您的爱好！")
     @ColumnInfo
     @TypeConverters({RoomListStringConverter.class})
@@ -117,8 +152,8 @@ public class Person extends BaseDaoBean {
     @Ignore
     private List<Uri> imageList;
 
-    //    @VerifyFieldSort(12)
-//    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
+    @VerifySort(15)
+    @Valid(notNull = true, group = VerifyGroup.Create.class, errorMsg = "请选择您的家庭信息！")
     @Ignore
     public Family family;
 
@@ -273,6 +308,15 @@ public class Person extends BaseDaoBean {
         notifyPropertyChanged(BR.sex);
     }
 
+    @Bindable
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+        notifyPropertyChanged(BR.emergencyContact);
+    }
 
     public List<Uri> getImageList() {
         return imageList;
@@ -298,6 +342,7 @@ public class Person extends BaseDaoBean {
         this.familyList = familyList;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Person{" +
@@ -309,6 +354,7 @@ public class Person extends BaseDaoBean {
                 ", weight='" + weight + '\'' +
                 ", height='" + height + '\'' +
                 ", email='" + email + '\'' +
+                ", emergencyContact='" + emergencyContact + '\'' +
                 ", hobby=" + hobby +
                 ", imageList=" + imageList +
                 ", family=" + family +

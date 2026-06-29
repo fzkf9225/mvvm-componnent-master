@@ -261,6 +261,24 @@
                     app:required="true"
                     app:text="@={data.email}" />
 
+                <!--紧急联系人（@Ignore，Create 分组条件校验演示）-->
+                <io.coderf.arklab.ui.form.FormEditText
+                    android:id="@+id/edit_emergency_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:formImeOptions="actionNext"
+                    app:formInputType="text"
+                    app:hint="年龄≥18 时必填（VerifyTop Create 分组）"
+                    app:label="紧急联系人"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_email"
+                    app:required="false"
+                    app:text="@={data.emergencyContact}" />
+
                 <!--爱好-->
                 <io.coderf.arklab.ui.form.FormEditArea
                     android:id="@+id/edit_hobby"
@@ -276,7 +294,7 @@
                     app:labelTextStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_email"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_emergency_contact"
                     app:required="true" />
                 <!--本人照片-->
                 <io.coderf.arklab.ui.form.FormImage

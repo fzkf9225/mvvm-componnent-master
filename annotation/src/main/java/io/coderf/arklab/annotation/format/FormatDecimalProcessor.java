@@ -28,7 +28,7 @@ import javax.tools.JavaFileObject;
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("io.coderf.arklab.annotation.format.FormatDecimal")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class FormatDecimalProcessor extends AbstractProcessor {
     private Filer filer;
     private Messager messager;

@@ -84,7 +84,23 @@ public enum VerifyType {
     /**
      * 验证时间格式（如 HH:mm:ss）。
      */
-    TIME
+    TIME,
+    /**
+     * 身份证号码
+     */
+    ID_CARD,
+    /**
+     * URL 地址
+     */
+    URL,
+    /**
+     * 邮政编码（国内 6 位）
+     */
+    POSTAL_CODE,
+    /**
+     * 年龄（0-120）
+     */
+    AGE
     ;
 
 }
