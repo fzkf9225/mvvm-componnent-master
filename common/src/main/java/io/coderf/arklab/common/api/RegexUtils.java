@@ -9,37 +9,36 @@ import java.util.regex.Pattern;
  */
 public class RegexUtils {
 
-    public static final String nameRegex = "^([\\u4e00-\\u9fa5]+|([a-z]+\\s?)+)$";//身份证正则
+    /** 中文姓名或英文姓名（可含空格） */
+    public static final String nameRegex = "^([\\u4e00-\\u9fa5]+|([a-zA-Z]+\\s?)+)$";
 
     /**
      * Email正则表达式
      */
-    public static final String EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+    public static final String EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,63}$";
 
     /**
      * 电话号码正则表达式
      */
-    public static final String PHONE = "(^(\\d{2,4}[-_－—]?)?\\d{3,8}([-_－—]?\\d{3,8})?([-_－—]?\\d{1,7})?$)|(^0?1[35]\\d{9}$)";
+    public static final String PHONE = "(^(\\d{2,4}[-_－—]?)?\\d{3,8}([-_－—]?\\d{3,8})?([-_－—]?\\d{1,7})?$)|(^1[3-9]\\d{9}$)";
 
-    /**
-     * 手机号码正则表达式
-     */
-    public static final String MOBILE = "^((13[0-9])|(14[0-4,5-9])|(15[0-3,5-9])|(16[0-4,5-6,7-9])|(17[0-8])|(18[0-9])|(19[0-9]))\\d{8}$";
+    /** 中国大陆 11 位手机号（1 开头，第二位 3-9） */
+    public static final String MOBILE = "^1[3-9]\\d{9}$";
 
     /**
      * Integer正则表达式
      */
-    public static final String INTEGER = "^-?(([1-9]\\d*$)|0)";
+    public static final String INTEGER = "^-?(([1-9]\\d*)|0)$";
 
     /**
      * 正整数正则表达式 >=0
      */
-    public static final String INTEGER_POSITIVE = "^[1-9]\\d*|0$";
+    public static final String INTEGER_POSITIVE = "^([1-9]\\d*|0)$";
 
     /**
      * 负整数正则表达式 <=0
      */
-    public static final String INTEGER_NEGATIVE = "^-[1-9]\\d*|0$";
+    public static final String INTEGER_NEGATIVE = "^(-[1-9]\\d*|0)$";
 
     /**
      * Double正则表达式
@@ -64,7 +63,7 @@ public class RegexUtils {
     /**
      * 年龄正则表达式 匹配0-120岁
      */
-    public static final String AGE = "^(?:[1-9][0-9]?|1[01][0-9]|120)$";
+    public static final String AGE = "^(?:0|[1-9][0-9]?|1[01][0-9]|120)$";
 
     /**
      * 邮编正则表达式 国内6位邮编
@@ -79,7 +78,7 @@ public class RegexUtils {
     /**
      * 匹配由数字和26个英文字母组成的字符串
      */
-    public static final String STR_ENG_NUM = "^[A-Za-z0-9]+";
+    public static final String STR_ENG_NUM = "^[A-Za-z0-9]+$";
 
     /**
      * 匹配由26个英文字母组成的字符串
@@ -129,30 +128,20 @@ public class RegexUtils {
     public static final String TIME = "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$";
     /**
      * 日期时间格式正则 (YYYY-MM-DD HH:mm:ss)
-     * 24小时制，必须包含秒数，小时必须两位数
-     * 示例：2023-12-25 14:30:45
+     * 24 小时制，秒数必填；小时支持一位或两位
+     * 示例：2023-12-25 14:30:45、2023-12-25 9:05:00
      */
-    public static final String DATE_TIME = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
+    public static final String DATE_TIME = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) ([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
     /**
-     * URL正则表达式
-     * 匹配 http、https、ftp 协议的URL格式
-     * 格式要求：协议://域名[路径/查询参数/锚点]
-     * 正则解释：
-     * ^(https?|ftp):\\/\\/      - 协议部分
-     *   (                        - 主机名开始分组
-     *     [^\\s\\/$.?#]          - 主机名第一个字符（不能是空白、斜杠、$、.、?、#）
-     *     .*                     - 主机名其余部分（任意字符，但受前一个字符约束）
-     *   )                        - 主机名结束分组
-     * $                         - 字符串结束
-     * 注意：这个正则实际上是匹配 https?、ftp 协议，不是只匹配 https
-     *       但存在设计缺陷，会导致某些有效URL匹配失败
+     * URL 正则表达式（http / https / ftp）
      */
-    public static final String URL = "^(https?|ftp):\\/\\/([^\\s\\/$.?#].[^\\s]*)$";
+    public static final String URL = "^(https?|ftp):\\/\\/[^\\s/?#]+(?:\\/[^\\s]*)?$";
 
-    /**
-     * 身份证正则表达式
-     */
+    /** 18 位二代身份证（格式校验，不含校验位算法） */
     public static final String IDCARD = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
+
+    /** 15 位一代身份证（格式校验） */
+    public static final String IDCARD_15 = "^[1-9]\\d{7}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}$";
 
     /**
      * 机构代码
@@ -406,11 +395,14 @@ public class RegexUtils {
         if (strIsNull(str)) {
             return false;
         }
-        if (str.trim().length() == 15 || str.trim().length() == 18) {
-            return Regular(str, IDCARD);
-        } else {
-            return false;
+        String trimmed = str.trim();
+        if (trimmed.length() == 18) {
+            return Regular(trimmed, IDCARD);
         }
+        if (trimmed.length() == 15) {
+            return Regular(trimmed, IDCARD_15);
+        }
+        return false;
     }
 
     /**
@@ -460,6 +452,9 @@ public class RegexUtils {
      * @return boolean
      */
     public static String filterStr(String str) {
+        if (str == null) {
+            return "";
+        }
         Pattern p = Pattern.compile(STR_SPECIAL);
         Matcher m = p.matcher(str);
         return m.replaceAll("").trim();
@@ -511,7 +506,9 @@ public class RegexUtils {
      * @return 返回文件名称
      */
     public static boolean isMatcher(String regex, String string) {
-        // 匹配当前正则表达式
+        if (regex == null || string == null) {
+            return false;
+        }
         Matcher matcher = Pattern.compile(regex).matcher(string);
         // 判断是否可以找到匹配正则表达式的字符
         return matcher.find();
@@ -524,13 +521,14 @@ public class RegexUtils {
      * @return 返回文件名称
      */
     public static String getFilterStr(String regex, String filterStr) {
-        // 匹配当前正则表达式
+        if (regex == null || filterStr == null) {
+            return "";
+        }
         Matcher matcher = Pattern.compile(regex).matcher(filterStr);
         // 定义当前文件的文件名称
         String str = "";
         // 判断是否可以找到匹配正则表达式的字符
-        if (matcher.find()) {
-            // 将匹配当前正则表达式的字符串即文件名称进行赋值
+        if (matcher.find() && matcher.groupCount() >= 1) {
             str = matcher.group(1);
         }
         // 返回
