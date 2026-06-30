@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/horizontal_margin_xl"
+        android:background="@color/default_background"
         android:paddingEnd="@dimen/horizontal_margin_xl"
         tools:context=".activity.CustomCameraActivity">
         <io.coderf.arklab.common.widget.customview.CornerImageView
@@ -20,6 +21,7 @@
             android:layout_height="120dp"
             android:scaleType="centerCrop"
             app:radius="@dimen/radius_l"
+            app:bgColor="@color/white"
             android:layout_marginTop="@dimen/vertical_margin_xxxl"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

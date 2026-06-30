@@ -1,6 +1,7 @@
 package io.coderf.arklab.demo.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.media.helper.ConstantsHelper
 import io.coderf.arklab.common.activity.CameraActivity
 import io.coderf.arklab.common.base.BaseActivity
+import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.permission.PermissionManager
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.camera.CameraView
@@ -59,6 +61,10 @@ class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBi
                 }
             }
         })
+        binding.layoutVideo.imageVideo.setBgColor(
+            Color.WHITE
+        )
+        binding.layoutVideo.imageVideo.setRadius(DensityUtil.dp2px(this, 12f))
         binding.buttonCamera.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (permissionManager?.lacksPermissions(
