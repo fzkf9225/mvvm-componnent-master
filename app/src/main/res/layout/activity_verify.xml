@@ -358,7 +358,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/form_video"
                     app:mediaItemRadius="@dimen/radius_m"
-                    app:mediaType="camera_album"
+                    app:mediaType="media_camera_shoot_album"
                     app:required="false" />
                 <!--荣誉证书-->
                 <io.coderf.arklab.ui.form.FormFile
