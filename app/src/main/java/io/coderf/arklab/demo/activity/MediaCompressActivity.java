@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMediaCompressBinding;
@@ -19,7 +20,7 @@ import io.coderf.arklab.media.dialog.OpenMediaDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
-import io.coderf.arklab.media.module.MediaModule;
+import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.common.adapter.MediaAddAdapter;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
@@ -29,7 +30,7 @@ import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> implements MediaAddAdapter.MediaClearListener,MediaAddAdapter.MediaAddListener {
     private UseCase useCase;
     @Inject
-    @MediaModule.ActivityMediaHelper
+    @ActivityMediaHelper
     MediaHelper mediaHelper;
 
     private MediaAddAdapter mediaAddAdapter;
@@ -77,6 +78,10 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
                 .setVideoQuality(VideoQualityEnum.LOW);
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
+            if (mediaBean == null || CollectionUtil.isEmpty(mediaBean.getMediaList())) {
+                showToast("未选择图片");
+                return;
+            }
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 binding.setSourceImagePath(mediaBean.getMediaList().get(0));
                 mediaHelper.startCompressImage(mediaBean.getMediaList());

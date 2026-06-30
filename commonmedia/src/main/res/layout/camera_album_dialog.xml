@@ -14,44 +14,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_white"
+            android:background="@drawable/action_sheet_panel_bg"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/takePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_xxl"
-                android:background="@null"
-                android:gravity="center"
-                android:text="@string/media_camera"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xxl" />
+                style="@style/ActionSheetItem"
+                android:text="@string/media_camera" />
 
             <View
                 android:id="@+id/v_line"
-                style="@style/h_line" />
+                style="@style/ActionSheetDivider" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/choosePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_xxl"
-                android:background="@null"
-                android:gravity="center"
-                android:text="@string/media_album"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xxl" />
+                style="@style/ActionSheetItem"
+                android:text="@string/media_album" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xxl"
-            android:layout_marginTop="@dimen/vertical_margin_xl"
-            android:background="@drawable/rounded_white"
-            android:gravity="center"
-            android:text="@string/media_cancel"
-            android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xl" />
+            style="@style/ActionSheetCancel"
+            android:layout_marginTop="@dimen/action_sheet_group_gap"
+            android:text="@string/media_cancel" />
 
     </LinearLayout>
 </layout>

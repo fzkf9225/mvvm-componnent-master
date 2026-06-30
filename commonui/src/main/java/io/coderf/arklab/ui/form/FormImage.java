@@ -114,6 +114,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     }
 
     private boolean isInitialized = false;  // 添加初始化标志
+
     @Override
     protected void initAttr(AttributeSet attrs) {
         if (isInitialized) {
@@ -284,7 +285,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                             ));
                     // 执行上传请求
                     return fileApiService.performUpload(url, filePart)
-                            .doOnSubscribe(dis-> handler.post(() ->
+                            .doOnSubscribe(dis -> handler.post(() ->
                                     imageAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),
                                             UploadStatusEnum.UPLOADING, "开始上传")
                             ))
@@ -382,6 +383,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
+            if (mediaBean == null || CollectionUtil.isEmpty(mediaBean.getMediaList())) {
+                return;
+            }
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 if (compress) {
                     mediaHelper.startCompressImage(mediaBean.getMediaList());

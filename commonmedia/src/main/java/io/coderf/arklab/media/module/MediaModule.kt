@@ -13,6 +13,14 @@ import io.coderf.arklab.media.MediaHelper
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum
 import javax.inject.Qualifier
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ActivityMediaHelper
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class FragmentMediaHelper
+
 /**
  * created by fz on 2024/12/19 17:53
  * describe:
@@ -49,13 +57,5 @@ class MediaModule {
             .setChooseType(MediaPickerTypeEnum.PICK)
             .builder()
     }
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class ActivityMediaHelper
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class FragmentMediaHelper
 }
 

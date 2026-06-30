@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.module.MediaModule;
+import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.common.adapter.ImageAddAdapter;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
@@ -29,7 +29,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
         ImageAddAdapter.ImageViewClearListener {
     private ImageAddAdapter imageAddAdapter;
     @Inject
-    @MediaModule.ActivityMediaHelper
+    @ActivityMediaHelper
     MediaHelper mediaHelper;
 
     @Override

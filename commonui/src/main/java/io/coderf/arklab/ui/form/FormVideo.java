@@ -397,7 +397,9 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
-            LogUtil.show(MediaHelper.TAG, "FormVideo");
+            if (mediaBean == null || CollectionUtil.isEmpty(mediaBean.getMediaList())) {
+                return;
+            }
             if (mediaBean.getMediaType() == MediaTypeEnum.VIDEO) {
                 if (compress) {
                     mediaHelper.startCompressVideo(mediaBean.getMediaList());

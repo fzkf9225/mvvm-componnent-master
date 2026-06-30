@@ -11,7 +11,7 @@
         android:id="@+id/cl_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white_16">
+        android:background="@drawable/action_sheet_panel_bg">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dialog_textView"

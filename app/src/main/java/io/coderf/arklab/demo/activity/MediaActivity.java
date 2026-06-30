@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
+import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 import io.coderf.arklab.demo.R;
@@ -18,6 +19,7 @@ import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMediaBinding;
 import io.coderf.arklab.demo.viewmodel.MediaViewModel;
 import io.coderf.arklab.media.utils.ExifUtil;
+
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
@@ -37,7 +39,7 @@ import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.listener.MediaListener;
-import io.coderf.arklab.media.module.MediaModule;
+import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.common.adapter.ImageAddAdapter;
 import io.coderf.arklab.common.adapter.MediaAddAdapter;
 import io.coderf.arklab.common.adapter.VideoAddAdapter;
@@ -58,7 +60,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
     private MediaAddAdapter mediaAddAdapter;
 
     @Inject
-    @MediaModule.ActivityMediaHelper
+    @ActivityMediaHelper
     MediaHelper mediaHelper;
 
     private final List<String> audioList = new ArrayList<>();
@@ -89,7 +91,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWriteCaptureExifMetadata(true)
                 .setWaterMark("仅测试使用")
-                .setWaterMarkTextSize(DensityUtil.dp2px(this,24))
+                .setWaterMarkTextSize(DensityUtil.dp2px(this, 24))
                 .setImageSelectedListener(new MediaListener() {
                     @Override
                     public int onSelectedCount() {
@@ -140,6 +142,10 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         });
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
+            if (mediaBean == null || CollectionUtil.isEmpty(mediaBean.getMediaList())) {
+                showToast("未选择图片");
+                return;
+            }
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
                 if (mediaBean.getMediaList() != null && !mediaBean.getMediaList().isEmpty()) {
                     binding.setSourceImagePath(mediaBean.getMediaList().get(0));

@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.module.MediaModule;
+import io.coderf.arklab.media.module.FragmentMediaHelper;
 import io.coderf.arklab.common.base.BaseFragment;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
@@ -33,7 +33,7 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
     UserRouterService userRouterService;
 
     @Inject
-    @MediaModule.FragmentMediaHelper
+    @FragmentMediaHelper
     MediaHelper mediaHelper;
 
     @Override

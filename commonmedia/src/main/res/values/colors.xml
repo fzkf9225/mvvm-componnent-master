@@ -5,5 +5,7 @@
     <color name="dark_light">#5d5d5d</color>
     <color name="gray">#666666</color>
     <color name="autoColor">#333333</color>
+    <color name="action_sheet_divider">#E8E8ED</color>
+    <color name="action_sheet_cancel_text">#8E8E93</color>
 
 </resources>

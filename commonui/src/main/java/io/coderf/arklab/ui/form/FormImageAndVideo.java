@@ -409,6 +409,9 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
+            if (mediaBean == null || CollectionUtil.isEmpty(mediaBean.getMediaList())) {
+                return;
+            }
             if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE_AND_VIDEO) {
                 if (compress) {
                     mediaHelper.startCompressMedia(mediaBean.getMediaList());

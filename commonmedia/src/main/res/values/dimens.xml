@@ -47,6 +47,12 @@
     <dimen name="height_xxxl">48dp</dimen>
     <dimen name="height_xxxxl">56dp</dimen>
 
+    <dimen name="action_sheet_item_height">52dp</dimen>
+    <dimen name="action_sheet_item_text_size">17sp</dimen>
+    <dimen name="action_sheet_cancel_text_size">16sp</dimen>
+    <dimen name="action_sheet_horizontal_margin">12dp</dimen>
+    <dimen name="action_sheet_group_gap">10dp</dimen>
+
     <dimen name="image_m">24dp</dimen>
     <dimen name="image_l">32dp</dimen>
     <dimen name="image_xl">45dp</dimen>
