@@ -23,11 +23,11 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.utils.common.DensityUtil;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
  * 图标+文字+数字角标的自定义View

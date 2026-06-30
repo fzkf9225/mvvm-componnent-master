@@ -17,27 +17,12 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
-import io.coderf.arklab.ui.R;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.MultipartBody;
-import io.coderf.arklab.media.MediaBuilder;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenShootDialog;
-import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
-import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.enums.VideoQualityEnum;
-import io.coderf.arklab.media.listener.MediaListener;
-import io.coderf.arklab.media.utils.LogUtil;
 import io.coderf.arklab.common.adapter.VideoAddAdapter;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
@@ -48,6 +33,19 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.media.MediaBuilder;
+import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.dialog.OpenShootDialog;
+import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
+import io.coderf.arklab.media.enums.MediaTypeEnum;
+import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.listener.MediaListener;
+import io.coderf.arklab.ui.R;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 
 /**
  * Created by fz on 2023/12/26 16:27

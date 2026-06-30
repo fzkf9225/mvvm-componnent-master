@@ -3,14 +3,12 @@ package io.coderf.arklab.demo.activity;
 import android.os.Build;
 import android.os.Bundle;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityDialogBinding;
 import io.coderf.arklab.demo.viewmodel.DialogViewModel;
-
-
-import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.common.base.BaseActivity;
 
 @AndroidEntryPoint
 public class DialogActivity extends BaseActivity<DialogViewModel, ActivityDialogBinding> {

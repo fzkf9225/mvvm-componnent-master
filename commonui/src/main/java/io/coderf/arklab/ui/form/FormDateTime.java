@@ -9,8 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.ui.R;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,6 +16,7 @@ import io.coderf.arklab.common.enums.DateMode;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
+import io.coderf.arklab.ui.R;
 
 /**
  * Created by fz on 2023/12/26 16:27

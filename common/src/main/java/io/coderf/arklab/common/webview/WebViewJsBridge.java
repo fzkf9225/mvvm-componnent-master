@@ -1,6 +1,5 @@
 package io.coderf.arklab.common.webview;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;

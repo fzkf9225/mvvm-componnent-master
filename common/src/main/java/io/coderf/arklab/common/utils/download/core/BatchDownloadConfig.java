@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.utils.common.FileUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.coderf.arklab.common.utils.common.FileUtil;
 
 /**
  * 批量下载配置（不可变对象，通过 {@link Builder} 构建）。

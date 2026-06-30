@@ -4,15 +4,14 @@ package io.coderf.arklab.demo.adapter;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import io.coderf.arklab.demo.BR;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.Person;
-import io.coderf.arklab.demo.databinding.RoomPagingItemBinding;
-
 import java.util.Objects;
 
 import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
+import io.coderf.arklab.demo.BR;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.Person;
+import io.coderf.arklab.demo.databinding.RoomPagingItemBinding;
 
 /**
  * Created by fz on 2023/12/1 16:50

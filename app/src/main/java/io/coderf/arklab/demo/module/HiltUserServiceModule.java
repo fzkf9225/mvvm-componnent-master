@@ -1,10 +1,5 @@
 package io.coderf.arklab.demo.module;
 
-import io.coderf.arklab.demo.impl.ContextHiltUserServiceImpl;
-import io.coderf.arklab.demo.impl.HiltUserServiceImpl;
-import io.coderf.arklab.demo.impl.NewHiltUserServiceImpl;
-import io.coderf.arklab.demo.inter.HiltUserService;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -14,6 +9,10 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import io.coderf.arklab.demo.impl.ContextHiltUserServiceImpl;
+import io.coderf.arklab.demo.impl.HiltUserServiceImpl;
+import io.coderf.arklab.demo.impl.NewHiltUserServiceImpl;
+import io.coderf.arklab.demo.inter.HiltUserService;
 
 /**
  * Created by fz on 2024/5/31 13:51

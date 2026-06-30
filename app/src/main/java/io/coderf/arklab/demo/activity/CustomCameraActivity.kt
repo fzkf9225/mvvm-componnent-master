@@ -8,16 +8,16 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
-import io.coderf.arklab.demo.R
-import io.coderf.arklab.demo.databinding.ActivityCustomCameraBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.coderf.arklab.media.helper.ConstantsHelper
 import io.coderf.arklab.common.activity.CameraActivity
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.permission.PermissionManager
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.camera.CameraView
+import io.coderf.arklab.demo.R
+import io.coderf.arklab.demo.databinding.ActivityCustomCameraBinding
+import io.coderf.arklab.media.helper.ConstantsHelper
 
 @AndroidEntryPoint
 class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBinding>() {

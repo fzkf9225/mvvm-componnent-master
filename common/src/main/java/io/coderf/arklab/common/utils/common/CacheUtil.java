@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
-import io.coderf.arklab.common.base.BaseView;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import io.coderf.arklab.common.base.BaseView;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;

@@ -15,8 +15,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import io.coderf.arklab.common.bean.Code.ResponseCode;
+import okhttp3.ResponseBody;
 import retrofit2.Converter;
 
 /**

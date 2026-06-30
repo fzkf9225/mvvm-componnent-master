@@ -11,15 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
-import io.coderf.arklab.common.utils.common.CollectionUtil;
-import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityMediaBinding;
-import io.coderf.arklab.demo.viewmodel.MediaViewModel;
-import io.coderf.arklab.media.utils.ExifUtil;
-
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
@@ -30,7 +21,22 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-
+import io.coderf.arklab.common.adapter.ImageAddAdapter;
+import io.coderf.arklab.common.adapter.MediaAddAdapter;
+import io.coderf.arklab.common.adapter.VideoAddAdapter;
+import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.enums.UploadStatusEnum;
+import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
+import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityMediaBinding;
+import io.coderf.arklab.demo.viewmodel.MediaViewModel;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenFileDialog;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
@@ -40,15 +46,7 @@ import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.module.ActivityMediaHelper;
-import io.coderf.arklab.common.adapter.ImageAddAdapter;
-import io.coderf.arklab.common.adapter.MediaAddAdapter;
-import io.coderf.arklab.common.adapter.VideoAddAdapter;
-import io.coderf.arklab.common.base.BaseActivity;
-import io.coderf.arklab.common.enums.UploadStatusEnum;
-import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
-import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
+import io.coderf.arklab.media.utils.ExifUtil;
 
 @AndroidEntryPoint
 public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener,

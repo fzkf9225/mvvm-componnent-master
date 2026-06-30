@@ -19,10 +19,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
+import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
-
-import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.enums.LabelVerticalAlignEnum;
 
 

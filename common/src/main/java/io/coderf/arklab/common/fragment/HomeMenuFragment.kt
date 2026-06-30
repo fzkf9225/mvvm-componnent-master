@@ -15,8 +15,8 @@ import io.coderf.arklab.common.listener.PagingAdapterListener
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.customview.HomeMenuView
-import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager
+import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration
 
 class HomeMenuFragment<T : HomeMenuBean> : BaseFragment<EmptyViewModel, FragmentHomeMenuBinding>() {
     private var menuList: List<HomeMenuBean>? = null

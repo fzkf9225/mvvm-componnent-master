@@ -2,8 +2,6 @@ package io.coderf.arklab.common.impl;
 
 import android.net.ParseException;
 
-import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.inter.ExceptionConverter;
 import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
@@ -12,6 +10,8 @@ import java.io.InterruptedIOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
+import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.inter.ExceptionConverter;
 import retrofit2.HttpException;
 
 /**

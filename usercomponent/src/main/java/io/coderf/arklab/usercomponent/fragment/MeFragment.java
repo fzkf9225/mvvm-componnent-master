@@ -4,6 +4,15 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.common.base.BaseFragment;
+import io.coderf.arklab.common.utils.theme.ThemeUtils;
+import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.dialog.OpenImageDialog;
+import io.coderf.arklab.media.module.FragmentMediaHelper;
 import io.coderf.arklab.userapi.router.UserRouterService;
 import io.coderf.arklab.usercomponent.R;
 import io.coderf.arklab.usercomponent.activity.ModifyPasswordActivity;
@@ -11,16 +20,6 @@ import io.coderf.arklab.usercomponent.activity.PersonalCenterActivity;
 import io.coderf.arklab.usercomponent.activity.SettingActivity;
 import io.coderf.arklab.usercomponent.api.UserAccountHelper;
 import io.coderf.arklab.usercomponent.databinding.MeFragmentBinding;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.module.FragmentMediaHelper;
-import io.coderf.arklab.common.base.BaseFragment;
-import io.coderf.arklab.common.utils.theme.ThemeUtils;
-import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 
 /**
  * Created by fz on 2020/03/26.

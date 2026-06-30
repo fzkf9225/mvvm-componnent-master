@@ -17,7 +17,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import dagger.hilt.android.AndroidEntryPoint
+import io.coderf.arklab.common.activity.WebViewActivity
 import io.coderf.arklab.common.base.BaseActivity
+import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 import io.coderf.arklab.common.utils.log.LogUtil
 import io.coderf.arklab.common.utils.permission.PermissionManager
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
@@ -25,17 +28,12 @@ import io.coderf.arklab.common.widget.dialog.ProtectionGuidelinesDialog
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityLaunchBinding
 import io.coderf.arklab.usercomponent.api.UserAccountHelper
-import dagger.hilt.android.AndroidEntryPoint
-import io.coderf.arklab.common.activity.WebViewActivity
-import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.jvm.java
-import kotlin.text.indexOf
 
 /**
  * created by fz on 2026/2/25 10:35

@@ -2,12 +2,11 @@ package io.coderf.arklab.demo.activity;
 
 import android.os.Bundle;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityHiltBinding;
 import io.coderf.arklab.demo.viewmodel.TestHiltViewModel;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.common.base.BaseActivity;
 
 @AndroidEntryPoint
 public class HiltActivity extends BaseActivity<TestHiltViewModel, ActivityHiltBinding> {

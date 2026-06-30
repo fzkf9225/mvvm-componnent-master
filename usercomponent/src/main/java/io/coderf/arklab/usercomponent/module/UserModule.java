@@ -4,9 +4,6 @@ import android.app.Application;
 
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.usercomponent.R;
-import io.coderf.arklab.usercomponent.api.UserApiService;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -15,6 +12,8 @@ import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.usercomponent.R;
+import io.coderf.arklab.usercomponent.api.UserApiService;
 
 /**
  * created by fz on 2024/9/26 14:53

@@ -1,12 +1,11 @@
 package io.coderf.arklab.demo.module;
 
-import io.coderf.arklab.demo.impl.ErrorServiceImpl;
-
 import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import io.coderf.arklab.common.inter.ErrorService;
+import io.coderf.arklab.demo.impl.ErrorServiceImpl;
 
 /**
  * Created by fz on 2023/5/17 11:20

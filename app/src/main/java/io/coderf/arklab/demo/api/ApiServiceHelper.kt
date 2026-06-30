@@ -1,9 +1,9 @@
 package io.coderf.arklab.demo.api
 
-import io.coderf.arklab.demo.bean.NotificationMessageBean
-import io.reactivex.rxjava3.core.Observable
 import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.bean.base.PageBean
+import io.coderf.arklab.demo.bean.NotificationMessageBean
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

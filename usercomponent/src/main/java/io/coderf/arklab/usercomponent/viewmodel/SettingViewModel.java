@@ -8,21 +8,20 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.common.utils.download.UpdateManager;
-import io.coderf.arklab.usercomponent.R;
-import io.coderf.arklab.usercomponent.activity.FeedBackActivity;
-import io.coderf.arklab.usercomponent.activity.LoginActivity;
-import io.coderf.arklab.usercomponent.activity.TechnicalSupportActivity;
-import io.coderf.arklab.usercomponent.api.UserAccountHelper;
-
 import io.coderf.arklab.common.api.ConstantsHelper;
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.utils.common.CacheUtil;
+import io.coderf.arklab.common.utils.download.UpdateManager;
 import io.coderf.arklab.common.widget.customview.IconLabelValueView;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
+import io.coderf.arklab.usercomponent.R;
+import io.coderf.arklab.usercomponent.activity.FeedBackActivity;
+import io.coderf.arklab.usercomponent.activity.LoginActivity;
+import io.coderf.arklab.usercomponent.activity.TechnicalSupportActivity;
+import io.coderf.arklab.usercomponent.api.UserAccountHelper;
 
 /**
  * Create by fz on 2020/3/26 0026

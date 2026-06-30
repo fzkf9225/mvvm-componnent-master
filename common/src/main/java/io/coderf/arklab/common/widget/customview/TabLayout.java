@@ -56,7 +56,6 @@ import androidx.core.widget.TextViewCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import io.coderf.arklab.common.R;
 import com.google.android.material.R.attr;
 import com.google.android.material.R.dimen;
 import com.google.android.material.R.layout;
@@ -74,6 +73,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import io.coderf.arklab.common.R;
 
 /**
  * 通过重写源码，去实现底部Indictor固定宽度

@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseActivity;
@@ -17,9 +19,6 @@ import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.TextureViewPlayerActivityBinding;
 import io.coderf.arklab.common.viewmodel.VideoPlayerViewModel;
 import io.coderf.arklab.common.widget.dialog.MessageDialog;
-import java.util.Arrays;
-import java.util.List;
-
 import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
 import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
 import io.coderf.arklab.common.widget.video.VideoPlayerController;

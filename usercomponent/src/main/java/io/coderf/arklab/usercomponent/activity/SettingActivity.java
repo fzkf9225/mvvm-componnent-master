@@ -2,13 +2,12 @@ package io.coderf.arklab.usercomponent.activity;
 
 import android.os.Bundle;
 
-import io.coderf.arklab.usercomponent.R;
-import io.coderf.arklab.usercomponent.databinding.SettingBinding;
-import io.coderf.arklab.usercomponent.viewmodel.SettingViewModel;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.usercomponent.R;
+import io.coderf.arklab.usercomponent.databinding.SettingBinding;
+import io.coderf.arklab.usercomponent.viewmodel.SettingViewModel;
 
 /**
  * Create by fz on 2019/10/11

@@ -15,8 +15,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.ui.R;
-
 import java.util.List;
 
 import io.coderf.arklab.common.adapter.MediaShowAdapter;
@@ -24,6 +22,7 @@ import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.ui.R;
 
 /**
  * Created by fz on 2023/12/26 16:27

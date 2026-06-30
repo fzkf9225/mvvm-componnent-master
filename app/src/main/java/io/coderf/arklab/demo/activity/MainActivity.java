@@ -11,14 +11,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.ActivityMainBinding;
-import io.coderf.arklab.demo.viewmodel.MainViewModel;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.api.AppSettingHelper;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.ActivityMainBinding;
+import io.coderf.arklab.demo.viewmodel.MainViewModel;
 
 /**
  * created by fz on 2023/4/27 14:51

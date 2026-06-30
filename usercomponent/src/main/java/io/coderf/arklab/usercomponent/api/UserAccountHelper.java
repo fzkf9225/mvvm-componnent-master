@@ -1,9 +1,8 @@
 package io.coderf.arklab.usercomponent.api;
 
-import io.coderf.arklab.userapi.bean.UserInfo;
-
 import io.coderf.arklab.common.api.MMKVHelper;
 import io.coderf.arklab.common.bean.Code.ResponseCode;
+import io.coderf.arklab.userapi.bean.UserInfo;
 
 /**
  * Created by fz on 2017/5/23.

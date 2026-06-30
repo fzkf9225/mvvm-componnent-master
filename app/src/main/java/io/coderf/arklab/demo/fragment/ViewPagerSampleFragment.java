@@ -2,12 +2,11 @@ package io.coderf.arklab.demo.fragment;
 
 import android.os.Bundle;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.ViewPagerSampleFragmentBinding;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseFragment;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.ViewPagerSampleFragmentBinding;
 
 /**
  * Created by fz on 2023/8/17 10:57

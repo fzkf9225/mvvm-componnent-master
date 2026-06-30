@@ -20,22 +20,21 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.adapter.FileAddAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import io.coderf.arklab.media.MediaBuilder;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenFileDialog;
-import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
-import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.FullyLinearLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.media.MediaBuilder;
+import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.dialog.OpenFileDialog;
+import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
+import io.coderf.arklab.media.listener.MediaListener;
+import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.adapter.FileAddAdapter;
 
 /**
  * Created by fz on 2023/12/26 16:27

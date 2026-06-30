@@ -3,13 +3,12 @@ package io.coderf.arklab.demo.activity;
 import android.os.Build;
 import android.os.Bundle;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityDemoSmartPagingHeaderBinding;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityDemoSmartPagingHeaderBinding;
 
 @AndroidEntryPoint
 public class DemoSmartPagingHeaderActivity extends BaseActivity<EmptyViewModel, ActivityDemoSmartPagingHeaderBinding> {

@@ -5,12 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.HiltTestBean;
-import io.coderf.arklab.demo.impl.UserServiceEntryPoint;
-import io.coderf.arklab.demo.inter.HiltUserService;
-import io.coderf.arklab.demo.module.HiltUserServiceModule;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.EntryPointAccessors;
@@ -20,6 +14,11 @@ import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.RepositoryImpl;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.HiltTestBean;
+import io.coderf.arklab.demo.impl.UserServiceEntryPoint;
+import io.coderf.arklab.demo.inter.HiltUserService;
+import io.coderf.arklab.demo.module.HiltUserServiceModule;
 
 /**
  * Created by fz on 2024/5/31 11:31

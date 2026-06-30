@@ -9,7 +9,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.dp2px

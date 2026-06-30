@@ -14,26 +14,25 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.withStyledAttributes
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
+import com.google.gson.Gson
+import io.coderf.arklab.common.utils.common.DateUtil
+import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.common.utils.log.LogUtil
+import io.coderf.arklab.common.widget.empty.EmptyLayout
 import io.coderf.arklab.ui.R
 import io.coderf.arklab.ui.bean.CalendarData
 import io.coderf.arklab.ui.databinding.ViewCalendarBinding
 import io.coderf.arklab.ui.helper.CalendarDataSource
 import io.coderf.arklab.ui.widght.calendar.adapter.MonthViewPagerAdapter
-import com.google.gson.Gson
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import android.text.TextUtils
-import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.DensityUtil
-import io.coderf.arklab.common.utils.log.LogUtil
 import java.text.ParseException
-import io.coderf.arklab.common.widget.empty.EmptyLayout
-import androidx.core.content.withStyledAttributes
 
 
 /**

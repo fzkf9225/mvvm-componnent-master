@@ -1,11 +1,11 @@
 package io.coderf.arklab.demo.activity
 
 import android.os.Bundle
-import io.coderf.arklab.demo.R
-import io.coderf.arklab.demo.databinding.ActivityPagingDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
+import io.coderf.arklab.demo.R
+import io.coderf.arklab.demo.databinding.ActivityPagingDetailBinding
 
 @AndroidEntryPoint
 class PagingDetailActivity : BaseActivity<EmptyViewModel, ActivityPagingDetailBinding>() {

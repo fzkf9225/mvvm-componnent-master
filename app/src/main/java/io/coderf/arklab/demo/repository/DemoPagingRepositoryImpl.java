@@ -1,15 +1,14 @@
 package io.coderf.arklab.demo.repository;
 
-import io.coderf.arklab.demo.api.ApiServiceHelper;
-import io.coderf.arklab.demo.bean.NotificationMessageBean;
-
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.PagingRepositoryImpl;
+import io.coderf.arklab.demo.api.ApiServiceHelper;
+import io.coderf.arklab.demo.bean.NotificationMessageBean;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * Created by fz on 2023/12/1 15:25

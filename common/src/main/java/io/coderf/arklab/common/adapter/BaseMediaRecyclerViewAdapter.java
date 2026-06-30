@@ -9,12 +9,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 
+import java.util.List;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-
-import java.util.List;
 
 /**
  * 图片、视频、媒体adapter适配器基类

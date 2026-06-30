@@ -1,18 +1,18 @@
 package io.coderf.arklab.common.base;
 
+import androidx.annotation.Nullable;
+
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Repository 基类。

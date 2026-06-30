@@ -4,17 +4,16 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.impl.DefaultExceptionConverter;
-import io.coderf.arklab.common.impl.RequestUiAdapters;
-import io.coderf.arklab.common.inter.ExceptionConverter;
-import io.coderf.arklab.common.inter.RequestUiCallback;
-
-import io.reactivex.rxjava3.functions.Consumer;
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
+import io.coderf.arklab.common.impl.DefaultExceptionConverter;
+import io.coderf.arklab.common.impl.RequestUiAdapters;
+import io.coderf.arklab.common.inter.ExceptionConverter;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.reactivex.rxjava3.functions.Consumer;
 
 /**
  * Created by fz on 2023/11/30 15:52

@@ -1,11 +1,7 @@
 package io.coderf.arklab.common.adapter;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.widget.Toast;
-
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,12 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
-import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**

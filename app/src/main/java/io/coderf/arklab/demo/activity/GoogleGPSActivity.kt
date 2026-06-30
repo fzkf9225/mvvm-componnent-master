@@ -1,27 +1,17 @@
 package io.coderf.arklab.demo.activity
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.View
-import androidx.core.app.NotificationCompat
-import androidx.lifecycle.lifecycleScope
-import io.coderf.arklab.demo.R
-import io.coderf.arklab.demo.bean.UseCase
-import io.coderf.arklab.demo.databinding.ActivityGoogleGpsBinding
-import io.coderf.arklab.demo.viewmodel.GoogleGpsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.utils.common.DateUtil
+import io.coderf.arklab.demo.R
+import io.coderf.arklab.demo.bean.UseCase
+import io.coderf.arklab.demo.databinding.ActivityGoogleGpsBinding
 import io.coderf.arklab.demo.impl.GpsCallbackImpl
+import io.coderf.arklab.demo.viewmodel.GoogleGpsViewModel
 import io.coderf.arklab.googlegps.common.GpsStarter
 import kotlinx.coroutines.Job
 

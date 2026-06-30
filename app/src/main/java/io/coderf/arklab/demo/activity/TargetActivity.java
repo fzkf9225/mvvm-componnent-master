@@ -3,13 +3,12 @@ package io.coderf.arklab.demo.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.ActivityTargetBinding;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.annotations.interrupte.NeedLogin;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.ActivityTargetBinding;
 
 @NeedLogin(enable = true)
 @AndroidEntryPoint

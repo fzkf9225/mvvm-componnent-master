@@ -2,6 +2,10 @@ package io.coderf.arklab.demo.enums;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.demo.activity.CheckBoxActivity;
 import io.coderf.arklab.demo.activity.CoordinatorActivity;
 import io.coderf.arklab.demo.activity.CustomCameraActivity;
@@ -21,22 +25,16 @@ import io.coderf.arklab.demo.activity.MqttDemoActivity;
 import io.coderf.arklab.demo.activity.RecyclerViewSampleActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
-import io.coderf.arklab.demo.activity.WebViewBasicDemoActivity;
-import io.coderf.arklab.demo.activity.WebViewHybridDemoActivity;
-import io.coderf.arklab.demo.activity.WebViewNetworkDemoActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
 import io.coderf.arklab.demo.activity.VerifyTopActivity;
 import io.coderf.arklab.demo.activity.VideoPlayerEmbedDemoActivity;
 import io.coderf.arklab.demo.activity.ViewPagerSampleActivity;
+import io.coderf.arklab.demo.activity.WebViewBasicDemoActivity;
+import io.coderf.arklab.demo.activity.WebViewHybridDemoActivity;
+import io.coderf.arklab.demo.activity.WebViewNetworkDemoActivity;
 import io.coderf.arklab.demo.activity.WightActivity;
 import io.coderf.arklab.demo.bean.UseCase;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.coderf.arklab.common.activity.VideoPlayerActivity;
-import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 
 /**
  * Created by fz on 2023/8/14 10:19

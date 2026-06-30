@@ -1,9 +1,9 @@
 package io.coderf.arklab.usercomponent.impl;
 
+import javax.inject.Inject;
+
 import io.coderf.arklab.userapi.UserService;
 import io.coderf.arklab.usercomponent.api.UserAccountHelper;
-
-import javax.inject.Inject;
 
 
 /**

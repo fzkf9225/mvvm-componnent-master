@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.ui.R;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
+import io.coderf.arklab.ui.R;
 
 /**
  * 将 FormUI 中与 DatePickDialog 相关的样式属性同步到 Dialog。

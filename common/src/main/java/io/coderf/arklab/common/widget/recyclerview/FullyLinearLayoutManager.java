@@ -1,7 +1,6 @@
 package io.coderf.arklab.common.widget.recyclerview;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

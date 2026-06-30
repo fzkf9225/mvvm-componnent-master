@@ -2,17 +2,16 @@ package io.coderf.arklab.common.utils.download;
 
 import android.app.Activity;
 
-import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.utils.download.core.BatchDownloadConfig;
-import io.coderf.arklab.common.utils.download.core.DownloadConfig;
-import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
-import io.coderf.arklab.common.utils.download.listener.DownloadListener;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.utils.download.core.BatchDownloadConfig;
+import io.coderf.arklab.common.utils.download.core.DownloadConfig;
+import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
+import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.core.Single;

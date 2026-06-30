@@ -2,9 +2,9 @@ package io.coderf.arklab.demo.impl;
 
 import android.app.Application;
 
-import io.coderf.arklab.demo.inter.HiltUserService;
-
 import javax.inject.Inject;
+
+import io.coderf.arklab.demo.inter.HiltUserService;
 
 
 /**

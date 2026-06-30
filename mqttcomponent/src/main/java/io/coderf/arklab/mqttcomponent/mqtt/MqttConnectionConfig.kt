@@ -1,5 +1,8 @@
 package io.coderf.arklab.mqttcomponent.mqtt
 
+import io.coderf.arklab.mqttcomponent.mqtt.MqttConnectionConfig.Companion.builder
+
+
 /**
  * 通用 MQTT 连接参数（Eclipse Paho MQTT v5）。
  *

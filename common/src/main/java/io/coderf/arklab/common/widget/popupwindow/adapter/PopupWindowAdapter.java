@@ -13,6 +13,9 @@ import androidx.core.content.ContextCompat;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
@@ -20,9 +23,6 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionTextViewBinding;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 文本选项Adapter - 支持单选/多选，支持自定义样式

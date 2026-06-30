@@ -43,14 +43,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import io.coderf.arklab.common.listener.FileUploadProgressListener;
 import io.coderf.arklab.common.utils.encode.MD5Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.upload.ProgressRequestBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 
 public final class FileUtil {

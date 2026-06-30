@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import io.coderf.arklab.usercomponent.R;
-import io.coderf.arklab.usercomponent.databinding.TechnicalSupportActivityBinding;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.coderf.arklab.usercomponent.R;
+import io.coderf.arklab.usercomponent.databinding.TechnicalSupportActivityBinding;
 
 
 /**

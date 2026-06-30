@@ -10,13 +10,12 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.googlegps.service.GpsService;
-
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.googlegps.service.GpsService;
 
 /**
  * Created by fz on 2024/3/26 10:56

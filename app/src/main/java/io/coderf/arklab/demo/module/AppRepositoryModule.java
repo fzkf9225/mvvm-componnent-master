@@ -1,16 +1,14 @@
 package io.coderf.arklab.demo.module;
 
 
-
-import io.coderf.arklab.demo.api.ApiServiceHelper;
-import io.coderf.arklab.demo.repository.KtDemoPagingRepositoryImpl;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.components.ViewModelComponent;
 import io.coderf.arklab.common.api.RepositoryFactory;
 import io.coderf.arklab.common.inter.RetryService;
+import io.coderf.arklab.demo.api.ApiServiceHelper;
+import io.coderf.arklab.demo.repository.KtDemoPagingRepositoryImpl;
 
 /**
  * created by fz on 2024/9/26 14:53

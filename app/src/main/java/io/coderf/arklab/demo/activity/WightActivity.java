@@ -14,13 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
-import io.coderf.arklab.common.base.BaseStatefulActivity;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityWightBinding;
-import io.coderf.arklab.demo.enums.UseCaseEnum;
-import io.coderf.arklab.demo.viewmodel.WightViewModel;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.adapter.ImageShowAdapter;
 import io.coderf.arklab.common.adapter.VideoShowAdapter;
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.base.BaseStatefulActivity;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.bean.BannerBean;
 import io.coderf.arklab.common.bean.HomeMenuBean;
@@ -50,6 +43,11 @@ import io.coderf.arklab.common.widget.customview.utils.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityWightBinding;
+import io.coderf.arklab.demo.enums.UseCaseEnum;
+import io.coderf.arklab.demo.viewmodel.WightViewModel;
 
 
 @AndroidEntryPoint

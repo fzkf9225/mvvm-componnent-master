@@ -5,6 +5,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.coderf.arklab.common.api.BaseApiService;
+import io.coderf.arklab.common.api.ErrorConsumer;
+import io.coderf.arklab.common.base.BaseRepository;
+import io.coderf.arklab.common.base.BaseView;
+import io.coderf.arklab.common.bean.ApiRequestOptions;
+import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.common.inter.RetryService;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
@@ -13,14 +20,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import kotlinx.coroutines.flow.MutableStateFlow;
-
-import io.coderf.arklab.common.api.BaseApiService;
-import io.coderf.arklab.common.api.ErrorConsumer;
-import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
-import io.coderf.arklab.common.bean.ApiRequestOptions;
-import io.coderf.arklab.common.inter.RequestUiCallback;
-import io.coderf.arklab.common.inter.RetryService;
 
 /**
  * Created by fz on 2023/12/1 10:19

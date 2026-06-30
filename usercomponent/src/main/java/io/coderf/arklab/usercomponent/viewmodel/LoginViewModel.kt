@@ -2,6 +2,9 @@ package io.coderf.arklab.usercomponent.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.coderf.arklab.common.api.RepositoryFactory
+import io.coderf.arklab.common.base.BaseViewModel
 import io.coderf.arklab.userapi.bean.UserInfo
 import io.coderf.arklab.usercomponent.api.UserAccountHelper
 import io.coderf.arklab.usercomponent.api.UserApiService
@@ -14,9 +17,6 @@ import io.coderf.arklab.usercomponent.domain.usecase.PersistLoginAndDecideNaviga
 import io.coderf.arklab.usercomponent.domain.usecase.ValidateLoginFormUseCase
 import io.coderf.arklab.usercomponent.repository.LoginRepositoryImpl
 import io.coderf.arklab.usercomponent.view.UserView
-import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.api.RepositoryFactory
-import io.coderf.arklab.common.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

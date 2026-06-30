@@ -2,6 +2,7 @@ package io.coderf.arklab.common.utils.upload
 
 
 import android.net.Uri
+import io.coderf.arklab.common.listener.FileUploadProgressListener
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okio.Buffer
@@ -9,7 +10,6 @@ import okio.BufferedSink
 import okio.ForwardingSink
 import okio.Sink
 import okio.buffer
-import io.coderf.arklab.common.listener.FileUploadProgressListener
 
 /**
  * created by fz on 2024/11/12 10:12

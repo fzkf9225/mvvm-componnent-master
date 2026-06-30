@@ -6,22 +6,21 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
+
+import io.coderf.arklab.common.api.ApiRetrofit;
+import io.coderf.arklab.common.base.BaseView;
+import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.database.AttachmentDatabase;
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
+import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.database.PersonDatabase;
 import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
-
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.coderf.arklab.common.api.ApiRetrofit;
-import io.coderf.arklab.common.base.BaseView;
-import io.coderf.arklab.common.base.BaseViewModel;
-import io.coderf.arklab.common.utils.log.LogUtil;
-
-import java.util.List;
 
 /**
  * created by fz on 2024/11/6 10:57

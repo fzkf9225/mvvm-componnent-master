@@ -2,10 +2,6 @@ package io.coderf.arklab.demo.activity;
 
 import android.os.Bundle;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.FormBean;
-import io.coderf.arklab.demo.databinding.ActivityFormTopDetailBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +9,9 @@ import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.FormBean;
+import io.coderf.arklab.demo.databinding.ActivityFormTopDetailBinding;
 
 public class FormTopDetailActivity extends BaseActivity<EmptyViewModel, ActivityFormTopDetailBinding> {
     private final List<AttachmentBean> imageList = new ArrayList<>();

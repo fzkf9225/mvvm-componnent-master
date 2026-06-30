@@ -3,21 +3,20 @@ package io.coderf.arklab.usercomponent.activity;
 import android.os.Bundle;
 import android.view.View;
 
-import io.coderf.arklab.usercomponent.R;
-import io.coderf.arklab.usercomponent.databinding.FeedbackBinding;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.common.adapter.ImageAddAdapter;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
+import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.dialog.OpenImageDialog;
+import io.coderf.arklab.media.enums.MediaTypeEnum;
+import io.coderf.arklab.media.module.ActivityMediaHelper;
+import io.coderf.arklab.usercomponent.R;
+import io.coderf.arklab.usercomponent.databinding.FeedbackBinding;
 
 
 /**

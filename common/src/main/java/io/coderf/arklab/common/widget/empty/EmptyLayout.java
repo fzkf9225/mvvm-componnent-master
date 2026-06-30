@@ -19,10 +19,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
+import net.qiujuer.genius.ui.widget.Loading;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-
-import net.qiujuer.genius.ui.widget.Loading;
 
 /**
  * 可配置的空白占位View，支持加载中、加载失败、无数据等状态

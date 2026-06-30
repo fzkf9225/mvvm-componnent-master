@@ -18,9 +18,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.adapter.FileShowAdapter;
-
 import java.util.List;
 
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
@@ -29,6 +26,8 @@ import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.FullyLinearLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.adapter.FileShowAdapter;
 
 /**
  * Created by fz on 2023/12/26 16:27

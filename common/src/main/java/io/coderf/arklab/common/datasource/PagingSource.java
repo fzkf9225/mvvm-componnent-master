@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Single;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.repository.PagingRepositoryImpl;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Created by fz on 2023/8/7 9:17

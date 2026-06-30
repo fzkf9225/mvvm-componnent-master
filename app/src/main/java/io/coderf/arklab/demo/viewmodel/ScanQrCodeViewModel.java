@@ -4,11 +4,10 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.demo.view.ScanQrCodeView;
-
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
+import io.coderf.arklab.demo.view.ScanQrCodeView;
 
 
 /**

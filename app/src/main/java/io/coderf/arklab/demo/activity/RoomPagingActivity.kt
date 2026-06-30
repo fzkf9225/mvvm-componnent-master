@@ -3,13 +3,13 @@ package io.coderf.arklab.demo.activity
 import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import io.coderf.arklab.demo.bean.UseCase
-import io.coderf.arklab.demo.fragment.RoomSmartPagingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseSearchActivity
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
+import io.coderf.arklab.demo.bean.UseCase
+import io.coderf.arklab.demo.fragment.RoomSmartPagingFragment
 
 @AndroidEntryPoint
 class RoomPagingActivity : BaseSearchActivity<EmptyViewModel>() {

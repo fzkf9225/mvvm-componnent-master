@@ -3,15 +3,14 @@ package io.coderf.arklab.demo.activity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.coderf.arklab.common.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.adapter.CheckBoxAdapter
+import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.bean.PopupWindowBean
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityCheckBoxBinding
-import dagger.hilt.android.AndroidEntryPoint
-import kotlin.getValue
 
 
 @AndroidEntryPoint

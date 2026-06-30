@@ -4,12 +4,12 @@ import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.ActivityCoordinatorBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.ActivityCoordinatorBinding;
 
 /**
  * Created by fz on 2023/8/17 16:12

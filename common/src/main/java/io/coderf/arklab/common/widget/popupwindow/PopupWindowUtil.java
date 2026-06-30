@@ -2,11 +2,11 @@ package io.coderf.arklab.common.widget.popupwindow;
 
 import android.text.TextUtils;
 
-import io.coderf.arklab.common.bean.PopupWindowBean;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.coderf.arklab.common.bean.PopupWindowBean;
+import io.coderf.arklab.common.utils.common.CollectionUtil;
 
 
 /**

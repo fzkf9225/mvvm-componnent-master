@@ -14,18 +14,14 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
-import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.databinding.AdapterFileAddItemBinding;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
+import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
@@ -33,6 +29,8 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.databinding.AdapterFileAddItemBinding;
 
 
 /**

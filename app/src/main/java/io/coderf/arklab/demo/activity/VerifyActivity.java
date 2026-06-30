@@ -5,11 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.Person;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityVerifyBinding;
-import io.coderf.arklab.demo.viewmodel.VerifyViewModel;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -23,6 +18,11 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.Person;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityVerifyBinding;
+import io.coderf.arklab.demo.viewmodel.VerifyViewModel;
 
 /**
  * Default 分组校验示例：

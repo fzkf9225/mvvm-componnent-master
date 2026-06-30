@@ -2,14 +2,13 @@ package io.coderf.arklab.common.utils.download.core;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.utils.download.listener.DownloadListener;
-
 import java.util.Map;
+
+import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 
 /**
  * APK 更新专用配置，继承 {@link DownloadConfig} 并扩展对话框相关字段。

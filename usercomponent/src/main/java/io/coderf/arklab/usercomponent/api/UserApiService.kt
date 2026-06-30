@@ -1,12 +1,12 @@
 package io.coderf.arklab.usercomponent.api
 
+import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.userapi.bean.UserInfo
 import io.coderf.arklab.usercomponent.bean.GraphicVerificationCodeBean
 import io.coderf.arklab.usercomponent.bean.RequestLoginBean
 import io.coderf.arklab.usercomponent.bean.TokenBean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
-import io.coderf.arklab.common.api.BaseApiService
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

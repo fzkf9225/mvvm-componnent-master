@@ -20,10 +20,6 @@ import androidx.core.widget.PopupWindowCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
-import io.coderf.arklab.common.widget.dialog.PickerDialog;
-import io.coderf.arklab.ui.widght.dialog.TickViewMessageDialog;
-import io.coderf.arklab.ui.widght.calendar.DateRangePickDialog;
-import io.coderf.arklab.demo.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -44,8 +40,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
@@ -66,14 +60,20 @@ import io.coderf.arklab.common.widget.dialog.InputDialog;
 import io.coderf.arklab.common.widget.dialog.LoadingProgressDialog;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.common.widget.dialog.MessageDialog;
+import io.coderf.arklab.common.widget.dialog.PickerDialog;
 import io.coderf.arklab.common.widget.dialog.ProgressBarDialog;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
 import io.coderf.arklab.common.widget.dialog.VideoPlayerDialog;
-import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
-import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 import io.coderf.arklab.common.widget.popupwindow.CascadeMultiPopupWindow;
 import io.coderf.arklab.common.widget.popupwindow.CascadeSinglePopupWindow;
+import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
+import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.media.dialog.OpenImageDialog;
+import io.coderf.arklab.media.dialog.OpenShootDialog;
+import io.coderf.arklab.ui.widght.calendar.DateRangePickDialog;
+import io.coderf.arklab.ui.widght.dialog.TickViewMessageDialog;
 
 /**
  * Created by fz on 2023/8/14 10:56

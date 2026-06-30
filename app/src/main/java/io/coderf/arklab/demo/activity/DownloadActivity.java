@@ -9,26 +9,25 @@ import android.text.TextUtils;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.common.utils.download.DownloadManager;
-import io.coderf.arklab.common.utils.download.UpdateManager;
-import io.coderf.arklab.common.utils.download.core.UpdateConfig;
-import io.coderf.arklab.common.utils.download.listener.DownloadListener;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityDownloadBinding;
-import io.coderf.arklab.demo.viewmodel.DownloadViewModel;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.utils.download.DownloadManager;
+import io.coderf.arklab.common.utils.download.UpdateManager;
+import io.coderf.arklab.common.utils.download.core.UpdateConfig;
+import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityDownloadBinding;
+import io.coderf.arklab.demo.viewmodel.DownloadViewModel;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 @AndroidEntryPoint
 public class DownloadActivity extends BaseActivity<DownloadViewModel, ActivityDownloadBinding> {

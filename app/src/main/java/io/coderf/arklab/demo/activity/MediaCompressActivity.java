@@ -5,15 +5,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.common.adapter.MediaAddAdapter;
+import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMediaCompressBinding;
 import io.coderf.arklab.demo.viewmodel.MediaCompressViewModel;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenMediaDialog;
@@ -21,10 +24,6 @@ import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.module.ActivityMediaHelper;
-import io.coderf.arklab.common.adapter.MediaAddAdapter;
-import io.coderf.arklab.common.base.BaseActivity;
-import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 
 @AndroidEntryPoint
 public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, ActivityMediaCompressBinding> implements MediaAddAdapter.MediaClearListener,MediaAddAdapter.MediaAddListener {

@@ -13,11 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,6 +22,9 @@ import androidx.annotation.Nullable;
 
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.R;
@@ -37,10 +36,10 @@ import io.coderf.arklab.common.helper.WebViewLocalUrlResolver;
 import io.coderf.arklab.common.helper.WebViewNativeLocationHelper;
 import io.coderf.arklab.common.utils.common.ConfigurableWebViewClient;
 import io.coderf.arklab.common.utils.common.NativeWebChromeClient;
+import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.webview.WebViewBridgeCallback;
 import io.coderf.arklab.common.webview.WebViewJsBridge;
 import io.coderf.arklab.common.webview.WebViewMenuAction;
-import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.dialog.WebViewActionSheetDialog;
 
 /**

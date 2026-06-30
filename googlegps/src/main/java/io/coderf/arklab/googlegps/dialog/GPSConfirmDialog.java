@@ -21,12 +21,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import java.util.Objects;
+
 import io.coderf.arklab.googlegps.R;
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.databinding.DialogGpsConfirmBinding;
 import io.coderf.arklab.googlegps.utils.AppUtil;
-
-import java.util.Objects;
 
 
 /**

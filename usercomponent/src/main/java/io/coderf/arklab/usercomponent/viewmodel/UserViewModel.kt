@@ -2,14 +2,14 @@ package io.coderf.arklab.usercomponent.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import io.coderf.arklab.userapi.bean.UserInfo
-import io.coderf.arklab.usercomponent.api.UserApiService
-import io.coderf.arklab.usercomponent.domain.usecase.RefreshUserProfileUseCase
-import io.coderf.arklab.usercomponent.repository.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.api.RepositoryFactory
 import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.base.BaseViewModel
+import io.coderf.arklab.userapi.bean.UserInfo
+import io.coderf.arklab.usercomponent.api.UserApiService
+import io.coderf.arklab.usercomponent.domain.usecase.RefreshUserProfileUseCase
+import io.coderf.arklab.usercomponent.repository.UserRepositoryImpl
 import javax.inject.Inject
 
 /**

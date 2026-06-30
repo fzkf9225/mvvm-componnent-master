@@ -18,23 +18,22 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Observer;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
-import io.coderf.arklab.googlegps.common.Session;
-import io.coderf.arklab.googlegps.common.GpsCallback;
-import io.coderf.arklab.googlegps.listener.GnssLocationListener;
-import io.coderf.arklab.googlegps.listener.NmeaLocationListener;
-import io.coderf.arklab.googlegps.logger.FileLoggerFactory;
-import io.coderf.arklab.googlegps.utils.LogUtil;
-import io.coderf.arklab.googlegps.utils.EsriUtil;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import io.coderf.arklab.googlegps.common.GpsCallback;
+import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.common.Session;
+import io.coderf.arklab.googlegps.listener.GnssLocationListener;
+import io.coderf.arklab.googlegps.listener.NmeaLocationListener;
+import io.coderf.arklab.googlegps.logger.FileLoggerFactory;
+import io.coderf.arklab.googlegps.utils.EsriUtil;
+import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**
  * GPS 定位服务

@@ -28,9 +28,9 @@ import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
+import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
-import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 /**
  * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>

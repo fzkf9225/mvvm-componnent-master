@@ -15,17 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import io.coderf.arklab.userapi.bean.UserInfo
-import io.coderf.arklab.usercomponent.R
-import io.coderf.arklab.usercomponent.api.UserAccountHelper
-import io.coderf.arklab.usercomponent.databinding.ActivityLoginBinding
-import io.coderf.arklab.usercomponent.domain.model.LoginSubmitResult
-import io.coderf.arklab.usercomponent.ui.LoginAgreementMarkup
-import io.coderf.arklab.usercomponent.view.UserView
-import io.coderf.arklab.usercomponent.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import io.coderf.arklab.common.R as CommonR
 import io.coderf.arklab.common.api.AppManager
 import io.coderf.arklab.common.api.ConstantsHelper
 import io.coderf.arklab.common.base.BaseActivity
@@ -35,7 +25,17 @@ import io.coderf.arklab.common.utils.common.KeyBoardUtil
 import io.coderf.arklab.common.utils.common.RxView
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog
 import io.coderf.arklab.common.widget.dialog.MessageDialog
+import io.coderf.arklab.userapi.bean.UserInfo
+import io.coderf.arklab.usercomponent.R
+import io.coderf.arklab.usercomponent.api.UserAccountHelper
+import io.coderf.arklab.usercomponent.databinding.ActivityLoginBinding
+import io.coderf.arklab.usercomponent.domain.model.LoginSubmitResult
+import io.coderf.arklab.usercomponent.ui.LoginAgreementMarkup
+import io.coderf.arklab.usercomponent.view.UserView
+import io.coderf.arklab.usercomponent.viewmodel.LoginViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import io.coderf.arklab.common.R as CommonR
 
 
 /**

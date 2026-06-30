@@ -1,12 +1,11 @@
 package io.coderf.arklab.usercomponent.module;
 
-import io.coderf.arklab.userapi.router.UserRouterService;
-import io.coderf.arklab.usercomponent.impl.UserRouterServiceImpl;
-
 import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import io.coderf.arklab.userapi.router.UserRouterService;
+import io.coderf.arklab.usercomponent.impl.UserRouterServiceImpl;
 
 /**
  * Created by fz on 2023/5/17 11:20

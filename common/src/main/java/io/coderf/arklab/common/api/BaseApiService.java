@@ -1,9 +1,9 @@
 package io.coderf.arklab.common.api;
 
 
+import io.coderf.arklab.common.inter.ApiRetrofitService;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
-import io.coderf.arklab.common.inter.ApiRetrofitService;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Streaming;

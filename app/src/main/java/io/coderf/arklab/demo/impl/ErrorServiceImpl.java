@@ -7,17 +7,16 @@ import android.text.TextUtils;
 
 import androidx.activity.result.ActivityResultLauncher;
 
-import io.coderf.arklab.demo.activity.MainActivity;
-import io.coderf.arklab.userapi.UserService;
-import io.coderf.arklab.userapi.router.UserRouterService;
-import io.coderf.arklab.usercomponent.api.UserAccountHelper;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.coderf.arklab.common.inter.ErrorService;
+import io.coderf.arklab.demo.activity.MainActivity;
+import io.coderf.arklab.userapi.UserService;
+import io.coderf.arklab.userapi.router.UserRouterService;
+import io.coderf.arklab.usercomponent.api.UserAccountHelper;
 
 /**
  * created by fz on 2023/04/25 13:04

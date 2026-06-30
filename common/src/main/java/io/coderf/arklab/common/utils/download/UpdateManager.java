@@ -3,6 +3,12 @@ package io.coderf.arklab.common.utils.download;
 import android.app.Activity;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.download.core.DownloadConfig;
@@ -13,13 +19,6 @@ import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.coderf.arklab.common.utils.download.util.DownloadUtil;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;

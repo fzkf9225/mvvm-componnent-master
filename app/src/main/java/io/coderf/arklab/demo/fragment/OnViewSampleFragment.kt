@@ -4,14 +4,14 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.Navigation.findNavController
-import io.coderf.arklab.demo.adapter.RecyclerViewSampleAdapter
-import io.coderf.arklab.demo.viewmodel.RecyclerViewSampleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseRecyclerViewFragment
 import io.coderf.arklab.common.bean.PopupWindowBean
 import io.coderf.arklab.common.databinding.SmartrecyclerviewBinding
 import io.coderf.arklab.common.listener.OnHeaderViewClickListener
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog
+import io.coderf.arklab.demo.adapter.RecyclerViewSampleAdapter
+import io.coderf.arklab.demo.viewmodel.RecyclerViewSampleViewModel
 
 @AndroidEntryPoint
 class OnViewSampleFragment :

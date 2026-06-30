@@ -3,15 +3,14 @@ package io.coderf.arklab.demo.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseSmartPagingFragment;
 import io.coderf.arklab.common.databinding.BaseSmartPagingBinding;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.demo.adapter.DemoSmartPagingRatioHeaderAdapter;
 import io.coderf.arklab.demo.adapter.PagingDemoAdapter;
 import io.coderf.arklab.demo.bean.NotificationMessageBean;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel;
 
 /**

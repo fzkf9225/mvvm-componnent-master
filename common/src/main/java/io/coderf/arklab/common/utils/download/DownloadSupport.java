@@ -1,8 +1,8 @@
 package io.coderf.arklab.common.utils.download;
 
-import io.coderf.arklab.common.base.BaseException;
-
 import java.util.List;
+
+import io.coderf.arklab.common.base.BaseException;
 
 /**
  * 下载/更新公共前置校验（包内使用）。
@@ -30,4 +30,4 @@ final class DownloadSupport {
         }
     }
 }
-
+

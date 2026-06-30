@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import io.coderf.arklab.demo.api.ApiServiceHelper;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -16,6 +14,7 @@ import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
+import io.coderf.arklab.demo.api.ApiServiceHelper;
 
 /**
  * Created by fz on 2023/4/27 14:58

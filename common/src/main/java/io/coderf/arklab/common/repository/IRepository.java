@@ -2,8 +2,8 @@ package io.coderf.arklab.common.repository;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.coderf.arklab.common.base.BaseView;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Created by fz on 2024/6/18 14:32

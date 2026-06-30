@@ -1,8 +1,8 @@
 package io.coderf.arklab.demo.impl;
 
-import io.coderf.arklab.demo.inter.HiltUserService;
-
 import javax.inject.Inject;
+
+import io.coderf.arklab.demo.inter.HiltUserService;
 
 /**
  * Created by fz on 2024/5/31 13:50

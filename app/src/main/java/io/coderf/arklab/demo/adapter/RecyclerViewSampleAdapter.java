@@ -1,8 +1,6 @@
 package io.coderf.arklab.demo.adapter;
 
 import com.bumptech.glide.Glide;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.databinding.RecyclerHeaderViewBinding;
 
 import java.util.List;
 
@@ -10,6 +8,8 @@ import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionTextViewBinding;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.databinding.RecyclerHeaderViewBinding;
 
 /**
  * Created by fz on 2023/8/14 10:39

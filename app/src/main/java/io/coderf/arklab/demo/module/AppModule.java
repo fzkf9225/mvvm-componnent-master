@@ -4,20 +4,18 @@ import android.app.Application;
 
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.common.inter.FlowRetryService;
-import io.coderf.arklab.ui.api.FileApiService;
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.api.ApiServiceHelper;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.inter.ErrorService;
+import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
-import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.api.ApiServiceHelper;
+import io.coderf.arklab.ui.api.FileApiService;
 
 /**
  * created by fz on 2024/9/26 14:53

@@ -15,10 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import io.coderf.arklab.googlegps.R
 import io.coderf.arklab.googlegps.dialog.GPSConfirmDialog
 import io.coderf.arklab.googlegps.permission.PermissionsChecker
-import io.coderf.arklab.googlegps.R
-import kotlin.collections.iterator
 
 /**
  * gps权限、隐私流程一键检测的lifecycle

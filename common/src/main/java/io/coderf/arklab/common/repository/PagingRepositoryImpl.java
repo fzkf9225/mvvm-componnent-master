@@ -2,7 +2,6 @@ package io.coderf.arklab.common.repository;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
 import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseException;
@@ -11,6 +10,7 @@ import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * Created by fz on 2023/12/1 11:14

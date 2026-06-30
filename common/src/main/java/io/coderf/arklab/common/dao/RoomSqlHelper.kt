@@ -2,6 +2,8 @@ package io.coderf.arklab.common.dao
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import io.coderf.arklab.common.dao.RoomSqlHelper.buildKeywordClause
+import io.coderf.arklab.common.dao.RoomSqlHelper.buildWhereClause
 
 /**
  * Room 动态 SQL 拼装工具（仅供 [BaseRoomDao] 内部使用）。

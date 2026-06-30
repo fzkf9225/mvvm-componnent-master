@@ -1,21 +1,19 @@
 package io.coderf.arklab.annotation.verify;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import io.coderf.arklab.annotation.annotation.VerifyCrossField;
 import io.coderf.arklab.annotation.annotation.VerifyEntity;
-import io.coderf.arklab.annotation.annotation.VerifyField;
 import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.annotation.VerifyWhen;
 import io.coderf.arklab.annotation.bean.VerifyResult;
 import io.coderf.arklab.annotation.enums.ConditionOperator;
 import io.coderf.arklab.annotation.enums.CrossFieldOperator;
 import io.coderf.arklab.annotation.enums.VerifyType;
-import io.coderf.arklab.annotation.inter.VerifyGroup;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class EntityValidatorTest {
 

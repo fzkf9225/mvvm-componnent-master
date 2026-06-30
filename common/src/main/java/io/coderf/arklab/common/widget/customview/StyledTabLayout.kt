@@ -10,15 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import com.google.android.material.tabs.TabLayout
 import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
-import com.google.android.material.tabs.TabLayout
-import kotlin.also
-import kotlin.apply
-import kotlin.collections.set
-import kotlin.let
-import kotlin.ranges.until
 
 /**
  * 自定义tabLayout

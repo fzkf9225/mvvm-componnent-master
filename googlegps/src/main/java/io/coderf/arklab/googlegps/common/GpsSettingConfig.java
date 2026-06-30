@@ -1,7 +1,7 @@
 package io.coderf.arklab.googlegps.common;
 
-import android.app.Application;
 import android.Manifest;
+import android.app.Application;
 import android.app.NotificationManager;
 import android.location.Location;
 import android.os.Build;

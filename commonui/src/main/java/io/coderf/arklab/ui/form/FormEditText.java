@@ -19,14 +19,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.enums.LabelAlignEnum;
-import io.coderf.arklab.ui.impl.DecimalDigitsInputFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.enums.LabelAlignEnum;
+import io.coderf.arklab.ui.impl.DecimalDigitsInputFilter;
 
 /**
  * Created by fz on 2023/12/26 16:27

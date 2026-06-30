@@ -6,10 +6,6 @@ import android.view.Gravity;
 
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.bean.UseCase;
-import io.coderf.arklab.demo.databinding.ActivityRecyclerViewSampleBinding;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +18,9 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.popupwindow.MultiPopupView;
 import io.coderf.arklab.common.widget.popupwindow.PopupView;
 import io.coderf.arklab.common.widget.popupwindow.TreePopupView;
+import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.bean.UseCase;
+import io.coderf.arklab.demo.databinding.ActivityRecyclerViewSampleBinding;
 
 @AndroidEntryPoint
 public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, ActivityRecyclerViewSampleBinding> {

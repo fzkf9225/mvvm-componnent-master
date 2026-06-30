@@ -13,6 +13,11 @@ import androidx.annotation.Dimension;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
@@ -20,11 +25,6 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.AdapterCheckBoxItemBinding;
 import io.coderf.arklab.common.listener.OnHeaderViewClickListener;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 复选框adapter - 支持单选/多选，支持头布局全选

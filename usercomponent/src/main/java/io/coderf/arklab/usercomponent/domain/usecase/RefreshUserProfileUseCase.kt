@@ -1,11 +1,11 @@
 package io.coderf.arklab.usercomponent.domain.usecase
 
 import androidx.lifecycle.MutableLiveData
+import io.coderf.arklab.common.inter.RequestUiCallback
 import io.coderf.arklab.userapi.bean.UserInfo
 import io.coderf.arklab.usercomponent.api.UserApiService
 import io.coderf.arklab.usercomponent.domain.repository.UserProfileRepository
 import io.coderf.arklab.usercomponent.repository.UserRepositoryImpl
-import io.coderf.arklab.common.inter.RequestUiCallback
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 

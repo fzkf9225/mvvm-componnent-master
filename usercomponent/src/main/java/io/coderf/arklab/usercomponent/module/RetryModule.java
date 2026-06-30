@@ -1,14 +1,13 @@
 package io.coderf.arklab.usercomponent.module;
 
-import io.coderf.arklab.common.inter.FlowRetryService;
-import io.coderf.arklab.usercomponent.impl.FlowRetryServiceImpl;
-import io.coderf.arklab.usercomponent.impl.RetryServiceImpl;
-
 import dagger.Binds;
 import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
+import io.coderf.arklab.usercomponent.impl.FlowRetryServiceImpl;
+import io.coderf.arklab.usercomponent.impl.RetryServiceImpl;
 
 /**
  * Created by fz on 2023/5/17 11:20

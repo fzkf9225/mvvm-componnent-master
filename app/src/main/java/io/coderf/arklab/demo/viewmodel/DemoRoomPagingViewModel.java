@@ -8,10 +8,6 @@ import androidx.paging.Pager;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 
-import io.coderf.arklab.demo.bean.Person;
-import io.coderf.arklab.demo.database.PersonDatabase;
-import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +20,9 @@ import io.coderf.arklab.common.api.RepositoryFactory;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.datasource.RxRoomPagingSource;
 import io.coderf.arklab.common.viewmodel.PagingViewModel;
+import io.coderf.arklab.demo.bean.Person;
+import io.coderf.arklab.demo.database.PersonDatabase;
+import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
 
 /**
  * Created by fz on 2023/4/27 14:58

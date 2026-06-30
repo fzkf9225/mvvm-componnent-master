@@ -6,10 +6,10 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 
+import javax.inject.Inject;
+
 import io.coderf.arklab.userapi.router.UserRouterService;
 import io.coderf.arklab.usercomponent.activity.LoginActivity;
-
-import javax.inject.Inject;
 
 /**
  * Created by fz on 2023/5/17 14:23

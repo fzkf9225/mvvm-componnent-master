@@ -40,7 +40,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

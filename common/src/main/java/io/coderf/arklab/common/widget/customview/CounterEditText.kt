@@ -14,9 +14,6 @@ import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.DensityUtil
-import kotlin.apply
-import kotlin.let
-import kotlin.toString
 
 /**
  * 右下角带数字的文本输入框

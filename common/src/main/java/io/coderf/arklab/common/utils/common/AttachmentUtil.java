@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.api.Config;
@@ -37,6 +36,7 @@ import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Created by fz on 2024/2/28 10:53

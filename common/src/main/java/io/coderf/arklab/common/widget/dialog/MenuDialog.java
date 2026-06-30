@@ -3,7 +3,6 @@ package io.coderf.arklab.common.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.adapter.MenuListAdapter;
@@ -26,7 +24,6 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.MenuDialogBinding;
 import io.coderf.arklab.common.listener.OnOptionBottomMenuClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 

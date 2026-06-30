@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import io.coderf.arklab.common.bean.Code.ResponseCode;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import io.coderf.arklab.common.bean.Code.ResponseCode;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 

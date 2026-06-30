@@ -19,13 +19,13 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.util.Objects;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogEditAreaBinding;
 import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-
-import java.util.Objects;
 
 
 /**

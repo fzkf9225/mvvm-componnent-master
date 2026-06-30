@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.paging.LoadState;
 import androidx.paging.LoadStateAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;

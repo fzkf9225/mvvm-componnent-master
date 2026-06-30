@@ -27,8 +27,8 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
-import java.io.ByteArrayOutputStream
 import androidx.core.graphics.drawable.toDrawable
+import java.io.ByteArrayOutputStream
 
 
 object DrawableUtil {

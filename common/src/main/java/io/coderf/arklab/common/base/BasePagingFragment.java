@@ -15,15 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.adapter.PagingFooterAdapter;
 import io.coderf.arklab.common.listener.PagingAdapterListener;
+import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by fz on 2017/11/17.

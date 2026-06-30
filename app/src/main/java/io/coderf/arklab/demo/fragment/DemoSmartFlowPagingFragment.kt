@@ -6,13 +6,13 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseSmartPagingFragment
 import io.coderf.arklab.common.databinding.BaseSmartPagingBinding
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog
 import io.coderf.arklab.demo.adapter.PagingDemoAdapter
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.viewmodel.DemoFlowPagingViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
