@@ -38,7 +38,7 @@ public class OpenShootDialog extends Dialog implements View.OnClickListener {
     private int mediaType = CAMERA_ALBUM;
 
     public OpenShootDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context, R.style.media_action_sheet_dialog_style);
     }
 
     public OpenShootDialog(@NonNull Context context, int themeResId) {

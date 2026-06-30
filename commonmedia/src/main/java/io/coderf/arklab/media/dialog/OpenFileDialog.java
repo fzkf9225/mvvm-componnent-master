@@ -33,7 +33,7 @@ public class OpenFileDialog extends Dialog {
     private int chooseType = FILE;
 
     public OpenFileDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context, R.style.media_action_sheet_dialog_style);
     }
 
     public OpenFileDialog(@NonNull Context context, int themeResId) {

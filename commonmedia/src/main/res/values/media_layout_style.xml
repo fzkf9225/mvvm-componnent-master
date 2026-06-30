@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 弹框dialog -->
-    <style name="ActionSheetDialogStyle" parent="@android:style/Theme.Dialog">
+    <style name="media_action_sheet_dialog_style" parent="@android:style/Theme.Dialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -16,49 +16,35 @@
         <!-- 半透明 -->
         <item name="android:windowIsTranslucent">true</item>
         <!-- Dialog进入及退出动画 -->
-        <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
+        <item name="android:windowAnimationStyle">@style/media_action_sheet_dialog_animation</item>
     </style>
     <!-- ActionSheet进出动画 -->
-    <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
+    <style name="media_action_sheet_dialog_animation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/media_actionsheet_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/media_actionsheet_dialog_out</item>
     </style>
 
-    <style name="ActionSheetItem">
+    <style name="media_action_sheet_item">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
         <item name="android:background">@drawable/action_sheet_item_ripple</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/autoColor</item>
+        <item name="android:textColor">@color/media_autoColor</item>
         <item name="android:textSize">@dimen/action_sheet_item_text_size</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="ActionSheetCancel" parent="ActionSheetItem">
+    <style name="media_action_sheet_cancel" parent="media_action_sheet_item">
         <item name="android:background">@drawable/action_sheet_cancel_ripple</item>
-        <item name="android:textColor">@color/action_sheet_cancel_text</item>
+        <item name="android:textColor">@color/media_action_sheet_cancel_text</item>
         <item name="android:textSize">@dimen/action_sheet_cancel_text_size</item>
     </style>
 
-    <style name="ActionSheetDivider">
+    <style name="media_action_sheet_divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/action_sheet_divider</item>
-    </style>
-
-    <!-- 横向线条 -->
-    <style name="h_line">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/h_line_color</item>
-    </style>
-
-    <!-- 竖向区域 -->
-    <style name="s_line">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/h_line_color</item>
+        <item name="android:background">@color/media_action_sheet_divider</item>
     </style>
 
     <!-- 自定义loading dialog -->

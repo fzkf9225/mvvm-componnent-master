@@ -45,7 +45,7 @@ public class TipDialog extends Dialog {
     private MediaTipDialogBinding binding;
 
     public TipDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context, R.style.media_action_sheet_dialog_style);
         layoutInflater = LayoutInflater.from(context);
     }
 

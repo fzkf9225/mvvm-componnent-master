@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="hint_text_color">#c4c4c4</color>
-    <color name="h_line_color">#dddddd</color>
-    <color name="dark_light">#5d5d5d</color>
-    <color name="gray">#666666</color>
-    <color name="autoColor">#333333</color>
-    <color name="action_sheet_divider">#E8E8ED</color>
-    <color name="action_sheet_cancel_text">#8E8E93</color>
+    <color name="media_line">#dddddd</color>
+    <color name="media_dark_light">#5d5d5d</color>
+    <color name="media_autoColor">#333333</color>
+    <color name="media_action_sheet_divider">#E8E8ED</color>
+    <color name="media_action_sheet_cancel_text">#8E8E93</color>
 
 </resources>

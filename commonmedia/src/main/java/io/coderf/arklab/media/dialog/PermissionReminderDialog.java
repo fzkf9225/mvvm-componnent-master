@@ -43,7 +43,7 @@ public class PermissionReminderDialog extends Dialog {
     private DialogPermissionReminderBinding binding;
 
     public PermissionReminderDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context, R.style.media_action_sheet_dialog_style);
         layoutInflater = LayoutInflater.from(context);
     }
 

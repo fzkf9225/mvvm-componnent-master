@@ -36,7 +36,7 @@ public class OpenImageDialog extends Dialog implements View.OnClickListener {
     private int mediaType = CAMERA_ALBUM;
 
     public OpenImageDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context, R.style.media_action_sheet_dialog_style);
     }
 
     public OpenImageDialog(@NonNull Context context, int themeResId) {

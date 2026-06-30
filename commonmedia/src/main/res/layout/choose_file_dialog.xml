@@ -13,13 +13,13 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/choose_file"
-            style="@style/ActionSheetItem"
+            style="@style/media_action_sheet_item"
             android:background="@drawable/action_sheet_cancel_ripple"
             android:text="@string/media_file" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/choose_file_cancel"
-            style="@style/ActionSheetCancel"
+            style="@style/media_action_sheet_cancel"
             android:layout_marginTop="@dimen/action_sheet_group_gap"
             android:text="@string/media_cancel" />
 

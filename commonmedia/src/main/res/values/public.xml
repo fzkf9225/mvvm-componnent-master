@@ -2,10 +2,11 @@
 <resources>
 
     <!--Color资源-->
-    <public name="hint_text_color" type="color"/>
-    <public name="h_line_color" type="color"/>
-    <public name="dark_light" type="color"/>
-    <public name="autoColor" type="color"/>
+    <public name="media_line" type="color"/>
+    <public name="media_dark_light" type="color"/>
+    <public name="media_autoColor" type="color"/>
+    <public name="media_action_sheet_divider" type="color"/>
+    <public name="media_action_sheet_cancel_text" type="color"/>
 
     <!--layout资源-->
     <public name="camera_album_dialog" type="layout"/>
@@ -21,7 +22,7 @@
     <public name="media_file" type="string"/>
     <public name="media_audio" type="string"/>
     <public name="media_cancel" type="string"/>
-    <public name="media_media_manage" type="string"/>
+    <public name="media_manage" type="string"/>
     <public name="media_confirm" type="string"/>
 
 </resources>
