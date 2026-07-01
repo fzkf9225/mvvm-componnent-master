@@ -28,9 +28,10 @@
             app:layout_constraintBottom_toTopOf="@+id/viewpager"
             app:layout_constraintEnd_toEndOf="parent"
             app:selectedTextColor="@color/autoColor"
-            app:tabTextSize="14sp"
-            app:tabTextStyle="bold"
-            app:unselectedTextColor="@color/dark_light" />
+            app:selectedTextBold="true"
+            app:selectedTextSize="14sp"
+            app:unselectedTextColor="@color/dark_light"
+            app:unselectedTextSize="14sp" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager"

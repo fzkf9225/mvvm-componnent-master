@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <io.coderf.arklab.common.widget.customview.StyledTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            app:selectedBackgroundCornerRadius="23dp"
+            app:selectedPaddingHorizontal="8dp"
+            app:selectedTextBold="true"
+            app:selectedTextColor="@android:color/white"
+            app:selectedTextSize="12sp"
+            app:tabHeight="29dp"
+            app:tabPaddingBottom="0dp"
+            app:tabPaddingTop="0dp"
+            app:unselectedTextColor="@color/autoColor"
+            app:unselectedTextSize="12sp" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</layout>

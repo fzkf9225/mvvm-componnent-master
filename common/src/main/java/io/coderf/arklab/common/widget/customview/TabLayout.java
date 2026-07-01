@@ -15,6 +15,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -23,6 +24,7 @@ import android.os.Build.VERSION;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,12 +79,40 @@ import java.util.Iterator;
 import io.coderf.arklab.common.R;
 
 /**
- * 通过重写源码，去实现底部Indictor固定宽度
+ * 自定义 TabLayout，支持固定宽度底部指示条，以及选中/未选中文字样式独立配置。
+ *
+ * <p>与 Material TabLayout 的区别：</p>
+ * <ul>
+ *   <li>可通过 {@code indicatorFixedWidth} 设置固定宽度指示条</li>
+ *   <li>支持 {@code selectedTextSize} / {@code unselectedTextSize} / {@code selectedTextBold} 等属性</li>
+ *   <li>配合 {@link CustomTabLayoutMediator} 用于 ViewPager2</li>
+ * </ul>
+ *
+ * <p>扩展自定义属性（app:）：</p>
+ * <ul>
+ *   <li>{@code tabTextSize} — 默认 Tab 文字大小</li>
+ *   <li>{@code selectedTextSize} / {@code unselectedTextSize} — 选中/未选中文字大小</li>
+ *   <li>{@code selectedTextBold} / {@code unselectedTextBold} — 选中/未选中是否加粗</li>
+ *   <li>{@code indicatorFixedWidth} — 底部指示条固定宽度（dp），0 表示跟随内容</li>
+ * </ul>
+ *
+ * XML 示例：
+ * <pre>
+ * &lt;io.coderf.arklab.common.widget.customview.TabLayout
+ *     app:indicatorFixedWidth="24dp"
+ *     app:tabIndicatorColor="@color/themeColor"
+ *     app:tabIndicatorHeight="3dp"
+ *     app:tabIndicatorGravity="bottom"
+ *     app:tabIndicatorFullWidth="false"
+ *     app:selectedTextColor="@color/themeColor"
+ *     app:unselectedTextColor="@color/autoColor"
+ *     app:selectedTextBold="true" /&gt;
+ * </pre>
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2026/4/1 10:23
+ * @created 2026/7/1 12:06
  */
 public class TabLayout extends HorizontalScrollView {
     @Dimension(
@@ -136,6 +166,15 @@ public class TabLayout extends HorizontalScrollView {
     Drawable tabSelectedIndicator;
     android.graphics.PorterDuff.Mode tabIconTintMode;
     float tabTextSize;
+    /** 选中态 Tab 文字大小（px），对应 XML {@code selectedTextSize} */
+    float selectedTabTextSize;
+    /** 未选中态 Tab 文字大小（px），对应 XML {@code unselectedTextSize} */
+    float unselectedTabTextSize;
+    /** 选中态 Tab 文字是否加粗，对应 XML {@code selectedTextBold} */
+    boolean selectedTabTextBold;
+    /** 未选中态 Tab 文字是否加粗，对应 XML {@code unselectedTextBold} */
+    boolean unselectedTabTextBold;
+    int indicatorHeightPx;
     float tabTextMultiLineSize;
     final int tabBackgroundResId;
     int tabMaxWidth;
@@ -185,8 +224,8 @@ public class TabLayout extends HorizontalScrollView {
         this.slidingTabIndicator.setSelectedIndicatorHeight(a.getDimensionPixelSize(styleable.TabLayout_tabIndicatorHeight, -1));
         this.slidingTabIndicator.setSelectedIndicatorColor(a.getColor(styleable.TabLayout_tabIndicatorColor, 0));
         this.setSelectedTabIndicator(MaterialResources.getDrawable(context, a, styleable.TabLayout_tabIndicator));
-        this.setSelectedTabIndicatorGravity(a.getInt(styleable.TabLayout_tabIndicatorGravity, 0));
-        this.setTabIndicatorFullWidth(a.getBoolean(styleable.TabLayout_tabIndicatorFullWidth, true));
+        this.setSelectedTabIndicatorGravity(a.getInt(styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
+        this.setTabIndicatorFullWidth(a.getBoolean(styleable.TabLayout_tabIndicatorFullWidth, false));
         this.tabPaddingStart = this.tabPaddingTop = this.tabPaddingEnd = this.tabPaddingBottom = a.getDimensionPixelSize(styleable.TabLayout_tabPadding, 0);
         this.tabPaddingStart = a.getDimensionPixelSize(styleable.TabLayout_tabPaddingStart, this.tabPaddingStart);
         this.tabPaddingTop = a.getDimensionPixelSize(styleable.TabLayout_tabPaddingTop, this.tabPaddingTop);
@@ -195,6 +234,23 @@ public class TabLayout extends HorizontalScrollView {
         this.tabTextAppearance = a.getResourceId(styleable.TabLayout_tabTextAppearance, style.TextAppearance_Design_Tab);
 
         this.tabTextSize = (float) a.getDimensionPixelSize(R.styleable.TabLayout_tabTextSize, 0);
+        this.selectedTabTextSize = a.getDimension(R.styleable.TabLayout_selectedTextSize, 0);
+        this.unselectedTabTextSize = a.getDimension(R.styleable.TabLayout_unselectedTextSize, 0);
+        this.selectedTabTextBold = a.getBoolean(R.styleable.TabLayout_selectedTextBold, false);
+        this.unselectedTabTextBold = a.getBoolean(R.styleable.TabLayout_unselectedTextBold, false);
+        if (this.selectedTabTextSize <= 0 && this.tabTextSize > 0) {
+            this.selectedTabTextSize = this.tabTextSize;
+        }
+        if (this.unselectedTabTextSize <= 0 && this.tabTextSize > 0) {
+            this.unselectedTabTextSize = this.tabTextSize;
+        }
+        this.indicatorFixedWidth = a.getDimensionPixelSize(
+                R.styleable.TabLayout_indicatorFixedWidth, this.dpToPx(MIN_INDICATOR_WIDTH));
+        this.indicatorHeightPx = a.getDimensionPixelSize(
+                styleable.TabLayout_tabIndicatorHeight, this.dpToPx(3));
+        if (this.indicatorHeightPx > 0) {
+            this.slidingTabIndicator.setSelectedIndicatorHeight(this.indicatorHeightPx);
+        }
 
         if (a.hasValue(styleable.TabLayout_tabTextColor)) {
             this.tabTextColors = MaterialResources.getColorStateList(context, a, styleable.TabLayout_tabTextColor);
@@ -202,7 +258,8 @@ public class TabLayout extends HorizontalScrollView {
 
         if (a.hasValue(styleable.TabLayout_tabSelectedTextColor)) {
             int selected = a.getColor(styleable.TabLayout_tabSelectedTextColor, 0);
-            this.tabTextColors = createColorStateList(this.tabTextColors.getDefaultColor(), selected);
+            int normal = this.tabTextColors != null ? this.tabTextColors.getDefaultColor() : selected;
+            this.tabTextColors = createColorStateList(normal, selected);
         }
 
         this.tabIconTint = MaterialResources.getColorStateList(context, a, styleable.TabLayout_tabIconTint);
@@ -221,7 +278,23 @@ public class TabLayout extends HorizontalScrollView {
         Resources res = this.getResources();
         this.tabTextMultiLineSize = (float) res.getDimensionPixelSize(dimen.design_tab_text_size_2line);
         this.scrollableTabMinWidth = res.getDimensionPixelSize(dimen.design_tab_scrollable_min_width);
+        this.configureIndicatorLayout();
         this.applyModeAndGravity();
+    }
+
+    /**
+     * 指示条默认底部对齐，并为文字预留底部间距，避免与指示条重叠。
+     */
+    private void configureIndicatorLayout() {
+        this.setSelectedTabIndicatorGravity(INDICATOR_GRAVITY_BOTTOM);
+        if (this.indicatorFixedWidth > 0) {
+            this.setTabIndicatorFullWidth(false);
+        }
+        int height = this.indicatorHeightPx > 0 ? this.indicatorHeightPx : this.dpToPx(3);
+        int minBottomPadding = height + this.dpToPx(4);
+        if (this.tabPaddingBottom < minBottomPadding) {
+            this.tabPaddingBottom = minBottomPadding;
+        }
     }
 
     public void setSelectedTabIndicatorColor(@ColorInt int color) {
@@ -1360,6 +1433,13 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         private void calculateTabViewContentBounds(TabView tabView, RectF contentBounds) {
+            int contentLeft = tabView.getIndicatorContentLeft();
+            int contentRight = tabView.getIndicatorContentRight();
+            if (contentRight > contentLeft) {
+                contentBounds.set((float) contentLeft, 0.0F, (float) contentRight, 0.0F);
+                return;
+            }
+
             int tabViewContentWidth = tabView.getContentWidth();
             if (tabViewContentWidth < TabLayout.this.dpToPx(24)) {
                 tabViewContentWidth = TabLayout.this.dpToPx(24);
@@ -1403,8 +1483,14 @@ public class TabLayout extends HorizontalScrollView {
 
             if (this.indicatorLeft >= 0 && this.indicatorRight > this.indicatorLeft) {
                 Drawable selectedIndicator = DrawableCompat.wrap((Drawable) (TabLayout.this.tabSelectedIndicator != null ? TabLayout.this.tabSelectedIndicator : this.defaultSelectionIndicator));
-                int center = (this.indicatorLeft + this.indicatorRight) / 2;
-                selectedIndicator.setBounds(center - indictorWidth / 2, indicatorTop, center + indictorWidth / 2, indicatorBottom);
+                int drawLeft = this.indicatorLeft;
+                int drawRight = this.indicatorRight;
+                if (TabLayout.this.indicatorFixedWidth > 0) {
+                    int center = (this.indicatorLeft + this.indicatorRight) / 2;
+                    drawLeft = center - TabLayout.this.indicatorFixedWidth / 2;
+                    drawRight = center + TabLayout.this.indicatorFixedWidth / 2;
+                }
+                selectedIndicator.setBounds(drawLeft, indicatorTop, drawRight, indicatorBottom);
                 if (this.selectedIndicatorPaint != null) {
                     if (VERSION.SDK_INT == 21) {
                         selectedIndicator.setColorFilter(this.selectedIndicatorPaint.getColor(), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1420,15 +1506,106 @@ public class TabLayout extends HorizontalScrollView {
         }
     }
 
-    int indictorWidth = 0;
+    /** 底部指示条固定宽度（px），0 表示跟随 Tab 内容宽度；对应 XML {@code indicatorFixedWidth} */
+    int indicatorFixedWidth = 0;
 
-    public int getIndictorWidth() {
-        return indictorWidth;
+    /** 获取指示条固定宽度（px）。 */
+    public int getIndicatorFixedWidth() {
+        return indicatorFixedWidth;
     }
 
-    public void setIndictorWidth(int indictorWidth) {
+    /**
+     * 设置底部指示条固定宽度
+     *
+     * @param widthDp 宽度 dp，0 表示跟随 Tab 内容宽度
+     */
+    public void setIndicatorFixedWidth(@Dimension(unit = 0) int widthDp) {
+        this.indicatorFixedWidth = widthDp > 0 ? dpToPx(widthDp) : 0;
+        ViewCompat.postInvalidateOnAnimation(this.slidingTabIndicator);
+    }
 
-        this.indictorWidth = dpToPx(indictorWidth);
+    /**
+     * 设置底部指示条固定宽度（像素）
+     */
+    public void setIndicatorFixedWidthPx(int widthPx) {
+        this.indicatorFixedWidth = Math.max(0, widthPx);
+        ViewCompat.postInvalidateOnAnimation(this.slidingTabIndicator);
+    }
+
+    /** @deprecated 使用 {@link #setIndicatorFixedWidth(int)} */
+    @Deprecated
+    public int getIndictorWidth() {
+        return indicatorFixedWidth;
+    }
+
+    /** @deprecated 使用 {@link #setIndicatorFixedWidth(int)} */
+    @Deprecated
+    public void setIndictorWidth(int widthDp) {
+        setIndicatorFixedWidth(widthDp);
+    }
+
+    /**
+     * 设置底部指示条高度（像素）。
+     *
+     * @param heightPx 高度 px
+     */
+    public void setSelectedTabIndicatorHeightPx(int heightPx) {
+        this.slidingTabIndicator.setSelectedIndicatorHeight(heightPx);
+    }
+
+    /**
+     * 通过颜色资源设置底部指示条颜色。
+     *
+     * @param colorRes 颜色资源 id
+     */
+    public void setSelectedTabIndicatorColorRes(@ColorRes int colorRes) {
+        setSelectedTabIndicatorColor(androidx.core.content.ContextCompat.getColor(getContext(), colorRes));
+    }
+
+    /**
+     * 设置选中态 Tab 文字大小。
+     *
+     * @param textSizeSp 字号，单位 sp
+     */
+    public void setSelectedTabTextSizeSp(float textSizeSp) {
+        this.selectedTabTextSize = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, textSizeSp, getResources().getDisplayMetrics());
+    }
+
+    /**
+     * 设置未选中态 Tab 文字大小。
+     *
+     * @param textSizeSp 字号，单位 sp
+     */
+    public void setUnselectedTabTextSizeSp(float textSizeSp) {
+        this.unselectedTabTextSize = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, textSizeSp, getResources().getDisplayMetrics());
+    }
+
+    /**
+     * 设置选中态 Tab 文字是否加粗。
+     */
+    public void setSelectedTabTextBold(boolean bold) {
+        this.selectedTabTextBold = bold;
+    }
+
+    /**
+     * 设置未选中态 Tab 文字是否加粗。
+     */
+    public void setUnselectedTabTextBold(boolean bold) {
+        this.unselectedTabTextBold = bold;
+    }
+
+    /**
+     * 对当前所有 Tab 重新应用选中/未选中文字大小与加粗样式。
+     */
+    public void applyTabTextStylesToAllTabs() {
+        for (int i = 0; i < this.slidingTabIndicator.getChildCount(); ++i) {
+            View child = this.slidingTabIndicator.getChildAt(i);
+            if (child instanceof TabView) {
+                ((TabView) child).applyTabTextStyle(child.isSelected());
+            }
+        }
     }
 
 
@@ -1534,6 +1711,7 @@ public class TabLayout extends HorizontalScrollView {
 
             if (this.textView != null) {
                 this.textView.setSelected(selected);
+                this.applyTabTextStyle(selected);
             }
 
             if (this.iconView != null) {
@@ -1544,6 +1722,19 @@ public class TabLayout extends HorizontalScrollView {
                 this.customView.setSelected(selected);
             }
 
+        }
+
+        /** 应用选中/未选中的文字大小与加粗样式 */
+        private void applyTabTextStyle(boolean selected) {
+            if (this.textView == null) {
+                return;
+            }
+            float size = selected ? TabLayout.this.selectedTabTextSize : TabLayout.this.unselectedTabTextSize;
+            if (size > 0) {
+                this.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            }
+            boolean bold = selected ? TabLayout.this.selectedTabTextBold : TabLayout.this.unselectedTabTextBold;
+            this.textView.setTypeface(bold ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         }
 
         public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
@@ -1570,7 +1761,12 @@ public class TabLayout extends HorizontalScrollView {
 
             super.onMeasure(widthMeasureSpec, origHeightMeasureSpec);
             if (this.textView != null) {
-                float textSize = TabLayout.this.tabTextSize;
+                float textSize = this.isSelected()
+                        ? TabLayout.this.selectedTabTextSize
+                        : TabLayout.this.unselectedTabTextSize;
+                if (textSize <= 0) {
+                    textSize = TabLayout.this.tabTextSize;
+                }
                 int maxLines = this.defaultMaxLines;
                 if (this.iconView != null && this.iconView.getVisibility() == 0) {
                     maxLines = 1;
@@ -1690,6 +1886,7 @@ public class TabLayout extends HorizontalScrollView {
             }
 
             this.setSelected(tab != null && tab.isSelected());
+            this.applyTabTextStyle(this.isSelected());
         }
 
         final void updateOrientation() {
@@ -1772,6 +1969,37 @@ public class TabLayout extends HorizontalScrollView {
             }
 
             return right - left;
+        }
+
+        /** 指示条水平锚点：优先取 TextView 实际布局边界，保证滑动时与文字居中对齐 */
+        int getIndicatorContentLeft() {
+            if (this.textView != null && this.textView.getVisibility() == View.VISIBLE) {
+                return this.getLeft() + this.textView.getLeft();
+            }
+            if (this.customTextView != null && this.customTextView.getVisibility() == View.VISIBLE) {
+                return this.getLeft() + this.customTextView.getLeft();
+            }
+            int contentWidth = this.getContentWidth();
+            if (contentWidth <= 0) {
+                return this.getLeft();
+            }
+            int center = (this.getLeft() + this.getRight()) / 2;
+            return center - contentWidth / 2;
+        }
+
+        int getIndicatorContentRight() {
+            if (this.textView != null && this.textView.getVisibility() == View.VISIBLE) {
+                return this.getLeft() + this.textView.getRight();
+            }
+            if (this.customTextView != null && this.customTextView.getVisibility() == View.VISIBLE) {
+                return this.getLeft() + this.customTextView.getRight();
+            }
+            int contentWidth = this.getContentWidth();
+            if (contentWidth <= 0) {
+                return this.getRight();
+            }
+            int center = (this.getLeft() + this.getRight()) / 2;
+            return center + contentWidth / 2;
         }
 
         public Tab getTab() {

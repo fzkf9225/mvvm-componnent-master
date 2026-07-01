@@ -216,6 +216,14 @@
     <attr name="unselectedTextColor" format="color" />
     <!-- Tab文字相关属性 -->
     <attr name="tabTextSize" format="dimension" />
+    <!-- 选中态文字大小 -->
+    <attr name="selectedTextSize" format="dimension" />
+    <!-- 未选中态文字大小 -->
+    <attr name="unselectedTextSize" format="dimension" />
+    <!-- 选中态是否加粗 -->
+    <attr name="selectedTextBold" format="boolean" />
+    <!-- 未选中态是否加粗 -->
+    <attr name="unselectedTextBold" format="boolean" />
     <!-- 自定义TabLayout属性 -->
     <declare-styleable name="StyledTabLayout">
         <!-- 选中时文字颜色 -->
@@ -224,17 +232,38 @@
         <!-- 未选中时文字颜色 -->
         <attr name="unselectedTextColor" />
 
-        <!-- 文字大小 -->
+        <!-- 默认文字大小（selected/unselected 未单独设置时生效） -->
         <attr name="tabTextSize" />
+
+        <!-- 选中态文字大小 -->
+        <attr name="selectedTextSize" />
+
+        <!-- 未选中态文字大小 -->
+        <attr name="unselectedTextSize" />
+
+        <!-- 选中态是否加粗 -->
+        <attr name="selectedTextBold" />
+
+        <!-- 未选中态是否加粗 -->
+        <attr name="unselectedTextBold" />
 
         <!-- 选中时背景 -->
         <attr name="selectedBackground" format="reference" />
 
-        <!-- Tab宽度 -->
+        <!-- Tab宽度，0 表示跟随文字 -->
         <attr name="tabWidth" format="dimension" />
 
         <!-- Tab高度 -->
         <attr name="tabHeight" format="dimension" />
+
+        <!-- 选中态水平内边距 -->
+        <attr name="selectedPaddingHorizontal" format="dimension" />
+
+        <!-- 选中背景圆角，仅在未设置 selectedBackground 时生效 -->
+        <attr name="selectedBackgroundCornerRadius" format="dimension" />
+
+        <!-- Tab 最小宽度 -->
+        <attr name="minTabWidth" format="dimension" />
     </declare-styleable>
     <!--自动换行-->
     <declare-styleable name="WarpLinearLayout">
@@ -791,6 +820,15 @@
         <attr name="tabTextSize" />
         <attr name="selectedTextColor" />
         <attr name="unselectedTextColor" />
+        <!-- 选中态文字大小 -->
+        <attr name="selectedTextSize" />
+        <!-- 未选中态文字大小 -->
+        <attr name="unselectedTextSize" />
+        <!-- 选中态是否加粗 -->
+        <attr name="selectedTextBold" />
+        <!-- 未选中态是否加粗 -->
+        <attr name="unselectedTextBold" />
+        <!-- 兼容旧属性：仅作用于选中态，建议使用 selectedTextBold -->
         <attr name="tabTextStyle" format="enum">
             <enum name="normal" value="0" />
             <enum name="bold" value="1" />
@@ -803,6 +841,14 @@
     <declare-styleable name="TabLayout">
         <!-- Tab文字相关属性 -->
         <attr name="tabTextSize" />
+        <!-- 选中态文字大小 -->
+        <attr name="selectedTextSize" />
+        <!-- 未选中态文字大小 -->
+        <attr name="unselectedTextSize" />
+        <!-- 选中态是否加粗 -->
+        <attr name="selectedTextBold" />
+        <!-- 未选中态是否加粗 -->
+        <attr name="unselectedTextBold" />
         <!-- Color of the indicator used to show the currently selected tab. -->
         <attr name="tabIndicatorColor" format="color" />
         <!-- {@deprecated Instead, set the intrinsic size of the custom drawable provided to the
@@ -885,6 +931,8 @@
         <!-- Whether to use unbounded ripple effect for tabs, or if ripple should instead be bound to
              tab item bounds. -->
         <attr name="tabUnboundedRipple" format="boolean" />
+        <!-- 底部指示条固定宽度，0 表示跟随 Tab 内容宽度 -->
+        <attr name="indicatorFixedWidth" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="RecyclerEmptyHostView">

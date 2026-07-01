@@ -2,11 +2,50 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recyclerview_sample_navigation"
-    app:startDestination="@+id/recyclerview_sample_layout_page">
+    android:id="@+id/viewpager_sample_navigation"
+    app:startDestination="@+id/viewPagerDemoHub">
+
     <fragment
-        android:id="@+id/recyclerview_sample_layout_page"
+        android:id="@+id/viewPagerDemoHub"
+        android:name="io.coderf.arklab.demo.fragment.ViewPagerDemoHubFragment"
+        android:label="TabLayout 示例"
+        tools:layout="@layout/view_pager_demo_hub_fragment">
+
+        <action
+            android:id="@+id/action_hub_to_material_tab"
+            app:destination="@id/viewPagerMaterialTabSample" />
+        <action
+            android:id="@+id/action_hub_to_styled_tab"
+            app:destination="@id/viewPagerStyledTabSample" />
+        <action
+            android:id="@+id/action_hub_to_fixed_tab"
+            app:destination="@id/viewPagerFixedTabSample" />
+        <action
+            android:id="@+id/action_hub_to_indicator_tab"
+            app:destination="@id/viewPagerIndicatorTabSample" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewPagerMaterialTabSample"
         android:name="io.coderf.arklab.demo.fragment.ViewPagerTabSampleFragment"
-        android:label="RecyclerViewSample示例"
+        android:label="Material TabLayout"
         tools:layout="@layout/base_tablayout_viewpager" />
+
+    <fragment
+        android:id="@+id/viewPagerStyledTabSample"
+        android:name="io.coderf.arklab.demo.fragment.StyledTabViewPagerSampleFragment"
+        android:label="StyledTabLayout"
+        tools:layout="@layout/base_styled_tablayout_viewpager" />
+
+    <fragment
+        android:id="@+id/viewPagerFixedTabSample"
+        android:name="io.coderf.arklab.demo.fragment.FixedTabViewPagerSampleFragment"
+        android:label="Fixed Indicator TabLayout"
+        tools:layout="@layout/base_fixed_tablayout_viewpager" />
+
+    <fragment
+        android:id="@+id/viewPagerIndicatorTabSample"
+        android:name="io.coderf.arklab.demo.fragment.IndicatorTabViewPagerSampleFragment"
+        android:label="IndicatorTabLayout"
+        tools:layout="@layout/base_indicator_tablayout_viewpager" />
 </navigation>
