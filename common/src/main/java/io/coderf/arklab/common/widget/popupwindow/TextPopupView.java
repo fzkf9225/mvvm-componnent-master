@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -110,7 +111,6 @@ public class TextPopupView extends ConstraintLayout {
 
     private void init() {
         createLabel();
-        layoutLabel();
         if (startDrawable != null) {
             createStartDrawable();
             layoutStartDrawable();
@@ -119,6 +119,7 @@ public class TextPopupView extends ConstraintLayout {
             createEndDrawable();
             layoutEndDrawable();
         }
+        layoutLabel();
     }
 
 
@@ -154,11 +155,13 @@ public class TextPopupView extends ConstraintLayout {
         tvLabel.setTextColor(labelTextColor);
         tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, labelTextSize);
         tvLabel.setHint(hiltText);
+        tvLabel.setGravity(Gravity.CENTER);
         tvLabel.setHintTextColor(hiltTextColor);
-        tvLabel.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        tvLabel.setEllipsize(TextUtils.TruncateAt.END);
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                0, LayoutParams.WRAP_CONTENT);
+        params.horizontalWeight = 1f;
         if (isBold) {
             // 设置为加粗
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
@@ -172,8 +175,16 @@ public class TextPopupView extends ConstraintLayout {
     protected void layoutLabel() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
-        constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        constraintSet.connect(tvLabel.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        if (startDrawable != null) {
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ivStartDrawable.getId(), ConstraintSet.END);
+        } else {
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        }
+        if (endDrawable != null) {
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.END, ivEndDrawable.getId(), ConstraintSet.START);
+        } else {
+            constraintSet.connect(tvLabel.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        }
         constraintSet.connect(tvLabel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         constraintSet.connect(tvLabel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.applyTo(this);
@@ -197,6 +208,7 @@ public class TextPopupView extends ConstraintLayout {
     protected void layoutStartDrawable() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
+        constraintSet.connect(ivStartDrawable.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
         constraintSet.connect(ivStartDrawable.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
         constraintSet.connect(ivStartDrawable.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
         constraintSet.connect(ivStartDrawable.getId(), ConstraintSet.END, tvLabel.getId(), ConstraintSet.START);
@@ -224,6 +236,7 @@ public class TextPopupView extends ConstraintLayout {
         constraintSet.connect(ivEndDrawable.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.TOP);
         constraintSet.connect(ivEndDrawable.getId(), ConstraintSet.BOTTOM, tvLabel.getId(), ConstraintSet.BOTTOM);
         constraintSet.connect(ivEndDrawable.getId(), ConstraintSet.START, tvLabel.getId(), ConstraintSet.END);
+        constraintSet.connect(ivEndDrawable.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
         constraintSet.applyTo(this);
     }
 }
