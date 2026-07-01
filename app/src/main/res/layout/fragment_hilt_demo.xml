@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvFragmentInject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/horizontal_margin_m"
+        android:layout_marginVertical="@dimen/vertical_margin_s"
+        android:background="@android:color/white"
+        android:padding="@dimen/horizontal_margin_s"
+        android:textColor="@android:color/black"
+        android:textSize="13sp" />
+</layout>

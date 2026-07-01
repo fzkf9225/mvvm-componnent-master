@@ -7,6 +7,10 @@
         <variable
             name="hiltViewModel"
             type="io.coderf.arklab.demo.viewmodel.TestHiltViewModel" />
+
+        <variable
+            name="activityInjectInfo"
+            type="String" />
     </data>
 
     <ScrollView
@@ -17,63 +21,183 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/vertical_margin_l">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_activity_inject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin_m"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:background="@android:color/white"
+                android:padding="@dimen/horizontal_margin_s"
+                android:text="@{activityInjectInfo}"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Activity @Inject" />
+
+            <FrameLayout
+                android:id="@+id/fragment_hilt_demo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_activity_inject" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_demo_result"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/horizontal_margin_m"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:background="@android:color/white"
+                android:padding="@dimen/horizontal_margin_s"
+                android:text="@{hiltViewModel.demoResult}"
+                android:textColor="@android:color/black"
+                android:textIsSelectable="true"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_hilt_demo"
+                tools:text="点击按钮查看 Hilt 注入效果" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_inter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:onClick="@{hiltViewModel.onClick}"
-                android:text="注入接口"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="1. 注入接口 @Binds"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_demo_result" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_entity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:onClick="@{hiltViewModel.onClick}"
-                android:text="注入实体类"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="2. 注入实体类 @Inject"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_inter" />
+                app:layout_constraintTop_toBottomOf="@id/button_inter" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_multi_impl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:onClick="@{hiltViewModel.onClick}"
-                android:text="注入接口（多实现类）"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="3. 多实现 @Qualifier"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_entity" />
+                app:layout_constraintTop_toBottomOf="@id/button_entity" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_context_impl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:onClick="@{hiltViewModel.onClick}"
-                android:text="注入接口（含有Context对象）"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="4. 注入 Application"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_multi_impl" />
+                app:layout_constraintTop_toBottomOf="@id/button_multi_impl" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_entryPoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:onClick="@{hiltViewModel.onClick}"
-                android:text="EntryPoint用法"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="5. EntryPoint 非 Hilt 类"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_context_impl" />
+                app:layout_constraintTop_toBottomOf="@id/button_context_impl" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_named"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="6. @Named 限定符"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_entryPoint" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_singleton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="7. @Singleton 单例"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_named" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_lazy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="8. Lazy 懒加载"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_singleton" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_provider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="9. Provider 多实例"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_lazy" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_multibinding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="10. @IntoSet 多绑定"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_provider" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_viewmodel_scope"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:onClick="@{hiltViewModel::onClick}"
+                android:text="11. ViewModelComponent 作用域"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_multibinding" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
