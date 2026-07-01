@@ -18,9 +18,6 @@
             android:id="@+id/action_hub_to_styled_tab"
             app:destination="@id/viewPagerStyledTabSample" />
         <action
-            android:id="@+id/action_hub_to_fixed_tab"
-            app:destination="@id/viewPagerFixedTabSample" />
-        <action
             android:id="@+id/action_hub_to_indicator_tab"
             app:destination="@id/viewPagerIndicatorTabSample" />
     </fragment>
@@ -36,12 +33,6 @@
         android:name="io.coderf.arklab.demo.fragment.StyledTabViewPagerSampleFragment"
         android:label="StyledTabLayout"
         tools:layout="@layout/base_styled_tablayout_viewpager" />
-
-    <fragment
-        android:id="@+id/viewPagerFixedTabSample"
-        android:name="io.coderf.arklab.demo.fragment.FixedTabViewPagerSampleFragment"
-        android:label="Fixed Indicator TabLayout"
-        tools:layout="@layout/base_fixed_tablayout_viewpager" />
 
     <fragment
         android:id="@+id/viewPagerIndicatorTabSample"

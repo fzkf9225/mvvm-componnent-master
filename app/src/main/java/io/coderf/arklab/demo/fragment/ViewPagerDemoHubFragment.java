@@ -39,7 +39,6 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
         config = TabLayoutDemoConfig.get();
         bindNavigation();
         bindStyledConfig();
-        bindFixedConfig();
         bindIndicatorConfig();
     }
 
@@ -48,8 +47,6 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
                 Navigation.findNavController(v).navigate(R.id.action_hub_to_material_tab));
         binding.btnStyledTab.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_hub_to_styled_tab));
-        binding.btnFixedTab.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_hub_to_fixed_tab));
         binding.btnIndicatorTab.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_hub_to_indicator_tab));
     }
@@ -98,67 +95,6 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
         });
         binding.switchStyledSelectedBold.setOnCheckedChangeListener((buttonView, isChecked) ->
                 config.styledSelectedBold = isChecked);
-    }
-
-    private void bindFixedConfig() {
-        binding.seekFixedIndicatorWidth.setProgress(config.fixedIndicatorWidthDp - 12);
-        binding.seekFixedIndicatorHeight.setProgress(config.fixedIndicatorHeightDp - 2);
-        binding.seekFixedSelectedSize.setProgress(spToProgress(config.fixedSelectedTextSizeSp));
-        binding.seekFixedUnselectedSize.setProgress(spToProgress(config.fixedUnselectedTextSizeSp));
-        binding.switchFixedSelectedBold.setChecked(config.fixedSelectedBold);
-        bindColorChips(
-                binding.chipsFixedSelectedColor,
-                config.fixedSelectedColorIndex,
-                index -> {
-                    config.fixedSelectedColorIndex = index;
-                    updateFixedLabels();
-                });
-        bindColorChips(
-                binding.chipsFixedUnselectedColor,
-                config.fixedUnselectedColorIndex,
-                index -> {
-                    config.fixedUnselectedColorIndex = index;
-                    updateFixedLabels();
-                });
-        bindColorChips(
-                binding.chipsFixedIndicatorColor,
-                config.fixedIndicatorColorIndex,
-                index -> {
-                    config.fixedIndicatorColorIndex = index;
-                    updateFixedLabels();
-                });
-        updateFixedLabels();
-
-        binding.seekFixedIndicatorWidth.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.fixedIndicatorWidthDp = progress + 12;
-                updateFixedLabels();
-            }
-        });
-        binding.seekFixedIndicatorHeight.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.fixedIndicatorHeightDp = progress + 2;
-                updateFixedLabels();
-            }
-        });
-        binding.seekFixedSelectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.fixedSelectedTextSizeSp = progressToSp(progress);
-                updateFixedLabels();
-            }
-        });
-        binding.seekFixedUnselectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.fixedUnselectedTextSizeSp = progressToSp(progress);
-                updateFixedLabels();
-            }
-        });
-        binding.switchFixedSelectedBold.setOnCheckedChangeListener((buttonView, isChecked) ->
-                config.fixedSelectedBold = isChecked);
     }
 
     private void bindIndicatorConfig() {
@@ -271,13 +207,6 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
         binding.tvStyledSelectedSize.setText("选中字号：" + formatSp(config.styledSelectedTextSizeSp));
         binding.tvStyledUnselectedSize.setText("未选中字号：" + formatSp(config.styledUnselectedTextSizeSp));
         binding.tvStyledCornerRadius.setText("圆角半径：" + config.styledCornerRadiusDp + "dp");
-    }
-
-    private void updateFixedLabels() {
-        binding.tvFixedIndicatorWidth.setText("指示条宽度：" + config.fixedIndicatorWidthDp + "dp");
-        binding.tvFixedIndicatorHeight.setText("指示条高度：" + config.fixedIndicatorHeightDp + "dp");
-        binding.tvFixedSelectedSize.setText("选中字号：" + formatSp(config.fixedSelectedTextSizeSp));
-        binding.tvFixedUnselectedSize.setText("未选中字号：" + formatSp(config.fixedUnselectedTextSizeSp));
     }
 
     private void updateIndicatorLabels() {

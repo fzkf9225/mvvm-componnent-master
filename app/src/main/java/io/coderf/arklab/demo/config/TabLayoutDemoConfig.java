@@ -20,23 +20,6 @@ public final class TabLayoutDemoConfig {
     /** StyledTabLayout：未选中文字颜色预设索引 */
     public int styledUnselectedColorIndex = 5;
 
-    /** Fixed TabLayout：指示条固定宽度（dp） */
-    public int fixedIndicatorWidthDp = 24;
-    /** Fixed TabLayout：指示条高度（dp） */
-    public int fixedIndicatorHeightDp = 3;
-    /** Fixed TabLayout：选中文字大小（sp） */
-    public float fixedSelectedTextSizeSp = 14f;
-    /** Fixed TabLayout：未选中文字大小（sp） */
-    public float fixedUnselectedTextSizeSp = 12f;
-    /** Fixed TabLayout：选中是否加粗 */
-    public boolean fixedSelectedBold = true;
-    /** Fixed TabLayout：选中文字颜色预设索引 */
-    public int fixedSelectedColorIndex = 0;
-    /** Fixed TabLayout：未选中文字颜色预设索引 */
-    public int fixedUnselectedColorIndex = 5;
-    /** Fixed TabLayout：指示条颜色预设索引 */
-    public int fixedIndicatorColorIndex = 0;
-
     /** IndicatorTabLayout：指示条宽度（dp，fixed 模式） */
     public int indicatorWidthDp = 12;
     /** IndicatorTabLayout：指示条高度（dp） */

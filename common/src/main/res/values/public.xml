@@ -205,7 +205,6 @@
     <public name="WarpLinearLayoutDefault" type="style"/>
     <public name="AppBaseTheme" type="style"/>
     <public name="loading_dialog" type="style"/>
-    <public name="MyCustomTabLayout" type="style"/>
     <public name="ActionSheetDialogStyle" type="style"/>
     <public name="ActionSheetDialogAnimation" type="style"/>
     <public name="PreviewPhotoDialog" type="style"/>
