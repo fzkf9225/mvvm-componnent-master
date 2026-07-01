@@ -102,6 +102,16 @@ class CameraView @JvmOverloads constructor(
     private var camera: Camera? = null
 
     /**
+     * 闪光灯模式，见 {@link ImageCapture#FLASH_MODE_OFF} 等
+     */
+    private var flashMode = ImageCapture.FLASH_MODE_OFF
+
+    /**
+     * 是否已主动取消过短录制，避免与 Finalize 重复处理
+     */
+    private var isRecordingCanceled = false
+
+    /**
      * 图片或视频路径
      */
     private var uri: Uri? = null
@@ -179,6 +189,7 @@ class CameraView @JvmOverloads constructor(
     fun setVideoMaxDuration(maxDuration: Int) {
         this.maxDuration = maxDuration
         binding?.captureLayout?.btnCapture?.setDuration(maxDuration * 1000)
+        binding?.captureLayout?.btnCapture?.setMinDuration(MIN_RECORD_DURATION)
     }
 
     /**
@@ -199,6 +210,7 @@ class CameraView @JvmOverloads constructor(
 
         binding?.captureLayout?.setButtonFeatures(buttonFeatures)
         binding?.captureLayout?.setIconSrc(iconLeft, iconRight)
+        binding?.captureLayout?.btnCapture?.setMinDuration(MIN_RECORD_DURATION)
         //切换摄像头
         binding?.imageSwitch?.setOnClickListener { _: View? -> flipCamera() }
         binding?.captureLayout?.setCaptureListener(object : CaptureListener {
@@ -209,8 +221,7 @@ class CameraView @JvmOverloads constructor(
             }
 
             override fun recordShort(time: Long) {
-                Toast.makeText(context, "录制时间过短!", Toast.LENGTH_LONG).show()
-                resetState(true)
+                stopRecordingAndReset("录制时间过短，请长按继续拍摄")
             }
 
             override fun recordStart() {
@@ -298,18 +309,25 @@ class CameraView @JvmOverloads constructor(
             ?.start(ContextCompat.getMainExecutor(context)) { recordEvent ->
                 when (recordEvent) {
                     is VideoRecordEvent.Finalize -> {
+                        recording = null
                         // 录制结束
                         if (recordEvent.hasError()) {
-                            // 录制失败
                             LogUtil.logger(
                                 TAG,
                                 "onError:${recordEvent.cause},${recordEvent.cause?.message}"
                             )
-                            cameraResultListener?.onError(
-                                recordEvent.error,
-                                recordEvent.cause?.message ?: "录制失败",
-                                recordEvent.cause
-                            )
+                            handler.post {
+                                if (isRecordingCanceled) {
+                                    isRecordingCanceled = false
+                                    return@post
+                                }
+                                resetState(true)
+                                Toast.makeText(
+                                    context,
+                                    "录制时间过短，请长按继续拍摄",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         } else {
                             // 录制成功
                             handler.post {
@@ -394,6 +412,7 @@ class CameraView @JvmOverloads constructor(
      */
     private fun flipCamera() {
         if (hasFrontCamera() && hasBackCamera()) {
+            flashMode = ImageCapture.FLASH_MODE_OFF
             owner?.let {
                 startCamera(it, true)
             }
@@ -430,7 +449,9 @@ class CameraView @JvmOverloads constructor(
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
-            imageCapture = ImageCapture.Builder().build()
+            imageCapture = ImageCapture.Builder()
+                .setFlashMode(flashMode)
+                .build()
             cameraSelector = getCameraSelector(isFlipCamera)
             videoCapture = VideoCapture.withOutput(
                 Recorder.Builder().setQualitySelector(QualitySelector.from(Quality.HIGHEST)).build()
@@ -444,6 +465,8 @@ class CameraView @JvmOverloads constructor(
                         .also { it.setSurfaceProvider(binding?.mCameraView?.surfaceProvider) },
                     imageCapture, videoCapture
                 )
+                updateFlashUi()
+                applyTorchState()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -451,41 +474,50 @@ class CameraView @JvmOverloads constructor(
     }
 
     /**
-     * 切换闪光灯
+     * 切换闪光灯：关闭 → 常开 → 自动 → 关闭
+     * 常开模式下启用手电筒预览，自动/关闭模式下关闭手电筒
      */
     private fun switchFlash() {
-        camera?.let {
-            if (it.cameraInfo.hasFlashUnit()) {
-                //方法一
-                when (imageCapture?.flashMode) {
-                    ImageCapture.FLASH_MODE_AUTO -> {
-                        binding?.imageFlash?.setImageResource(R.drawable.ic_flash_off)
-                        imageCapture?.flashMode = ImageCapture.FLASH_MODE_OFF
-                    }
+        val currentCamera = camera
+        if (currentCamera == null || !currentCamera.cameraInfo.hasFlashUnit()) {
+            Toast.makeText(context, "当前设备不支持闪光灯", Toast.LENGTH_SHORT).show()
+            return
+        }
+        flashMode = when (flashMode) {
+            ImageCapture.FLASH_MODE_OFF -> ImageCapture.FLASH_MODE_ON
+            ImageCapture.FLASH_MODE_ON -> ImageCapture.FLASH_MODE_AUTO
+            else -> ImageCapture.FLASH_MODE_OFF
+        }
+        imageCapture?.flashMode = flashMode
+        applyTorchState()
+        updateFlashUi()
+    }
 
-                    ImageCapture.FLASH_MODE_ON -> {
-                        binding?.imageFlash?.setImageResource(R.drawable.ic_flash_auto)
-                        imageCapture?.flashMode = ImageCapture.FLASH_MODE_AUTO
-                    }
+    private fun applyTorchState() {
+        val enableTorch = flashMode == ImageCapture.FLASH_MODE_ON
+                && camera?.cameraInfo?.hasFlashUnit() == true
+        camera?.cameraControl?.enableTorch(enableTorch)
+    }
 
-                    ImageCapture.FLASH_MODE_OFF -> {
-                        binding?.imageFlash?.setImageResource(R.drawable.ic_flash_on)
-                        imageCapture?.flashMode = ImageCapture.FLASH_MODE_ON
-                    }
-
-                    else -> {
-                        Toast.makeText(context, "当前设备不支持闪光灯", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                //方法二
-//                if (it.cameraInfo.torchState.getValue() == 0) {
-//                    it.cameraControl.enableTorch(true)
-//                } else {
-//                    it.cameraControl.enableTorch(false)
-//                }
-            } else {
-                Toast.makeText(context, "当前设备不支持闪光灯", Toast.LENGTH_SHORT).show()
+    private fun updateFlashUi() {
+        val hasFlash = camera?.cameraInfo?.hasFlashUnit() == true
+        binding?.imageFlash?.visibility = if (hasFlash) VISIBLE else GONE
+        binding?.imageFlash?.setImageResource(
+            when (flashMode) {
+                ImageCapture.FLASH_MODE_ON -> R.drawable.ic_flash_on
+                ImageCapture.FLASH_MODE_AUTO -> R.drawable.ic_flash_auto
+                else -> R.drawable.ic_flash_off
             }
+        )
+    }
+
+    private fun stopRecordingAndReset(tip: String) {
+        isRecordingCanceled = true
+        recording?.stop()
+        recording = null
+        handler.post {
+            resetState(true)
+            Toast.makeText(context, tip, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -629,6 +661,10 @@ class CameraView @JvmOverloads constructor(
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         // 释放资源
+        flashMode = ImageCapture.FLASH_MODE_OFF
+        applyTorchState()
+        recording?.stop()
+        recording = null
         GSYVideoManager.releaseAllVideos()
         cameraProvider?.unbindAll()
         cameraExecutor.shutdown()
@@ -710,5 +746,10 @@ class CameraView @JvmOverloads constructor(
          * 轻触屏幕的范围，即聚焦点的范围大小
          */
         private const val FOCUS_RECT_SIZE_WIDTH = 50
+
+        /**
+         * 最短有效录制时长（毫秒），短于该时长视为无效录制
+         */
+        private const val MIN_RECORD_DURATION = 1000
     }
 }

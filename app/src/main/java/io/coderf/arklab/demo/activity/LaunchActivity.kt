@@ -69,6 +69,10 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
         return true
     }
 
+    override fun shouldHideStatusBar(): Boolean {
+        return true
+    }
+
     /**
      * 控制是否保持启动页面的变量，初始值为true，保持SplashScreen显示直到我们的内容准备好
      */

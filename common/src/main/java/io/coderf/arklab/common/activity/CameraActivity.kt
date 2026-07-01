@@ -89,6 +89,10 @@ class CameraActivity : BaseActivity<EmptyViewModel, ActivityShootBinding>() {
 
     override fun hasToolBar() = false
 
+    override fun shouldHideStatusBar(): Boolean {
+        return true
+    }
+
     override fun initView(p0: Bundle?) {
         lifecycle.addObserver(binding.cameraFaceView)
         //设置拍照回调接口,拍照成功和错误回调

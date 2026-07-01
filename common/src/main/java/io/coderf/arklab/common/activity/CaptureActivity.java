@@ -85,6 +85,11 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptur
     }
 
     @Override
+    protected boolean shouldHideStatusBar() {
+        return true;
+    }
+
+    @Override
     public void initView(Bundle savedInstanceState) {
         permissionManager = new PermissionManager(this);
         permissionManager.setOnGrantedCallback(map -> {
