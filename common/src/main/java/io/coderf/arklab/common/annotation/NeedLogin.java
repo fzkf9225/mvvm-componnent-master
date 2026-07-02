@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.annotations.interrupte;
+package io.coderf.arklab.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

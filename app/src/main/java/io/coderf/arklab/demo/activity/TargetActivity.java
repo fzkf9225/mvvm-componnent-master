@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.common.annotations.interrupte.NeedLogin;
+import io.coderf.arklab.common.annotation.NeedLogin;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.demo.R;

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.annotations.interrupte.NeedLogin;
+import io.coderf.arklab.common.annotation.NeedLogin;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
