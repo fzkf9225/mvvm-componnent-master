@@ -117,8 +117,8 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
                 "18", "72.00", "172", "tencent@qq.com", null);
         // @Ignore 演示字段：开学时间需 >= 生日；上课时间需符合 HH:mm 格式
         person.setEducationalExperienceDate("2024-01-01 ~ 2024-12-31");
-        person.setSchoolStartTime("1999-09-01");
-        person.setClassStartTime("08:30");
+        person.setSchoolStartTime("1999-09-01 09:00:00");
+        person.setClassStartTime("08:30:00");
         binding.setData(person);
     }
 

@@ -15,6 +15,7 @@ import java.util.Date;
 import io.coderf.arklab.common.enums.DateMode;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
+import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
 import io.coderf.arklab.ui.R;
 
@@ -75,11 +76,11 @@ public class FormDateTime extends FormSelection {
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY_HOUR_MINUTE.model);
             startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
             endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.YEAR_MONTH_DAY.model;
-            confirmTextColor = ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black);
+            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black);
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
             showClearButton = true;
@@ -119,16 +120,21 @@ public class FormDateTime extends FormSelection {
         super.createText();
         tvSelection.setOnClickListener(v -> {
             AppCompatTextView textView = (AppCompatTextView) tvSelection;
-            if (!TextUtils.isEmpty(textView.getText())) {
-                Date date = DateUtil.getDateByFormat(textView.getText().toString(), format);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));
-                datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
-                datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
-                datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
-                datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
-                datePickDialog.setDefaultSecond(calendar.get(Calendar.SECOND));
+            try {
+                if (!TextUtils.isEmpty(textView.getText())) {
+                    Date date = DateUtil.getDateByFormat(textView.getText().toString(), format);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));
+                    datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
+                    datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
+                    datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
+                    datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
+                    datePickDialog.setDefaultSecond(calendar.get(Calendar.SECOND));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.logger(TAG, "解析默认日志异常:" + e);
             }
             datePickDialog.show();
         });

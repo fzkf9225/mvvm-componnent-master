@@ -15,6 +15,7 @@ import java.util.Date;
 import io.coderf.arklab.common.enums.DateMode;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
+import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
 import io.coderf.arklab.ui.R;
 
@@ -66,11 +67,11 @@ public class FormTime extends FormSelection {
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
         } else {
             datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
-            confirmTextColor = ContextCompat.getColor(getContext(),io.coderf.arklab.common.R.color.black);
+            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black);
             showClearButton = true;
         }
         if (TextUtils.isEmpty(separator)) {
@@ -110,13 +111,18 @@ public class FormTime extends FormSelection {
         super.createText();
         tvSelection.setOnClickListener(v -> {
             AppCompatTextView textView = (AppCompatTextView) tvSelection;
-            if (!TextUtils.isEmpty(textView.getText())) {
-                Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
-                datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
-                datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
+            try {
+                if (!TextUtils.isEmpty(textView.getText())) {
+                    Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
+                    datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
+                    datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.logger(TAG, "解析默认日志异常:" + e);
             }
             datePickDialog.show();
         });

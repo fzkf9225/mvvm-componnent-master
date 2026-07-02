@@ -15,6 +15,7 @@ import java.util.Date;
 import io.coderf.arklab.common.enums.DateMode;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
+import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
 import io.coderf.arklab.ui.R;
 
@@ -123,13 +124,18 @@ public class FormDate extends FormSelection {
         super.createText();
         tvSelection.setOnClickListener(v -> {
             AppCompatTextView textView = (AppCompatTextView) tvSelection;
-            if (!TextUtils.isEmpty(textView.getText())) {
-                Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));
-                datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
-                datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
+            try {
+                if (!TextUtils.isEmpty(textView.getText())) {
+                    Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    datePickDialog.setDefaultYear(calendar.get(Calendar.YEAR));
+                    datePickDialog.setDefaultMonth(calendar.get(Calendar.MONTH) + 1);
+                    datePickDialog.setDefaultDay(calendar.get(Calendar.DAY_OF_MONTH));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.logger(TAG, "解析默认日志异常:" + e);
             }
             datePickDialog.show();
         });
