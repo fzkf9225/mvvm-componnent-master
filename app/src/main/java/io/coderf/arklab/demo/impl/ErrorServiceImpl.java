@@ -16,7 +16,7 @@ import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.demo.activity.MainActivity;
 import io.coderf.arklab.userapi.UserService;
 import io.coderf.arklab.userapi.router.UserRouterService;
-import io.coderf.arklab.usercomponent.api.UserAccountHelper;
+import io.coderf.arklab.user.api.UserAccountHelper;
 
 /**
  * created by fz on 2023/04/25 13:04

@@ -8,6 +8,16 @@
     void set*(***);
     *** get*();
 }
+-keep class io.coderf.arklab.common.helper.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.common.helper.bean.** {
+    void set*(***);
+    *** get*();
+}
+-keep class io.coderf.arklab.common.widget.dialog.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.common.widget.dialog.bean.** {
+    void set*(***);
+    *** get*();
+}
 
 # 保留 BaseResponse 和 ViewModel
 -keep class io.coderf.arklab.common.base.BaseResponse { *; }

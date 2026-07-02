@@ -13,7 +13,7 @@ import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.demo.adapter.PagingRoomAdapter;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.viewmodel.DemoRoomPagingViewModel;
-import io.coderf.arklab.usercomponent.view.UserView;
+import io.coderf.arklab.user.view.UserView;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**

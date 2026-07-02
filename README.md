@@ -83,7 +83,7 @@
     - googlegps：GPS工具类
     - mqttcomponent：MQTT最基础的封装示例
     - userapi：示例module的对外接口，模块之间调用
-    - usercomponent：示例module，也就是项目中模块化示例
+    - user：示例module，也就是项目中模块化示例
     - wscomponent：WebSocket最基础的封装示例
 
 全面使用``ksp``
@@ -109,7 +109,7 @@
 
 为module的公共api模块，提供给别的module接入，建议此模块编写一些interface接口和实体类等等，其他的主要逻辑代码不要放在这里
 
-### usercomponent
+### user
 
 组件化代码示例，为单独一个组件，配合api模块一起使用，别的module不要接入此模块，不然组件化就失去了本身的意义
 
@@ -301,7 +301,7 @@ TAG值为类名：`ApiRetrofit`
     implementation project(':commonui')
     implementation project(':googlegps')
     implementation project(':commonmedia')
-    implementation project(':usercomponent')
+    implementation project(':user')
     implementation project(':mqttcomponent')
     implementation project(':wscomponent')
 

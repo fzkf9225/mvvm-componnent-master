@@ -79,7 +79,7 @@ dependencies {
     implementation project(':commonui')
     implementation project(':googlegps')
     implementation project(':commonmedia')
-    implementation project(':usercomponent')
+    implementation project(':user')
     implementation project(':mqttcomponent')
     implementation project(':wscomponent')
 

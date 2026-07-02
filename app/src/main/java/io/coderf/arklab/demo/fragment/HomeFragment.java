@@ -18,7 +18,7 @@ import io.coderf.arklab.demo.adapter.UseCaseAdapter;
 import io.coderf.arklab.demo.databinding.FragmentHomeBinding;
 import io.coderf.arklab.demo.enums.UseCaseEnum;
 import io.coderf.arklab.demo.viewmodel.HomeFragmentViewModel;
-import io.coderf.arklab.usercomponent.api.UserAccountHelper;
+import io.coderf.arklab.user.api.UserAccountHelper;
 
 /**
  * created by fz on 2023/4/28

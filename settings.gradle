@@ -25,7 +25,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "mvvm-component-master"
 include ':common'
-include ':usercomponent'
+include ':user'
 include ':userapi'
 include ':mqttcomponent'
 include ':app'

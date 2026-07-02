@@ -27,7 +27,7 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.dialog.ProtectionGuidelinesDialog
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityLaunchBinding
-import io.coderf.arklab.usercomponent.api.UserAccountHelper
+import io.coderf.arklab.user.api.UserAccountHelper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
