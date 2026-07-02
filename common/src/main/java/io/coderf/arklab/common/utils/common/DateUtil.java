@@ -446,12 +446,13 @@ public final class DateUtil {
     }
 
     /**
-     * 计算两个 yyyy-MM 日期字符串相差多少月。
+     * 计算两个日期字符串相差多少月。
+     * <p>支持 {@code yyyy-MM} 与 {@code yyyy-MM-dd} 两种格式（日历组件传入完整日期时使用后者）。
      */
     public static int getMonthSpace(String stDate, String endDate) {
         try {
-            LocalDate bef = YearMonth.parse(stDate, DateTimeFormatter.ofPattern("yyyy-MM", Locale.getDefault())).atDay(1);
-            LocalDate aft = YearMonth.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM", Locale.getDefault())).atDay(1);
+            LocalDate bef = toYearMonthStart(stDate);
+            LocalDate aft = toYearMonthStart(endDate);
             int result = aft.getMonthValue() - bef.getMonthValue();
             int month = (aft.getYear() - bef.getYear()) * 12;
             return Math.abs(month + result);
@@ -459,6 +460,19 @@ public final class DateUtil {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    /**
+     * 将 yyyy-MM 或 yyyy-MM-dd 解析为当月 1 号。
+     */
+    private static LocalDate toYearMonthStart(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) {
+            throw new DateTimeParseException("empty date", dateStr, 0);
+        }
+        if (dateStr.length() >= 10) {
+            return LocalDate.parse(dateStr.substring(0, 10), DEFAULT_DATE_FORMATTER).withDayOfMonth(1);
+        }
+        return YearMonth.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM", Locale.getDefault())).atDay(1);
     }
 
     /**
