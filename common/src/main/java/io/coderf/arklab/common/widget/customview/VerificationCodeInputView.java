@@ -24,72 +24,151 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * Created by fz on 2023/9/7 10:25
- * describe :
+ * 短信验证码输入框。
+ * <p>
+ * 以多个独立方格展示验证码，支持光标闪烁、输入类型限制（数字 / 字母 / 数字+字母）
+ * 及边框、光标、背景等样式自定义。输入达到最大长度后自动收起软键盘并回调完成监听。
+ * </p>
+ *
+ * @author fz
+ * @version 1.1
+ * @since 1.0
+ * @created 2026/7/2 9:00
  */
 public class VerificationCodeInputView extends AppCompatEditText implements View.OnFocusChangeListener {
-    private final String TAG = VerificationCodeInputView.class.getSimpleName();
 
+    /** 光标闪烁间隔（毫秒） */
+    private static final long CURSOR_BLINK_INTERVAL_MS = 500;
+
+    /** 输入类型：纯数字 */
+    public static final int CODE_TYPE_NUMBER = 0;
+    /** 输入类型：纯字母 */
+    public static final int CODE_TYPE_CHARACTER = 1;
+    /** 输入类型：数字 + 字母 */
+    public static final int CODE_TYPE_ALL = 2;
+
+    private static final int[] STATE_FOCUSED = new int[]{android.R.attr.state_focused};
+    private static final int[] STATE_UNFOCUSED = new int[]{-android.R.attr.state_focused};
+
+    /** 仅允许输入数字 */
+    private static final InputFilter FILTER_NUMBER = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            if (!Character.isDigit(source.charAt(i))) {
+                return "";
+            }
+        }
+        return null;
+    };
+
+    /** 仅允许输入字母 */
+    private static final InputFilter FILTER_CHARACTER = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            if (!Character.isLetter(source.charAt(i))) {
+                return "";
+            }
+        }
+        return null;
+    };
+
+    /** 仅允许输入数字和字母 */
+    private static final InputFilter FILTER_NUMBER_AND_CHARACTER = (source, start, end, dest, dstart, dend) -> {
+        for (int i = start; i < end; i++) {
+            if (!Character.isLetterOrDigit(source.charAt(i))) {
+                return "";
+            }
+        }
+        return null;
+    };
+
+    /**
+     * 验证码输入完成监听。
+     */
     public interface OnTextFinishListener {
 
+        /**
+         * 输入达到最大长度时回调。
+         *
+         * @param text   完整验证码文本
+         * @param length 最大长度（与 {@link #getMaxLength()} 一致）
+         */
         void onTextFinish(CharSequence text, int length);
     }
 
-    protected int mTextColor;
-    // 输入的最大长度
-    protected int mMaxLength;
-    // 边框宽度
-    protected int mStrokeWidth;
-    // 边框高度
-    protected int mStrokeHeight;
-    // 边框之间的距离
-    protected int mStrokePadding;
-    // 光标宽度
-    protected int mCursorWidth;
-    // 光标高度
-    protected int mCursorHeight;
-    // 方框的背景
-    protected StateListDrawable mStrokeDrawable;
-    // 光标的背景
-    protected StateListDrawable mCursorDrawable;
-    // 输入结束监听
-    protected OnTextFinishListener mOnInputFinishListener;
-    // 是否光标获取焦点
-    protected boolean mCursorStateFocused = true;
-    // 记录上次光标获取焦点时间
-    protected long mLastCursorFocusedTimeMillis = System.currentTimeMillis();
-    //纯数字
-    protected final int NUMBER = 0;
-    //纯字母
-    protected final int CHARACTER = 1;
-    //数字+字母
-    protected final int ALL = 2;
-    //验证码框颜色，有焦点时边框颜色
-    protected int mStrokeFocusedColor;
-    //验证码框圆角大小
-    protected int mRadius;
-    //验证码框粗细
-    protected int mBorderWidth;
-    //验证码框颜色，有焦点时背景颜色
-    protected int mStrokeFocusedBgColor;
-    //验证码框颜色，有焦点时光标颜色
-    protected int mCursorFocusedBgColor;
-    //验证码框颜色，无焦点时边框颜色
-    protected int mStrokeDefaultColor;
-    //验证码框颜色，无焦点时背景色
-    protected int mStrokeDefaultBgColor;
-    //输入类型
-    protected int mCodeType = NUMBER;
-    //验证码框颜色，无焦点时光标颜色
-    protected int mCursorDefaultBgColor;
+    /** 文本绘制颜色（onDraw 时临时设为透明，绘制完方格后再恢复） */
+    private int mTextColor;
+    /** 允许输入的最大字符数 */
+    private int mMaxLength;
+    /** 单个验证码方格的宽度（px） */
+    private int mStrokeWidth;
+    /** 单个验证码方格的高度（px） */
+    private int mStrokeHeight;
+    /** 相邻方格之间的间距（px） */
+    private int mStrokePadding;
+    /** 自定义光标的宽度（px） */
+    private int mCursorWidth;
+    /** 自定义光标的高度（px） */
+    private int mCursorHeight;
+    /** 方格边框的状态列表 Drawable */
+    private StateListDrawable mStrokeDrawable;
+    /** 光标的状态列表 Drawable */
+    private StateListDrawable mCursorDrawable;
+    /** 输入完成回调 */
+    private OnTextFinishListener mOnInputFinishListener;
+    /** 光标当前是否处于“亮”态（用于闪烁） */
+    private boolean mCursorVisible = true;
+    /** 允许的输入类型，见 {@link #CODE_TYPE_NUMBER} 等常量 */
+    private int mCodeType = CODE_TYPE_NUMBER;
+    /** 方格获取焦点时的边框颜色 */
+    private int mStrokeFocusedColor;
+    /** 方格圆角半径（px） */
+    private int mRadius;
+    /** 方格边框线宽（px） */
+    private int mBorderWidth;
+    /** 方格获取焦点时的背景颜色 */
+    private int mStrokeFocusedBgColor;
+    /** 光标处于“亮”态时的颜色 */
+    private int mCursorFocusedBgColor;
+    /** 方格未获取焦点时的边框颜色 */
+    private int mStrokeDefaultColor;
+    /** 方格未获取焦点时的背景颜色 */
+    private int mStrokeDefaultBgColor;
+    /** 光标处于“暗”态时的颜色 */
+    private int mCursorDefaultBgColor;
+    /** 标记构造是否完成，避免 super() 期间回调访问未初始化的成员 */
+    private boolean mInitialized;
+
+    /** 主线程 Handler，用于光标闪烁与光标位置修正 */
+    private Handler mMainHandler;
+    /** 绘制时复用的矩形区域，避免 onDraw 中频繁分配对象 */
+    private final Rect mDrawRect = new Rect();
+    /** 光标闪烁任务 */
+    private final Runnable mBlinkRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!shouldBlinkCursor()) {
+                return;
+            }
+            mCursorVisible = !mCursorVisible;
+            invalidate();
+            mMainHandler.postDelayed(this, CURSOR_BLINK_INTERVAL_MS);
+        }
+    };
 
     /**
-     * 构造方法
+     * 构造方法。
+     *
+     * @param context 上下文
      */
     public VerificationCodeInputView(Context context) {
         this(context, null);
     }
 
+    /**
+     * 构造方法，支持从 XML 读取 {@link R.styleable#verification_code} 属性。
+     *
+     * @param context 上下文
+     * @param attrs   布局属性，可为 null
+     */
     public VerificationCodeInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (attrs == null) {
@@ -98,45 +177,21 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
             initAttrs(attrs);
         }
 
-        mStrokeDrawable = new StateListDrawable();
-
-        GradientDrawable bgDefaultDrawable = new GradientDrawable();
-        bgDefaultDrawable.setStroke(mBorderWidth, mStrokeDefaultColor);
-        bgDefaultDrawable.setColor(mStrokeDefaultBgColor);
-        bgDefaultDrawable.setCornerRadius(mRadius);
-        mStrokeDrawable.addState(new int[]{-android.R.attr.state_focused}, bgDefaultDrawable);
-
-        GradientDrawable bgFocusedDrawable = new GradientDrawable();
-        bgFocusedDrawable.setStroke(mBorderWidth, mStrokeFocusedColor);
-        bgFocusedDrawable.setColor(mStrokeFocusedBgColor);
-        bgFocusedDrawable.setCornerRadius(mRadius);
-        mStrokeDrawable.addState(new int[]{android.R.attr.state_focused}, bgFocusedDrawable);
-
-
-        mCursorDrawable = new StateListDrawable();
-        // 创建默认状态的GradientDrawable
-        GradientDrawable defaultDrawable = new GradientDrawable();
-        defaultDrawable.setColor(mCursorDefaultBgColor);
-        defaultDrawable.setSize(mCursorWidth, mCursorHeight);
-        mCursorDrawable.addState(new int[]{-android.R.attr.state_focused}, defaultDrawable);
-
-        // 创建焦点状态的GradientDrawable
-        GradientDrawable focusedDrawable = new GradientDrawable();
-        focusedDrawable.setColor(mCursorFocusedBgColor);
-        focusedDrawable.setSize(mCursorWidth, mCursorHeight);
-        mCursorDrawable.addState(new int[]{android.R.attr.state_focused}, focusedDrawable);
-
-        setCodeType(this.mCodeType);
+        rebuildDrawables();
+        applyInputFilters();
         setLongClickable(false);
-        // 去掉背景颜色
         setBackgroundColor(Color.TRANSPARENT);
-        // 不显示光标
         setCursorVisible(false);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setOnFocusChangeListener(this);
+        mMainHandler = new Handler(Looper.getMainLooper());
+        mInitialized = true;
     }
 
+    /**
+     * 使用内置默认值初始化样式（无 XML 属性时）。
+     */
     private void initDefaultValue() {
         mStrokeFocusedColor = ContextCompat.getColor(getContext(), R.color.themeColor);
         mStrokeFocusedBgColor = ContextCompat.getColor(getContext(), R.color.white);
@@ -152,174 +207,385 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
         mCursorWidth = DensityUtil.dp2px(getContext(), 2);
         mCursorHeight = DensityUtil.dp2px(getContext(), 15);
         mMaxLength = 6;
-        mCodeType = NUMBER;
+        mCodeType = CODE_TYPE_NUMBER;
     }
 
+    /**
+     * 从 XML 属性初始化样式。
+     *
+     * @param attrs 布局属性
+     */
     private void initAttrs(AttributeSet attrs) {
-        if (attrs == null) {
-            return;
-        }
         @SuppressLint("CustomViewStyleable")
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.verification_code, 0, 0);
-        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.verification_code_strokeWidth, DensityUtil.dp2px(getContext(), 30));
-        mStrokeHeight = ta.getDimensionPixelSize(R.styleable.verification_code_strokeWidth, DensityUtil.dp2px(getContext(), 30));
-        mStrokePadding = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokePadding, DensityUtil.dp2px(getContext(), 10));
-        mBorderWidth = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokeBorderWidth, DensityUtil.dp2px(getContext(), 2));
-        mRadius = ta.getDimensionPixelSize(R.styleable.verification_code_radius, DensityUtil.dp2px(getContext(), 4));
-        mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.themeColor));
-        mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.white));
-        mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.white));
-        mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.transparent));
-        mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursorWidth, DensityUtil.dp2px(getContext(), 2));
-        mCursorHeight = ta.getDimensionPixelSize(R.styleable.verification_code_cursorHeight, DensityUtil.dp2px(getContext(), 15));
-        mCursorFocusedBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedTrue, ContextCompat.getColor(getContext(), R.color.themeColor));
-        mCursorDefaultBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedFalse, ContextCompat.getColor(getContext(), R.color.transparent));
+        mStrokeWidth = ta.getDimensionPixelSize(R.styleable.verification_code_strokeWidth,
+                DensityUtil.dp2px(getContext(), 30));
+        mStrokeHeight = ta.getDimensionPixelSize(R.styleable.verification_code_strokeHeight,
+                DensityUtil.dp2px(getContext(), 30));
+        mStrokePadding = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokePadding,
+                DensityUtil.dp2px(getContext(), 10));
+        mBorderWidth = ta.getDimensionPixelSize(R.styleable.verification_code_codeStrokeBorderWidth,
+                DensityUtil.dp2px(getContext(), 2));
+        mRadius = ta.getDimensionPixelSize(R.styleable.verification_code_radius,
+                DensityUtil.dp2px(getContext(), 4));
+        mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedTrue,
+                ContextCompat.getColor(getContext(), R.color.themeColor));
+        mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedFalse,
+                ContextCompat.getColor(getContext(), R.color.white));
+        mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedTrue,
+                ContextCompat.getColor(getContext(), R.color.white));
+        mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedFalse,
+                ContextCompat.getColor(getContext(), R.color.transparent));
+        mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursorWidth,
+                DensityUtil.dp2px(getContext(), 2));
+        mCursorHeight = ta.getDimensionPixelSize(R.styleable.verification_code_cursorHeight,
+                DensityUtil.dp2px(getContext(), 15));
+        mCursorFocusedBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedTrue,
+                ContextCompat.getColor(getContext(), R.color.themeColor));
+        mCursorDefaultBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedFalse,
+                ContextCompat.getColor(getContext(), R.color.transparent));
         mMaxLength = ta.getInt(R.styleable.verification_code_codeMaxLength, 6);
-        mCodeType = ta.getInt(R.styleable.verification_code_codeType, NUMBER);
+        mCodeType = ta.getInt(R.styleable.verification_code_codeType, CODE_TYPE_NUMBER);
         ta.recycle();
     }
 
-    public void setBorderWidth(int mBorderWidth) {
-        this.mBorderWidth = mBorderWidth;
+    /**
+     * 根据当前颜色、尺寸配置重建方格与光标 Drawable。
+     */
+    private void rebuildDrawables() {
+        mStrokeDrawable = new StateListDrawable();
+
+        GradientDrawable bgDefaultDrawable = new GradientDrawable();
+        bgDefaultDrawable.setStroke(mBorderWidth, mStrokeDefaultColor);
+        bgDefaultDrawable.setColor(mStrokeDefaultBgColor);
+        bgDefaultDrawable.setCornerRadius(mRadius);
+        mStrokeDrawable.addState(STATE_UNFOCUSED, bgDefaultDrawable);
+
+        GradientDrawable bgFocusedDrawable = new GradientDrawable();
+        bgFocusedDrawable.setStroke(mBorderWidth, mStrokeFocusedColor);
+        bgFocusedDrawable.setColor(mStrokeFocusedBgColor);
+        bgFocusedDrawable.setCornerRadius(mRadius);
+        mStrokeDrawable.addState(STATE_FOCUSED, bgFocusedDrawable);
+
+        mCursorDrawable = new StateListDrawable();
+
+        GradientDrawable defaultDrawable = new GradientDrawable();
+        defaultDrawable.setColor(mCursorDefaultBgColor);
+        defaultDrawable.setSize(mCursorWidth, mCursorHeight);
+        mCursorDrawable.addState(STATE_UNFOCUSED, defaultDrawable);
+
+        GradientDrawable focusedDrawable = new GradientDrawable();
+        focusedDrawable.setColor(mCursorFocusedBgColor);
+        focusedDrawable.setSize(mCursorWidth, mCursorHeight);
+        mCursorDrawable.addState(STATE_FOCUSED, focusedDrawable);
     }
 
-    public void setRadius(int mRadius) {
-        this.mRadius = mRadius;
-    }
-
-    public void setStrokeFocusedColor(int mStrokeFocusedColor) {
-        this.mStrokeFocusedColor = mStrokeFocusedColor;
-    }
-
-    public void setStrokeDefaultColor(int mStrokeDefaultColor) {
-        this.mStrokeDefaultColor = mStrokeDefaultColor;
-    }
-
-    public void setStrokeDefaultBgColor(int mStrokeDefaultBgColor) {
-        this.mStrokeDefaultBgColor = mStrokeDefaultBgColor;
-    }
-
-    public void setStrokeFocusedBgColor(int mStrokeFocusedBgColor) {
-        this.mStrokeFocusedBgColor = mStrokeFocusedBgColor;
-    }
-
-    public void setCursorDefaultBgColor(int mCursorDefaultBgColor) {
-        this.mCursorDefaultBgColor = mCursorDefaultBgColor;
-    }
-
-    public void setCursorFocusedBgColor(int mCursorFocusedBgColor) {
-        this.mCursorFocusedBgColor = mCursorFocusedBgColor;
-    }
-
-    public void setCodeType(int mCodeType) {
-        this.mCodeType = mCodeType;
-        if (mMaxLength >= 0) {
-            if (NUMBER == this.mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterNumber});
-            } else if (CHARACTER == mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterCharacter});
-            } else if (ALL == mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterNumberAndCharacter});
-            } else {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
-            }
-        } else {
+    /**
+     * 根据 {@link #mMaxLength} 与 {@link #mCodeType} 更新输入过滤器。
+     */
+    private void applyInputFilters() {
+        if (mMaxLength < 0) {
             setFilters(new InputFilter[0]);
+            return;
+        }
+        InputFilter typeFilter = getTypeFilter();
+        if (typeFilter != null) {
+            setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), typeFilter});
+        } else {
+            setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
         }
     }
 
+    /**
+     * 根据当前输入类型返回对应的字符过滤器。
+     *
+     * @return 类型过滤器，未知类型时返回 null
+     */
+    private InputFilter getTypeFilter() {
+        switch (mCodeType) {
+            case CODE_TYPE_NUMBER:
+                return FILTER_NUMBER;
+            case CODE_TYPE_CHARACTER:
+                return FILTER_CHARACTER;
+            case CODE_TYPE_ALL:
+                return FILTER_NUMBER_AND_CHARACTER;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * 当前是否应显示并闪烁光标（有焦点且尚未输满）。
+     */
+    private boolean shouldBlinkCursor() {
+        return hasFocus() && getEditableText().length() < mMaxLength;
+    }
+
+    /**
+     * 启动光标闪烁动画。
+     */
+    private void startCursorBlink() {
+        if (mMainHandler == null) {
+            return;
+        }
+        mMainHandler.removeCallbacks(mBlinkRunnable);
+        mCursorVisible = true;
+        mMainHandler.postDelayed(mBlinkRunnable, CURSOR_BLINK_INTERVAL_MS);
+    }
+
+    /**
+     * 停止光标闪烁动画。
+     */
+    private void stopCursorBlink() {
+        if (mMainHandler == null) {
+            return;
+        }
+        mMainHandler.removeCallbacks(mBlinkRunnable);
+        mCursorVisible = true;
+    }
+
+    /**
+     * 计算第 index 个方格在 View 中的左边界 x 坐标。
+     *
+     * @param index 方格索引，从 0 开始
+     * @return 左边界 x（px）
+     */
+    private int getCellLeft(int index) {
+        return index * (mStrokeWidth + mStrokePadding);
+    }
+
+    /**
+     * 当前待输入方格的索引；无焦点或已全部输入时返回 -1。
+     */
+    private int getActiveCellIndex() {
+        if (!hasFocus()) {
+            return -1;
+        }
+        int length = getEditableText().length();
+        return length < mMaxLength ? length : -1;
+    }
+
+    /**
+     * 设置方格边框线宽。
+     *
+     * @param borderWidth 线宽（px）
+     */
+    public void setBorderWidth(int borderWidth) {
+        this.mBorderWidth = borderWidth;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置方格圆角半径。
+     *
+     * @param radius 圆角（px）
+     */
+    public void setRadius(int radius) {
+        this.mRadius = radius;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置方格获取焦点时的边框颜色。
+     *
+     * @param strokeFocusedColor 颜色值
+     */
+    public void setStrokeFocusedColor(int strokeFocusedColor) {
+        this.mStrokeFocusedColor = strokeFocusedColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置方格未获取焦点时的边框颜色。
+     *
+     * @param strokeDefaultColor 颜色值
+     */
+    public void setStrokeDefaultColor(int strokeDefaultColor) {
+        this.mStrokeDefaultColor = strokeDefaultColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置方格未获取焦点时的背景颜色。
+     *
+     * @param strokeDefaultBgColor 颜色值
+     */
+    public void setStrokeDefaultBgColor(int strokeDefaultBgColor) {
+        this.mStrokeDefaultBgColor = strokeDefaultBgColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置方格获取焦点时的背景颜色。
+     *
+     * @param strokeFocusedBgColor 颜色值
+     */
+    public void setStrokeFocusedBgColor(int strokeFocusedBgColor) {
+        this.mStrokeFocusedBgColor = strokeFocusedBgColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置光标“暗”态颜色。
+     *
+     * @param cursorDefaultBgColor 颜色值
+     */
+    public void setCursorDefaultBgColor(int cursorDefaultBgColor) {
+        this.mCursorDefaultBgColor = cursorDefaultBgColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置光标“亮”态颜色。
+     *
+     * @param cursorFocusedBgColor 颜色值
+     */
+    public void setCursorFocusedBgColor(int cursorFocusedBgColor) {
+        this.mCursorFocusedBgColor = cursorFocusedBgColor;
+        rebuildDrawables();
+        invalidate();
+    }
+
+    /**
+     * 设置允许的输入类型。
+     *
+     * @param codeType {@link #CODE_TYPE_NUMBER}、{@link #CODE_TYPE_CHARACTER} 或 {@link #CODE_TYPE_ALL}
+     */
+    public void setCodeType(int codeType) {
+        this.mCodeType = codeType;
+        applyInputFilters();
+    }
+
+    /**
+     * 设置单个方格宽度。
+     *
+     * @param strokeWidth 宽度（px）
+     */
     public void setStrokeWidth(int strokeWidth) {
         mStrokeWidth = strokeWidth;
+        requestLayout();
+        invalidate();
     }
 
+    /**
+     * 设置单个方格高度。
+     *
+     * @param strokeHeight 高度（px）
+     */
     public void setStrokeHeight(int strokeHeight) {
         mStrokeHeight = strokeHeight;
+        requestLayout();
+        invalidate();
     }
 
+    /**
+     * 设置相邻方格间距。
+     *
+     * @param strokePadding 间距（px）
+     */
     public void setStrokePadding(int strokePadding) {
         mStrokePadding = strokePadding;
+        requestLayout();
+        invalidate();
     }
 
+    /**
+     * 设置自定义光标宽度。
+     *
+     * @param cursorWidth 宽度（px）
+     */
     public void setCursorWidth(int cursorWidth) {
         mCursorWidth = cursorWidth;
+        rebuildDrawables();
+        invalidate();
     }
 
+    /**
+     * 设置自定义光标高度。
+     *
+     * @param cursorHeight 高度（px）
+     */
     public void setCursorHeight(int cursorHeight) {
         mCursorHeight = cursorHeight;
+        rebuildDrawables();
+        invalidate();
     }
 
+    /**
+     * 设置方格边框 Drawable（覆盖默认样式）。
+     *
+     * @param strokeDrawable 状态列表 Drawable
+     */
     public void setStrokeDrawable(StateListDrawable strokeDrawable) {
         mStrokeDrawable = strokeDrawable;
+        invalidate();
     }
 
+    /**
+     * 设置光标 Drawable（覆盖默认样式）。
+     *
+     * @param cursorDrawable 状态列表 Drawable
+     */
     public void setCursorDrawable(StateListDrawable cursorDrawable) {
         mCursorDrawable = cursorDrawable;
+        invalidate();
     }
 
     /**
-     * 设置最大长度
+     * 设置验证码最大长度，并同步更新输入过滤器。
+     *
+     * @param maxLength 最大字符数，小于 0 表示不限制
      */
-    private void setMaxLength(int maxLength) {
+    public void setMaxLength(int maxLength) {
         this.mMaxLength = maxLength;
-        if (mMaxLength >= 0) {
-            if (NUMBER == this.mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterNumber});
-            } else if (CHARACTER == mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterCharacter});
-            } else if (ALL == mCodeType) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterNumberAndCharacter});
-            } else {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
-            }
+        applyInputFilters();
+        requestLayout();
+        invalidate();
+    }
+
+    /**
+     * 获取验证码最大长度。
+     *
+     * @return 最大字符数
+     */
+    public int getMaxLength() {
+        return mMaxLength;
+    }
+
+    /**
+     * 设置自定义输入过滤器（仍会保留长度限制）。
+     * <p>
+     * 适用于需要比 {@link #setCodeType(int)} 更细粒度过滤规则的场景。
+     * </p>
+     *
+     * @param customFilter 自定义过滤器
+     */
+    public void setCustomInputFilter(InputFilter customFilter) {
+        if (mMaxLength < 0) {
+            setFilters(customFilter == null ? new InputFilter[0] : new InputFilter[]{customFilter});
+            return;
+        }
+        if (customFilter == null) {
+            setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
         } else {
-            setFilters(new InputFilter[0]);
+            setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), customFilter});
         }
     }
 
     /**
-     * 设置最大长度
+     * @deprecated 请使用 {@link #setCustomInputFilter(InputFilter)}
      */
-    public void setInputFilters(InputFilter filterNumber) {
-        if (mMaxLength >= 0) {
-            setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength), filterNumber});
-        } else {
-            setFilters(new InputFilter[0]);
-        }
+    @Deprecated
+    public void setInputFilters(InputFilter filter) {
+        setCustomInputFilter(filter);
     }
-
-    //仅允许输入纯数字：
-    InputFilter filterNumber = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int i = start; i < end; i++) {
-                if (!Character.isDigit(source.charAt(i))) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };
-    //仅允许输入纯字母：
-    InputFilter filterCharacter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int i = start; i < end; i++) {
-                if (!Character.isLetter(source.charAt(i))) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };
-    // 仅允许输入数字和字符：
-    InputFilter filterNumberAndCharacter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int i = start; i < end; i++) {
-                if (!Character.isLetterOrDigit(source.charAt(i))) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
@@ -327,15 +593,17 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
             return;
         }
         if (hasFocus) {
-            setSelection(getText().toString().length());
-            setFocusable(true);
-            setFocusableInTouchMode(true);
-            requestFocus();
+            setSelection(getText().length());
+            startCursorBlink();
+        } else {
+            stopCursorBlink();
         }
+        invalidate();
     }
 
     @Override
     public boolean onTextContextMenuItem(int id) {
+        // 禁用复制、粘贴等上下文菜单，避免破坏分格展示逻辑
         return false;
     }
 
@@ -345,24 +613,17 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
 
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        // 判断高度是否小于推荐高度
         if (height < mStrokeHeight) {
             height = mStrokeHeight;
         }
 
-        // 判断高度是否小于推荐宽度
-        int recommendWidth = mStrokeWidth * mMaxLength + mStrokePadding * (mMaxLength - 1);
+        int recommendWidth = mStrokeWidth * mMaxLength + mStrokePadding * Math.max(0, mMaxLength - 1);
         if (width < recommendWidth) {
             width = recommendWidth;
         }
 
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, widthMode);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, heightMode);
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -371,163 +632,129 @@ public class VerificationCodeInputView extends AppCompatEditText implements View
         setTextColor(Color.TRANSPARENT);
         super.onDraw(canvas);
         setTextColor(mTextColor);
-        // 重绘背景颜色
         drawStrokeBackground(canvas);
         drawCursorBackground(canvas);
-        // 重绘文本
         drawText(canvas);
     }
 
     /**
-     * 重绘背景
+     * 绘制所有验证码方格背景，当前待输入方格高亮显示。
+     *
+     * @param canvas 画布
      */
     private void drawStrokeBackground(Canvas canvas) {
-        Rect mRect = new Rect();
-        if (mStrokeDrawable != null) {
-            // 绘制方框背景
-            mRect.left = 0;
-            mRect.top = 0;
-            mRect.right = mStrokeWidth;
-            mRect.bottom = mStrokeHeight;
-            int count = canvas.getSaveCount();
-            canvas.save();
-            for (int i = 0; i < mMaxLength; i++) {
-                mStrokeDrawable.setBounds(mRect);
-                mStrokeDrawable.setState(new int[]{-android.R.attr.state_focused});
-                mStrokeDrawable.draw(canvas);
-                float dx = mRect.right + mStrokePadding;
-                // 移动画布
-                canvas.save();
-                canvas.translate(dx, 0);
-            }
-            canvas.restoreToCount(count);
-            canvas.translate(0, 0);
-
-            // 绘制激活状态
-            // 当前激活的索引
-            int activatedIndex = Math.max(0, getEditableText().length());
-            if (activatedIndex < mMaxLength) {
-                mRect.left = mStrokeWidth * activatedIndex + mStrokePadding * activatedIndex;
-                mRect.right = mRect.left + mStrokeWidth;
-                mStrokeDrawable.setState(new int[]{android.R.attr.state_focused});
-                mStrokeDrawable.setBounds(mRect);
-                mStrokeDrawable.draw(canvas);
-            }
+        if (mStrokeDrawable == null) {
+            return;
+        }
+        int activeIndex = getActiveCellIndex();
+        for (int i = 0; i < mMaxLength; i++) {
+            int left = getCellLeft(i);
+            mDrawRect.set(left, 0, left + mStrokeWidth, mStrokeHeight);
+            mStrokeDrawable.setBounds(mDrawRect);
+            mStrokeDrawable.setState(i == activeIndex ? STATE_FOCUSED : STATE_UNFOCUSED);
+            mStrokeDrawable.draw(canvas);
         }
     }
 
     /**
-     * 重绘光标
+     * 绘制光标；仅在当前待输入方格且处于“亮”态时显示。
+     *
+     * @param canvas 画布
      */
     private void drawCursorBackground(Canvas canvas) {
-        Rect mRect = new Rect();
-        if (mCursorDrawable != null) {
-            // 绘制光标
-            mRect.left = (mStrokeWidth - mCursorWidth) / 2;
-            mRect.top = (mStrokeHeight - mCursorHeight) / 2;
-            mRect.right = mRect.left + mCursorWidth;
-            mRect.bottom = mRect.top + mCursorHeight;
-            int count = canvas.getSaveCount();
-            canvas.save();
-            for (int i = 0; i < mMaxLength; i++) {
-                mCursorDrawable.setBounds(mRect);
-                mCursorDrawable.setState(new int[]{-android.R.attr.state_focused});
-                mCursorDrawable.draw(canvas);
-                float dx = mRect.right + mStrokePadding;
-                // 移动画布
-                canvas.save();
-                canvas.translate(dx, 0);
-            }
-            canvas.restoreToCount(count);
-            canvas.translate(0, 0);
-
-            // 绘制激活状态
-            // 当前激活的索引
-            int activatedIndex = Math.max(0, getEditableText().length());
-            if (activatedIndex < mMaxLength) {
-                mRect.left = mStrokeWidth * activatedIndex + mStrokePadding * activatedIndex + (mStrokeWidth - mCursorWidth) / 2;
-                mRect.right = mRect.left + mCursorWidth;
-                int[] state = new int[]{isFocusable() && isFocusableInTouchMode() && mCursorStateFocused ? android.R.attr.state_focused : -android.R.attr.state_focused};
-                mCursorDrawable.setState(state);
-                mCursorDrawable.setBounds(mRect);
-                mCursorDrawable.draw(canvas);
-                if ((System.currentTimeMillis() - mLastCursorFocusedTimeMillis) >= 800) {
-                    mCursorStateFocused = !mCursorStateFocused;
-                    mLastCursorFocusedTimeMillis = System.currentTimeMillis();
-                }
-            }
+        if (mCursorDrawable == null) {
+            return;
         }
+        int activeIndex = getActiveCellIndex();
+        if (activeIndex < 0 || !mCursorVisible) {
+            return;
+        }
+        int left = getCellLeft(activeIndex) + (mStrokeWidth - mCursorWidth) / 2;
+        int top = (mStrokeHeight - mCursorHeight) / 2;
+        mDrawRect.set(left, top, left + mCursorWidth, top + mCursorHeight);
+        mCursorDrawable.setBounds(mDrawRect);
+        mCursorDrawable.setState(STATE_FOCUSED);
+        mCursorDrawable.draw(canvas);
     }
 
-
     /**
-     * 重绘文本
+     * 在每个方格中心绘制已输入字符。
+     *
+     * @param canvas 画布
      */
     private void drawText(Canvas canvas) {
-        Rect mRect = new Rect();
-        int count = canvas.getSaveCount();
-        canvas.translate(0, 0);
         int length = getEditableText().length();
+        if (length <= 0) {
+            return;
+        }
+        TextPaint textPaint = getPaint();
+        textPaint.setColor(mTextColor);
         for (int i = 0; i < length; i++) {
             String text = String.valueOf(getEditableText().charAt(i));
-            TextPaint textPaint = getPaint();
-            textPaint.setColor(mTextColor);
-            // 获取文本大小
-            textPaint.getTextBounds(text, 0, 1, mRect);
-            // 计算(x,y) 坐标
-            int x = mStrokeWidth / 2 + (mStrokeWidth + mStrokePadding) * i - (mRect.centerX());
-            int y = mStrokeHeight / 2 - mRect.centerY();
+            textPaint.getTextBounds(text, 0, 1, mDrawRect);
+            int x = getCellLeft(i) + mStrokeWidth / 2 - mDrawRect.centerX();
+            int y = mStrokeHeight / 2 - mDrawRect.centerY();
             canvas.drawText(text, x, y, textPaint);
         }
-        canvas.restoreToCount(count);
     }
 
     @Override
-    protected void onTextChanged(CharSequence text, int start,
-                                 int lengthBefore, int lengthAfter) {
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        // 当前文本长度
+        if (!mInitialized || mMaxLength <= 0) {
+            return;
+        }
         int textLength = getEditableText().length();
         if (textLength == mMaxLength) {
+            stopCursorBlink();
             clearFocus();
             hideSoftInput();
             if (mOnInputFinishListener != null) {
                 mOnInputFinishListener.onTextFinish(getEditableText().toString(), mMaxLength);
             }
+        } else if (shouldBlinkCursor()) {
+            startCursorBlink();
         }
+        invalidate();
     }
 
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
         super.onSelectionChanged(selStart, selEnd);
-        if (getText() == null) {
+        if (!mInitialized || mMainHandler == null || getText() == null) {
             return;
         }
-        if (selStart == getText().toString().length()) {
+        int end = getText().length();
+        if (selStart == end && selEnd == end) {
             return;
         }
-        try {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                setSelection(getText().toString().length());
-                setFocusable(true);
-                setFocusableInTouchMode(true);
-                requestFocus();
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        // 强制光标始终在末尾，保证逐格输入体验
+        mMainHandler.post(() -> setSelection(end));
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        stopCursorBlink();
+        if (mMainHandler != null) {
+            mMainHandler.removeCallbacksAndMessages(null);
+        }
+        super.onDetachedFromWindow();
+    }
+
+    /**
+     * 隐藏软键盘。
+     */
     public void hideSoftInput() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            imm.hideSoftInputFromWindow(getWindowToken(), 0);
         }
     }
 
     /**
-     * 设置输入完成监听
+     * 设置输入完成监听。
+     *
+     * @param onInputFinishListener 监听实例，可为 null 表示移除
      */
     public void setOnTextFinishListener(OnTextFinishListener onInputFinishListener) {
         this.mOnInputFinishListener = onInputFinishListener;

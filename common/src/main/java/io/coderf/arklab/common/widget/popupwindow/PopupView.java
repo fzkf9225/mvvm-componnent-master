@@ -88,7 +88,7 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow {
         this.context = context;
 
         // 设置默认值
-        itemHeight = (float) DensityUtil.dp2px(context, 40f);
+        itemHeight = (float) DensityUtil.dp2px(context, 48f);
         selectTextColor = ContextCompat.getColor(context, R.color.themeColor);
         unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(

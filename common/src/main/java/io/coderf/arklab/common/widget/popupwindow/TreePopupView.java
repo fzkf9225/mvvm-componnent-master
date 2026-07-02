@@ -101,7 +101,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         this.hasRight = hasRight;
 
         // 设置默认值
-        itemHeight = (float) DensityUtil.dp2px(activity, 40f);
+        itemHeight = (float) DensityUtil.dp2px(activity, 48f);
         selectTextColor = ContextCompat.getColor(activity, R.color.themeColor);
         unSelectTextColor = ContextCompat.getColor(activity, R.color.autoColor);
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(

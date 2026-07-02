@@ -17,19 +17,16 @@ import io.coderf.arklab.common.utils.common.DensityUtil
 
 /**
  * 右下角带数字的文本输入框
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @created 2026/3/4 13:23
- */
-
-/**
  * 自定义文本区域输入框，右下角显示字数统计
  *
  * @param context 上下文
  * @param attrs 属性集
  * @param defStyleAttr 默认样式
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/3/4 13:23
  */
 @SuppressLint("SetTextI18n")
 class CounterEditText @JvmOverloads constructor(
@@ -135,7 +132,7 @@ class CounterEditText @JvmOverloads constructor(
         // 处理自定义属性
         attrs?.let { applyAttributes(context, it) }
 
-        dataSource.addOnPropertyChangedCallback(object : androidx.databinding.Observable.OnPropertyChangedCallback() {
+        dataSource.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 val newValue = dataSource.get()
                 if (editText.text == null) {
