@@ -1073,20 +1073,43 @@ public class MediaUtil {
      * @param filePath 源文件路径，保存的话直接替换源文件
      */
     public static void saveBitmap(Bitmap bmp, String filePath) {
-        try { // 获取SDCard指定目录下
+        try {
             File dirFile = new File(filePath);
-            //目录转化成文件夹
             if (!dirFile.getParentFile().exists()) {
-                //如果不存在，那就建立这个文件夹
                 dirFile.getParentFile().mkdirs();
-            }                          //文件夹有啦，就可以保存图片啦
+            }
             FileOutputStream out = new FileOutputStream(dirFile);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            String extension = "";
+            int dotIndex = filePath.lastIndexOf('.');
+            if (dotIndex >= 0) {
+                extension = filePath.substring(dotIndex);
+            }
+            bmp.compress(compressFormatFromExtension(extension), 100, out);
             out.flush();
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 根据文件扩展名推断 Bitmap 压缩格式（用于压缩/水印等输出）
+     *
+     * @param extension 扩展名，如 .jpg、.png；不含点号时也可识别
+     * @return 对应的压缩格式，默认 JPEG
+     */
+    public static Bitmap.CompressFormat compressFormatFromExtension(String extension) {
+        if (TextUtils.isEmpty(extension)) {
+            return Bitmap.CompressFormat.JPEG;
+        }
+        String normalized = extension.startsWith(".") ? extension.toLowerCase() : ("." + extension).toLowerCase();
+        if (".png".equals(normalized)) {
+            return Bitmap.CompressFormat.PNG;
+        }
+        if (".webp".equals(normalized)) {
+            return Bitmap.CompressFormat.WEBP;
+        }
+        return Bitmap.CompressFormat.JPEG;
     }
 
 

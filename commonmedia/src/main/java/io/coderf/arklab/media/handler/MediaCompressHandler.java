@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.compressor.image.ImgCompressor;
 import io.coderf.arklab.media.compressor.video.CompressListener;
@@ -27,7 +28,6 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
-import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
  * created by fz on 2025/8/6 17:10
@@ -44,7 +44,8 @@ public class MediaCompressHandler extends Handler {
         this.srcUriList = srcUriList;
         compressedList = new ArrayList<>();
         if (mediaHelper.getMediaBuilder().isShowLoading()) {
-            mediaHelper.getUIController().showLoading("正在压缩...");
+            mediaHelper.getUIController().showLoading(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_compressing));
         }
     }
 
@@ -63,7 +64,8 @@ public class MediaCompressHandler extends Handler {
             }
 
             if (srcUriList == null || srcUriList.isEmpty() || msg.what >= srcUriList.size()) {
-                mediaHelper.getUIController().showToast("处理完成！");
+                mediaHelper.getUIController().showToast(
+                        mediaHelper.getMediaBuilder().getContext().getString(R.string.media_processing_complete));
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
@@ -88,7 +90,8 @@ public class MediaCompressHandler extends Handler {
         } catch (Exception e) {
             LogUtil.show(MediaHelper.TAG, "媒体处理出现错误:" + e);
             e.printStackTrace();
-            mediaHelper.getUIController().showToast("媒体处理出现错误");
+            mediaHelper.getUIController().showToast(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_media_process_error));
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
@@ -126,13 +129,13 @@ public class MediaCompressHandler extends Handler {
                     .starCompress(imageUri,
                             mediaHelper.getMediaBuilder().getImageOutPutPath(),
                             720, 1280,
-                            mediaHelper.getMediaBuilder().getImageQualityCompress());
+                            mediaHelper.getMediaBuilder().getImageQualityCompress(),
+                            mediaHelper.getMediaBuilder().getCaptureImageExtension());
         }
     }
 
     private void handleVideoCompression(Uri videoUri, int currentIndex) {
-        String fileName = MediaUtil.getNoRepeatFileName(mediaHelper.getMediaBuilder().getVideoOutPutPath(), "VIDEO_", ".mp4");
-        File outputFile = new File(mediaHelper.getMediaBuilder().getVideoOutPutPath(), fileName + ".mp4");
+        File outputFile = mediaHelper.getMediaBuilder().buildVideoOutputFile("VIDEO_");
 
         VideoQualityEnum quality = mediaHelper.getMediaBuilder().getVideoQuality();
         if (quality == null) {
@@ -168,7 +171,9 @@ public class MediaCompressHandler extends Handler {
         @Override
         public void onCompressStart() {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
-                mediaHelper.getUIController().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
+                mediaHelper.getUIController().refreshLoading(
+                        mediaHelper.getMediaBuilder().getContext().getString(
+                                R.string.media_compressing_progress, index + 1, totalCount));
             }
         }
 
@@ -178,7 +183,8 @@ public class MediaCompressHandler extends Handler {
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
-                mediaHelper.getUIController().showToast("图片压缩错误");
+                mediaHelper.getUIController().showToast(
+                        mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_error));
                 return;
             }
             Message message = new Message();
@@ -193,7 +199,8 @@ public class MediaCompressHandler extends Handler {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
-            mediaHelper.getUIController().showToast("图片压缩错误");
+            mediaHelper.getUIController().showToast(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_error));
         }
     }
 
@@ -216,7 +223,9 @@ public class MediaCompressHandler extends Handler {
         @Override
         public void onResult(boolean isSuccess, String message) {
             if (!isSuccess) {
-                mediaHelper.getUIController().showToast(TextUtils.isEmpty(message) ? "视频压缩异常" : message);
+                mediaHelper.getUIController().showToast(TextUtils.isEmpty(message)
+                        ? mediaHelper.getMediaBuilder().getContext().getString(R.string.media_video_compress_error)
+                        : message);
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
@@ -239,9 +248,13 @@ public class MediaCompressHandler extends Handler {
         public void onProgress(float percent) {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 if (percent == 100) {
-                    mediaHelper.getUIController().refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
+                    mediaHelper.getUIController().refreshLoading(
+                            mediaHelper.getMediaBuilder().getContext().getString(
+                                    R.string.media_merging_av, index + 1, totalCount));
                 } else {
-                    mediaHelper.getUIController().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
+                    mediaHelper.getUIController().refreshLoading(
+                            mediaHelper.getMediaBuilder().getContext().getString(
+                                    R.string.media_compressing_progress_percent, index + 1, totalCount, (int) percent));
                 }
             }
         }

@@ -1,5 +1,6 @@
 package io.coderf.arklab.media.helper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.SelectorOptions;
 import io.coderf.arklab.media.callback.CameraCallBack;
 import io.coderf.arklab.media.callback.MultiSelectorCallBack;
@@ -77,7 +79,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         } else if (owner instanceof Fragment) {
             registry = ((Fragment) owner).requireActivity().getActivityResultRegistry();
         } else {
-            throw new RuntimeException("请使用Activity或Fragment的lifecycle对象");
+            throw new RuntimeException(mediaHelper.getMediaBuilder().getContext().getString(R.string.media_lifecycle_error));
         }
         //新选择器，兼容性不是很好,register中的key不能重复，如果重复则默认为同一个因此当你一个页面有多个实例的时候就会有问题
         pickMediaSelector = new OpenPickMediaSelector();
@@ -171,10 +173,11 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
                 return;
             }
             if (!allGranted) {
-                new TipDialog(mediaHelper.getMediaBuilder().getContext())
-                        .setMessage("您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改")
-                        .setNegativeText("取消")
-                        .setPositiveText("前往设置")
+                Context context = mediaHelper.getMediaBuilder().getContext();
+                new TipDialog(context)
+                        .setMessage(context.getString(R.string.media_permission_denied_message))
+                        .setNegativeText(context.getString(R.string.media_cancel))
+                        .setPositiveText(context.getString(R.string.media_go_to_settings))
                         .setOnPositiveClickListener(dialog -> {
                             dialog.dismiss();
                             Intent intent = new Intent();

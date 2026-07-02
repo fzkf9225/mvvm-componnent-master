@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.compressor.video.CompressListener;
 import io.coderf.arklab.media.compressor.video.VideoCompress;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.utils.LogUtil;
-import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
  * created by fz on 2025/8/6 9:16
@@ -38,7 +38,8 @@ public class VideoCompressHandler extends Handler {
         this.uriList = videos;
         compressUriList = new ArrayList<>();
         if (mediaHelper.getMediaBuilder().isShowLoading()) {
-            mediaHelper.getUIController().showLoading("正在处理视频...");
+            mediaHelper.getUIController().showLoading(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_processing_video));
         }
     }
 
@@ -50,14 +51,14 @@ public class VideoCompressHandler extends Handler {
                 compressUriList.add((Uri) msg.obj);
             }
             if (uriList.isEmpty() || msg.what >= uriList.size()) {
-                mediaHelper.getUIController().showToast("压缩成功！");
+                mediaHelper.getUIController().showToast(
+                        mediaHelper.getMediaBuilder().getContext().getString(R.string.media_compress_success));
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
                 mediaHelper.getMutableLiveDataCompress().postValue(new MediaBean(compressUriList, MediaTypeEnum.VIDEO));
             } else {
-                String fileName = MediaUtil.getNoRepeatFileName(mediaHelper.getMediaBuilder().getVideoOutPutPath(), "VIDEO_", ".mp4");
-                File outputFile = new File(mediaHelper.getMediaBuilder().getVideoOutPutPath(), fileName + ".mp4");
+                File outputFile = mediaHelper.getMediaBuilder().buildVideoOutputFile("VIDEO_");
                 if (mediaHelper.getMediaBuilder().getVideoQuality() == VideoQualityEnum.HIGH) {
                     VideoCompress.compressVideoHigh(mediaHelper.getMediaBuilder().getContext(),
                             uriList.get(msg.what), outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
@@ -75,7 +76,8 @@ public class VideoCompressHandler extends Handler {
         } catch (Exception e) {
             LogUtil.show(MediaHelper.TAG, "视频加载出现错误：" + e);
             e.printStackTrace();
-            mediaHelper.getUIController().showToast("视频加载出现错误");
+            mediaHelper.getUIController().showToast(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_video_load_error));
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
@@ -100,7 +102,9 @@ public class VideoCompressHandler extends Handler {
         @Override
         public void onResult(boolean isSuccess, String message) {
             if (!isSuccess) {
-                mediaHelper.getUIController().showToast(TextUtils.isEmpty(message) ? "视频压缩异常" : message);
+                mediaHelper.getUIController().showToast(TextUtils.isEmpty(message)
+                        ? mediaHelper.getMediaBuilder().getContext().getString(R.string.media_video_compress_error)
+                        : message);
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
@@ -124,9 +128,13 @@ public class VideoCompressHandler extends Handler {
         public void onProgress(float percent) {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 if (percent == 100) {
-                    mediaHelper.getUIController().refreshLoading("正在合成音视频（" + (index + 1) + "/" + totalCount + "）");
+                    mediaHelper.getUIController().refreshLoading(
+                            mediaHelper.getMediaBuilder().getContext().getString(
+                                    R.string.media_merging_av, index + 1, totalCount));
                 } else {
-                    mediaHelper.getUIController().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）：" + (int) percent + "%");
+                    mediaHelper.getUIController().refreshLoading(
+                            mediaHelper.getMediaBuilder().getContext().getString(
+                                    R.string.media_compressing_progress_percent, index + 1, totalCount, (int) percent));
                 }
             }
         }

@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.bean.SelectorOptions;
 import io.coderf.arklab.media.dialog.OpenFileDialog;
@@ -321,7 +322,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             new TipDialog(mediaBuilder.getContext())
                     .setMessage(mediaBuilder.getCaptureExifPermissionDeniedMessage())
                     .setNegativeText(mediaBuilder.getCaptureExifPermissionNegativeText())
-                    .setPositiveText("知道了")
+                    .setPositiveText(mediaBuilder.getContext().getString(R.string.media_got_it))
                     .setOnPositiveClickListener(Dialog::dismiss)
                     .setOnNegativeClickListener(Dialog::dismiss)
                     .builder()
@@ -454,7 +455,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = 100;
         if (mediaBuilder.isShowLoading()) {
-            uiController.showLoading("正在为图片添加水印...");
+            uiController.showLoading(mediaBuilder.getContext().getString(R.string.media_adding_watermark));
         }
         new WaterMarkHandler(this, handlerLooper()).sendMessage(message);
     }
@@ -470,7 +471,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         message.obj = bitmap;
         message.arg1 = alpha;
         if (mediaBuilder.isShowLoading()) {
-            uiController.showLoading("正在为图片添加水印...");
+            uiController.showLoading(mediaBuilder.getContext().getString(R.string.media_adding_watermark));
         }
         new WaterMarkHandler(this, handlerLooper()).sendMessage(message);
     }
@@ -482,7 +483,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxMedia() {
         if (mediaBuilder.getImageAndVideoSelectedListener() != null) {
             if (mediaBuilder.getMediaMaxSelectedCount() <= mediaBuilder.getImageAndVideoSelectedListener().onSelectedCount()) {
-                uiController.showToast("最多只可选" + mediaBuilder.getMediaMaxSelectedCount() + "个附件");
+                uiController.showToast(mediaBuilder.getContext().getString(
+                        R.string.media_max_media_selected, mediaBuilder.getMediaMaxSelectedCount()));
                 return true;
             }
         }
@@ -492,7 +494,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxImage() {
         if (mediaBuilder.getImageSelectedListener() != null) {
             if (mediaBuilder.getImageMaxSelectedCount() <= mediaBuilder.getImageSelectedListener().onSelectedCount()) {
-                uiController.showToast("最多只可选" + mediaBuilder.getImageMaxSelectedCount() + "张图片");
+                uiController.showToast(mediaBuilder.getContext().getString(
+                        R.string.media_max_image_selected, mediaBuilder.getImageMaxSelectedCount()));
                 return true;
             }
         }
@@ -502,7 +505,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxVideo() {
         if (mediaBuilder.getVideoSelectedListener() != null) {
             if (mediaBuilder.getVideoMaxSelectedCount() <= mediaBuilder.getVideoSelectedListener().onSelectedCount()) {
-                uiController.showToast("最多只可选" + mediaBuilder.getVideoMaxSelectedCount() + "条视频");
+                uiController.showToast(mediaBuilder.getContext().getString(
+                        R.string.media_max_video_selected, mediaBuilder.getVideoMaxSelectedCount()));
                 return true;
             }
         }
@@ -512,7 +516,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxAudio() {
         if (mediaBuilder.getAudioSelectedListener() != null) {
             if (mediaBuilder.getAudioMaxSelectedCount() <= mediaBuilder.getAudioSelectedListener().onSelectedCount()) {
-                uiController.showToast("最多只可选" + mediaBuilder.getAudioMaxSelectedCount() + "条音频");
+                uiController.showToast(mediaBuilder.getContext().getString(
+                        R.string.media_max_audio_selected, mediaBuilder.getAudioMaxSelectedCount()));
                 return true;
             }
         }
@@ -522,7 +527,8 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private boolean isMoreThanMaxFile() {
         if (mediaBuilder.getFileSelectedListener() != null) {
             if (mediaBuilder.getFileMaxSelectedCount() <= mediaBuilder.getFileSelectedListener().onSelectedCount()) {
-                uiController.showToast("最多只可选" + mediaBuilder.getFileMaxSelectedCount() + "个文件");
+                uiController.showToast(mediaBuilder.getContext().getString(
+                        R.string.media_max_file_selected, mediaBuilder.getFileMaxSelectedCount()));
                 return true;
             }
         }
@@ -619,7 +625,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             } else {
                 mediaType = customMediaType;
             }
-            if (mediaBuilder.getImageMaxSelectedCount() == 1) {
+            if (mediaBuilder.getMediaMaxSelectedCount() == 1) {
                 mediaLifecycleObserver.getSingleLauncher().launch(new SelectorOptions(mediaType,MediaTypeEnum.IMAGE_AND_VIDEO));
             } else {
                 mediaLifecycleObserver.getMultiLauncher().launch(new SelectorOptions(mediaType,MediaTypeEnum.IMAGE_AND_VIDEO));

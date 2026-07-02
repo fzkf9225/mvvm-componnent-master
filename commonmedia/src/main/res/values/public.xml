@@ -24,5 +24,44 @@
     <public name="media_cancel" type="string"/>
     <public name="media_manage" type="string"/>
     <public name="media_confirm" type="string"/>
+    <public name="media_permission_message" type="string"/>
+    <public name="media_capture_exif_permission_negative_text" type="string"/>
+    <public name="media_capture_exif_permission_message" type="string"/>
+    <public name="media_capture_exif_permission_denied_message" type="string"/>
+    <public name="media_got_it" type="string"/>
+    <public name="media_loading_please_wait" type="string"/>
+    <public name="media_adding_watermark" type="string"/>
+    <public name="media_compressing" type="string"/>
+    <public name="media_processing_complete" type="string"/>
+    <public name="media_media_process_error" type="string"/>
+    <public name="media_compressing_progress" type="string"/>
+    <public name="media_compressing_progress_percent" type="string"/>
+    <public name="media_merging_av" type="string"/>
+    <public name="media_processing_images" type="string"/>
+    <public name="media_image_compress_success" type="string"/>
+    <public name="media_image_compress_error" type="string"/>
+    <public name="media_image_compress_failed" type="string"/>
+    <public name="media_processing_video" type="string"/>
+    <public name="media_compress_success" type="string"/>
+    <public name="media_video_load_error" type="string"/>
+    <public name="media_video_compress_error" type="string"/>
+    <public name="media_max_media_selected" type="string"/>
+    <public name="media_max_image_selected" type="string"/>
+    <public name="media_max_video_selected" type="string"/>
+    <public name="media_max_audio_selected" type="string"/>
+    <public name="media_max_file_selected" type="string"/>
+    <public name="media_can_select_more_images" type="string"/>
+    <public name="media_can_select_more_videos" type="string"/>
+    <public name="media_can_select_more_audios" type="string"/>
+    <public name="media_can_select_more_files" type="string"/>
+    <public name="media_can_select_more_media" type="string"/>
+    <public name="media_permission_denied_message" type="string"/>
+    <public name="media_go_to_settings" type="string"/>
+    <public name="media_album_not_supported" type="string"/>
+    <public name="media_camera_not_supported" type="string"/>
+    <public name="media_video_record_not_supported" type="string"/>
+    <public name="media_video_shoot_not_supported" type="string"/>
+    <public name="media_media_file_not_supported" type="string"/>
+    <public name="media_lifecycle_error" type="string"/>
 
 </resources>

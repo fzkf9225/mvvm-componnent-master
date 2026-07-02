@@ -8,4 +8,55 @@
     <string name="media_manage">Select from the multimedia file</string>
     <string name="media_confirm">OK</string>
     <string name="media_go_to_authorization">Go to Authorization</string>
+
+    <!-- MediaBuilder permission dialog -->
+    <string name="media_permission_message">We need your permission to access the camera, photo library, and microphone so you can take photos, record videos, and select files. These permissions are used only for the current feature and will not affect your privacy.</string>
+    <string name="media_capture_exif_permission_negative_text">Not now</string>
+    <string name="media_capture_exif_permission_message">Location permission is required to write latitude, longitude, and altitude into photo EXIF. It is used only for the current capture and will not be used for other purposes.</string>
+    <string name="media_capture_exif_permission_denied_message">Location permission was denied. The photo will still be saved, but location metadata may not be written.</string>
+
+    <!-- Tips & loading -->
+    <string name="media_got_it">Got it</string>
+    <string name="media_loading_please_wait">Loading, please wait…</string>
+    <string name="media_adding_watermark">Adding watermark to image…</string>
+    <string name="media_compressing">Compressing…</string>
+    <string name="media_processing_complete">Processing complete!</string>
+    <string name="media_media_process_error">Media processing error</string>
+    <string name="media_compressing_progress">Compressing (%1$d/%2$d)</string>
+    <string name="media_compressing_progress_percent">Compressing (%1$d/%2$d): %3$d%%</string>
+    <string name="media_merging_av">Merging audio and video (%1$d/%2$d)</string>
+    <string name="media_processing_images">Processing images…</string>
+    <string name="media_image_compress_success">Image compression successful!</string>
+    <string name="media_image_compress_error">Image compression error</string>
+    <string name="media_image_compress_failed">Image compression failed</string>
+    <string name="media_processing_video">Processing video…</string>
+    <string name="media_compress_success">Compression successful!</string>
+    <string name="media_video_load_error">Video loading error</string>
+    <string name="media_video_compress_error">Video compression error</string>
+
+    <!-- Selection limits -->
+    <string name="media_max_media_selected">You can select up to %1$d attachments</string>
+    <string name="media_max_image_selected">You can select up to %1$d images</string>
+    <string name="media_max_video_selected">You can select up to %1$d videos</string>
+    <string name="media_max_audio_selected">You can select up to %1$d audio files</string>
+    <string name="media_max_file_selected">You can select up to %1$d files</string>
+    <string name="media_can_select_more_images">You can select %1$d more images</string>
+    <string name="media_can_select_more_videos">You can select %1$d more videos</string>
+    <string name="media_can_select_more_audios">You can select %1$d more audio files</string>
+    <string name="media_can_select_more_files">You can select %1$d more files</string>
+    <string name="media_can_select_more_media">You can select %1$d more files</string>
+
+    <!-- Permission denied -->
+    <string name="media_permission_denied_message">You denied the required permission, which may prevent this feature from working. You can change it in Settings.</string>
+    <string name="media_go_to_settings">Go to Settings</string>
+
+    <!-- Action sheet unsupported actions -->
+    <string name="media_album_not_supported">Album is not supported</string>
+    <string name="media_camera_not_supported">Camera is not supported</string>
+    <string name="media_video_record_not_supported">Video recording is not supported</string>
+    <string name="media_video_shoot_not_supported">Video capture is not supported</string>
+    <string name="media_media_file_not_supported">Media file picker is not supported</string>
+
+    <!-- Lifecycle -->
+    <string name="media_lifecycle_error">Please use the lifecycle from an Activity or Fragment</string>
 </resources>

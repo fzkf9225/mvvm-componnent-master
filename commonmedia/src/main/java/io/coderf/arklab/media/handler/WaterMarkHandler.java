@@ -48,8 +48,7 @@ public class WaterMarkHandler extends Handler {
                 alpha,
                 mediaHelper.getMediaBuilder().getWaterMarkTextSize(),
                 mediaHelper.getMediaBuilder().getWaterMarkTextColor());
-        String outputPath = MediaUtil.getNoRepeatFileName(mediaHelper.getMediaBuilder().getImageOutPutPath(), "IMAGE_WM_", ".jpg");
-        File outputFile = new File(mediaHelper.getMediaBuilder().getImageOutPutPath(), outputPath + ".jpg");
+        File outputFile = mediaHelper.getMediaBuilder().buildImageOutputFile("IMAGE_WM_");
         MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
         if (mediaHelper.getMediaBuilder().isShowLoading()) {
             mediaHelper.getUIController().hideLoading();

@@ -8,4 +8,55 @@
     <string name="media_manage">从多媒体文件中选择</string>
     <string name="media_confirm">确定</string>
     <string name="media_go_to_authorization">前往授权</string>
+
+    <!-- MediaBuilder permission dialog -->
+    <string name="media_permission_message">接下来需要您同意相机、读取相册、录音等权限，以便拍照、录像和选择文件，我们承诺此次授权权限仅用于当前功能，不会涉及隐私安全。</string>
+    <string name="media_capture_exif_permission_negative_text">暂不授权</string>
+    <string name="media_capture_exif_permission_message">拍照写入位置信息需要定位权限，用于将经纬度与海拔写入照片 EXIF，仅用于当前拍照分析，不会用于其他用途。</string>
+    <string name="media_capture_exif_permission_denied_message">您拒绝了定位权限，照片仍将保存，但可能无法写入经纬度与海拔信息。</string>
+
+    <!-- Tips & loading -->
+    <string name="media_got_it">知道了</string>
+    <string name="media_loading_please_wait">正在加载,请稍后…</string>
+    <string name="media_adding_watermark">正在为图片添加水印…</string>
+    <string name="media_compressing">正在压缩…</string>
+    <string name="media_processing_complete">处理完成！</string>
+    <string name="media_media_process_error">媒体处理出现错误</string>
+    <string name="media_compressing_progress">压缩中（%1$d/%2$d）</string>
+    <string name="media_compressing_progress_percent">压缩中（%1$d/%2$d）：%3$d%%</string>
+    <string name="media_merging_av">正在合成音视频（%1$d/%2$d）</string>
+    <string name="media_processing_images">正在处理图片…</string>
+    <string name="media_image_compress_success">图片压缩成功！</string>
+    <string name="media_image_compress_error">图片压缩错误</string>
+    <string name="media_image_compress_failed">图片压缩出现错误</string>
+    <string name="media_processing_video">正在处理视频…</string>
+    <string name="media_compress_success">压缩成功！</string>
+    <string name="media_video_load_error">视频加载出现错误</string>
+    <string name="media_video_compress_error">视频压缩异常</string>
+
+    <!-- Selection limits -->
+    <string name="media_max_media_selected">最多只可选%1$d个附件</string>
+    <string name="media_max_image_selected">最多只可选%1$d张图片</string>
+    <string name="media_max_video_selected">最多只可选%1$d条视频</string>
+    <string name="media_max_audio_selected">最多只可选%1$d条音频</string>
+    <string name="media_max_file_selected">最多只可选%1$d个文件</string>
+    <string name="media_can_select_more_images">您最多还可选%1$d张图片</string>
+    <string name="media_can_select_more_videos">您最多还可再选%1$d条视频</string>
+    <string name="media_can_select_more_audios">您最多还可再选%1$d条音频</string>
+    <string name="media_can_select_more_files">您最多还可再选%1$d个文件</string>
+    <string name="media_can_select_more_media">您最多还可再选%1$d个文件</string>
+
+    <!-- Permission denied -->
+    <string name="media_permission_denied_message">您拒绝了当前权限，可能导致无法使用该功能，可前往设置修改</string>
+    <string name="media_go_to_settings">前往设置</string>
+
+    <!-- Action sheet unsupported actions -->
+    <string name="media_album_not_supported">暂不支持打开相册！</string>
+    <string name="media_camera_not_supported">暂不支持拍照！</string>
+    <string name="media_video_record_not_supported">暂不支持录像！</string>
+    <string name="media_video_shoot_not_supported">暂不支持拍摄视频！</string>
+    <string name="media_media_file_not_supported">暂不支持打开媒体文件！</string>
+
+    <!-- Lifecycle -->
+    <string name="media_lifecycle_error">请使用Activity或Fragment的lifecycle对象</string>
 </resources>

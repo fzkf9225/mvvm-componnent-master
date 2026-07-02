@@ -20,10 +20,11 @@ public class MediaProgressDialog extends Dialog {
     /**
      * 加载提示文字
      */
-    private String message = "正在加载,请稍后...";
+    private String message;
 
     public MediaProgressDialog(Context context) {
         super(context, R.style.media_loading_dialog);
+        message = context.getString(R.string.media_loading_please_wait);
     }
 
     public static MediaProgressDialog getInstance(Context context) {

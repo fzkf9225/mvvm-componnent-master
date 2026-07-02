@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.compressor.image.ImgCompressor;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
@@ -36,7 +37,8 @@ public class ImageCompressHandler extends Handler {
         this.srcUriList = srcUriList;
         imagesCompressList = new ArrayList<>();
         if (mediaHelper.getMediaBuilder().isShowLoading()) {
-            mediaHelper.getUIController().showLoading("正在处理图片...");
+            mediaHelper.getUIController().showLoading(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_processing_images));
         }
     }
 
@@ -55,7 +57,8 @@ public class ImageCompressHandler extends Handler {
             }
             if (srcUriList == null || srcUriList.isEmpty() ||
                     msg.what >= srcUriList.size()) {
-                mediaHelper.getUIController().showToast("图片压缩成功！");
+                mediaHelper.getUIController().showToast(
+                        mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_success));
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
@@ -78,13 +81,15 @@ public class ImageCompressHandler extends Handler {
                     ImgCompressor.getInstance(mediaHelper.getMediaBuilder().getContext())
                             .withListener(new ImageCompressListener(msg.what, srcUriList.size())).
                             starCompress(srcUriList.get(msg.what), mediaHelper.getMediaBuilder().getImageOutPutPath(), 720, 1280,
-                                    mediaHelper.getMediaBuilder().getImageQualityCompress());
+                                    mediaHelper.getMediaBuilder().getImageQualityCompress(),
+                                    mediaHelper.getMediaBuilder().getCaptureImageExtension());
                 }
             }
         } catch (Exception e) {
             LogUtil.show(MediaHelper.TAG, "图片压缩出现错误:" + e);
             e.printStackTrace();
-            mediaHelper.getUIController().showToast("图片压缩出现错误");
+            mediaHelper.getUIController().showToast(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_failed));
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
@@ -115,7 +120,9 @@ public class ImageCompressHandler extends Handler {
         @Override
         public void onCompressStart() {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
-                mediaHelper.getUIController().refreshLoading("压缩中（" + (index + 1) + "/" + totalCount + "）");
+                mediaHelper.getUIController().refreshLoading(
+                        mediaHelper.getMediaBuilder().getContext().getString(
+                                R.string.media_compressing_progress, index + 1, totalCount));
             }
         }
 
@@ -125,7 +132,8 @@ public class ImageCompressHandler extends Handler {
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
-                mediaHelper.getUIController().showToast("图片压缩错误");
+                mediaHelper.getUIController().showToast(
+                        mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_error));
                 return;
             }
             Message message = new Message();
@@ -140,7 +148,8 @@ public class ImageCompressHandler extends Handler {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
-            mediaHelper.getUIController().showToast("图片压缩错误");
+            mediaHelper.getUIController().showToast(
+                    mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_error));
         }
     }
 }

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Parcel;
+import android.text.TextUtils;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 
@@ -72,7 +73,20 @@ public class ImgCompressor {
      * @param maxFileSize 期望的输出图片的最大占用的存储空间
      * @return
      */
-    public Uri compressImage( Uri srcImageUri, String outputPath, int outWidth, int outHeight, int maxFileSize) {
+    public Uri compressImage(Uri srcImageUri, String outputPath, int outWidth, int outHeight, int maxFileSize) {
+        return compressImage(srcImageUri, outputPath, outWidth, outHeight, maxFileSize, ".jpg");
+    }
+
+    /**
+     * @param srcImageUri  原始图片的uri路径
+     * @param outputPath   输出目录
+     * @param outWidth     期望的输出图片的宽度
+     * @param outHeight    期望的输出图片的高度
+     * @param maxFileSize  期望的输出图片的最大占用的存储空间，单位 kb
+     * @param fileExtension 输出文件扩展名，如 .jpg；编码格式会根据扩展名自动选择
+     */
+    public Uri compressImage(Uri srcImageUri, String outputPath, int outWidth, int outHeight, int maxFileSize,
+                             String fileExtension) {
 
         //进行大小缩放来达到压缩的目的
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -181,16 +195,17 @@ public class ImgCompressor {
         }
 
         //进行有损压缩
+        Bitmap.CompressFormat compressFormat = MediaUtil.compressFormatFromExtension(fileExtension);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int options_ = 100;
-        actualOutBitmap.compress(Bitmap.CompressFormat.JPEG, options_, baos);//质量压缩方法，把压缩后的数据存放到baos中 (100表示不压缩，0表示压缩到最小)
+        actualOutBitmap.compress(compressFormat, options_, baos);//质量压缩方法，把压缩后的数据存放到baos中 (100表示不压缩，0表示压缩到最小)
 
         int baosLength = baos.toByteArray().length;
 
         while (baosLength / 1024 > maxFileSize) {//循环判断如果压缩后图片是否大于maxMemmorrySize,大于继续压缩
             baos.reset();//重置baos即让下一次的写入覆盖之前的内容
             options_ = Math.max(0, options_ - 10);//图片质量每次减少10
-            actualOutBitmap.compress(Bitmap.CompressFormat.JPEG, options_, baos);//将压缩后的图片保存到baos中
+            actualOutBitmap.compress(compressFormat, options_, baos);//将压缩后的图片保存到baos中
             baosLength = baos.toByteArray().length;
             if (options_ == 0)//如果图片的质量已降到最低则，不再进行压缩
             {
@@ -200,8 +215,10 @@ public class ImgCompressor {
         actualOutBitmap.recycle();
         //将bitmap保存到指定路径
         FileOutputStream fos = null;
-        String fileName = MediaUtil.getNoRepeatFileName(outputPath, "IMG_", ".jpg");
-        File outputFile = new File(outputPath, fileName + ".jpg");
+        String normalizedExtension = TextUtils.isEmpty(fileExtension) ? ".jpg"
+                : (fileExtension.startsWith(".") ? fileExtension : "." + fileExtension);
+        String fileName = MediaUtil.getNoRepeatFileName(outputPath, "IMG_", normalizedExtension);
+        File outputFile = new File(outputPath, fileName + normalizedExtension);
         try {
             fos = new FileOutputStream(outputFile);
             //包装缓冲流,提高写入速度
@@ -243,8 +260,17 @@ public class ImgCompressor {
         return sampleSize;
     }
 
-    public void starCompress( Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize) {
-        ThreadExecutor.getInstance().execute(new CompressRunnable(srcImageUri, outPath, outWidth, outHeight, maxFileSize));
+    public void starCompress(Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize) {
+        starCompress(srcImageUri, outPath, outWidth, outHeight, maxFileSize, ".jpg");
+    }
+
+    /**
+     * @param fileExtension 输出文件扩展名，如 .jpg；传 null 或空则默认 .jpg
+     */
+    public void starCompress(Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize,
+                             String fileExtension) {
+        ThreadExecutor.getInstance().execute(
+                new CompressRunnable(srcImageUri, outPath, outWidth, outHeight, maxFileSize, fileExtension));
     }
 
     public static class CompressResult implements Parcelable {
@@ -331,13 +357,16 @@ public class ImgCompressor {
         private final int outHeight;
         private final int maxFileSize;
         private final String outPath;
+        private final String fileExtension;
 
-        public CompressRunnable( Uri srcPath, String outPath, int outWidth, int outHeight, int maxFileSize) {
+        public CompressRunnable(Uri srcPath, String outPath, int outWidth, int outHeight, int maxFileSize,
+                                String fileExtension) {
             this.srcPath = srcPath;
             this.outPath = outPath;
             this.outWidth = outWidth;
             this.outHeight = outHeight;
             this.maxFileSize = maxFileSize;
+            this.fileExtension = fileExtension;
             if (compressListener != null) {
                 compressListener.onCompressStart();
             }
@@ -348,7 +377,7 @@ public class ImgCompressor {
             CompressResult compressResult = new CompressResult();
             Uri outPutPath = null;
             try {
-                outPutPath = compressImage( srcPath, outPath, outWidth, outHeight, maxFileSize);
+                outPutPath = compressImage(srcPath, outPath, outWidth, outHeight, maxFileSize, fileExtension);
             } catch (Exception e) {
                 e.printStackTrace();
                 if (compressListener != null) {

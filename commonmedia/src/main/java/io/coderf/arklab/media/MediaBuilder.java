@@ -7,6 +7,8 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
+import io.coderf.arklab.media.utils.MediaUtil;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
@@ -24,6 +27,23 @@ import io.coderf.arklab.media.utils.MediaUtil;
  * describe:mediaUtil配置类
  */
 public class MediaBuilder {
+    /**
+     * 系统相机拍照默认 MIME 类型
+     */
+    public static final String DEFAULT_CAPTURE_IMAGE_MIME_TYPE = "image/jpeg";
+    /**
+     * 系统相机拍照默认文件扩展名（含点号）
+     */
+    public static final String DEFAULT_CAPTURE_IMAGE_EXTENSION = ".jpg";
+    /**
+     * 系统相机录像默认 MIME 类型
+     */
+    public static final String DEFAULT_CAPTURE_VIDEO_MIME_TYPE = "video/mp4";
+    /**
+     * 系统相机录像默认文件扩展名（含点号）
+     */
+    public static final String DEFAULT_CAPTURE_VIDEO_EXTENSION = ".mp4";
+
     /**
      * 设置视频拍摄时长，单位：秒
      */
@@ -137,11 +157,11 @@ public class MediaBuilder {
     /**
      * 请求权限前的dialog确认按钮文字颜色
      */
-    private String permissionPositiveText = "前往授权";
+    private String permissionPositiveText;
     /**
-     * 请求权限前的dialog确认按钮文字颜色
+     * 请求权限前的dialog取消按钮文字
      */
-    private String permissionNegativeText = "取消";
+    private String permissionNegativeText;
     /**
      * 请求权限前的dialog提示文字，优先级高于permissionMessage
      */
@@ -149,7 +169,7 @@ public class MediaBuilder {
     /**
      * 请求权限前的dialog提示文字
      */
-    private String permissionMessage = "接下来需要您同意相机、读取相册、录音等权限，以便拍照、录像和选择文件，我们承诺此次授权权限仅用于当前功能，不会涉及隐私安全。";
+    private String permissionMessage;
     /**
      * 请求权限前的dialog确认按钮点击事件
      */
@@ -182,13 +202,27 @@ public class MediaBuilder {
      * 拍照 EXIF 定位权限：是否展示授权前说明弹窗（与 {@link #isShowPermissionDialog} 独立）
      */
     private boolean showCaptureExifPermissionDialog = true;
-    private String captureExifPermissionPositiveText = "前往授权";
-    private String captureExifPermissionNegativeText = "暂不授权";
+    private String captureExifPermissionPositiveText;
+    private String captureExifPermissionNegativeText;
     private SpannableString captureExifPermissionSpannableContent;
-    private String captureExifPermissionMessage =
-            "拍照写入位置信息需要定位权限，用于将经纬度与海拔写入照片 EXIF，仅用于当前拍照分析，不会用于其他用途。";
-    private String captureExifPermissionDeniedMessage =
-            "您拒绝了定位权限，照片仍将保存，但可能无法写入经纬度与海拔信息。";
+    private String captureExifPermissionMessage;
+    private String captureExifPermissionDeniedMessage;
+    /**
+     * 系统相机拍照输出 MIME 类型，默认 {@link #DEFAULT_CAPTURE_IMAGE_MIME_TYPE}
+     */
+    private String captureImageMimeType = DEFAULT_CAPTURE_IMAGE_MIME_TYPE;
+    /**
+     * 系统相机拍照输出文件扩展名（含点号），默认 {@link #DEFAULT_CAPTURE_IMAGE_EXTENSION}
+     */
+    private String captureImageExtension = DEFAULT_CAPTURE_IMAGE_EXTENSION;
+    /**
+     * 系统相机录像输出 MIME 类型，默认 {@link #DEFAULT_CAPTURE_VIDEO_MIME_TYPE}
+     */
+    private String captureVideoMimeType = DEFAULT_CAPTURE_VIDEO_MIME_TYPE;
+    /**
+     * 系统相机录像输出文件扩展名（含点号），默认 {@link #DEFAULT_CAPTURE_VIDEO_EXTENSION}
+     */
+    private String captureVideoExtension = DEFAULT_CAPTURE_VIDEO_EXTENSION;
     private boolean showCaptureExifPermissionDeniedTip = true;
     private OnDialogInterfaceClickListener onCaptureExifPermissionPositiveClickListener;
     private OnDialogInterfaceClickListener onCaptureExifPermissionNegativeClickListener;
@@ -197,6 +231,20 @@ public class MediaBuilder {
 
     public MediaBuilder(@NotNull Context context) {
         this.mContext = context;
+        initDefaultStrings(context);
+    }
+
+    /**
+     * 从字符串资源加载 dialog 默认文案，跟随系统语言（values / values-zh）。
+     */
+    private void initDefaultStrings(@NonNull Context context) {
+        permissionPositiveText = context.getString(R.string.media_go_to_authorization);
+        permissionNegativeText = context.getString(R.string.media_cancel);
+        permissionMessage = context.getString(R.string.media_permission_message);
+        captureExifPermissionPositiveText = context.getString(R.string.media_go_to_authorization);
+        captureExifPermissionNegativeText = context.getString(R.string.media_capture_exif_permission_negative_text);
+        captureExifPermissionMessage = context.getString(R.string.media_capture_exif_permission_message);
+        captureExifPermissionDeniedMessage = context.getString(R.string.media_capture_exif_permission_denied_message);
     }
 
     public int getAudioMaxSelectedCount() {
@@ -756,7 +804,7 @@ public class MediaBuilder {
             if (TextUtils.isEmpty(videoSubPath)) {
                 return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mContext) + File.separator + "video";
             } else {
-                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + imageSubPath;
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + videoSubPath;
             }
         } else {
             if (TextUtils.isEmpty(videoSubPath)) {
@@ -1008,6 +1056,181 @@ public class MediaBuilder {
     public MediaBuilder setCaptureExifPermissionNegativeTextColor(@ColorInt int captureExifPermissionNegativeTextColor) {
         this.captureExifPermissionNegativeTextColor = captureExifPermissionNegativeTextColor;
         return this;
+    }
+
+    /**
+     * 获取系统相机拍照输出 MIME 类型
+     *
+     * @return MIME 类型，默认 image/jpeg
+     */
+    public String getCaptureImageMimeType() {
+        return captureImageMimeType;
+    }
+
+    /**
+     * 设置系统相机拍照输出 MIME 类型
+     *
+     * @param captureImageMimeType MIME 类型，如 image/jpeg；传 null 或空则恢复默认
+     * @return this
+     */
+    public MediaBuilder setCaptureImageMimeType(@Nullable String captureImageMimeType) {
+        this.captureImageMimeType = TextUtils.isEmpty(captureImageMimeType)
+                ? DEFAULT_CAPTURE_IMAGE_MIME_TYPE : captureImageMimeType;
+        return this;
+    }
+
+    /**
+     * 获取系统相机拍照输出文件扩展名
+     *
+     * @return 扩展名（含点号），默认 .jpg
+     */
+    public String getCaptureImageExtension() {
+        return captureImageExtension;
+    }
+
+    /**
+     * 设置系统相机拍照输出文件扩展名；同时作用于压缩、水印等图片输出的文件名。
+     * 压缩/水印写入时会根据扩展名选择 JPEG、PNG 或 WEBP 编码。
+     *
+     * @param captureImageExtension 扩展名，如 .jpg 或 jpg；传 null 或空则恢复默认
+     * @return this
+     */
+    public MediaBuilder setCaptureImageExtension(@Nullable String captureImageExtension) {
+        this.captureImageExtension = normalizeExtension(captureImageExtension, DEFAULT_CAPTURE_IMAGE_EXTENSION);
+        return this;
+    }
+
+    /**
+     * 同时设置系统相机拍照输出的 MIME 类型与扩展名。
+     * 应用通过 {@link android.provider.MediaStore#EXTRA_OUTPUT} 预创建输出 Uri 并指定 MIME/文件名；
+     * 实际编码由系统相机完成，多数设备会按扩展名写入对应格式。
+     *
+     * @param mimeType MIME 类型，如 image/jpeg；传 null 或空则使用默认
+     * @param fileExtension 文件扩展名，如 .jpg；传 null 或空则使用默认
+     * @return this
+     */
+    public MediaBuilder setCaptureImageFormat(@Nullable String mimeType, @Nullable String fileExtension) {
+        return setCaptureImageMimeType(mimeType).setCaptureImageExtension(fileExtension);
+    }
+
+    /**
+     * 获取系统相机录像输出 MIME 类型
+     *
+     * @return MIME 类型，默认 video/mp4
+     */
+    public String getCaptureVideoMimeType() {
+        return captureVideoMimeType;
+    }
+
+    /**
+     * 设置系统相机录像输出 MIME 类型
+     *
+     * @param captureVideoMimeType MIME 类型，如 video/mp4；传 null 或空则恢复默认
+     * @return this
+     */
+    public MediaBuilder setCaptureVideoMimeType(@Nullable String captureVideoMimeType) {
+        this.captureVideoMimeType = TextUtils.isEmpty(captureVideoMimeType)
+                ? DEFAULT_CAPTURE_VIDEO_MIME_TYPE : captureVideoMimeType;
+        return this;
+    }
+
+    /**
+     * 获取系统相机录像输出文件扩展名
+     *
+     * @return 扩展名（含点号），默认 .mp4
+     */
+    public String getCaptureVideoExtension() {
+        return captureVideoExtension;
+    }
+
+    /**
+     * 设置系统相机录像输出文件扩展名；同时作用于视频压缩输出的文件名。
+     * 视频压缩底层仍输出 MP4 容器，扩展名仅影响最终文件名。
+     *
+     * @param captureVideoExtension 扩展名，如 .mp4 或 mp4；传 null 或空则恢复默认
+     * @return this
+     */
+    public MediaBuilder setCaptureVideoExtension(@Nullable String captureVideoExtension) {
+        this.captureVideoExtension = normalizeExtension(captureVideoExtension, DEFAULT_CAPTURE_VIDEO_EXTENSION);
+        return this;
+    }
+
+    /**
+     * 同时设置系统相机录像输出的 MIME 类型与扩展名。
+     * 应用通过 {@link android.provider.MediaStore#EXTRA_OUTPUT} 预创建输出 Uri 并指定 MIME/文件名；
+     * 实际编码由系统相机完成，多数设备会按扩展名写入对应格式。
+     *
+     * @param mimeType MIME 类型，如 video/mp4；传 null 或空则使用默认
+     * @param fileExtension 文件扩展名，如 .mp4；传 null 或空则使用默认
+     * @return this
+     */
+    public MediaBuilder setCaptureVideoFormat(@Nullable String mimeType, @Nullable String fileExtension) {
+        return setCaptureVideoMimeType(mimeType).setCaptureVideoExtension(fileExtension);
+    }
+
+    /**
+     * 生成系统相机拍照输出文件名（不含路径）
+     *
+     * @return 如 IMAGE_20250702120000.jpg
+     */
+    public String buildCaptureImageFileName() {
+        return "IMAGE_" + MediaUtil.getCurrentTime() + captureImageExtension;
+    }
+
+    /**
+     * 生成系统相机录像输出文件名（不含路径）
+     *
+     * @return 如 VIDEO_20250702120000.mp4
+     */
+    public String buildCaptureVideoFileName() {
+        return "VIDEO_" + MediaUtil.getCurrentTime() + captureVideoExtension;
+    }
+
+    /**
+     * 生成图片类输出（压缩、水印等）不重名基础文件名，不含路径
+     *
+     * @param prefix 文件名前缀，如 IMG_、IMAGE_WM_
+     * @return 不含扩展名的基础文件名
+     */
+    public String buildImageOutputBaseName(String prefix) {
+        return MediaUtil.getNoRepeatFileName(getImageOutPutPath(), prefix, captureImageExtension);
+    }
+
+    /**
+     * 生成图片类输出（压缩、水印等）完整 File，扩展名跟随 {@link #captureImageExtension}
+     *
+     * @param prefix 文件名前缀，如 IMG_、IMAGE_WM_
+     * @return 输出文件对象
+     */
+    public File buildImageOutputFile(String prefix) {
+        return new File(getImageOutPutPath(), buildImageOutputBaseName(prefix) + captureImageExtension);
+    }
+
+    /**
+     * 生成视频类输出（压缩等）不重名基础文件名，不含路径
+     *
+     * @param prefix 文件名前缀，如 VIDEO_
+     * @return 不含扩展名的基础文件名
+     */
+    public String buildVideoOutputBaseName(String prefix) {
+        return MediaUtil.getNoRepeatFileName(getVideoOutPutPath(), prefix, captureVideoExtension);
+    }
+
+    /**
+     * 生成视频类输出（压缩等）完整 File，扩展名跟随 {@link #captureVideoExtension}
+     *
+     * @param prefix 文件名前缀，如 VIDEO_
+     * @return 输出文件对象
+     */
+    public File buildVideoOutputFile(String prefix) {
+        return new File(getVideoOutPutPath(), buildVideoOutputBaseName(prefix) + captureVideoExtension);
+    }
+
+    private static String normalizeExtension(@Nullable String extension, String defaultExtension) {
+        if (TextUtils.isEmpty(extension)) {
+            return defaultExtension;
+        }
+        return extension.startsWith(".") ? extension : "." + extension;
     }
 
     /**

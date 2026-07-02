@@ -118,7 +118,7 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
         int id = v.getId();
         if (id == R.id.choosePhoto) {
             if (mediaType == CAMERA || mediaType == SHOOT || mediaType == CAMERA_SHOOT) {
-                Toast.makeText(getContext(), "暂不支持打开相册！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.media_album_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
             ActionSheetDismissTracker.markUserChoseAction(this);
@@ -130,7 +130,7 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
             }
         } else if (id == R.id.takePhoto) {
             if (mediaType == ALBUM || mediaType == SHOOT) {
-                Toast.makeText(getContext(), "暂不支持拍照！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.media_camera_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
             ActionSheetDismissTracker.markUserChoseAction(this);
@@ -142,7 +142,7 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
             }
         } else if (id == R.id.shoot) {
             if (mediaType == ALBUM || mediaType == CAMERA) {
-                Toast.makeText(getContext(), "暂不支持录像！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getString(R.string.media_video_record_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
             ActionSheetDismissTracker.markUserChoseAction(this);
