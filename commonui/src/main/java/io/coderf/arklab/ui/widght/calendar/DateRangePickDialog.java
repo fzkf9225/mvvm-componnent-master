@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -28,9 +29,12 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import java.util.Objects;
+
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
@@ -693,6 +697,13 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         }
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(gravity);
+        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
+                Color.WHITE,
+                DensityUtil.dp2px(getContext(), 16f),
+                DensityUtil.dp2px(getContext(), 16f),
+                0,
+                0
+        )));
     }
 
     private void applyTitleConfig() {
