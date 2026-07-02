@@ -26,7 +26,8 @@ public class KeyBoardUtil {
     {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mEditText, InputMethodManager.RESULT_SHOWN);
+        mEditText.requestFocus();  // 先获取焦点
+        imm.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
                 InputMethodManager.HIDE_IMPLICIT_ONLY);
     }

@@ -9,8 +9,12 @@ import java.math.RoundingMode;
 import io.coderf.arklab.common.bean.Gps;
 
 /**
- * Created by fz on 2024/2/26 13:30
- * describe :经纬度格式转换工具类，坐标系转换
+ * :经纬度格式转换工具类，坐标系转换
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/7/2 10:13
  */
 public class GeoMapUtil {
     private static final double pi = 3.1415926535897932384626;
@@ -56,6 +60,21 @@ public class GeoMapUtil {
     }
 
     /**
+     * WGS84 转百度坐标系 (BD-09)
+     *
+     * @param lon 经度
+     * @param lat 纬度
+     * @return Gps
+     */
+    public static Gps gps84_To_Bd09(double lon, double lat) {
+        Gps gcj02 = gps84_To_Gcj02(lon, lat);
+        if (gcj02 == null) {
+            return gcj02_To_Bd09(lon, lat);
+        }
+        return gcj02_To_Bd09(gcj02.getLongitude(), gcj02.getLatitude());
+    }
+
+    /**
      * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换算法 将 GCJ-02 坐标转换成 BD-09 坐标
      *
      * @param gg_lat 纬度
@@ -83,18 +102,15 @@ public class GeoMapUtil {
     }
 
     /**
-     * (BD-09)-->84
+     * BD-09 转 WGS84
      *
-     * @param bd_lat 纬度
      * @param bd_lon 经度
+     * @param bd_lat 纬度
      * @return Gps
      */
-    public static Gps bd09_To_Gps84(double bd_lon,double bd_lat) {
-
-        Gps gcj02 = bd09_To_Gcj02(bd_lon,bd_lat);
-        return gcj02_To_Gps84(gcj02.getLatitude(),
-                gcj02.getLongitude());
-
+    public static Gps bd09_To_Gps84(double bd_lon, double bd_lat) {
+        Gps gcj02 = bd09_To_Gcj02(bd_lon, bd_lat);
+        return gcj02_To_Gps84(gcj02.getLongitude(), gcj02.getLatitude());
     }
 
     public static boolean outOfChina(double lon, double lat) {

@@ -32,6 +32,7 @@ import io.coderf.arklab.common.listener.OnUploadRetryClickListener;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.common.FileUploadUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.media.MediaBuilder;
 import io.coderf.arklab.media.MediaHelper;
@@ -221,7 +222,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         Disposable disposable = Observable.fromIterable(attachmentList)
                 .flatMap(attachmentBean -> {
                     // 创建文件部分并处理上传进度
-                    MultipartBody.Part filePart = FileUtil.createTempFilePart(getContext(),
+                    MultipartBody.Part filePart = FileUploadUtil.createTempFilePart(getContext(),
                             Uri.parse(attachmentBean.getPath()),
                             (uri, currentPos, totalCount, percent) -> handler.post(() ->
                                     mediaAddAdapter.updateUploadStatus(attachmentBean.getMobileId(),

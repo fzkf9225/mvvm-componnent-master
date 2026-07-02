@@ -3,13 +3,10 @@ package io.coderf.arklab.common.utils.common;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
@@ -20,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,30 +30,30 @@ import java.io.RandomAccessFile;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.IntStream;
 
-import io.coderf.arklab.common.listener.FileUploadProgressListener;
 import io.coderf.arklab.common.utils.encode.MD5Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.utils.upload.ProgressRequestBody;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 
+/**
+ * 文件工具类，提供文件读写、复制、删除、大小格式化等能力。
+ * <p>上传相关方法已迁移至 {@link FileUploadUtil}，此处保留委托以兼容旧调用。
+ */
 public final class FileUtil {
     private static final String TAG = "FileUtils";
+    private static final int BUFFER_SIZE = 4096;
+    private static final int LARGE_BUFFER_SIZE = 1024 * 1024;
 
     private FileUtil() {
-        throw new Error("error");
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
@@ -81,40 +77,48 @@ public final class FileUtil {
         return new File(saveBasePath, tempFileName + ".temp.download");
     }
 
+    /**
+     * 从 URL 中提取文件扩展名（取文件名中第一个 {@code .} 后的部分，忽略 query 参数）。
+     *
+     * @param url 文件 URL
+     * @return 扩展名，无扩展名时返回空字符串
+     */
     public static String getUrlFileExtensionName(String url) {
         if (url == null || url.isEmpty()) {
             return "";
         }
-
-        String[] tmp = url.split("/"); // 按照"/"分割
-        String pp = tmp[tmp.length - 1]; // 获取最后一部分，即文件名和参数
-        tmp = pp.split("\\?"); // 把参数和文件名分割开
-        if (tmp.length == 0) {
+        String[] segments = url.split("/");
+        String filePart = segments[segments.length - 1];
+        String[] nameParts = filePart.split("\\?");
+        if (nameParts.length == 0) {
             return "";
         }
-
-        String[] nameTemp = tmp[0].split("\\."); // 按照"."分割
-        System.out.println("nameTemp: " + Arrays.toString(nameTemp));
-        return nameTemp.length >= 2 ? nameTemp[1] : "";
+        String[] dotParts = nameParts[0].split("\\.");
+        return dotParts.length >= 2 ? dotParts[1] : "";
     }
 
+    /**
+     * 读取文件全部字节内容。
+     *
+     * @param file 目标文件
+     * @return 文件字节数组；读取失败返回空数组
+     */
     public static byte[] getFileToByte(File file) {
-        byte[] by = new byte[(int) file.length()];
-        try {
-            InputStream is = new FileInputStream(file);
-            ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
-            byte[] bb = new byte[1024 * 1024];
-            int ch;
-            ch = is.read(bb);
-            while (ch != -1) {
-                bytestream.write(bb, 0, ch);
-                ch = is.read(bb);
+        if (file == null || !file.isFile()) {
+            return new byte[0];
+        }
+        try (InputStream is = new FileInputStream(file);
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[LARGE_BUFFER_SIZE];
+            int read;
+            while ((read = is.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
             }
-            by = bytestream.toByteArray();
+            return outputStream.toByteArray();
         } catch (Exception ex) {
             ex.printStackTrace();
+            return new byte[0];
         }
-        return by;
     }
 
     /**
@@ -127,6 +131,13 @@ public final class FileUtil {
         return Environment.MEDIA_MOUNTED.equals(status);
     }
 
+    /**
+     * 将 Bitmap 保存为 JPEG 文件到外部存储目录。
+     *
+     * @param bitmap   图片对象
+     * @param fileName 文件名（含路径前缀）
+     * @return 保存后的文件；失败返回 null
+     */
     public static File getFile(Bitmap bitmap, String fileName) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -150,6 +161,13 @@ public final class FileUtil {
         return file;
     }
 
+    /**
+     * 将网络响应体保存到指定路径（从头写入）。
+     *
+     * @param filePath 目标文件路径
+     * @param body     响应体
+     * @return 保存后的文件；失败返回 null
+     */
     public static File saveFile(String filePath, ResponseBody body) {
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -160,10 +178,10 @@ public final class FileUtil {
             }
             file = new File(filePath);
             if (!file.exists()) {
-                boolean result = file.createNewFile();
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
             }
-            long fileSizeDownloaded = 0;
-            byte[] fileReader = new byte[4096];
+            byte[] fileReader = new byte[BUFFER_SIZE];
 
             inputStream = body.byteStream();
             outputStream = new FileOutputStream(file);
@@ -174,10 +192,7 @@ public final class FileUtil {
                     break;
                 }
                 outputStream.write(fileReader, 0, read);
-                fileSizeDownloaded += read;
-
             }
-
             outputStream.flush();
 
         } catch (Exception e) {
@@ -204,9 +219,12 @@ public final class FileUtil {
     }
 
     /**
-     * @param filePath
-     * @param start    起始位置
-     * @param body
+     * 断点续传：从指定偏移位置写入响应体内容。
+     *
+     * @param filePath 目标文件路径
+     * @param start    起始写入位置（字节偏移）
+     * @param body     响应体
+     * @return 保存后的文件；失败返回 null
      */
     public static File saveFile(String filePath, long start, ResponseBody body) {
         InputStream inputStream = null;
@@ -217,7 +235,7 @@ public final class FileUtil {
 
             raf = new RandomAccessFile(filePath, "rw");
             inputStream = body.byteStream();
-            byte[] fileReader = new byte[4096];
+            byte[] fileReader = new byte[BUFFER_SIZE];
 
             raf.seek(start);
 
@@ -254,6 +272,13 @@ public final class FileUtil {
 
     }
 
+    /**
+     * 将 Bitmap 保存为 JPEG 到指定目录，自动生成不重复文件名。
+     *
+     * @param path  保存目录
+     * @param image 图片对象
+     * @return 保存后的绝对路径
+     */
     public static String saveBitmap(String path, Bitmap image) {
         if (TextUtils.isEmpty(path)) {
             return null;
@@ -737,6 +762,12 @@ public final class FileUtil {
         return (filePosi >= extenPosi) ? "" : filePath.substring(extenPosi + 1);
     }
 
+    /**
+     * 获取路径的最后一段（文件名或末级目录名）。
+     *
+     * @param path 文件路径
+     * @return 最后一段；路径为空返回 null
+     */
     public static String getLastPath(String path) {
         if (TextUtils.isEmpty(path)) {
             return null;
@@ -754,6 +785,13 @@ public final class FileUtil {
         return pathArr[pathArr.length - 1];
     }
 
+    /**
+     * 获取路径的最后一段，为空时返回默认值。
+     *
+     * @param path        文件路径
+     * @param defaultPath 默认返回值
+     * @return 最后一段或默认值
+     */
     public static String getLastPath(String path, String defaultPath) {
         if (TextUtils.isEmpty(path)) {
             return defaultPath;
@@ -771,8 +809,14 @@ public final class FileUtil {
         return TextUtils.isEmpty(pathArr[pathArr.length - 1]) ? defaultPath : pathArr[pathArr.length - 1];
     }
 
-    public static String getDefaultBasePath(Context mContext) {
-        String packageName = mContext.getPackageName();
+    /**
+     * 从包名中提取应用标识（取第二段，如 com.example.app → example）。
+     *
+     * @param context 上下文
+     * @return 应用标识
+     */
+    public static String getDefaultBasePath(Context context) {
+        String packageName = context.getPackageName();
         String[] packageArr = packageName.split("\\.");
         if (packageArr.length == 0) {
             return "";
@@ -915,6 +959,12 @@ public final class FileUtil {
         return (filePosi == -1) ? filePath : filePath.substring(filePosi + 1);
     }
 
+    /**
+     * 从 URL 中提取文件名，失败时返回时间戳.apk。
+     *
+     * @param url 文件 URL
+     * @return 文件名
+     */
     public static String getFileNameByUrl(String url) {
         // 获取文件路径部分
         URL fileUrl = null;
@@ -1071,39 +1121,67 @@ public final class FileUtil {
         return (file.exists() && file.isFile() ? file.length() : -1);
     }
 
+    /**
+     * 通过 Content URI 获取文件大小。
+     *
+     * @param context 上下文
+     * @param uri     文件 URI
+     * @return 文件字节大小；无法获取时返回 -1
+     */
+    @SuppressLint("Range")
     public static long getFileSize(Context context, Uri uri) {
-        if (uri == null) {
+        if (context == null || uri == null) {
             return -1;
         }
-
-        Cursor cursor = context.getContentResolver().query(uri, new String[]{
-                MediaStore.Files.FileColumns.SIZE
-        }, null, null, null);
-        long size = cursor.getLong(0);
-        LogUtil.logger(TAG, "size:" + size);
-        return size;
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(
+                    uri,
+                    new String[]{OpenableColumns.SIZE},
+                    null,
+                    null,
+                    null
+            );
+            if (cursor != null && cursor.moveToFirst()) {
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (sizeIndex >= 0) {
+                    long size = cursor.getLong(sizeIndex);
+                    LogUtil.logger(TAG, "size:" + size);
+                    return size;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return -1;
     }
 
     /**
-     * 保存文件到本地
+     * 将字节数组保存到指定目录，文件名前缀为当前时间戳。
      *
-     * @param b
-     * @param path 路径
-     * @return
+     * @param bytes    字节数据
+     * @param path     目录路径
+     * @param fileName 文件名后缀
+     * @return 保存后的文件
      */
-    public static File saveFileFromBytes(byte[] b, String path, String fileName) {
+    public static File saveFileFromBytes(byte[] bytes, String path, String fileName) {
         File rootFile = new File(path);
         if (!rootFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             rootFile.mkdirs();
         }
-        String outputFile = path + String.valueOf(System.currentTimeMillis()) + fileName;
+        String outputFile = path + System.currentTimeMillis() + fileName;
         BufferedOutputStream stream = null;
         File file = null;
         try {
             file = new File(outputFile);
             FileOutputStream fstream = new FileOutputStream(file);
             stream = new BufferedOutputStream(fstream);
-            stream.write(b);
+            stream.write(bytes);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -1151,214 +1229,172 @@ public final class FileUtil {
         return fileSizeStr;
     }
 
-    @SuppressLint("Range")
-    public static Map<String, RequestBody> createFormDataRequestBody(Context mContext, Uri uri) {
-        Map<String, RequestBody> formDataMap = new HashMap<>(0);
-        ContentResolver contentResolver = mContext.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-            formDataMap.put("name", RequestBody.create(MediaType.parse("multipart/form-data"), TextUtils.isEmpty(name) ? "unknown" : name));
-            cursor.close();
-        } else {
-            throw new RuntimeException("无附件操作权限");
-        }
-        return formDataMap;
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createFormDataRequestBody(Context, Uri)}
+     */
+    @Deprecated
+    public static Map<String, RequestBody> createFormDataRequestBody(Context context, Uri uri) {
+        return FileUploadUtil.createFormDataRequestBody(context, uri);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static List<MultipartBody.Part> createFilePart(Context context, List<Uri> uriList,
+                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createFilePart(context, uriList, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createFilePart(Context context, Uri uri,
+                                                    io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createFilePart(context, uri, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createFilePart(Context context, Uri uri, int currentPos, int totalCount,
+                                                    io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createFilePart(context, uri, currentPos, totalCount, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static List<MultipartBody.Part> createAssetsFilePart(Context context, List<Uri> uriList,
+                                                                io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createAssetsFilePart(context, uriList, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createAssetsFilePart(Context context, Uri uri,
+                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createAssetsFilePart(context, uri, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createAssetsFilePart(Context context, Uri uri, int currentPos, int totalCount,
+                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createAssetsFilePart(context, uri, currentPos, totalCount, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static List<MultipartBody.Part> createTempFilePart(Context context, List<Uri> uriList,
+                                                              io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createTempFilePart(context, uriList, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createTempFilePart(Context context, Uri uri,
+                                                        io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createTempFilePart(context, uri, uploadListener);
+    }
+
+    /**
+     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
+     */
+    @Deprecated
+    public static MultipartBody.Part createTempFilePart(Context context, Uri uri, int currentPos, int totalCount,
+                                                        io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
+        return FileUploadUtil.createTempFilePart(context, uri, currentPos, totalCount, uploadListener);
     }
 
     @SuppressLint("Range")
-    public static List<MultipartBody.Part> createFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
-        if (uriList == null || uriList.isEmpty()) {
-            return null;
-        }
-        List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        IntStream.range(0, uriList.size()).forEach(i ->
-                multiList.add(createFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
-        );
-        return multiList;
-    }
-
-    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
-        return createFilePart(mContext, uri, 0, 1, uploadListener);
-    }
-
-    @SuppressLint("Range")
-    public static MultipartBody.Part createFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
-        try {
-            ContentResolver contentResolver = mContext.getContentResolver();
-            Cursor cursor = contentResolver.query(uri, null, null, null, null);
-            String fileName = null;
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                cursor.close();
-            }
-            ParcelFileDescriptor pdf = contentResolver.openFileDescriptor(uri, "r");
-            if (pdf == null) {
-                throw new RuntimeException("读取文件失败");
-            }
-            FileDescriptor fileDescriptor = pdf.getFileDescriptor();
-            RequestBody requestFile = RequestBody.create(
-                    fileDescriptor,
-                    MediaType.parse("multipart/form-data")
-            );
-            if (uploadListener == null) {
-                pdf.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
-            } else {
-                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
-                pdf.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException("无附件操作权限");
-        } catch (IOException e) {
-            throw new RuntimeException("读取文件失败");
-        }
-    }
-
-    @SuppressLint("Range")
-    public static List<MultipartBody.Part> createAssetsFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
-        if (uriList == null || uriList.isEmpty()) {
-            return null;
-        }
-        List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        IntStream.range(0, uriList.size()).forEach(i ->
-                multiList.add(createAssetsFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
-        );
-        return multiList;
-    }
-
-    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
-        return createAssetsFilePart(mContext, uri, 0, 1, uploadListener);
-    }
-
-    @SuppressLint("Range")
-    public static MultipartBody.Part createAssetsFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
-        try {
-            ContentResolver contentResolver = mContext.getContentResolver();
-            Cursor cursor = contentResolver.query(uri, null, null, null, null);
-            String fileName = null;
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                cursor.close();
-            }
-            AssetFileDescriptor afd = contentResolver.openAssetFileDescriptor(uri, "r");
-            if (afd == null) {
-                throw new RuntimeException("读取文件失败");
-            }
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[4 * 1024];
-            int bytesRead;
-            while ((bytesRead = afd.createInputStream().read(buffer)) != -1) {
-                byteArrayOutputStream.write(buffer, 0, bytesRead);
-            }
-            RequestBody requestFile = RequestBody.create(
-                    byteArrayOutputStream.toByteArray(),
-                    MediaType.parse("multipart/form-data")
-            );
-            if (uploadListener == null) {
-                afd.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
-            } else {
-                ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
-                afd.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, progressRequestBody);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException("无附件操作权限");
-        } catch (IOException e) {
-            throw new RuntimeException("读取文件失败");
-        }
-    }
-
-    @SuppressLint("Range")
-    public static List<MultipartBody.Part> createTempFilePart(Context mContext, List<Uri> uriList, FileUploadProgressListener uploadListener) {
-        if (uriList == null || uriList.isEmpty()) {
-            return null;
-        }
-        List<MultipartBody.Part> multiList = new ArrayList<>(uriList.size());
-        IntStream.range(0, uriList.size()).forEach(i ->
-                multiList.add(createTempFilePart(mContext, uriList.get(i), i, uriList.size(), uploadListener))
-        );
-        return multiList;
-    }
-
-    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, FileUploadProgressListener uploadListener) {
-        return createTempFilePart(mContext, uri, 0, 1, uploadListener);
-    }
-
-    @SuppressLint("Range")
-    public static MultipartBody.Part createTempFilePart(Context mContext, Uri uri, int currentPos, int totalCount, FileUploadProgressListener uploadListener) {
-        try {
-            ContentResolver contentResolver = mContext.getContentResolver();
-            Cursor cursor = contentResolver.query(uri, null, null, null, null);
-            String fileName = null;
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                cursor.close();
-            }
-            // 创建临时文件
-            File tempFile = new File(mContext.getCacheDir(), TextUtils.isEmpty(fileName) ? "file" : fileName);
-            tempFile.deleteOnExit();//删除旧文件
-            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
-            FileOutputStream outputStream = new FileOutputStream(tempFile);
-            if (inputStream == null) {
-                return null;
-            }
-            byte[] buffer = new byte[4 * 1024]; // 4K buffer
-            int read;
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-            }
-            outputStream.flush();
-            if (!tempFile.exists()) {
-                throw new RuntimeException("临时文件生成失败");
-            }
-            RequestBody requestFile = RequestBody.create(tempFile, MediaType.parse("multipart/form-data"));
-
-            if (uploadListener == null) {
-                inputStream.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestFile);
-            } else {
-                ProgressRequestBody requestBody = new ProgressRequestBody(requestFile, uri, currentPos, totalCount, uploadListener);
-                inputStream.close();
-                return MultipartBody.Part.createFormData("file", TextUtils.isEmpty(fileName) ? "file" : fileName, requestBody);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("无附件操作权限");
-        }
-    }
-
-    @SuppressLint("Range")
-    public static File copyFileToCacheDir(Context mContext, Uri uri) throws IOException {
-        ContentResolver contentResolver = mContext.getContentResolver();
+    public static File copyFileToCacheDir(Context context, Uri uri) throws IOException {
+        ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
         String fileName = null;
         if (cursor != null && cursor.moveToFirst()) {
             fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             cursor.close();
         }
-        // 创建临时文件
-        File tempFile = new File(mContext.getCacheDir(), TextUtils.isEmpty(fileName) ? "file" : fileName);
-        tempFile.deleteOnExit();//删除旧文件
-        InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
-        FileOutputStream outputStream = new FileOutputStream(tempFile);
+        File tempFile = new File(context.getCacheDir(), TextUtils.isEmpty(fileName) ? "file" : fileName);
+        tempFile.deleteOnExit();
+        InputStream inputStream = contentResolver.openInputStream(uri);
         if (inputStream == null) {
             return null;
         }
-        byte[] buffer = new byte[4 * 1024]; // 4K buffer
-        int read;
-        while ((read = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, read);
+        try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            outputStream.flush();
+        } finally {
+            inputStream.close();
         }
-        outputStream.flush();
-        inputStream.close();
-
         return tempFile;
+    }
+
+    /**
+     * 判断文件路径是否为空或文件不存在。
+     *
+     * @param filePath 文件路径
+     * @return 不存在返回 true
+     */
+    public static boolean isFileNotExist(String filePath) {
+        return !isFileExist(filePath);
+    }
+
+    /**
+     * 获取目录下所有文件的总大小（递归计算）。
+     *
+     * @param path 目录或文件路径
+     * @return 总字节数；路径无效返回 -1
+     */
+    public static long getDirectorySize(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return -1;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return -1;
+        }
+        if (file.isFile()) {
+            return file.length();
+        }
+        long size = 0;
+        File[] children = file.listFiles();
+        if (children == null) {
+            return 0;
+        }
+        for (File child : children) {
+            size += child.isFile() ? child.length() : getDirectorySize(child.getAbsolutePath());
+        }
+        return size;
+    }
+
+    /**
+     * 读取文件全部字节（{@link #getFileToByte(File)} 别名）。
+     *
+     * @param filePath 文件路径
+     * @return 字节数组
+     */
+    public static byte[] readBytes(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return new byte[0];
+        }
+        return getFileToByte(new File(filePath));
     }
 
 }

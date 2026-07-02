@@ -14,8 +14,12 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
- * Created by fz on 2023/9/6 17:35
- * describe :
+ * 防止菜单快读点击工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/7/2 10:28
  */
 public class RxMenuView {
     /**
