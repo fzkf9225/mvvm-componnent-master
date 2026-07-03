@@ -32,7 +32,7 @@ public class BaseViewViewModel<BV extends BaseView> extends AndroidViewModel {
 
     public void startActivity(Context context, Class<?> toClx, Bundle bundle) {
         Intent intent = new Intent(context, toClx);
-        ContextCompat.startActivity(context, intent, bundle);
+        context.startActivity(intent, bundle);
     }
 
     public void startActivity(Context context, Class<?> toClx) {
