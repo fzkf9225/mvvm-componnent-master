@@ -62,7 +62,7 @@ public class ImageCompressHandler extends Handler {
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
-                mediaHelper.getMutableLiveDataCompress().postValue(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE));
+                mediaHelper.postCompressResult(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE));
             } else {
                 ContentResolver contentResolver = mediaHelper.getMediaBuilder().getContext().getContentResolver();
                 Cursor cursor = contentResolver.query(srcUriList.get(msg.what), null, null, null, null);

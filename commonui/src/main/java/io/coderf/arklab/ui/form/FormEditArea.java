@@ -21,8 +21,10 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.enums.FormTextFormatEnum;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
 import io.coderf.arklab.ui.enums.LabelVerticalAlignEnum;
+import io.coderf.arklab.ui.impl.FormTextFormatter;
 
 
 /**
@@ -39,7 +41,7 @@ public class FormEditArea extends FormConstraintLayout {
      */
     protected int imeOptions;
     /**
-     * 格式化文本，这个功能未实现
+     * 格式化文本；{@link FormTextFormatEnum#NORMAL} 时不做格式化。
      */
     protected int formatText;
     /**
@@ -177,7 +179,7 @@ public class FormEditArea extends FormConstraintLayout {
         if (maxLength > 0) {
             editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         }
-        // 设置水平权重
+        FormTextFormatter.apply(editText, FormTextFormatEnum.fromValue(formatText), -1, null);
         ConstraintLayout.LayoutParams params;
         if (LabelAlignEnum.TOP.value == labelAlign) {
             editText.setPadding((int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding);

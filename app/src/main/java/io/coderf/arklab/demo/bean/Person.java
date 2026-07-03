@@ -49,6 +49,33 @@ public class Person extends BaseDaoBean {
     @ColumnInfo
     private String sex;
 
+    /** 非 Room：FormSpinner 学历下拉演示 */
+    @Ignore
+    @VerifySort(16)
+    @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请选择学历！")
+    private String educationLevel;
+
+    /** 非 Room：FormSwitch 订阅演示 */
+    @Ignore
+    private Boolean acceptNewsletter;
+
+    /** 非 Room：FormCheckbox 协议演示 */
+    @Ignore
+    @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请勾选用户协议！")
+    private Boolean agreeProtocol;
+
+    /** 非 Room：FormRadio 联系方式偏好演示 */
+    @Ignore
+    private String contactPreference;
+
+    /** 非 Room：FormStepper 步数演示 */
+    @Ignore
+    private int dailySteps;
+
+    /** 非 Room：FormRating 评分演示 */
+    @Ignore
+    private float serviceRating;
+
     @VerifyField({
             @VerifyParams(type = VerifyType.NOT_EMPTY,group = {VerifyGroup.Default.class,VerifyGroup.Create.class}, errorMsg = "请选择生日！"),
     })
@@ -306,6 +333,66 @@ public class Person extends BaseDaoBean {
     public void setSex(String sex) {
         this.sex = sex;
         notifyPropertyChanged(BR.sex);
+    }
+
+    @Bindable
+    public String getEducationLevel() {
+        return educationLevel;
+    }
+
+    public void setEducationLevel(String educationLevel) {
+        this.educationLevel = educationLevel;
+        notifyPropertyChanged(BR.educationLevel);
+    }
+
+    @Bindable
+    public Boolean getAcceptNewsletter() {
+        return acceptNewsletter;
+    }
+
+    public void setAcceptNewsletter(Boolean acceptNewsletter) {
+        this.acceptNewsletter = acceptNewsletter;
+        notifyPropertyChanged(BR.acceptNewsletter);
+    }
+
+    @Bindable
+    public Boolean getAgreeProtocol() {
+        return agreeProtocol;
+    }
+
+    public void setAgreeProtocol(Boolean agreeProtocol) {
+        this.agreeProtocol = agreeProtocol;
+        notifyPropertyChanged(BR.agreeProtocol);
+    }
+
+    @Bindable
+    public String getContactPreference() {
+        return contactPreference;
+    }
+
+    public void setContactPreference(String contactPreference) {
+        this.contactPreference = contactPreference;
+        notifyPropertyChanged(BR.contactPreference);
+    }
+
+    @Bindable
+    public int getDailySteps() {
+        return dailySteps;
+    }
+
+    public void setDailySteps(int dailySteps) {
+        this.dailySteps = dailySteps;
+        notifyPropertyChanged(BR.dailySteps);
+    }
+
+    @Bindable
+    public float getServiceRating() {
+        return serviceRating;
+    }
+
+    public void setServiceRating(float serviceRating) {
+        this.serviceRating = serviceRating;
+        notifyPropertyChanged(BR.serviceRating);
     }
 
     @Bindable

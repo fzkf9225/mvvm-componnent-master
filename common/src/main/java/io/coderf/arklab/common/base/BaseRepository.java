@@ -107,11 +107,7 @@ public abstract class BaseRepository<BV extends BaseView> implements IRepository
     }
 
     public void removeSubscription(Subscription subscription) {
-        subscriptionList.forEach(item -> {
-            if (item == subscription) {
-                subscriptionList.remove(item);
-            }
-        });
+        subscriptionList.remove(subscription);
     }
 
     @Override

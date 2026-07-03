@@ -39,4 +39,3 @@ public class BaseViewViewModel<BV extends BaseView> extends AndroidViewModel {
         startActivity(context, toClx, null);
     }
 }
-

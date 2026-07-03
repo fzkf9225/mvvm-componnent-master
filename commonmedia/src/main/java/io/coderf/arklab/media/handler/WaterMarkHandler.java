@@ -38,7 +38,7 @@ public class WaterMarkHandler extends Handler {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }
-            mediaHelper.getMutableLiveDataWaterMark().postValue(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE));
+            mediaHelper.postWaterMarkResult(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE));
             return;
         }
         Bitmap bitmapOld = (Bitmap) msg.obj;
@@ -55,9 +55,9 @@ public class WaterMarkHandler extends Handler {
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             // 从文件中创建uri
-            mediaHelper.getMutableLiveDataWaterMark().postValue(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE));
+            mediaHelper.postWaterMarkResult(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE));
         } else { //兼容android7.0 使用共享文件的形式
-            mediaHelper.getMutableLiveDataWaterMark().postValue(new MediaBean(List.of(FileProvider.getUriForFile(mediaHelper.getMediaBuilder().getContext(),
+            mediaHelper.postWaterMarkResult(new MediaBean(List.of(FileProvider.getUriForFile(mediaHelper.getMediaBuilder().getContext(),
                     mediaHelper.getMediaBuilder().getContext().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE));
         }
         if (bitmapNew.isRecycled()) {

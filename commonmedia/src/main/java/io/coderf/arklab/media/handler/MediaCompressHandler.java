@@ -70,8 +70,8 @@ public class MediaCompressHandler extends Handler {
                     mediaHelper.getUIController().hideLoading();
                 }
                 // Post the result with the appropriate media type
-                mediaHelper.getMutableLiveDataCompress().postValue(new MediaBean(compressedList,
-                        MediaTypeEnum.IMAGE_AND_VIDEO)); // Assuming all items are of same type
+                mediaHelper.postCompressResult(new MediaBean(compressedList,
+                        MediaTypeEnum.IMAGE_AND_VIDEO));
             } else {
                 int currentIndex = msg.what;
                 Uri currentUri = srcUriList.get(currentIndex);

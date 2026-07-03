@@ -24,8 +24,10 @@ import java.util.List;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
+import io.coderf.arklab.ui.enums.FormTextFormatEnum;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
 import io.coderf.arklab.ui.impl.DecimalDigitsInputFilter;
+import io.coderf.arklab.ui.impl.FormTextFormatter;
 
 /**
  * Created by fz on 2023/12/26 16:27
@@ -41,7 +43,7 @@ public class FormEditText extends FormConstraintLayout {
      */
     protected int imeOptions;
     /**
-     * 输入框格式，暂未实现功能
+     * 输入框格式；{@link FormTextFormatEnum#NORMAL} 时不做格式化。
      */
     protected int formatText;
     /**
@@ -175,7 +177,8 @@ public class FormEditText extends FormConstraintLayout {
         if (!filters.isEmpty()) {
             editText.setFilters(filters.toArray(new InputFilter[0]));
         }
-        // 设置水平权重
+        FormTextFormatter.apply(editText, FormTextFormatEnum.fromValue(formatText), digits, null);
+        tvSelection = editText;
         ConstraintLayout.LayoutParams params;
         if (LabelAlignEnum.TOP.value == labelAlign) {
             editText.setPadding(0, 0, 0, 0);

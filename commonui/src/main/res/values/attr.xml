@@ -728,6 +728,91 @@
         <attr name="bottomTagTextSizeSp"/>
         <!--是否显示弹窗左上角清空按钮，默认 true -->
         <attr name="showClearButton" format="boolean"/>
+        <!--FormRadio 选项（逗号分隔名称，简单场景）；复杂数据请用 setRadioItems-->
+        <attr name="radioOptions" format="string"/>
+        <!--FormRadio 选项，每个 item 之间的间距-->
+        <attr name="radioItemPadding" format="dimension"/>
+        <!--FormRadio 单选图标尺寸-->
+        <attr name="radioIconSize" format="dimension"/>
+        <!--FormRadio 未选中边框粗细-->
+        <attr name="radioStrokeWidth" format="dimension"/>
+        <!--FormRadio 选中/未选中图标，未设置时使用 DrawableUtil 默认样式-->
+        <attr name="radioCheckedDrawable" format="reference"/>
+        <attr name="radioUncheckedDrawable" format="reference"/>
+        <!--FormRadio 未选中边框色（选中图标色仍用 radioButtonTint）-->
+        <attr name="radioUncheckedColor" format="color"/>
+        <!--FormRadio 排列方向-->
+        <attr name="radioOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <!--FormRadio 单选图标颜色-->
+        <attr name="radioButtonTint" format="color"/>
+        <!--FormCheckbox 图标尺寸-->
+        <attr name="checkboxIconSize" format="dimension"/>
+        <!--FormCheckbox 选中/未选中图标，未设置时使用 DrawableUtil 默认样式-->
+        <attr name="checkboxCheckedDrawable" format="reference"/>
+        <attr name="checkboxUncheckedDrawable" format="reference"/>
+        <!--FormCheckbox 默认样式：选中填充色、未选中边框色、边框粗细-->
+        <attr name="checkboxCheckedColor" format="color"/>
+        <attr name="checkboxUncheckedColor" format="color"/>
+        <attr name="checkboxStrokeWidth" format="dimension"/>
+        <!--FormStepper 最小值-->
+        <attr name="stepperMin" format="integer"/>
+        <!--FormStepper 最大值-->
+        <attr name="stepperMax" format="integer"/>
+        <!--FormStepper 步进值-->
+        <attr name="stepperStep" format="integer"/>
+        <!--FormStepper 按钮大小-->
+        <attr name="stepperSize" format="float"/>
+        <!--FormStepper 按钮文字大小，单位sp-->
+        <attr name="stepperBtnTextSize" format="float"/>
+        <!--FormStepper 输入框宽度-->
+        <attr name="stepperEditWidth" format="float"/>
+        <!--FormStepper 按钮背景/边框/图标-->
+        <attr name="stepperBtnBgColor" format="color"/>
+        <attr name="stepperBtnBorderColor" format="color"/>
+        <attr name="stepperBtnBorderWidth" format="dimension"/>
+        <!--FormStepper 输入框与按钮间margin-->
+        <attr name="stepperBtnMargin" format="float"/>
+        <attr name="stepperIconColor" format="color"/>
+        <!--FormRating 星星数量-->
+        <attr name="ratingCount" format="integer"/>
+        <!--FormRating 星星大小-->
+        <attr name="ratingSize" format="float"/>
+        <!--FormRating 星星颜色、间距、步进-->
+        <attr name="ratingStarColor" format="color"/>
+        <attr name="ratingEmptyStarColor" format="color"/>
+        <attr name="ratingStarSpacing" format="dimension"/>
+        <attr name="ratingStepType" format="enum">
+            <enum name="integer" value="0"/>
+            <enum name="half" value="1"/>
+            <enum name="any" value="2"/>
+        </attr>
+        <!--FormSpinner 下拉列表最大高度-->
+        <attr name="spinnerDropdownMaxHeight" format="dimension"/>
+        <!--FormSpinner 下拉项高度-->
+        <attr name="spinnerItemHeight" format="dimension"/>
+        <!--FormSpinner 下拉项分割线颜色-->
+        <attr name="spinnerItemBorderColor" format="color"/>
+        <!--FormSpinner 下拉项框背景-->
+        <attr name="spinnerBackground" format="reference"/>
+        <!--FormSpinner 下拉项左右 padding-->
+        <attr name="spinnerItemPaddingStart" format="dimension"/>
+        <attr name="spinnerItemPaddingEnd" format="dimension"/>
+        <!--FormSpinner 下拉项文字颜色、大小-->
+        <attr name="spinnerItemTextColor" format="color"/>
+        <attr name="spinnerItemTextSelectedColor" format="color"/>
+        <attr name="spinnerItemTextSize" format="dimension"/>
+        <!--开关控件 tint-->
+        <attr name="switchThumbTint" format="color"/>
+        <attr name="switchTrackTint" format="color"/>
+        <!--FormSwitch / FormCheckbox 选中状态-->
+        <attr name="checked" format="boolean"/>
+        <!--FormStepper 当前值-->
+        <attr name="stepperValue" format="integer"/>
+        <!--FormRating 当前评分-->
+        <attr name="ratingValue" format="float"/>
     </declare-styleable>
     <!--日历宽度，不包括圆点-->
     <attr name="itemWidth" format="dimension"/>

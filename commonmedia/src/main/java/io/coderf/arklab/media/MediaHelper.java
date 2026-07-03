@@ -22,6 +22,7 @@ import java.util.List;
 
 import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
+import io.coderf.arklab.media.bean.MediaResult;
 import io.coderf.arklab.media.bean.SelectorOptions;
 import io.coderf.arklab.media.dialog.OpenFileDialog;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
@@ -37,6 +38,7 @@ import io.coderf.arklab.media.handler.VideoCompressHandler;
 import io.coderf.arklab.media.handler.WaterMarkHandler;
 import io.coderf.arklab.media.helper.ConstantsHelper;
 import io.coderf.arklab.media.helper.MediaLifecycleObserver;
+import io.coderf.arklab.media.helper.MediaResultPublisher;
 import io.coderf.arklab.media.helper.UIController;
 
 /**
@@ -47,18 +49,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
         OpenFileDialog.OnOpenFileClickListener, OpenMediaDialog.OnOpenMediaClickListener {
     public final static String TAG = MediaHelper.class.getSimpleName();
     /**
-     * 选择、拍照、拍摄、文件选择等结果
+     * 媒体结果统一分发（含旧版分路 LiveData 兼容）。
      */
-    private final MutableLiveData<MediaBean> mutableLiveData = new MutableLiveData<>();
-    /**
-     * 压缩结果
-     */
-    private final MutableLiveData<MediaBean> mutableLiveDataCompress = new MutableLiveData<>();
-
-    /**
-     * 添加照片水印回调
-     */
-    private final MutableLiveData<MediaBean> mutableLiveDataWaterMark = new MutableLiveData<>();
+    private final MediaResultPublisher mediaResultPublisher = new MediaResultPublisher();
 
     /**
      * 最大可选的图片数量，默认9张
@@ -113,11 +106,45 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     public MutableLiveData<MediaBean> getMutableLiveData() {
-        return mutableLiveData;
+        return mediaResultPublisher.getPickLiveData();
     }
 
     public MutableLiveData<MediaBean> getMutableLiveDataCompress() {
-        return mutableLiveDataCompress;
+        return mediaResultPublisher.getCompressLiveData();
+    }
+
+    public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
+        return mediaResultPublisher.getWaterMarkLiveData();
+    }
+
+    /**
+     * 统一媒体结果 LiveData（Pick / Compress / WaterMark）。
+     */
+    public androidx.lifecycle.LiveData<MediaResult> getMediaResultLiveData() {
+        return mediaResultPublisher.getMediaResultLiveData();
+    }
+
+    /**
+     * 统一媒体结果 Flow（Kotlin 协程友好）。
+     */
+    public kotlinx.coroutines.flow.SharedFlow<MediaResult> getMediaResultFlow() {
+        return mediaResultPublisher.getMediaResultFlow();
+    }
+
+    public MediaResultPublisher getMediaResultPublisher() {
+        return mediaResultPublisher;
+    }
+
+    public void postPickResult(@NonNull MediaBean mediaBean) {
+        mediaResultPublisher.postPick(mediaBean);
+    }
+
+    public void postCompressResult(@NonNull MediaBean mediaBean) {
+        mediaResultPublisher.postCompress(mediaBean);
+    }
+
+    public void postWaterMarkResult(@NonNull MediaBean mediaBean) {
+        mediaResultPublisher.postWaterMark(mediaBean);
     }
 
     /**
@@ -474,10 +501,6 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             uiController.showLoading(mediaBuilder.getContext().getString(R.string.media_adding_watermark));
         }
         new WaterMarkHandler(this, handlerLooper()).sendMessage(message);
-    }
-
-    public MutableLiveData<MediaBean> getMutableLiveDataWaterMark() {
-        return mutableLiveDataWaterMark;
     }
 
     private boolean isMoreThanMaxMedia() {

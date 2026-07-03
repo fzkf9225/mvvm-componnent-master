@@ -56,7 +56,7 @@ public class VideoCompressHandler extends Handler {
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
                 }
-                mediaHelper.getMutableLiveDataCompress().postValue(new MediaBean(compressUriList, MediaTypeEnum.VIDEO));
+                mediaHelper.postCompressResult(new MediaBean(compressUriList, MediaTypeEnum.VIDEO));
             } else {
                 File outputFile = mediaHelper.getMediaBuilder().buildVideoOutputFile("VIDEO_");
                 if (mediaHelper.getMediaBuilder().getVideoQuality() == VideoQualityEnum.HIGH) {

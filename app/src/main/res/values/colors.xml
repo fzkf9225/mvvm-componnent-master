@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 演示页：表单控件绿色主题配置 -->
+    <color name="demo_green_track">#6608A04B</color>
+    <color name="demo_green_empty_star">#4D08A04B</color>
 </resources>

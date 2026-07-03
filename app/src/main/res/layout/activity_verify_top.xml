@@ -64,6 +64,101 @@
                     app:layout_constraintTop_toBottomOf="@+id/edit_name"
                     app:required="true"
                     app:text="@{data.sex}" />
+                <!--学历 FormSpinner-->
+                <io.coderf.arklab.ui.form.FormSpinner
+                    android:id="@+id/form_education"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:hint="请选择学历"
+                    app:label="学历"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+                    app:required="true"
+                    app:text="@={data.educationLevel}" />
+                <!--订阅 FormSwitch-->
+                <io.coderf.arklab.ui.form.FormSwitch
+                    android:id="@+id/form_newsletter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:checked="@={data.acceptNewsletter}"
+                    app:label="订阅资讯"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/form_education"
+                    app:switchThumbTint="@color/theme_green"
+                    app:switchTrackTint="@color/demo_green_track" />
+                <!--协议 FormCheckbox-->
+                <io.coderf.arklab.ui.form.FormCheckbox
+                    android:id="@+id/form_agree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:checked="@={data.agreeProtocol}"
+                    app:checkboxCheckedColor="@color/theme_green"
+                    app:checkboxUncheckedColor="@color/theme_green"
+                    app:label="同意用户协议"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/form_newsletter"
+                    app:required="true" />
+                <!--联系方式 FormRadio-->
+                <io.coderf.arklab.ui.form.FormRadio
+                    android:id="@+id/form_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:label="联系偏好"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/form_agree"
+                    app:radioButtonTint="@color/theme_green"
+                    app:radioUncheckedColor="@color/theme_green"
+                    app:text="@={data.contactPreference}" />
+                <!--步数 FormStepper-->
+                <io.coderf.arklab.ui.form.FormStepper
+                    android:id="@+id/form_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:label="每日步数"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/form_contact"
+                    app:stepperBtnBorderColor="@color/theme_green"
+                    app:stepperIconColor="@color/theme_green"
+                    app:stepperMax="50000"
+                    app:stepperMin="0"
+                    app:stepperStep="500"
+                    app:stepperValue="@={data.dailySteps}" />
+                <!--评分 FormRating-->
+                <io.coderf.arklab.ui.form.FormRating
+                    android:id="@+id/form_rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bottomBorder="true"
+                    app:label="服务评分"
+                    app:labelAlign="top"
+                    app:labelTextStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/form_steps"
+                    app:ratingCount="5"
+                    app:ratingEmptyStarColor="@color/demo_green_empty_star"
+                    app:ratingStarColor="@color/theme_green"
+                    app:ratingValue="@={data.serviceRating}" />
                 <!--生日-->
                 <io.coderf.arklab.ui.form.FormDate
                     android:id="@+id/tv_birthday"
@@ -80,7 +175,7 @@
                     app:labelTextStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_sex"
+                    app:layout_constraintTop_toBottomOf="@+id/form_rating"
                     app:required="true"
                     app:startYear="1990"
                     app:text="@={data.birthday}" />

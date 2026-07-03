@@ -93,7 +93,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         pickMuLtiImageSelectorLauncher = registry.register("pickMuLtiImageSelector" + UUID.randomUUID().toString(), owner, pickMuLtiImageSelector,
                 new MultiSelectorCallBack(mediaHelper, pickMuLtiImageSelector));
         pickImageSelectorLauncher = registry.register("pickImageSelector" + UUID.randomUUID().toString(), owner, pickMediaSelector,
-                new SingleSelectorCallBack(pickMediaSelector, mediaHelper.getMutableLiveData()));
+                new SingleSelectorCallBack(pickMediaSelector, mediaHelper));
 
         //图片和视频
         if (mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() > 1) {
@@ -104,7 +104,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         pickMuLtiMediaSelectorLauncher = registry.register("pickMuLtiMediaSelector" + UUID.randomUUID().toString(), owner, pickMuLtiImageAndViewSelector,
                 new MultiSelectorCallBack(mediaHelper, pickMuLtiImageAndViewSelector));
         pickMediaSelectorLauncher = registry.register("pickMediaSelector" + UUID.randomUUID().toString(), owner, pickMediaSelector,
-                new SingleSelectorCallBack(pickMediaSelector, mediaHelper.getMutableLiveData()));
+                new SingleSelectorCallBack(pickMediaSelector, mediaHelper));
         //视频
         if (mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() > 1) {
             pickMuLtiVideoSelector = new OpenPickMultipleMediaSelector(mediaHelper.getMediaBuilder().getVideoMaxSelectedCount());
@@ -114,12 +114,12 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         pickMuLtiVideoSelectorLauncher = registry.register("pickMuLtiVideoSelector" + UUID.randomUUID().toString(), owner, pickMuLtiVideoSelector,
                 new MultiSelectorCallBack(mediaHelper, pickMuLtiVideoSelector));
         pickVideoSelectorLauncher = registry.register("pickVideoSelector" + UUID.randomUUID().toString(), owner, pickMediaSelector,
-                new SingleSelectorCallBack(pickMediaSelector, mediaHelper.getMutableLiveData()));
+                new SingleSelectorCallBack(pickMediaSelector, mediaHelper));
 
         //传统选择器，单选
         singleSelector = new OpenSingleSelector();
         singleLauncher = registry.register("singleSelector" + UUID.randomUUID().toString(), owner, singleSelector,
-                new SingleSelectorCallBack(singleSelector, mediaHelper.getMutableLiveData()));
+                new SingleSelectorCallBack(singleSelector, mediaHelper));
         //传统选择器，多选
         multiSelector = new OpenMultiSelector();
         multiLauncher = registry.register("multiSelector" + UUID.randomUUID().toString(), owner, multiSelector,
@@ -137,11 +137,11 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         takeCameraUri = new TakeCameraUri(mediaHelper.getMediaBuilder());
         cameraLauncher = registry.register("camera" + UUID.randomUUID().toString(), owner, takeCameraUri,
                 new CameraCallBack(mediaHelper.getMediaBuilder(), takeCameraUri, captureMetadataHelper,
-                        mediaHelper.getMutableLiveData()));
+                        mediaHelper));
         //录像
         takeVideoUri = new TakeVideoUri(mediaHelper.getMediaBuilder(), mediaHelper.getMediaBuilder().getMaxVideoTime());
         shootLauncher = registry.register("shoot" + UUID.randomUUID().toString(), owner, takeVideoUri,
-                new CameraCallBack(mediaHelper.getMediaBuilder(), takeVideoUri, mediaHelper.getMutableLiveData()));
+                new CameraCallBack(mediaHelper.getMediaBuilder(), takeVideoUri, mediaHelper));
     }
 
     /**

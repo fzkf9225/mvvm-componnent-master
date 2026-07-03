@@ -5,7 +5,6 @@ import android.net.Uri;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,7 +29,7 @@ import io.coderf.arklab.media.utils.LogUtil;
  */
 public class CameraCallBack implements ActivityResultCallback<Uri> {
     private final MediaBuilder mediaBuilder;
-    private final MutableLiveData<MediaBean> mutableLiveData;
+    private final MediaHelper mediaHelper;
 
     private TakeCameraUri takeCameraUri;
 
@@ -41,18 +40,18 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
 
     public CameraCallBack(MediaBuilder mediaBuilder, TakeCameraUri takeCameraUri,
                           @Nullable CaptureMetadataHelper captureMetadataHelper,
-                          MutableLiveData<MediaBean> mutableLiveData) {
+                          MediaHelper mediaHelper) {
         this.mediaBuilder = mediaBuilder;
         this.takeCameraUri = takeCameraUri;
         this.captureMetadataHelper = captureMetadataHelper;
-        this.mutableLiveData = mutableLiveData;
+        this.mediaHelper = mediaHelper;
     }
 
-    public CameraCallBack(MediaBuilder mediaBuilder, TakeVideoUri takeVideoUri, MutableLiveData<MediaBean> mutableLiveData) {
+    public CameraCallBack(MediaBuilder mediaBuilder, TakeVideoUri takeVideoUri, MediaHelper mediaHelper) {
         this.mediaBuilder = mediaBuilder;
         this.takeVideoUri = takeVideoUri;
         this.captureMetadataHelper = null;
-        this.mutableLiveData = mutableLiveData;
+        this.mediaHelper = mediaHelper;
     }
 
     @Override
@@ -63,22 +62,21 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
         }
         LogUtil.show(MediaHelper.TAG, "拍照录像：" + getMediaType() + "，回调：" + result.toString());
         if (!isFileUriExists(result)) {
-            // 系统拍照/录像取消时仍可能带回占位 Uri，需通知上层释放 file chooser
             notifySelectionCancelled();
             return;
         }
         if (MediaTypeEnum.IMAGE == getMediaType()) {
             writeCaptureExifIfEnabled(result);
-            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
+            mediaHelper.postPickResult(new MediaBean(List.of(result), MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == getMediaType()) {
-            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.VIDEO));
+            mediaHelper.postPickResult(new MediaBean(List.of(result), MediaTypeEnum.VIDEO));
         } else if (MediaTypeEnum.IMAGE_AND_VIDEO == getMediaType()) {
-            mutableLiveData.postValue(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
+            mediaHelper.postPickResult(new MediaBean(List.of(result), MediaTypeEnum.IMAGE_AND_VIDEO));
         }
     }
 
     private void notifySelectionCancelled() {
-        mutableLiveData.postValue(new MediaBean(Collections.emptyList(), getMediaType()));
+        mediaHelper.postPickResult(new MediaBean(Collections.emptyList(), getMediaType()));
     }
 
     private void writeCaptureExifIfEnabled(Uri uri) {
@@ -101,12 +99,6 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
     }
 
 
-    /**
-     * 判断uri是否存在，因为新版打开拍照后不拍照也会返回uri因此需要判断一下
-     *
-     * @param uri 文件uri路径
-     * @return true存在，false不存在
-     */
     private boolean isFileUriExists(Uri uri) {
         ContentResolver contentResolver = mediaBuilder.getContext().getContentResolver();
         InputStream inputStream = null;
@@ -117,7 +109,6 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
                 return true;
             }
         } catch (FileNotFoundException e) {
-            // 文件不存在
             return false;
         } catch (IOException e) {
             e.printStackTrace();

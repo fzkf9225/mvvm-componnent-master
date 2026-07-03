@@ -27,10 +27,30 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
 
 /**
  * 实体类注解校验器。
+ * <p>
+ * 反射元数据默认走 {@link EntityValidatorCache}，可通过 {@link #setReflectionCacheEnabled(boolean)} 关闭。
  */
 public final class EntityValidator {
 
     private EntityValidator() {
+    }
+
+    /**
+     * 是否启用字段反射缓存，默认 {@code true}。
+     */
+    public static void setReflectionCacheEnabled(boolean enabled) {
+        EntityValidatorCache.setCacheEnabled(enabled);
+    }
+
+    public static boolean isReflectionCacheEnabled() {
+        return EntityValidatorCache.isCacheEnabled();
+    }
+
+    /**
+     * 清空反射缓存。
+     */
+    public static void clearReflectionCache() {
+        EntityValidatorCache.clearCache();
     }
 
     public static VerifyResult validate(Object entity) {
@@ -75,12 +95,13 @@ public final class EntityValidator {
         }
         try {
             Class<?> clazz = entity.getClass();
-            VerifyEntity validation = clazz.getAnnotation(VerifyEntity.class);
+            EntityValidatorCache.EntityMeta meta = EntityValidatorCache.resolve(clazz);
+            VerifyEntity validation = meta.verifyEntity;
             if (validation == null || !validation.enable()) {
                 return VerifyResult.ok();
             }
 
-            List<Field> fields = ValidatorUtil.collectDeclaredFields(clazz);
+            List<Field> fields = new ArrayList<>(meta.fields);
             if (fields.isEmpty()) {
                 return VerifyResult.ok();
             }
@@ -88,10 +109,10 @@ public final class EntityValidator {
                 sortFields(fields);
             }
 
-            Map<String, Field> fieldMap = CompareUtil.buildFieldMap(fields);
+            Map<String, Field> fieldMap = meta.fieldMap;
             List<FieldVerifyError> errors = new ArrayList<>();
             for (Field field : fields) {
-                if (!hasValidationAnnotations(field)) {
+                if (!meta.validationFlags.getOrDefault(field, hasValidationAnnotations(field))) {
                     continue;
                 }
                 field.setAccessible(true);
@@ -112,7 +133,7 @@ public final class EntityValidator {
         }
     }
 
-    private static boolean hasValidationAnnotations(Field field) {
+    static boolean hasValidationAnnotations(Field field) {
         return field.isAnnotationPresent(VerifyParams.class)
                 || field.isAnnotationPresent(VerifyField.class)
                 || field.isAnnotationPresent(Valid.class)

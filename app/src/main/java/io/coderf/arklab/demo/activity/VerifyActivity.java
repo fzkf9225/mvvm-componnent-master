@@ -8,12 +8,14 @@ import android.text.TextWatcher;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.annotation.bean.FieldVerifyError;
 import io.coderf.arklab.annotation.bean.VerifyResult;
 import io.coderf.arklab.annotation.verify.EntityValidator;
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
@@ -48,6 +50,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        setupDemoFormControls();
         binding.formImage.setBaseView(this);
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);
@@ -119,7 +122,29 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
         person.setEducationalExperienceDate("2024-01-01 ~ 2024-12-31");
         person.setSchoolStartTime("1999-09-01 09:00:00");
         person.setClassStartTime("08:30:00");
+        person.setEducationLevel("本科");
+        person.setAcceptNewsletter(true);
+        person.setAgreeProtocol(true);
+        person.setContactPreference("微信");
+        person.setDailySteps(8000);
+        person.setServiceRating(4.5f);
         binding.setData(person);
+    }
+
+    private void setupDemoFormControls() {
+        List<PopupWindowBean<Object>> educationItems = Arrays.asList(
+                new PopupWindowBean<>("1", "本科"),
+                new PopupWindowBean<>("2", "硕士"),
+                new PopupWindowBean<>("3", "博士")
+        );
+        binding.formEducation.setSpinnerItems(educationItems);
+
+        List<PopupWindowBean<Object>> contactItems = Arrays.asList(
+                new PopupWindowBean<>("phone", "phone", "电话"),
+                new PopupWindowBean<>("email", "email", "邮件"),
+                new PopupWindowBean<>("wechat", "wechat", "微信")
+        );
+        binding.formContact.setRadioItems(contactItems);
     }
 
     private static String formatVerifyResult(VerifyResult verifyResult) {

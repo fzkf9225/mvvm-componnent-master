@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 
@@ -32,6 +34,11 @@ public class StarBar extends View {
     private Paint paint;         //绘制星星画笔
     private boolean integerMark = false;
     private boolean isClickAble = true;
+
+    public StarBar(Context context) {
+        super(context);
+        init(context, null);
+    }
 
     public StarBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,17 +62,62 @@ public class StarBar extends View {
      */
     private void init(Context context, AttributeSet attrs) {
         setClickable(true);
+        paint = new Paint();
+        paint.setAntiAlias(true);
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.RatingBar);
         this.starDistance = (int) mTypedArray.getDimension(R.styleable.RatingBar_starDistance, 0);
         this.starSize = (int) mTypedArray.getDimension(R.styleable.RatingBar_starSize, 20);
         this.starCount = mTypedArray.getInteger(R.styleable.RatingBar_starCount, 5);
         this.starEmptyDrawable = mTypedArray.getDrawable(R.styleable.RatingBar_starEmpty);
-        this.starFillBitmap = drawableToBitmap(mTypedArray.getDrawable(R.styleable.RatingBar_starFill));
+        Drawable fillDrawable = mTypedArray.getDrawable(R.styleable.RatingBar_starFill);
         mTypedArray.recycle();
+        if (starEmptyDrawable == null) {
+            starEmptyDrawable = ContextCompat.getDrawable(context, R.mipmap.star_empty);
+        }
+        if (fillDrawable == null) {
+            fillDrawable = ContextCompat.getDrawable(context, R.mipmap.star_full);
+        }
+        this.starFillBitmap = drawableToBitmap(fillDrawable);
+        updateFillShader();
+    }
 
-        paint = new Paint();
-        paint.setAntiAlias(true);
+    private void updateFillShader() {
+        if (starFillBitmap == null) {
+            paint.setShader(null);
+            return;
+        }
         paint.setShader(new BitmapShader(starFillBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+    }
+
+    /**
+     * 运行时配置星星样式（FormRating 等代码创建场景）。
+     */
+    public void configure(int starCount, int starSize, int starDistance,
+                          @Nullable Drawable starFill, @Nullable Drawable starEmpty) {
+        this.starCount = Math.max(1, starCount);
+        this.starSize = starSize > 0 ? starSize : 20;
+        this.starDistance = Math.max(0, starDistance);
+        if (starEmpty != null) {
+            this.starEmptyDrawable = starEmpty;
+        }
+        if (starFill != null) {
+            this.starFillBitmap = drawableToBitmap(starFill);
+            updateFillShader();
+        }
+        requestLayout();
+        invalidate();
+    }
+
+    public int getStarCount() {
+        return starCount;
+    }
+
+    public int getStarSize() {
+        return starSize;
+    }
+
+    public int getStarDistance() {
+        return starDistance;
     }
 
     /**
@@ -83,13 +135,20 @@ public class StarBar extends View {
      * @param mark 分数
      */
     public void setStarMark(float mark) {
+        setStarMark(mark, true);
+    }
+
+    /**
+     * @param notifyListener 双向绑定时可传 false，避免循环回调
+     */
+    public void setStarMark(float mark, boolean notifyListener) {
         if (integerMark) {
             starMark = (int) Math.ceil(mark);
         } else {
             starMark = Math.round(mark * 10) * 1.0f / 10;
         }
-        if (this.onStarChangeListener != null) {
-            this.onStarChangeListener.onStarChange(starMark);  //调用监听接口
+        if (notifyListener && this.onStarChangeListener != null) {
+            this.onStarChangeListener.onStarChange(starMark);
         }
         invalidate();
     }

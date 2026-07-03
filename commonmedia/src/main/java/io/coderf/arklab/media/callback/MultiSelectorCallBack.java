@@ -39,9 +39,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
     public void onActivityResult(List<Uri> result) {
         LogUtil.show(MediaHelper.TAG, "多选回调：" + result);
         if (result == null || result.isEmpty()) {
-            mediaHelper.getMutableLiveData().postValue(
-                    new MediaBean(Collections.emptyList(), getMediaType())
-            );
+            mediaHelper.postPickResult(new MediaBean(Collections.emptyList(), getMediaType()));
             return;
         }
         if (MediaTypeEnum.IMAGE == getMediaType()) {
@@ -54,7 +52,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE));
+            mediaHelper.postPickResult(new MediaBean(result, MediaTypeEnum.IMAGE));
         } else if (MediaTypeEnum.VIDEO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getVideoSelectedListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getVideoMaxSelectedCount() - mediaHelper.getMediaBuilder().getVideoSelectedListener().onSelectedCount()) {
@@ -65,7 +63,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.VIDEO));
+            mediaHelper.postPickResult(new MediaBean(result, MediaTypeEnum.VIDEO));
         } else if (MediaTypeEnum.AUDIO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getAudioSelectedListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getAudioMaxSelectedCount() - mediaHelper.getMediaBuilder().getAudioSelectedListener().onSelectedCount()) {
@@ -76,7 +74,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.AUDIO));
+            mediaHelper.postPickResult(new MediaBean(result, MediaTypeEnum.AUDIO));
         } else if (MediaTypeEnum.FILE == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getFileSelectedListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getFileMaxSelectedCount() - mediaHelper.getMediaBuilder().getFileSelectedListener().onSelectedCount()) {
@@ -87,7 +85,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.FILE));
+            mediaHelper.postPickResult(new MediaBean(result, MediaTypeEnum.FILE));
         } else if (MediaTypeEnum.IMAGE_AND_VIDEO == getMediaType()) {
             if (mediaHelper.getMediaBuilder().getImageAndVideoSelectedListener() != null) {
                 if (result.size() > mediaHelper.getMediaBuilder().getMediaMaxSelectedCount() - mediaHelper.getMediaBuilder().getImageAndVideoSelectedListener().onSelectedCount()) {
@@ -98,7 +96,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
                     return;
                 }
             }
-            mediaHelper.getMutableLiveData().setValue(new MediaBean(result, MediaTypeEnum.IMAGE_AND_VIDEO));
+            mediaHelper.postPickResult(new MediaBean(result, MediaTypeEnum.IMAGE_AND_VIDEO));
         }
     }
 

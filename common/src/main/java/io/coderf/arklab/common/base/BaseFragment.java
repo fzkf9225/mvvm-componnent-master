@@ -22,7 +22,6 @@ import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
-
 /**
  * Fragment MVVM 基类，生命周期约定与 {@link BaseActivity} 对齐。
  * <p>
