@@ -72,8 +72,8 @@ import io.coderf.arklab.common.widget.video.VideoPlayerConfig;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
-import io.coderf.arklab.ui.widght.calendar.DateRangePickDialog;
-import io.coderf.arklab.ui.widght.dialog.TickViewMessageDialog;
+import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
+import io.coderf.arklab.ui.widget.dialog.TickViewMessageDialog;
 
 /**
  * Created by fz on 2023/8/14 10:56

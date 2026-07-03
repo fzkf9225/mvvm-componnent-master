@@ -1,4 +1,4 @@
-package io.coderf.arklab.ui.widght.tickview;
+package io.coderf.arklab.ui.widget.tickview;
 
 import android.content.Context;
 

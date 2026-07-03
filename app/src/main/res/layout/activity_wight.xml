@@ -433,7 +433,7 @@
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintTop_toBottomOf="@+id/iconDotTextView" />
 
-            <io.coderf.arklab.ui.widght.calendar.CalendarView
+            <io.coderf.arklab.ui.widget.calendar.CalendarView
                 android:id="@+id/calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -458,7 +458,7 @@
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintTop_toBottomOf="@+id/calendarView_single" />
 
-            <io.coderf.arklab.ui.widght.calendar.CalendarView
+            <io.coderf.arklab.ui.widget.calendar.CalendarView
                 android:id="@+id/calendarView_multi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

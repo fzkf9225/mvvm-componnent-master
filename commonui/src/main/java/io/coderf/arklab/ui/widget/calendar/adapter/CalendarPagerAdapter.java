@@ -1,4 +1,4 @@
-package io.coderf.arklab.ui.widght.calendar.adapter;
+package io.coderf.arklab.ui.widget.calendar.adapter;
 
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -19,7 +19,7 @@ import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.ItemCalendarDayBinding;
-import io.coderf.arklab.ui.widght.calendar.CalendarView;
+import io.coderf.arklab.ui.widget.calendar.CalendarView;
 
 /**
  * created by fz on 2024/11/20 15:10

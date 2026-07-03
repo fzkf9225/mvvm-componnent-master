@@ -1,4 +1,4 @@
-package io.coderf.arklab.ui.widght.dialog;
+package io.coderf.arklab.ui.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.widght.tickview.OnCheckedChangeListener;
-import io.coderf.arklab.ui.widght.tickview.OnTickViewHideListener;
-import io.coderf.arklab.ui.widght.tickview.TickView;
+import io.coderf.arklab.ui.widget.tickview.OnCheckedChangeListener;
+import io.coderf.arklab.ui.widget.tickview.OnTickViewHideListener;
+import io.coderf.arklab.ui.widget.tickview.TickView;
 
 
 /**

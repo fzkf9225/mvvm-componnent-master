@@ -1,11 +1,11 @@
-package io.coderf.arklab.ui.widght.calendar.adapter
+package io.coderf.arklab.ui.widget.calendar.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import io.coderf.arklab.ui.bean.CalendarData
 import io.coderf.arklab.ui.fragment.CalendarMonthFragment
-import io.coderf.arklab.ui.widght.calendar.CalendarView
+import io.coderf.arklab.ui.widget.calendar.CalendarView
 
 /**
  * created by fz on 2024/11/21 9:00

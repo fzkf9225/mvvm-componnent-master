@@ -1,4 +1,4 @@
-package io.coderf.arklab.ui.widght.calendar;
+package io.coderf.arklab.ui.widget.calendar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -38,7 +38,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
-import io.coderf.arklab.ui.widght.calendar.adapter.MonthViewPagerAdapter;
+import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter;
 
 
 /**

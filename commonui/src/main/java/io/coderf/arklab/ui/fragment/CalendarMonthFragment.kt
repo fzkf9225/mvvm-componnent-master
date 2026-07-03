@@ -13,8 +13,8 @@ import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration
 import io.coderf.arklab.ui.R
 import io.coderf.arklab.ui.bean.CalendarData
 import io.coderf.arklab.ui.databinding.FragmentCalendarMonthBinding
-import io.coderf.arklab.ui.widght.calendar.CalendarView
-import io.coderf.arklab.ui.widght.calendar.adapter.CalendarPagerAdapter
+import io.coderf.arklab.ui.widget.calendar.CalendarView
+import io.coderf.arklab.ui.widget.calendar.adapter.CalendarPagerAdapter
 
 /**
  * created by fz on 2024/11/20 15:11

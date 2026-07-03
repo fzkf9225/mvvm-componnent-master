@@ -1,4 +1,4 @@
-package io.coderf.arklab.ui.widght.calendar
+package io.coderf.arklab.ui.widget.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -28,7 +28,7 @@ import io.coderf.arklab.ui.R
 import io.coderf.arklab.ui.bean.CalendarData
 import io.coderf.arklab.ui.databinding.ViewCalendarBinding
 import io.coderf.arklab.ui.helper.CalendarDataSource
-import io.coderf.arklab.ui.widght.calendar.adapter.MonthViewPagerAdapter
+import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

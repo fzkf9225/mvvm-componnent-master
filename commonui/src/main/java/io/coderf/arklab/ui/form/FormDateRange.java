@@ -21,7 +21,7 @@ import androidx.lifecycle.Lifecycle;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
-import io.coderf.arklab.ui.widght.calendar.DateRangePickDialog;
+import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
 
 /**
  * Created by fz on 2023/12/26 16:27
