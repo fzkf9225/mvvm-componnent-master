@@ -1,17 +1,13 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.NumberPicker;
 
 import androidx.annotation.ColorInt;
@@ -20,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogDatePickBinding;
@@ -32,10 +27,14 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 
 
 /**
- * Created by fz on 2024/12/2.
- * describe：年月日选择dialog
+ * 年月日/时间选择弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2
  */
-public class DatePickDialog extends Dialog {
+public class DatePickDialog extends BaseDialog {
     /**
      * 上下文
      */
@@ -56,10 +55,6 @@ public class DatePickDialog extends Dialog {
      * 清空按钮点击监听
      */
     private OnDialogInterfaceClickListener onClearClickListener;
-    /**
-     * 是否允许点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 模式，参考枚举 DateMode
      */
@@ -111,10 +106,6 @@ public class DatePickDialog extends Dialog {
      * 年、月、日、时、分、秒标签
      */
     private String yearLabel, monthLabel, dayLabel, hourLabel, minuteLabel, secondLabel;
-    /**
-     * 背景样式
-     */
-    private Drawable bgDrawable;
 
     /**
      * 对齐方式
@@ -151,7 +142,7 @@ public class DatePickDialog extends Dialog {
     private float clearTextSizeSp = 0f;
 
     public DatePickDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context);
         this.context = context;
     }
 
@@ -160,13 +151,15 @@ public class DatePickDialog extends Dialog {
         return this;
     }
 
+    @Override
     public DatePickDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
+    @Override
     public DatePickDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -396,7 +389,7 @@ public class DatePickDialog extends Dialog {
     }
 
     private void initView() {
-        binding = DialogDatePickBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = DialogDatePickBinding.inflate(layoutInflater, null, false);
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -493,24 +486,9 @@ public class DatePickDialog extends Dialog {
             binding.tvClear.setLayoutParams(clearLp);
         }
         applyDynamicAppearance();
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(gravity);
-
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(getContext(), 16f),
-                DensityUtil.dp2px(getContext(), 16f),
-                0,
-                0
-        )));
+        applyCancelableOutside(outSide);
+        applyBottomSheetWindow(gravity);
     }
 
     private void applyDynamicAppearance() {

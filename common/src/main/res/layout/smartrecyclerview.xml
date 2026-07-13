@@ -35,6 +35,14 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center" />
+
+            <io.coderf.arklab.common.widget.feedback.SkeletonLayout
+                android:id="@+id/mSkeletonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:visibility="gone"
+                app:skeletonRowCount="6" />
         </FrameLayout>
 
         <com.scwang.smart.refresh.footer.ClassicsFooter

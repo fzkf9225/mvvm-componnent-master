@@ -364,6 +364,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/videoPlayerDialog" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/toastHelperDemo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="ToastHelper 短提示"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoPlayerFullscreenDialog" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/snackbarHelperDemo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginBottom="@dimen/vertical_margin_xl"
+                android:onClick="@{dialogViewModel.onClick}"
+                android:text="SnackbarHelper 带操作"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toastHelperDemo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

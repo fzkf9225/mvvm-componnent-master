@@ -1,11 +1,9 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -38,15 +36,11 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
  * - 左右margin
  * - 上下padding
  */
-public class MenuDialog<T extends PopupWindowBean> extends Dialog {
+public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
     /**
      * 菜单点击监听
      */
     private OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener;
-    /**
-     * 是否可以点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 菜单数据
      */
@@ -137,10 +131,6 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
      * 取消按钮背景Drawable
      */
     private Drawable cancelButtonBackgroundDrawable;
-    /**
-     * 对话框背景Drawable
-     */
-    private Drawable bgDrawable;
     /** 底部取消按钮 layout_marginTop (px)，小于 0 表示沿用 XML */
     private int cancelButtonMarginTopPx = -1;
     /** RecyclerView 四边 padding (px)，小于 0 表示不改该边 */
@@ -150,7 +140,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
     private int recyclerPaddingBottomPx = -1;
 
     public MenuDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context);
     }
 
     public MenuDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
@@ -158,13 +148,15 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    @Override
     public MenuDialog<T> setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
+    @Override
     public MenuDialog<T> setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -372,7 +364,7 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
     }
 
     private void initView() {
-        binding = MenuDialogBinding.inflate(LayoutInflater.from(getContext()), null, false);
+        binding = MenuDialogBinding.inflate(layoutInflater, null, false);
 
         // 设置取消按钮
         setupCancelButton();
@@ -399,21 +391,14 @@ public class MenuDialog<T extends PopupWindowBean> extends Dialog {
         // 设置分割线
         setupDivider();
 
-        // 设置对话框属性
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-
-        // 设置窗口属性
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(gravity);
+        applyCancelableOutside(outSide);
+        applyBottomWindowLayout(gravity);
         if (bgDrawable != null) {
-            dialogWindow.setBackgroundDrawable(bgDrawable);
+            Window dialogWindow = getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setBackgroundDrawable(bgDrawable);
+            }
         }
     }
 

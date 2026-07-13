@@ -65,6 +65,8 @@ import io.coderf.arklab.common.widget.dialog.ProgressBarDialog;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
 import io.coderf.arklab.common.widget.dialog.VideoPlayerDialog;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
+import io.coderf.arklab.common.widget.feedback.SnackBarHelper;
+import io.coderf.arklab.common.widget.feedback.ToastHelper;
 import io.coderf.arklab.common.widget.popupwindow.CascadeMultiPopupWindow;
 import io.coderf.arklab.common.widget.popupwindow.CascadeSinglePopupWindow;
 import io.coderf.arklab.common.widget.video.VideoPlayerClarityOption;
@@ -559,6 +561,15 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setStartExpanded(true)
                     .builder()
                     .show();
+        } else if (R.id.toastHelperDemo == view.getId()) {
+            ToastHelper.showShort(view.getContext(), "ToastHelper：统一短提示封装");
+        } else if (R.id.snackbarHelperDemo == view.getId()) {
+            SnackBarHelper.showAction(
+                    view,
+                    "SnackbarHelper：操作已提交",
+                    "撤销",
+                    v -> ToastHelper.showShort(view.getContext(), "已撤销")
+            );
         }
     }
 

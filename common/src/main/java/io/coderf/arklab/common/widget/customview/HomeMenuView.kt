@@ -26,8 +26,13 @@ import java.util.function.IntConsumer
 import java.util.stream.IntStream
 
 /**
- * created by fz on 2025/4/27 15:59
- * describe:
+ * 首页九宫格菜单。默认数据模型为 {@link io.coderf.arklab.common.bean.HomeMenuBean}；
+ * 轻量场景可实现 {@link io.coderf.arklab.common.widget.customview.inter.IHomeMenuItem} 后映射为本类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/7/13 10:25
  */
 open class HomeMenuView : ConstraintLayout {
     private var lifecycleOwner: LifecycleOwner? = null

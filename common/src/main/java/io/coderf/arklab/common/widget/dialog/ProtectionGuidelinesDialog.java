@@ -1,17 +1,12 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -22,10 +17,14 @@ import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 
 
 /**
- * updated by fz on 2025/8/5 17:53
- * describe：请求权限提示弹框
+ * 权限/隐私保护指引弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/5
  */
-public class ProtectionGuidelinesDialog extends Dialog {
+public class ProtectionGuidelinesDialog extends BaseDialog {
     /**
      * 富文本样式内容，可以添加超链接和颜色
      */
@@ -34,10 +33,6 @@ public class ProtectionGuidelinesDialog extends Dialog {
      * 点击事件监听
      */
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 是否允许点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 按钮文字，同意文字内容，拒绝文字内容，标题内容
      */
@@ -59,18 +54,12 @@ public class ProtectionGuidelinesDialog extends Dialog {
      */
     private ColorStateList textColor = null;
     /**
-     * 背景样式
-     */
-    private Drawable bgDrawable;
-    private final LayoutInflater layoutInflater;
-    /**
      * 绑定布局
      */
     private DialogProtectionGuidelinesBinding binding;
 
     public ProtectionGuidelinesDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        layoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
     public ProtectionGuidelinesDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
@@ -78,8 +67,9 @@ public class ProtectionGuidelinesDialog extends Dialog {
         return this;
     }
 
+    @Override
     public ProtectionGuidelinesDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -93,8 +83,9 @@ public class ProtectionGuidelinesDialog extends Dialog {
         return this;
     }
 
+    @Override
     public ProtectionGuidelinesDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -198,23 +189,9 @@ public class ProtectionGuidelinesDialog extends Dialog {
         });
         binding.dialogTextView.setText(spannableContent);
         binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    appDisplayMetrics.heightPixels * 3 / 5);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
+        applyCancelableOutside(outSide);
+        applyCenterWindow(4, 5, 3, 5);
     }
 
 }

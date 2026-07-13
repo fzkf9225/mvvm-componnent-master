@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -13,6 +11,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
 import io.coderf.arklab.common.widget.dialog.LoadingProgressDialog;
+import io.coderf.arklab.common.widget.feedback.ToastHelper;
 
 /**
  * 页面级 UI 辅助：Loading、Toast；绑定 Lifecycle，在 ON_DESTROY 时自动关闭 Loading，避免 Window 泄漏。
@@ -101,15 +100,10 @@ public class UIController implements DefaultLifecycleObserver {
     }
 
     public void showToast(String message) {
-        if (TextUtils.isEmpty(message) || !canShowUi()) {
+        if (!canShowUi()) {
             return;
         }
-        mainHandler.post(() -> {
-            if (!canShowUi()) {
-                return;
-            }
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-        });
+        ToastHelper.showShort(context, message);
     }
 
     private boolean canShowUi() {

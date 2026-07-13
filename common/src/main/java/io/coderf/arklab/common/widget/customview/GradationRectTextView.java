@@ -390,7 +390,7 @@ public class GradationRectTextView extends AppCompatTextView {
                 shapeBuilder.GradientInit(orientation, getColor(startColor), getColor(endColor));
             }
         } else {
-            shapeBuilder.Soild(mSolid);
+            shapeBuilder.Solid(mSolid);
         }
         shapeBuilder.build(this);
     }

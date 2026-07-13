@@ -6,6 +6,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -38,6 +40,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.common.utils.common.RxView;
 import io.coderf.arklab.common.widget.customview.BannerView;
+import io.coderf.arklab.common.widget.customview.BottomNavBar;
 import io.coderf.arklab.common.widget.customview.Code;
 import io.coderf.arklab.common.widget.customview.utils.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
@@ -81,6 +84,14 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         initBannerDemo(binding.customBannerPicture, bannerData, BannerView.IndicatorStyle.DOT);
         initBannerDemo(binding.customBannerText, bannerData, BannerView.IndicatorStyle.TEXT);
         initBannerDemo(binding.customBannerTextCenter, bannerData, BannerView.IndicatorStyle.TEXT);
+        binding.customBannerTextCenter.setOnBannerItemClickListener((bannerView, item, position) -> {
+            showToast("Banner 自定义点击：第 " + (position + 1) + " 项");
+            return true;
+        });
+        initInputWidgetDemo();
+        initTitleBarDemo();
+        initSkeletonDemo();
+        initBottomNavDemo();
         binding.cornersImageView.setOnClickListener(v -> new PreviewPhotoDialog(this)
                 .createImageInfo(imageUrl)
                 .currentPosition(0)
@@ -195,6 +206,50 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     private void initBannerDemo(BannerView<BannerBean> bannerView, List<BannerBean> bannerData, int indicatorStyle) {
         bannerView.setIndicatorStyle(indicatorStyle);
         bannerView.initView(bannerData);
+    }
+
+    private void initInputWidgetDemo() {
+        binding.clearableEditText.setOnClearListener(() -> showToast("ClearableEditText 已清除"));
+    }
+
+    private void initTitleBarDemo() {
+        binding.demoTitleBar.setOnBackClickListener(() -> showToast("TitleBar 返回点击"));
+        binding.demoTitleBar.setOnRightClickListener(() -> showToast("TitleBar 保存点击"));
+    }
+
+    private void initSkeletonDemo() {
+        binding.btnSkeletonDemo.setOnClickListener(v -> {
+            binding.skeletonContent.setVisibility(View.GONE);
+            binding.skeletonLayout.showSkeleton();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                binding.skeletonLayout.hideSkeleton();
+                binding.skeletonContent.setVisibility(View.VISIBLE);
+                showToast("SkeletonLayout 加载完成");
+            }, 1500);
+        });
+    }
+
+    private void initBottomNavDemo() {
+        int themeColor = ContextCompat.getColor(this, io.coderf.arklab.common.R.color.themeColor);
+        int normalColor = ContextCompat.getColor(this, io.coderf.arklab.common.R.color.gray);
+        binding.demoBottomNavBar
+                .setNavItems(Arrays.asList(
+                        new BottomNavBar.NavItem(R.id.demo_nav_home, R.mipmap.ic_launcher, "首页"),
+                        new BottomNavBar.NavItem(R.id.demo_nav_category, R.mipmap.ic_launcher, "分类"),
+                        new BottomNavBar.NavItem(R.id.demo_nav_mine, R.mipmap.ic_launcher, "我的")
+                ))
+                .setNavItemColors(themeColor, normalColor)
+                .setSelectedItem(R.id.demo_nav_home)
+                .setOnNavItemSelectedListener(itemId -> {
+                    if (itemId == R.id.demo_nav_home) {
+                        showToast("BottomNavBar：首页");
+                    } else if (itemId == R.id.demo_nav_category) {
+                        showToast("BottomNavBar：分类");
+                    } else if (itemId == R.id.demo_nav_mine) {
+                        showToast("BottomNavBar：我的");
+                    }
+                    return true;
+                });
     }
 
     OnMenuClickListener menuClickListener = new OnMenuClickListener() {

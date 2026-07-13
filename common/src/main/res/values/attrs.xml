@@ -492,6 +492,15 @@
         <attr name="radius" />
     </declare-styleable>
 
+    <declare-styleable name="ClearableEditText">
+        <attr name="clearIcon" />
+        <attr name="enableBgStyle" />
+        <attr name="strokeColor" />
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+    </declare-styleable>
+
     <declare-styleable name="MaterialRipple">
         <attr name="viewItemBackground" format="reference" />
         <attr name="viewItemForeground" format="reference" />
@@ -841,5 +850,39 @@
     <declare-styleable name="RecyclerEmptyHostView">
         <!-- 列表与空态占位共用背景（颜色或 drawable 引用） -->
         <attr name="recyclerEmptyBackground" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="PasswordEditText">
+        <attr name="passwordVisibleIcon" format="reference" />
+        <attr name="passwordInvisibleIcon" format="reference" />
+        <attr name="enablePasswordToggle" format="boolean" />
+        <attr name="enableClear" format="boolean" />
+        <attr name="clearIcon" />
+        <attr name="enableBgStyle" />
+        <attr name="strokeColor" />
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+    </declare-styleable>
+
+    <declare-styleable name="TitleBar">
+        <attr name="titleBarTitle" format="string" />
+        <attr name="titleBarRightText" format="string" />
+        <attr name="titleBarTitleColor" format="color" />
+        <attr name="titleBarRightTextColor" format="color" />
+        <attr name="titleBarTitleSize" format="dimension" />
+        <attr name="titleBarBackIcon" format="reference" />
+        <attr name="titleBarShowBack" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SkeletonLayout">
+        <attr name="skeletonRowCount" format="integer" />
+        <attr name="skeletonRowHeight" format="dimension" />
+        <attr name="skeletonRowSpacing" format="dimension" />
+        <attr name="skeletonRowRadius" format="dimension" />
+        <attr name="skeletonBaseColor" format="color" />
+        <attr name="skeletonHighlightColor" format="color" />
+        <attr name="skeletonShimmerEnabled" format="boolean" />
+        <attr name="skeletonShimmerDuration" format="integer" />
     </declare-styleable>
 </resources>

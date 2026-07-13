@@ -1,38 +1,33 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogEditAreaBinding;
 import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 
 
 /**
- * Created by fz on 2024/2/26.
- * describe：多行输入框
+ * 多行文本输入框弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/2/26
  */
-public class EditAreaDialog extends Dialog {
+public class EditAreaDialog extends BaseDialog {
     /**
      * 绑定布局
      */
@@ -41,10 +36,6 @@ public class EditAreaDialog extends Dialog {
      * 监听
      */
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 是否允许点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 右侧确定按钮文字
      */
@@ -82,11 +73,6 @@ public class EditAreaDialog extends Dialog {
      */
     private ColorStateList tipColor = null;
 
-    /**
-     * 背景样式
-     */
-    private Drawable bgDrawable;
-
     private float tipsTextSizeSp = 0f;
     private int tipsMarginTopPx = -1;
     private int tipsMarginStartPx = -1;
@@ -100,11 +86,8 @@ public class EditAreaDialog extends Dialog {
     private float positiveTextSizeSp = 0f;
     private float negativeTextSizeSp = 0f;
 
-    private final LayoutInflater layoutInflater;
-
     public EditAreaDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        layoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
     public EditAreaDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
@@ -112,8 +95,15 @@ public class EditAreaDialog extends Dialog {
         return this;
     }
 
+    @Override
     public EditAreaDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
+        return this;
+    }
+
+    @Override
+    public EditAreaDialog setBgDrawable(Drawable bgDrawable) {
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -124,11 +114,6 @@ public class EditAreaDialog extends Dialog {
 
     public EditAreaDialog setPositiveTextColor(@ColorInt int color) {
         positiveTextColor = ColorStateList.valueOf(color);
-        return this;
-    }
-
-    public EditAreaDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
         return this;
     }
 
@@ -305,30 +290,9 @@ public class EditAreaDialog extends Dialog {
                 dismiss();
             }
         });
-        setCanceledOnTouchOutside(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
-
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f)
-        )));
+        applyCancelableOutside(outSide);
+        applyCenterWindow();
     }
 
     private void applyAppearanceOverrides() {

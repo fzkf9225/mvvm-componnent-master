@@ -3,6 +3,7 @@ package io.coderf.arklab.common.base;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
@@ -21,18 +22,26 @@ import io.coderf.arklab.common.listener.PagingAdapterListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
+import io.coderf.arklab.common.widget.feedback.SkeletonLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 /**
- * Created by fz on 2017/11/17.
- * 列表式fragment的BaseRecyclerViewFragment封装
+ * 列表分页 Fragment 基类，默认使用 {@link EmptyLayout} 展示加载/空态/错误；
+ * 子类可通过 {@link #enableSkeletonLoading()} 开启骨架屏首刷加载（默认关闭，保持原有行为）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/11/17
  */
 public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, SwipeRefreshLayout.OnRefreshListener{
     protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
+    @Nullable
+    protected SkeletonLayout skeletonLayout;
     protected SwipeRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
 
@@ -50,7 +59,11 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected void initView(Bundle savedInstanceState) {
         mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
         emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
+        skeletonLayout = binding.getRoot().findViewById(R.id.mSkeletonLayout);
         refreshLayout = binding.getRoot().findViewById(R.id.swipeRefreshLayout);
+        if (enableSkeletonLoading() && skeletonLayout != null) {
+            configureSkeletonLayout(skeletonLayout);
+        }
         adapter = getRecyclerAdapter();
         getRecyclerView().setLayoutManager(createLayoutManager());
         if (!hideRecycleViewDivider()) {
@@ -105,8 +118,32 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected boolean shouldShowEmptyLayoutOnRefreshError() {
         return adapter != null
                 && adapter.getItemCount() == 0
-                && emptyLayout != null
-                && emptyLayout.isLoading();
+                && isInitialLoadingVisible();
+    }
+
+    /**
+     * 是否处于首刷/重试加载展示态（含骨架屏模式）。
+     */
+    protected boolean isInitialLoadingVisible() {
+        if (enableSkeletonLoading() && skeletonLayout != null
+                && skeletonLayout.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return emptyLayout != null && emptyLayout.isLoading();
+    }
+
+    /**
+     * 是否启用骨架屏替代 EmptyLayout 的首刷加载动画，默认 false（沿用 EmptyLayout）。
+     */
+    protected boolean enableSkeletonLoading() {
+        return false;
+    }
+
+    /**
+     * 骨架屏样式配置，仅在 {@link #enableSkeletonLoading()} 为 true 时生效。
+     */
+    protected void configureSkeletonLayout(@NonNull SkeletonLayout skeleton) {
+        skeleton.setRowCount(6);
     }
 
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
@@ -153,7 +190,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     public void onErrorCode(BaseResponse model) {
         try {
             boolean refreshError = refreshLayout.isRefreshing()
-                    || (emptyLayout != null && emptyLayout.isLoading());
+                    || isInitialLoadingVisible();
             if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
                 setViewState(EmptyLayout.State.LOADING_ERROR);
             }
@@ -171,6 +208,15 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected void setViewState(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
+        }
+        if (enableSkeletonLoading() && skeletonLayout != null) {
+            if (emptyType == EmptyLayout.State.NETWORK_LOADING
+                    || emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
+                skeletonLayout.showSkeleton();
+                emptyLayout.setState(EmptyLayout.State.HIDE_LAYOUT);
+                return;
+            }
+            skeletonLayout.hideSkeleton();
         }
         emptyLayout.setState(emptyType);
     }

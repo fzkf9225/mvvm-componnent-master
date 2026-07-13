@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,7 +30,7 @@ import io.coderf.arklab.common.widget.gallery.PreviewGalleryConfig;
  * @since 1.0
  * @created 2026/5/20 17:13
  */
-public class ImageSaveDialog extends Dialog {
+public class ImageSaveDialog extends BaseDialog {
 
     private OnImageSaveListener onImageSaveListener;
     private ImageSaveDialogBinding binding;
@@ -73,13 +72,11 @@ public class ImageSaveDialog extends Dialog {
         });
         applyBottomSheetStyle(getEffectiveConfig());
         setContentView(binding.getRoot());
+        applyBottomWindowLayout();
         Window dialogWindow = getWindow();
         if (dialogWindow == null) {
             return this;
         }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(Gravity.BOTTOM);
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.y = 0;
         ImageSaveDialogConfig cfg = getEffectiveConfig();

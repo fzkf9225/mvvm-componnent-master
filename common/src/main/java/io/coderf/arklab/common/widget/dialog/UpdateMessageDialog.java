@@ -1,19 +1,14 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -25,10 +20,14 @@ import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 
 
 /**
- * Updated by fz on 2025/12/09.
- * 更新弹框
+ * 应用更新提示弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/12/09
  */
-public class UpdateMessageDialog extends Dialog {
+public class UpdateMessageDialog extends BaseDialog {
     /**
      * 更新内容和版本好
      */
@@ -92,7 +91,7 @@ public class UpdateMessageDialog extends Dialog {
     private UpdateDialogBinding binding;
 
     public UpdateMessageDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context);
         buttonTextColor = ContextCompat.getColor(context, R.color.white);
         titleColor = ContextCompat.getColor(context, R.color.autoColor);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
@@ -259,23 +258,9 @@ public class UpdateMessageDialog extends Dialog {
                 }
             }
         });
-        setCancelable(canCancel);
-        setCanceledOnTouchOutside(canCancel);
-
         setContentView(binding.getRoot());
-
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5, ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        dialogWindow.setGravity(Gravity.CENTER);
+        applyCancelableOutside(canCancel);
+        applyCenterWindow();
     }
 
     public UpdateMessageDialog setOnUpdateListener(OnUpdateListener onUpdateListener) {

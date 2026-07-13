@@ -41,20 +41,24 @@ import io.coderf.arklab.common.activity.WebViewActivity;
 import io.coderf.arklab.common.adapter.PictureAdapter;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.bean.AttachmentBean;
-import io.coderf.arklab.common.bean.BannerBean;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
+import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2024/12/18 10:57
- * describe：自定义banner轮播图
+ * 自定义 Banner 轮播：支持圆点/文字指示器、自动轮播、链接跳转与大图预览。
+ * 数据项实现 {@link IBannerItem}；可通过 {@link #setOnBannerItemClickListener} 覆盖默认点击行为。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/18 10:57
  */
-
-public class BannerView<T extends BannerBean> extends ConstraintLayout {
+public class BannerView<T extends IBannerItem> extends ConstraintLayout {
     protected ViewPager2 viewPager;
     /** 底部指示器容器（圆点 / 文字页码共用） */
     protected LinearLayout indicatorLayout;
@@ -133,6 +137,21 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
     @Nullable
     protected TextView tvTotalPage;
     protected final Handler handler = new Handler(Looper.getMainLooper());
+
+    @Nullable
+    protected OnBannerItemClickListener<T> onBannerItemClickListener;
+    @Nullable
+    protected OnBannerPreviewListener<T> onBannerPreviewListener;
+
+    public BannerView<T> setOnBannerItemClickListener(@Nullable OnBannerItemClickListener<T> listener) {
+        this.onBannerItemClickListener = listener;
+        return this;
+    }
+
+    public BannerView<T> setOnBannerPreviewListener(@Nullable OnBannerPreviewListener<T> listener) {
+        this.onBannerPreviewListener = listener;
+        return this;
+    }
 
     public final static class IndicatorPosition {
         public final static int INNER_BOTTOM_CENTER = 0;
@@ -506,46 +525,65 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
     };
 
     protected final PictureAdapter.OnItemClickListener onDefaultImageItemClickListener = position -> {
-        if (!StringUtil.isEmpty(bannerList.get(position).getLinkUrl())) {
-            if ("#".equals(bannerList.get(position).getLinkUrl())) {
+        if (bannerList == null || position < 0 || position >= bannerList.size()) {
+            return;
+        }
+        T item = bannerList.get(position);
+        if (onBannerItemClickListener != null && onBannerItemClickListener.onBannerClick(this, item, position)) {
+            return;
+        }
+        handleDefaultBannerClick(item, position);
+    };
+
+    private void handleDefaultBannerClick(@NonNull T item, int position) {
+        if (!StringUtil.isEmpty(item.getLinkUrl())) {
+            if ("#".equals(item.getLinkUrl())) {
                 return;
             }
-            if (bannerList.get(position).getLinkUrl() == null) {
+            if (item.getLinkUrl() == null) {
                 return;
             }
-            if (bannerList.get(position).isLinkInside()) {
-                WebViewActivity.show(getContext(), bannerList.get(position).getLinkUrl(), "");
+            if (item.isLinkInside()) {
+                WebViewActivity.show(getContext(), item.getLinkUrl(), "");
             } else {
-                Uri uri = Uri.parse(bannerList.get(position).getLinkUrl());
+                Uri uri = Uri.parse(item.getLinkUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 getContext().startActivity(intent);
             }
             return;
         }
         if (previewLarger) {
-            List<AttachmentBean> list = this.bannerList.stream().map(item -> {
-                AttachmentBean attachmentBean = new AttachmentBean();
-                attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
-                if (item.getBannerUrl() instanceof Integer resId) {
-                    attachmentBean.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(), resId));
-                    attachmentBean.setRelativePath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(), resId));
-                    if (Config.getInstance().getApplication() != null) {
-                        attachmentBean.setFileName(getContext().getResources().getResourceEntryName(resId));
-                    }
-                } else if (item.getBannerUrl() instanceof Uri uri) {
-                    attachmentBean.setPath(uri == null ? null : uri.toString());
-                    attachmentBean.setRelativePath(uri == null ? null : uri.toString());
-                    attachmentBean.setFileName(FileUtil.getFileName(uri == null ? null : uri.toString()));
-                } else {
-                    attachmentBean.setPath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
-                    attachmentBean.setRelativePath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
-                    attachmentBean.setFileName(FileUtil.getFileName(item.getBannerUrl() == null ? null : item.getBannerUrl().toString()));
-                }
-                return attachmentBean;
-            }).collect(Collectors.toList());
-            new PreviewPhotoDialog(getContext(), list, position).show();
+            if (onBannerPreviewListener != null) {
+                onBannerPreviewListener.onBannerPreview(this, bannerList, position);
+            } else {
+                showDefaultPreview(position);
+            }
         }
-    };
+    }
+
+    private void showDefaultPreview(int position) {
+        List<AttachmentBean> list = this.bannerList.stream().map(item -> {
+            AttachmentBean attachmentBean = new AttachmentBean();
+            attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
+            if (item.getBannerUrl() instanceof Integer resId) {
+                attachmentBean.setPath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(), resId));
+                attachmentBean.setRelativePath(DrawableUtil.resourceToBase64(Config.getInstance().getApplication(), resId));
+                if (Config.getInstance().getApplication() != null) {
+                    attachmentBean.setFileName(getContext().getResources().getResourceEntryName(resId));
+                }
+            } else if (item.getBannerUrl() instanceof Uri uri) {
+                attachmentBean.setPath(uri == null ? null : uri.toString());
+                attachmentBean.setRelativePath(uri == null ? null : uri.toString());
+                attachmentBean.setFileName(FileUtil.getFileName(uri == null ? null : uri.toString()));
+            } else {
+                attachmentBean.setPath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
+                attachmentBean.setRelativePath(item.getBannerUrl() == null ? null : item.getBannerUrl().toString());
+                attachmentBean.setFileName(FileUtil.getFileName(item.getBannerUrl() == null ? null : item.getBannerUrl().toString()));
+            }
+            return attachmentBean;
+        }).collect(Collectors.toList());
+        new PreviewPhotoDialog(getContext(), list, position).show();
+    }
 
     protected final ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
         @Override
@@ -638,5 +676,19 @@ public class BannerView<T extends BannerBean> extends ConstraintLayout {
         if (viewPager != null) {
             viewPager.unregisterOnPageChangeCallback(onPageChangeCallback);
         }
+    }
+
+    /**
+     * Banner 项点击回调；返回 true 表示已消费，不再执行默认跳转/预览逻辑。
+     */
+    public interface OnBannerItemClickListener<T extends IBannerItem> {
+        boolean onBannerClick(@NonNull BannerView<T> bannerView, @NonNull T item, int position);
+    }
+
+    /**
+     * Banner 大图预览回调，用于替换默认 {@link PreviewPhotoDialog} 行为。
+     */
+    public interface OnBannerPreviewListener<T extends IBannerItem> {
+        void onBannerPreview(@NonNull BannerView<T> bannerView, @NonNull List<T> items, int position);
     }
 }

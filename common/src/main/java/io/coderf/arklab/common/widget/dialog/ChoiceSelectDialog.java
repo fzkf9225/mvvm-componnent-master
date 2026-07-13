@@ -1,11 +1,8 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -36,7 +33,7 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
  * <p>
  * 支持标题、确认/取消按钮、列表项高度、文字、勾选图标、全选头等全面配置。
  */
-public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
+public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
 
     public static final int MODE_MULTI = CheckBoxAdapter.MODE_MULTI;
     public static final int MODE_SINGLE = CheckBoxAdapter.MODE_SINGLE;
@@ -51,9 +48,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
     private int selectionMode = MODE_SINGLE;
     private OnChoiceSelectListener<T> choiceSelectListener;
 
-    private boolean outSide = true;
     private int gravity = Gravity.BOTTOM;
-    private Drawable bgDrawable;
 
     private boolean showTitle = true;
     private String titleText;
@@ -110,7 +105,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
     private boolean dismissOnSingleItemClick = false;
 
     public ChoiceSelectDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context);
         this.context = context;
     }
 
@@ -150,8 +145,9 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    @Override
     public ChoiceSelectDialog<T> setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -160,8 +156,9 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
         return this;
     }
 
+    @Override
     public ChoiceSelectDialog<T> setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -443,30 +440,16 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends Dialog {
     }
 
     private void initView() {
-        binding = DialogChoiceSelectBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = DialogChoiceSelectBinding.inflate(layoutInflater, null, false);
 
         setupTitle();
         setupButtons();
         setupRecyclerView();
         applyLayoutAppearance();
 
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(gravity);
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(context, 16f),
-                DensityUtil.dp2px(context, 16f),
-                0,
-                0
-        )));
+        applyCancelableOutside(outSide);
+        applyBottomSheetWindow(gravity);
     }
 
     private void setupTitle() {

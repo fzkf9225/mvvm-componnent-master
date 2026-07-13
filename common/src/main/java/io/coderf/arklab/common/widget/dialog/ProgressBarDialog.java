@@ -1,13 +1,9 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -19,11 +15,15 @@ import io.coderf.arklab.common.listener.OnProgressEndListener;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 
 /**
- * Created by fz on 2017/11/2.
- * 自定义加载dialog
+ * 自定义进度条弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/11/2
  */
 
-public class ProgressBarDialog extends Dialog {
+public class ProgressBarDialog extends BaseDialog {
     /**
      * 进度条布局
      */
@@ -299,20 +299,7 @@ public class ProgressBarDialog extends Dialog {
         setCancelable(isCanCancel);
         setOnCancelListener(onCancelListener);
         setContentView(processBarDialogBinding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
+        applyCenterWindow();
     }
 
     @Override

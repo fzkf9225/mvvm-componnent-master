@@ -1,39 +1,34 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogInputBinding;
 import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 
 
 /**
- * Created by fz on 2017/1/14.
- * describe：单行文本输入框
+ * 单行文本输入框弹窗。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/1/14
  */
-public class InputDialog extends Dialog {
+public class InputDialog extends BaseDialog {
     /**
      * 绑定布局
      */
@@ -43,10 +38,6 @@ public class InputDialog extends Dialog {
      * 监听器
      */
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 是否允许点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 右侧确认按钮提示文字
      */
@@ -86,12 +77,6 @@ public class InputDialog extends Dialog {
     /** 输入框文字颜色（与 XML 默认独立配置） */
     private ColorStateList inputTextColor = null;
 
-    private final LayoutInflater layoutInflater;
-    /**
-     * 背景
-     */
-    private Drawable bgDrawable;
-
     private float tipsTextSizeSp = 0f;
     private int tipsMarginTopPx = -1;
     private int tipsMarginStartPx = -1;
@@ -106,8 +91,7 @@ public class InputDialog extends Dialog {
     private float negativeTextSizeSp = 0f;
 
     public InputDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        layoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
     public InputDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
@@ -115,13 +99,15 @@ public class InputDialog extends Dialog {
         return this;
     }
 
+    @Override
     public InputDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
+    @Override
     public InputDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -298,30 +284,9 @@ public class InputDialog extends Dialog {
                 dismiss();
             }
         });
-        setCanceledOnTouchOutside(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
-
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f)
-        )));
+        applyCancelableOutside(outSide);
+        applyCenterWindow();
     }
 
     private void applyAppearanceOverrides() {

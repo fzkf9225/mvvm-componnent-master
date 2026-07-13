@@ -311,6 +311,54 @@
                 app:strokeColor="@color/themeColor"
                 app:strokeWidth="1dp" />
 
+            <io.coderf.arklab.common.widget.customview.ClearableEditText
+                android:id="@+id/clearableEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:hint="ClearableEditText 可清除输入框"
+                android:inputType="text"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
+                app:bgColor="@color/white"
+                app:enableBgStyle="true"
+                app:layout_constraintTop_toBottomOf="@+id/customEditText"
+                app:radius="@dimen/radius_m"
+                app:strokeColor="@color/themeColor"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.PasswordEditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xl"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:hint="PasswordEditText 密码输入框"
+                android:textColor="@color/autoColor"
+                android:textColorHint="@color/nv_bg_color"
+                android:textSize="@dimen/font_size_l"
+                app:bgColor="@color/white"
+                app:enableBgStyle="true"
+                app:enablePasswordToggle="true"
+                app:enableClear="true"
+                app:layout_constraintTop_toBottomOf="@+id/clearableEditText"
+                app:radius="@dimen/radius_m"
+                app:strokeColor="@color/themeColor"
+                app:strokeWidth="1dp" />
+
+            <io.coderf.arklab.common.widget.customview.TitleBar
+                android:id="@+id/demoTitleBar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_xxl"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+                app:titleBarRightText="保存"
+                app:titleBarShowBack="true"
+                app:titleBarTitle="TitleBar 示例"
+                app:titleBarTitleColor="@color/black"
+                app:titleBarRightTextColor="@color/themeColor" />
+
             <io.coderf.arklab.common.widget.customview.CornerEditText
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"
@@ -326,7 +374,7 @@
                 app:bgColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customEditText"
+                app:layout_constraintTop_toBottomOf="@+id/demoTitleBar"
                 app:radius="@dimen/radius_l"
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
@@ -613,6 +661,73 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
                 app:unitText="次" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_skeleton_demo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:text="SkeletonLayout 骨架屏"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintTop_toBottomOf="@+id/value_label_start" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSkeletonDemo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="模拟列表加载"
+                android:textAllCaps="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_skeleton_demo" />
+
+            <FrameLayout
+                android:id="@+id/skeletonHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                app:layout_constraintTop_toBottomOf="@+id/btnSkeletonDemo">
+
+                <io.coderf.arklab.common.widget.feedback.SkeletonLayout
+                    android:id="@+id/skeletonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:skeletonRowCount="4"
+                    app:skeletonRowHeight="16dp"
+                    app:skeletonRowSpacing="12dp"
+                    app:skeletonShimmerEnabled="true" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/skeletonContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/padding_m"
+                    android:text="骨架屏加载完成后展示的真实内容区域。"
+                    android:textColor="@color/autoColor" />
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_bottom_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_xl"
+                android:text="BottomNavBar 底部导航"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintTop_toBottomOf="@+id/skeletonHost" />
+
+            <io.coderf.arklab.common.widget.customview.BottomNavBar
+                android:id="@+id/demoBottomNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginBottom="@dimen/vertical_margin_xl"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bottom_nav" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

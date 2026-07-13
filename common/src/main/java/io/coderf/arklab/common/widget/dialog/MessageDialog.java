@@ -1,25 +1,19 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
-import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogMessageBinding;
@@ -30,10 +24,14 @@ import io.coderf.arklab.common.utils.common.StringUtil;
 
 
 /**
- * Created by fz on 2019/10/11.
- * 提示弹框
+ * 单按钮提示弹框，支持标题类型区与富文本内容。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/11 00:00
  */
-public class MessageDialog extends Dialog {
+public class MessageDialog extends BaseDialog {
     /**
      * 弹框内容
      */
@@ -47,10 +45,6 @@ public class MessageDialog extends Dialog {
      */
     private OnDialogInterfaceClickListener onPositiveClickListener;
     /**
-     * 是否允许点击外部取消弹框
-     */
-    private boolean outSide = true;
-    /**
      * 弹框按钮文字
      */
     private String positiveText = null;
@@ -58,11 +52,6 @@ public class MessageDialog extends Dialog {
      * 弹框类型
      */
     private String messageType = null;
-    private final LayoutInflater layoutInflater;
-    /**
-     * 弹框背景
-     */
-    private Drawable bgDrawable;
     /**
      * 弹框文字颜色
      */
@@ -86,17 +75,12 @@ public class MessageDialog extends Dialog {
     private DialogMessageBinding binding;
 
     public MessageDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        layoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
-    public MessageDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
-        this.onPositiveClickListener = onPositiveClickListener;
-        return this;
-    }
-
+    @Override
     public MessageDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -125,8 +109,14 @@ public class MessageDialog extends Dialog {
         return this;
     }
 
+    public MessageDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
+        this.onPositiveClickListener = onPositiveClickListener;
+        return this;
+    }
+
+    @Override
     public MessageDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -220,31 +210,9 @@ public class MessageDialog extends Dialog {
         }
         applyAppearanceOverrides();
 
-        setCancelable(outSide);
-        setCanceledOnTouchOutside(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
-
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f)
-        )));
+        applyCancelableOutside(outSide);
+        applyCenterWindow();
     }
 
     private void applyAppearanceOverrides() {

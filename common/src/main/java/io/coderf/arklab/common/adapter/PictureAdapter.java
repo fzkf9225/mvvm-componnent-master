@@ -13,12 +13,17 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import io.coderf.arklab.common.bean.BannerBean;
+import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
 
 /**
- * Created by fz on 2024/11/22
+ * Banner 轮播图片适配器。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/22 00:00
  */
-public class PictureAdapter<T extends BannerBean> extends RecyclerView.Adapter<PictureAdapter.BannerViewHolder<T>> {
+public class PictureAdapter<T extends IBannerItem> extends RecyclerView.Adapter<PictureAdapter.BannerViewHolder<T>> {
     private final List<T> imageUrls;
     private final @DrawableRes int placeholderImage;
 
@@ -53,7 +58,7 @@ public class PictureAdapter<T extends BannerBean> extends RecyclerView.Adapter<P
         return Integer.MAX_VALUE;
     }
 
-    protected static class BannerViewHolder<T extends BannerBean> extends RecyclerView.ViewHolder {
+    protected static class BannerViewHolder<T extends IBannerItem> extends RecyclerView.ViewHolder {
         private final ImageView imageView;
 
         public BannerViewHolder(@NonNull View itemView, PictureAdapter<T> pictureAdapter) {

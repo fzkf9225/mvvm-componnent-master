@@ -6,6 +6,15 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
 
+/**
+ * 首页九宫格菜单数据模型。自定义菜单项可实现 {@link io.coderf.arklab.common.widget.customview.inter.IHomeMenuItem}，
+ * 或继承本类以保持与 {@link io.coderf.arklab.common.widget.customview.HomeMenuView} 的 Parcelable 兼容。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/22 00:00
+ */
 open class HomeMenuBean : BaseObservable, Parcelable {
     var id: Int
 

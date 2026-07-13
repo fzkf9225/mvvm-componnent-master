@@ -1,7 +1,6 @@
 package io.coderf.arklab.common.widget.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,15 +9,17 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.databinding.LoadingDialogBinding;
+import io.coderf.arklab.common.R;import io.coderf.arklab.common.databinding.LoadingDialogBinding;
 import io.coderf.arklab.common.utils.common.ScreenUtil;
 
 /**
- * updated by fz on 2025/9/8.
- * describe:自定义加载dialog
- */
-public class LoadingProgressDialog extends Dialog {
+ * 全局加载进度弹窗（单例）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/9/8
+ */public class LoadingProgressDialog extends BaseDialog {
     /**
      * 单例
      */
@@ -309,6 +310,9 @@ public class LoadingProgressDialog extends Dialog {
 
     @Override
     public void show() {
+        if (!canShow(getContext())) {
+            return;
+        }
         // 防止重复显示
         if (!isShowing()) {
             super.show();
@@ -318,7 +322,6 @@ public class LoadingProgressDialog extends Dialog {
             }
         }
     }
-
     @Override
     public void dismiss() {
         try {

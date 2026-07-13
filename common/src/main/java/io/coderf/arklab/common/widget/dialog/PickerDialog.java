@@ -1,14 +1,10 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -16,7 +12,6 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PopupWindowBean;
@@ -38,7 +33,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
  * @since 2.0
  * @created 2026/3/18
  */
-public class PickerDialog<T extends PopupWindowBean> extends Dialog {
+public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
 
     // 数据相关
     private List<T> menuData; // 泛型数据列表
@@ -59,7 +54,6 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     private @ColorInt int cancelButtonColor = -1;   // 取消按钮文字颜色
     private @ColorInt int confirmButtonBgColor = -1; // 确认按钮背景颜色
     private @ColorInt int cancelButtonBgColor = -1;   // 取消按钮背景颜色
-    private Drawable bgDrawable;                 // 对话框背景
     private boolean wrapSelectorWheel = true;    // 是否循环滚动
     private int visibility = View.VISIBLE;       // 是否可见
 
@@ -76,16 +70,14 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     private int buttonBarMarginTopPx = -1;
 
     // 对话框属性
-    private boolean showTitle = true;               // 是否允许点击外部取消
-    // 对话框属性
-    private boolean outSide = true;               // 是否允许点击外部取消
+    private boolean showTitle = true;               // 是否显示标题
     private int gravity = Gravity.BOTTOM;         // 对话框显示位置
 
     private DialogPickerBinding binding;
     private final Context context;
 
     public PickerDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
+        super(context);
         this.context = context;
     }
 
@@ -302,8 +294,9 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     /**
      * 设置对话框背景
      */
+    @Override
     public PickerDialog<T> setBgDrawable(Drawable drawable) {
-        this.bgDrawable = drawable;
+        super.setBgDrawable(drawable);
         return this;
     }
 
@@ -318,8 +311,9 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     /**
      * 设置是否允许点击外部取消
      */
+    @Override
     public PickerDialog<T> setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -393,7 +387,7 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
     }
 
     private void initView() {
-        binding = DialogPickerBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = DialogPickerBinding.inflate(layoutInflater, null, false);
 
         // 设置标题
         if (titleText != null && !titleText.isEmpty()) {
@@ -415,27 +409,9 @@ public class PickerDialog<T extends PopupWindowBean> extends Dialog {
 
         applyLayoutAppearance();
 
-        // 设置对话框属性
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-
-        // 设置窗口属性
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(gravity);
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(context, 16f),
-                DensityUtil.dp2px(context, 16f),
-                0,
-                0
-        )));
-
+        applyCancelableOutside(outSide);
+        applyBottomSheetWindow(gravity);
     }
 
     private void applyLayoutAppearance() {

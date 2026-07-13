@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
@@ -27,16 +28,24 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
+import io.coderf.arklab.common.widget.feedback.SkeletonLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
- * Created by fz on 2017/11/17.
- * 列表式fragment的BaseRecyclerViewFragment封装
+ * 传统分页列表 Fragment 基类，默认使用 {@link EmptyLayout} 展示加载/空态/错误；
+ * 子类可通过 {@link #enableSkeletonLoading()} 开启骨架屏首刷加载（默认关闭，保持原有行为）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/11/17
  */
 public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB> implements BaseRecyclerViewAdapter.OnItemClickListener,
         BaseRecyclerViewAdapter.OnItemLongClickListener, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener, OnLoadMoreListener {
     private RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
+    @Nullable
+    protected SkeletonLayout skeletonLayout;
     protected SmartRefreshLayout refreshLayout;
     protected boolean isCanRefresh = true;
     protected boolean isCanLoadMore = true;
@@ -65,7 +74,11 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     protected void initView(Bundle savedInstanceState) {
         mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
         emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
+        skeletonLayout = binding.getRoot().findViewById(R.id.mSkeletonLayout);
         refreshLayout = binding.getRoot().findViewById(R.id.smartFreshLayout);
+        if (enableSkeletonLoading() && skeletonLayout != null) {
+            configureSkeletonLayout(skeletonLayout);
+        }
         adapter = getRecyclerAdapter();
         getRecyclerView().setAdapter(adapter);
         getRecyclerView().setLayoutManager(initLayoutManager());
@@ -104,8 +117,10 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @SuppressLint("NotifyDataSetChanged")
     protected void setListData(List<T> listData) {
         try {
-            boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing || (emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING && mCurrentPage == 1) ||
-                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH;
+            boolean isRefresh = refreshLayout.getState() == RefreshState.Refreshing
+                    || (emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING && mCurrentPage == 1)
+                    || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH
+                    || isInitialLoadingVisible();
             if (isRefresh) {
                 onRefreshFinish(true);
                 adapter.setList(listData);
@@ -171,8 +186,11 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     @Override
     public void onErrorCode(BaseResponse model) {
         try {
-            if (refreshLayout.getState() == RefreshState.Refreshing || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING ||
-                    emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH || refreshLayout.getState() == RefreshState.Loading) {
+            if (refreshLayout.getState() == RefreshState.Refreshing
+                    || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING
+                    || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH
+                    || isInitialLoadingVisible()
+                    || refreshLayout.getState() == RefreshState.Loading) {
                 setViewState(EmptyLayout.State.LOADING_ERROR);
             }
             onRefreshFinish(false);
@@ -205,9 +223,49 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         return emptyLayout.getCurrentState();
     }
 
+    /**
+     * 是否处于首刷/重试加载展示态（含骨架屏模式）。
+     */
+    protected boolean isInitialLoadingVisible() {
+        if (enableSkeletonLoading() && skeletonLayout != null
+                && skeletonLayout.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return emptyLayout != null && emptyLayout.isLoading();
+    }
+
+    /**
+     * 是否启用骨架屏替代 EmptyLayout 的首刷加载动画，默认 false（沿用 EmptyLayout）。
+     */
+    protected boolean enableSkeletonLoading() {
+        return false;
+    }
+
+    /**
+     * 骨架屏样式配置，仅在 {@link #enableSkeletonLoading()} 为 true 时生效。
+     */
+    protected void configureSkeletonLayout(@NonNull SkeletonLayout skeleton) {
+        skeleton.setRowCount(6);
+    }
+
     protected void setViewState(EmptyLayout.State emptyType) {
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
+        }
+        if (enableSkeletonLoading() && skeletonLayout != null) {
+            if (emptyType == EmptyLayout.State.NETWORK_LOADING
+                    || emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
+                skeletonLayout.showSkeleton();
+                emptyLayout.setState(EmptyLayout.State.HIDE_LAYOUT);
+                emptyLayout.setVisibility(View.GONE);
+                if (emptyType == EmptyLayout.State.NETWORK_LOADING) {
+                    getRecyclerView().setVisibility(View.GONE);
+                } else {
+                    getRecyclerView().setVisibility(View.VISIBLE);
+                }
+                return;
+            }
+            skeletonLayout.hideSkeleton();
         }
         emptyLayout.setState(emptyType);
         if (Objects.requireNonNull(emptyType) == EmptyLayout.State.LOADING_ERROR) {

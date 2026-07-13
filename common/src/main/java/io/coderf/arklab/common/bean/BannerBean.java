@@ -3,12 +3,17 @@ package io.coderf.arklab.common.bean;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-/**
- * Created by fz on 2017/6/14.
- * 首页banner图
- */
+import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
 
-public class BannerBean extends BaseObservable {
+/**
+ * 首页 Banner 数据模型，实现 {@link IBannerItem} 以接入 {@link io.coderf.arklab.common.widget.customview.BannerView}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/6/14 00:00
+ */
+public class BannerBean extends BaseObservable implements IBannerItem {
     /**
      * 图片地址
      */
@@ -42,6 +47,7 @@ public class BannerBean extends BaseObservable {
 
     }
     @Bindable
+    @Override
     public String getLinkUrl() {
         return linkUrl;
     }
@@ -51,6 +57,7 @@ public class BannerBean extends BaseObservable {
     }
 
     @Bindable
+    @Override
     public Object getBannerUrl() {
         return bannerUrl;
     }
@@ -60,6 +67,7 @@ public class BannerBean extends BaseObservable {
     }
 
     @Bindable
+    @Override
     public boolean isLinkInside() {
         return linkInside;
     }

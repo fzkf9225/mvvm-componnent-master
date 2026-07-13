@@ -1,27 +1,19 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
-import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogConfirmBinding;
@@ -31,10 +23,14 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 
 
 /**
- * updated by fz on 2024/12/2.
- * describe：确认弹框
+ * 确认弹框：双按钮（确定 / 取消），支持富文本与细粒度样式配置。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2 00:00
  */
-public class ConfirmDialog extends Dialog {
+public class ConfirmDialog extends BaseDialog {
     /**
      * 弹框提示内容
      */
@@ -47,10 +43,6 @@ public class ConfirmDialog extends Dialog {
      * 弹框按钮点击监听
      */
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 是否允许点击外部取消
-     */
-    private boolean outSide = true;
     /**
      * 弹框右侧确认按钮文字
      */
@@ -79,10 +71,6 @@ public class ConfirmDialog extends Dialog {
      * 分割线颜色
      */
     private @ColorInt Integer lineColor = null;
-    /**
-     * 弹框背景
-     */
-    private Drawable bgDrawable;
 
     // 新增属性
     /** 确定按钮文字大小 (sp) */
@@ -112,17 +100,12 @@ public class ConfirmDialog extends Dialog {
     private int contentPaddingEndPx = -1;
 
     /**
-     * 布局填充器
-     */
-    private final LayoutInflater layoutInflater;
-    /**
      * 弹框布局
      */
     private DialogConfirmBinding binding;
 
     public ConfirmDialog(@NonNull Context context) {
-        super(context, R.style.ActionSheetDialogStyle);
-        layoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
     public ConfirmDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
@@ -130,8 +113,9 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    @Override
     public ConfirmDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -160,8 +144,9 @@ public class ConfirmDialog extends Dialog {
         return this;
     }
 
+    @Override
     public ConfirmDialog setBgDrawable(Drawable bgDrawable) {
-        this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -452,34 +437,9 @@ public class ConfirmDialog extends Dialog {
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-        // 设置Dialog属性
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f)
-        )));
+        applyCancelableOutside(outSide);
+        applyCenterWindow();
     }
 
 }

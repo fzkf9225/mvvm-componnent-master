@@ -5,8 +5,12 @@ import android.os.Build;
 import android.view.View;
 
 /**
- * Created by fz on 2023/5/23 16:33
- * describe :
+ * GradientDrawable 构建器，支持圆角、描边、渐变等；保留历史拼写 API 并标记 {@link Deprecated}。
+ *
+ * @author fz
+ * @version 1.1
+ * @since 1.0
+ * @created 2023/5/23 16:33
  */
 public class ShapeBuilder {
     private GradientDrawable drawable;
@@ -43,8 +47,8 @@ public class ShapeBuilder {
     public ShapeBuilder Stroke(int px, int color) {
         drawable.setStroke(px, color);
         if (container != null) {
-            container.stokewidth = px;
-            container.stokeColor = color;
+            container.strokeWidth = px;
+            container.strokeColor = color;
         }
         return this;
     }
@@ -60,8 +64,8 @@ public class ShapeBuilder {
     public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap) {
         drawable.setStroke(px, color, dashWidth, dashGap);
         if (container != null) {
-            container.stokewidth = px;
-            container.stokeColor = color;
+            container.strokeWidth = px;
+            container.strokeColor = color;
             container.dashWidth = dashWidth;
             container.dashGap = dashGap;
         }
@@ -69,14 +73,22 @@ public class ShapeBuilder {
     }
 
     /**
-     * @param color -背景颜色
+     * 设置背景填充色。
      */
-    public ShapeBuilder Soild(int color) {
+    public ShapeBuilder Solid(int color) {
         drawable.setColor(color);
         if (container != null) {
-            container.soild = color;
+            container.solid = color;
         }
         return this;
+    }
+
+    /**
+     * @deprecated 拼写错误，请使用 {@link #Solid(int)}。
+     */
+    @Deprecated
+    public ShapeBuilder Soild(int color) {
+        return Solid(color);
     }
 
     /**
@@ -252,7 +264,7 @@ public class ShapeBuilder {
     public ShapeBuilder GradientRadius(float radius) {
         drawable.setGradientRadius(radius);
         if (container != null) {
-            container.gradinetRadius = radius;
+            container.gradientRadius = radius;
         }
         return this;
     }
@@ -298,30 +310,30 @@ public class ShapeBuilder {
     private void operateMethod() {
         if (container != null) {
             this.Type(container.type)
-                    .Stroke(container.stokewidth, container.stokeColor, container.dashWidth,
+                    .Stroke(container.strokeWidth, container.strokeColor, container.dashWidth,
                             container.dashGap)
                     .Radius(container.topLeft, container.topRight, container.botLeft, container.botRight)
                     .setSize(container.width, container.height)
                     .GradientType(container.gradientType)
                     .GradientCenter(container.gradientCenterX, container.gradientCenterY)
-                    .GradientRadius(container.gradinetRadius);
-            if (container.soild != 0) {
-                Soild(container.soild);
+                    .GradientRadius(container.gradientRadius);
+            if (container.solid != 0) {
+                Solid(container.solid);
             }
         }
     }
 
     private class AttrContainer {
         public int type;
-        public int stokewidth;
-        public int stokeColor;
+        public int strokeWidth;
+        public int strokeColor;
         public int dashWidth;
         public int dashGap;
-        public int soild;
+        public int solid;
         public float topLeft, topRight, botLeft, botRight;
         public int width, height;
         public int gradientType;
-        public float gradinetRadius;
+        public float gradientRadius;
 
         public float gradientCenterX, gradientCenterY;
 
