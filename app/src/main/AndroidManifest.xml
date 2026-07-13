@@ -196,6 +196,9 @@
             android:name=".activity.MediaActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.EmptyLayoutDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DialogActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />

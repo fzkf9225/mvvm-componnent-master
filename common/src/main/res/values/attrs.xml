@@ -180,11 +180,37 @@
         <attr name="contentBottomMargin" />
         <attr name="imageTextMargin" />
 
-        <!-- 图片尺寸 -->
+    <!-- 图片尺寸（通用 fallback，各态未单独指定时使用） -->
         <attr name="imageWidth" />
         <attr name="imageHeight" />
+        <!-- 各状态图标独立尺寸，未指定时沿用 imageWidth/imageHeight，仍为 0 则 wrap_content（矢量默认 120dp） -->
+        <attr name="errorImageWidth" format="dimension" />
+        <attr name="errorImageHeight" format="dimension" />
+        <attr name="loadingImageWidth" format="dimension" />
+        <attr name="loadingImageHeight" format="dimension" />
+        <attr name="noDataImageWidth" format="dimension" />
+        <attr name="noDataImageHeight" format="dimension" />
+        <attr name="clickableNoDataImageWidth" format="dimension" />
+        <attr name="clickableNoDataImageHeight" format="dimension" />
         <attr name="loadingWidth" format="dimension" />
         <attr name="loadingHeight" format="dimension" />
+
+        <!-- 加载样式：spinner=转圈 Loading（默认），skeleton=骨架屏；勿用 default，AAPT 保留字 -->
+        <attr name="loadingStyle" format="enum">
+            <enum name="spinner" value="0" />
+            <enum name="skeleton" value="1" />
+        </attr>
+
+        <!-- 骨架屏配置（引用下方全局 attr，与 SkeletonLayout 共用） -->
+        <attr name="skeletonRowCount" />
+        <attr name="skeletonRowHeight" />
+        <attr name="skeletonRowSpacing" />
+        <attr name="skeletonRowRadius" />
+        <attr name="skeletonBaseColor" />
+        <attr name="skeletonHighlightColor" />
+        <attr name="skeletonShimmerEnabled" />
+        <attr name="skeletonShimmerDuration" />
+        <attr name="skeletonPadding" />
     </declare-styleable>
     <declare-styleable name="CounterEditText">
         <!-- 输入框高度，设置为0或负数时使用最低高度 -->
@@ -875,14 +901,25 @@
         <attr name="titleBarShowBack" format="boolean" />
     </declare-styleable>
 
+    <!-- 骨架屏属性：EmptyLayout 与 SkeletonLayout 共用 -->
+    <attr name="skeletonRowCount" format="integer" />
+    <attr name="skeletonRowHeight" format="dimension" />
+    <attr name="skeletonRowSpacing" format="dimension" />
+    <attr name="skeletonRowRadius" format="dimension" />
+    <attr name="skeletonBaseColor" format="color" />
+    <attr name="skeletonHighlightColor" format="color" />
+    <attr name="skeletonShimmerEnabled" format="boolean" />
+    <attr name="skeletonShimmerDuration" format="integer" />
+    <attr name="skeletonPadding" format="dimension" />
+
     <declare-styleable name="SkeletonLayout">
-        <attr name="skeletonRowCount" format="integer" />
-        <attr name="skeletonRowHeight" format="dimension" />
-        <attr name="skeletonRowSpacing" format="dimension" />
-        <attr name="skeletonRowRadius" format="dimension" />
-        <attr name="skeletonBaseColor" format="color" />
-        <attr name="skeletonHighlightColor" format="color" />
-        <attr name="skeletonShimmerEnabled" format="boolean" />
-        <attr name="skeletonShimmerDuration" format="integer" />
+        <attr name="skeletonRowCount" />
+        <attr name="skeletonRowHeight" />
+        <attr name="skeletonRowSpacing" />
+        <attr name="skeletonRowRadius" />
+        <attr name="skeletonBaseColor" />
+        <attr name="skeletonHighlightColor" />
+        <attr name="skeletonShimmerEnabled" />
+        <attr name="skeletonShimmerDuration" />
     </declare-styleable>
 </resources>

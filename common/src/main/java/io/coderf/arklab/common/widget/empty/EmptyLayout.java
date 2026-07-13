@@ -25,15 +25,41 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * 可配置的空白占位View，支持加载中、加载失败、无数据等状态
+ * 可配置的空白占位 View，支持加载中、加载失败、无数据等状态。
+ * <p>
+ * 加载态支持两种样式（{@link LoadingStyle}）：
+ * <ul>
+ *     <li>{@link LoadingStyle#DEFAULT} — 居中 Loading 动画（默认，与历史行为一致）</li>
+ *     <li>{@link LoadingStyle#SKELETON} — 骨架屏 Shimmer 占位（可通过 XML {@code app:loadingStyle="skeleton"} 或代码开启）</li>
+ * </ul>
  *
  * @author fz
- * @version 2.0
+ * @version 2.1
  * @since 1.0
  * @created 2025/12/09 16:30
- * @update 2026/3/10 19:25
+ * @update 2026/7/13 11:00
  */
 public class EmptyLayout extends ConstraintLayout {
+
+    /**
+     * 首刷/重试加载时的展示样式。
+     */
+    public enum LoadingStyle {
+        /** 居中 Loading 转圈（默认） */
+        DEFAULT(0),
+        /** 骨架屏 Shimmer 占位行 */
+        SKELETON(1);
+
+        private final int value;
+
+        LoadingStyle(int value) {
+            this.value = value;
+        }
+
+        public static LoadingStyle fromValue(int value) {
+            return value == SKELETON.value ? SKELETON : DEFAULT;
+        }
+    }
 
     public enum State {
         HIDE_LAYOUT,           // 隐藏布局
@@ -55,10 +81,11 @@ public class EmptyLayout extends ConstraintLayout {
     private String customNoDataContent = "";
 
     // ==================== 图片资源 ====================
-    @DrawableRes private int errorImage = R.mipmap.loading_error;
-    @DrawableRes private int loadingImage = R.mipmap.icon_loading_again;
-    @DrawableRes private int noDataImage = R.mipmap.page_icon_empty;
-    @DrawableRes private int clickableNoDataImage = R.mipmap.icon_loading_again;
+    @DrawableRes private int errorImage = R.drawable.ic_empty_load_error;
+    @DrawableRes private int loadingImage = R.drawable.ic_empty_loading;
+    @DrawableRes private int noDataImage = R.drawable.ic_empty_no_data;
+    /** 可点击重试态使用刷新图标；加载中静态图参见 {@link #loadingImage}（沙漏） */
+    @DrawableRes private int clickableNoDataImage = R.drawable.ic_empty_retry;
 
     // ==================== 文字资源 ====================
     @StringRes private int errorText = R.string.state_load_error;
@@ -110,13 +137,27 @@ public class EmptyLayout extends ConstraintLayout {
     // ==================== 图片尺寸 ====================
     private float imageWidth;
     private float imageHeight;
+    private float errorImageWidth;
+    private float errorImageHeight;
+    private float loadingImageWidth;
+    private float loadingImageHeight;
+    private float noDataImageWidth;
+    private float noDataImageHeight;
+    private float clickableNoDataImageWidth;
+    private float clickableNoDataImageHeight;
 
     // ==================== Loading尺寸 ====================
     private float loadingWidth;
     private float loadingHeight;
 
+    // ==================== Loading 样式 ====================
+    /** 加载态展示方式，默认 {@link LoadingStyle#DEFAULT}，不影响旧项目 */
+    private LoadingStyle loadingStyle = LoadingStyle.DEFAULT;
+    private float skeletonPaddingPx;
+
     // ==================== 控件引用 ====================
-    private LinearLayout containerView;  // 中间容器层
+    private LinearLayout containerView;  // 中间容器层（Loading / 图片 / 文字）
+    private SkeletonShimmerPanel skeletonPanel; // 骨架屏层，按需显示
     private AppCompatImageView ivImage;
     private Loading loadingView;
     private AppCompatTextView tvText;
@@ -132,7 +173,7 @@ public class EmptyLayout extends ConstraintLayout {
     public EmptyLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttr(attrs);
-        initViews();
+        initViews(attrs);
         setupClickListener();
     }
 
@@ -164,6 +205,7 @@ public class EmptyLayout extends ConstraintLayout {
 
         loadingWidth = DensityUtil.dp2px(getContext(), 32);
         loadingHeight = DensityUtil.dp2px(getContext(), 32);
+        skeletonPaddingPx = DensityUtil.dp2px(getContext(), 16);
 
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.EmptyLayout);
@@ -212,11 +254,37 @@ public class EmptyLayout extends ConstraintLayout {
             // 图片尺寸
             imageWidth = a.getDimension(R.styleable.EmptyLayout_imageWidth, imageWidth);
             imageHeight = a.getDimension(R.styleable.EmptyLayout_imageHeight, imageHeight);
+            errorImageWidth = a.getDimension(R.styleable.EmptyLayout_errorImageWidth, errorImageWidth);
+            errorImageHeight = a.getDimension(R.styleable.EmptyLayout_errorImageHeight, errorImageHeight);
+            loadingImageWidth = a.getDimension(R.styleable.EmptyLayout_loadingImageWidth, loadingImageWidth);
+            loadingImageHeight = a.getDimension(R.styleable.EmptyLayout_loadingImageHeight, loadingImageHeight);
+            noDataImageWidth = a.getDimension(R.styleable.EmptyLayout_noDataImageWidth, noDataImageWidth);
+            noDataImageHeight = a.getDimension(R.styleable.EmptyLayout_noDataImageHeight, noDataImageHeight);
+            clickableNoDataImageWidth = a.getDimension(
+                    R.styleable.EmptyLayout_clickableNoDataImageWidth, clickableNoDataImageWidth);
+            clickableNoDataImageHeight = a.getDimension(
+                    R.styleable.EmptyLayout_clickableNoDataImageHeight, clickableNoDataImageHeight);
             loadingWidth = a.getDimension(R.styleable.EmptyLayout_loadingWidth, loadingWidth);
             loadingHeight = a.getDimension(R.styleable.EmptyLayout_loadingHeight, loadingHeight);
 
+            loadingStyle = LoadingStyle.fromValue(
+                    a.getInt(R.styleable.EmptyLayout_loadingStyle, LoadingStyle.DEFAULT.value));
+            skeletonPaddingPx = a.getDimension(R.styleable.EmptyLayout_skeletonPadding, skeletonPaddingPx);
+
             a.recycle();
         }
+    }
+
+    /**
+     * 在 {@link #initViews()} 创建骨架屏后，应用 XML 中的骨架屏细项配置。
+     */
+    private void applySkeletonAttributesFromXml(@Nullable AttributeSet attrs) {
+        if (attrs == null || skeletonPanel == null) {
+            return;
+        }
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.EmptyLayout);
+        skeletonPanel.readFromEmptyLayoutStyleable(a);
+        a.recycle();
     }
 
     public AppCompatTextView getTvText() {
@@ -235,21 +303,33 @@ public class EmptyLayout extends ConstraintLayout {
         return containerView;
     }
 
-    private void initViews() {
-        // 创建容器View（LinearLayout）
+    /**
+     * 骨架屏面板，仅在 {@link LoadingStyle#SKELETON} 时展示；也可用于细粒度样式调整。
+     */
+    @Nullable
+    public SkeletonShimmerPanel getSkeletonPanel() {
+        return skeletonPanel;
+    }
+
+    private void initViews(@Nullable AttributeSet attrs) {
+        // 创建容器 View（LinearLayout）
         createContainer();
 
-        // 创建图片View
+        // 创建图片 View
         createImageView();
 
-        // 创建LoadingView
+        // 创建 LoadingView
         createLoadingView();
 
-        // 创建文字View
+        // 创建文字 View
         createTextView();
 
-        // 将所有View添加到容器中
+        // 将所有 View 添加到容器中
         setupContainer();
+
+        // 骨架屏层（默认 GONE，不影响旧布局）
+        createSkeletonPanel();
+        applySkeletonAttributesFromXml(attrs);
 
         // 应用布局
         applyConstraints();
@@ -341,6 +421,23 @@ public class EmptyLayout extends ConstraintLayout {
         }
     }
 
+    /**
+     * 全屏骨架屏层：与居中 Loading 容器互斥展示，懒创建后常驻以便复用行配置。
+     */
+    private void createSkeletonPanel() {
+        skeletonPanel = new SkeletonShimmerPanel(getContext());
+        skeletonPanel.setId(View.generateViewId());
+        skeletonPanel.setVisibility(GONE);
+        int padding = (int) skeletonPaddingPx;
+        skeletonPanel.setPadding(padding, padding, padding, padding);
+
+        LayoutParams params = new LayoutParams(
+                LayoutParams.MATCH_CONSTRAINT,
+                LayoutParams.MATCH_CONSTRAINT
+        );
+        addView(skeletonPanel, params);
+    }
+
     private void applyConstraints() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this);
@@ -348,6 +445,14 @@ public class EmptyLayout extends ConstraintLayout {
         // 设置容器View的水平居中
         constraintSet.connect(containerView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, (int) contentStartMargin);
         constraintSet.connect(containerView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, (int) contentEndMargin);
+
+        // 骨架屏铺满父布局
+        if (skeletonPanel != null) {
+            constraintSet.connect(skeletonPanel.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.connect(skeletonPanel.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+            constraintSet.connect(skeletonPanel.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(skeletonPanel.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        }
 
         // 根据内容对齐方式设置容器的垂直位置
         switch (contentGravity) {
@@ -380,12 +485,67 @@ public class EmptyLayout extends ConstraintLayout {
         this.currentState = state;
 
         if (state == State.HIDE_LAYOUT) {
+            hideSkeletonPanel();
+            clearSkeletonLoadingOverlay();
+            hideClassicLoadingContent();
             setVisibility(View.GONE);
             return;
         }
 
         setVisibility(View.VISIBLE);
         updateViewForState(state);
+    }
+
+    /** 停止并隐藏骨架屏（非 SKELETON 加载态、隐藏、错误、空态时调用）。 */
+    private void hideSkeletonPanel() {
+        if (skeletonPanel != null) {
+            skeletonPanel.hideSkeleton();
+        }
+    }
+
+    /** 骨架屏加载时铺满不透明背景，避免重试态透出下层列表/文案。 */
+    private void applySkeletonLoadingOverlay() {
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+    }
+
+    private void clearSkeletonLoadingOverlay() {
+        setBackground(null);
+    }
+
+    /**
+     * 按状态解析图标宽/高：态专属 > 通用 imageWidth/Height > wrap_content。
+     */
+    private int resolveImageDimension(float specificSize, float fallbackSize) {
+        if (specificSize > 0f) {
+            return (int) specificSize;
+        }
+        if (fallbackSize > 0f) {
+            return (int) fallbackSize;
+        }
+        return LinearLayout.LayoutParams.WRAP_CONTENT;
+    }
+
+    private void applyImageViewSize(float widthPx, float heightPx) {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) ivImage.getLayoutParams();
+        lp.width = resolveImageDimension(widthPx, imageWidth);
+        lp.height = resolveImageDimension(heightPx, imageHeight);
+        ivImage.setLayoutParams(lp);
+    }
+
+    /** 隐藏转圈/图片/提示文字，骨架屏加载态不与经典 Loading 文案叠加。 */
+    private void hideClassicLoadingContent() {
+        loadingView.stop();
+        loadingView.setVisibility(GONE);
+        ivImage.setVisibility(GONE);
+        tvText.setVisibility(GONE);
+    }
+
+    /** 是否正在使用骨架屏展示加载态。 */
+    public boolean isSkeletonLoadingActive() {
+        return loadingStyle == LoadingStyle.SKELETON
+                && isLoading()
+                && skeletonPanel != null
+                && skeletonPanel.getVisibility() == View.VISIBLE;
     }
 
     private void updateViewForState(State state) {
@@ -409,11 +569,16 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void setupErrorState() {
+        clearSkeletonLoadingOverlay();
+        hideSkeletonPanel();
+        containerView.setVisibility(VISIBLE);
+        applyImageViewSize(errorImageWidth, errorImageHeight);
         ivImage.setVisibility(View.VISIBLE);
         ivImage.setImageResource(errorImage);
         loadingView.setVisibility(View.GONE);
         loadingView.stop();
 
+        tvText.setVisibility(VISIBLE);
         tvText.setText(errorText);
         tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, errorTextSize);
         tvText.setTextColor(errorTextColor);
@@ -423,10 +588,23 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void setupLoadingState(State state) {
+        if (loadingStyle == LoadingStyle.SKELETON) {
+            hideClassicLoadingContent();
+            applySkeletonLoadingOverlay();
+            containerView.setVisibility(GONE);
+            skeletonPanel.showSkeleton();
+            clickEnable = state == State.NETWORK_LOADING_REFRESH;
+            return;
+        }
+
+        clearSkeletonLoadingOverlay();
+        hideSkeletonPanel();
+        containerView.setVisibility(VISIBLE);
         ivImage.setVisibility(View.GONE);
         loadingView.setVisibility(View.VISIBLE);
         loadingView.start();
 
+        tvText.setVisibility(VISIBLE);
         tvText.setText(loadingText);
         tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, loadingTextSize);
         tvText.setTextColor(loadingTextColor);
@@ -436,11 +614,21 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void setupNoDataState(boolean clickable) {
+        clearSkeletonLoadingOverlay();
+        hideSkeletonPanel();
+        containerView.setVisibility(VISIBLE);
+        if (clickable) {
+            applyImageViewSize(clickableNoDataImageWidth, clickableNoDataImageHeight);
+            ivImage.setImageResource(clickableNoDataImage);
+        } else {
+            applyImageViewSize(noDataImageWidth, noDataImageHeight);
+            ivImage.setImageResource(noDataImage);
+        }
         ivImage.setVisibility(View.VISIBLE);
-        ivImage.setImageResource(clickable ? clickableNoDataImage : noDataImage);
         loadingView.setVisibility(View.GONE);
         loadingView.stop();
 
+        tvText.setVisibility(VISIBLE);
         if (!customNoDataContent.isEmpty()) {
             tvText.setText(customNoDataContent);
         } else {
@@ -484,6 +672,7 @@ public class EmptyLayout extends ConstraintLayout {
     public void setErrorImage(@DrawableRes int resId) {
         this.errorImage = resId;
         if (currentState == State.LOADING_ERROR) {
+            applyImageViewSize(errorImageWidth, errorImageHeight);
             ivImage.setImageResource(resId);
         }
     }
@@ -511,6 +700,39 @@ public class EmptyLayout extends ConstraintLayout {
 
     public void setClickableNoDataImageRes(@DrawableRes int resId) {
         this.clickableNoDataImage = resId;
+    }
+
+    public EmptyLayout setErrorImageSize(int widthPx, int heightPx) {
+        this.errorImageWidth = widthPx;
+        this.errorImageHeight = heightPx;
+        if (currentState == State.LOADING_ERROR) {
+            applyImageViewSize(errorImageWidth, errorImageHeight);
+        }
+        return this;
+    }
+
+    public EmptyLayout setLoadingImageSize(int widthPx, int heightPx) {
+        this.loadingImageWidth = widthPx;
+        this.loadingImageHeight = heightPx;
+        return this;
+    }
+
+    public EmptyLayout setNoDataImageSize(int widthPx, int heightPx) {
+        this.noDataImageWidth = widthPx;
+        this.noDataImageHeight = heightPx;
+        if (currentState == State.NO_DATA) {
+            applyImageViewSize(noDataImageWidth, noDataImageHeight);
+        }
+        return this;
+    }
+
+    public EmptyLayout setClickableNoDataImageSize(int widthPx, int heightPx) {
+        this.clickableNoDataImageWidth = widthPx;
+        this.clickableNoDataImageHeight = heightPx;
+        if (currentState == State.NO_DATA_ENABLE_CLICK) {
+            applyImageViewSize(clickableNoDataImageWidth, clickableNoDataImageHeight);
+        }
+        return this;
     }
 
     public void setErrorTextRes(@StringRes int resId) {
@@ -543,6 +765,58 @@ public class EmptyLayout extends ConstraintLayout {
 
     public void setClickableNoDataTextColor(int color) {
         this.clickableNoDataTextColor = color;
+    }
+
+    // ==================== 加载样式 / 骨架屏配置 ====================
+
+    public LoadingStyle getLoadingStyle() {
+        return loadingStyle;
+    }
+
+    /**
+     * 切换加载态样式。默认 {@link LoadingStyle#DEFAULT}，旧代码无需调用。
+     */
+    public EmptyLayout setLoadingStyle(@NonNull LoadingStyle loadingStyle) {
+        this.loadingStyle = loadingStyle;
+        if (isLoading()) {
+            updateViewForState(currentState);
+        }
+        return this;
+    }
+
+    /** 便捷方法：是否使用骨架屏加载。 */
+    public EmptyLayout setSkeletonLoadingEnabled(boolean enabled) {
+        return setLoadingStyle(enabled ? LoadingStyle.SKELETON : LoadingStyle.DEFAULT);
+    }
+
+    public boolean isSkeletonLoadingEnabled() {
+        return loadingStyle == LoadingStyle.SKELETON;
+    }
+
+    public EmptyLayout setSkeletonRowCount(int rowCount) {
+        if (skeletonPanel != null) {
+            skeletonPanel.setRowCount(rowCount);
+        }
+        return this;
+    }
+
+    /** 当前骨架屏占位行数（未创建面板时返回 XML/代码最近一次配置，默认 4）。 */
+    public int getSkeletonRowCount() {
+        return skeletonPanel != null ? skeletonPanel.getRowCount() : 4;
+    }
+
+    public EmptyLayout setSkeletonRowHeight(int rowHeightPx) {
+        if (skeletonPanel != null) {
+            skeletonPanel.setRowHeight(rowHeightPx);
+        }
+        return this;
+    }
+
+    public EmptyLayout setSkeletonShimmerEnabled(boolean enabled) {
+        if (skeletonPanel != null) {
+            skeletonPanel.setShimmerEnabled(enabled);
+        }
+        return this;
     }
 
     public interface OnEmptyLayoutClickListener {

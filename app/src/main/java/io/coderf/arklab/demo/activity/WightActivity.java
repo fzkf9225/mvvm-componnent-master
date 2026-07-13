@@ -90,7 +90,6 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         });
         initInputWidgetDemo();
         initTitleBarDemo();
-        initSkeletonDemo();
         initBottomNavDemo();
         binding.cornersImageView.setOnClickListener(v -> new PreviewPhotoDialog(this)
                 .createImageInfo(imageUrl)
@@ -215,18 +214,6 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     private void initTitleBarDemo() {
         binding.demoTitleBar.setOnBackClickListener(() -> showToast("TitleBar 返回点击"));
         binding.demoTitleBar.setOnRightClickListener(() -> showToast("TitleBar 保存点击"));
-    }
-
-    private void initSkeletonDemo() {
-        binding.btnSkeletonDemo.setOnClickListener(v -> {
-            binding.skeletonContent.setVisibility(View.GONE);
-            binding.skeletonLayout.showSkeleton();
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                binding.skeletonLayout.hideSkeleton();
-                binding.skeletonContent.setVisibility(View.VISIBLE);
-                showToast("SkeletonLayout 加载完成");
-            }, 1500);
-        });
     }
 
     private void initBottomNavDemo() {

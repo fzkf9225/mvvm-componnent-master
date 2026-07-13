@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- 顶盖 -->
+    <path
+        android:fillColor="#B0BBC8"
+        android:pathData="M36,28 L84,28 Q86,28 86,30 L86,34 Q86,36 84,36 L36,36 Q34,36 34,34 L34,30 Q34,28 36,28 Z" />
+
+    <!-- 底盖 -->
+    <path
+        android:fillColor="#B0BBC8"
+        android:pathData="M36,82 L84,82 Q86,82 86,84 L86,88 Q86,90 84,90 L36,90 Q34,90 34,88 L34,84 Q34,82 36,82 Z" />
+
+    <!-- 上半玻璃 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M40,38 L80,38 L62,56 Z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#A8B4C4"
+        android:strokeLineJoin="round" />
+
+    <!-- 下半玻璃 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M62,60 L80,78 L40,78 Z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#A8B4C4"
+        android:strokeLineJoin="round" />
+
+    <!-- 上部沙 -->
+    <path
+        android:fillColor="#C5CED9"
+        android:pathData="M46,42 L74,42 L62,54 Z" />
+
+    <!-- 下部沙 -->
+    <path
+        android:fillColor="#C5CED9"
+        android:pathData="M54,68 L70,68 L62,74 Z" />
+
+    <!-- 流沙 -->
+    <path
+        android:fillColor="#B8C3D0"
+        android:pathData="M59,56 L61,56 L60,62 Z" />
+
+</vector>

@@ -34,6 +34,8 @@
             android:minHeight="90dp"
             android:paddingTop="@dimen/vertical_margin_l"
             android:paddingBottom="@dimen/horizontal_margin_l"
+            android:paddingStart="@dimen/horizontal_margin_l"
+            android:paddingEnd="@dimen/horizontal_margin_l"
             app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
             android:gravity="center"
             android:textColor="@color/autoColor"

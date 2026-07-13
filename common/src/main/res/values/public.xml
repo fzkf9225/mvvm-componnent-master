@@ -188,7 +188,10 @@
     <public name="icon_pause" type="mipmap"/>
     <public name="icon_play" type="mipmap"/>
     <public name="icon_stop" type="mipmap"/>
-    <public name="page_icon_empty" type="mipmap"/>
+    <public name="ic_empty_no_data" type="drawable"/>
+    <public name="ic_empty_load_error" type="drawable"/>
+    <public name="ic_empty_loading" type="drawable"/>
+    <public name="ic_empty_retry" type="drawable"/>
     <public name="star_empty" type="mipmap"/>
     <public name="star_full" type="mipmap"/>
     <public name="ic_arrow_bottom" type="mipmap"/>

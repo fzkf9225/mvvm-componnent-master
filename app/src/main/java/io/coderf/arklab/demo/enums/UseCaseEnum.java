@@ -14,6 +14,7 @@ import io.coderf.arklab.demo.activity.DemoSmartFlowPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingHeaderActivity;
 import io.coderf.arklab.demo.activity.DialogActivity;
+import io.coderf.arklab.demo.activity.EmptyLayoutDemoActivity;
 import io.coderf.arklab.demo.activity.DownloadActivity;
 import io.coderf.arklab.demo.activity.FormDetailActivity;
 import io.coderf.arklab.demo.activity.FormTopDetailActivity;
@@ -45,6 +46,7 @@ public enum UseCaseEnum {
      * 自定义组件
      */
     WIGHT(WightActivity.class, "自定义组件", "自定义实现的一些View、ViewGroup", null),
+    EMPTY_LAYOUT(EmptyLayoutDemoActivity.class, "EmptyLayout 骨架屏", "EmptyLayout 加载样式、骨架屏与空态/错误态用法演示", null),
     DIALOG(DialogActivity.class, "自定义dialog", "自定义实现的一些Vdialog", null),
     MEDIA(MediaActivity.class, "媒体访问", "自定义媒体dialog可以实现选择图片、视频等", null),
     DOWNLOAD(DownloadActivity.class, "文件下载", "自定义断点续传下载功能", null),

@@ -5,4 +5,16 @@
     <string name="nv_info">消息</string>
     <string name="nv_me">我的</string>
     <string name="nv_setting">设置</string>
+
+    <string name="empty_layout_demo_intro">EmptyLayout 支持 loadingStyle=\"skeleton\" 骨架屏，可通过 skeletonRowCount 控制占位行数。下方按钮可切换状态与行数；首刷约 1.5s 后展示模拟列表。</string>
+    <string name="empty_layout_demo_skeleton_load">骨架6行首刷</string>
+    <string name="empty_layout_demo_spinner_load">转圈首刷</string>
+    <string name="empty_layout_demo_skeleton_4_rows">骨架4行首刷</string>
+    <string name="empty_layout_demo_skeleton_8_rows">骨架8行首刷</string>
+    <string name="empty_layout_demo_skeleton_refresh">骨架屏重试</string>
+    <string name="empty_layout_demo_no_data">无数据</string>
+    <string name="empty_layout_demo_error">加载错误</string>
+    <string name="empty_layout_demo_show_content">显示内容</string>
+    <string name="empty_layout_demo_state_fmt">当前状态：%1$s\nloadingStyle=%2$s，骨架屏激活=%3$s，skeletonRowCount=%4$d</string>
+    <string name="empty_layout_demo_code_hint">代码示例：\nemptyLayout.setSkeletonLoadingEnabled(true);\nemptyLayout.setSkeletonRowCount(6);\nemptyLayout.setState(EmptyLayout.State.NETWORK_LOADING);\n\nXML：app:loadingStyle=\"skeleton\" app:skeletonRowCount=\"6\"\napp:skeletonRowHeight=\"14dp\" app:skeletonRowSpacing=\"10dp\"</string>
 </resources>

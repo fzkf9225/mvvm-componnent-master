@@ -64,8 +64,8 @@ public class MessageDialog extends BaseDialog {
     private float contentTextSizeSp = 0f;
     private int contentPaddingTopPx = -1;
     private int contentPaddingBottomPx = -1;
-    private int contentMarginStartPx = -1;
-    private int contentMarginEndPx = -1;
+    private int contentPaddingStartPx = -1;
+    private int contentPaddingEndPx = -1;
     private ColorStateList optionTextColor = null;
     private float optionTextSizeSp = 0f;
 
@@ -152,10 +152,27 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
 
-    public MessageDialog setContentHorizontalMarginDp(int marginStartDp, int marginEndDp) {
-        this.contentMarginStartPx = marginStartDp >= 0 ? DensityUtil.dp2px(getContext(), marginStartDp) : -1;
-        this.contentMarginEndPx = marginEndDp >= 0 ? DensityUtil.dp2px(getContext(), marginEndDp) : -1;
+    /**
+     * 设置正文左右内边距（px），任一侧小于 0 则保持 XML 该侧数值。
+     */
+    public MessageDialog setContentHorizontalPaddingPx(int paddingStartPx, int paddingEndPx) {
+        this.contentPaddingStartPx = paddingStartPx;
+        this.contentPaddingEndPx = paddingEndPx;
         return this;
+    }
+
+    public MessageDialog setContentHorizontalPaddingDp(int paddingStartDp, int paddingEndDp) {
+        this.contentPaddingStartPx = paddingStartDp >= 0 ? DensityUtil.dp2px(getContext(), paddingStartDp) : -1;
+        this.contentPaddingEndPx = paddingEndDp >= 0 ? DensityUtil.dp2px(getContext(), paddingEndDp) : -1;
+        return this;
+    }
+
+    /**
+     * @deprecated 请使用 {@link #setContentHorizontalPaddingDp(int, int)}，内容与 padding 语义统一。
+     */
+    @Deprecated
+    public MessageDialog setContentHorizontalMarginDp(int marginStartDp, int marginEndDp) {
+        return setContentHorizontalPaddingDp(marginStartDp, marginEndDp);
     }
 
     public MessageDialog setOptionTextColor(@ColorInt int color) {
@@ -239,25 +256,17 @@ public class MessageDialog extends BaseDialog {
         if (contentTextSizeSp > 0f) {
             binding.dialogTextView.setTextSize(contentTextSizeSp);
         }
-        if (contentPaddingTopPx >= 0 || contentPaddingBottomPx >= 0) {
-            int top = contentPaddingTopPx >= 0 ? contentPaddingTopPx : binding.dialogTextView.getPaddingTop();
-            int bottom = contentPaddingBottomPx >= 0 ? contentPaddingBottomPx : binding.dialogTextView.getPaddingBottom();
-            binding.dialogTextView.setPaddingRelative(
-                    binding.dialogTextView.getPaddingStart(),
-                    top,
-                    binding.dialogTextView.getPaddingEnd(),
-                    bottom);
-        }
-        if (contentMarginStartPx >= 0 || contentMarginEndPx >= 0) {
-            ViewGroup.MarginLayoutParams lp =
-                    (ViewGroup.MarginLayoutParams) binding.dialogTextView.getLayoutParams();
-            if (contentMarginStartPx >= 0) {
-                lp.setMarginStart(contentMarginStartPx);
-            }
-            if (contentMarginEndPx >= 0) {
-                lp.setMarginEnd(contentMarginEndPx);
-            }
-            binding.dialogTextView.setLayoutParams(lp);
+        if (contentPaddingTopPx >= 0 || contentPaddingBottomPx >= 0
+                || contentPaddingStartPx >= 0 || contentPaddingEndPx >= 0) {
+            int start = contentPaddingStartPx >= 0
+                    ? contentPaddingStartPx : binding.dialogTextView.getPaddingStart();
+            int top = contentPaddingTopPx >= 0
+                    ? contentPaddingTopPx : binding.dialogTextView.getPaddingTop();
+            int end = contentPaddingEndPx >= 0
+                    ? contentPaddingEndPx : binding.dialogTextView.getPaddingEnd();
+            int bottom = contentPaddingBottomPx >= 0
+                    ? contentPaddingBottomPx : binding.dialogTextView.getPaddingBottom();
+            binding.dialogTextView.setPaddingRelative(start, top, end, bottom);
         }
         if (optionTextColor != null) {
             binding.dialogOption.setTextColor(optionTextColor);

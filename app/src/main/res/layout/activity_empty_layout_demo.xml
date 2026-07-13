@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:fillViewport="true"
+        tools:context=".activity.EmptyLayoutDemoActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_m">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvIntro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/empty_layout_demo_intro"
+                android:textColor="@color/autoColor"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCurrentState"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:background="@color/white"
+                android:padding="@dimen/padding_s"
+                android:textColor="@color/themeColor"
+                android:textSize="@dimen/font_size_m"
+                tools:text="当前状态：HIDE_LAYOUT"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvIntro" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSkeletonLoading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="@string/empty_layout_demo_skeleton_load"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toStartOf="@+id/btnSpinnerLoading"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrentState" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSpinnerLoading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="@string/empty_layout_demo_spinner_load"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/btnSkeletonLoading"
+                app:layout_constraintTop_toTopOf="@+id/btnSkeletonLoading" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSkeleton4Rows"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="@string/empty_layout_demo_skeleton_4_rows"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toStartOf="@+id/btnSkeleton8Rows"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSkeletonLoading" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSkeleton8Rows"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="@string/empty_layout_demo_skeleton_8_rows"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/btnSkeleton4Rows"
+                app:layout_constraintTop_toTopOf="@+id/btnSkeleton4Rows" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSkeletonRefresh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="@string/empty_layout_demo_skeleton_refresh"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toStartOf="@+id/btnNoData"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSkeleton4Rows" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnNoData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="@string/empty_layout_demo_no_data"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/btnSkeletonRefresh"
+                app:layout_constraintTop_toTopOf="@+id/btnSkeletonRefresh" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnError"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="@string/empty_layout_demo_error"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toStartOf="@+id/btnHide"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSkeletonRefresh" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnHide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="@string/empty_layout_demo_show_content"
+                android:textAllCaps="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/btnError"
+                app:layout_constraintTop_toTopOf="@+id/btnError" />
+
+            <FrameLayout
+                android:id="@+id/demoHost"
+                android:layout_width="0dp"
+                android:layout_height="320dp"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnError">
+
+                <LinearLayout
+                    android:id="@+id/mockListContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_m">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="模拟列表 Item #1"
+                        android:textColor="@color/autoColor"
+                        android:textSize="@dimen/font_size_l" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vertical_margin_m"
+                        android:text="模拟列表 Item #2"
+                        android:textColor="@color/autoColor"
+                        android:textSize="@dimen/font_size_l" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vertical_margin_m"
+                        android:text="模拟列表 Item #3"
+                        android:textColor="@color/autoColor"
+                        android:textSize="@dimen/font_size_l" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vertical_margin_m"
+                        android:text="加载完成后显示以上内容"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/font_size_m" />
+                </LinearLayout>
+
+                <io.coderf.arklab.common.widget.empty.EmptyLayout
+                    android:id="@+id/demoEmptyLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:loadingStyle="skeleton"
+                    app:skeletonPadding="16dp"
+                    app:skeletonRowCount="6"
+                    app:skeletonRowHeight="14dp"
+                    app:skeletonRowSpacing="10dp"
+                    app:skeletonBaseColor="#E4E8ED"
+                    app:skeletonHighlightColor="#F5F7FA"
+                    app:skeletonShimmerEnabled="true" />
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCodeHint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginBottom="@dimen/vertical_margin_xl"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/empty_layout_demo_code_hint"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/demoHost" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

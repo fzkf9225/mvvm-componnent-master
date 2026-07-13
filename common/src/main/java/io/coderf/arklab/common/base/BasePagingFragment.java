@@ -22,14 +22,14 @@ import io.coderf.arklab.common.listener.PagingAdapterListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
-import io.coderf.arklab.common.widget.feedback.SkeletonLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 /**
  * 列表分页 Fragment 基类，默认使用 {@link EmptyLayout} 展示加载/空态/错误；
- * 子类可通过 {@link #enableSkeletonLoading()} 开启骨架屏首刷加载（默认关闭，保持原有行为）。
+ * 子类可通过 {@link #enableSkeletonLoading()} 或 XML {@code app:loadingStyle="skeleton"}
+ * 开启骨架屏首刷加载（默认关闭，保持原有行为）。
  *
  * @author fz
  * @version 1.0
@@ -40,8 +40,6 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, SwipeRefreshLayout.OnRefreshListener{
     protected RecyclerView mRecyclerView;
     protected EmptyLayout emptyLayout;
-    @Nullable
-    protected SkeletonLayout skeletonLayout;
     protected SwipeRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
 
@@ -59,11 +57,8 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     protected void initView(Bundle savedInstanceState) {
         mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
         emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
-        skeletonLayout = binding.getRoot().findViewById(R.id.mSkeletonLayout);
         refreshLayout = binding.getRoot().findViewById(R.id.swipeRefreshLayout);
-        if (enableSkeletonLoading() && skeletonLayout != null) {
-            configureSkeletonLayout(skeletonLayout);
-        }
+        applyEmptyLayoutLoadingConfig();
         adapter = getRecyclerAdapter();
         getRecyclerView().setLayoutManager(createLayoutManager());
         if (!hideRecycleViewDivider()) {
@@ -125,25 +120,29 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
      * 是否处于首刷/重试加载展示态（含骨架屏模式）。
      */
     protected boolean isInitialLoadingVisible() {
-        if (enableSkeletonLoading() && skeletonLayout != null
-                && skeletonLayout.getVisibility() == View.VISIBLE) {
-            return true;
-        }
         return emptyLayout != null && emptyLayout.isLoading();
     }
 
     /**
-     * 是否启用骨架屏替代 EmptyLayout 的首刷加载动画，默认 false（沿用 EmptyLayout）。
+     * 是否启用骨架屏加载（委托 {@link EmptyLayout#setSkeletonLoadingEnabled(boolean)}）。
      */
     protected boolean enableSkeletonLoading() {
         return false;
     }
 
+    /** 在 {@link #initView} 中应用骨架屏配置，子类一般无需重写。 */
+    protected void applyEmptyLayoutLoadingConfig() {
+        if (emptyLayout != null && enableSkeletonLoading()) {
+            emptyLayout.setSkeletonLoadingEnabled(true);
+            configureEmptyLayoutSkeleton(emptyLayout);
+        }
+    }
+
     /**
      * 骨架屏样式配置，仅在 {@link #enableSkeletonLoading()} 为 true 时生效。
      */
-    protected void configureSkeletonLayout(@NonNull SkeletonLayout skeleton) {
-        skeleton.setRowCount(6);
+    protected void configureEmptyLayoutSkeleton(@NonNull EmptyLayout layout) {
+        layout.setSkeletonRowCount(6);
     }
 
     protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
@@ -209,16 +208,24 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         if (emptyLayout == null || getRecyclerView() == null) {
             return;
         }
-        if (enableSkeletonLoading() && skeletonLayout != null) {
-            if (emptyType == EmptyLayout.State.NETWORK_LOADING
-                    || emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
-                skeletonLayout.showSkeleton();
-                emptyLayout.setState(EmptyLayout.State.HIDE_LAYOUT);
-                return;
-            }
-            skeletonLayout.hideSkeleton();
-        }
         emptyLayout.setState(emptyType);
+        if (emptyType == EmptyLayout.State.LOADING_ERROR
+                || emptyType == EmptyLayout.State.NO_DATA) {
+            getRecyclerView().setVisibility(View.GONE);
+        } else if (emptyType == EmptyLayout.State.NETWORK_LOADING) {
+            emptyLayout.setVisibility(View.VISIBLE);
+            getRecyclerView().setVisibility(View.GONE);
+        } else if (emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
+            if (emptyLayout.isSkeletonLoadingEnabled()) {
+                emptyLayout.setVisibility(View.VISIBLE);
+            } else {
+                emptyLayout.setVisibility(View.GONE);
+            }
+            getRecyclerView().setVisibility(View.VISIBLE);
+        } else if (emptyType == EmptyLayout.State.HIDE_LAYOUT) {
+            emptyLayout.setVisibility(View.GONE);
+            getRecyclerView().setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.widget.feedback;
+package io.coderf.arklab.common.widget.empty;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -25,15 +25,16 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * 骨架屏容器：在内容加载前展示占位块，并附带 Shimmer 扫光动画。
- * 可通过 {@link #setRowCount(int)}、{@link #setRowHeight(int)} 配置占位行。
+ * 骨架屏占位面板（Shimmer 扫光 + 多行圆角块）。
+ * <p>
+ * 通常由 {@link EmptyLayout} 内部持有；独立使用时见 {@link io.coderf.arklab.common.widget.feedback.SkeletonLayout}。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2026/7/13 10:30
+ * @created 2026/7/13 11:00
  */
-public class SkeletonLayout extends LinearLayout {
+public class SkeletonShimmerPanel extends LinearLayout {
 
     private int rowCount = 4;
     private int rowHeightPx;
@@ -51,75 +52,139 @@ public class SkeletonLayout extends LinearLayout {
     private final Paint shimmerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Matrix shimmerMatrix = new Matrix();
 
-    public SkeletonLayout(@NonNull Context context) {
+    public SkeletonShimmerPanel(@NonNull Context context) {
         this(context, null);
     }
 
-    public SkeletonLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public SkeletonShimmerPanel(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SkeletonLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SkeletonShimmerPanel(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
-        rowHeightPx = DensityUtil.dp2px(context, 16f);
-        rowSpacingPx = DensityUtil.dp2px(context, 12f);
-        rowRadiusPx = DensityUtil.dp2px(context, 4f);
-        baseColor = ContextCompat.getColor(context, R.color.default_background);
-        highlightColor = Color.parseColor("#ECECEC");
-
+        applyDefaults(context);
         if (attrs != null) {
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SkeletonLayout);
-            rowCount = ta.getInt(R.styleable.SkeletonLayout_skeletonRowCount, rowCount);
-            rowHeightPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowHeight, rowHeightPx);
-            rowSpacingPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowSpacing, rowSpacingPx);
-            rowRadiusPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowRadius, rowRadiusPx);
-            baseColor = ta.getColor(R.styleable.SkeletonLayout_skeletonBaseColor, baseColor);
-            highlightColor = ta.getColor(R.styleable.SkeletonLayout_skeletonHighlightColor, highlightColor);
-            shimmerEnabled = ta.getBoolean(R.styleable.SkeletonLayout_skeletonShimmerEnabled, shimmerEnabled);
-            shimmerDurationMs = ta.getInt(R.styleable.SkeletonLayout_skeletonShimmerDuration, (int) shimmerDurationMs);
-            ta.recycle();
+            applyAttributes(context, attrs, defStyleAttr);
         }
-
         setWillNotDraw(false);
         rebuildRows();
     }
 
+    private void applyDefaults(@NonNull Context context) {
+        rowHeightPx = DensityUtil.dp2px(context, 16f);
+        rowSpacingPx = DensityUtil.dp2px(context, 12f);
+        rowRadiusPx = DensityUtil.dp2px(context, 4f);
+        baseColor = Color.parseColor("#E4E8ED");
+        highlightColor = Color.parseColor("#F5F7FA");
+    }
+
     /**
-     * 显示骨架屏并开始动画。
+     * 从 {@link R.styleable#SkeletonLayout} 或 {@link R.styleable#EmptyLayout} 读取骨架屏配置。
      */
+    public void applyAttributes(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        if (attrs == null) {
+            return;
+        }
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SkeletonLayout, defStyleAttr, 0);
+        readSkeletonAttributes(ta);
+        ta.recycle();
+    }
+
+    /**
+     * 从 {@link R.styleable#EmptyLayout} 读取骨架屏相关字段（与 {@link #applyAttributes} 字段一致）。
+     */
+    public void readFromEmptyLayoutStyleable(@NonNull TypedArray emptyLayoutAttrs) {
+        rowCount = emptyLayoutAttrs.getInt(R.styleable.EmptyLayout_skeletonRowCount, rowCount);
+        rowHeightPx = (int) emptyLayoutAttrs.getDimension(
+                R.styleable.EmptyLayout_skeletonRowHeight, rowHeightPx);
+        rowSpacingPx = (int) emptyLayoutAttrs.getDimension(
+                R.styleable.EmptyLayout_skeletonRowSpacing, rowSpacingPx);
+        rowRadiusPx = (int) emptyLayoutAttrs.getDimension(
+                R.styleable.EmptyLayout_skeletonRowRadius, rowRadiusPx);
+        baseColor = emptyLayoutAttrs.getColor(R.styleable.EmptyLayout_skeletonBaseColor, baseColor);
+        highlightColor = emptyLayoutAttrs.getColor(
+                R.styleable.EmptyLayout_skeletonHighlightColor, highlightColor);
+        shimmerEnabled = emptyLayoutAttrs.getBoolean(
+                R.styleable.EmptyLayout_skeletonShimmerEnabled, shimmerEnabled);
+        shimmerDurationMs = emptyLayoutAttrs.getInt(
+                R.styleable.EmptyLayout_skeletonShimmerDuration, (int) shimmerDurationMs);
+    }
+
+    private void readSkeletonAttributes(@NonNull TypedArray ta) {
+        rowCount = ta.getInt(R.styleable.SkeletonLayout_skeletonRowCount, rowCount);
+        rowHeightPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowHeight, rowHeightPx);
+        rowSpacingPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowSpacing, rowSpacingPx);
+        rowRadiusPx = (int) ta.getDimension(R.styleable.SkeletonLayout_skeletonRowRadius, rowRadiusPx);
+        baseColor = ta.getColor(R.styleable.SkeletonLayout_skeletonBaseColor, baseColor);
+        highlightColor = ta.getColor(R.styleable.SkeletonLayout_skeletonHighlightColor, highlightColor);
+        shimmerEnabled = ta.getBoolean(R.styleable.SkeletonLayout_skeletonShimmerEnabled, shimmerEnabled);
+        shimmerDurationMs = ta.getInt(R.styleable.SkeletonLayout_skeletonShimmerDuration, (int) shimmerDurationMs);
+    }
+
+    /** 显示骨架行并启动 Shimmer（若已启用）。 */
     public void showSkeleton() {
         setVisibility(VISIBLE);
         startShimmer();
     }
 
-    /**
-     * 隐藏骨架屏并停止动画。
-     */
+    /** 隐藏骨架行并停止 Shimmer，避免离屏动画泄漏。 */
     public void hideSkeleton() {
         stopShimmer();
         setVisibility(GONE);
     }
 
-    public SkeletonLayout setRowCount(int rowCount) {
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public SkeletonShimmerPanel setRowCount(int rowCount) {
         this.rowCount = Math.max(1, rowCount);
         rebuildRows();
         return this;
     }
 
-    public SkeletonLayout setRowHeight(int rowHeightPx) {
+    public SkeletonShimmerPanel setRowHeight(int rowHeightPx) {
         this.rowHeightPx = rowHeightPx;
         rebuildRows();
         return this;
     }
 
-    public SkeletonLayout setShimmerEnabled(boolean shimmerEnabled) {
+    public SkeletonShimmerPanel setRowSpacing(int rowSpacingPx) {
+        this.rowSpacingPx = rowSpacingPx;
+        rebuildRows();
+        return this;
+    }
+
+    public SkeletonShimmerPanel setRowRadius(int rowRadiusPx) {
+        this.rowRadiusPx = rowRadiusPx;
+        rebuildRows();
+        return this;
+    }
+
+    public SkeletonShimmerPanel setBaseColor(@ColorInt int baseColor) {
+        this.baseColor = baseColor;
+        rebuildRows();
+        return this;
+    }
+
+    public SkeletonShimmerPanel setHighlightColor(@ColorInt int highlightColor) {
+        this.highlightColor = highlightColor;
+        return this;
+    }
+
+    public SkeletonShimmerPanel setShimmerEnabled(boolean shimmerEnabled) {
         this.shimmerEnabled = shimmerEnabled;
         if (!shimmerEnabled) {
             stopShimmer();
         } else if (getVisibility() == VISIBLE) {
             startShimmer();
         }
+        return this;
+    }
+
+    public SkeletonShimmerPanel setShimmerDurationMs(long shimmerDurationMs) {
+        this.shimmerDurationMs = shimmerDurationMs;
         return this;
     }
 

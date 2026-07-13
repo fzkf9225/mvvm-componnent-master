@@ -663,53 +663,6 @@
                 app:unitText="次" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_skeleton_demo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_xl"
-                android:text="SkeletonLayout 骨架屏"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_l"
-                app:layout_constraintTop_toBottomOf="@+id/value_label_start" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSkeletonDemo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                android:text="模拟列表加载"
-                android:textAllCaps="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_skeleton_demo" />
-
-            <FrameLayout
-                android:id="@+id/skeletonHost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_margin_m"
-                app:layout_constraintTop_toBottomOf="@+id/btnSkeletonDemo">
-
-                <io.coderf.arklab.common.widget.feedback.SkeletonLayout
-                    android:id="@+id/skeletonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:skeletonRowCount="4"
-                    app:skeletonRowHeight="16dp"
-                    app:skeletonRowSpacing="12dp"
-                    app:skeletonShimmerEnabled="true" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/skeletonContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="@dimen/padding_m"
-                    android:text="骨架屏加载完成后展示的真实内容区域。"
-                    android:textColor="@color/autoColor" />
-            </FrameLayout>
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_bottom_nav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -717,7 +670,7 @@
                 android:text="BottomNavBar 底部导航"
                 android:textColor="@color/autoColor"
                 android:textSize="@dimen/font_size_l"
-                app:layout_constraintTop_toBottomOf="@+id/skeletonHost" />
+                app:layout_constraintTop_toBottomOf="@+id/value_label_end" />
 
             <io.coderf.arklab.common.widget.customview.BottomNavBar
                 android:id="@+id/demoBottomNavBar"
