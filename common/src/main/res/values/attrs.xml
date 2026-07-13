@@ -180,7 +180,7 @@
         <attr name="contentBottomMargin" />
         <attr name="imageTextMargin" />
 
-    <!-- 图片尺寸（通用 fallback，各态未单独指定时使用） -->
+        <!-- 图片尺寸（通用 fallback，各态未单独指定时使用） -->
         <attr name="imageWidth" />
         <attr name="imageHeight" />
         <!-- 各状态图标独立尺寸，未指定时沿用 imageWidth/imageHeight，仍为 0 则 wrap_content（矢量默认 120dp） -->
