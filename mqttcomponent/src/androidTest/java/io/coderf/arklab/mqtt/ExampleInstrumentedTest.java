@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent;
+package io.coderf.arklab.mqtt;
 
 import static org.junit.Assert.assertEquals;
 

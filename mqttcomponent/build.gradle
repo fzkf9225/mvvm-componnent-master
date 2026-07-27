@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = 'io.coderf.arklab.mqttcomponent'
+    namespace = 'io.coderf.arklab.mqtt'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
         minSdk = libs.versions.minSdkVersion.get().toInteger()
@@ -39,6 +39,8 @@ android {
 
 dependencies {
     api libs.paho.org.eclipse.paho.mqttv5.client
+    // Lifecycle：MqttLifecycleSession / DefaultLifecycleObserver
+    api libs.lifecycle.runtime.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
     implementation libs.constraintlayout
@@ -72,7 +74,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.mqtt'
                 artifactId = 'mqtt'
-                version = '1.1.0'
+                version = '1.2.0'
             }
         }
         repositories {

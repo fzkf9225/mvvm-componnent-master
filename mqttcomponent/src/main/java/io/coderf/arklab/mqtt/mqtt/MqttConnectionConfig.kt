@@ -1,7 +1,4 @@
-package io.coderf.arklab.mqttcomponent.mqtt
-
-import io.coderf.arklab.mqttcomponent.mqtt.MqttConnectionConfig.Companion.builder
-
+package io.coderf.arklab.mqtt.mqtt
 
 /**
  * 通用 MQTT 连接参数（Eclipse Paho MQTT v5）。
@@ -16,6 +13,11 @@ import io.coderf.arklab.mqttcomponent.mqtt.MqttConnectionConfig.Companion.builde
  *   超出次数后回调 [MqttConnectionListener.onReconnectExhausted]
  *
  * Java 接入请使用 [builder] 构建，避免 Kotlin 默认参数兼容问题。
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 class MqttConnectionConfig private constructor(
     @JvmField val brokerAddress: String,
@@ -30,7 +32,15 @@ class MqttConnectionConfig private constructor(
     @JvmField val subscribeTopics: Array<String>?,
     @JvmField val subscribeQos: IntArray?,
     @JvmField val resubscribeOnReconnect: Boolean,
+    /** 连接相关回调（connected / disconnected / reconnecting / exhausted / error）是否切到主线程 */
     @JvmField val dispatchConnectOnMainThread: Boolean,
+    /** 消息相关回调（onMessage / onDeliveryComplete）是否切到主线程 */
+    @JvmField val dispatchMessageOnMainThread: Boolean,
+    /**
+     * 是否强制要求 username / password 非空。
+     * 设为 false 时允许匿名 Broker（仅校验 brokerAddress + clientId）。
+     */
+    @JvmField val requireAuth: Boolean,
     @JvmField val defaultPublishQos: Int,
     @JvmField val defaultPublishRetained: Boolean,
     @JvmField val maxReconnectAttempts: Int?,
@@ -39,11 +49,21 @@ class MqttConnectionConfig private constructor(
     @JvmField val reconnectMaxDelaySeconds: Int?,
 ) {
 
+    /** 是否启用自定义固定间隔重连（[maxReconnectAttempts] 非 null） */
     fun usesCustomReconnect(): Boolean = maxReconnectAttempts != null
 
+    /** 自定义重连生效间隔（秒） */
     fun effectiveReconnectIntervalSeconds(): Int =
         reconnectIntervalSeconds?.takeIf { it > 0 } ?: DEFAULT_CUSTOM_RECONNECT_INTERVAL_SECONDS
 
+    /**
+     * [MqttConnectionConfig] 建造器，便于 Java 链式赋值。
+     *
+     * @author fz
+     * @version 1.2
+     * @since 1.0
+     * @created 2026/7/27 10:10
+     */
     class Builder {
         private var brokerAddress: String = ""
         private var clientId: String = ""
@@ -58,6 +78,8 @@ class MqttConnectionConfig private constructor(
         private var subscribeQos: IntArray? = null
         private var resubscribeOnReconnect: Boolean = true
         private var dispatchConnectOnMainThread: Boolean = false
+        private var dispatchMessageOnMainThread: Boolean = false
+        private var requireAuth: Boolean = true
         private var defaultPublishQos: Int = DEFAULT_PUBLISH_QOS
         private var defaultPublishRetained: Boolean = false
         private var maxReconnectAttempts: Int? = null
@@ -80,6 +102,8 @@ class MqttConnectionConfig private constructor(
         fun subscribeQos(value: IntArray?) = apply { subscribeQos = value }
         fun resubscribeOnReconnect(value: Boolean) = apply { resubscribeOnReconnect = value }
         fun dispatchConnectOnMainThread(value: Boolean) = apply { dispatchConnectOnMainThread = value }
+        fun dispatchMessageOnMainThread(value: Boolean) = apply { dispatchMessageOnMainThread = value }
+        fun requireAuth(value: Boolean) = apply { requireAuth = value }
         fun defaultPublishQos(value: Int) = apply { defaultPublishQos = value }
         fun defaultPublishRetained(value: Boolean) = apply { defaultPublishRetained = value }
 
@@ -110,6 +134,8 @@ class MqttConnectionConfig private constructor(
                 subscribeQos = subscribeQos,
                 resubscribeOnReconnect = resubscribeOnReconnect,
                 dispatchConnectOnMainThread = dispatchConnectOnMainThread,
+                dispatchMessageOnMainThread = dispatchMessageOnMainThread,
+                requireAuth = requireAuth,
                 defaultPublishQos = defaultPublishQos,
                 defaultPublishRetained = defaultPublishRetained,
                 maxReconnectAttempts = maxReconnectAttempts,

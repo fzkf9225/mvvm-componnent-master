@@ -16,15 +16,15 @@ import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityMqttDemoBinding;
-import io.coderf.arklab.mqttcomponent.mqtt.AbstractMqttConnectionListener;
-import io.coderf.arklab.mqttcomponent.mqtt.MqttConnection;
-import io.coderf.arklab.mqttcomponent.mqtt.MqttConnectionConfig;
-import io.coderf.arklab.mqttcomponent.presence.HeartbeatAction;
-import io.coderf.arklab.mqttcomponent.presence.HeartbeatScheduler;
-import io.coderf.arklab.mqttcomponent.presence.PresenceConnectionInfo;
-import io.coderf.arklab.mqttcomponent.presence.PresenceConnectionListener;
-import io.coderf.arklab.mqttcomponent.presence.PresenceMqttClient;
-import io.coderf.arklab.mqttcomponent.widget.MqttReconnectDialog;
+import io.coderf.arklab.mqtt.mqtt.AbstractMqttConnectionListener;
+import io.coderf.arklab.mqtt.mqtt.MqttConnection;
+import io.coderf.arklab.mqtt.mqtt.MqttConnectionConfig;
+import io.coderf.arklab.mqtt.presence.HeartbeatAction;
+import io.coderf.arklab.mqtt.presence.HeartbeatScheduler;
+import io.coderf.arklab.mqtt.presence.PresenceConnectionInfo;
+import io.coderf.arklab.mqtt.presence.PresenceConnectionListener;
+import io.coderf.arklab.mqtt.presence.PresenceMqttClient;
+import io.coderf.arklab.mqtt.widget.MqttReconnectDialog;
 
 /**
  * MQTT 组件演示页（Java 接入示例）。

@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.mqtt
+package io.coderf.arklab.mqtt.mqtt
 
 import android.util.Log
 
@@ -14,6 +14,11 @@ import android.util.Log
  *     }
  * });
  * ```
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 fun interface MqttLogger {
 

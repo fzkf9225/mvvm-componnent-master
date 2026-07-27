@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.mqtt
+package io.coderf.arklab.mqtt.mqtt
 
 import org.eclipse.paho.mqttv5.common.MqttException
 
@@ -6,8 +6,15 @@ import org.eclipse.paho.mqttv5.common.MqttException
  * [MqttConnection] 事件回调。
  *
  * 业务消息体格式由各模块自行组装后调用 [MqttConnection.publish]，不在此层定义。
+ * 连接类回调是否切主线程由 [MqttConnectionConfig.dispatchConnectOnMainThread] 控制；
+ * 消息类回调是否切主线程由 [MqttConnectionConfig.dispatchMessageOnMainThread] 控制。
  *
  * Java 项目可继承 [AbstractMqttConnectionListener]，只覆写关心的方法。
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 interface MqttConnectionListener {
 
@@ -38,8 +45,20 @@ interface MqttConnectionListener {
     /** MQTT 协议级错误 */
     fun onError(exception: MqttException?) {}
 
-    /** 订阅主题收到下行消息 */
+    /**
+     * 订阅主题收到下行消息。
+     *
+     * @param topic 主题
+     * @param payload UTF-8 文本载荷；二进制场景请使用 [onMessageRaw]
+     */
     fun onMessage(topic: String, payload: String) {}
+
+    /**
+     * 订阅主题收到下行原始消息（含 QoS / retained / 字节载荷）。
+     *
+     * 默认空实现；需要二进制或元数据时覆写。与 [onMessage] 都会触发。
+     */
+    fun onMessageRaw(message: MqttRawMessage) {}
 
     /** QoS > 0 消息投递完成 */
     fun onDeliveryComplete() {}
@@ -47,5 +66,10 @@ interface MqttConnectionListener {
 
 /**
  * [MqttConnectionListener] 的空实现基类，便于 Java 只覆写部分回调。
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 abstract class AbstractMqttConnectionListener : MqttConnectionListener

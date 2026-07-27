@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.widget
+package io.coderf.arklab.mqtt.widget
 
 import android.app.Dialog
 import android.content.Context
@@ -6,13 +6,13 @@ import android.os.CountDownTimer
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
-import io.coderf.arklab.mqttcomponent.R
-import io.coderf.arklab.mqttcomponent.databinding.DialogMqttReconnectBinding
+import io.coderf.arklab.mqtt.R
+import io.coderf.arklab.mqtt.databinding.DialogMqttReconnectBinding
 
 /**
  * MQTT 重连等待弹窗：转圈 + 重试进度文案 + 可选退出按钮。
  *
- * 配合 [io.coderf.arklab.mqttcomponent.mqtt.MqttConnectionListener.onReconnecting] 使用：
+ * 配合 [io.coderf.arklab.mqtt.mqtt.MqttConnectionListener.onReconnecting] 使用：
  * ```
  * dialog.updateReconnectState(attempt, maxAttempts, nextRetryDelaySeconds)
  * ```
@@ -24,6 +24,11 @@ import io.coderf.arklab.mqttcomponent.databinding.DialogMqttReconnectBinding
  * dialog.builder().show();
  * dialog.updateReconnectState(1, 20, 5);
  * ```
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 class MqttReconnectDialog @JvmOverloads constructor(
     context: Context,
@@ -69,6 +74,13 @@ class MqttReconnectDialog @JvmOverloads constructor(
         return this
     }
 
+    /**
+     * 更新重连进度文案并启动倒计时。
+     *
+     * @param attempt 当前第几次重连（从 1 开始）
+     * @param maxAttempts 最大重连次数
+     * @param nextRetryDelaySeconds 距下次发起连接的秒数
+     */
     fun updateReconnectState(
         attempt: Int,
         maxAttempts: Int,

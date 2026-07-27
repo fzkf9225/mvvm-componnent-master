@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.presence
+package io.coderf.arklab.mqtt.presence
 
 /**
  * 设备在线（Presence）通道连接参数。
@@ -14,6 +14,13 @@ package io.coderf.arklab.mqttcomponent.presence
  * @param lwtTopic         遗嘱主题，为空则不注册 LWT
  * @param lwtMessage       遗嘱消息体
  * @param heartbeatTopic   应用层心跳发布主题
+ * @param maxReconnectAttempts 最大重连次数；null 表示 Paho 无限自动重连
+ * @param reconnectIntervalSeconds 自定义重连间隔（秒）；仅当 maxReconnectAttempts 非 null 时生效
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 class PresenceConnectionInfo @JvmOverloads constructor(
     @JvmField val brokerAddress: String,
@@ -24,6 +31,8 @@ class PresenceConnectionInfo @JvmOverloads constructor(
     @JvmField val lwtTopic: String? = null,
     @JvmField val lwtMessage: String? = null,
     @JvmField val heartbeatTopic: String? = null,
+    @JvmField val maxReconnectAttempts: Int? = null,
+    @JvmField val reconnectIntervalSeconds: Int? = null,
 ) {
 
     companion object {

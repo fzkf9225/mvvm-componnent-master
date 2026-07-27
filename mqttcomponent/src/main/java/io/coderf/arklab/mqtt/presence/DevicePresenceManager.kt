@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.presence
+package io.coderf.arklab.mqtt.presence
 
 /**
  * 设备在线（MQTT 心跳）管理接口。
@@ -8,7 +8,8 @@ package io.coderf.arklab.mqttcomponent.presence
  *
  * ## 职责边界
  * - **本接口**：登录态下的长连接 + 应用层心跳 + LWT 离线感知
- * - **其它 MQTT 通道**（推送、轨迹等）：使用独立 [io.coderf.arklab.mqttcomponent.mqtt.MqttConnection] 实例
+ * - **其它 MQTT 通道**（推送、轨迹等）：使用独立 [io.coderf.arklab.mqtt.mqtt.MqttConnection]
+ *   或 [io.coderf.arklab.mqtt.mqtt.MqttAsyncClient] 实例
  *
  * ## 典型调用时机
  * | 场景                      | 方法                |
@@ -17,6 +18,11 @@ package io.coderf.arklab.mqttcomponent.presence
  * | 登录成功                  | [start]             |
  * | 退出登录 / 跳转登录页     | [stop]              |
  * | Access Token 刷新成功     | [reconnectIfNeeded]（MQTT 密码为 JWT 时需重连） |
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 interface DevicePresenceManager {
 

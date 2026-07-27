@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.presence
+package io.coderf.arklab.mqtt.presence
 
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +26,11 @@ import android.os.Looper
  * scheduler.publishOnce();
  * scheduler.stop();
  * ```
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 class HeartbeatScheduler @JvmOverloads constructor(
     private val intervalMs: Long = DEFAULT_INTERVAL_MS,
@@ -77,6 +82,9 @@ class HeartbeatScheduler @JvmOverloads constructor(
         publishAction?.invoke()
     }
 
+    /** 是否正在调度中 */
+    fun isRunning(): Boolean = tickRunnable != null
+
     private fun stopTicks() {
         tickRunnable?.let { handler.removeCallbacks(it) }
         tickRunnable = null
@@ -88,7 +96,14 @@ class HeartbeatScheduler @JvmOverloads constructor(
     }
 }
 
-/** Java 心跳动作接口 */
+/**
+ * Java 心跳动作接口。
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
+ */
 fun interface HeartbeatAction {
     fun run()
 }

@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqttcomponent.mqtt
+package io.coderf.arklab.mqtt.mqtt
 
 import android.os.Handler
 import android.os.Looper
@@ -19,10 +19,19 @@ import java.nio.charset.StandardCharsets
  * ## 设计要点
  * - 每个实例拥有独立的 [MqttClient] 与 clientId，多实例互不影响
  * - 支持 Paho 自动重连、可配置自定义重连、地址规范化、线程安全的 connect / publish / disconnect
+ * - 支持运行时动态 [subscribe] / [unsubscribe]，重连后优先恢复动态主题集合
+ * - 支持 [syncTopics] 按目标集合做 diff 订退，避免频繁全量重订
  * - 连接参数全部来自 [MqttConnectionConfig]，库内无硬编码业务配置
+ *
+ * 阻塞式 API 请在工作线程调用；UI 场景推荐使用 [MqttAsyncClient]。
  *
  * @param tag    日志 Tag，便于多实例区分
  * @param logger 日志实现，默认 [MqttLogger.DEFAULT]
+ *
+ * @author fz
+ * @version 1.2
+ * @since 1.0
+ * @created 2026/7/27 10:10
  */
 class MqttConnection @JvmOverloads constructor(
     private val tag: String = TAG,
@@ -40,26 +49,43 @@ class MqttConnection @JvmOverloads constructor(
     private var reconnectAttempt = 0
     private var reconnectRunnable: Runnable? = null
 
+    /**
+     * 运行时动态订阅主题 → QoS 映射；重连成功后优先恢复此集合。
+     * 使用 LinkedHashMap 保持订阅顺序稳定。
+     */
+    private val dynamicSubscribeTopics = linkedMapOf<String, Int>()
+
     /** 当前是否已连接 Broker */
     fun isConnected(): Boolean = mqttClient?.isConnected == true
 
     /** 获取底层 Paho 客户端（高级场景使用，一般业务无需直接访问） */
     fun getClient(): MqttClient? = mqttClient
 
+    /** 当前已登记的动态订阅主题快照（含尚未连上时缓存的主题） */
+    fun getSubscribedTopics(): Set<String> {
+        synchronized(lock) {
+            return dynamicSubscribeTopics.keys.toSet()
+        }
+    }
+
     /**
      * 建立连接。
      *
-     * 必填参数（brokerAddress / clientId / username / password）缺失时记录日志并跳过。
+     * 必填校验：
+     * - 始终要求 brokerAddress、clientId 非空
+     * - 当 [MqttConnectionConfig.requireAuth] 为 true 时，额外要求 username / password 非空
+     *
      * 若已连接则直接回调 [MqttConnectionListener.onConnected](false)，不重复建连。
+     * **注意**：本方法同步阻塞，请勿在主线程直接调用；可用 [MqttAsyncClient.connect]。
      */
     fun connect(config: MqttConnectionConfig, listener: MqttConnectionListener) {
         val address = normalizeAddress(config.brokerAddress)
-        if (address.isNullOrBlank()
-            || config.clientId.isBlank()
-            || config.username.isBlank()
-            || config.password.isBlank()
-        ) {
-            logger.log(tag, "MQTT 连接参数不完整，跳过连接")
+        if (address.isNullOrBlank() || config.clientId.isBlank()) {
+            logger.log(tag, "MQTT 连接参数不完整（address/clientId），跳过连接")
+            return
+        }
+        if (config.requireAuth && (config.username.isBlank() || config.password.isBlank())) {
+            logger.log(tag, "MQTT 鉴权参数不完整（username/password），跳过连接")
             return
         }
         synchronized(lock) {
@@ -68,6 +94,8 @@ class MqttConnection @JvmOverloads constructor(
             manualDisconnect = false
             cancelReconnectLocked()
             reconnectAttempt = 0
+            // 将配置中的初始主题并入动态集合，便于后续 diff / 重连恢复
+            seedDynamicTopicsFromConfigLocked(config)
             try {
                 if (mqttClient?.isConnected == true) {
                     dispatchConnected(config, reconnect = false)
@@ -87,22 +115,22 @@ class MqttConnection @JvmOverloads constructor(
     }
 
     /**
-     * 主动断开并释放资源；会先按配置退订主题。
+     * 主动断开并释放资源；会先退订当前登记主题。
      */
     fun disconnect() {
         synchronized(lock) {
             manualDisconnect = true
             cancelReconnectLocked()
-            val config = currentConfig
-            val topics = config?.subscribeTopics
+            val unsubscribeTopics = buildUnsubscribeTopicsLocked()
             listener = null
             currentConfig = null
             hasConnectedOnce = false
             reconnectAttempt = 0
+            dynamicSubscribeTopics.clear()
             try {
                 val client = mqttClient
-                if (client != null && client.isConnected && !topics.isNullOrEmpty()) {
-                    client.unsubscribe(topics)
+                if (client != null && client.isConnected && unsubscribeTopics.isNotEmpty()) {
+                    client.unsubscribe(unsubscribeTopics)
                 }
                 client?.takeIf { it.isConnected }?.disconnect()
             } catch (e: MqttException) {
@@ -115,6 +143,12 @@ class MqttConnection @JvmOverloads constructor(
 
     /**
      * 发布文本消息。
+     *
+     * @param topic 主题
+     * @param payload UTF-8 文本
+     * @param qos QoS，缺省取配置 [MqttConnectionConfig.defaultPublishQos]
+     * @param retained 是否保留，缺省取配置 [MqttConnectionConfig.defaultPublishRetained]
+     * @return 是否发送成功（未连接或异常返回 false）
      */
     @JvmOverloads
     fun publish(
@@ -127,6 +161,32 @@ class MqttConnection @JvmOverloads constructor(
             return false
         }
         val message = MqttMessage(payload.toByteArray(StandardCharsets.UTF_8)).apply {
+            this.qos = qos
+            isRetained = retained
+        }
+        return publish(topic, message)
+    }
+
+    /**
+     * 发布二进制消息。
+     *
+     * @param topic 主题
+     * @param payload 字节载荷
+     * @param qos QoS
+     * @param retained 是否保留
+     * @return 是否发送成功
+     */
+    @JvmOverloads
+    fun publish(
+        topic: String,
+        payload: ByteArray,
+        qos: Int = currentConfig?.defaultPublishQos ?: MqttConnectionConfig.DEFAULT_PUBLISH_QOS,
+        retained: Boolean = currentConfig?.defaultPublishRetained ?: false,
+    ): Boolean {
+        if (topic.isBlank()) {
+            return false
+        }
+        val message = MqttMessage(payload).apply {
             this.qos = qos
             isRetained = retained
         }
@@ -150,12 +210,108 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /**
+     * 运行时追加订阅；不影响其它 [MqttConnection] 实例。
+     *
+     * 未连接时仍会登记主题，待 [connectComplete] / 重连后自动恢复。
+     *
+     * @param topics 待订阅主题
+     * @param qos 与 [topics] 等长的 QoS；缺省时每个主题 QoS=1
+     * @return 是否全部订阅成功（未连接时返回 false，但主题已缓存）
+     */
+    @JvmOverloads
+    fun subscribe(topics: Array<String>, qos: IntArray? = null): Boolean {
+        val validTopics = topics.filter { it.isNotBlank() }.distinct()
+        if (validTopics.isEmpty()) {
+            return true
+        }
+        synchronized(lock) {
+            val qosArray = qos?.takeIf { it.size == validTopics.size }
+                ?: IntArray(validTopics.size) { MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS }
+            validTopics.forEachIndexed { index, topic ->
+                dynamicSubscribeTopics[topic] = qosArray[index]
+            }
+            val client = mqttClient
+            if (client == null || !client.isConnected) {
+                return false
+            }
+            return try {
+                client.subscribe(validTopics.toTypedArray(), qosArray)
+                true
+            } catch (e: MqttException) {
+                logger.log(tag, "MQTT 动态订阅失败: ${e.message}")
+                false
+            }
+        }
+    }
+
+    /**
+     * 运行时退订主题，并从动态集合中移除。
+     *
+     * @param topics 待退订主题
+     * @return 是否全部退订成功（未连接时视为成功，仅更新本地登记）
+     */
+    fun unsubscribe(topics: Array<String>): Boolean {
+        val validTopics = topics.filter { it.isNotBlank() }.distinct()
+        if (validTopics.isEmpty()) {
+            return true
+        }
+        synchronized(lock) {
+            validTopics.forEach { dynamicSubscribeTopics.remove(it) }
+            val client = mqttClient
+            if (client == null || !client.isConnected) {
+                return true
+            }
+            return try {
+                client.unsubscribe(validTopics.toTypedArray())
+                true
+            } catch (e: MqttException) {
+                logger.log(tag, "MQTT 动态退订失败: ${e.message}")
+                false
+            }
+        }
+    }
+
+    /**
+     * 将当前动态订阅同步为 [desiredTopics]（diff 订退）。
+     *
+     * 适用于页面切换、设备列表变化等「目标主题集合」场景，避免全量退订再全量订阅。
+     *
+     * @param desiredTopics 期望保持的主题集合
+     * @param qos 新增主题的默认 QoS
+     * @return diff 结果；未连接时仍会更新本地登记，toSubscribe 会在连上后生效
+     */
+    @JvmOverloads
+    fun syncTopics(
+        desiredTopics: Collection<String>,
+        qos: Int = MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS,
+    ): MqttTopicDiff.Result {
+        val desired = desiredTopics.filter { it.isNotBlank() }.toSet()
+        val current: Set<String>
+        synchronized(lock) {
+            current = dynamicSubscribeTopics.keys.toSet()
+        }
+        val diff = MqttTopicDiff.diff(current, desired)
+        if (diff.toUnsubscribe.isNotEmpty()) {
+            unsubscribe(diff.toUnsubscribe.toTypedArray())
+        }
+        if (diff.toSubscribe.isNotEmpty()) {
+            val topicArray = diff.toSubscribe.toTypedArray()
+            subscribe(topicArray, IntArray(topicArray.size) { qos })
+        }
+        return diff
+    }
+
     private fun buildOptions(config: MqttConnectionConfig): MqttConnectionOptions {
         val usePahoAutoReconnect = config.automaticReconnect && !config.usesCustomReconnect()
         return MqttConnectionOptions().apply {
             isCleanStart = config.cleanStart
-            userName = config.username
-            setPassword(config.password.toByteArray(StandardCharsets.UTF_8))
+            if (config.username.isNotBlank()) {
+                userName = config.username
+            }
+            if (config.password.isNotBlank()) {
+                setPassword(config.password.toByteArray(StandardCharsets.UTF_8))
+            }
             isAutomaticReconnect = usePahoAutoReconnect
             connectionTimeout = config.connectionTimeoutSeconds
             keepAliveInterval = config.keepAliveSeconds
@@ -176,18 +332,56 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
-    private fun subscribeIfNeeded(config: MqttConnectionConfig) {
-        val topics = config.subscribeTopics?.filter { it.isNotBlank() }?.toTypedArray()
-        if (topics.isNullOrEmpty()) {
+    private fun seedDynamicTopicsFromConfigLocked(config: MqttConnectionConfig) {
+        val topics = config.subscribeTopics?.filter { it.isNotBlank() } ?: return
+        if (topics.isEmpty()) {
             return
         }
         val qos = config.subscribeQos?.takeIf { it.size == topics.size }
-            ?: IntArray(topics.size) { MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS }
+        topics.forEachIndexed { index, topic ->
+            if (!dynamicSubscribeTopics.containsKey(topic)) {
+                dynamicSubscribeTopics[topic] =
+                    qos?.get(index) ?: MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS
+            }
+        }
+    }
+
+    private fun subscribeIfNeeded(config: MqttConnectionConfig) {
+        val entries = synchronized(lock) {
+            if (dynamicSubscribeTopics.isNotEmpty()) {
+                dynamicSubscribeTopics.toList()
+            } else {
+                val topics = config.subscribeTopics?.filter { it.isNotBlank() }?.distinct().orEmpty()
+                val qos = config.subscribeQos?.takeIf { it.size == topics.size }
+                topics.mapIndexed { index, topic ->
+                    topic to (qos?.get(index) ?: MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS)
+                }
+            }
+        }
+        if (entries.isEmpty()) {
+            return
+        }
+        val topicArray = entries.map { it.first }.toTypedArray()
+        val qosArray = entries.map { it.second }.toIntArray()
         try {
-            mqttClient?.subscribe(topics, qos)
+            mqttClient?.subscribe(topicArray, qosArray)
+            synchronized(lock) {
+                entries.forEach { (topic, qos) -> dynamicSubscribeTopics[topic] = qos }
+            }
         } catch (e: MqttException) {
             logger.log(tag, "MQTT 订阅失败: ${e.message}")
         }
+    }
+
+    private fun buildUnsubscribeTopicsLocked(): Array<String> {
+        if (dynamicSubscribeTopics.isNotEmpty()) {
+            return dynamicSubscribeTopics.keys.toTypedArray()
+        }
+        return currentConfig?.subscribeTopics
+            ?.filter { it.isNotBlank() }
+            ?.distinct()
+            ?.toTypedArray()
+            ?: emptyArray()
     }
 
     private fun scheduleCustomReconnectLocked(config: MqttConnectionConfig) {
@@ -251,14 +445,12 @@ class MqttConnection @JvmOverloads constructor(
 
     private fun dispatchConnected(config: MqttConnectionConfig, reconnect: Boolean) {
         val target = listener ?: return
-        val action = { target.onConnected(reconnect) }
-        dispatchOnMainThread(config, action)
+        dispatchConnectCallback(config) { target.onConnected(reconnect) }
     }
 
     private fun dispatchDisconnected(config: MqttConnectionConfig) {
         val target = listener ?: return
-        val action = { target.onDisconnected() }
-        dispatchOnMainThread(config, action)
+        dispatchConnectCallback(config) { target.onDisconnected() }
     }
 
     private fun dispatchReconnecting(
@@ -268,24 +460,31 @@ class MqttConnection @JvmOverloads constructor(
         delaySeconds: Int,
     ) {
         val target = listener ?: return
-        val action = { target.onReconnecting(attempt, maxAttempts, delaySeconds) }
-        dispatchOnMainThread(config, action)
+        dispatchConnectCallback(config) {
+            target.onReconnecting(attempt, maxAttempts, delaySeconds)
+        }
     }
 
     private fun dispatchReconnectExhausted(config: MqttConnectionConfig) {
         val target = listener ?: return
-        val action = { target.onReconnectExhausted() }
-        dispatchOnMainThread(config, action)
+        dispatchConnectCallback(config) { target.onReconnectExhausted() }
     }
 
     private fun dispatchError(config: MqttConnectionConfig, exception: MqttException) {
         val target = listener ?: return
-        val action = { target.onError(exception) }
-        dispatchOnMainThread(config, action)
+        dispatchConnectCallback(config) { target.onError(exception) }
     }
 
-    private fun dispatchOnMainThread(config: MqttConnectionConfig, action: () -> Unit) {
+    private fun dispatchConnectCallback(config: MqttConnectionConfig, action: () -> Unit) {
         if (config.dispatchConnectOnMainThread) {
+            mainHandler.post(action)
+        } else {
+            action()
+        }
+    }
+
+    private fun dispatchMessageCallback(config: MqttConnectionConfig?, action: () -> Unit) {
+        if (config?.dispatchMessageOnMainThread == true) {
             mainHandler.post(action)
         } else {
             action()
@@ -343,12 +542,28 @@ class MqttConnection @JvmOverloads constructor(
         if (topic.isNullOrBlank() || message == null) {
             return
         }
-        val payload = String(message.payload, StandardCharsets.UTF_8)
-        listener?.onMessage(topic, payload)
+        val payloadBytes = message.payload ?: ByteArray(0)
+        val raw = MqttRawMessage(
+            topic = topic,
+            payload = payloadBytes,
+            qos = message.qos,
+            retained = message.isRetained,
+        )
+        val payloadText = raw.payloadAsUtf8()
+        val config = synchronized(lock) { currentConfig }
+        val target = synchronized(lock) { listener } ?: return
+        dispatchMessageCallback(config) {
+            target.onMessageRaw(raw)
+            target.onMessage(topic, payloadText)
+        }
     }
 
     override fun deliveryComplete(token: IMqttToken?) {
-        listener?.onDeliveryComplete()
+        val config = synchronized(lock) { currentConfig }
+        val target = synchronized(lock) { listener } ?: return
+        dispatchMessageCallback(config) {
+            target.onDeliveryComplete()
+        }
     }
 
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
@@ -365,6 +580,7 @@ class MqttConnection @JvmOverloads constructor(
     }
 
     override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) {
+        // MQTT v5 增强认证扩展点；当前业务使用用户名密码，无需处理
     }
 
     companion object {
