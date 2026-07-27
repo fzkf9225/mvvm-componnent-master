@@ -1,8 +1,5 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For JAR publishing, also keep META-INF/proguard/arklab-annotation.pro in sync.
+# Keep annotation runtime validation (EntityValidator reflects annotations).
+# Packaged into JAR so R8 auto-merges when App minifyEnabled=true.
 
 -keep class io.coderf.arklab.annotation.** { *; }
 -dontwarn io.coderf.arklab.annotation.**
@@ -27,5 +24,4 @@
 -keep class io.coderf.arklab.annotation.utils.** { *; }
 
 -keepattributes *Annotation*
--keepattributes *Comments*
 -keepattributes SourceFile,LineNumberTable,LocalVariableTable

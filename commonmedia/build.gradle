@@ -14,6 +14,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+        // 放入 defaultConfig，确保 debug/release AAR 均携带 consumer 规则
+        consumerProguardFiles('consumer-rules.pro')
         ndk {
             //armeabi-v7a 较旧的 Android 设备（大约 2016年前），逐渐淘汰，32位架构
             //armeabi-v8a 绝大多数现代 Android 手机和平板,主流和未来,64位架构
@@ -29,8 +31,6 @@ android {
             buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
             minifyEnabled = false// 混淆
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
-            //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
-            consumerProguardFiles('consumer-rules.pro')
         }
         debug {
             resValue("string", "app_config_file", "dev.properties")
@@ -112,7 +112,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.media'
                 artifactId = 'media'
-                version = '3.2.2'
+                version = '3.2.3'
             }
         }
         repositories {

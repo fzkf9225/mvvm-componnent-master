@@ -29,3 +29,21 @@
 # 保留资源绑定相关类（如果有自动生成的绑定类）
 -keep class *Binding { *; }
 -keep class *BindingImpl { *; }
+
+# ---- 网络依赖（ApiRetrofit 所在模块，须进入 consumer）----
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
+-keepattributes Signature,Exceptions,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
+-keepclasseswithmembers interface * {
+    @retrofit2.http.* <methods>;
+}
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+-keep class okio.** { *; }
+-dontwarn okio.**
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.**
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class io.reactivex.rxjava3.** { *; }
+-dontwarn io.reactivex.rxjava3.**

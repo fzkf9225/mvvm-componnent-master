@@ -16,6 +16,20 @@
     public * send*(...);
 }
 
+# Netty（GPSSocketServer / InboundClientHandler 运行时依赖，必须进入 consumer）
+-keep class io.netty.** { *; }
+-dontwarn io.netty.**
+-keepclassmembers class io.netty.channel.** {
+    public *;
+}
+-keepclassmembers class io.netty.buffer.** {
+    public *;
+}
+
+# Apache Commons Lang（googlegps 依赖）
+-keep class org.apache.commons.lang3.** { *; }
+-dontwarn org.apache.commons.lang3.**
+
 # 保留工具类
 -keep class io.coderf.arklab.googlegps.utils.** { *; }
 
