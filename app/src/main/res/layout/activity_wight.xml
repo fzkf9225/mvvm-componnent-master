@@ -112,11 +112,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingTop="@dimen/padding_s"
+                android:paddingEnd="@dimen/padding_m"
+                android:paddingBottom="@dimen/padding_s"
+                app:animDuration="800"
+                app:autoFlip="true"
+                app:bgColor="@color/white"
+                app:flipInterval="2500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cornerButton"
+                app:radius="@dimen/radius_m"
+                app:strokeColor="@color/themeColor"
+                app:strokeWidth="1dp"
                 app:text="这是AutoTextView测试文字"
                 app:textColor="@color/themeColor"
+                app:textGravity="center"
+                app:textSize="@dimen/font_size_l" />
+
+            <io.coderf.arklab.common.widget.customview.MarqueeTextView
+                android:id="@+id/marqueeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:paddingStart="@dimen/padding_m"
+                android:paddingTop="@dimen/padding_s"
+                android:paddingEnd="@dimen/padding_m"
+                android:paddingBottom="@dimen/padding_s"
+                app:autoStart="true"
+                app:bgColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/autoTextView"
+                app:marqueeGap="64dp"
+                app:radius="@dimen/radius_m"
+                app:scrollDirection="left"
+                app:scrollSpeed="50"
+                app:strokeColor="@color/theme_orange"
+                app:strokeWidth="1dp"
+                app:text="这是 MarqueeTextView 单行横向滚动演示，文字超出宽度后会自动滚动，可配置速度、圆角、背景色与描边"
+                app:textColor="@color/theme_orange"
                 app:textSize="@dimen/font_size_l" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -126,7 +162,7 @@
                 app:layout_constraintDimensionRatio="h,9:16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/autoTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/marqueeTextView" />
 
             <io.coderf.arklab.common.widget.customview.ScalingTextView
                 android:id="@+id/scalingTextView"

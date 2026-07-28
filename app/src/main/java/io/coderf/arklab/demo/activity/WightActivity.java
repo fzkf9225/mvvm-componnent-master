@@ -42,6 +42,7 @@ import io.coderf.arklab.common.utils.common.RxView;
 import io.coderf.arklab.common.widget.customview.BannerView;
 import io.coderf.arklab.common.widget.customview.BottomNavBar;
 import io.coderf.arklab.common.widget.customview.Code;
+import io.coderf.arklab.common.widget.customview.MarqueeTextView;
 import io.coderf.arklab.common.widget.customview.utils.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
@@ -74,7 +75,8 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     @Override
     public void initView(Bundle savedInstanceState) {
         binding.setImageUrl(imageUrl);
-        binding.autoTextView.setText("这是AutoTextView测试文字");
+        initAutoTextViewDemo();
+        initMarqueeTextViewDemo();
         binding.starBar.setOnStarChangeListener(mark -> binding.tvStarBar.setText(String.valueOf(mark)));
         List<BannerBean> bannerData = Arrays.asList(
                 new BannerBean("https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"),
@@ -205,6 +207,29 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     private void initBannerDemo(BannerView<BannerBean> bannerView, List<BannerBean> bannerData, int indicatorStyle) {
         bannerView.setIndicatorStyle(indicatorStyle);
         bannerView.initView(bannerData);
+    }
+
+    private void initAutoTextViewDemo() {
+        binding.autoTextView
+                .setAnimDuration(800)
+                .setFlipInterval(2500)
+                .setFlipUp(true)
+                .setTextList(
+                        "这是 AutoTextView 第 1 条：上下 3D 翻页",
+                        "这是 AutoTextView 第 2 条：可配置圆角背景描边",
+                        "这是 AutoTextView 第 3 条：可控制翻滚时长",
+                        "这是 AutoTextView 第 4 条：自动轮播演示"
+                )
+                .startAutoFlip();
+    }
+
+    private void initMarqueeTextViewDemo() {
+        binding.marqueeTextView
+                .setMarqueeText("这是 MarqueeTextView 单行横向滚动演示，文字超出宽度后会自动滚动，可配置速度、圆角、背景色与描边")
+                .setScrollSpeed(50f)
+                .setScrollDirection(MarqueeTextView.DIRECTION_LEFT)
+                .setAutoStart(true)
+                .startScroll();
     }
 
     private void initInputWidgetDemo() {

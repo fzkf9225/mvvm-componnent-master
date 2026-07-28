@@ -229,6 +229,56 @@ public class CornerTextView extends AppCompatTextView {
         applyBackground();
     }
 
+    /**
+     * 一次性设置描边、背景色和统一圆角，仅调用一次 applyBackground，避免分别设置带来的重复创建。
+     *
+     * @param strokeColor 描边颜色
+     * @param strokeWidth 描边宽度（像素）
+     * @param bgColor     背景颜色
+     * @param radius      四个角统一圆角半径
+     */
+    public void setStrokeBgColorAndRadius(@ColorInt int strokeColor, float strokeWidth,
+                                          @ColorInt int bgColor, float radius) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        this.circleBackColor = bgColor;
+        this.hasBgColor = true;
+        this.radius = radius;
+        this.leftTopRadius = radius;
+        this.rightTopRadius = radius;
+        this.rightBottomRadius = radius;
+        this.leftBottomRadius = radius;
+        applyBackground();
+    }
+
+    /**
+     * 一次性设置描边、背景色和四个角圆角，仅调用一次 applyBackground。
+     *
+     * @param strokeColor  描边颜色
+     * @param strokeWidth  描边宽度（像素）
+     * @param bgColor      背景颜色
+     * @param leftTop      左上角圆角半径
+     * @param rightTop     右上角圆角半径
+     * @param rightBottom  右下角圆角半径
+     * @param leftBottom   左下角圆角半径
+     */
+    public void setStrokeBgColorAndCornerRadii(@ColorInt int strokeColor, float strokeWidth,
+                                               @ColorInt int bgColor,
+                                               float leftTop, float rightTop,
+                                               float rightBottom, float leftBottom) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        this.circleBackColor = bgColor;
+        this.hasBgColor = true;
+        this.leftTopRadius = leftTop;
+        this.rightTopRadius = rightTop;
+        this.rightBottomRadius = rightBottom;
+        this.leftBottomRadius = leftBottom;
+        applyBackground();
+    }
+
     public float getRadius() {
         return radius;
     }

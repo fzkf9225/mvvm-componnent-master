@@ -246,6 +246,56 @@ public class CornerImageView extends AppCompatImageView {
     }
 
     /**
+     * 一次性设置描边、背景色和统一圆角，仅触发一次 invalidate，避免分别设置带来的重复重绘。
+     *
+     * @param strokeColor 描边颜色
+     * @param strokeWidth 描边宽度（像素）
+     * @param bgColor     背景颜色
+     * @param radius      四个角统一圆角半径
+     */
+    public void setStrokeBgColorAndRadius(int strokeColor, float strokeWidth, int bgColor, int radius) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        this.bgColor = bgColor;
+        this.hasBgColor = true;
+        this.radius = radius;
+        this.leftTopRadius = radius;
+        this.rightTopRadius = radius;
+        this.rightBottomRadius = radius;
+        this.leftBottomRadius = radius;
+        updateCornerClipEnabled();
+        invalidate();
+    }
+
+    /**
+     * 一次性设置描边、背景色和四个角圆角，仅触发一次 invalidate。
+     *
+     * @param strokeColor  描边颜色
+     * @param strokeWidth  描边宽度（像素）
+     * @param bgColor      背景颜色
+     * @param leftTop      左上角圆角半径
+     * @param rightTop     右上角圆角半径
+     * @param rightBottom  右下角圆角半径
+     * @param leftBottom   左下角圆角半径
+     */
+    public void setStrokeBgColorAndCornerRadii(int strokeColor, float strokeWidth, int bgColor,
+                                               int leftTop, int rightTop,
+                                               int rightBottom, int leftBottom) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        this.bgColor = bgColor;
+        this.hasBgColor = true;
+        this.leftTopRadius = leftTop;
+        this.rightTopRadius = rightTop;
+        this.rightBottomRadius = rightBottom;
+        this.leftBottomRadius = leftBottom;
+        updateCornerClipEnabled();
+        invalidate();
+    }
+
+    /**
      * 获取边框颜色
      */
     public int getStrokeColor() {

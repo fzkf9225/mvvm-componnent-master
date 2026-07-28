@@ -134,6 +134,25 @@ public class CornerEditText extends AppCompatEditText {
         applyBackground();
     }
 
+    /**
+     * 一次性设置描边、背景色和圆角，仅调用一次 applyBackground，避免分别设置带来的重复创建。
+     *
+     * @param strokeColor 描边颜色
+     * @param strokeWidth 描边宽度（像素）
+     * @param bgColor     背景颜色
+     * @param radius      圆角半径
+     */
+    public void setStrokeBgColorAndRadius(@ColorInt int strokeColor, float strokeWidth,
+                                          @ColorInt int bgColor, float radius) {
+        this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
+        this.hasStroke = strokeWidth > 0;
+        this.circleBackColor = bgColor;
+        this.hasBgColor = true;
+        this.radius = radius;
+        applyBackground();
+    }
+
     public float getRadius() {
         return radius;
     }

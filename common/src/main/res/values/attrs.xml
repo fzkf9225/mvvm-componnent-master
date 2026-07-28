@@ -303,11 +303,57 @@
         <attr name="isFull" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="auto3d">
+    <!-- 上下 3D 翻页文字切换控件 -->
+    <declare-styleable name="AutoTextView">
         <attr name="textSize" />
         <attr name="textColor" />
         <attr name="text" />
-        <attr name="bgSelected" format="boolean" />
+        <attr name="bgColor" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
+        <!-- 单次翻页动画时长，单位毫秒 -->
+        <attr name="animDuration" format="integer" />
+        <!-- 自动翻页间隔，单位毫秒（含动画时长） -->
+        <attr name="flipInterval" format="integer" />
+        <!-- 是否在绑定数据后自动开始翻页 -->
+        <attr name="autoFlip" format="boolean" />
+        <!-- 文字水平对齐：0 左 1 中 2 右 -->
+        <attr name="textGravity" format="enum">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 单行横向滚动文本控件 -->
+    <declare-styleable name="MarqueeTextView">
+        <attr name="textSize" />
+        <attr name="textColor" />
+        <attr name="text" />
+        <attr name="bgColor" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
+        <!-- 横向滚动速度，单位 dp/秒 -->
+        <attr name="scrollSpeed" format="float" />
+        <!-- 循环滚动时首尾留白间距 -->
+        <attr name="marqueeGap" format="dimension" />
+        <!-- 是否在布局完成后自动开始滚动 -->
+        <attr name="autoStart" format="boolean" />
+        <!-- 滚动方向：0 从右向左，1 从左向右 -->
+        <attr name="scrollDirection" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="IconDotTextView">
