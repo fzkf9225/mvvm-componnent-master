@@ -181,6 +181,10 @@ public class ApiRetrofit {
          */
         private boolean mobileInfo = false;
         /**
+         * 返回参数是否跳过默认的解析，默认为false，也就是默认解析最外层的code,msg，data结构，让各自接口自动只获取到data
+         */
+        private boolean jumpAutoParse = false;
+        /**
          * 请求头
          */
         private final Map<String, String> headerMap = new HashMap<>();
@@ -289,6 +293,11 @@ public class ApiRetrofit {
 
         public Builder setMobileInfo(boolean mobileInfo) {
             this.mobileInfo = mobileInfo;
+            return this;
+        }
+
+        public Builder setJumpAutoParse(boolean jumpAutoParse) {
+            this.jumpAutoParse = jumpAutoParse;
             return this;
         }
 
@@ -455,7 +464,7 @@ public class ApiRetrofit {
                 client = build.build();
             }
             if (converterFactory == null) {
-                converterFactory = BaseConverterFactory.create(successCode);
+                converterFactory = BaseConverterFactory.create(successCode,jumpAutoParse);
             }
             if (retrofit == null) {
                 retrofit = new Retrofit.Builder()
@@ -548,6 +557,10 @@ public class ApiRetrofit {
 
         public boolean isMobileInfo() {
             return mobileInfo;
+        }
+
+        public boolean isJumpAutoParse() {
+            return jumpAutoParse;
         }
 
         public String getSuccessCode() {

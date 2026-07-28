@@ -19,37 +19,49 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 /**
- * 作者： fz
- * 时间： 2019/7/30
- * 描述：
+ * 默认解析工厂
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/7/28 15:42
  */
-
 public final class BaseConverterFactory extends Converter.Factory {
     private String successCode = ResponseCode.OK;
+    private boolean jumpAutoParse = false;
 
     public static BaseConverterFactory create() {
-        return create(null, new GsonBuilder().disableHtmlEscaping().create());
+        return create(null, false, new GsonBuilder().disableHtmlEscaping().create());
     }
 
     public static BaseConverterFactory create(String successCode) {
-        return create(successCode, new GsonBuilder().disableHtmlEscaping().create());
+        return create(successCode, false, new GsonBuilder().disableHtmlEscaping().create());
     }
 
     public static BaseConverterFactory create(Gson gson) {
-        return create(null, gson);
+        return create(null, false, gson);
+    }
+
+    public static BaseConverterFactory create(String successCode, boolean jumpAutoParse) {
+        return create(successCode, jumpAutoParse, new GsonBuilder().disableHtmlEscaping().create());
     }
 
     public static BaseConverterFactory create(String successCode, Gson gson) {
+        return create(successCode, false, gson);
+    }
+
+    public static BaseConverterFactory create(String successCode, boolean jumpAutoParse, Gson gson) {
         if (gson == null) {
             throw new NullPointerException("gson must be not null");
         }
-        return new BaseConverterFactory(successCode, gson);
+        return new BaseConverterFactory(successCode, jumpAutoParse, gson);
     }
 
     private final Gson gson;
 
-    private BaseConverterFactory(String successCode, Gson gson) {
+    private BaseConverterFactory(String successCode, boolean jumpAutoParse, Gson gson) {
         this.successCode = successCode;
+        this.jumpAutoParse = jumpAutoParse;
         this.gson = gson;
     }
 
@@ -57,7 +69,7 @@ public final class BaseConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NonNull @NotNull Annotation[] annotations,
                                                             @NotNull Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
-        return new BaseResponseBodyConverter<>(successCode, gson, adapter,type);
+        return new BaseResponseBodyConverter<>(successCode, jumpAutoParse, gson, adapter, type);
     }
 
     @Override
@@ -73,5 +85,13 @@ public final class BaseConverterFactory extends Converter.Factory {
 
     public void setSuccessCode(String successCode) {
         this.successCode = successCode;
+    }
+
+    public boolean isJumpAutoParse() {
+        return jumpAutoParse;
+    }
+
+    public void setJumpAutoParse(boolean jumpAutoParse) {
+        this.jumpAutoParse = jumpAutoParse;
     }
 }

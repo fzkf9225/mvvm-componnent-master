@@ -27,22 +27,32 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     private final TypeAdapter<T> adapter;
     private final Gson gson;
     private final String successCode;
+    private final boolean jumpAutoParse;
     private final Type actualType;
 
-    public BaseResponseBodyConverter(String successCode, Gson gson, TypeAdapter<T> adapter,Type actualType) {
+    public BaseResponseBodyConverter(String successCode, boolean jumpAutoParse, Gson gson, TypeAdapter<T> adapter, Type actualType) {
         this.successCode = successCode;
+        this.jumpAutoParse = jumpAutoParse;
         this.adapter = adapter;
         this.gson = gson;
         this.actualType = actualType;
     }
 
-    public BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter,Type actualType) {
-        this(null,gson,adapter,actualType);
+    public BaseResponseBodyConverter(String successCode, Gson gson, TypeAdapter<T> adapter, Type actualType) {
+        this(successCode, false, gson, adapter, actualType);
+    }
+
+    public BaseResponseBodyConverter(Gson gson, TypeAdapter<T> adapter, Type actualType) {
+        this(null, false, gson, adapter, actualType);
     }
 
     @Override
     public T convert(ResponseBody value) throws IOException {
         String jsonString = value.string();
+        // 跳过默认解析：直接按接口声明的类型解析整段 JSON，不拆 code/msg/data
+        if (jumpAutoParse) {
+            return adapter.fromJson(jsonString);
+        }
         // 构建 BaseModelEntity<T> 的完整类型
         Type baseModelType = TypeToken.getParameterized(BaseResponse.class, actualType).getType();
         // 解析 JSON
