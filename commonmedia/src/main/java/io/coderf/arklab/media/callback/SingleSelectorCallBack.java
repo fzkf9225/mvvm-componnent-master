@@ -37,7 +37,7 @@ public class SingleSelectorCallBack implements ActivityResultCallback<Uri> {
 
     @Override
     public void onActivityResult(Uri result) {
-        LogUtil.show(MediaHelper.TAG, "单选回调：" + result);
+        LogUtil.logger(MediaHelper.TAG, "单选回调：" + result);
         if (result == null) {
             mediaHelper.postPickResult(new MediaBean(Collections.emptyList(), getMediaType()));
             return;

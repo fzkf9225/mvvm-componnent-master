@@ -72,7 +72,7 @@ public class ImageCompressHandler extends Handler {
                     cursor.close();
                 }
                 if (size != -1 && size < mediaHelper.getMediaBuilder().getImageQualityCompress() * 1024) {
-                    LogUtil.show(MediaHelper.TAG, "该图片小于" + mediaHelper.getMediaBuilder().getImageQualityCompress() + "kb不压缩");
+                    LogUtil.logger(MediaHelper.TAG, "该图片小于" + mediaHelper.getMediaBuilder().getImageQualityCompress() + "kb不压缩");
                     Message message = new Message();
                     message.obj = srcUriList.get(msg.what);
                     message.what = msg.what + 1;
@@ -86,7 +86,7 @@ public class ImageCompressHandler extends Handler {
                 }
             }
         } catch (Exception e) {
-            LogUtil.show(MediaHelper.TAG, "图片压缩出现错误:" + e);
+            LogUtil.logger(MediaHelper.TAG, "图片压缩出现错误:" + e);
             e.printStackTrace();
             mediaHelper.getUIController().showToast(
                     mediaHelper.getMediaBuilder().getContext().getString(R.string.media_image_compress_failed));
@@ -104,7 +104,7 @@ public class ImageCompressHandler extends Handler {
         boolean copied = ExifUtil.copyCaptureMetadataIfPresent(
                 mediaHelper.getMediaBuilder().getContext(), sourceUri, outputUri);
         if (copied) {
-            LogUtil.show(MediaHelper.TAG, "压缩后同步拍照元数据：" + sourceUri + " -> " + outputUri);
+            LogUtil.logger(MediaHelper.TAG, "压缩后同步拍照元数据：" + sourceUri + " -> " + outputUri);
         }
     }
 
@@ -144,7 +144,7 @@ public class ImageCompressHandler extends Handler {
 
         @Override
         public void onCompressFail(Exception exception) {
-            LogUtil.show(MediaHelper.TAG, "图片压缩异常：" + exception);
+            LogUtil.logger(MediaHelper.TAG, "图片压缩异常：" + exception);
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
             }

@@ -86,7 +86,7 @@ public class TakeCameraUri extends ActivityResultContract<MediaTypeEnum, Uri> {
      */
     @Override
     public Uri parseResult(int resultCode, @Nullable Intent intent) {
-        LogUtil.show(MediaHelper.TAG, "拍照回调resultCode：" + resultCode);
+        LogUtil.logger(MediaHelper.TAG, "拍照回调resultCode：" + resultCode);
 //        if (resultCode == Activity.RESULT_OK) {
 //            return uri;
 //        }

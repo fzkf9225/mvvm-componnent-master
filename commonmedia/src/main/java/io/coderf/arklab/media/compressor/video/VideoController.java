@@ -116,7 +116,7 @@ public class VideoController {
                     // 写入数据
                     if (mp4Writer.writeSampleData(muxerTrackIndex, buffer, info)) {
                         // 写入成功
-                        LogUtil.show(TAG, "写入成功");
+                        LogUtil.logger(TAG, "写入成功");
                     }
                     extractor.advance();
                 }
@@ -133,7 +133,7 @@ public class VideoController {
         for (int i = 0; i < numTracks; i++) {
             MediaFormat format = extractor.getTrackFormat(i);
             String mime = format.getString(MediaFormat.KEY_MIME);
-            LogUtil.show(TAG, "mime：" + mime);
+            LogUtil.logger(TAG, "mime：" + mime);
             if (mime == null) {
                 continue;
             }
@@ -164,14 +164,14 @@ public class VideoController {
             throw new IllegalArgumentException("源视频信息读取失败！");
         }
 
-        LogUtil.show(TAG, "videoInfo：" + videoInfo.toString());
+        LogUtil.logger(TAG, "videoInfo：" + videoInfo.toString());
         //拷贝到缓存目录，这样拥有绝对的读写权利不会出权限的各种错误,也可以用sourcePath，转换为FileDescriptor使用
         File tempFile = VideoUtils.copyFileToCacheDir(context, sourcePath);
         if (tempFile == null) {
             throw new IllegalArgumentException("拷贝临时文件出错！");
         }
 
-        LogUtil.show(TAG, "拷贝目标临时文件路径：" + tempFile.getAbsolutePath());
+        LogUtil.logger(TAG, "拷贝目标临时文件路径：" + tempFile.getAbsolutePath());
         int rotationValue = videoInfo.rotation();
 
         int resultWidth;
@@ -228,7 +228,7 @@ public class VideoController {
         };
         //在tempFile的同路径下生成一个compress目录存放只有视频没有声音的视频文件
         File cacheFile = VideoUtils.createCompressVideoFileByTempFile(tempFile);
-        LogUtil.show(TAG, "视频输出临时目录:" + cacheFile.getAbsolutePath());
+        LogUtil.logger(TAG, "视频输出临时目录:" + cacheFile.getAbsolutePath());
         MP4Writer mp4Writer = null;
         MediaExtractor extractor = null;
         long time = System.currentTimeMillis();
@@ -248,7 +248,7 @@ public class VideoController {
             if (mp4Writer != null) {
                 mp4Writer.finishMovie(false);
             }
-            LogUtil.show(TAG, "压缩用时：" + (System.currentTimeMillis() - time));
+            LogUtil.logger(TAG, "压缩用时：" + (System.currentTimeMillis() - time));
         }
 
         List<com.googlecode.mp4parser.authoring.Track> audioTracks = new LinkedList<>();// 音频通道集合

@@ -37,7 +37,7 @@ public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> 
 
     @Override
     public void onActivityResult(List<Uri> result) {
-        LogUtil.show(MediaHelper.TAG, "多选回调：" + result);
+        LogUtil.logger(MediaHelper.TAG, "多选回调：" + result);
         if (result == null || result.isEmpty()) {
             mediaHelper.postPickResult(new MediaBean(Collections.emptyList(), getMediaType()));
             return;

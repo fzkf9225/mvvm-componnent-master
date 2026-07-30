@@ -60,7 +60,7 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
             notifySelectionCancelled();
             return;
         }
-        LogUtil.show(MediaHelper.TAG, "拍照录像：" + getMediaType() + "，回调：" + result.toString());
+        LogUtil.logger(MediaHelper.TAG, "拍照录像：" + getMediaType() + "，回调：" + result.toString());
         if (!isFileUriExists(result)) {
             notifySelectionCancelled();
             return;
@@ -85,7 +85,7 @@ public class CameraCallBack implements ActivityResultCallback<Uri> {
         }
         ExifUtil.CaptureMetadata metadata = captureMetadataHelper.snapshot();
         boolean written = ExifUtil.tryWriteCaptureMetadata(mediaBuilder.getContext(), uri, metadata);
-        LogUtil.show(MediaHelper.TAG, "拍照EXIF写入" + (written ? "成功" : "跳过/失败") + "：" + metadata);
+        LogUtil.logger(MediaHelper.TAG, "拍照EXIF写入" + (written ? "成功" : "跳过/失败") + "：" + metadata);
     }
 
     public MediaTypeEnum getMediaType() {

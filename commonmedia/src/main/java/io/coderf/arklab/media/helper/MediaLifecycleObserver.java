@@ -151,7 +151,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         @Override
         public void onActivityResult(Map<String, Boolean> result) {
             for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-                LogUtil.show(MediaHelper.TAG, "拍照EXIF定位权限 " + entry.getKey() + ":" + entry.getValue());
+                LogUtil.logger(MediaHelper.TAG, "拍照EXIF定位权限 " + entry.getKey() + ":" + entry.getValue());
             }
             mediaHelper.continueAfterCaptureExifPermissionResult(mediaHelper.hasCaptureExifLocationPermission());
         }
@@ -164,7 +164,7 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
         @Override
         public void onActivityResult(Map<String, Boolean> result) {
             for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-                LogUtil.show(MediaHelper.TAG, entry.getKey() + ":" + entry.getValue());
+                LogUtil.logger(MediaHelper.TAG, entry.getKey() + ":" + entry.getValue());
             }
             Runnable continuation = mediaHelper.drainPendingPermissionContinuation();
             boolean allGranted = !result.containsValue(Boolean.FALSE);

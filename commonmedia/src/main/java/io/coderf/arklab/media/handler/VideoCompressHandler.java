@@ -74,7 +74,7 @@ public class VideoCompressHandler extends Handler {
                 }
             }
         } catch (Exception e) {
-            LogUtil.show(MediaHelper.TAG, "视频加载出现错误：" + e);
+            LogUtil.logger(MediaHelper.TAG, "视频加载出现错误：" + e);
             e.printStackTrace();
             mediaHelper.getUIController().showToast(
                     mediaHelper.getMediaBuilder().getContext().getString(R.string.media_video_load_error));

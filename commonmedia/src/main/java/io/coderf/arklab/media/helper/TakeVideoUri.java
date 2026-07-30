@@ -99,7 +99,7 @@ public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
      */
     @Override
     public Uri parseResult(int resultCode, @Nullable Intent intent) {
-        LogUtil.show(MediaHelper.TAG, "录像回调resultCode：" + resultCode);
+        LogUtil.logger(MediaHelper.TAG, "录像回调resultCode：" + resultCode);
         return uri;
     }
 }
