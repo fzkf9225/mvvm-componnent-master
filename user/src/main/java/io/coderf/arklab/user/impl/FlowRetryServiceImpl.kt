@@ -25,6 +25,11 @@ import javax.inject.Singleton
  *
  * 服务端 refresh_token 通常只能消费一次：先成功者拿到新 token，
  * 后发起者仍携带旧 refresh_token 会被判定无效，导致误登出。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/7/30 15:25
  */
 @Singleton
 class FlowRetryServiceImpl @Inject constructor(

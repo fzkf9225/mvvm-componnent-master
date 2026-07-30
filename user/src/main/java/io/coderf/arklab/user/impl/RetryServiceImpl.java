@@ -22,12 +22,16 @@ import io.reactivex.rxjava3.core.ObservableSource;
 import retrofit2.HttpException;
 
 /**
- * Created by fz on 2020/9/9 14:11
- * describe:请求失败，重试机制，当请求过期时利用Function方法重新请求刷新token方法替换请求token，然后再重新请求
+ * 请求失败，重试机制，当请求过期时利用Function方法重新请求刷新token方法替换请求token，然后再重新请求
  * 设置3次重试，每次间隔1秒,但仅适用于用户登录过期刷新token和无权限刷新用户菜单时使用
  * <p>
  * 演示 case：多播（{@code share()}）+ Single-Flight，避免多个独立请求并发 401 时各自刷 token 形成竞态。
  * 服务端 refresh_token 通常只能消费一次：先成功者拿到新 token，后发起者仍携带旧 refresh_token 会被判定无效。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/7/30 15:24
  */
 @Singleton
 public class RetryServiceImpl implements RetryService {
