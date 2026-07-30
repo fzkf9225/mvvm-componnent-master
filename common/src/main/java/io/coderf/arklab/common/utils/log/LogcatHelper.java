@@ -95,7 +95,7 @@ public class LogcatHelper {
                 }
                 String today = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                         .format(new java.util.Date());
-                out = new FileOutputStream(new File(logDir, "gps-log-" + today + ".log"), true);
+                out = new FileOutputStream(new File(logDir, "log-" + today + ".log"), true);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
