@@ -84,6 +84,7 @@ public class LogcatHelper {
             ALLOWED_LEVELS.add("E");
             ALLOWED_LEVELS.add("I");
             ALLOWED_LEVELS.add("W");
+            ALLOWED_LEVELS.add("D");
         }
 
         public LogDumper(String pid, String dir) {
