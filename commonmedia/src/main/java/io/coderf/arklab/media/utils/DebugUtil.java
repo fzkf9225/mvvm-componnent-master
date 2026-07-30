@@ -2,7 +2,6 @@ package io.coderf.arklab.media.utils;
 
 import android.app.Application;
 
-import io.coderf.arklab.googlegps.utils.LogcatHelper;
 
 /**
  * 是否开启media模块日志
