@@ -59,4 +59,10 @@
 
     <!-- Lifecycle -->
     <string name="media_lifecycle_error">请使用Activity或Fragment的lifecycle对象</string>
+
+    <!-- Image crop -->
+    <string name="media_crop_title">裁剪图片</string>
+    <string name="media_crop_load_failed">图片加载失败</string>
+    <string name="media_crop_failed">裁剪失败</string>
+    <string name="media_crop_save_failed">裁剪图片保存失败</string>
 </resources>

@@ -13,6 +13,10 @@
             name="waterMarkImagePath"
             type="android.net.Uri" />
 
+        <variable
+            name="cropResultImagePath"
+            type="android.net.Uri" />
+
     </data>
 
     <ScrollView
@@ -206,6 +210,93 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_water_mark_image" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_crop_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:text="图片裁剪（需先选择图片）"
+                android:textSize="@dimen/font_size_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_image" />
+
+            <LinearLayout
+                android:id="@+id/ll_crop_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/tv_crop_title">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_crop_circle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_theme_color"
+                    android:paddingStart="@dimen/padding_m"
+                    android:paddingEnd="@dimen/padding_m"
+                    android:text="圆形裁剪"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_crop_square"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_theme_color"
+                    android:paddingStart="@dimen/padding_m"
+                    android:paddingEnd="@dimen/padding_m"
+                    android:text="方形裁剪"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_crop_rect"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_theme_color"
+                    android:paddingStart="@dimen/padding_m"
+                    android:paddingEnd="@dimen/padding_m"
+                    android:text="长方形裁剪"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <io.coderf.arklab.common.widget.customview.CornerImageView
+                android:id="@+id/cropResultImage"
+                imageUri="@{cropResultImagePath}"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_crop_actions"
+                app:radius="@dimen/radius_l" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_crop_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="@{`裁剪结果：`+ cropResultImagePath}"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintTop_toBottomOf="@+id/cropResultImage" />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_capture_exif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -218,7 +309,7 @@
                 android:textSize="@dimen/font_size_m"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_image" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_crop_result" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

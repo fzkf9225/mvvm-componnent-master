@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMediaBinding;
 import io.coderf.arklab.demo.viewmodel.MediaViewModel;
 import io.coderf.arklab.media.MediaHelper;
+import io.coderf.arklab.media.crop.CropShapeEnum;
+import io.coderf.arklab.media.crop.ImageCropBuilder;
+import io.coderf.arklab.media.crop.OnImageCropListener;
 import io.coderf.arklab.media.dialog.OpenFileDialog;
 import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenMediaDialog;
@@ -229,6 +233,83 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                     .currentPosition(0)
                     .show();
         });
+        binding.btnCropCircle.setOnClickListener(v -> startCropDemo(CropShapeEnum.CIRCLE));
+        binding.btnCropSquare.setOnClickListener(v -> startCropDemo(CropShapeEnum.SQUARE));
+        binding.btnCropRect.setOnClickListener(v -> startCropDemo(CropShapeEnum.RECTANGLE));
+        binding.cropResultImage.setOnClickListener(v -> {
+            if (binding.getCropResultImagePath() == null) {
+                return;
+            }
+            new PreviewPhotoDialog(MediaActivity.this)
+                    .createUriImageInfo(binding.getCropResultImagePath())
+                    .currentPosition(0)
+                    .show();
+        });
+    }
+
+    /**
+     * 演示图片裁剪：使用当前已选源图，按指定形状打开裁剪页。
+     *
+     * @param cropShape 裁剪框形状
+     */
+    private void startCropDemo(CropShapeEnum cropShape) {
+        if (binding.getSourceImagePath() == null) {
+            showToast("请先选择图片");
+            return;
+        }
+        ImageCropBuilder builder = new ImageCropBuilder(this)
+                .setSourceUri(binding.getSourceImagePath())
+                .setCropShape(cropShape)
+                // 裁剪框可缩放拖动，描边颜色可配
+                .setCropFrameScalable(true)
+                .setBorderColor(0xFFFFFFFF)
+                .setDimColor(0x99000000)
+                // 裁剪框距边缘留白，避免与系统返回手势冲突；初始框不铺满
+                .setCropEdgeInsetDp(16f)
+                .setInitialCropScale(0.7f)
+                // 取消 / 确定按钮文案、颜色、字号、背景色均可配
+                .setCancelText("取消")
+                .setCancelTextColor(0xFFFFFFFF)
+                .setCancelTextSizeSp(16f)
+                .setCancelBackgroundColor(0x33FFFFFF)
+                .setConfirmText("完成")
+                .setConfirmTextColor(0xFFFFFFFF)
+                .setConfirmTextSizeSp(16f)
+                .setConfirmBackgroundColor(0xFF2D8CF0)
+                .setCancelButtonSizeDp(0, 48)
+                .setConfirmButtonSizeDp(0, 48)
+                .setOnImageCropListener(new OnImageCropListener() {
+                    @Override
+                    public void onCropSuccess(@androidx.annotation.NonNull File outputFile,
+                                              @androidx.annotation.NonNull Uri outputUri) {
+                        binding.setCropResultImagePath(outputUri);
+                        showToast("裁剪成功：" + outputFile.getAbsolutePath());
+                        LogUtil.logger(TAG, "裁剪成功 path=" + outputFile.getAbsolutePath() + ", uri=" + outputUri);
+                    }
+
+                    @Override
+                    public void onCropCancel() {
+                        showToast("已取消裁剪");
+                    }
+
+                    @Override
+                    public void onCropError(@androidx.annotation.Nullable String message,
+                                            @androidx.annotation.Nullable Throwable throwable) {
+                        showToast(message == null ? "裁剪失败" : message);
+                        LogUtil.logger(TAG, "裁剪失败：" + message);
+                    }
+                });
+        if (cropShape == CropShapeEnum.RECTANGLE) {
+            // 长方形示例：自由裁剪（不锁宽高比）；若要固定比例可改用 setAspectRatio(16, 9)
+            builder.setFreeCrop(true);
+        }
+        if (cropShape == CropShapeEnum.CIRCLE) {
+            // 圆形示例：绿色描边 + 绿色确定按钮
+            builder.setBorderColor(0xFF4CAF50)
+                    .setConfirmBackgroundColor(0xFF4CAF50)
+                    .setConfirmText("确认裁剪");
+        }
+        builder.builder().start(this);
     }
 
     private double percentage = 0;

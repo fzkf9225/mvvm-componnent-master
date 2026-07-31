@@ -59,4 +59,10 @@
 
     <!-- Lifecycle -->
     <string name="media_lifecycle_error">Please use the lifecycle from an Activity or Fragment</string>
+
+    <!-- Image crop -->
+    <string name="media_crop_title">Crop</string>
+    <string name="media_crop_load_failed">Failed to load image</string>
+    <string name="media_crop_failed">Crop failed</string>
+    <string name="media_crop_save_failed">Failed to save cropped image</string>
 </resources>

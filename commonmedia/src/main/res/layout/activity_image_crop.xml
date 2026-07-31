@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        tools:ignore="ContentDescription">
+
+        <!-- 裁剪区域：图片与遮罩共享同一容器，避免边距导致坐标系偏移 -->
+        <FrameLayout
+            android:id="@+id/crop_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="88dp">
+
+            <io.coderf.arklab.media.crop.GestureCropImageView
+                android:id="@+id/crop_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- 不拦截触摸，事件穿透给下层 ImageView -->
+            <io.coderf.arklab.media.crop.CropOverlayView
+                android:id="@+id/crop_overlay_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/crop_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_gravity="bottom"
+            android:background="#CC111111"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btn_crop_cancel"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/media_crop_btn_cancel_ripple"
+                android:gravity="center"
+                android:text="@string/media_cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btn_crop_confirm"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/media_crop_btn_confirm_ripple"
+                android:gravity="center"
+                android:text="@string/media_confirm"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>
