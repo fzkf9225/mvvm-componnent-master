@@ -15,22 +15,22 @@ public class DebugUtil {
     private static Application application;
 
     /**
-     * 开启 debug 日志，默认不写本地文件
+     * 开启 debug 日志，默认不写本地文件（NONE）
      */
     public static void enableDebug(Application application, boolean enableDebug) {
-        enableDebug(application, enableDebug, false);
+        enableDebug(application, enableDebug, FileLogLevel.NONE);
     }
 
     /**
-     * @param application   Application
-     * @param enableDebug   是否开启 debug 日志（控制台）
-     * @param enableFileLog 是否把日志写到本地
+     * @param application  Application
+     * @param enableDebug  是否开启 debug 日志（控制台）
+     * @param fileLogLevel 本地日志读写层级：NONE / DEBUG / TEST / RELEASE
      */
-    public static void enableDebug(Application application, boolean enableDebug, boolean enableFileLog) {
+    public static void enableDebug(Application application, boolean enableDebug, FileLogLevel fileLogLevel) {
         DebugUtil.application = application;
         DebugUtil.enableDebug = enableDebug;
-        if (enableDebug && enableFileLog) {
-            LogcatHelper.getInstance(application).start();
+        if (fileLogLevel != null && fileLogLevel != FileLogLevel.NONE) {
+            LogcatHelper.getInstance(application).start(fileLogLevel);
         }
     }
 

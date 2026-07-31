@@ -9,10 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +27,7 @@ public class LogcatHelper {
     private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
     private final int mPId;
+    private FileLogLevel fileLogLevel = FileLogLevel.DEBUG;
 
     /**
      * 初始化目录
@@ -54,8 +53,16 @@ public class LogcatHelper {
     }
 
     public void start() {
+        start(FileLogLevel.DEBUG);
+    }
+
+    public void start(FileLogLevel fileLogLevel) {
+        if (fileLogLevel == null || fileLogLevel == FileLogLevel.NONE) {
+            return;
+        }
+        this.fileLogLevel = fileLogLevel;
         if (mLogDumper == null) {
-            mLogDumper = new LogDumper(String.valueOf(mPId), PATH_LOGCAT);
+            mLogDumper = new LogDumper(String.valueOf(mPId), PATH_LOGCAT, this.fileLogLevel);
         }
         mLogDumper.start();
     }
@@ -68,7 +75,6 @@ public class LogcatHelper {
     }
 
     private static class LogDumper extends Thread {
-        private static final Set<String> ALLOWED_LEVELS = new HashSet<>();
         private static final Pattern THREADTIME_PATTERN = Pattern.compile(
                 "^\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+(\\d+)\\s+\\d+\\s+([VDIWEAF])\\s+.*$"
         );
@@ -78,17 +84,12 @@ public class LogcatHelper {
         private boolean mRunning = true;
         private final String[] cmds;
         private final String mPID;
+        private final FileLogLevel fileLogLevel;
         private FileOutputStream out = null;
 
-        static {
-            ALLOWED_LEVELS.add("E");
-            ALLOWED_LEVELS.add("I");
-            ALLOWED_LEVELS.add("W");
-            ALLOWED_LEVELS.add("D");
-        }
-
-        public LogDumper(String pid, String dir) {
+        public LogDumper(String pid, String dir, FileLogLevel fileLogLevel) {
             mPID = pid;
+            this.fileLogLevel = fileLogLevel == null ? FileLogLevel.DEBUG : fileLogLevel;
             try {
                 File logDir = new File(dir);
                 if (!logDir.exists()) {
@@ -105,7 +106,7 @@ public class LogcatHelper {
              *
              * 日志等级：*:v , *:d , *:w , *:e , *:f , *:s
              *
-             * 显示当前mPID程序的 E和W等级的日志.
+             * 显示当前mPID程序的日志，具体层级由 FileLogLevel 控制.
              *
              * */
 
@@ -172,7 +173,7 @@ public class LogcatHelper {
             }
             String pid = matcher.group(1);
             String level = matcher.group(2);
-            return mPID.equals(pid) && ALLOWED_LEVELS.contains(level);
+            return mPID.equals(pid) && fileLogLevel.allows(level);
         }
 
     }

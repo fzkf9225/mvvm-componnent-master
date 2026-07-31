@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.coderf.arklab.common.autosize.AutoSize;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.CrashHandler;
+import io.coderf.arklab.common.utils.log.FileLogLevel;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.log.LogcatHelper;
 
@@ -72,23 +73,23 @@ public class Config {
     }
 
     /**
-     * 开启 debug 日志，默认同时把日志写到本地
+     * 开启 debug 日志，默认以 DEBUG 层级写本地日志
      */
     public void enableDebug(boolean enable) {
-        enableDebug(enable, true);
+        enableDebug(enable, FileLogLevel.DEBUG);
     }
 
     /**
-     * @param enable        是否开启 debug 日志（控制台）
-     * @param enableFileLog 是否把日志写到本地
+     * @param enable       是否开启 debug 日志（控制台）
+     * @param fileLogLevel 本地日志读写层级：NONE / DEBUG / TEST / RELEASE
      */
-    public void enableDebug(boolean enable, boolean enableFileLog) {
+    public void enableDebug(boolean enable, FileLogLevel fileLogLevel) {
         enableDebug.set(enable);
         if (enable) {
             LogUtil.init();
-            if (enableFileLog) {
-                LogcatHelper.getInstance(application).start();
-            }
+        }
+        if (fileLogLevel != null && fileLogLevel != FileLogLevel.NONE) {
+            LogcatHelper.getInstance(application).start(fileLogLevel);
         }
     }
 
