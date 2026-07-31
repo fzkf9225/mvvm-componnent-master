@@ -71,11 +71,24 @@ public class Config {
         return errorService;
     }
 
+    /**
+     * 开启 debug 日志，默认同时把日志写到本地
+     */
     public void enableDebug(boolean enable) {
+        enableDebug(enable, true);
+    }
+
+    /**
+     * @param enable        是否开启 debug 日志（控制台）
+     * @param enableFileLog 是否把日志写到本地
+     */
+    public void enableDebug(boolean enable, boolean enableFileLog) {
         enableDebug.set(enable);
-        if (enableDebug.get()) {
-            LogcatHelper.getInstance(application).start();
+        if (enable) {
             LogUtil.init();
+            if (enableFileLog) {
+                LogcatHelper.getInstance(application).start();
+            }
         }
     }
 
