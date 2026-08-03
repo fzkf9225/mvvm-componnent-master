@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.demo.activity.MainActivity;
 import io.coderf.arklab.userapi.UserService;
@@ -95,8 +96,20 @@ public class ErrorServiceImpl implements ErrorService {
     }
 
     @Override
+    @Deprecated
     public Class<?> getMainActivity() {
         return MainActivity.class;
+    }
+
+    @Override
+    public void toMain(Context context, Bundle bundle) {
+        Intent intent = new Intent(context, MainActivity.class);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        AppManager.getAppManager().finishAllActivity();
+        context.startActivity(intent);
     }
 
     @Override

@@ -221,8 +221,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
 
     override fun toMain() {
         showToast("登录成功！")
-        AppManager.getAppManager().finishAllActivity()
-        startActivity(errorService.mainActivity)
+        errorService.toMain(this,null)
     }
 
     override fun onErrorCode(model: BaseResponse<*>?) {

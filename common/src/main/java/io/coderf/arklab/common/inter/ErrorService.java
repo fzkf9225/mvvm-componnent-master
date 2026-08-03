@@ -20,6 +20,7 @@ public interface ErrorService {
      * @return 是否已登录
      */
     boolean isLogin();
+
     /**
      * 是否登录超时或者登录无效等情况，他包含是否登录
      * @return 是否为登录过期，true：登录过期，false：登录有效
@@ -40,13 +41,15 @@ public interface ErrorService {
      * @param activityResultLauncher launcher
      */
     void toLogin(Context mContext, Bundle bundle, ActivityResultLauncher<Intent> activityResultLauncher);
+
     /**
      * activity跳转登录
      * @param context 上下文
      */
     void toLogin(Context context);
 
-    void toLogin(Context context,Bundle bundle);
+    void toLogin(Context context, Bundle bundle);
+
     /**
      * 是否有操作权限，errorCode为错误编码，注意这里返回的是有权限的情况
      * @return 是否有权限，true：有权限，false：无权限
@@ -59,16 +62,19 @@ public interface ErrorService {
      * @param activityResultLauncher launcher
      */
     void toNoPermission(Context mContext, ActivityResultLauncher<Intent> activityResultLauncher);
+
     /**
      * 跳转到无权限页面目标页，大部分是跳转到登录页
      * @param context 上下文
      */
     void toNoPermission(Context context);
+
     /**
      * 是否统一处理登录和权限回调
      * @return true为统一处理，false为不同处理
      */
     boolean unifyHandling();
+
     /**
      * 崩溃日志
      * @param errorInfo 上传登录日志
@@ -79,7 +85,14 @@ public interface ErrorService {
      * app主页Activity，因为登录页在其他模块，这个主要是其他子模块使用
      * @return app主页Activity
      */
+    @Deprecated
     Class<?> getMainActivity();
+
+    /**
+     * 跳转到App的首页，也就是关闭全部activity,重启到MainActivity
+     */
+    void toMain(Context context,Bundle bundle);
+
     /**
      * 获取用户token
      * @return token
@@ -97,6 +110,6 @@ public interface ErrorService {
      * @param system 系统标识
      * @return Map请求头
      */
-    Map<String,String> defaultRequestHeader(String system);
+    Map<String, String> defaultRequestHeader(String system);
 
 }
