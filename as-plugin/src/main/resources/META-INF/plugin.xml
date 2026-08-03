@@ -1,0 +1,14 @@
+<idea-plugin>
+    <id>io.coderf.arklab.templates.basemvvm</id>
+    <name>ArkLab BaseActivity Templates</name>
+    <vendor email="arklab@coderf.io" url="https://coderf.io">ArkLab</vendor>
+
+    <!-- Do not depend on org.jetbrains.kotlin: that blocks install under Kotlin K2 mode. -->
+    <depends>org.jetbrains.android</depends>
+    <depends>com.intellij.modules.androidstudio</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.android.tools.idea.wizard.template">
+        <wizardTemplateProvider implementation="io.coderf.arklab.templates.ArkLabTemplateProvider"/>
+    </extensions>
+</idea-plugin>
