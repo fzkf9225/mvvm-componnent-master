@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt.handler
 
 /**
  * 业务消息处理器扩展点。
@@ -8,7 +8,7 @@ package io.coderf.arklab.mqtt.mqtt
  * 路由键由调用方从 payload / topic 中自行提取后传入 [MqttHandlerRegistry.dispatch]。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
@@ -35,7 +35,7 @@ interface MqttMessageHandler {
  * [MqttMessageHandler] 空实现基类，便于 Java 只覆写部分方法。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */

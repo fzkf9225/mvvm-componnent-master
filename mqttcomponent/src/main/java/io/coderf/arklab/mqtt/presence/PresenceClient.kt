@@ -1,12 +1,12 @@
 package io.coderf.arklab.mqtt.presence
 
-import io.coderf.arklab.mqtt.mqtt.AbstractMqttConnectionListener
-import io.coderf.arklab.mqtt.mqtt.MqttConnection
-import io.coderf.arklab.mqtt.mqtt.MqttConnectionConfig
-import io.coderf.arklab.mqtt.mqtt.MqttConnectionListener
-import io.coderf.arklab.mqtt.mqtt.MqttLogger
-import io.coderf.arklab.mqtt.mqtt.MqttLwtConfig
-import io.coderf.arklab.mqtt.mqtt.MqttRawMessage
+import io.coderf.arklab.mqtt.utils.LogUtil
+import io.coderf.arklab.mqtt.AbstractMqttListener
+import io.coderf.arklab.mqtt.MqttConfig
+import io.coderf.arklab.mqtt.MqttListener
+import io.coderf.arklab.mqtt.MqttLwt
+import io.coderf.arklab.mqtt.MqttRawMessage
+import io.coderf.arklab.mqtt.core.MqttConnection
 import org.eclipse.paho.mqttv5.common.MqttException
 import org.eclipse.paho.mqttv5.common.MqttMessage
 import java.nio.charset.StandardCharsets
@@ -25,12 +25,12 @@ import java.nio.charset.StandardCharsets
  *
  * ## Java 接入示例
  * ```
- * PresenceMqttClient client = new PresenceMqttClient();
- * PresenceConnectionInfo info = new PresenceConnectionInfo(
+ * PresenceClient client = new PresenceClient();
+ * PresenceConfig info = new PresenceConfig(
  *     "tcp://broker:1883", "clientId", "user", "pass",
  *     60, "device/offline", "{\"online\":false}", "device/heartbeat"
  * );
- * client.connect(info, new AbstractPresenceConnectionListener() {
+ * client.connect(info, new AbstractPresenceListener() {
  *     @Override public void onConnected(boolean reconnect) { ... }
  *     @Override public void onDisconnected() { ... }
  * });
@@ -39,29 +39,27 @@ import java.nio.charset.StandardCharsets
  * ```
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-class PresenceMqttClient @JvmOverloads constructor(
-    private val logger: MqttLogger = MqttLogger.DEFAULT,
-) {
+class PresenceClient {
 
-    private val connection = MqttConnection(TAG, logger)
+    private val connection = MqttConnection(TAG)
 
     /** 最近一次成功用于建连的配置，供心跳发布时读取 topic 等 */
-    private var currentInfo: PresenceConnectionInfo? = null
+    private var currentInfo: PresenceConfig? = null
 
     fun isConnected(): Boolean = connection.isConnected()
 
     /**
-     * 使用 [PresenceConnectionInfo] 建立（或重建）MQTT 连接。
+     * 使用 [PresenceConfig] 建立（或重建）MQTT 连接。
      *
      * 必填字段缺失时记录日志并跳过；若已连接则直接回调 onConnected(false)，不重复建连。
      * 仅关心连接成功时可用此简化重载。
      */
-    fun connect(info: PresenceConnectionInfo, onConnected: (reconnect: Boolean) -> Unit) {
-        connect(info, object : AbstractPresenceConnectionListener() {
+    fun connect(info: PresenceConfig, onConnected: (reconnect: Boolean) -> Unit) {
+        connect(info, object : AbstractPresenceListener() {
             override fun onConnected(reconnect: Boolean) {
                 onConnected(reconnect)
             }
@@ -69,10 +67,10 @@ class PresenceMqttClient @JvmOverloads constructor(
     }
 
     /**
-     * Java 友好重载：使用简化 [PresenceConnectionListener] 接收连接回调。
+     * Java 友好重载：使用简化 [PresenceConnectCallback] 接收连接回调。
      */
-    fun connect(info: PresenceConnectionInfo, listener: PresenceConnectionListener) {
-        connect(info, object : AbstractPresenceConnectionListener() {
+    fun connect(info: PresenceConfig, listener: PresenceConnectCallback) {
+        connect(info, object : AbstractPresenceListener() {
             override fun onConnected(reconnect: Boolean) {
                 listener.onConnected(reconnect)
             }
@@ -82,25 +80,25 @@ class PresenceMqttClient @JvmOverloads constructor(
     /**
      * 使用完整 Presence 监听建立连接（推荐：可感知断连/重连/错误）。
      */
-    fun connect(info: PresenceConnectionInfo, listener: PresenceMqttListener) {
+    fun connect(info: PresenceConfig, listener: PresenceListener) {
         if (info.brokerAddress.isBlank() || info.clientId.isBlank()
             || info.username.isBlank() || info.password.isBlank()
         ) {
-            logger.log(TAG, "MQTT 连接参数不完整，跳过连接")
+            LogUtil.logger(TAG, "MQTT 连接参数不完整，跳过连接")
             return
         }
         currentInfo = info
         val keepAlive = info.keepAliveSeconds.takeIf { it > 0 }
-            ?: PresenceConnectionInfo.DEFAULT_KEEP_ALIVE_SECONDS
+            ?: PresenceConfig.DEFAULT_KEEP_ALIVE_SECONDS
         val lwt = if (!info.lwtTopic.isNullOrBlank() && !info.lwtMessage.isNullOrBlank()) {
-            MqttLwtConfig(
+            MqttLwt(
                 topic = info.lwtTopic!!,
                 message = info.lwtMessage!!,
             )
         } else {
             null
         }
-        val config = MqttConnectionConfig.builder()
+        val config = MqttConfig.builder()
             .brokerAddress(info.brokerAddress)
             .clientId(info.clientId)
             .username(info.username)
@@ -112,7 +110,7 @@ class PresenceMqttClient @JvmOverloads constructor(
             .maxReconnectAttempts(info.maxReconnectAttempts)
             .reconnectIntervalSeconds(info.reconnectIntervalSeconds)
             .build()
-        connection.connect(config, object : AbstractMqttConnectionListener() {
+        connection.connect(config, object : AbstractMqttListener() {
             override fun onConnected(reconnect: Boolean) {
                 listener.onConnected(reconnect)
             }
@@ -148,10 +146,10 @@ class PresenceMqttClient @JvmOverloads constructor(
     }
 
     /**
-     * 直接使用底层 [MqttConnectionListener] 连接（高级场景）。
+     * 直接使用底层 [MqttListener] 连接（高级场景）。
      */
-    fun connect(info: PresenceConnectionInfo, listener: MqttConnectionListener) {
-        connect(info, object : AbstractPresenceConnectionListener() {
+    fun connect(info: PresenceConfig, listener: MqttListener) {
+        connect(info, object : AbstractPresenceListener() {
             override fun onConnected(reconnect: Boolean) = listener.onConnected(reconnect)
             override fun onDisconnected() = listener.onDisconnected()
             override fun onReconnecting(attempt: Int, maxAttempts: Int, nextRetryDelaySeconds: Int) =
@@ -171,7 +169,7 @@ class PresenceMqttClient @JvmOverloads constructor(
     }
 
     /** 获取当前缓存的连接信息（心跳 topic 等） */
-    fun getCurrentInfo(): PresenceConnectionInfo? = currentInfo
+    fun getCurrentInfo(): PresenceConfig? = currentInfo
 
     /**
      * 主动发布离线消息（与 CONNECT 注册的 LWT 同 topic/payload，由客户端主动发出）。
@@ -212,48 +210,7 @@ class PresenceMqttClient @JvmOverloads constructor(
     }
 
     companion object {
-        private const val TAG = "PresenceMqttClient"
+        private const val TAG = "PresenceClient"
         private const val DEFAULT_MESSAGE_QOS = 1
     }
 }
-
-/**
- * Presence 简化连接回调，供 Java 项目只关心 onConnected 时使用。
- *
- * @author fz
- * @version 1.2
- * @since 1.0
- * @created 2026/7/27 10:10
- */
-fun interface PresenceConnectionListener {
-    fun onConnected(reconnect: Boolean)
-}
-
-/**
- * Presence 完整事件回调。
- *
- * @author fz
- * @version 1.2
- * @since 1.2
- * @created 2026/7/27 10:10
- */
-interface PresenceMqttListener {
-    fun onConnected(reconnect: Boolean) {}
-    fun onDisconnected() {}
-    fun onReconnecting(attempt: Int, maxAttempts: Int, nextRetryDelaySeconds: Int) {}
-    fun onReconnectExhausted() {}
-    fun onError(exception: MqttException?) {}
-    fun onMessage(topic: String, payload: String) {}
-    fun onMessageRaw(message: MqttRawMessage) {}
-    fun onDeliveryComplete() {}
-}
-
-/**
- * [PresenceMqttListener] 空实现基类，便于 Java 只覆写部分回调。
- *
- * @author fz
- * @version 1.2
- * @since 1.2
- * @created 2026/7/27 10:10
- */
-abstract class AbstractPresenceConnectionListener : PresenceMqttListener

@@ -1,7 +1,9 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt.session
 
+import io.coderf.arklab.mqtt.utils.LogUtil
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import io.coderf.arklab.mqtt.MqttClient
 import java.lang.ref.WeakReference
 import java.util.WeakHashMap
 
@@ -13,19 +15,17 @@ import java.util.WeakHashMap
  * - 同一时刻仅一个 [LifecycleOwner] 持有 Broker 订阅（切页先退旧订新）
  * - 未连接时缓存 pending 主题，连上后再 flush
  *
- * 传输仍委托 [MqttAsyncClient]，本类只编排「谁该订哪些主题」。
+ * 传输仍委托 [MqttClient]，本类只编排「谁该订哪些主题」。
  *
  * @param client 异步 MQTT 客户端
- * @param logger 日志
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-class MqttLifecycleSession @JvmOverloads constructor(
-    private val client: MqttAsyncClient,
-    private val logger: MqttLogger = MqttLogger.DEFAULT,
+class MqttSession(
+    private val client: MqttClient,
 ) {
 
     private val lock = Any()
@@ -121,7 +121,7 @@ class MqttLifecycleSession @JvmOverloads constructor(
             if (client.isConnected()) {
                 applyTopicsLocked(topics)
             } else {
-                logger.log(TAG, "尚未连接，主题已缓存，待 flushPendingSubscriptions")
+                LogUtil.logger(TAG, "尚未连接，主题已缓存，待 flushPendingSubscriptions")
             }
         }
     }
@@ -147,7 +147,7 @@ class MqttLifecycleSession @JvmOverloads constructor(
      * 单个页面会话状态。
      *
      * @author fz
-     * @version 1.2
+     * @version 1.3
      * @since 1.2
      * @created 2026/7/27 10:10
      */
@@ -162,7 +162,7 @@ class MqttLifecycleSession @JvmOverloads constructor(
         fun resolveTopics(): Set<String> {
             val fromProvider = runCatching { topicsProvider() }
                 .getOrElse {
-                    logger.log(TAG, "topicsProvider 异常: ${it.message}")
+                    LogUtil.logger(TAG, "topicsProvider 异常: ${it.message}")
                     emptyList()
                 }
                 .filter { it.isNotBlank() }
@@ -189,6 +189,6 @@ class MqttLifecycleSession @JvmOverloads constructor(
     }
 
     companion object {
-        private const val TAG = "MqttLifecycleSession"
+        private const val TAG = "MqttSession"
     }
 }

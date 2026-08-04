@@ -1,11 +1,11 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt
 
 import java.nio.charset.StandardCharsets
 
 /**
  * MQTT 下行原始消息封装。
  *
- * 在文本 [MqttConnectionListener.onMessage] 之外，提供字节载荷与 QoS / retained 元数据，
+ * 在文本 [MqttListener.onMessage] 之外，提供字节载荷与 QoS / retained 元数据，
  * 便于业务层做二进制解析或按需转码。
  *
  * @property topic 主题
@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets
  * @property retained 是否为保留消息
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */

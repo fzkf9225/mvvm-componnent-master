@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt.internal
 
 /**
  * MQTT 主题集合 diff 工具。
@@ -8,18 +8,18 @@ package io.coderf.arklab.mqtt.mqtt
  *
  * 典型用法：
  * ```
- * val diff = MqttTopicDiff.diff(connection.getSubscribedTopics(), desired);
+ * val diff = TopicDiff.diff(connection.getSubscribedTopics(), desired);
  * connection.unsubscribe(diff.toUnsubscribe.toTypedArray());
  * connection.subscribe(diff.toSubscribe.toTypedArray());
  * // 或直接：connection.syncTopics(desired);
  * ```
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-object MqttTopicDiff {
+object TopicDiff {
 
     /**
      * Diff 结果。
@@ -28,7 +28,7 @@ object MqttTopicDiff {
      * @property toUnsubscribe 需要退订的主题
      *
      * @author fz
-     * @version 1.2
+     * @version 1.3
      * @since 1.2
      * @created 2026/7/27 10:10
      */

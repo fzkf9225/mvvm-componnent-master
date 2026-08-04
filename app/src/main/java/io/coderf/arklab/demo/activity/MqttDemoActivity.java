@@ -16,14 +16,14 @@ import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityMqttDemoBinding;
-import io.coderf.arklab.mqtt.mqtt.AbstractMqttConnectionListener;
-import io.coderf.arklab.mqtt.mqtt.MqttConnection;
-import io.coderf.arklab.mqtt.mqtt.MqttConnectionConfig;
+import io.coderf.arklab.mqtt.AbstractMqttListener;
+import io.coderf.arklab.mqtt.MqttClient;
+import io.coderf.arklab.mqtt.MqttConfig;
 import io.coderf.arklab.mqtt.presence.HeartbeatAction;
 import io.coderf.arklab.mqtt.presence.HeartbeatScheduler;
-import io.coderf.arklab.mqtt.presence.PresenceConnectionInfo;
-import io.coderf.arklab.mqtt.presence.PresenceConnectionListener;
-import io.coderf.arklab.mqtt.presence.PresenceMqttClient;
+import io.coderf.arklab.mqtt.presence.PresenceConfig;
+import io.coderf.arklab.mqtt.presence.PresenceConnectCallback;
+import io.coderf.arklab.mqtt.presence.PresenceClient;
 import io.coderf.arklab.mqtt.widget.MqttReconnectDialog;
 
 /**
@@ -31,11 +31,11 @@ import io.coderf.arklab.mqtt.widget.MqttReconnectDialog;
  * <p>
  * 演示内容：
  * <ul>
- *     <li>{@link MqttConnection} + {@link MqttConnectionConfig.Builder} 建立连接、订阅、发布</li>
- *     <li>{@link AbstractMqttConnectionListener} 接收连接与下行消息</li>
+ *     <li>{@link MqttClient} + {@link MqttConfig.Builder} 建立连接、订阅、发布（推荐入口）</li>
+ *     <li>{@link AbstractMqttListener} 接收连接与下行消息</li>
  *     <li>意外断连后的自定义自动重连（{@code maxReconnectAttempts} / {@code reconnectIntervalSeconds}）</li>
  *     <li>{@link MqttReconnectDialog} 展示重连进度，支持「直接退出」</li>
- *     <li>{@link PresenceMqttClient} + {@link HeartbeatScheduler} 在线心跳（独立通道示例）</li>
+ *     <li>{@link PresenceClient} + {@link HeartbeatScheduler} 在线心跳（独立通道示例）</li>
  * </ul>
  * <p>
  * 默认 Broker 为 EMQX 公共测试节点，仅供联调；生产环境请替换为服务端下发的连接参数。
@@ -44,11 +44,11 @@ import io.coderf.arklab.mqtt.widget.MqttReconnectDialog;
 public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttDemoBinding> {
 
     /** 业务推送 / 订阅通道（核心 API 示例） */
-    private MqttConnection mqttConnection;
+    private MqttClient mqttClient;
 
     /** 在线心跳通道（与上方独立实例，互不影响） */
     @Nullable
-    private PresenceMqttClient presenceClient;
+    private PresenceClient presenceClient;
 
     @Nullable
     private HeartbeatScheduler heartbeatScheduler;
@@ -92,7 +92,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     }
 
     /**
-     * 核心层示例：Java 通过 Builder 组装 {@link MqttConnectionConfig} 并连接。
+     * 核心层示例：Java 通过 Builder 组装 {@link MqttConfig} 并连接。
      * 配置自定义重连策略后，意外断连将自动重试并在 UI 展示 {@link MqttReconnectDialog}。
      */
     private void connectMqtt() {
@@ -110,7 +110,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
             return;
         }
 
-        MqttConnectionConfig.Builder builder = MqttConnectionConfig.builder()
+        MqttConfig.Builder builder = MqttConfig.builder()
                 .brokerAddress(broker)
                 .clientId(clientId)
                 .username(username)
@@ -126,10 +126,10 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
             builder.subscribeTopics(subscribeTopic);
         }
 
-        MqttConnectionConfig config = builder.build();
+        MqttConfig config = builder.build();
 
-        if (mqttConnection == null) {
-            mqttConnection = new MqttConnection("MqttDemo", (tag, message) -> appendLog("[Paho] " + message));
+        if (mqttClient == null) {
+            mqttClient = new MqttClient("MqttDemo");
         }
 
         dismissReconnectDialog();
@@ -137,7 +137,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         appendLog("重连策略: 最多 " + maxReconnectAttempts + " 次, 间隔 " + reconnectIntervalSeconds + " 秒");
         updateStatus("连接中...");
 
-        mqttConnection.connect(config, new AbstractMqttConnectionListener() {
+        mqttClient.connect(config, new AbstractMqttListener() {
             @Override
             public void onConnected(boolean reconnect) {
                 dismissReconnectDialog();
@@ -187,15 +187,15 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     private void disconnectMqtt() {
         dismissReconnectDialog();
         stopPresenceDemo();
-        if (mqttConnection != null) {
-            mqttConnection.disconnect();
+        if (mqttClient != null) {
+            mqttClient.disconnect();
             appendLog("已主动断开连接");
         }
         updateStatus("未连接");
     }
 
     private void publishMessage() {
-        if (mqttConnection == null || !mqttConnection.isConnected()) {
+        if (mqttClient == null || !mqttClient.isConnected()) {
             showToast("请先连接 MQTT");
             return;
         }
@@ -205,8 +205,8 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
             showToast("发布主题与消息不能为空");
             return;
         }
-        boolean ok = mqttConnection.publish(topic, payload, 1, false);
-        appendLog(ok ? "发布成功 -> " + topic : "发布失败");
+        mqttClient.publish(topic, payload, 1, false, ok ->
+                appendLog(ok ? "发布成功 -> " + topic : "发布失败"));
     }
 
     private void showOrUpdateReconnectDialog(int attempt, int maxAttempts, int nextRetryDelaySeconds) {
@@ -233,9 +233,9 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     }
 
     /**
-     * Presence 层示例：独立 {@link PresenceMqttClient} 建连并启动应用层心跳。
+     * Presence 层示例：独立 {@link PresenceClient} 建连并启动应用层心跳。
      * <p>
-     * 与上方 {@link #mqttConnection} 使用不同 clientId，可同时在线。
+     * 与上方 {@link #mqttClient} 使用不同 clientId，可同时在线。
      */
     private void demoPresenceHeartbeat() {
         String broker = textOf(binding.editBroker);
@@ -251,7 +251,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         String presenceClientId = textOf(binding.editClientId) + "_presence";
         String heartbeatTopic = textOf(binding.editPublishTopic) + "/heartbeat";
 
-        PresenceConnectionInfo info = new PresenceConnectionInfo(
+        PresenceConfig info = new PresenceConfig(
                 broker,
                 presenceClientId,
                 username,
@@ -262,10 +262,10 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
                 heartbeatTopic
         );
 
-        presenceClient = new PresenceMqttClient();
+        presenceClient = new PresenceClient();
         appendLog("Presence 通道连接中 clientId=" + presenceClientId);
 
-        presenceClient.connect(info, new PresenceConnectionListener() {
+        presenceClient.connect(info, new PresenceConnectCallback() {
             @Override
             public void onConnected(boolean reconnect) {
                 appendLog("Presence 连接成功 reconnect=" + reconnect);
@@ -274,7 +274,7 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
         });
     }
 
-    private void startPresenceHeartbeat(PresenceConnectionInfo info) {
+    private void startPresenceHeartbeat(PresenceConfig info) {
         if (presenceClient == null) {
             return;
         }
@@ -338,9 +338,9 @@ public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttD
     protected void onDestroy() {
         dismissReconnectDialog();
         stopPresenceDemo();
-        if (mqttConnection != null) {
-            mqttConnection.disconnect();
-            mqttConnection = null;
+        if (mqttClient != null) {
+            mqttClient.disconnect();
+            mqttClient = null;
         }
         super.onDestroy();
     }

@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt;
+package io.coderf.arklab.mqtt.handler;
 
 import org.junit.Test;
 

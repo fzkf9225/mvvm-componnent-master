@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt
 
 /**
  * MQTT 遗嘱（Last Will and Testament）配置。
@@ -13,11 +13,11 @@ package io.coderf.arklab.mqtt.mqtt
  * @param retained 遗嘱是否保留，默认 false
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-class MqttLwtConfig @JvmOverloads constructor(
+class MqttLwt @JvmOverloads constructor(
     @JvmField val topic: String,
     @JvmField val message: String,
     @JvmField val qos: Int = DEFAULT_QOS,

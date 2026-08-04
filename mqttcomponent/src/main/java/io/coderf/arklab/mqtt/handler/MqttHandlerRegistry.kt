@@ -1,5 +1,6 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt.handler
 
+import io.coderf.arklab.mqtt.utils.LogUtil
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -14,16 +15,13 @@ import java.util.concurrent.CopyOnWriteArrayList
  *   registry.dispatch(bizCode, topic, payload);
  * ```
  *
- * @param logger 日志实现
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-class MqttHandlerRegistry @JvmOverloads constructor(
-    private val logger: MqttLogger = MqttLogger.DEFAULT,
-) {
+class MqttHandlerRegistry {
 
     private val handlers = CopyOnWriteArrayList<MqttMessageHandler>()
 
@@ -64,7 +62,7 @@ class MqttHandlerRegistry @JvmOverloads constructor(
         var hit = 0
         for (handler in handlers) {
             val keys = runCatching { handler.supportedKeys() }.getOrElse {
-                logger.log(TAG, "读取 supportedKeys 失败: ${it.message}")
+                LogUtil.logger(TAG, "读取 supportedKeys 失败: ${it.message}")
                 emptySet()
             }
             if (!keys.contains(key)) {
@@ -74,7 +72,7 @@ class MqttHandlerRegistry @JvmOverloads constructor(
             runCatching {
                 handler.onMessage(key, topic, payload)
             }.onFailure {
-                logger.log(TAG, "handler 处理失败 key=$key: ${it.message}")
+                LogUtil.logger(TAG, "handler 处理失败 key=$key: ${it.message}")
             }
         }
         return hit

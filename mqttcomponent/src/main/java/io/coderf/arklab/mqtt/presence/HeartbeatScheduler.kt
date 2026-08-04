@@ -28,7 +28,7 @@ import android.os.Looper
  * ```
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
@@ -100,7 +100,7 @@ class HeartbeatScheduler @JvmOverloads constructor(
  * Java 心跳动作接口。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */

@@ -12,7 +12,7 @@ import io.coderf.arklab.mqtt.databinding.DialogMqttReconnectBinding
 /**
  * MQTT 重连等待弹窗：转圈 + 重试进度文案 + 可选退出按钮。
  *
- * 配合 [io.coderf.arklab.mqtt.mqtt.MqttConnectionListener.onReconnecting] 使用：
+ * 配合 [io.coderf.arklab.mqtt.MqttListener.onReconnecting] 使用：
  * ```
  * dialog.updateReconnectState(attempt, maxAttempts, nextRetryDelaySeconds)
  * ```
@@ -26,7 +26,7 @@ import io.coderf.arklab.mqtt.databinding.DialogMqttReconnectBinding
  * ```
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */

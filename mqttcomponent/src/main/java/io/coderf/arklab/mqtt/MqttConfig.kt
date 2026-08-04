@@ -1,25 +1,23 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt
 
 /**
  * 通用 MQTT 连接参数（Eclipse Paho MQTT v5）。
  *
- * 不同业务通道应使用独立的 [MqttConnection] 实例，通过本配置区分行为，例如：
- * - **在线心跳**：配置 [lwt]、通常不订阅主题
- * - **业务推送/轨迹**：配置 [subscribeTopics]、通常无遗嘱
+ * 配合入口 [MqttClient]（或底层 [io.coderf.arklab.mqtt.core.MqttConnection]）使用。不同业务通道应使用独立客户端实例。
  *
  * ## 重连策略
  * - [maxReconnectAttempts] 为 null：委托 Paho 自动重连（指数退避 1s→120s，无限重试）
- * - [maxReconnectAttempts] 有值：关闭 Paho 自动重连，由 [MqttConnection] 按固定间隔 [reconnectIntervalSeconds] 重试，
- *   超出次数后回调 [MqttConnectionListener.onReconnectExhausted]
+ * - [maxReconnectAttempts] 有值：关闭 Paho 自动重连，按固定间隔 [reconnectIntervalSeconds] 重试，
+ *   超出次数后回调 [MqttListener.onReconnectExhausted]
  *
  * Java 接入请使用 [builder] 构建，避免 Kotlin 默认参数兼容问题。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-class MqttConnectionConfig private constructor(
+class MqttConfig private constructor(
     @JvmField val brokerAddress: String,
     @JvmField val clientId: String,
     @JvmField val username: String,
@@ -28,7 +26,7 @@ class MqttConnectionConfig private constructor(
     @JvmField val connectionTimeoutSeconds: Int,
     @JvmField val cleanStart: Boolean,
     @JvmField val automaticReconnect: Boolean,
-    @JvmField val lwt: MqttLwtConfig?,
+    @JvmField val lwt: MqttLwt?,
     @JvmField val subscribeTopics: Array<String>?,
     @JvmField val subscribeQos: IntArray?,
     @JvmField val resubscribeOnReconnect: Boolean,
@@ -57,10 +55,10 @@ class MqttConnectionConfig private constructor(
         reconnectIntervalSeconds?.takeIf { it > 0 } ?: DEFAULT_CUSTOM_RECONNECT_INTERVAL_SECONDS
 
     /**
-     * [MqttConnectionConfig] 建造器，便于 Java 链式赋值。
+     * [MqttConfig] 建造器，便于 Java 链式赋值。
      *
      * @author fz
-     * @version 1.2
+     * @version 1.3
      * @since 1.0
      * @created 2026/7/27 10:10
      */
@@ -73,7 +71,7 @@ class MqttConnectionConfig private constructor(
         private var connectionTimeoutSeconds: Int = DEFAULT_CONNECTION_TIMEOUT_SECONDS
         private var cleanStart: Boolean = true
         private var automaticReconnect: Boolean = true
-        private var lwt: MqttLwtConfig? = null
+        private var lwt: MqttLwt? = null
         private var subscribeTopics: Array<String>? = null
         private var subscribeQos: IntArray? = null
         private var resubscribeOnReconnect: Boolean = true
@@ -95,7 +93,7 @@ class MqttConnectionConfig private constructor(
         fun connectionTimeoutSeconds(value: Int) = apply { connectionTimeoutSeconds = value }
         fun cleanStart(value: Boolean) = apply { cleanStart = value }
         fun automaticReconnect(value: Boolean) = apply { automaticReconnect = value }
-        fun lwt(value: MqttLwtConfig?) = apply { lwt = value }
+        fun lwt(value: MqttLwt?) = apply { lwt = value }
         fun subscribeTopics(vararg topics: String) = apply {
             subscribeTopics = if (topics.isEmpty()) null else arrayOf(*topics)
         }
@@ -119,8 +117,8 @@ class MqttConnectionConfig private constructor(
         /** Paho 自动重连最大间隔（秒）；仅当 [maxReconnectAttempts] 为 null 时生效 */
         fun reconnectMaxDelaySeconds(value: Int?) = apply { reconnectMaxDelaySeconds = value }
 
-        fun build(): MqttConnectionConfig {
-            return MqttConnectionConfig(
+        fun build(): MqttConfig {
+            return MqttConfig(
                 brokerAddress = brokerAddress,
                 clientId = clientId,
                 username = username,

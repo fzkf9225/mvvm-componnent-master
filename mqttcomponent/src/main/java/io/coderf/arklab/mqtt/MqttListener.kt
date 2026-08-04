@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt
 
 import org.eclipse.paho.mqttv5.common.MqttException
 
@@ -6,17 +6,17 @@ import org.eclipse.paho.mqttv5.common.MqttException
  * [MqttConnection] 事件回调。
  *
  * 业务消息体格式由各模块自行组装后调用 [MqttConnection.publish]，不在此层定义。
- * 连接类回调是否切主线程由 [MqttConnectionConfig.dispatchConnectOnMainThread] 控制；
- * 消息类回调是否切主线程由 [MqttConnectionConfig.dispatchMessageOnMainThread] 控制。
+ * 连接类回调是否切主线程由 [MqttConfig.dispatchConnectOnMainThread] 控制；
+ * 消息类回调是否切主线程由 [MqttConfig.dispatchMessageOnMainThread] 控制。
  *
- * Java 项目可继承 [AbstractMqttConnectionListener]，只覆写关心的方法。
+ * Java 项目可继承 [AbstractMqttListener]，只覆写关心的方法。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-interface MqttConnectionListener {
+interface MqttListener {
 
     /** 连接建立完成（含 Paho / 自定义自动重连成功） */
     fun onConnected(reconnect: Boolean) {}
@@ -38,7 +38,7 @@ interface MqttConnectionListener {
 
     /**
      * 已达最大重连次数，不再重连（彻底断连）。
-     * 仅当 [MqttConnectionConfig.maxReconnectAttempts] 非 null 时可能触发。
+     * 仅当 [MqttConfig.maxReconnectAttempts] 非 null 时可能触发。
      */
     fun onReconnectExhausted() {}
 
@@ -65,11 +65,11 @@ interface MqttConnectionListener {
 }
 
 /**
- * [MqttConnectionListener] 的空实现基类，便于 Java 只覆写部分回调。
+ * [MqttListener] 的空实现基类，便于 Java 只覆写部分回调。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-abstract class AbstractMqttConnectionListener : MqttConnectionListener
+abstract class AbstractMqttListener : MqttListener

@@ -3,7 +3,7 @@ package io.coderf.arklab.mqtt.presence
 /**
  * 设备在线（Presence）通道连接参数。
  *
- * 由宿主 App 从服务端接口获取后组装传入 [PresenceMqttClient.connect]，
+ * 由宿主 App 从服务端接口获取后组装传入 [PresenceClient.connect]，
  * 库内不持有 MMKV / SharedPreferences 等业务缓存。
  *
  * @param brokerAddress    Broker 地址，可带或不带 tcp:// 前缀
@@ -18,11 +18,11 @@ package io.coderf.arklab.mqtt.presence
  * @param reconnectIntervalSeconds 自定义重连间隔（秒）；仅当 maxReconnectAttempts 非 null 时生效
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */
-class PresenceConnectionInfo @JvmOverloads constructor(
+class PresenceConfig @JvmOverloads constructor(
     @JvmField val brokerAddress: String,
     @JvmField val clientId: String,
     @JvmField val username: String,

@@ -4,12 +4,11 @@ package io.coderf.arklab.mqtt.presence
  * 设备在线（MQTT 心跳）管理接口。
  *
  * 定义「用户在线状态」在客户端侧的统一入口；具体实现放在宿主 App 模块，
- * 负责拉取 [PresenceConnectionInfo]、驱动 [PresenceMqttClient] 与 [HeartbeatScheduler]。
+ * 负责拉取 [PresenceConfig]、驱动 [PresenceClient] 与 [HeartbeatScheduler]。
  *
  * ## 职责边界
  * - **本接口**：登录态下的长连接 + 应用层心跳 + LWT 离线感知
- * - **其它 MQTT 通道**（推送、轨迹等）：使用独立 [io.coderf.arklab.mqtt.mqtt.MqttConnection]
- *   或 [io.coderf.arklab.mqtt.mqtt.MqttAsyncClient] 实例
+ * - **其它 MQTT 通道**（推送、轨迹等）：使用独立 [io.coderf.arklab.mqtt.MqttClient] 实例
  *
  * ## 典型调用时机
  * | 场景                      | 方法                |
@@ -20,7 +19,7 @@ package io.coderf.arklab.mqtt.presence
  * | Access Token 刷新成功     | [reconnectIfNeeded]（MQTT 密码为 JWT 时需重连） |
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
  * @created 2026/7/27 10:10
  */

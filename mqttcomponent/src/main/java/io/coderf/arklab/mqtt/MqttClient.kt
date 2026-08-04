@@ -1,7 +1,9 @@
-package io.coderf.arklab.mqtt.mqtt
+package io.coderf.arklab.mqtt
 
+import io.coderf.arklab.mqtt.utils.LogUtil
 import android.os.Handler
 import android.os.Looper
+import io.coderf.arklab.mqtt.core.MqttConnection
 import org.eclipse.paho.mqttv5.common.MqttException
 import org.eclipse.paho.mqttv5.common.MqttMessage
 import java.util.concurrent.CopyOnWriteArrayList
@@ -10,39 +12,43 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 异步 MQTT 客户端门面。
+ * **模块推荐入口**：异步 MQTT 客户端。
  *
  * 将阻塞的 Paho connect / subscribe / unsubscribe / publish 投递到单线程 Worker，
- * 连接结果与消息回调默认抛到主线程，避免 ANR 与线程切换遗漏。
+ * 连接结果与消息回调默认抛到主线程，避免 ANR。日常业务推送通道只需依赖本类 + [MqttConfig] + [MqttListener]。
  *
- * 参考业务侧「传输层 + 异步适配」分层：底层仍是 [MqttConnection]，本类负责线程编排。
+ * 底层同步实现见 [io.coderf.arklab.mqtt.core.MqttConnection]（一般无需直接使用）。
  *
  * ## 使用示例
  * ```
- * MqttAsyncClient client = new MqttAsyncClient("BizMqtt");
- * client.connect(config, new AbstractMqttConnectionListener() {
+ * MqttClient client = new MqttClient("BizMqtt");
+ * MqttConfig config = MqttConfig.builder()
+ *         .brokerAddress("tcp://broker:1883")
+ *         .clientId("app_" + deviceId)
+ *         .username(user)
+ *         .password(token)
+ *         .subscribeTopics("push/#")
+ *         .build();
+ * client.connect(config, new AbstractMqttListener() {
  *     @Override public void onConnected(boolean reconnect) { ... }
  *     @Override public void onMessage(String topic, String payload) { ... }
  * });
- * client.subscribe(new String[]{"a/b"}, null);
  * client.syncTopics(desiredTopics);
  * client.disconnect();
  * ```
  *
  * @param tag 日志 Tag
- * @param logger 日志实现
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-class MqttAsyncClient @JvmOverloads constructor(
+class MqttClient @JvmOverloads constructor(
     private val tag: String = TAG,
-    private val logger: MqttLogger = MqttLogger.DEFAULT,
 ) {
 
-    private val connection = MqttConnection(tag, logger)
+    private val connection = MqttConnection(tag)
     private val mainHandler = Handler(Looper.getMainLooper())
     private val worker: ExecutorService = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "$tag-Worker").apply { isDaemon = true }
@@ -55,7 +61,7 @@ class MqttAsyncClient @JvmOverloads constructor(
     private val connectInFlight = AtomicBoolean(false)
 
     @Volatile
-    private var userListener: MqttConnectionListener? = null
+    private var userListener: MqttListener? = null
 
     /** 是否已连接 */
     fun isConnected(): Boolean = connection.isConnected()
@@ -82,8 +88,8 @@ class MqttAsyncClient @JvmOverloads constructor(
      */
     @JvmOverloads
     fun connect(
-        config: MqttConnectionConfig,
-        listener: MqttConnectionListener? = null,
+        config: MqttConfig,
+        listener: MqttListener? = null,
         onConnected: ((Boolean) -> Unit)? = null,
     ) {
         onConnected?.let { connectListeners.add(it) }
@@ -102,7 +108,7 @@ class MqttAsyncClient @JvmOverloads constructor(
             try {
                 connection.connect(safeConfig, internalListener)
             } catch (e: Exception) {
-                logger.log(tag, "异步连接异常: ${e.message}")
+                LogUtil.logger(tag, "异步连接异常: ${e.message}")
                 finishConnect(success = false)
             }
         }
@@ -129,7 +135,7 @@ class MqttAsyncClient @JvmOverloads constructor(
     }
 
     /** Java：添加消息监听 */
-    fun addMessageListener(listener: MqttTextMessageListener) {
+    fun addMessageListener(listener: MqttTextListener) {
         addMessageListener { topic, payload -> listener.onMessage(topic, payload) }
     }
 
@@ -143,7 +149,7 @@ class MqttAsyncClient @JvmOverloads constructor(
     }
 
     /** Java：添加原始消息监听 */
-    fun addRawMessageListener(listener: MqttRawMessageListener) {
+    fun addRawMessageListener(listener: MqttBytesListener) {
         addRawMessageListener { message -> listener.onMessage(message) }
     }
 
@@ -166,36 +172,41 @@ class MqttAsyncClient @JvmOverloads constructor(
     @JvmOverloads
     fun syncTopics(
         desiredTopics: Collection<String>,
-        qos: Int = MqttConnectionConfig.DEFAULT_SUBSCRIBE_QOS,
+        qos: Int = MqttConfig.DEFAULT_SUBSCRIBE_QOS,
     ) {
         worker.execute {
             connection.syncTopics(desiredTopics, qos)
         }
     }
 
-    /** 异步发布文本 */
+    /** 异步发布文本；[callback] 在主线程回调结果 */
     @JvmOverloads
     fun publish(
         topic: String,
         payload: String,
-        qos: Int = MqttConnectionConfig.DEFAULT_PUBLISH_QOS,
+        qos: Int = MqttConfig.DEFAULT_PUBLISH_QOS,
         retained: Boolean = false,
-        onResult: ((Boolean) -> Unit)? = null,
+        callback: MqttPublishCallback? = null,
     ) {
         worker.execute {
             val ok = connection.publish(topic, payload, qos, retained)
-            if (onResult != null) {
-                mainHandler.post { onResult(ok) }
+            if (callback != null) {
+                mainHandler.post { callback.onResult(ok) }
             }
         }
     }
 
-    /** 异步发布 [MqttMessage] */
-    fun publish(topic: String, message: MqttMessage, onResult: ((Boolean) -> Unit)? = null) {
+    /** 异步发布 [MqttMessage]；[callback] 在主线程回调结果 */
+    @JvmOverloads
+    fun publish(
+        topic: String,
+        message: MqttMessage,
+        callback: MqttPublishCallback? = null,
+    ) {
         worker.execute {
             val ok = connection.publish(topic, message)
-            if (onResult != null) {
-                mainHandler.post { onResult(ok) }
+            if (callback != null) {
+                mainHandler.post { callback.onResult(ok) }
             }
         }
     }
@@ -208,8 +219,8 @@ class MqttAsyncClient @JvmOverloads constructor(
         worker.shutdownNow()
     }
 
-    private fun ensureMainThreadDispatch(config: MqttConnectionConfig): MqttConnectionConfig {
-        return MqttConnectionConfig.builder()
+    private fun ensureMainThreadDispatch(config: MqttConfig): MqttConfig {
+        return MqttConfig.builder()
             .brokerAddress(config.brokerAddress)
             .clientId(config.clientId)
             .username(config.username)
@@ -243,7 +254,7 @@ class MqttAsyncClient @JvmOverloads constructor(
         }
     }
 
-    private val internalListener = object : AbstractMqttConnectionListener() {
+    private val internalListener = object : AbstractMqttListener() {
         override fun onConnected(reconnect: Boolean) {
             finishConnect(success = true)
             userListener?.onConnected(reconnect)
@@ -286,7 +297,7 @@ class MqttAsyncClient @JvmOverloads constructor(
     }
 
     companion object {
-        private const val TAG = "MqttAsyncClient"
+        private const val TAG = "MqttClient"
     }
 }
 
@@ -294,11 +305,11 @@ class MqttAsyncClient @JvmOverloads constructor(
  * Java 文本消息监听。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-fun interface MqttTextMessageListener {
+fun interface MqttTextListener {
     fun onMessage(topic: String, payload: String)
 }
 
@@ -306,10 +317,21 @@ fun interface MqttTextMessageListener {
  * Java 原始消息监听。
  *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-fun interface MqttRawMessageListener {
+fun interface MqttBytesListener {
     fun onMessage(message: MqttRawMessage)
+}
+
+/**
+ * Java 发布结果回调。
+ *
+ * @author fz
+ * @version 1.3
+ * @since 1.3
+ */
+fun interface MqttPublishCallback {
+    fun onResult(success: Boolean)
 }

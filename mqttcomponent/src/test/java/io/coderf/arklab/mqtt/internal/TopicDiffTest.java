@@ -1,4 +1,4 @@
-package io.coderf.arklab.mqtt.mqtt;
+package io.coderf.arklab.mqtt.internal;
 
 import org.junit.Test;
 
@@ -12,21 +12,21 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * [MqttTopicDiff] 单元测试。
+ * [TopicDiff] 单元测试。
  *
  * @author fz
  * @version 1.2
  * @since 1.2
  * @created 2026/7/27 10:10
  */
-public class MqttTopicDiffTest {
+public class TopicDiffTest {
 
     @Test
     public void diff_addsAndRemovesCorrectly() {
         Set<String> current = new HashSet<>(Arrays.asList("a", "b", "c"));
         Set<String> desired = new HashSet<>(Arrays.asList("b", "c", "d"));
 
-        MqttTopicDiff.Result result = MqttTopicDiff.diff(current, desired);
+        TopicDiff.Result result = TopicDiff.diff(current, desired);
 
         assertEquals(Collections.singleton("d"), result.getToSubscribe());
         assertEquals(Collections.singleton("a"), result.getToUnsubscribe());
@@ -36,7 +36,7 @@ public class MqttTopicDiffTest {
     @Test
     public void diff_emptyWhenUnchanged() {
         Set<String> topics = new HashSet<>(Arrays.asList("x", "y"));
-        MqttTopicDiff.Result result = MqttTopicDiff.diff(topics, topics);
+        TopicDiff.Result result = TopicDiff.diff(topics, topics);
         assertTrue(result.getToSubscribe().isEmpty());
         assertTrue(result.getToUnsubscribe().isEmpty());
         assertFalse(result.hasChanges());
@@ -44,7 +44,7 @@ public class MqttTopicDiffTest {
 
     @Test
     public void diff_ignoresBlankTopics() {
-        MqttTopicDiff.Result result = MqttTopicDiff.diff(
+        TopicDiff.Result result = TopicDiff.diff(
                 Arrays.asList("a", "", " "),
                 Arrays.asList("a", "b", "")
         );
