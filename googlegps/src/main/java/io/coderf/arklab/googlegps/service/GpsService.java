@@ -279,19 +279,44 @@ public class GpsService extends Service {
 
     private Notification buildBootstrapNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        String channelId = BOOTSTRAP_CHANNEL_ID;
+        String channelName = "定位服务启动";
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        boolean useBusinessChannel = false;
+
+        // 优先复用业务通知渠道，避免系统通知管理里出现两个同名「位置服务」
+        try {
+            GpsSettingConfig config = gpsCallback != null ? gpsCallback.getConfig() : null;
+            if (config != null
+                    && config.getNotificationChannelId() != null
+                    && !config.getNotificationChannelId().isEmpty()) {
+                channelId = config.getNotificationChannelId();
+                channelName = config.getNotificationChannelName() != null
+                        ? config.getNotificationChannelName()
+                        : "位置服务";
+                importance = config.getNotificationImportance();
+                useBusinessChannel = true;
+            }
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "resolve bootstrap channel from config failed: " + t.getMessage());
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    BOOTSTRAP_CHANNEL_ID,
-                    "位置服务",
-                    NotificationManager.IMPORTANCE_LOW
-            );
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
             channel.enableLights(false);
             channel.enableVibration(false);
             channel.setSound(null, null);
-            channel.setShowBadge(false);
+            channel.setShowBadge(useBusinessChannel);
             manager.createNotificationChannel(channel);
+            // 已改用业务渠道时，清理历史遗留的 bootstrap 渠道，去掉设置页重复入口
+            if (useBusinessChannel && !BOOTSTRAP_CHANNEL_ID.equals(channelId)) {
+                try {
+                    manager.deleteNotificationChannel(BOOTSTRAP_CHANNEL_ID);
+                } catch (Throwable ignored) {
+                }
+            }
         }
-        return new NotificationCompat.Builder(this, BOOTSTRAP_CHANNEL_ID)
+        return new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(android.R.drawable.ic_menu_mylocation)
                 .setContentTitle("正在启动定位服务")
                 .setContentText("请稍候")

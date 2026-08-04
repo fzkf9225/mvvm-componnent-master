@@ -259,7 +259,29 @@ class GpsStarter(
      * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param onResult 定位结果回调，定位失败时返回null
      */
+    @Deprecated("Use startSingleLocation instead.")
     fun getSingleLocation(gpsCallback: GpsCallback? = null, onResult: (Location?) -> Unit) {
+        if (isRunning) {
+            onResult(null)
+            return
+        }
+        this.gpsCallback = gpsCallback
+        // 存储待执行的请求
+        pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
+        // 触发权限和GPS检测
+        gpsObserver?.startCheck(permissionGpsCallback)
+    }
+
+    /**
+     * 单次定位
+     *
+     * <p>获取一次定位结果后自动停止服务和清理资源。
+     * 内部会自动处理权限和GPS检测。</p>
+     *
+     * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
+     * @param onResult 定位结果回调，定位失败时返回null
+     */
+    fun startSingleLocation(gpsCallback: GpsCallback? = null, onResult: (Location?) -> Unit) {
         if (isRunning) {
             onResult(null)
             return
