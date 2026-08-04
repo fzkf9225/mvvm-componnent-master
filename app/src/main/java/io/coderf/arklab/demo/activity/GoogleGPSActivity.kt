@@ -76,7 +76,7 @@ class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBind
             applyHighPowerConfigFromUi()
 
             binding.tvMessage.text = "正在开启监听，等待结果返回"
-            gpsStarter.getSingleLocation { location ->
+            gpsStarter.startSingleLocation { location ->
                 binding.tvMessage.text = formatLocation(location)
             }
         }

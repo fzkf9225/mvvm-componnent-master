@@ -9,11 +9,11 @@ import android.provider.Settings;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.api.AppSettingHelper;
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.navigator.StateNavigationUI;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityMainBinding;
@@ -48,12 +48,10 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        //如果xml中是androidx.fragment.app.FragmentContainerView，则使用这种方式获取navController
+        // FragmentContainerView + StateNavHostFragment：hide/show 保活 tab Fragment
         NavHostFragment navHostFragment = binding.navHostFragmentActivityMain.getFragment();
         NavController navController = navHostFragment.getNavController();
-        //如果xml是fragment则使用这种方式获取navController
-//      NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        StateNavigationUI.setupWithNavController(binding.navView, navController);
     }
 
     @Override

@@ -5,13 +5,13 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <fragment
+    <state_fragment
         android:id="@+id/navigation_home"
         android:name="io.coderf.arklab.demo.fragment.HomeFragment"
         android:label="@string/nv_index"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <state_fragment
         android:id="@+id/navigation_me"
         android:name="io.coderf.arklab.user.fragment.MeFragment"
         android:label="@string/nv_me"

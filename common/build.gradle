@@ -125,6 +125,7 @@ dependencies {
     implementation libs.amazonaws.aws.android.sdk.mobile.client
 
     implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui
     implementation libs.androidx.navigation.ui.ktx
     //每个用到的模块都要加这两个，不能使用api
