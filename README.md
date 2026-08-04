@@ -203,7 +203,7 @@
 7. `DividerView`：可绘制横线或竖线的虚线控件（Kotlin 实现）
 8. `CircleProgressBar`：圆形进度条，支持文字显示、动画进度更新
 9. `GradationRectTextView`：支持渐变背景、左右文字样式不同的 `TextView`
-10. `HomeMenuView`：首页菜单视图，支持分页显示、圆点指示器（`Kotlin` 实现）
+10. `GridMenuView`：分页网格菜单视图，支持圆点指示器与圆角描边（`Kotlin` 实现）
 11. `CornerEditText`：圆角背景的 `EditText`，支持边框和背景色设置
 12. `CornerLabelView`：三角形角标控件，可显示在四个角落，支持文字和背景色
 13. `CornerTextView`：圆角背景的 `TextView`，支持边框和背景色

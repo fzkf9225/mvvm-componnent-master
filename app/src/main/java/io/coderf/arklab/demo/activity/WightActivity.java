@@ -30,7 +30,7 @@ import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseStatefulActivity;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.bean.BannerBean;
-import io.coderf.arklab.common.bean.HomeMenuBean;
+import io.coderf.arklab.common.bean.GridMenuBean;
 import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.listener.OnMenuClickListener;
@@ -195,12 +195,12 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
                 .load("https://n.sinaimg.cn/translate/125/w690h1035/20180414/Rb2D-fzcyxmu4457695.jpg")
                 .into(binding.roundedShapeableImageView);
 //        binding.customBannerPicture.setOnViewPagerSelectedListener(position -> LogUtil.show(TAG, "当前选中页：" + position));
-        binding.homeMenuView.bindLifecycle(this,getSupportFragmentManager());
-        binding.homeMenuView.setDrawableResCurrent(DrawableUtil.createCircleDrawable(
+        binding.gridMenuView.bindLifecycle(this, getSupportFragmentManager());
+        binding.gridMenuView.setDrawableResCurrent(DrawableUtil.createCircleDrawable(
                 ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_green),
                 DensityUtil.dp2px(this, 5f)
         ));
-        binding.homeMenuView.setOnMenuClickListener(menuClickListener);
+        binding.gridMenuView.setOnMenuClickListener(menuClickListener);
         binding.iconDotTextView.setDotText("66");
     }
 
@@ -266,12 +266,12 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
 
     OnMenuClickListener menuClickListener = new OnMenuClickListener() {
         @Override
-        public void onMenuLongClick(@Nullable View v, @Nullable Fragment fragment, @Nullable HomeMenuBean menuBean) {
+        public void onMenuLongClick(@Nullable View v, @Nullable Fragment fragment, @Nullable GridMenuBean menuBean) {
 
         }
 
         @Override
-        public void onMenuClick(@Nullable View v, @Nullable Fragment fragment, @Nullable HomeMenuBean menuBean) {
+        public void onMenuClick(@Nullable View v, @Nullable Fragment fragment, @Nullable GridMenuBean menuBean) {
             if (menuBean == null || TextUtils.isEmpty(menuBean.getComponentName())) {
                 showToast("此页面正在研发中请稍后再试！");
                 return;
@@ -306,14 +306,14 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         }
         toolbarBind.getToolbarConfig().setTitle(useCase.getName());
         List<UseCase> useCaseList = UseCaseEnum.toUseCaseList();
-        List<HomeMenuBean> homeMenuBeanList = useCaseList.stream().map(item -> {
-            HomeMenuBean homeMenuBean = new HomeMenuBean(0, R.mipmap.ic_launcher, item.getName(), item.getDescribe(), item.getClx().getName());
+        List<GridMenuBean> gridMenuBeanList = useCaseList.stream().map(item -> {
+            GridMenuBean gridMenuBean = new GridMenuBean(0, R.mipmap.ic_launcher, item.getName(), item.getDescribe(), item.getClx().getName());
             if ("自定义组件".equalsIgnoreCase(item.getName())) {
-                homeMenuBean.setGray(true);
+                gridMenuBean.setGray(true);
             }
-            return homeMenuBean;
+            return gridMenuBean;
         }).collect(Collectors.toList());
-        binding.homeMenuView.initData(homeMenuBeanList);
+        binding.gridMenuView.initData(gridMenuBeanList);
     }
 
 

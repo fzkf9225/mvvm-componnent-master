@@ -139,7 +139,7 @@
     <public name="search_smartrecyclerview" type="layout"/>
     <public name="smartrecyclerview" type="layout"/>
     <public name="web_view" type="layout"/>
-    <public name="adapter_home_menu_item" type="layout"/>
+    <public name="adapter_grid_menu_item" type="layout"/>
     <public name="adapter_image_add_item" type="layout"/>
     <public name="adapter_image_show_item" type="layout"/>
     <public name="adapter_media_add_item" type="layout"/>
@@ -151,7 +151,7 @@
     <public name="option_item" type="layout"/>
     <public name="option_selected_view" type="layout"/>
     <public name="option_text_view" type="layout"/>
-    <public name="fragment_home_menu" type="layout"/>
+    <public name="fragment_grid_menu" type="layout"/>
     <public name="loading_dialog" type="layout"/>
     <public name="popup_cascade_view" type="layout"/>
     <public name="popup_multi_cascade" type="layout"/>

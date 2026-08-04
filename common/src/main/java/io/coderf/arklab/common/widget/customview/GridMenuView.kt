@@ -8,33 +8,31 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.size
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import io.coderf.arklab.common.R
-import io.coderf.arklab.common.adapter.HomeMenuViewPager2Adapter
-import io.coderf.arklab.common.bean.HomeMenuBean
-import io.coderf.arklab.common.listener.CustomHomeMenuAdapterCallback
+import io.coderf.arklab.common.adapter.GridMenuViewPager2Adapter
+import io.coderf.arklab.common.bean.GridMenuBean
+import io.coderf.arklab.common.listener.CustomGridMenuAdapterCallback
 import io.coderf.arklab.common.listener.OnMenuClickListener
 import io.coderf.arklab.common.listener.PagingAdapterListener
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
-import java.util.function.IntConsumer
-import java.util.stream.IntStream
 
 /**
- * 首页九宫格菜单。默认数据模型为 {@link io.coderf.arklab.common.bean.HomeMenuBean}；
- * 轻量场景可实现 {@link io.coderf.arklab.common.widget.customview.inter.IHomeMenuItem} 后映射为本类。
+ * 分页网格菜单。默认数据模型为 {@link io.coderf.arklab.common.bean.GridMenuBean}；
+ * 轻量场景可实现 {@link io.coderf.arklab.common.widget.customview.inter.IGridMenuItem} 后映射为本类。
+ * 圆角/描边等外观属性继承自 {@link CornerConstraintLayout}（bgColor、radius、stroke* 等）。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/7/13 10:25
+ * @updated 2026/8/4
  */
-open class HomeMenuView : ConstraintLayout {
+open class GridMenuView : CornerConstraintLayout {
     private var lifecycleOwner: LifecycleOwner? = null
     private var fragmentManager: FragmentManager? = null
 
@@ -59,7 +57,7 @@ open class HomeMenuView : ConstraintLayout {
     protected var dotRightMargin: Int = 0
 
     /**
-     * 指示器内部margin，点与点之间的间距
+     * 指示器内部 margin，点与点之间的间距
      */
     protected var dotPadding: Int = 0
 
@@ -69,17 +67,17 @@ open class HomeMenuView : ConstraintLayout {
     private var columnCount = 4
 
     /**
-     * 一共几行
+     * 一共几行（用于分页）
      */
     private var rowCount = 2
 
     /**
-     * viewPager的topMargin
+     * ViewPager 的 topMargin
      */
-    protected var topMargin = 0
+    protected var pagerTopMargin = 0
 
     /**
-     * label显示行数
+     * label 显示行数
      */
     var labelLines = Int.MAX_VALUE
 
@@ -89,39 +87,43 @@ open class HomeMenuView : ConstraintLayout {
     protected var isWrap = true
 
     /**
-     * viewPager的leftMargin
+     * 网格内容左右内边距
      */
-    var startMargin = 0
+    var contentPaddingStart = 0
+    var contentPaddingEnd = 0
 
     /**
-     * viewPager的rightMargin
+     * 指示器与 ViewPager 的间距
      */
-    var endMargin = 0
-
-    /**
-     * 指示器与viewPager的间隔
-     */
-    protected var bottomMargin = 0
+    protected var indicatorSpacing = 0
 
     /**
      * 列间距
      */
-    protected var columnMargin = 0
+    var columnMargin = 0
 
     /**
-     * 背景样式资源，与下面二选一
+     * 行间距；未单独配置时与 columnMargin 相同
      */
-    protected var backgroundDrawableRes: Drawable? = null
+    var rowMargin: Int? = null
 
     /**
-     * 背景颜色，与上面二选一
+     * 是否显示指示器
      */
-    protected var backgroundColor: Int? = null
+    var showIndicator = true
 
     /**
-     * 背景圆角，与上面二选一
+     * View 级默认图标尺寸
      */
-    protected var backgroundCornerRadius: Float? = 0f
+    var defaultIconWidth: Int? = null
+    var defaultIconHeight: Int? = null
+
+    /**
+     * View 级默认 label 样式
+     */
+    var defaultLabelTextColor: Int? = null
+    var defaultLabelTextSize: Float? = null
+    var defaultLabelIconMargin: Int? = null
 
     /**
      * 选中时圆点样式
@@ -144,30 +146,30 @@ open class HomeMenuView : ConstraintLayout {
     }
 
     /**
-     * 选中原点样式
+     * 选中圆点样式
      */
     var drawableResCurrent: Drawable? = null
 
     /**
-     * 未选中原点样式
+     * 未选中圆点样式
      */
     var drawableResNormal: Drawable? = null
 
     /**
-     * 菜单item点击事件
+     * 菜单 item 点击事件
      */
     var onMenuClickListener: OnMenuClickListener? = null
 
     /**
-     * 自定义item回调
+     * 自定义 item 回调
      */
-    var customHomeMenuAdapterCallback: CustomHomeMenuAdapterCallback? = null
+    var customGridMenuAdapterCallback: CustomGridMenuAdapterCallback? = null
 
+    private var pageCallbackRegistered = false
 
     protected val menuViewPager by lazy {
         ViewPager2(context).apply {
             id = generateViewId()
-            registerOnPageChangeCallback(onPageChangeCallback)
         }
     }
 
@@ -178,7 +180,6 @@ open class HomeMenuView : ConstraintLayout {
                 LayoutParams.WRAP_CONTENT
             } else 0
         ).apply {
-            // viewPager的定位
             topToTop = LayoutParams.PARENT_ID
             startToStart = LayoutParams.PARENT_ID
             endToEnd = LayoutParams.PARENT_ID
@@ -186,14 +187,13 @@ open class HomeMenuView : ConstraintLayout {
             if (!isWrap) {
                 verticalWeight = 1f
             }
-            topMargin = this@HomeMenuView.topMargin
+            topMargin = this@GridMenuView.pagerTopMargin
         }
     }
 
-    protected var adapter: HomeMenuViewPager2Adapter<HomeMenuBean>? = null
+    protected var adapter: GridMenuViewPager2Adapter<GridMenuBean>? = null
 
     protected val dotsLayout by lazy {
-        // 初始化指针
         LinearLayout(context).apply {
             id = generateViewId()
             setVerticalGravity(Gravity.CENTER)
@@ -211,7 +211,7 @@ open class HomeMenuView : ConstraintLayout {
             rightMargin = dotRightMargin
             bottomMargin = dotBottomMargin
             topToBottom = menuViewPager.id
-            topMargin = this@HomeMenuView.bottomMargin
+            topMargin = this@GridMenuView.indicatorSpacing
             endToEnd = LayoutParams.PARENT_ID
             startToStart = LayoutParams.PARENT_ID
             bottomToBottom = LayoutParams.PARENT_ID
@@ -243,26 +243,18 @@ open class HomeMenuView : ConstraintLayout {
         } else {
             parseAttributes(context, attrs)
         }
-        // 设置指针和ViewPager定位
+        if (background == null) {
+            setBgColorAndRadius(
+                ContextCompat.getColor(context, R.color.white),
+                DensityUtil.dp2px(context, 16f).toFloat()
+            )
+        }
         removeAllViews()
         addView(menuViewPager, viewPagerLayoutParams)
         addView(dotsLayout, dotLayoutParams)
-        // 设置背景（优先级：drawable > 颜色 > 默认）
-        background = when {
-            backgroundDrawableRes != null -> backgroundDrawableRes
-            backgroundColor != null -> {
-                DrawableUtil.createRectDrawable(
-                    backgroundColor!!,
-                    0, 0, backgroundCornerRadius ?: 0f
-                )
-            }
-
-            else -> ContextCompat.getDrawable(context, R.drawable.rounded_white_16)
-        }
     }
 
     private fun setDefaultValues() {
-        // 设置代码创建时的默认值
         dotLeftMargin = DensityUtil.dp2px(context, 12f)
         dotRightMargin = DensityUtil.dp2px(context, 12f)
         dotBottomMargin = DensityUtil.dp2px(context, 12f)
@@ -270,88 +262,118 @@ open class HomeMenuView : ConstraintLayout {
         columnCount = 4
         rowCount = 2
         columnMargin = DensityUtil.dp2px(context, 8f)
-        backgroundCornerRadius = DensityUtil.dp2px(context, 16f).toFloat()
-        // 新增的margin属性默认值
-        topMargin = DensityUtil.dp2px(context, 18f)
-        startMargin = DensityUtil.dp2px(context, 12f)
-        endMargin = DensityUtil.dp2px(context, 12f)
-        bottomMargin = DensityUtil.dp2px(context, 12f)
+        rowMargin = null
+        pagerTopMargin = DensityUtil.dp2px(context, 18f)
+        contentPaddingStart = DensityUtil.dp2px(context, 12f)
+        contentPaddingEnd = DensityUtil.dp2px(context, 12f)
+        indicatorSpacing = DensityUtil.dp2px(context, 12f)
         isWrap = true
+        showIndicator = true
     }
 
     private fun parseAttributes(context: Context, attrs: AttributeSet) {
         val typedArray: TypedArray = context.obtainStyledAttributes(
             attrs,
-            R.styleable.HomeMenuView,
+            R.styleable.GridMenuView,
             0,
             0
         )
 
         try {
             dotHeight = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_dotHeight,
+                R.styleable.GridMenuView_dotHeight,
                 0
             )
             if (dotHeight == 0) {
-                dotHeight = null;
+                dotHeight = null
             }
-            isWrap = typedArray.getBoolean(R.styleable.HomeMenuView_isWrap, true)
-            labelLines = typedArray.getInt(R.styleable.HomeMenuView_labelLines, Int.MAX_VALUE)
+            isWrap = typedArray.getBoolean(R.styleable.GridMenuView_isWrap, true)
+            showIndicator = typedArray.getBoolean(R.styleable.GridMenuView_showIndicator, true)
+            labelLines = typedArray.getInt(R.styleable.GridMenuView_labelLines, Int.MAX_VALUE)
             dotBottomMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_dotBottomMargin,
+                R.styleable.GridMenuView_dotBottomMargin,
                 DensityUtil.dp2px(context, 12f)
             )
             dotLeftMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_dotLeftMargin,
+                R.styleable.GridMenuView_dotLeftMargin,
                 DensityUtil.dp2px(context, 12f)
             )
             dotRightMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_dotRightMargin,
+                R.styleable.GridMenuView_dotRightMargin,
                 DensityUtil.dp2px(context, 12f)
             )
             dotPadding = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_dotPadding,
+                R.styleable.GridMenuView_dotPadding,
                 DensityUtil.dp2px(context, 4f)
             )
-            columnCount = typedArray.getInt(R.styleable.HomeMenuView_columnCount, 4)
-            rowCount = typedArray.getInt(R.styleable.HomeMenuView_rowCount, 2)
-            topMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_topMargin,
+            columnCount = typedArray.getInt(R.styleable.GridMenuView_columnCount, 4)
+            rowCount = typedArray.getInt(R.styleable.GridMenuView_rowCount, 2)
+            pagerTopMargin = typedArray.getDimensionPixelSize(
+                R.styleable.GridMenuView_pagerTopMargin,
                 DensityUtil.dp2px(context, 18f)
             )
-            // 解析新增的margin属性
-            startMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_startMargin,
+            contentPaddingStart = typedArray.getDimensionPixelSize(
+                R.styleable.GridMenuView_contentPaddingStart,
                 DensityUtil.dp2px(context, 12f)
             )
-            endMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_endMargin,
+            contentPaddingEnd = typedArray.getDimensionPixelSize(
+                R.styleable.GridMenuView_contentPaddingEnd,
                 DensityUtil.dp2px(context, 12f)
             )
-            bottomMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_bottomMargin,
+            indicatorSpacing = typedArray.getDimensionPixelSize(
+                R.styleable.GridMenuView_indicatorSpacing,
                 DensityUtil.dp2px(context, 12f)
             )
             columnMargin = typedArray.getDimensionPixelSize(
-                R.styleable.HomeMenuView_columnMargin,
+                R.styleable.GridMenuView_columnMargin,
                 DensityUtil.dp2px(context, 8f)
             )
-            // 其他属性解析...
-            backgroundCornerRadius = typedArray.getDimension(
-                R.styleable.HomeMenuView_backgroundCornerRadius,
-                DensityUtil.dp2px(context, 16f).toFloat()
-            )
-
-            // 解析背景颜色
-            if (typedArray.hasValue(R.styleable.HomeMenuView_backgroundColor)) {
-                backgroundColor = typedArray.getColor(R.styleable.HomeMenuView_backgroundColor, 0)
+            if (typedArray.hasValue(R.styleable.GridMenuView_rowMargin)) {
+                rowMargin = typedArray.getDimensionPixelSize(
+                    R.styleable.GridMenuView_rowMargin,
+                    columnMargin
+                )
             }
-
-            // 解析背景drawable
-            if (typedArray.hasValue(R.styleable.HomeMenuView_backgroundDrawable)) {
-                backgroundDrawableRes = ContextCompat.getDrawable(
+            if (typedArray.hasValue(R.styleable.GridMenuView_iconWidth)) {
+                defaultIconWidth = typedArray.getDimensionPixelSize(
+                    R.styleable.GridMenuView_iconWidth,
+                    0
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_iconHeight)) {
+                defaultIconHeight = typedArray.getDimensionPixelSize(
+                    R.styleable.GridMenuView_iconHeight,
+                    0
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_labelTextColor)) {
+                defaultLabelTextColor = typedArray.getColor(
+                    R.styleable.GridMenuView_labelTextColor,
+                    0
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_labelTextSize)) {
+                defaultLabelTextSize = typedArray.getDimension(
+                    R.styleable.GridMenuView_labelTextSize,
+                    0f
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_labelIconMargin)) {
+                defaultLabelIconMargin = typedArray.getDimensionPixelSize(
+                    R.styleable.GridMenuView_labelIconMargin,
+                    0
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_dotSelectedDrawable)) {
+                drawableResCurrent = ContextCompat.getDrawable(
                     context,
-                    typedArray.getResourceId(R.styleable.HomeMenuView_backgroundDrawable, 0)
+                    typedArray.getResourceId(R.styleable.GridMenuView_dotSelectedDrawable, 0)
+                )
+            }
+            if (typedArray.hasValue(R.styleable.GridMenuView_dotNormalDrawable)) {
+                drawableResNormal = ContextCompat.getDrawable(
+                    context,
+                    typedArray.getResourceId(R.styleable.GridMenuView_dotNormalDrawable, 0)
                 )
             }
         } finally {
@@ -360,14 +382,14 @@ open class HomeMenuView : ConstraintLayout {
     }
 
     /**
-     * 绑定生命周期和FragmentManager
+     * 绑定生命周期和 FragmentManager
      */
-    public fun bindLifecycle(lifecycleOwner: LifecycleOwner,fragmentManager: FragmentManager) {
+    fun bindLifecycle(lifecycleOwner: LifecycleOwner, fragmentManager: FragmentManager) {
         this.lifecycleOwner = lifecycleOwner
         this.fragmentManager = fragmentManager
     }
 
-    fun <T : HomeMenuBean> initData(menuList: List<T>?) {
+    fun <T : GridMenuBean> initData(menuList: List<T>?) {
         if (menuList.isNullOrEmpty()) {
             return
         }
@@ -380,7 +402,7 @@ open class HomeMenuView : ConstraintLayout {
         }
         val newList = menuList.chunked(columnCount * rowCount)
         initImageRounds(newList)
-        adapter = HomeMenuViewPager2Adapter(
+        adapter = GridMenuViewPager2Adapter(
             this,
             newList
         )
@@ -389,33 +411,36 @@ open class HomeMenuView : ConstraintLayout {
     }
 
     /**
-     * 计算viewPager小底部小圆点的大小
+     * 计算 ViewPager 底部小圆点
      */
-    private fun <T : HomeMenuBean> initImageRounds(menuList: List<List<T>>?) {
+    private fun <T : GridMenuBean> initImageRounds(menuList: List<List<T>>?) {
         dotsLayout.removeAllViews()
-        /*
-         *当轮播图大于1张时小圆点显示
-         */
-        if ((menuList?.size ?: 0) > 1) {
-            dotsLayout.visibility = VISIBLE
+        val pageCount = menuList?.size ?: 0
+        dotsLayout.visibility = if (showIndicator && pageCount > 1) {
+            VISIBLE
         } else {
-            dotsLayout.visibility = INVISIBLE
+            GONE
         }
         lastPos = 0
-        /*
-         * 默认让第一张图片显示深颜色的圆点
-         */
-        IntStream.range(0, (menuList?.size ?: 0)).forEach(IntConsumer { i: Int ->
+        if (pageCount <= 1) {
+            return
+        }
+        for (i in 0 until pageCount) {
             val round = AppCompatImageView(context)
-            if (i == 0) {
-                round.background = drawableResCurrent ?: defaultDrawableResCurrent
+            round.background = if (i == 0) {
+                drawableResCurrent ?: defaultDrawableResCurrent
             } else {
-                round.background = drawableResNormal ?: defaultDrawableResNormal
+                drawableResNormal ?: defaultDrawableResNormal
             }
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, -2)
-            params.leftMargin = dotPadding
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            if (i > 0) {
+                params.leftMargin = dotPadding
+            }
             dotsLayout.addView(round, params)
-        })
+        }
     }
 
     /**
@@ -425,22 +450,26 @@ open class HomeMenuView : ConstraintLayout {
         object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val realPos: Int = position % (adapter?.pagerInfo?.size ?: 1)
-                dotsLayout.getChildAt(realPos).background =
+                val pageSize = adapter?.pagerInfo?.size ?: 1
+                if (pageSize <= 0 || dotsLayout.childCount == 0) {
+                    return
+                }
+                val realPos: Int = position % pageSize
+                dotsLayout.getChildAt(realPos)?.background =
                     drawableResCurrent ?: defaultDrawableResCurrent
                 if (lastPos >= 0 && lastPos < dotsLayout.size && lastPos != realPos) {
-                    dotsLayout.getChildAt(lastPos).background =
+                    dotsLayout.getChildAt(lastPos)?.background =
                         drawableResNormal ?: defaultDrawableResNormal
                 }
                 lastPos = realPos
             }
         }
 
-    private val adapterListener: PagingAdapterListener<HomeMenuBean> =
-        object : PagingAdapterListener<HomeMenuBean> {
+    private val adapterListener: PagingAdapterListener<GridMenuBean> =
+        object : PagingAdapterListener<GridMenuBean> {
             override fun onItemClick(
                 view: View?,
-                item: HomeMenuBean?,
+                item: GridMenuBean?,
                 position: Int
             ) {
                 onMenuClickListener?.onMenuClick(
@@ -452,7 +481,7 @@ open class HomeMenuView : ConstraintLayout {
 
             override fun onItemLongClick(
                 view: View?,
-                item: HomeMenuBean?,
+                item: GridMenuBean?,
                 position: Int
             ) {
                 onMenuClickListener?.onMenuLongClick(
@@ -462,24 +491,6 @@ open class HomeMenuView : ConstraintLayout {
                 )
             }
         }
-
-    // 提供设置背景的方法
-    fun setMenuBackground(drawable: Drawable?) {
-        backgroundDrawableRes = drawable
-        background = drawable
-    }
-
-    fun setMenuBackgroundColor(color: Int) {
-        backgroundColor = color
-        background = DrawableUtil.createRectDrawable(color, 0, 0, backgroundCornerRadius ?: 0f)
-    }
-
-    fun setMenuBackgroundCornerRadius(radius: Float) {
-        backgroundCornerRadius = radius
-        if (backgroundColor != null) {
-            background = DrawableUtil.createRectDrawable(backgroundColor!!, 0, 0, radius)
-        }
-    }
 
     fun getFragmentManager(): FragmentManager? {
         return fragmentManager
@@ -497,12 +508,27 @@ open class HomeMenuView : ConstraintLayout {
         return columnCount
     }
 
-    fun getAdapterListener(): PagingAdapterListener<HomeMenuBean>? {
+    fun getRowMarginOrDefault(): Int {
+        return rowMargin ?: columnMargin
+    }
+
+    fun getAdapterListener(): PagingAdapterListener<GridMenuBean>? {
         return adapterListener
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (!pageCallbackRegistered) {
+            menuViewPager.registerOnPageChangeCallback(onPageChangeCallback)
+            pageCallbackRegistered = true
+        }
+    }
+
     override fun onDetachedFromWindow() {
+        if (pageCallbackRegistered) {
+            menuViewPager.unregisterOnPageChangeCallback(onPageChangeCallback)
+            pageCallbackRegistered = false
+        }
         super.onDetachedFromWindow()
-        menuViewPager.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 }

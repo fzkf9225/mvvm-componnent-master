@@ -588,15 +588,15 @@
                 app:strokeColor="@color/theme_green"
                 app:strokeWidth="3dp" />
 
-            <io.coderf.arklab.common.widget.customview.HomeMenuView
-                android:id="@+id/homeMenuView"
+            <io.coderf.arklab.common.widget.customview.GridMenuView
+                android:id="@+id/gridMenuView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_xl"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:layout_marginEnd="@dimen/horizontal_margin_xl"
-                app:backgroundColor="@color/white"
-                app:backgroundCornerRadius="16dp"
+                app:bgColor="@color/white"
+                app:radius="16dp"
                 app:columnCount="3"
                 app:dotHeight="20dp"
                 app:dotPadding="6dp"
@@ -605,7 +605,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/roundedShapeableImageView"
                 app:rowCount="2"
-                app:topMargin="16dp" />
+                app:pagerTopMargin="16dp" />
             <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_start"
                 android:layout_width="wrap_content"
@@ -627,7 +627,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/value_label_center"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
+                app:layout_constraintTop_toBottomOf="@+id/gridMenuView"
                 app:unitText="次" />
             <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_center"
@@ -650,7 +650,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/value_label_space_between"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/value_label_start"
-                app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
+                app:layout_constraintTop_toBottomOf="@+id/gridMenuView"
                 app:unitText="次" />
             <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_space_between"
@@ -672,7 +672,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/value_label_end"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/value_label_center"
-                app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
+                app:layout_constraintTop_toBottomOf="@+id/gridMenuView"
                 app:unitText="次" />
             <io.coderf.arklab.common.widget.customview.ValueLabelView
                 android:id="@+id/value_label_end"
@@ -695,7 +695,7 @@
                 app:layout_constraintStart_toEndOf="@+id/value_label_space_between"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/homeMenuView"
+                app:layout_constraintTop_toBottomOf="@+id/gridMenuView"
                 app:unitText="次" />
 
             <androidx.appcompat.widget.AppCompatTextView

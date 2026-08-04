@@ -4,14 +4,14 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 
 /**
- * 首页九宫格菜单项数据契约，与 {@link io.coderf.arklab.common.bean.HomeMenuBean} 解耦。
+ * 分页网格菜单项数据契约，与 {@link io.coderf.arklab.common.bean.GridMenuBean} 解耦。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2026/7/13 10:05
  */
-interface IHomeMenuItem {
+interface IGridMenuItem {
     val id: Int
 
     @get:DrawableRes

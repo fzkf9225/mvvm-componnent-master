@@ -776,36 +776,38 @@
         <attr name="squareSpacing" format="dimension|reference" />
     </declare-styleable>
 
-    <declare-styleable name="HomeMenuView">
+    <declare-styleable name="GridMenuView">
         <attr name="dotHeight" />
         <attr name="dotBottomMargin" />
         <attr name="dotLeftMargin" />
         <attr name="dotRightMargin" />
         <attr name="dotPadding" />
+        <attr name="dotSelectedDrawable" format="reference" />
+        <attr name="dotNormalDrawable" format="reference" />
+        <attr name="showIndicator" format="boolean" />
         <attr name="columnCount" />
         <attr name="rowCount" />
-        <attr name="topMargin" />
+        <!-- ViewPager 顶部间距 -->
+        <attr name="pagerTopMargin" format="dimension" />
         <!--是否自适应高度，默认为true-->
         <attr name="isWrap" format="boolean" />
         <!--label显示行数-->
         <attr name="labelLines" format="integer" />
-        <attr name="startMargin" />
-        <attr name="endMargin" />
-        <attr name="bottomMargin" />
+        <!-- 网格内容左右内边距 -->
+        <attr name="contentPaddingStart" />
+        <attr name="contentPaddingEnd" />
+        <!-- 指示器与 ViewPager 间距 -->
+        <attr name="indicatorSpacing" format="dimension" />
         <attr name="columnMargin" />
-        <attr name="cornerRadius" />
-        <attr name="backgroundDrawable" />
-        <attr name="backgroundColor" />
-        <attr name="backgroundCornerRadius" />
-        <!-- 左侧图标宽度 -->
+        <!-- 行间距；未配置时与 columnMargin 相同 -->
+        <attr name="rowMargin" format="dimension" />
+        <!-- 图标默认宽高 -->
         <attr name="iconWidth" format="dimension" />
-        <!-- 左侧图标高度 -->
         <attr name="iconHeight" format="dimension" />
-        <!-- label文字颜色 -->
+        <!-- label 默认样式 -->
         <attr name="labelTextColor" />
-        <!-- label文字大小 -->
         <attr name="labelTextSize" />
-        <!-- label文字大小 -->
+        <!-- 图标与文字间距 -->
         <attr name="labelIconMargin" format="dimension" />
     </declare-styleable>
     <attr name="labelTextStyle">

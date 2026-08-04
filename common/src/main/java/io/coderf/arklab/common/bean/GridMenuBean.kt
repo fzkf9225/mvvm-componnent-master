@@ -7,15 +7,15 @@ import androidx.annotation.DrawableRes
 import androidx.databinding.BaseObservable
 
 /**
- * 首页九宫格菜单数据模型。自定义菜单项可实现 {@link io.coderf.arklab.common.widget.customview.inter.IHomeMenuItem}，
- * 或继承本类以保持与 {@link io.coderf.arklab.common.widget.customview.HomeMenuView} 的 Parcelable 兼容。
+ * 分页网格菜单数据模型。自定义菜单项可实现 {@link io.coderf.arklab.common.widget.customview.inter.IGridMenuItem}，
+ * 或继承本类以保持与 {@link io.coderf.arklab.common.widget.customview.GridMenuView} 的 Parcelable 兼容。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2024/11/22 00:00
  */
-open class HomeMenuBean : BaseObservable, Parcelable {
+open class GridMenuBean : BaseObservable, Parcelable {
     var id: Int
 
     /**
@@ -68,7 +68,7 @@ open class HomeMenuBean : BaseObservable, Parcelable {
     /**
      * 是否置灰
      */
-    var isGray: Boolean?= false
+    var isGray: Boolean? = false
 
     constructor(
         id: Int,
@@ -100,14 +100,14 @@ open class HomeMenuBean : BaseObservable, Parcelable {
         title: String,
         describe: String,
         componentName: String?
-    ) : this(id, icon, title, describe, componentName,null,null,null,null,null)
+    ) : this(id, icon, title, describe, componentName, null, null, null, null, null)
 
     constructor(
         id: Int,
         @DrawableRes icon: Int,
         title: String,
         componentName: String?
-    ) : this(id, icon, title, "", componentName,null,null,null,null,null)
+    ) : this(id, icon, title, "", componentName, null, null, null, null, null)
 
 
     constructor(parcel: Parcel) : this(
@@ -144,7 +144,7 @@ open class HomeMenuBean : BaseObservable, Parcelable {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as HomeMenuBean
+        other as GridMenuBean
 
         if (id != other.id) return false
         if (icon != other.icon) return false
@@ -175,17 +175,17 @@ open class HomeMenuBean : BaseObservable, Parcelable {
     }
 
     override fun toString(): String {
-        return "HomeMenuBean(id=$id, icon=$icon, title='$title', describe='$describe', " +
+        return "GridMenuBean(id=$id, icon=$icon, title='$title', describe='$describe', " +
                 "componentName=$componentName, iconWidth=$iconWidth, iconHeight=$iconHeight, " +
                 "iconTextMargin=$iconTextMargin, labelColor=$labelColor, labelSize=$labelSize)"
     }
 
-    companion object CREATOR : Parcelable.Creator<HomeMenuBean> {
-        override fun createFromParcel(parcel: Parcel): HomeMenuBean {
-            return HomeMenuBean(parcel)
+    companion object CREATOR : Parcelable.Creator<GridMenuBean> {
+        override fun createFromParcel(parcel: Parcel): GridMenuBean {
+            return GridMenuBean(parcel)
         }
 
-        override fun newArray(size: Int): Array<HomeMenuBean?> {
+        override fun newArray(size: Int): Array<GridMenuBean?> {
             return arrayOfNulls(size)
         }
     }
