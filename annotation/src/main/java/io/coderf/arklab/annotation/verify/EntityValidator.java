@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import io.coderf.arklab.annotation.annotation.Valid;
 import io.coderf.arklab.annotation.annotation.VerifyArray;
@@ -31,6 +33,8 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
  * 反射元数据默认走 {@link EntityValidatorCache}，可通过 {@link #setReflectionCacheEnabled(boolean)} 关闭。
  */
 public final class EntityValidator {
+
+    private static final Logger LOGGER = Logger.getLogger(EntityValidator.class.getName());
 
     private EntityValidator() {
     }
@@ -129,7 +133,10 @@ public final class EntityValidator {
             }
             return VerifyResult.aggregate(errors);
         } catch (Exception e) {
-            return VerifyResult.fail("验证过程发生异常：" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "实体校验过程发生异常, entityType="
+                    + (entity != null ? entity.getClass().getName() : "null"), e);
+            String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            return VerifyResult.fail("验证过程发生异常：" + detail);
         }
     }
 
@@ -425,6 +432,8 @@ public final class EntityValidator {
             if (!RegexUtils.isDoubleTwoDecimals(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
+        } else if (verifyType == VerifyType.NUMBER_SCALE) {
+            return verifyNumberScale(validationParams, value);
         } else if (verifyType == VerifyType.EMAIL) {
             if (!RegexUtils.isEmail(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());
@@ -458,43 +467,17 @@ public final class EntityValidator {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
         } else if (verifyType == VerifyType.NUMBER_RANGE) {
-            double number = Double.parseDouble(value.toString());
-            if (number <= validationParams.minNumber() || number >= validationParams.maxNumber()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
+            // 开区间：minNumber < value < maxNumber
+            return verifyNumberRange(validationParams, value, false);
         } else if (verifyType == VerifyType.NUMBER_RANGE_EQUAL) {
-            double number = Double.parseDouble(value.toString());
-            if (number < validationParams.minNumber() || number > validationParams.maxNumber()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
+            // 闭区间：minNumber <= value <= maxNumber
+            return verifyNumberRange(validationParams, value, true);
         } else if (verifyType == VerifyType.LENGTH_RANGE) {
-            if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
-                return VerifyResult.ok();
-            }
-            if (validationParams.minLength() < 0 && value.toString().length() >= validationParams.maxLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
-            if (validationParams.maxLength() < 0 && value.toString().length() <= validationParams.minLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
-            if (value.toString().length() >= validationParams.maxLength()
-                    || value.toString().length() <= validationParams.minLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
+            // 开区间：minLength < length < maxLength（未设置的一端不限制）
+            return verifyLengthRange(validationParams, value, false);
         } else if (verifyType == VerifyType.LENGTH_RANGE_EQUAL) {
-            if (validationParams.minLength() < 0 && validationParams.maxLength() < 0) {
-                return VerifyResult.ok();
-            }
-            if (validationParams.minLength() < 0 && value.toString().length() > validationParams.maxLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
-            if (validationParams.maxLength() < 0 && value.toString().length() < validationParams.minLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
-            if (value.toString().length() > validationParams.maxLength()
-                    || value.toString().length() < validationParams.minLength()) {
-                return VerifyResult.fail(validationParams.errorMsg());
-            }
+            // 闭区间：minLength <= length <= maxLength（未设置的一端不限制）
+            return verifyLengthRange(validationParams, value, true);
         } else if (verifyType == VerifyType.REGEX) {
             return RegexUtils.regular(value.toString(), validationParams.regex())
                     ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
@@ -510,6 +493,104 @@ public final class EntityValidator {
                     ? "yyyy-MM-dd HH:mm:ss" : validationParams.dateFormat();
             return ValidatorUtil.isValidDateTime(value.toString(), format)
                     ? VerifyResult.ok() : VerifyResult.fail(validationParams.errorMsg());
+        }
+        return VerifyResult.ok();
+    }
+
+    /**
+     * 数字范围校验。
+     *
+     * @param inclusive true 为闭区间 [min, max]，false 为开区间 (min, max)
+     */
+    private static VerifyResult verifyNumberRange(VerifyParams validationParams, Object value, boolean inclusive) {
+        final double number;
+        try {
+            number = Double.parseDouble(value.toString().trim());
+        } catch (NumberFormatException e) {
+            return VerifyResult.fail(validationParams.errorMsg());
+        }
+        double min = validationParams.minNumber();
+        double max = validationParams.maxNumber();
+        boolean minSet = min > -Double.MAX_VALUE;
+        boolean maxSet = max < Double.MAX_VALUE;
+        if (!minSet && !maxSet) {
+            return VerifyResult.ok();
+        }
+        if (inclusive) {
+            if (minSet && number < min) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+            if (maxSet && number > max) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else {
+            if (minSet && number <= min) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+            if (maxSet && number >= max) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        }
+        return VerifyResult.ok();
+    }
+
+    /**
+     * 长度范围校验。
+     * minLength / maxLength 为负数表示该端不限制。
+     *
+     * @param inclusive true 为闭区间，false 为开区间
+     */
+    private static VerifyResult verifyLengthRange(VerifyParams validationParams, Object value, boolean inclusive) {
+        int min = validationParams.minLength();
+        int max = validationParams.maxLength();
+        if (min < 0 && max < 0) {
+            return VerifyResult.ok();
+        }
+        int length = value.toString().length();
+        if (inclusive) {
+            if (min >= 0 && length < min) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+            if (max >= 0 && length > max) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else {
+            if (min >= 0 && length <= min) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+            if (max >= 0 && length >= max) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        }
+        return VerifyResult.ok();
+    }
+
+    /**
+     * 小数位数校验（NUMBER_SCALE）。
+     * scale &gt;= 0 时要求小数位 &lt;= scale；scale &lt; 0 时仅校验是否为合法数字。
+     */
+    private static VerifyResult verifyNumberScale(VerifyParams validationParams, Object value) {
+        String text = value.toString().trim();
+        if (!RegexUtils.isNumber(text) && !RegexUtils.isDouble(text)) {
+            return VerifyResult.fail(validationParams.errorMsg());
+        }
+        int scale = validationParams.scale();
+        if (scale < 0) {
+            return VerifyResult.ok();
+        }
+        int dotIndex = text.indexOf('.');
+        int fractionDigits = 0;
+        if (dotIndex >= 0) {
+            // 去掉末尾可能的科学计数法标记，仅统计小数点后数字位数
+            String fraction = text.substring(dotIndex + 1);
+            int expIndex = Math.max(fraction.indexOf('e'), fraction.indexOf('E'));
+            if (expIndex >= 0) {
+                fraction = fraction.substring(0, expIndex);
+            }
+            fractionDigits = fraction.length();
+        }
+        if (fractionDigits > scale) {
+            return VerifyResult.fail(validationParams.errorMsg());
         }
         return VerifyResult.ok();
     }

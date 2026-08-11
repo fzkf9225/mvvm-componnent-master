@@ -34,9 +34,14 @@ public enum VerifyType {
      */
     NUMBER_DOUBLE,
     /**
-     * 两位有效数字
+     * 两位有效数字（必须恰好两位小数，如 1.50）
      */
     NUMBER_00,
+    /**
+     * 小数位数校验：数字的小数位数不超过 {@link io.coderf.arklab.annotation.annotation.VerifyParams#scale()} 指定值。
+     * scale &lt; 0 时不限制小数位，仅校验是否为合法数字。
+     */
+    NUMBER_SCALE,
     /**
      * email
      */

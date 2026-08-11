@@ -346,7 +346,11 @@ public class RegexUtils {
     }
 
     /**
-     * 判断字段是否为身份证 符合返回ture
+     * 判断字段是否为身份证。
+     * <ul>
+     *   <li>18 位：格式校验 + ISO 7064 / GB 11643 校验位算法</li>
+     *   <li>15 位：仅格式校验（一代证无校验位）</li>
+     * </ul>
      *
      * @param str 字符串
      * @return boolean
@@ -357,12 +361,37 @@ public class RegexUtils {
         }
         String trimmed = str.trim();
         if (trimmed.length() == 18) {
-            return Regular(trimmed, IDCARD);
+            if (!Regular(trimmed, IDCARD)) {
+                return false;
+            }
+            return isIdCardChecksumValid(trimmed);
         }
         if (trimmed.length() == 15) {
             return Regular(trimmed, IDCARD_15);
         }
         return false;
+    }
+
+    /**
+     * 18 位二代身份证校验位（GB 11643 / ISO 7064 MOD 11-2）。
+     * 加权因子：7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2
+     * 校验码表：1,0,X,9,8,7,6,5,4,3,2
+     */
+    private static final int[] ID_CARD_WEIGHT = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    private static final char[] ID_CARD_CHECK_CODE = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+
+    private static boolean isIdCardChecksumValid(String id18) {
+        int sum = 0;
+        for (int i = 0; i < 17; i++) {
+            char c = id18.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+            sum += (c - '0') * ID_CARD_WEIGHT[i];
+        }
+        char expected = ID_CARD_CHECK_CODE[sum % 11];
+        char actual = Character.toUpperCase(id18.charAt(17));
+        return expected == actual;
     }
 
     /**

@@ -52,6 +52,15 @@ public @interface VerifyParams {
     String dateFormat() default "";
 
     /**
+     * 小数位数上限，用于 {@link VerifyType#NUMBER_SCALE}。
+     * <ul>
+     *   <li>{@code scale >= 0}：小数位数必须 &lt;= scale（整数视为 0 位小数）</li>
+     *   <li>{@code scale < 0}（默认）：不限制小数位，仅校验是否为合法数字</li>
+     * </ul>
+     */
+    int scale() default -1;
+
+    /**
      * 单条规则生效条件；refField 为空（默认）时始终生效。
      */
     VerifyWhen when() default @VerifyWhen(refField = VerifyWhen.SKIP);
