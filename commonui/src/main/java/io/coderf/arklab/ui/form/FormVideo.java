@@ -385,6 +385,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setVideoType(fileType)
+                .setDefaultVideoSubPath(saveSubPath)
                 .setMaxVideoTime(maxVideoDuration)
                 .setShowPermissionDialog(protocolDialog)
                 .setVideoSelectedListener(new MediaListener() {

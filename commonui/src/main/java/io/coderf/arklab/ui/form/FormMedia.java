@@ -42,6 +42,10 @@ public abstract class FormMedia extends CornerConstraintLayout {
      */
     protected String labelString;
     /**
+     * 文件自定义保存的子目录名
+     */
+    protected String saveSubPath;
+    /**
      * 是否必填
      */
     protected boolean required;
@@ -254,6 +258,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
 
             itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor, 0xFFF1F3F2);
             labelString = typedArray.getString(R.styleable.FormUI_label);
+            saveSubPath = typedArray.getString(R.styleable.FormUI_saveSubPath);
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
             requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);

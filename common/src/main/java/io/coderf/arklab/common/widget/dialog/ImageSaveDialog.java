@@ -112,7 +112,7 @@ public class ImageSaveDialog extends BaseDialog {
     private void applyBottomSheetStyle(ImageSaveDialogConfig cfg) {
         Context ctx = getContext();
         int horizontalMargin = cfg.getHorizontalMarginPx() != null
-                ? cfg.getHorizontalMarginPx() : DensityUtil.dp2px(ctx, 12f);
+                ? cfg.getHorizontalMarginPx() : DensityUtil.dp2px(ctx, 0f);
         int bottomMargin = cfg.getBottomMarginPx() != null
                 ? cfg.getBottomMarginPx() : DensityUtil.dp2px(ctx, 12f);
         int buttonGap = cfg.getButtonGapPx() != null
@@ -124,19 +124,19 @@ public class ImageSaveDialog extends BaseDialog {
         int saveTextColor = cfg.getSaveTextColor() != null
                 ? cfg.getSaveTextColor() : ContextCompat.getColor(ctx, R.color.autoColor);
         int cancelTextColor = cfg.getCancelTextColor() != null
-                ? cfg.getCancelTextColor() : ContextCompat.getColor(ctx, R.color.gray);
+                ? cfg.getCancelTextColor() : 0xFF8E8E93;
         int rippleMask = cfg.getRippleColor() != null
                 ? cfg.getRippleColor() : ContextCompat.getColor(ctx, R.color.h_line_color);
         boolean saveBold = cfg.getSaveTextBold() != null ? cfg.getSaveTextBold() : true;
         float saveTextSizePx = cfg.getSaveTextSizePx() != null
                 ? cfg.getSaveTextSizePx()
-                : ctx.getResources().getDimension(R.dimen.font_size_xxl);
+                : DensityUtil.sp2px(getContext(),17f);
         float cancelTextSizePx = cfg.getCancelTextSizePx() != null
                 ? cfg.getCancelTextSizePx()
-                : ctx.getResources().getDimension(R.dimen.font_size_xl);
+                : DensityUtil.sp2px(getContext(),16f);
         int buttonHeight = cfg.getButtonHeightPx() != null
                 ? cfg.getButtonHeightPx()
-                : ctx.getResources().getDimensionPixelSize(R.dimen.height_xl);
+                : DensityUtil.dp2px(getContext(),52f);
 
         String saveText = cfg.getSaveText() != null
                 ? cfg.getSaveText() : ctx.getString(R.string.save_to_local);

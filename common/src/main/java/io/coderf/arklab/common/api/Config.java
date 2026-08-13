@@ -29,6 +29,12 @@ public class Config {
      * 空白处可以点击收起键盘
      */
     private boolean hideKeyboardOnTouchOutside = true;
+
+    /**
+     * 本地文件夹名称
+     */
+    private String folderName;
+
     private Config() {
     }
 
@@ -50,6 +56,14 @@ public class Config {
 
     public void setHideKeyboardOnTouchOutside(boolean hideKeyboardOnTouchOutside) {
         this.hideKeyboardOnTouchOutside = hideKeyboardOnTouchOutside;
+    }
+
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
     }
 
     /**

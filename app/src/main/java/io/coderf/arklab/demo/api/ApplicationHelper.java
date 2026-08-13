@@ -49,6 +49,7 @@ public class ApplicationHelper extends BaseApplication {
                 .setFilterStaleLocation(false);
 
         Config.getInstance().setResponseBodyLogConverterJson(true);
+        Config.getInstance().setFolderName("arklab");
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
             io.coderf.arklab.googlegps.utils.DebugUtil.enableDebug(this,true);

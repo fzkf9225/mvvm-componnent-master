@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.OpenableColumns;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.utils.encode.MD5Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import okhttp3.MultipartBody;
@@ -63,7 +65,8 @@ public final class FileUtil {
 
     /**
      * 获取临时文件
-     * @param url 文件地址
+     *
+     * @param url          文件地址
      * @param saveBasePath 保存基础路径
      * @return 临时文件
      */
@@ -816,6 +819,9 @@ public final class FileUtil {
      * @return 应用标识
      */
     public static String getDefaultBasePath(Context context) {
+        if (!TextUtils.isEmpty(Config.getInstance().getFolderName())) {
+            return Config.getInstance().getFolderName();
+        }
         String packageName = context.getPackageName();
         String[] packageArr = packageName.split("\\.");
         if (packageArr.length == 0) {
@@ -825,6 +831,20 @@ public final class FileUtil {
             return packageArr[0];
         }
         return packageArr[1];
+    }
+
+    /**
+     * 通知系统相册更新
+     */
+    public static void notifyGallery(Context context, File file) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+        // 方式2：使用MediaScannerConnection（推荐，兼容性更好）
+        MediaScannerConnection.scanFile(context,
+                new String[]{file.getAbsolutePath()},
+                null,
+                (path, uri) -> LogUtil.logger(TAG, "相册扫描完成：" + path));
     }
 
     /**

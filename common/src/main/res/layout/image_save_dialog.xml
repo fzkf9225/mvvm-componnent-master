@@ -15,23 +15,23 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save_local"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xl"
+            android:layout_height="52dp"
             android:background="@drawable/rounded_white"
             android:gravity="center"
             android:text="@string/save_to_local"
             android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xxl" />
+            android:textSize="17sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_cancel"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xl"
-            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/rounded_white"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="@color/autoColor"
-            android:textSize="@dimen/font_size_xl" />
+            android:textColor="#8E8E93"
+            android:textSize="16sp" />
 
     </LinearLayout>
 </layout>

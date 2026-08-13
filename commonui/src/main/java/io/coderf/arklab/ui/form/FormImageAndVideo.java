@@ -397,6 +397,8 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 .setImageQualityCompress(compressImageSize)
                 .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setMaxVideoTime(maxVideoDuration)
+                .setDefaultVideoSubPath(saveSubPath)
+                .setDefaultImageSubPath(saveSubPath)
                 .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
                 .setShowPermissionDialog(protocolDialog)
                 .setMediaType(fileType)

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.Target;
 import java.io.File;
 import java.io.IOException;
 
+import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
@@ -33,6 +34,7 @@ public class DownLoadImageService implements Runnable {
      * 保存路径
      */
     private final String filePath;
+    private final String fileType;
 
     /**
      * @param context  上下文
@@ -44,6 +46,7 @@ public class DownLoadImageService implements Runnable {
         this.url = url;
         this.callBack = callBack;
         this.context = context;
+        this.fileType = fileType;
         String extension = null;
         try {
             extension = FileUtil.getFileExtension(url.toString());
@@ -60,7 +63,7 @@ public class DownLoadImageService implements Runnable {
             }
         }
         String name = FileUtil.getNoRepeatFileName(fileType, !TextUtils.isEmpty(fileType) && "video".equalsIgnoreCase(fileType) ? "VIDEO_" : "IMG_", "." + extension);
-        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + fileType + File.separator + name + "." + extension;
+        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + name + "." + extension;
     }
 
     @Override
@@ -77,7 +80,14 @@ public class DownLoadImageService implements Runnable {
 
             @Override
             public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
-                File currentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), filePath);
+                File currentFile;
+                if (AttachmentTypeEnum.VIDEO.typeValue.equalsIgnoreCase(fileType)) {
+                    currentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), filePath);
+                } else if (AttachmentTypeEnum.IMAGE.typeValue.equalsIgnoreCase(fileType)) {
+                    currentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filePath);
+                } else {
+                    currentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), filePath);
+                }
                 if (currentFile.getParentFile() != null && !currentFile.getParentFile().exists()) {
                     boolean isCreated = currentFile.getParentFile().mkdirs();
                 }
@@ -92,6 +102,7 @@ public class DownLoadImageService implements Runnable {
                     if (callBack != null) {
                         callBack.onDownLoadSuccess(currentFile);
                     }
+                    FileUtil.notifyGallery(context,currentFile);
                 } catch (IOException e) {
                     LogUtil.e(TAG, "重命名文件异常：" + e);
                     if (callBack != null) {

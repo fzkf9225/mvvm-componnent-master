@@ -236,6 +236,8 @@
         <attr name="labelTextStyle"/>
         <!--label文字内容-->
         <attr name="label" />
+        <!--文件自定义保存的子目录名-->
+        <attr name="saveSubPath" format="string" />
         <!--下拉框图标-->
         <attr name="selectionIcon" format="reference"/>
         <!--下拉框图标宽度，未设置时自适应图标原始尺寸-->
