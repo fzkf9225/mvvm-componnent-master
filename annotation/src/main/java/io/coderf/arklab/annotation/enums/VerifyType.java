@@ -22,6 +22,14 @@ public enum VerifyType {
      */
     NOT_EQUALS,
     /**
+     * 目标值是否在 {@link io.coderf.arklab.annotation.annotation.VerifyParams#values()} 列表中
+     */
+    IN,
+    /**
+     * 目标值是否不在 {@link io.coderf.arklab.annotation.annotation.VerifyParams#values()} 列表中
+     */
+    NOT_IN,
+    /**
      * 数字
      */
     NUMBER,

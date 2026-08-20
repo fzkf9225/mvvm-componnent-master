@@ -208,7 +208,10 @@ public final class CompareUtil {
         }
     }
 
-    private static boolean containsValue(String[] values, Object refValue) {
+    /**
+     * 判断 {@code refValue.toString()} 是否等于 {@code values} 中某一项（字符串精确匹配）。
+     */
+    public static boolean containsValue(String[] values, Object refValue) {
         if (values == null || values.length == 0 || refValue == null) {
             return false;
         }

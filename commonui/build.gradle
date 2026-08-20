@@ -17,12 +17,9 @@ android {
         // 放入 defaultConfig，确保 debug/release AAR 均携带 consumer 规则
         consumerProguardFiles('consumer-rules.pro')
         ndk {
-            //armeabi-v7a 较旧的 Android 设备（大约 2016年前），逐渐淘汰，32位架构
-            //armeabi-v8a 绝大多数现代 Android 手机和平板,主流和未来,64位架构
-            //x86 旧的 Android 模拟器和极少数平板，基本淘汰，32位架构
-            //x86_64 少数 Android 平板、Chromebook 和模拟器，小众但重要，64位架构
-            abiFilters = ['armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64']
-//            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a',
+            // armeabi-v7a：较旧 32 位；arm64-v8a：主流 64 位；x86/x86_64：模拟器
+            abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+//            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a',
 //                    'x86', 'x86_64', 'mips', 'mips64'
         }
     }
@@ -125,7 +122,7 @@ afterEvaluate {
                 artifact("${buildDir}/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.ui'
                 artifactId = 'ui'
-                version = '3.4.12'
+                version = '3.5.0'
             }
         }
         repositories {

@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.widget.LinearLayout;
 
-import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.databinding.MediaLoadingDialogBinding;
 
@@ -13,7 +12,6 @@ import io.coderf.arklab.media.databinding.MediaLoadingDialogBinding;
  * 自定义加载dialog
  */
 public class MediaProgressDialog extends Dialog {
-    private volatile static MediaProgressDialog instance;
     private MediaLoadingDialogBinding loadingDialogBinding;
     private boolean isCanCancel = false;
     private OnCancelListener onCancelListener;
@@ -27,15 +25,11 @@ public class MediaProgressDialog extends Dialog {
         message = context.getString(R.string.media_loading_please_wait);
     }
 
+    /**
+     * 创建加载框（每次使用当前 Context，避免单例持有已销毁 Activity）。
+     */
     public static MediaProgressDialog getInstance(Context context) {
-        if (instance == null) {
-            synchronized (MediaHelper.class) {
-                if (instance == null) {
-                    instance = new MediaProgressDialog(context);
-                }
-            }
-        }
-        return instance;
+        return new MediaProgressDialog(context);
     }
 
     public void refreshMessage(String message) {
@@ -86,6 +80,5 @@ public class MediaProgressDialog extends Dialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        instance = null;
     }
 }

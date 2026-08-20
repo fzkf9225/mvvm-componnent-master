@@ -416,6 +416,14 @@ public final class EntityValidator {
             if (value.toString().equals(validationParams.equalStr())) {
                 return VerifyResult.fail(validationParams.errorMsg());
             }
+        } else if (verifyType == VerifyType.IN) {
+            if (!CompareUtil.containsValue(validationParams.values(), value)) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
+        } else if (verifyType == VerifyType.NOT_IN) {
+            if (CompareUtil.containsValue(validationParams.values(), value)) {
+                return VerifyResult.fail(validationParams.errorMsg());
+            }
         } else if (verifyType == VerifyType.NUMBER) {
             if (!RegexUtils.isNumber(value.toString()) && !RegexUtils.isDouble(value.toString())) {
                 return VerifyResult.fail(validationParams.errorMsg());

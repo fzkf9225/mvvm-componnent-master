@@ -1,49 +1,12 @@
-# 保留 MVVM 框架核心类
+# common facade：桥接类 + 透出说明
+# 实际 keep 规则主要由 api 依赖的 core-* consumer-rules 合并进来；
+# 此处保留 facade 自身与历史包名兼容入口。
+
+-keep class io.coderf.arklab.common.corebridge.** { *; }
+-dontwarn io.coderf.arklab.common.corebridge.**
+
+# 兼容仍按旧坐标只依赖 common AAR、且未拆 core 坐标的宿主
 -keep class io.coderf.arklab.common.** { *; }
 -dontwarn io.coderf.arklab.common.**
-
-# 保留数据绑定相关类
--keep class io.coderf.arklab.common.bean.** { *; }
--keepclassmembers class io.coderf.arklab.common.bean.** {
-    void set*(***);
-    *** get*();
-}
--keep class io.coderf.arklab.common.helper.bean.** { *; }
--keepclassmembers class io.coderf.arklab.common.helper.bean.** {
-    void set*(***);
-    *** get*();
-}
--keep class io.coderf.arklab.common.widget.dialog.bean.** { *; }
--keepclassmembers class io.coderf.arklab.common.widget.dialog.bean.** {
-    void set*(***);
-    *** get*();
-}
-
-# 保留 BaseResponse 和 ViewModel
--keep class io.coderf.arklab.common.base.BaseResponse { *; }
--keep class io.coderf.arklab.common.viewmodel.** { *; }
-
-# 保留注解处理器生成的类
--keep class * extends io.coderf.arklab.common.base.** { *; }
-
-# 保留资源绑定相关类（如果有自动生成的绑定类）
--keep class *Binding { *; }
--keep class *BindingImpl { *; }
-
-# ---- 网络依赖（ApiRetrofit 所在模块，须进入 consumer）----
--keep class retrofit2.** { *; }
--dontwarn retrofit2.**
--keepattributes Signature,Exceptions,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
--keepclasseswithmembers interface * {
-    @retrofit2.http.* <methods>;
-}
--keep class okhttp3.** { *; }
--dontwarn okhttp3.**
--keep class okio.** { *; }
--dontwarn okio.**
--keep class com.google.gson.** { *; }
--dontwarn com.google.gson.**
--keep class * extends com.google.gson.TypeAdapter
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class io.reactivex.rxjava3.** { *; }
--dontwarn io.reactivex.rxjava3.**
+-keep class io.coderf.arklab.core.** { *; }
+-dontwarn io.coderf.arklab.core.**

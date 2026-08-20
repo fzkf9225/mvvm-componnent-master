@@ -1,7 +1,11 @@
 package io.coderf.arklab.user.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -11,25 +15,21 @@ import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.user.R;
 import io.coderf.arklab.user.databinding.FeedbackBinding;
-
+import io.coderf.arklab.userapi.gateway.MediaGateway;
 
 /**
  * Created by fz on 2018/1/22.
- * describe：问题反馈
+ * describe：问题反馈（经 MediaGateway 选图，不直接依赖 commonmedia）
  */
 @AndroidEntryPoint
 public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,
         ImageAddAdapter.ImageViewClearListener {
     private ImageAddAdapter imageAddAdapter;
+
     @Inject
-    @ActivityMediaHelper
-    MediaHelper mediaHelper;
+    MediaGateway mediaGateway;
 
     @Override
     protected int getLayoutId() {
@@ -43,13 +43,6 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        //图片、视频选择结果回调通知
-        mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE) {
-                imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList()));
-                imageAddAdapter.notifyDataSetChanged();
-            }
-        });
         imageAddAdapter = new ImageAddAdapter();
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
@@ -61,14 +54,15 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
         });
         binding.feedBackRecyclerView.setAdapter(imageAddAdapter);
         binding.feedBackBtn.setOnClickListener(v -> {
-            mediaHelper.startCompressImage(AttachmentUtil.toUriList(imageAddAdapter.getList()));
+            List<Uri> uris = AttachmentUtil.toUriList(imageAddAdapter.getList());
+            mediaGateway.compressImages(uris, compressed -> {
+                // 压缩完成回调；业务可在此上传
+            });
         });
-
     }
 
     @Override
     public void initData(Bundle bundle) {
-
     }
 
     @Override
@@ -79,10 +73,12 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
 
     @Override
     public void imgAdd(View view) {
-        new OpenImageDialog(view.getContext())
-                .setMediaType(OpenImageDialog.CAMERA_ALBUM)
-                .setOnOpenImageClickListener(mediaHelper)
-                .builder()
-                .show();
+        mediaGateway.pickImages(9, uris -> {
+            if (uris == null || uris.isEmpty()) {
+                return;
+            }
+            imageAddAdapter.getList().addAll(AttachmentUtil.uriListToAttachmentList(new ArrayList<>(uris)));
+            imageAddAdapter.notifyDataSetChanged();
+        });
     }
 }

@@ -10,16 +10,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseFragment;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
-import io.coderf.arklab.media.MediaHelper;
-import io.coderf.arklab.media.dialog.OpenImageDialog;
-import io.coderf.arklab.media.module.FragmentMediaHelper;
-import io.coderf.arklab.userapi.router.UserRouterService;
 import io.coderf.arklab.user.R;
 import io.coderf.arklab.user.activity.ModifyPasswordActivity;
 import io.coderf.arklab.user.activity.PersonalCenterActivity;
 import io.coderf.arklab.user.activity.SettingActivity;
 import io.coderf.arklab.user.api.UserAccountHelper;
 import io.coderf.arklab.user.databinding.MeFragmentBinding;
+import io.coderf.arklab.userapi.gateway.MediaGateway;
+import io.coderf.arklab.userapi.router.UserRouterService;
 
 /**
  * Created by fz on 2020/03/26.
@@ -27,13 +25,12 @@ import io.coderf.arklab.user.databinding.MeFragmentBinding;
  */
 @AndroidEntryPoint
 public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> {
-    private final String TAG = this.getClass().getSimpleName();
+
     @Inject
     UserRouterService userRouterService;
 
     @Inject
-    @FragmentMediaHelper
-    MediaHelper mediaHelper;
+    MediaGateway mediaGateway;
 
     @Override
     protected int getLayoutId() {
@@ -42,19 +39,7 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.themeColor),true);
-        mediaHelper.getMediaBuilder().setImageMaxSelectedCount(1);
-        mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-//            if (mediaBean.getMediaType() == MediaTypeEnum.IMAGE.getMediaType()) {
-//                if (mediaBean.getMediaList() == null || mediaBean.getMediaList().size() == 0) {
-//                    return;
-//                }
-//                UserInfo userInfo = UserAccountHelper.getUser();
-//                userInfo.setAvatar(mediaBean.getMediaList().get(0));
-//                UserAccountHelper.saveLoginState(userInfo, true);
-//                binding.setUser(userInfo);
-//            }
-        });
+        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.themeColor), true);
         binding.imagePersonalCenter.setOnClickListener(v -> startActivity(PersonalCenterActivity.class));
         binding.tvUserName.setOnClickListener(v -> {
             if (UserAccountHelper.isLogin()) {
@@ -68,30 +53,17 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
             if (!UserAccountHelper.isLogin()) {
                 userRouterService.toLogin(requireContext(), authManager.getLoginLauncher());
             } else {
-                new OpenImageDialog(requireActivity())
-                        .setMediaType(OpenImageDialog.CAMERA_ALBUM)
-                        .setOnOpenImageClickListener(mediaHelper)
-                        .builder()
-                        .show();
+                mediaGateway.pickImages(1, uris -> {
+                    // 头像上传等业务回调
+                });
             }
         });
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        binding.setUser(UserAccountHelper.getUser());
-    }
-
-    @Override
     protected void initData(Bundle bundle) {
-
-    }
-
-    /**
-     * 检查登录状态
-     */
-    private void checkUserInfo() {
-
+        if (UserAccountHelper.isLogin()) {
+            binding.setUser(UserAccountHelper.getUser());
+        }
     }
 }

@@ -90,10 +90,10 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
 
     protected MediaHelper(MediaBuilder mediaBuilder) {
         this.mediaBuilder = mediaBuilder;
-        uiController = new UIController(mediaBuilder.getContext(), this.mediaBuilder.getLifecycleOwner().getLifecycle());
         if (this.mediaBuilder.getLifecycleOwner() == null) {
-            return;
+            throw new IllegalArgumentException("MediaBuilder.bindLifeCycle(LifecycleOwner) is required before build()");
         }
+        uiController = new UIController(mediaBuilder.getContext(), this.mediaBuilder.getLifecycleOwner().getLifecycle());
         this.mediaBuilder.getLifecycleOwner().getLifecycle().addObserver(mediaLifecycleObserver);
     }
 
@@ -469,6 +469,18 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
             handlerThread.start();
         }
         return handlerThread.getLooper();
+    }
+
+    /**
+     * 生命周期结束时释放后台线程，避免 HandlerThread 泄漏。
+     */
+    public void release() {
+        if (uiController != null) {
+            uiController.hideLoading();
+        }
+        if (handlerThread.isAlive()) {
+            handlerThread.quitSafely();
+        }
     }
 
     /**

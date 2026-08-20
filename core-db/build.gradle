@@ -1,0 +1,88 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = 'io.coderf.arklab.core.db'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        consumerProguardFiles('consumer-rules.pro')
+    }
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+        debug { minifyEnabled = false }
+    }
+    compileOptions {
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin { jvmToolchain(17) }
+    java { toolchain { languageVersion.set(JavaLanguageVersion.of(17)) } }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+    buildFeatures { buildConfig = true }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+dependencies {
+    api project(':core-base')
+
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    ksp libs.room.compiler
+    ksp project(':room-processor')
+    implementation libs.room.rxjava3
+    implementation libs.room.paging
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.kotlinx.coroutines.core
+    testImplementation libs.junit
+}
+
+// Publish: ./gradlew :core-db:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'io.coderf.arklab.core'
+                artifactId = 'db'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+        }
+    }
+}

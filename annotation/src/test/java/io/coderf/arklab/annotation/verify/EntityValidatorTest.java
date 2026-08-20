@@ -96,6 +96,44 @@ public class EntityValidatorTest {
         assertFalse(result.isOk());
     }
 
+    @Test
+    public void validate_in_shouldPassWhenValueInList() {
+        StatusForm form = new StatusForm();
+        form.status = "2";
+
+        VerifyResult result = EntityValidator.validate(form);
+        assertTrue(result.isOk());
+    }
+
+    @Test
+    public void validate_in_shouldFailWhenValueNotInList() {
+        StatusForm form = new StatusForm();
+        form.status = "9";
+
+        VerifyResult result = EntityValidator.validate(form);
+        assertFalse(result.isOk());
+        assertEquals("status", result.getFieldName());
+    }
+
+    @Test
+    public void validate_notIn_shouldFailWhenValueInList() {
+        BannedForm form = new BannedForm();
+        form.status = "deleted";
+
+        VerifyResult result = EntityValidator.validate(form);
+        assertFalse(result.isOk());
+        assertEquals("status", result.getFieldName());
+    }
+
+    @Test
+    public void validate_notIn_shouldPassWhenValueNotInList() {
+        BannedForm form = new BannedForm();
+        form.status = "active";
+
+        VerifyResult result = EntityValidator.validate(form);
+        assertTrue(result.isOk());
+    }
+
     @VerifyEntity
     static class ConditionalForm {
         @VerifyWhen(refField = "type", operator = ConditionOperator.EQUALS, value = "1")
@@ -138,5 +176,17 @@ public class EntityValidatorTest {
     static class IdForm {
         @VerifyParams(type = VerifyType.ID_CARD, errorMsg = "身份证格式错误")
         String idCard;
+    }
+
+    @VerifyEntity
+    static class StatusForm {
+        @VerifyParams(type = VerifyType.IN, values = {"1", "2", "3"}, errorMsg = "状态不合法")
+        String status;
+    }
+
+    @VerifyEntity
+    static class BannedForm {
+        @VerifyParams(type = VerifyType.NOT_IN, values = {"deleted", "banned"}, errorMsg = "状态不可用")
+        String status;
     }
 }

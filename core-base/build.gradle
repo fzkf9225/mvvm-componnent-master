@@ -1,0 +1,153 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.hilt.android)
+}
+
+android {
+    // ?? R / BuildConfig / databinding ????????? import ??
+    namespace = 'io.coderf.arklab.common'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
+        consumerProguardFiles('consumer-rules.pro')
+        ndk {
+            abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+        }
+    }
+    buildTypes {
+        release {
+            resValue("string", "app_config_file", "prod.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+        debug {
+            resValue("string", "app_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+    }
+    compileOptions {
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin { jvmToolchain(17) }
+    java { toolchain { languageVersion.set(JavaLanguageVersion.of(17)) } }
+    buildFeatures {
+        dataBinding = true
+        buildConfig = true
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+dependencies {
+    api project(':core-utils')
+    api project(':core-ui')
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation platform(libs.kotlin.bom)
+    implementation libs.activity
+    implementation libs.androidx.core.ktx
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.viewpager2
+    implementation libs.material
+    implementation libs.graphics
+    implementation libs.net.res
+    implementation libs.net.ui
+    implementation libs.constraintlayout
+    implementation libs.logger
+    implementation libs.androidx.recyclerview
+    implementation libs.gson
+    implementation libs.github.glide
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.reactivex.rxandroid
+    implementation libs.rxjava3.rxjava
+    implementation libs.retrofit2.converter.scalars
+    implementation libs.retrofit2.converter.gson
+    implementation libs.retrofit2.adapter.rxjava3
+    implementation libs.scwang90.refresh.layout.kernel
+    implementation libs.refresh.header.classics
+    implementation libs.refresh.footer.classics
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.common.java8
+    implementation libs.gsyvideoplayer.java
+    implementation libs.gsyvideoplayer.arm64
+    implementation libs.gsyvideoplayer.armv7a
+    implementation libs.github.gsyvideoplayer.x86
+    implementation libs.github.gsyvideoplayer.x64
+    implementation libs.mmkv
+    implementation libs.amazonaws.aws.android.sdk.s3
+    implementation libs.amazonaws.aws.android.sdk.mobile.client
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
+    implementation libs.zxing.core
+    implementation libs.zxing.android.embedded
+    implementation libs.androidx.paging.runtime
+    implementation libs.paging.rxjava3
+    implementation libs.androidx.paging.runtime.ktx
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.swiperefreshlayout
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    implementation libs.room.rxjava3
+    implementation libs.room.paging
+    implementation libs.bouncycastle.bcprov
+    implementation libs.androidx.webkit
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.video)
+    implementation(libs.camera.view)
+    implementation(libs.camera.extensions)
+    testImplementation libs.junit
+}
+
+// Publish: ./gradlew :core-base:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'io.coderf.arklab.core'
+                artifactId = 'base'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+        }
+    }
+}

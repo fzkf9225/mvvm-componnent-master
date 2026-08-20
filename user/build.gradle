@@ -94,8 +94,7 @@ dependencies {
     implementation libs.retrofit2.adapter.rxjava3
     implementation project(":common")
     implementation project(":userapi")
-    implementation project(":mqttcomponent")
-    implementation project(':commonmedia')
+    // mqtt / media 经 userapi.gateway + app/commonmedia Hilt 绑定，禁止直接依赖实现模块
 
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler

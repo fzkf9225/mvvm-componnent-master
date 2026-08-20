@@ -25,6 +25,12 @@ public @interface VerifyParams {
 
     String equalStr() default "";
 
+    /**
+     * 候选值列表，用于 {@link VerifyType#IN} / {@link VerifyType#NOT_IN}。
+     * 比较方式与 {@link VerifyType#EQUALS} 一致：按 {@code value.toString()} 与列表项做字符串相等判断。
+     */
+    String[] values() default {};
+
     int minLength() default -1;
 
     int maxLength() default -1;

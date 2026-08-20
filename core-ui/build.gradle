@@ -1,0 +1,75 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+}
+
+android {
+    namespace = 'io.coderf.arklab.core.ui'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        consumerProguardFiles('consumer-rules.pro')
+    }
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+        debug { minifyEnabled = false }
+    }
+    compileOptions {
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin { jvmToolchain(17) }
+    java { toolchain { languageVersion.set(JavaLanguageVersion.of(17)) } }
+    buildFeatures { buildConfig = true }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+dependencies {
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.lifecycle.runtime.ktx
+    testImplementation libs.junit
+}
+
+// Publish: ./gradlew :core-ui:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'io.coderf.arklab.core'
+                artifactId = 'ui'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+        }
+    }
+}

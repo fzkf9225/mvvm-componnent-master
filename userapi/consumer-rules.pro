@@ -1,3 +1,7 @@
+# Gateway 契约（业务模块只依赖接口，实现由 app / media / mqtt 注入）
+-keep class io.coderf.arklab.userapi.gateway.** { *; }
+-dontwarn io.coderf.arklab.userapi.gateway.**
+
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.

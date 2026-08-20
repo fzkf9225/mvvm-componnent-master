@@ -19,11 +19,20 @@ dependencyResolutionManagement {
         maven { setUrl("https://jitpack.io") }
         google()
         mavenCentral()
-        maven { setUrl("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap") } // 用于 RC 版本
+        maven { setUrl("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap") }
     }
 }
 
 rootProject.name = "mvvm-component-master"
+
+// ---- core 分层 ----
+include ':core-utils'
+include ':core-base'
+include ':core-network'
+include ':core-db'
+include ':core-ui'
+
+// ---- 既有模块 ----
 include ':common'
 include ':user'
 include ':userapi'

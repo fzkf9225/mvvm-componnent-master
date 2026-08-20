@@ -1,0 +1,1 @@
+-include consumer-rules.pro

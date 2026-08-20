@@ -14,6 +14,10 @@
 -keep class io.coderf.arklab.media.MediaHelper { *; }
 -keep class io.coderf.arklab.media.utils.** { *; }
 
+# Gateway / Hilt 绑定（解耦后对外实现）
+-keep class io.coderf.arklab.media.gateway.** { *; }
+-dontwarn io.coderf.arklab.media.gateway.**
+
 # 保留回调接口
 -keep class io.coderf.arklab.media.callback.** { *; }
 -keep interface io.coderf.arklab.media.callback.** { *; }

@@ -264,3 +264,11 @@
     @dagger.hilt.* <methods>;
 }
 
+# ===== 拆分后的 core / facade / gateway（与各模块 consumer-rules 互补）=====
+-keep class io.coderf.arklab.common.** { *; }
+-dontwarn io.coderf.arklab.common.**
+-keep class io.coderf.arklab.core.** { *; }
+-dontwarn io.coderf.arklab.core.**
+-keep class io.coderf.arklab.userapi.gateway.** { *; }
+-keep class io.coderf.arklab.media.gateway.** { *; }
+
