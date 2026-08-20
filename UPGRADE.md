@@ -1,6 +1,6 @@
 # 4.5.0 版本升级与迁移说明
 
-> 从 **common 4.4.x 单体** 升级到 **common 4.5.0 + core-\* 1.0.0**。  
+> 从 **common 4.4.x 单体** 升级到 **common 4.5.1 + core-\* 1.0.1**。  
 > 模块职责与日常用法见 [MODULES.md](./MODULES.md)。
 
 ---
@@ -34,10 +34,10 @@ implementation project(':common')
 ### 2.2 改用 Maven
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.5.0'
+implementation 'io.coderf.arklab.common:common:4.5.1'
 // 若 POM 未完整传递，按需显式补：
-// implementation 'io.coderf.arklab.core:base:1.0.0'
-// implementation 'io.coderf.arklab.core:network:1.0.0'
+// implementation 'io.coderf.arklab.core:base:1.0.1'
+// implementation 'io.coderf.arklab.core:network:1.0.1'
 // …
 ```
 
@@ -67,6 +67,7 @@ implementation project(':commonmedia')
 
 ```gradle
 implementation project(':common')
+implementation project(':base')
 implementation project(':userapi')
 // mqtt / media：禁止写在业务 module，由 app 绑定 Gateway
 ```
@@ -75,13 +76,13 @@ Java / Kotlin 中：
 
 | 旧写法 | 新写法 |
 |--------|--------|
-| 直接 `MqttClient` / mqtt API | `@Inject MessageGateway` |
-| 直接 `MediaHelper` / `MediaBuilder` | `@Inject MediaGateway` |
+| 直接 `MqttClient` / mqtt API | `@Inject MessageGateway`（接口在 `:base`） |
+| 直接 `MediaHelper` / `MediaBuilder` | `@Inject MediaGateway`（接口在 `:base`） |
 
 app 侧绑定参考：
 
-- `MessageGateway` → `app/.../GatewayModule.kt`
-- `MediaGateway` → `commonmedia` 的 `MediaGatewayModule`（需 app 依赖 `commonmedia` 以激活）
+- `MessageGateway` → `app/.../GatewayModule.kt` + `app/.../mqtt/MqttMessageGateway`
+- `MediaGateway` → `app/.../MediaGatewayModule.kt` + `app/.../media/MediaHelperGateway`（app 依赖 `commonmedia`）
 
 ### 3.2 网络请求（建议逐步）
 
@@ -158,6 +159,6 @@ repository.request(RequestOptions(showLoading = true)) { api.xxx() }
 
 | 组件 | 旧（约） | 现 |
 |------|----------|-----|
-| common | 4.4.x（单体） | **4.5.0**（facade） |
-| core-\* | 无 | **1.0.0** |
+| common | 4.4.x（单体） | **4.5.1**（facade） |
+| core-\* | 无 | **1.0.1** |
 | media | 3.2.x | 3.2.5（发布脚本已对齐） |

@@ -46,6 +46,8 @@ public class UIController implements DefaultLifecycleObserver {
             if (!canShowUi()) {
                 return;
             }
+            // 先关掉旧实例，避免并发 show 覆盖引用后旧 Dialog 无法被 hide
+            hideLoadingImmediate();
             loadingDialog = LoadingProgressDialog.getInstance(context)
                     .setCanCancel(isCancelable)
                     .setEnableDynamicEllipsis(enableDynamicEllipsis)
@@ -69,6 +71,7 @@ public class UIController implements DefaultLifecycleObserver {
                     return;
                 }
             }
+            hideLoadingImmediate();
             loadingDialog = LoadingProgressDialog.getInstance(context)
                     .setCanCancel(isCancelable)
                     .setEnableDynamicEllipsis(enableDynamicEllipsis)

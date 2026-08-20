@@ -34,9 +34,10 @@ include ':core-ui'
 
 // ---- 既有模块 ----
 include ':common'
+include ':base'   // Demo/case 基建（Gateway、配置、BaseApp*）；非框架，勿与 :core-base 混淆
 include ':user'
 include ':userapi'
-include ':mqttcomponent'
+include ':core-mqtt'
 include ':app'
 include ':wscomponent'
 include ':commonui'

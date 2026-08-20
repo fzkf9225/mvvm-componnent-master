@@ -16,7 +16,7 @@ import io.coderf.arklab.user.activity.PersonalCenterActivity;
 import io.coderf.arklab.user.activity.SettingActivity;
 import io.coderf.arklab.user.api.UserAccountHelper;
 import io.coderf.arklab.user.databinding.MeFragmentBinding;
-import io.coderf.arklab.userapi.gateway.MediaGateway;
+import io.coderf.arklab.base.gateway.MediaGateway;
 import io.coderf.arklab.userapi.router.UserRouterService;
 
 /**

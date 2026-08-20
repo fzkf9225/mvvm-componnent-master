@@ -3,22 +3,22 @@ package io.coderf.arklab.demo.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import dagger.hilt.EntryPoints;
+import io.coderf.arklab.base.api.AppPropertiesConfig;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.database.AttachmentDatabase;
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl;
-import io.coderf.arklab.common.utils.common.PropertiesUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.database.PersonDatabase;
+import io.coderf.arklab.demo.di.AppPropertiesEntryPoint;
 import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -31,16 +31,18 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
     public MutableLiveData<Boolean> liveData = new MutableLiveData<>();
 
     private AttachmentRepositoryImpl attachmentRoomRepositoryImpl;
+
     public VerifyViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
     protected RoomPagingRepositoryImpl createRepository() {
-        String attachmentDatabaseName =  PropertiesUtil.getInstance().loadConfig(
+        AppPropertiesConfig config = EntryPoints.get(
                 getApplication(),
-                ContextCompat.getString(getApplication(), R.string.app_config_file)
-        ).getPropertyValue("ATTACHMENT_DATA_BASE", "");
+                AppPropertiesEntryPoint.class
+        ).appPropertiesConfig();
+        String attachmentDatabaseName = config.getAttachmentDataBase();
         attachmentRoomRepositoryImpl = new AttachmentRepositoryImpl(
                 AttachmentDatabase.getInstance(
                         getApplication(),
@@ -59,7 +61,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
                 () -> {
                     liveData.postValue(true);
                 }, throwable -> {
-                    LogUtil.logger(ApiRetrofit.TAG,"错误："+throwable);
+                    LogUtil.logger(ApiRetrofit.TAG, "错误：" + throwable);
                     baseView.showToast(throwable.getMessage());
                     liveData.postValue(false);
                 });

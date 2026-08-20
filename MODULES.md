@@ -1,6 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本：**common 4.5.0 / core-\* 1.0.0**（见文末 Maven 坐标）  
+> 对应版本：**common 4.5.1 / core-\* 1.0.1**（见文末 Maven 坐标）  
 > 本文说明各模块职责、依赖关系与日常用法。升级与迁移请看 [UPGRADE.md](./UPGRADE.md)。
 
 ---
@@ -9,9 +9,10 @@
 
 ```
 app（组装：Hilt / Demo）
-  ├─ user（业务）─────► userapi（Gateway 接口）
+  ├─ user（业务）──► userapi（UserService / UserInfo / Router）
+  │              └─► base（Gateway、配置、BaseApp* …）  ← case 基建，非框架
   │                      ▲
-  │                      │ 实现绑定在 app / mqtt / media
+  │                      │ 实现绑定在 app（适配 media / mqtt）
   ├─ mqttcomponent ──────┘ MessageGateway
   ├─ commonmedia ────────┘ MediaGateway
   ├─ commonui / googlegps / wscomponent / …
@@ -24,11 +25,14 @@ app（组装：Hilt / Demo）
 **业务侧推荐入口：**
 
 ```gradle
-implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.5.0
-implementation project(':userapi')  // 需要 Gateway 时
+implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.5.1
+implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
+implementation project(':userapi')  // 仅需要用户契约时
 ```
 
 `common` 是兼容门面：本身几乎无业务代码，通过 `api` 把 `core-*` 透传出去，便于旧工程继续只依赖一个坐标。
+
+> **命名注意：** Gradle 模块 `:base`（case）≠ Maven `io.coderf.arklab.core:base`（框架 `:core-base`）。
 
 ---
 
@@ -104,15 +108,16 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 
 | 模块 | 职责 | 业务应如何依赖 |
 |------|------|----------------|
-| `userapi` | 路由、账户契约、**Gateway 接口** | `implementation project(':userapi')` |
-| `user` | 用户业务 UI / 逻辑 | 只依赖 `common` + `userapi`，**禁止**直接依赖 mqtt / media |
-| `mqttcomponent` | MQTT 实现 + `MqttMessageGateway` | 仅 app（或组装层）依赖并做 Hilt 绑定 |
-| `commonmedia` | 拍照/选图/压缩等 + `MediaHelperGateway` | 仅 app 依赖；业务注入 `MediaGateway` |
+| `base` | **Demo/case 基建**（非框架）：`MediaGateway` / `MessageGateway`、`AppPropertiesConfig`、`BaseAppActivity`、通用枚举等 | `api`/`implementation project(':base')` |
+| `userapi` | 用户模块对外契约（`UserService` / `UserInfo` / Router） | `implementation project(':userapi')` |
+| `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
+| `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
+| `commonmedia` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
 | `commonui` | 表单等通用 UI 组件 | 按需 |
 | `googlegps` | 定位能力 | 按需 |
 | `wscomponent` | WebSocket | 按需 |
 | `annotation` / `room-processor` | 校验注解与 Room 处理器 | 按需 |
-| `app` | Demo 组装：Hilt Module、Gateway 绑定 | 宿主样板 |
+| `app` | Demo 组装：Hilt Module、Gateway 适配与绑定 | 宿主样板 |
 
 ---
 
@@ -129,7 +134,7 @@ messageGateway.connect()
 messageGateway.subscribe("topic/x") { topic, payload -> /* … */ }
 ```
 
-绑定示例见 `app/.../di/GatewayModule.kt`（`MqttMessageGateway`）。
+绑定示例见 `app/.../di/GatewayModule.kt`、`app/.../mqtt/MqttMessageGateway`。
 
 ### MediaGateway（媒体）
 
@@ -139,11 +144,14 @@ messageGateway.subscribe("topic/x") { topic, payload -> /* … */ }
 mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 ```
 
-- 接口：`userapi/.../MediaGateway`
-- 实现：`commonmedia/.../MediaHelperGateway`（Activity 作用域 Hilt 提供）
+- 接口：`base/.../MediaGateway`（case，非框架）
+- 适配与绑定：`app/.../media/MediaHelperGateway`、`app/.../di/MediaGatewayModule`
 - 参考：`MeFragment`、`FeedBackActivity`
 
-**禁止：** 在 `user` 等业务 module 的 `build.gradle` 里写 `mqttcomponent` / `commonmedia`。
+**禁止：** 在 `user` 等业务 module 的 `build.gradle` 里写 `mqttcomponent` / `commonmedia`。  
+**禁止：** `commonmedia` / `mqttcomponent` / `core-*` 依赖 `:base` / `userapi`。
+
+字典类枚举（如业务 `DicTypeEnum`）按项目放在各自的 case `:base`，Demo 不内置业务字典码。
 
 ---
 
@@ -158,13 +166,14 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 | 模块 | 坐标 |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.5.0` |
-| core-base | `io.coderf.arklab.core:base:1.0.0` |
-| core-network | `io.coderf.arklab.core:network:1.0.0` |
-| core-db | `io.coderf.arklab.core:db:1.0.0` |
-| core-ui | `io.coderf.arklab.core:ui:1.0.0` |
-| core-utils | `io.coderf.arklab.core:utils:1.0.0` |
-| commonmedia | `io.coderf.arklab.media:media:3.2.5` |
+| common | `io.coderf.arklab.common:common:4.5.1` |
+| core-base | `io.coderf.arklab.core:base:1.0.1` |
+| core-network | `io.coderf.arklab.core:network:1.0.1` |
+| core-db | `io.coderf.arklab.core:db:1.0.1` |
+| core-ui | `io.coderf.arklab.core:ui:1.0.1` |
+| core-utils | `io.coderf.arklab.core:utils:1.0.1` |
+| commonmedia | `io.coderf.arklab.media:media:3.3.1` |
+| commonui | `io.coderf.arklab.ui:ui:3.5.1`（`api` → core-base / core-network，另依赖 media） |
 
 宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ConfigModule 读取；实际文件名由 buildTypes resValue 覆盖 -->
+    <string name="base_config_file" translatable="false">dev.properties</string>
+</resources>

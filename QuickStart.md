@@ -1,6 +1,6 @@
 # 五分钟快速入门
 
-> 对应框架 **common 4.5.0**（facade）+ **core-\* 1.0.0**。模块说明见 [MODULES.md](MODULES.md)，从 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
+> 对应框架 **common 4.5.1**（facade）+ **core-\* 1.0.1**。模块说明见 [MODULES.md](MODULES.md)，从 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
@@ -38,11 +38,11 @@
 ```toml
 annotation = "3.1.2"
 roomProcessor = "1.0.0"
-commonui = "3.4.12"
+commonui = "3.5.1"
 commongps = "3.1.6"
 commonmedia = "3.2.5"
-commonVersion = "4.5.0"
-coreVersion = "1.0.0"
+commonVersion = "4.5.1"
+coreVersion = "1.0.1"
 [libraries]
 # 基础：common 为 facade；core-* 一般由 common 传递，也可显式声明
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
@@ -508,8 +508,8 @@ mediaGateway.pickImages(1) { uris -> /* … */ }
 messageGateway.connect()
 ```
 
-- 接口：`userapi` → `MediaGateway` / `MessageGateway`
-- 实现绑定：在 **app** 依赖 media / mqtt，并由 Hilt Module 提供（框架 Demo：`MediaGatewayModule`、`GatewayModule`）
+- 接口：`:base` → `MediaGateway` / `MessageGateway`（case 契约）
+- 实现绑定：在 **app** 依赖 media / mqtt，并由组装层 Hilt Module 适配（Demo：`MediaGatewayModule`、`GatewayModule`）
 - 详细说明：[MODULES.md](MODULES.md) §4、[UPGRADE.md](UPGRADE.md) §3.1
 
 # 好了，你出师了！！！

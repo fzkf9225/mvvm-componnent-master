@@ -2,36 +2,38 @@ package io.coderf.arklab.demo.module;
 
 import android.app.Application;
 
-import androidx.core.content.ContextCompat;
-
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import io.coderf.arklab.base.api.AppPropertiesConfig;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
-import io.coderf.arklab.common.utils.common.PropertiesUtil;
-import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.api.ApiServiceHelper;
 import io.coderf.arklab.ui.api.FileApiService;
 
 /**
  * created by fz on 2024/9/26 14:53
- * describe:
+ * describe: 网络 API 绑定；baseUrl 等来自注入的 {@link AppPropertiesConfig}
  */
-@Module//必须配置的注解，表示这个对象是Module的配置规则
-@InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的
+@Module
+@InstallIn(SingletonComponent.class)
 public class AppModule {
 
     @Provides
-    public ApiServiceHelper provideApiServiceHelper(Application application, ErrorService errorService, RetryService retryService, FlowRetryService flowRetryService) {
-        String baseUrl = PropertiesUtil.getInstance().loadConfig(application).getBaseUrl();
+    public ApiServiceHelper provideApiServiceHelper(
+            Application application,
+            AppPropertiesConfig config,
+            ErrorService errorService,
+            RetryService retryService,
+            FlowRetryService flowRetryService
+    ) {
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)
-                .setBaseUrl(baseUrl)
+                .setBaseUrl(config.getBaseUrl())
                 .setRetryService(retryService)
                 .setFlowRetryService(flowRetryService)
                 .setErrorService(errorService)
@@ -41,12 +43,14 @@ public class AppModule {
 
     @Provides
     public FileApiService provideFileApiService(
-            Application application, ErrorService errorService
+            Application application,
+            AppPropertiesConfig config,
+            ErrorService errorService
     ) {
-        String baseUrl = PropertiesUtil.getInstance().loadConfig(
-                application,
-                ContextCompat.getString(application, R.string.app_config_file)
-        ).getBaseUrl();
+        String fileBaseUrl = config.getFileBaseUrl();
+        String baseUrl = (fileBaseUrl == null || fileBaseUrl.isEmpty())
+                ? config.getBaseUrl()
+                : fileBaseUrl;
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)
@@ -57,4 +61,3 @@ public class AppModule {
                 .getApiService(FileApiService.class);
     }
 }
-

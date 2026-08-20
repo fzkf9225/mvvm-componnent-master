@@ -17,7 +17,7 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.user.R;
 import io.coderf.arklab.user.databinding.FeedbackBinding;
-import io.coderf.arklab.userapi.gateway.MediaGateway;
+import io.coderf.arklab.base.gateway.MediaGateway;
 
 /**
  * Created by fz on 2018/1/22.

@@ -75,12 +75,13 @@ dependencies {
     implementation libs.constraintlayout
 
     implementation project(':common')
+    implementation project(':base')
     implementation project(':userapi')
     implementation project(':commonui')
     implementation project(':googlegps')
     implementation project(':commonmedia')
     implementation project(':user')
-    implementation project(':mqttcomponent')
+    implementation project(':core-mqtt')
     implementation project(':wscomponent')
 
     implementation project(':annotation')

@@ -59,21 +59,21 @@
 
 ---
 
-# 文档索引（4.5.0）
+# 文档索引（4.5.1）
 
 | 文档 | 说明 |
 |------|------|
 | [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
-| [UPGRADE.md](UPGRADE.md) | 从 common 4.4.x 升到 4.5.0 的迁移清单与验收 |
+| [UPGRADE.md](UPGRADE.md) | 从 common 4.4.x 升到 4.5.1 的迁移清单与验收 |
 | [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、配置、页面脚手架） |
 
-当前主干版本：**common `4.5.0`（facade）+ core-\* `1.0.0`**。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。
+当前主干版本：**common `4.5.0`（facade）+ core-base/network/db `1.0.1`**。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。
 
 # 框架简介
 框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，最高兼容到`Android 14`。
 从架构上根本的进行拆解，充分发挥解耦的思路，从原始的`Activity`干所有事件，拆分成各个分开的模块，发挥`ViewModel`特性专门使用`Repository`进行数据处理，接口通过`Hilt`依赖注入的方式进行一键注入省去大量的`New`操作。
 
-**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（`userapi`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
+**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
 
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
@@ -98,12 +98,13 @@
     - **common**：兼容门面（facade），业务推荐只依赖它
     - annotation：注解框架，主要用于数据校验的注解
     - app：框架 case 示例（含 Gateway Hilt 绑定）
-    - commonmedia：摄像头、相册、媒体相关封装 + `MediaHelperGateway`
+    - commonmedia：摄像头、相册、媒体相关封装（不含 Gateway）
     - commonui：UI组件封装，主要为表单组件
     - googlegps：GPS工具类
-    - mqttcomponent：MQTT 封装 + `MqttMessageGateway`
-    - userapi：示例 module 的对外接口（含 `MessageGateway` / `MediaGateway`）
-    - user：示例业务 module（只依赖 common + userapi）
+    - mqttcomponent：MQTT 封装（不含 Gateway）
+    - base：Demo/case 基建（Gateway、AppPropertiesConfig、BaseAppActivity 等；**非框架**，勿与 core-base 混淆）
+    - userapi：用户模块对外接口（UserService / UserInfo / Router）
+    - user：示例业务 module（依赖 common + base + userapi）
     - wscomponent：WebSocket最基础的封装示例
     - room-processor：`@RoomObservedEntity` KSP 处理器
 
@@ -115,18 +116,18 @@
 
 ## MVVM架构示例代码，重构版本
 
-### 业务侧依赖入口：继续用 `common`（4.5.0 facade）
+### 业务侧依赖入口：继续用 `common`（4.5.1 facade）
 
 #### 在线引用（Maven）
 
 仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.5.0'
+implementation 'io.coderf.arklab.common:common:4.5.1'
 // 一般可由 common POM 传递；若解析不全可显式补：
-// implementation 'io.coderf.arklab.core:base:1.0.0'
-// implementation 'io.coderf.arklab.core:network:1.0.0'
-// implementation 'io.coderf.arklab.core:db:1.0.0'
+// implementation 'io.coderf.arklab.core:base:1.0.1'
+// implementation 'io.coderf.arklab.core:network:1.0.1'
+// implementation 'io.coderf.arklab.core:db:1.0.1'
 // implementation 'io.coderf.arklab.core:ui:1.0.0'
 // implementation 'io.coderf.arklab.core:utils:1.0.0'
 ```
@@ -137,7 +138,8 @@ implementation 'io.coderf.arklab.common:common:4.5.0'
 
 ```gradle
 implementation project(':common')
-implementation project(':userapi')   // 需要 Gateway 时
+implementation project(':base')      // Gateway / 配置 / BaseApp*
+implementation project(':userapi')   // 需要用户契约时
 ```
 
 ### mqttcomponent / commonmedia / websocket
@@ -147,15 +149,19 @@ implementation project(':userapi')   // 需要 Gateway 时
 - `MessageGateway`（MQTT）
 - `MediaGateway`（媒体）
 
-在 **app** 中 Hilt 绑定实现（参考 `GatewayModule`、`MediaGatewayModule`）。
+在 **app** 中 Hilt 绑定实现（参考 `GatewayModule`、`MediaGatewayModule`）。接口在 **`:base`**。
 
 ### userapi
 
-为 module 的公共 api：接口、实体、**Gateway 契约**。不要放具体实现。
+为 **user 模块** 的公共 api：接口、实体、路由。不要放 Gateway / 全局配置。
+
+### base（case）
+
+项目基础模块样板：Gateway、`AppPropertiesConfig`、`PropertiesKeyEnum`、`FileTypeEnum`、`BasePage`、`BaseAppActivity` 等。各宿主可按 serm-app 的 `:base` 思路扩展字典、文件服务等，**不要把业务字典硬塞进框架**。
 
 ### user
 
-组件化示例：只依赖 `common` + `userapi`，配合 api + Gateway 使用；其他业务 module 不要依赖 `user` 实现模块。
+组件化示例：依赖 `common` + `base` + `userapi`；其他业务 module 不要依赖 `user` 实现模块。
 ## 封装思路博文，注意观看顺序哈
 
 一：https://blog.csdn.net/fzkf9225/article/details/105197996
@@ -405,7 +411,7 @@ TAG值为类名：`ApiRetrofit`
 -dontwarn io.coderf.arklab.common.**
 -keep class io.coderf.arklab.core.** { *; }
 -dontwarn io.coderf.arklab.core.**
--keep class io.coderf.arklab.userapi.gateway.** { *; }
+-keep class io.coderf.arklab.base.gateway.** { *; }
 
 # 保留数据绑定相关类
 -keep class io.coderf.arklab.common.bean.** { *; }

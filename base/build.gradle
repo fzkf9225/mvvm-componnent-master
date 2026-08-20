@@ -1,0 +1,70 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.hilt.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = 'io.coderf.arklab.base'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles('consumer-rules.pro')
+    }
+
+    buildTypes {
+        release {
+            resValue("string", "base_config_file", "prod.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+        debug {
+            resValue("string", "base_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+    }
+
+    resourcePrefix "base_"
+
+    compileOptions {
+        encoding = "UTF-8"
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+    lint {
+        abortOnError false
+    }
+    kotlin {
+        jvmToolchain(17)
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+    buildFeatures {
+        dataBinding = true
+        buildConfig = true
+    }
+}
+
+dependencies {
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.androidx.core.ktx
+
+    // case 基建依赖框架能力（经 common facade 或直接 core）
+    api project(':common')
+
+    implementation libs.google.hilt.android
+    ksp libs.google.hilt.android.compiler
+
+    testImplementation libs.junit
+}

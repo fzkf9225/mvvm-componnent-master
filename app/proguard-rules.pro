@@ -269,6 +269,6 @@
 -dontwarn io.coderf.arklab.common.**
 -keep class io.coderf.arklab.core.** { *; }
 -dontwarn io.coderf.arklab.core.**
--keep class io.coderf.arklab.userapi.gateway.** { *; }
+-keep class io.coderf.arklab.base.gateway.** { *; }
 -keep class io.coderf.arklab.media.gateway.** { *; }
 
