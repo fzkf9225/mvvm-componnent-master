@@ -1,5 +1,7 @@
 package io.coderf.arklab.common.base;
 
+import androidx.annotation.StringRes;
+
 /**
  * 作者： fz
  * 时间： 2019/7/30
@@ -32,7 +34,12 @@ public interface BaseView {
      * @param msg 吐司提示的问题
      */
     void showToast(String msg);
-
+    /**
+     * 显示错误信息
+     *
+     * @param strRes 字符资源id
+     */
+    void showToast(@StringRes int strRes);
     /**
      * 错误码
      */

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -104,6 +105,13 @@ public class UIController implements DefaultLifecycleObserver {
             return;
         }
         ToastHelper.showShort(context, message);
+    }
+
+    public void showToast(@StringRes int strRes) {
+        if (!canShowUi()) {
+            return;
+        }
+        ToastHelper.showShort(strRes);
     }
 
     private boolean canShowUi() {

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
@@ -348,6 +349,14 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         uiController.showToast(msg);
+    }
+
+    @Override
+    public void showToast(@StringRes int strRes) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
+        uiController.showToast(strRes);
     }
 
     @Override

@@ -35,12 +35,12 @@ public final class ToastHelper {
         show(context, message, Toast.LENGTH_LONG);
     }
 
-    public static void showShort(@StringRes int messageRes) {
+    public static void showShort(@StringRes int strRes) {
         Context context = BaseApplication.getInstance();
         if (context == null) {
             return;
         }
-        showShort(context, context.getString(messageRes));
+        showShort(context, context.getString(strRes));
     }
 
     public static void show(@Nullable Context context, @Nullable CharSequence message, int duration) {

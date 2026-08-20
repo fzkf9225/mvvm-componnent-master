@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
@@ -191,6 +192,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         uiController.showToast(msg);
+    }
+
+    @Override
+    public void showToast(@StringRes int strRes) {
+        if (!isUiSafe() || uiController == null) {
+            return;
+        }
+        uiController.showToast(strRes);
     }
 
     @Override
