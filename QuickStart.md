@@ -1,6 +1,9 @@
 # 五分钟快速入门
+
+> 对应框架 **common 4.5.0**（facade）+ **core-\* 1.0.0**。模块说明见 [MODULES.md](MODULES.md)，从 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
+
 ## 创建项目
-直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高`SDK 版本34`，然后等待同步完成
+直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
 ## 添加依赖
 ### 配置阿里云
 在`settings.gradle`添加阿里云仓库
@@ -33,17 +36,23 @@
 ### 添加基础库依赖
 打开`libs.versions.toml`文件，添加基础库配置
 ```toml
-annotation = "2.0.0"
+annotation = "3.1.2"
 roomProcessor = "1.0.0"
-commonui = "2.0.11"
-commongps = "2.0.3"
-commonmedia = "2.0.3"
-commonVersion = "3.0.11"
+commonui = "3.4.12"
+commongps = "3.1.6"
+commonmedia = "3.2.5"
+commonVersion = "4.5.0"
+coreVersion = "1.0.0"
 [libraries]
-# 基础
+# 基础：common 为 facade；core-* 一般由 common 传递，也可显式声明
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
+base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreVersion" }
+base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreVersion" }
+base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreVersion" }
+base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }
+base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreVersion" }
 base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
-base-commonui = { module = "io.coderf.arklab.ui:commonui", version.ref = "commonui" }
+base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
 base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
 # Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（需已发布 room-processor）
@@ -56,12 +65,25 @@ room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref 
 ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.0.0"
 ```
 
-并确保已依赖 `common`（注解 `RoomObservedEntity` 在 common 模块内）。
+并确保已依赖 `common`（注解包名仍为 `io.coderf.arklab.common.annotation`，实现在 core 分层中）。
 
-在需要的模块引入即可，比如，在`user模块`引入`common`,示例： 打开`user模块`的`build.gradle`
+在需要的模块引入即可。**业务模块**示例（如 `user`）：
+
 ```groovy
 implementation libs.base.common
+// 需要选图 / MQTT 时依赖本工程 *api 中的 Gateway 接口，不要直接依赖 media / mqtt 实现库
 ```
+
+**app 组装层**再按需：
+
+```groovy
+implementation libs.base.common
+implementation libs.base.media      // 激活 MediaGateway Hilt 绑定
+implementation libs.base.commonui
+implementation libs.base.googlegps
+implementation libs.base.annotation
+```
+
 ### 统一依赖库版本（可选）
 可以对比下框架的`libs.versions.toml`文件和自己项目的`libs.versions.toml`文件，将`ksp版本`、`kotlin版本`、`gradle版本`、`gradle插件`和`一些常用库`版本进行统一
 
@@ -398,7 +420,9 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
 
 ## 请求过程 UI 与 BaseView 分工（RequestUiCallback）
 
-网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，在 `common` 模块里统一走 **`RequestUiCallback`**，由 **`BaseViewModel`** 在 `createRepository(...)` 之后注入到 **`BaseRepository#setRequestUi`**。`RepositoryImpl`、`FlowRepositoryImpl`、`RoomRepositoryImpl` 等内部**只调用 `getRequestUi()`**，不再直接调用 `baseView.showLoading` 等，避免数据层与页面接口绑死、也方便测试与替换实现。
+网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，在框架里统一走 **`RequestUiCallback`**（实现位于 `core-base`，经 `common` facade 透出），由 **`BaseViewModel`** 在 `createRepository(...)` 之后注入到 **`BaseRepository#setRequestUi`**。旧 `RepositoryImpl`、`FlowRepositoryImpl`、`RoomRepositoryImpl` 等内部**只调用 `getRequestUi()`**，不再直接调用 `baseView.showLoading` 等。
+
+**新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）；与旧 `RequestUiCallback` 可用 `RequestUiBridge` 互转。旧 Repository 已 `@Deprecated`，可继续编译但勿新增。
 
 ### `BaseView` 还在吗？和 `RequestUiCallback` 什么关系？
 
@@ -469,7 +493,23 @@ repository.setRequestUi(RequestUiAdapters.fromBaseView(activityAsBaseView))
 ## 各模块之间解耦方案说明
 一般`app`模块只包含基础启动页和`MainActivity`，其他都都要新建模块
 1. 新建base模块，这里一般放一些公共的服务，比如：行政区划获取，字典获取等，他不依赖任何其他模块，只有别的模块依赖他
-2. 新建具体的业务模块，比如：`businsess`模块，这里写具体的业务代码
-3. 新建`businessapi`模块，这里提供对外接口服务，在`businsess`模块实现接口，并提供`module`,在别的模块需要使用`businsess`模块功能的时候，就通过`Hilt`注入接口调用服务
+2. 新建具体的业务模块，比如：`business`模块，这里写具体的业务代码
+3. 新建`businessapi`模块，这里提供对外接口服务，在`business`模块实现接口，并提供`module`,在别的模块需要使用`business`模块功能的时候，就通过`Hilt`注入接口调用服务
+
+### Gateway（媒体 / MQTT，4.5.0 推荐）
+
+业务模块**禁止**直接依赖 `commonmedia` / `mqttcomponent`，只依赖 api 中的接口：
+
+```kotlin
+@Inject lateinit var mediaGateway: MediaGateway
+mediaGateway.pickImages(1) { uris -> /* … */ }
+
+@Inject lateinit var messageGateway: MessageGateway
+messageGateway.connect()
+```
+
+- 接口：`userapi` → `MediaGateway` / `MessageGateway`
+- 实现绑定：在 **app** 依赖 media / mqtt，并由 Hilt Module 提供（框架 Demo：`MediaGatewayModule`、`GatewayModule`）
+- 详细说明：[MODULES.md](MODULES.md) §4、[UPGRADE.md](UPGRADE.md) §3.1
 
 # 好了，你出师了！！！

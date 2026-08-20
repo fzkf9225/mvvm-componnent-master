@@ -57,62 +57,105 @@
 ## 总结
 一个优秀的Android框架应当引导开发者写出 **可维护、可测试、高性能、不易出错** 的代码。相反，上述列表中的任何一个“问题”，都会在项目规模扩大、人员流动、业务迭代时逐渐暴露，最终成为团队效率的瓶颈和稳定性风险的源头。
 
+---
+
+# 文档索引（4.5.0）
+
+| 文档 | 说明 |
+|------|------|
+| [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
+| [UPGRADE.md](UPGRADE.md) | 从 common 4.4.x 升到 4.5.0 的迁移清单与验收 |
+| [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、配置、页面脚手架） |
+
+当前主干版本：**common `4.5.0`（facade）+ core-\* `1.0.0`**。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。
+
 # 框架简介
 框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，最高兼容到`Android 14`。
 从架构上根本的进行拆解，充分发挥解耦的思路，从原始的`Activity`干所有事件，拆分成各个分开的模块，发挥`ViewModel`特性专门使用`Repository`进行数据处理，接口通过`Hilt`依赖注入的方式进行一键注入省去大量的`New`操作。
+
+**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（`userapi`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
+
 主要封装功能：
-1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类
+1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
 2. 自动集成`今日头条UI适配方案`
-3. 网络请求封装，使用`OkHttp`+`RxJava`+`Retrofit`，同时也提供了`Kotlin`的`Flow`版本
-4. 本地数据库封装，使用`Room`+`RxJava`，提供常用数据库操作Api，同时也提供了`Kotlin`的`Flow`版本
+3. 网络请求封装：`OkHttp`+`RxJava`+`Retrofit`，以及 `Flow`；**推荐**新 API `DefaultNetworkRepository`（旧 `RepositoryImpl` / `FlowRepositoryImpl` 已 `@Deprecated`）
+4. 本地数据库封装，使用`Room`+`RxJava` / `Flow`（`core-db`）
 5. 轻量化存储框架，使用`MMKV`，替换自带的`SharedPreferences`
 6. 集成`Paging3`分页，更加智能化的分页列表，同时也提供原始的分页功能
-7. 拆分`Media`模块`commonmedia`，专门处理媒体数据，其中包括隐私协议弹框、拍照、视频、图片选择，压缩、添加水印等等
+7. 拆分`Media`模块`commonmedia`，专门处理媒体数据；业务侧注入 `MediaGateway`
 8. 拆分常用表单组件，单独module`commonui`，比如表单校验，表单验证，表单提交等等
 9. 拆分单独的`GPS`服务处理模块`googlegps`，提供GPS服务，从检测GPS是否打开到获取权限到获取经纬度一键集成
 10. 使用`properties`配置文件，配置文件会自动拆分环境，防止频繁切换环境导致的一系列问题
 11. 单独拆分`annotation`模块，一键注解校验字段表单参数是否满足约束条件
-12. 架构上通过模块拆分进行解耦，每个模块都可单独运行，如果模块之间有依赖关系的话，可提供一个api模块对外服务
+12. 架构上通过模块拆分 + Gateway 解耦，业务只依赖 `*api`，实现由 app 组装层绑定
 
 # 工程介绍
+    - **core-utils**：无 R 依赖的轻量工具（预留分层）
+    - **core-base**：Base* / widget / helper / res（namespace 仍为 `io.coderf.arklab.common`）
+    - **core-network**：Retrofit / Repository / `DefaultNetworkRepository`
+    - **core-db**：Room DAO / Database / RoomRepository
+    - **core-ui**：Activity 委托（如 `InitDataPolicy`）
+    - **common**：兼容门面（facade），业务推荐只依赖它
     - annotation：注解框架，主要用于数据校验的注解
-    - app：框架case示例
-    - common：共同模块，最基础的封装
-    - commonmedia：摄像头、相册、媒体相关封装
+    - app：框架 case 示例（含 Gateway Hilt 绑定）
+    - commonmedia：摄像头、相册、媒体相关封装 + `MediaHelperGateway`
     - commonui：UI组件封装，主要为表单组件
     - googlegps：GPS工具类
-    - mqttcomponent：MQTT最基础的封装示例
-    - userapi：示例module的对外接口，模块之间调用
-    - user：示例module，也就是项目中模块化示例
+    - mqttcomponent：MQTT 封装 + `MqttMessageGateway`
+    - userapi：示例 module 的对外接口（含 `MessageGateway` / `MediaGateway`）
+    - user：示例业务 module（只依赖 common + userapi）
     - wscomponent：WebSocket最基础的封装示例
+    - room-processor：`@RoomObservedEntity` KSP 处理器
 
 全面使用``ksp``
 
 # 五分钟快读开始
-[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI 与 `BaseView` 分工（`RequestUiCallback`）** 说明与示例。）
+[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI 与 `BaseView` 分工（`RequestUiCallback`）** 说明与示例。）  
+从旧版升级请先读 [UPGRADE.md](UPGRADE.md)。
 
 ## MVVM架构示例代码，重构版本
 
-### 如果想用基础模块的话直接导入common就可以了
+### 业务侧依赖入口：继续用 `common`（4.5.0 facade）
 
-#### 在线引用方式
+#### 在线引用（Maven）
 
-可以先直接打包成aar，然后执行gradle中的脚本即可，gradle中有注解，或者直接执行gradle得maven-publish，
-`ALIYUN_USER_NAME`、`ALIYUN_PASSWORD`是window的环境变量值为阿里云的用户名密码，大家可以自己添加，或者直接不用
-`System.getenv("ALIYUN_USER_NAME")`,直接用你的用户名密码
+仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标：
 
-### mqttcomponent和websocketcomponent
+```gradle
+implementation 'io.coderf.arklab.common:common:4.5.0'
+// 一般可由 common POM 传递；若解析不全可显式补：
+// implementation 'io.coderf.arklab.core:base:1.0.0'
+// implementation 'io.coderf.arklab.core:network:1.0.0'
+// implementation 'io.coderf.arklab.core:db:1.0.0'
+// implementation 'io.coderf.arklab.core:ui:1.0.0'
+// implementation 'io.coderf.arklab.core:utils:1.0.0'
+```
 
-为mqtt和websocket简单封装，没太多复杂逻辑，有需要的可以自己接
+本仓库发布：`./gradlew :common:publish` / `:core-*:publish`（详见 [MODULES.md](MODULES.md)）。
+
+工程内依赖：
+
+```gradle
+implementation project(':common')
+implementation project(':userapi')   // 需要 Gateway 时
+```
+
+### mqttcomponent / commonmedia / websocket
+
+实现库仍可单独依赖，但 **业务 module 不要直接依赖**。应注入：
+
+- `MessageGateway`（MQTT）
+- `MediaGateway`（媒体）
+
+在 **app** 中 Hilt 绑定实现（参考 `GatewayModule`、`MediaGatewayModule`）。
 
 ### userapi
 
-为module的公共api模块，提供给别的module接入，建议此模块编写一些interface接口和实体类等等，其他的主要逻辑代码不要放在这里
+为 module 的公共 api：接口、实体、**Gateway 契约**。不要放具体实现。
 
 ### user
 
-组件化代码示例，为单独一个组件，配合api模块一起使用，别的module不要接入此模块，不然组件化就失去了本身的意义
-
+组件化示例：只依赖 `common` + `userapi`，配合 api + Gateway 使用；其他业务 module 不要依赖 `user` 实现模块。
 ## 封装思路博文，注意观看顺序哈
 
 一：https://blog.csdn.net/fzkf9225/article/details/105197996
@@ -155,18 +198,17 @@
 13. 自定义相机可以直接调用`CameraActivity`，视频播放可以直接调用`VideoPlayerActivity`，二维码扫描可以直接调用`CaptureActivity`，WebView可以直接调用`WebViewActivity`
 
 #### 数据存储和网络请求相关
-1. 网络请求相关`Repository`常用的话直接继承`RepositoryImpl`，在`ViewModel1`中创建`Repository`对象，可以使用构造方法创建也可以使用`RepositoryFactory`工厂工具类创建
+1. 网络请求：新代码推荐继承 / 使用 `DefaultNetworkRepository`（`core-network`，返回 `Flow<RequestResult<T>>`）。旧 `RepositoryImpl` / `FlowRepositoryImpl` 仍可用但已 `@Deprecated`，勿再新增调用。Demo 见 `SampleCoreNetworkRepository`
 2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
-3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`和`RoomRepositoryImpl`，提供常见的一些Api方法，附件表已经提供了基础的模版`AttachmentDao`和`AttachmentDatabase`和`AttachmentRepositoryImpl`。DAO 上添加 `@RoomObservedEntity(实体.class)` 后 KSP 会生成 `XxxDaoRawQueryBridge`，将 `extends BaseRoomDao` 改为 `extends XxxDaoRawQueryBridge` 即可，无需手写 6 个 RawQuery。协程/Flow 见 `RoomRepositoryCoroutineExt`、`RoomRepositoryFlowExt`。**外部工程**需同时依赖 `common`（含注解）与 KSP 处理器 `io.coderf.arklab.room:room-processor`（本仓库 `:room-processor` 模块，`./gradlew :room-processor:publish` 发布，版本见 `libs.versions.toml` 的 `roomProcessor`）
+3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`和`RoomRepositoryImpl`，提供常见的一些Api方法，附件表已经提供了基础的模版`AttachmentDao`和`AttachmentDatabase`和`AttachmentRepositoryImpl`。DAO 上添加 `@RoomObservedEntity(实体.class)` 后 KSP 会生成 `XxxDaoRawQueryBridge`，将 `extends BaseRoomDao` 改为 `extends XxxDaoRawQueryBridge` 即可，无需手写 6 个 RawQuery。协程/Flow 见 `RoomRepositoryCoroutineExt`、`RoomRepositoryFlowExt`。**外部工程**需依赖 `common`（注解仍在 `io.coderf.arklab.common.annotation`，实现于 `core-base`/`core-db`）与 KSP 处理器 `io.coderf.arklab.room:room-processor`
 4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
 5. 网络请求分页`PagingSource`继承`PagingSource`，协程`flow`方式继承`FlowPagingSource`，数据库存储分页继承`RxRoomPagingSource`
 6. `RetryService`：封装了网络请求拦截重试机制，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
 7. `FlowRetryService`：协程方式的网络请求重试，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
 8. `RoomRepositoryImpl`：数据库的一些常用方法
-9. `PagingRepositoryImpl`：`pinging3`分页的`Repository`层封装
-10. `PagingFlowRepositoryImpl`：关于协程的`pinging3``Repository`层封装
-11. `FlowRepositoryImpl`：协程方式`Repository`封装
-
+9. `PagingRepositoryImpl`：`paging3`分页的`Repository`层封装
+10. `PagingFlowRepositoryImpl`：关于协程的`paging3``Repository`层封装
+11. `FlowRepositoryImpl`：协程方式`Repository`封装（已 Deprecated，优先新 API）
 #### 常用工具类
 1. `AppManager`：获取`Activity`栈信息和获取App版本号、版本名称、App是否在前台运行等API
 2. `AppSettingHelper`：可以设置基础的app是否首次运行等方法
@@ -300,9 +342,10 @@ TAG值为类名：`ApiRetrofit`
     implementation project(':userapi')
     implementation project(':commonui')
     implementation project(':googlegps')
+    // 组装层才依赖实现库；业务 module 通过 Gateway 注入
     implementation project(':commonmedia')
-    implementation project(':user')
     implementation project(':mqttcomponent')
+    implementation project(':user')
     implementation project(':wscomponent')
 
     implementation project(':annotation')
@@ -356,10 +399,13 @@ TAG值为类名：`ApiRetrofit`
 ### 混淆配置
 
 ```
-# ==================== MVVM Common Library ====================
-# 保留 MVVM 框架核心类
+# ==================== MVVM Common / Core Library ====================
+# common facade + core-*（包名仍多为 io.coderf.arklab.common.*）
 -keep class io.coderf.arklab.common.** { *; }
 -dontwarn io.coderf.arklab.common.**
+-keep class io.coderf.arklab.core.** { *; }
+-dontwarn io.coderf.arklab.core.**
+-keep class io.coderf.arklab.userapi.gateway.** { *; }
 
 # 保留数据绑定相关类
 -keep class io.coderf.arklab.common.bean.** { *; }
@@ -384,6 +430,7 @@ TAG值为类名：`ApiRetrofit`
 # 保留 Media 框架核心类
 -keep class io.coderf.arklab.media.** { *; }
 -dontwarn io.coderf.arklab.media.**
+-keep class io.coderf.arklab.media.gateway.** { *; }
 
 # 保留数据模型类
 -keep class io.coderf.arklab.media.bean.** { *; }
