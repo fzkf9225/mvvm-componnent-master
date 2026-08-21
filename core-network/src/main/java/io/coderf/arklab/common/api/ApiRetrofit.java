@@ -20,6 +20,7 @@ import io.coderf.arklab.common.inter.ApiRetrofitService;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
+import io.coderf.arklab.core.request.TokenRefresher;
 import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
 import io.coderf.arklab.common.utils.encode.MD5Util;
@@ -225,9 +226,13 @@ public class ApiRetrofit {
          */
         private RetryService retryService = null;
         /**
-         * 请求接口重试服务
+         * 请求接口重试服务（旧 Flow 栈）
          */
         private FlowRetryService flowRetryService = null;
+        /**
+         * 新版网络栈鉴权刷新（按本 Builder / ApiService 实例生效，非进程全局）
+         */
+        private TokenRefresher tokenRefresher = null;
         /**
          * 请求成功版本号，如果自定义converterFactory情况下不生效
          */
@@ -268,6 +273,20 @@ public class ApiRetrofit {
 
         public Builder setFlowRetryService(FlowRetryService flowRetryService) {
             this.flowRetryService = flowRetryService;
+            // 同一实现若同时是 TokenRefresher，自动挂到本实例，供新栈按 ApiService 解析
+            if (flowRetryService instanceof TokenRefresher) {
+                this.tokenRefresher = (TokenRefresher) flowRetryService;
+            }
+            return this;
+        }
+
+        /**
+         * 为当前 ApiRetrofit 实例设置新版鉴权刷新。未设置则新栈 request 不走鉴权重试。
+         * 与 {@link #setFlowRetryService} 独立；也可只设其一（setFlowRetryService 在实现类
+         * 同时实现 TokenRefresher 时会自动写入本字段）。
+         */
+        public Builder setTokenRefresher(TokenRefresher tokenRefresher) {
+            this.tokenRefresher = tokenRefresher;
             return this;
         }
 
@@ -547,6 +566,10 @@ public class ApiRetrofit {
 
         public FlowRetryService getFlowRetryService() {
             return flowRetryService;
+        }
+
+        public TokenRefresher getTokenRefresher() {
+            return tokenRefresher;
         }
 
         public boolean isAppInfo() {

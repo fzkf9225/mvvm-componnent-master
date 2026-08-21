@@ -11,8 +11,13 @@ data class RequestOptions(
     val retryPolicy: RetryPolicy? = null,
     /** null 表示不额外设置超时（沿用 OkHttp / 调用方） */
     val timeoutMs: Long? = null,
-    /** 是否把业务错误交给 RequestUi 展示（Toast 等） */
-    val deliverErrorToUi: Boolean = true
+    /** 是否把业务错误交给 RequestUi 展示（Toast / onErrorCode 等） */
+    val deliverErrorToUi: Boolean = true,
+    /**
+     * 是否启用 [TokenRefresher] 鉴权刷新重试。
+     * 登录 / 验证码 / 刷新 token 自身等请求应设为 false，避免递归。
+     */
+    val enableAuthRetry: Boolean = true
 ) {
     class Builder {
         private var showLoading: Boolean = true
@@ -21,6 +26,7 @@ data class RequestOptions(
         private var retryPolicy: RetryPolicy? = null
         private var timeoutMs: Long? = null
         private var deliverErrorToUi: Boolean = true
+        private var enableAuthRetry: Boolean = true
 
         fun showLoading(value: Boolean) = apply { showLoading = value }
         fun loadingMessage(value: String) = apply { loadingMessage = value }
@@ -28,6 +34,7 @@ data class RequestOptions(
         fun retryPolicy(value: RetryPolicy?) = apply { retryPolicy = value }
         fun timeoutMs(value: Long?) = apply { timeoutMs = value }
         fun deliverErrorToUi(value: Boolean) = apply { deliverErrorToUi = value }
+        fun enableAuthRetry(value: Boolean) = apply { enableAuthRetry = value }
 
         fun build() = RequestOptions(
             showLoading = showLoading,
@@ -35,7 +42,8 @@ data class RequestOptions(
             enableDynamicEllipsis = enableDynamicEllipsis,
             retryPolicy = retryPolicy,
             timeoutMs = timeoutMs,
-            deliverErrorToUi = deliverErrorToUi
+            deliverErrorToUi = deliverErrorToUi,
+            enableAuthRetry = enableAuthRetry
         )
     }
 
@@ -45,6 +53,10 @@ data class RequestOptions(
 
         @JvmStatic
         fun silent() = RequestOptions(showLoading = false, deliverErrorToUi = false)
+
+        /** 登录 / 验证码等：无 loading 鉴权刷新 */
+        @JvmStatic
+        fun noAuthRetry() = RequestOptions(enableAuthRetry = false)
 
         @JvmStatic
         fun builder() = Builder()

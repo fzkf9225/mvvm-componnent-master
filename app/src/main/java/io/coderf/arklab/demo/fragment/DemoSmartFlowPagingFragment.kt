@@ -37,10 +37,11 @@ class DemoSmartFlowPagingFragment :
 
     override fun onItemClick(view: View?, item: NotificationMessageBean, position: Int) {
         super.onItemClick(view, item, position)
-//        showToast("点击的是第" + position + "行，内容是：" + item.title)
         lifecycleScope.launch {
-            mViewModel.getInfoById(item.id)?.collect {
-                showToast("点击的是第" + position + "行，内容是：" + it.title)
+            mViewModel.getInfoById(item.id).collect { result ->
+                result.onSuccess {
+                    showToast("点击的是第" + position + "行，内容是：" + it.title)
+                }
             }
         }
     }

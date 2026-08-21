@@ -2,19 +2,20 @@ package io.coderf.arklab.user.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.api.RepositoryFactory
 import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.userapi.bean.UserInfo
+import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.domain.usecase.RefreshUserProfileUseCase
 import io.coderf.arklab.user.repository.UserRepositoryImpl
+import io.coderf.arklab.userapi.bean.UserInfo
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * created by fz on 2024/11/4 13:57
- * describe:
+ * 用户资料 ViewModel（新版 Flow）。
  */
 @HiltViewModel
 class UserViewModel @Inject constructor(
@@ -30,10 +31,14 @@ class UserViewModel @Inject constructor(
     }
 
     override fun createRepository(): UserRepositoryImpl {
-        return RepositoryFactory.create(UserRepositoryImpl::class.java, userApiService)
+        return UserRepositoryImpl(userApiService)
     }
 
     fun refreshUserInfo() {
-        refreshUserProfile.execute(iRepository, userInfoLiveData)
+        viewModelScope.launch {
+            refreshUserProfile.execute(iRepository).collect { result ->
+                result.onSuccess { userInfoLiveData.value = it }
+            }
+        }
     }
 }

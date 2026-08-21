@@ -36,6 +36,16 @@ sealed class AppError(
         fun from(throwable: Throwable): AppError {
             return when (throwable) {
                 is AppErrorThrowable -> throwable.appError
+                is io.coderf.arklab.common.base.BaseException -> Business(
+                    code = throwable.errorCode ?: "",
+                    message = throwable.errorMsg ?: throwable.message ?: "业务异常",
+                    cause = throwable
+                )
+                is retrofit2.HttpException -> Business(
+                    code = throwable.code().toString(),
+                    message = throwable.message() ?: "HTTP ${throwable.code()}",
+                    cause = throwable
+                )
                 is java.util.concurrent.CancellationException,
                 is kotlinx.coroutines.CancellationException -> Cancelled
                 is java.net.SocketTimeoutException,

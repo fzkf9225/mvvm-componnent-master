@@ -1,34 +1,50 @@
 package io.coderf.arklab.demo.repository
 
-import io.coderf.arklab.core.network.DefaultNetworkRepository
+import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.request.RequestOptions
 import io.coderf.arklab.core.request.RequestResult
-import io.coderf.arklab.core.request.RequestUi
+import io.coderf.arklab.core.request.TokenRefresher
+import io.coderf.arklab.demo.api.ApiServiceHelper
+import io.coderf.arklab.demo.bean.NotificationMessageBean
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 新版 NetworkRepository 用法示例（可直接对照迁移旧 Repository）。
+ * 新版 NetworkRepository 用法示例（真实 API）。
  *
  * ```
  * viewModelScope.launch {
- *   sample.requestHello()
- *     .collect { result ->
- *       result.onSuccess { data -> ... }
- *             .onError { err -> /* 一般已由 RequestUi 展示 */ }
- *     }
+ *   sample.requestNewsDetail(id).collect { result ->
+ *     result.onSuccess { data -> ... }
+ *           .onError { /* 一般已由 RequestUi 展示；鉴权失败会自动刷 token 后重试 */ }
+ *   }
  * }
  * ```
  */
 class SampleCoreNetworkRepository(
-    requestUi: RequestUi
-) : DefaultNetworkRepository(requestUi) {
+    private val api: ApiServiceHelper,
+    tokenRefresher: TokenRefresher? = null
+) : BaseNetworkRepository<io.coderf.arklab.common.base.BaseView>(tokenRefresher = tokenRefresher) {
 
-    fun requestHello(
+    fun requestNewsDetail(
+        id: String,
         options: RequestOptions = RequestOptions.defaults()
-    ): Flow<RequestResult<String>> {
+    ): Flow<RequestResult<NotificationMessageBean>> {
         return request(options) {
-            // 替换为真实 api 调用，例如 api.hello()
-            "hello-from-core-network"
+            api.getNewInfoByIdSuspend(id)
+        }
+    }
+
+    fun requestNewsPage(
+        page: Int,
+        pageSize: Int,
+        options: RequestOptions = RequestOptions.builder().showLoading(false).build()
+    ): Flow<RequestResult<List<NotificationMessageBean>>> {
+        return request(options) {
+            api.getNewListSuspend(
+                page,
+                pageSize,
+                NotificationMessageBean().apply { type = "5" }
+            ).list ?: emptyList()
         }
     }
 }

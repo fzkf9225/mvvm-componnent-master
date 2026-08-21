@@ -1,64 +1,55 @@
 package io.coderf.arklab.user.repository
 
-import androidx.lifecycle.MutableLiveData
-import io.coderf.arklab.common.bean.ApiRequestOptions
-import io.coderf.arklab.common.repository.RepositoryImpl
-import io.coderf.arklab.userapi.bean.UserInfo
+import io.coderf.arklab.core.network.BaseNetworkRepository
+import io.coderf.arklab.core.request.RequestOptions
+import io.coderf.arklab.core.request.RequestResult
+import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
 import io.coderf.arklab.user.bean.RequestLoginBean
-import io.coderf.arklab.user.bean.TokenBean
 import io.coderf.arklab.user.view.UserView
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.functions.Consumer
+import io.coderf.arklab.userapi.bean.UserInfo
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Created by fz on 2023/12/1 10:47
- * describe :
+ * 登录仓库（新版 [BaseNetworkRepository]）。
+ * 登录 / 验证码关闭鉴权刷新，避免与 refresh-token 递归。
  */
-class LoginRepositoryImpl constructor(apiService: UserApiService?) : RepositoryImpl<UserApiService, UserView>(apiService) {
+class LoginRepositoryImpl(
+    private val api: UserApiService
+) : BaseNetworkRepository<UserView>() {
 
-    fun getImageCode(
-        randomNumber: String,
-        liveData: MutableLiveData<GraphicVerificationCodeBean>
-    ): Disposable {
-        return sendRequest(
-            apiService.getImageCode(randomNumber),
-            ApiRequestOptions.Builder()
-                .setShowDialog(false)
-                .build(),
-            liveData
-        )
+    fun getImageCode(randomNumber: String): Flow<RequestResult<GraphicVerificationCodeBean>> {
+        return request(
+            RequestOptions.builder()
+                .showLoading(false)
+                .enableAuthRetry(false)
+                .build()
+        ) {
+            api.getImageCodeSuspend(randomNumber)
+        }
     }
 
-    fun login(requestLoginBean: RequestLoginBean, liveData: MutableLiveData<UserInfo>) {
-        sendRequest(
-            apiService.getToken(requestLoginBean)
-                .flatMap { tokenBean: TokenBean ->
-                    UserAccountHelper.setToken(tokenBean.tokenId)
-                    apiService.getUserInfo()
-                },
-            ApiRequestOptions.getDefault().apply { dialogMessage = "登录中，请稍后..." },
-            liveData
-        )
+    fun login(requestLoginBean: RequestLoginBean): Flow<RequestResult<UserInfo>> {
+        return request(
+            RequestOptions.builder()
+                .loadingMessage("登录中，请稍后...")
+                .enableAuthRetry(false)
+                .build()
+        ) {
+            val tokenBean = api.getTokenSuspend(requestLoginBean)
+            UserAccountHelper.setToken(tokenBean.tokenId ?: tokenBean.access_token)
+            UserAccountHelper.setRefreshToken(tokenBean.refresh_token)
+            api.getUserInfoSuspend()
+        }
     }
 
-
-    fun logout(liveData: MutableLiveData<Any>) {
-        sendRequest(
-            apiService.logout(),
-            ApiRequestOptions.getDefault(),
-            liveData
-        )
-    }
-
-    fun logout(consumer: Consumer<Any>, consumerError: Consumer<Throwable>) {
-        sendRequest(
-            apiService.logout(),
-            ApiRequestOptions.getDefault().apply { isShowDialog = false },
-            consumer,
-            consumerError
-        )
+    fun logout(
+        options: RequestOptions = RequestOptions.defaults()
+    ): Flow<RequestResult<Any?>> {
+        return request(options) {
+            api.logoutSuspend()
+        }
     }
 }

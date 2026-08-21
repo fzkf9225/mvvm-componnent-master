@@ -1,14 +1,13 @@
 package io.coderf.arklab.user.domain.repository
 
-import androidx.lifecycle.MutableLiveData
+import io.coderf.arklab.core.request.RequestResult
 import io.coderf.arklab.userapi.bean.UserInfo
-import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.flow.Flow
 
 /**
- * 用户资料相关数据端口；由 [io.coderf.arklab.user.repository.UserRepositoryImpl] 实现，
- * [io.coderf.arklab.user.domain.usecase.RefreshUserProfileUseCase] 只依赖本接口以便替换与测试。
+ * 用户资料相关数据端口；由 [io.coderf.arklab.user.repository.UserRepositoryImpl] 实现。
  */
 interface UserProfileRepository {
 
-    fun refreshUserInfo(liveData: MutableLiveData<UserInfo>): Disposable
+    fun refreshUserInfo(): Flow<RequestResult<UserInfo>>
 }

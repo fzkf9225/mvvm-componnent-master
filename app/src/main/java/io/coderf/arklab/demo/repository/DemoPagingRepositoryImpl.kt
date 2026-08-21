@@ -6,17 +6,21 @@ import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 
 /**
- * Kotlin 分页 Demo（已迁到新版 [NetworkPagingRepository]，替代旧 Rx [PagingRepositoryImpl]）。
+ * Java 侧遗留的 Demo 分页仓库，已迁到新版 [NetworkPagingRepository]。
+ * （原 Rx [PagingRepositoryImpl] 实现已移除。）
  */
-class KtDemoPagingRepositoryImpl(
-    private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView>() {
+class DemoPagingRepositoryImpl(
+    private val api: ApiServiceHelper,
+    tokenRefresher: TokenRefresher? = null
+) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView>(
+    tokenRefresher = tokenRefresher
+) {
 
     override suspend fun fetchPage(page: Int, pageSize: Int): List<NotificationMessageBean> {
         val pageBean = api.getNewListSuspend(
             page,
             pageSize,
-            NotificationMessageBean().apply { type = "5" }
+            NotificationMessageBean().apply { type = "1" }
         )
         return pageBean?.list ?: emptyList()
     }

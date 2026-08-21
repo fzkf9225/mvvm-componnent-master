@@ -2,10 +2,10 @@ package io.coderf.arklab.user.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.api.RepositoryFactory
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.userapi.bean.UserInfo
+import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
@@ -17,15 +17,17 @@ import io.coderf.arklab.user.domain.usecase.PersistLoginAndDecideNavigationUseCa
 import io.coderf.arklab.user.domain.usecase.ValidateLoginFormUseCase
 import io.coderf.arklab.user.repository.LoginRepositoryImpl
 import io.coderf.arklab.user.view.UserView
+import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
 /**
- * 登录页 ViewModel：只做状态持有、调用 [LoginRepositoryImpl] 与领域用例；协议富文本与系统弹窗在 Activity 处理。
+ * 登录页 ViewModel：新版 [LoginRepositoryImpl] + Flow 收集。
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -46,7 +48,7 @@ class LoginViewModel @Inject constructor(
     val imageLiveData: MutableLiveData<GraphicVerificationCodeBean> by lazy { MutableLiveData() }
 
     override fun createRepository(): LoginRepositoryImpl {
-        return RepositoryFactory.create(LoginRepositoryImpl::class.java, userApiService)
+        return LoginRepositoryImpl(userApiService)
     }
 
     fun updateUserName(name: String) {
@@ -80,13 +82,14 @@ class LoginViewModel @Inject constructor(
         val plain = rawPassword ?: return LoginSubmitResult.Toast("请填写密码")
         val hashed = hashLoginPassword(plain)
         _loginState.update { it.copy(password = hashed) }
-        iRepository.login(_loginState.value, liveData)
+        viewModelScope.launch {
+            iRepository.login(_loginState.value).collect { result ->
+                result.onSuccess { liveData.value = it }
+            }
+        }
         return LoginSubmitResult.Submitted
     }
 
-    /**
-     * 登录接口成功后的持久化与路由（栈大小、是否含目标页由 Activity 传入，避免在领域层依赖 [AppManager]）。
-     */
     fun onLoginSuccess(
         userInfo: UserInfo?,
         userName: String,
@@ -110,6 +113,10 @@ class LoginViewModel @Inject constructor(
     fun refreshCaptchaAndLoadImage() {
         val num = Random.nextInt(10000000, 100000000).toString()
         _loginState.update { it.copy(num = num) }
-        iRepository.getImageCode(num, imageLiveData)
+        viewModelScope.launch {
+            iRepository.getImageCode(num).collect { result ->
+                result.onSuccess { imageLiveData.value = it }
+            }
+        }
     }
 }

@@ -45,6 +45,8 @@ public class AppModule {
     public FileApiService provideFileApiService(
             Application application,
             AppPropertiesConfig config,
+            RetryService retryService,
+            FlowRetryService flowRetryService,
             ErrorService errorService
     ) {
         String fileBaseUrl = config.getFileBaseUrl();
@@ -56,7 +58,9 @@ public class AppModule {
                 .setSingleInstance(false)
                 .setBaseUrl(baseUrl)
                 .setTimeOut(30)
+                .setRetryService(retryService)
                 .setErrorService(errorService)
+                .setFlowRetryService(flowRetryService)
                 .builder()
                 .getApiService(FileApiService.class);
     }

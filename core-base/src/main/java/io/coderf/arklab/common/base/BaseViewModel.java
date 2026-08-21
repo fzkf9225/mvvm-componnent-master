@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import io.coderf.arklab.common.impl.RequestUiAdapters;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.repository.IRepository;
+import io.coderf.arklab.core.request.NoOpRequestUi;
+import io.coderf.arklab.core.request.RequestUiHost;
 
 /**
  * Create by fz on 2020/3/19 0019
@@ -67,14 +69,22 @@ public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseV
         if (iRepository instanceof BaseRepository) {
             ((BaseRepository<?>) iRepository).setRequestUi(null);
         }
+        if (iRepository instanceof RequestUiHost) {
+            ((RequestUiHost) iRepository).setRequestUi(NoOpRequestUi.INSTANCE);
+        }
     }
 
     /**
-     * 向继承 {@link BaseRepository} 的仓库注入 {@link RequestUiCallback}。
+     * 向继承 {@link BaseRepository} 的仓库注入 {@link RequestUiCallback}；
+     * 向实现 {@link RequestUiHost} 的新版仓库注入 {@link io.coderf.arklab.core.request.RequestUi}。
      */
     protected void attachRepositoryRequestUi() {
+        RequestUiCallback callback = provideRequestUiCallback();
         if (iRepository instanceof BaseRepository) {
-            ((BaseRepository<?>) iRepository).setRequestUi(provideRequestUiCallback());
+            ((BaseRepository<?>) iRepository).setRequestUi(callback);
+        }
+        if (iRepository instanceof RequestUiHost) {
+            ((RequestUiHost) iRepository).setRequestUi(RequestUiAdapters.toRequestUi(callback));
         }
     }
 

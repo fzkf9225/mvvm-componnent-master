@@ -36,6 +36,8 @@ implementation project(':core-network')
 
 用法见仓库 [QuickStart.md](../QuickStart.md)、[UPGRADE.md](../UPGRADE.md)。
 
+**从 RxJava3 / 旧 Flow 迁到新版 `request { }`：** 见本模块 [MIGRATION.md](./MIGRATION.md)（含完整对照与示例）。
+
 ---
 
 ## 发布
