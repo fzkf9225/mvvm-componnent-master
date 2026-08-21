@@ -27,6 +27,7 @@ rootProject.name = "mvvm-component-master"
 
 // ---- core 分层 ----
 include ':core-utils'
+include ':core-log'
 include ':core-base'
 include ':core-network'
 include ':core-db'

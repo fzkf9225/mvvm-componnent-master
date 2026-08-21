@@ -29,12 +29,16 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
- * created by fz on 2023/12/17 14:00
  * Kotlin Flow版本的Repository，简化版，只保留核心方法
  *
  * 与 [RepositoryImpl] 相同：请求过程中的 UI 只走 [io.coderf.arklab.common.base.BaseRepository.getRequestUi]，不在此处直接调用 [baseView]。
  *
  * 迁移提示：新代码优先使用 [io.coderf.arklab.core.network.DefaultNetworkRepository]。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/8/21 8:58
  */
 @Deprecated("Use DefaultNetworkRepository.request { }")
 abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRepository<BV> {

@@ -9,9 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.coderf.arklab.common.autosize.AutoSize;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.CrashHandler;
-import io.coderf.arklab.common.utils.log.FileLogLevel;
-import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.utils.log.LogcatHelper;
+import io.coderf.arklab.log.ArkLog;
+import io.coderf.arklab.log.FileLogLevel;
 
 /**
  * Created by fz on 2023/8/8 13:54
@@ -87,23 +86,21 @@ public class Config {
     }
 
     /**
-     * 开启 debug 日志，默认以 DEBUG 层级写本地日志
+     * 开启 base 模块控制台 debug，并默认以 DEBUG 层级写本地日志（进程级，由 core-log 统一管理）。
      */
     public void enableDebug(boolean enable) {
         enableDebug(enable, FileLogLevel.DEBUG);
     }
 
     /**
-     * @param enable       是否开启 debug 日志（控制台）
-     * @param fileLogLevel 本地日志读写层级：NONE / DEBUG / TEST / RELEASE
+     * @param enable       是否开启 base 模块控制台 debug
+     * @param fileLogLevel 本地日志读写层级（进程级）：非 NONE 时开启落盘；NONE 表示本次不改动落盘
      */
     public void enableDebug(boolean enable, FileLogLevel fileLogLevel) {
         enableDebug.set(enable);
-        if (enable) {
-            LogUtil.init();
-        }
-        if (fileLogLevel != null && fileLogLevel != FileLogLevel.NONE) {
-            LogcatHelper.getInstance(application).start(fileLogLevel);
+        ArkLog.base().setEnableDebug(enable);
+        if (application != null && fileLogLevel != null && fileLogLevel != FileLogLevel.NONE) {
+            ArkLog.startFileLog(application, fileLogLevel);
         }
     }
 

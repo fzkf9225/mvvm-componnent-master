@@ -85,7 +85,7 @@ dependencies {
     ksp libs.google.hilt.android.compiler
 
     implementation libs.androidx.exifinterface
-    implementation libs.logger
+    api project(':core-log')
 }
 
 
@@ -99,7 +99,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.media'
                 artifactId = 'media'
-                version = '3.3.1'
+                version = '3.3.2'
             }
         }
         repositories {

@@ -53,6 +53,7 @@ android {
 
 dependencies {
     api project(':core-utils')
+    api project(':core-log')
     api project(':core-ui')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -67,7 +68,6 @@ dependencies {
     implementation libs.net.res
     implementation libs.net.ui
     implementation libs.constraintlayout
-    implementation libs.logger
     implementation libs.androidx.recyclerview
     implementation libs.gson
     implementation libs.github.glide
@@ -130,7 +130,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'base'
-                version = '1.0.1'
+                version = '1.0.2'
             }
         }
         repositories {

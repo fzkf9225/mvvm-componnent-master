@@ -2,8 +2,8 @@
 
 可选定位能力库：GNSS / NMEA、Socket 定位客户端及 GPX/CSV 等记录辅助。
 
-当前版本：**3.1.6**  
-Maven：`io.coderf.arklab.googlegps:googlegps:3.1.6`  
+当前版本：**3.1.7**
+Maven：`io.coderf.arklab.googlegps:googlegps:3.1.7`
 namespace：`io.coderf.arklab.googlegps`
 
 ---
@@ -26,7 +26,7 @@ namespace：`io.coderf.arklab.googlegps`
 App 需要定位能力时按需引入：
 
 ```gradle
-implementation 'io.coderf.arklab.googlegps:googlegps:3.1.6'
+implementation 'io.coderf.arklab.googlegps:googlegps:3.1.7'
 // 或
 implementation project(':googlegps')
 ```

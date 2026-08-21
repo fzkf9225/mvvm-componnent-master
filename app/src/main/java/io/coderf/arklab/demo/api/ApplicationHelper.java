@@ -13,6 +13,10 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.demo.BuildConfig;
 import io.coderf.arklab.googlegps.common.GpsSettingConfig;
 import io.coderf.arklab.googlegps.utils.DebugUtil;
+import io.coderf.arklab.log.ArkLog;
+import io.coderf.arklab.log.FileLogLevel;
+import io.coderf.arklab.log.LogConfig;
+import io.coderf.arklab.mqtt.Mqtt;
 import io.coderf.arklab.ui.api.FileApiService;
 import io.coderf.arklab.ui.api.MediaUploadConfig;
 import io.coderf.arklab.ui.helper.CalendarDataSource;
@@ -50,11 +54,19 @@ public class ApplicationHelper extends BaseApplication {
 
         Config.getInstance().setResponseBodyLogConverterJson(true);
         Config.getInstance().setFolderName("arklab");
+
+        ArkLog.init(this, LogConfig.builder()
+                .showThreadInfo(true)
+                .globalTag("ArkLab")
+                .fileLogLevel(BuildConfig.LOG_DEBUG ? FileLogLevel.DEBUG : FileLogLevel.NONE)
+                .build());
+
         if (BuildConfig.LOG_DEBUG) {
-            Config.getInstance().enableDebug(true);
-            io.coderf.arklab.googlegps.utils.DebugUtil.enableDebug(this,true);
-            io.coderf.arklab.media.utils.DebugUtil.enableDebug(this,true);
-            io.coderf.arklab.mqtt.utils.DebugUtil.enableDebug(this,true);
+            // 各模块只开自己的控制台开关（落盘已由 ArkLog.init 统一配置）
+            Config.getInstance().enableDebug(true, FileLogLevel.NONE);
+            DebugUtil.enableDebug(this, true);
+            io.coderf.arklab.media.utils.DebugUtil.enableDebug(this, true);
+            Mqtt.enableDebug(this, true);
         }
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()

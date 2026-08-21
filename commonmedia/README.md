@@ -2,8 +2,8 @@
 
 可选媒体能力库：拍照、相册、压缩等（`MediaHelper` / `MediaBuilder` …）。
 
-当前版本：**3.3.1**  
-Maven：`io.coderf.arklab.media:media:3.3.1`  
+当前版本：**3.3.2**
+Maven：`io.coderf.arklab.media:media:3.3.2`
 namespace：`io.coderf.arklab.media`
 
 ---
@@ -28,7 +28,7 @@ namespace：`io.coderf.arklab.media`
 
 ```gradle
 // app
-implementation 'io.coderf.arklab.media:media:3.3.1'
+implementation 'io.coderf.arklab.media:media:3.3.2'
 ```
 
 Demo 参考：`app/.../media/MediaHelperGateway`、`MediaGatewayModule`。

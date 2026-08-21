@@ -22,8 +22,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import kotlinx.coroutines.flow.MutableStateFlow;
 
 /**
- * Created by fz on 2023/12/1 10:19
- * describe :
  * <p>
  * 网络请求的加载与错误展示仅通过 {@link BaseRepository#getRequestUi()}，由 {@link io.coderf.arklab.common.base.BaseViewModel} 统一注入。
  * <p>
@@ -31,6 +29,11 @@ import kotlinx.coroutines.flow.MutableStateFlow;
  * 本类 Rx {@code sendRequest} 重载仅作兼容，将逐步移除。
  *
  * @deprecated 请改用 {@link io.coderf.arklab.core.network.DefaultNetworkRepository}
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/8/21 8:57
  */
 @Deprecated
 public abstract class RepositoryImpl<API extends BaseApiService, BV extends BaseView> extends BaseRepository<BV> {

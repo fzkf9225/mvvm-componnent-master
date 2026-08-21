@@ -2,8 +2,8 @@
 
 可复用的 Android MQTT 组件库（Eclipse Paho MQTT **v5**），面向多通道、可配置、Java / Kotlin 双友好。
 
-当前版本：**1.5.0**  
-Maven 坐标：`io.coderf.arklab.mqtt:mqtt:1.5.0`
+当前版本：**1.5.1**
+Maven 坐标：`io.coderf.arklab.mqtt:mqtt:1.5.1`
 
 > **边界**：本库只提供连接 / 订退 / Presence / Lifecycle 编排等基础能力。  
 > 业务信封、bizCode、设备 SN 匹配等请在宿主项目二次扩展，不要写进框架。
@@ -38,7 +38,9 @@ client.connect(
 调试日志：
 
 ```java
-Mqtt.enableDebug(application, true); // 可选落盘：MqttFileLogLevel.DEBUG
+// 推荐：宿主用 ArkLog 统一 init + 落盘，模块只开开关
+// ArkLog.init(app, LogConfig.builder().globalTag("ArkLab").fileLogLevel(FileLogLevel.DEBUG).build());
+Mqtt.enableDebug(application, true);
 ```
 
 ---
@@ -56,7 +58,7 @@ Mqtt.enableDebug(application, true); // 可选落盘：MqttFileLogLevel.DEBUG
 | **`core.MqttConnection`** | 同步底层（进阶） | 一般业务别直接用 |
 | **`presence.PresenceClient`** | 在线心跳专用通道 | 与业务推送通道分开实例 |
 | **`presence.PresenceManager`** | 宿主实现的在线生命周期接口 | 旧名 `DevicePresenceManager` 已废弃 |
-| **`utils.MqttLog` / `MqttDebug`** | 本模块日志 | 旧名 `LogUtil` / `DebugUtil` 已废弃 |
+| **`utils.MqttLog`** | 本模块日志（委托 core-log） | 落盘请用 `ArkLog.startFileLog` |
 
 ---
 
@@ -149,7 +151,7 @@ io.coderf.arklab.mqtt          ★ 日常入口（Mqtt / MqttClient / MqttConfig
 ├── presence/                  在线心跳（PresenceClient / PresenceManager）
 ├── widget/                    重连弹窗 MqttReconnectDialog
 ├── core/                      同步底层 MqttConnection（进阶）
-├── utils/                     MqttLog / MqttDebug / MqttFileLogLevel
+├── utils/                     MqttLog（委托 core-log）
 └── internal/                  TopicDiff（勿依赖）
 ```
 
@@ -220,17 +222,16 @@ dialog.updateReconnectState(attempt, maxAttempts, delaySec);
 
 - **`Mqtt` 快捷入口**：`createClient` / `simpleConfig` / `bindTopics` / `enableDebug`
 - **`MqttSession`**：焦点栈 + `observeDialog`；`updateTopics` / `addTopics` / `removeTopics`
-- **命名澄清**：`MqttLog` / `MqttDebug` / `MqttFileLogLevel` / `MqttLogcatHelper`；`PresenceManager`
-- 旧名保留 `@Deprecated` 转发，便于过渡
+- **日志**：`MqttLog` 委托 `core-log`；落盘由 `ArkLog` 统一管理
+- **命名澄清**：`PresenceManager`
 
-### 相对 1.3.0 的破坏性提示
+### 相对旧版的破坏性提示
 
-| 旧（仍可用，已废弃） | 新（推荐） |
-|----------------------|------------|
-| `utils.LogUtil` | `utils.MqttLog` |
-| `utils.DebugUtil` | `utils.MqttDebug` |
-| `utils.FileLogLevel` | `utils.MqttFileLogLevel` |
-| `utils.LogcatHelper` | `utils.MqttLogcatHelper` |
+| 旧 | 新 |
+|----|-----|
+| `utils.LogUtil` / 自建 Logger | `utils.MqttLog` → `core-log` |
+| `utils.MqttDebug` / `DebugUtil` | `Mqtt.enableDebug` / `MqttLog.setEnableDebug` |
+| `utils.MqttFileLogLevel` / `MqttLogcatHelper` | `io.coderf.arklab.log.FileLogLevel` / `ArkLog.startFileLog` |
 | `presence.DevicePresenceManager` | `presence.PresenceManager` |
 
 ---
@@ -238,7 +239,7 @@ dialog.updateReconnectState(attempt, maxAttempts, delaySec);
 ## 依赖
 
 ```gradle
-implementation 'io.coderf.arklab.mqtt:mqtt:1.5.0'
+implementation 'io.coderf.arklab.mqtt:mqtt:1.5.1'
 ```
 
 宿主 Manifest 需声明：
@@ -262,4 +263,4 @@ implementation 'io.coderf.arklab.mqtt:mqtt:1.5.0'
 ## 作者
 
 - **author**: fz
-- **module version**: 1.5.0
+- **module version**: 1.5.1

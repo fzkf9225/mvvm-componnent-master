@@ -4,9 +4,10 @@ import androidx.lifecycle.LifecycleOwner
 import io.coderf.arklab.mqtt.session.MqttSession
 import io.coderf.arklab.mqtt.session.MqttSubscribePolicy
 import io.coderf.arklab.mqtt.session.MqttTopicsProvider
-import io.coderf.arklab.mqtt.utils.MqttDebug
 import android.app.Application
-import io.coderf.arklab.mqtt.utils.MqttFileLogLevel
+import io.coderf.arklab.log.ArkLog
+import io.coderf.arklab.log.FileLogLevel
+import io.coderf.arklab.mqtt.utils.MqttLog
 
 /**
  * 降低接入门槛的静态入口：三步完成「建客户端 → 绑生命周期订阅 → 连接」。
@@ -125,14 +126,20 @@ object Mqtt {
         return builder.build()
     }
 
-    /** 打开模块 debug 日志 */
+    /**
+     * 打开 MQTT 模块控制台 debug。
+     * 本地落盘请用 [ArkLog.startFileLog]（进程级统一配置）；若传入非 [FileLogLevel.NONE] 也会触发落盘。
+     */
     @JvmStatic
     @JvmOverloads
     fun enableDebug(
         application: Application,
         enable: Boolean = true,
-        fileLogLevel: MqttFileLogLevel = MqttFileLogLevel.NONE,
+        fileLogLevel: FileLogLevel = FileLogLevel.NONE,
     ) {
-        MqttDebug.enableDebug(application, enable, fileLogLevel)
+        MqttLog.setEnableDebug(enable)
+        if (fileLogLevel != FileLogLevel.NONE) {
+            ArkLog.startFileLog(application, fileLogLevel)
+        }
     }
 }
