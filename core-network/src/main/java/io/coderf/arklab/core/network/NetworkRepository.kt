@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.math.pow
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * 新版网络 Repository 契约：只暴露 Flow 统一入口。
@@ -98,7 +100,7 @@ open class DefaultNetworkRepository(
         return flow {
             val timeout = options.timeoutMs
             val data = if (timeout != null && timeout > 0) {
-                withTimeout(timeout) { block() }
+                withTimeout(timeout.milliseconds) { block() }
             } else {
                 block()
             }
@@ -124,10 +126,10 @@ open class DefaultNetworkRepository(
                 }
 
                 if (attempt >= policy.maxRetries) return@retryWhen false
-                val delayMs = (policy.initialDelayMs * Math.pow(policy.factor, attempt.toDouble()))
+                val delayMs = (policy.initialDelayMs * policy.factor.pow(attempt.toDouble()))
                     .toLong()
                     .coerceAtMost(policy.maxDelayMs)
-                delay(delayMs)
+                delay(delayMs.milliseconds)
                 true
             }
             .onStart {
