@@ -10,8 +10,11 @@ import io.coderf.arklab.core.request.NoOpRequestUi;
 import io.coderf.arklab.core.request.RequestUi;
 
 /**
- * 将页面 {@link BaseView} / 旧 {@link RequestUiCallback} 适配为新 {@link RequestUi}，
- * 以及反向：将 {@link BaseView} 适配为 {@link RequestUiCallback}。
+ * 桥接适配器（兼容层）。
+ * <p>
+ * 长期默认路径已改为 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}
+ * （同时实现 {@link RequestUiCallback} 与 {@link RequestUi}），本类保留供：
+ * 自定义 callback 转新 {@link RequestUi}、或遗留直接从 {@link BaseView} 适配的场景。
  */
 public final class RequestUiAdapters {
 

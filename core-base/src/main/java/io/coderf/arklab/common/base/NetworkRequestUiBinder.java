@@ -6,14 +6,23 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 
 /**
- * 将 {@link NetworkRequestUiHost} 的 LiveData 派发到实现了 {@link BaseView} 的页面（例如 BaseActivity），
- * 从而在采用 {@link NetworkRequestUiHost} 作为 {@link io.coderf.arklab.common.inter.RequestUiCallback} 时，无需手写 observe 逻辑即可恢复原先对话框/Toast 行为。
+ * 将 {@link NetworkRequestUiHost} 的 LiveData 派发到实现了 {@link BaseView} 的页面。
+ * <p>
+ * 由 {@link BaseActivity} / {@link BaseFragment} 在 {@code createViewModel} 后自动调用；
+ * 业务页一般无需再手写 observe。自定义 UI（非 BaseView）可自行观察 Host 的三个 LiveData。
+ * <p>
+ * {@code refreshLoading} 通过再次 post 可见的 {@link NetworkRequestUiHost.RequestLoadingState} 体现，
+ * 无需单独通道。
  */
 public final class NetworkRequestUiBinder {
 
     private NetworkRequestUiBinder() {
     }
 
+    /**
+     * 订阅 Host 状态并转发到 {@link BaseView}。
+     * 使用 {@link LifecycleOwner} 自动随页面销毁解除观察，避免泄漏。
+     */
     public static void bind(
             @NonNull LifecycleOwner owner,
             @NonNull NetworkRequestUiHost host,

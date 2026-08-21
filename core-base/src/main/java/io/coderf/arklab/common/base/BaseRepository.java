@@ -18,9 +18,10 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * Repository 基类。
  * <p>
  * <b>请求相关 UI（加载、Toast、onErrorCode）</b>：只通过 {@link #getRequestUi()} 非空引用触发；
- * 由 {@link BaseViewModel#attachRepositoryRequestUi()} 在创建 Repository 后注入，业务侧不要与 {@link #baseView} 混用两套。
+ * 由 {@link BaseViewModel} 默认注入 {@link NetworkRequestUiHost}，页面经 {@link NetworkRequestUiBinder} 展示。
+ * 业务侧不要与 {@link #baseView} 混用两套。
  * <p>
- * <b>{@link #baseView}</b>：仍随 {@link IRepository} 存在，表示「当前绑定的页面」，供尚未改造的代码读取；
+ * <b>{@link #baseView}</b>：仍表示「当前绑定的页面」，供非请求类遗留逻辑读取；
  * 新代码请勿在子类里对 {@code baseView} 调用 showLoading / onErrorCode，应统一走 {@link RequestUiCallback}。
  */
 public abstract class BaseRepository<BV extends BaseView> implements IRepository<BV> {

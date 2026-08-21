@@ -240,7 +240,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * 创建并绑定 ViewModel。沿继承链解析泛型，兼容 Hilt 生成类与子类只写 {@code extends XxxActivity} 的场景。
      * <p>
      * ViewModel 由 {@link ViewModelProvider} 缓存；每次 {@code onCreate} 都会
-     * {@link BaseViewModel#createRepository(BaseView)} 重绑当前页面，避免配置变更后仍指向旧 Activity。
+     * {@link BaseViewModel#createRepository(BaseView)} 重绑当前页面，并
+     * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData，避免配置变更后仍指向旧 Activity。
      */
     @SuppressWarnings("unchecked")
     public void createViewModel() {
@@ -249,6 +250,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
         }
         mViewModel.createRepository(this);
+        bindNetworkRequestUi();
+    }
+
+    /**
+     * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页 {@link BaseView}。
+     * 子类若完全自定义请求 UI，可重写为空实现并自行 observe {@link BaseViewModel#getNetworkRequestUiHost()}。
+     */
+    protected void bindNetworkRequestUi() {
+        if (mViewModel == null) {
+            return;
+        }
+        NetworkRequestUiBinder.bind(this, mViewModel.getNetworkRequestUiHost(), this);
     }
 
     @Override

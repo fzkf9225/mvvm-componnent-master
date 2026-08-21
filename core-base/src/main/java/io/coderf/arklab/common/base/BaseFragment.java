@@ -103,7 +103,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     /**
      * 创建并绑定 ViewModel。每次 View 创建都会重绑 {@link BaseView}，避免重建后仍指向旧 Fragment。
      * <p>
-     * 与 Activity 共用 ViewModel 时，绑定目标为宿主 {@link BaseActivity}（须为 BaseActivity 子类）。
+     * 与 Activity 共用 ViewModel 时，Repository 绑定目标为宿主 {@link BaseActivity}（须为 BaseActivity 子类）。
+     * 请求 UI 的 {@link NetworkRequestUiBinder#bind} 在 {@link #onViewCreated} 中执行（此时
+     * {@link #getViewLifecycleOwner()} 已可用）。
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void createViewModel() {
@@ -112,6 +114,24 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
         }
         mViewModel.createRepository(resolveRepositoryHost());
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindNetworkRequestUi();
+    }
+
+    /**
+     * 将 ViewModel 内 {@link NetworkRequestUiHost} 派发到本页。
+     * 与 Activity 共用 VM 时默认仍 bind 到本 Fragment（loading 跟当前可见页）；
+     * 若希望只由 Activity 展示，可重写为空并依赖 Activity 的 bind。
+     */
+    protected void bindNetworkRequestUi() {
+        if (mViewModel == null) {
+            return;
+        }
+        NetworkRequestUiBinder.bind(getViewLifecycleOwner(), mViewModel.getNetworkRequestUiHost(), resolveRepositoryHost());
     }
 
     /**
