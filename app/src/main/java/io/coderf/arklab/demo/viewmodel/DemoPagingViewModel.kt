@@ -3,6 +3,7 @@ package io.coderf.arklab.demo.viewmodel
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.base.BaseView
+import io.coderf.arklab.core.bean.EmptyPagingQuery
 import io.coderf.arklab.core.network.NetworkFlowPagingViewModel
 import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
@@ -17,11 +18,13 @@ import javax.inject.Inject
 class DemoPagingViewModel @Inject constructor(
     application: Application,
     private val apiServiceHelper: ApiServiceHelper
-) : NetworkFlowPagingViewModel<KtDemoPagingRepositoryImpl, NotificationMessageBean, BaseView>(
+) : NetworkFlowPagingViewModel<KtDemoPagingRepositoryImpl, NotificationMessageBean, BaseView, EmptyPagingQuery>(
     application
 ) {
 
     override fun createRepository(): KtDemoPagingRepositoryImpl {
         return KtDemoPagingRepositoryImpl(apiServiceHelper)
     }
+
+    override fun createPagingQuery() = EmptyPagingQuery()
 }

@@ -3,9 +3,9 @@ package io.coderf.arklab.common.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import io.coderf.arklab.common.api.ApiRetrofit
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.repository.PagingFlowRepositoryImpl
 import io.coderf.arklab.common.utils.log.LogUtil
+import io.coderf.arklab.core.bean.PagingQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
@@ -13,25 +13,26 @@ import kotlinx.coroutines.flow.map
 
 /**
  * Created by fz on 2023/8/7 9:17
- * describe : Kotlin协程版本，使用Flow的分页数据源
+ * describe : Kotlin 协程版本，使用 Flow 的分页数据源。
+ * [query] 为创建本 Source 时的快照；变更条件须由 ViewModel refreshData 重建 Source。
  */
-class FlowPagingSource<T : Any, BV : BaseView>(
-    private val pagingRepository: PagingFlowRepositoryImpl<*, T, BV>,
-    private val startPage: Int = 1
+class FlowPagingSource<T : Any, Q : PagingQuery>(
+    private val pagingRepository: PagingFlowRepositoryImpl<*, T, *, Q>,
+    private val startPage: Int = 1,
+    private val query: Q
 ) : PagingSource<Int, T>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         val currentPage = params.key ?: startPage
 
         return try {
-            val flow: Flow<List<T>>? = pagingRepository.requestPaging(currentPage, params.loadSize)
+            val flow: Flow<List<T>>? =
+                pagingRepository.requestPaging(currentPage, params.loadSize, query)
 
             flow?.map { mBeans ->
                 toLoadResult(mBeans, currentPage, params.loadSize)
             }?.catch { e ->
-                // 相当于 doOnError：执行副作用
-                pagingRepository.handleFlowError(e,pagingRepository.apiRequestOptions)
-                // 相当于 onErrorReturn：返回错误结果
+                pagingRepository.handleFlowError(e, pagingRepository.apiRequestOptions)
                 emit(LoadResult.Error(e))
             }?.firstOrNull() ?: run {
                 LoadResult.Error(Exception("Flow is null"))
@@ -44,11 +45,12 @@ class FlowPagingSource<T : Any, BV : BaseView>(
         }
     }
 
-    /**
-     * 将获取的集合对象转化为需加载的结果对象
-     */
-    private fun toLoadResult(mBeans: List<T>, page: Int, requestedLoadSize: Int): LoadResult<Int, T> {
-        val prevKey = if (page == 1) null else page - 1
+    private fun toLoadResult(
+        mBeans: List<T>,
+        page: Int,
+        requestedLoadSize: Int
+    ): LoadResult<Int, T> {
+        val prevKey = if (page == startPage) null else page - 1
         val endReached = mBeans.isEmpty() || mBeans.size < requestedLoadSize
         val nextKey = if (endReached) null else page + 1
         return LoadResult.Page(
@@ -60,8 +62,5 @@ class FlowPagingSource<T : Any, BV : BaseView>(
         )
     }
 
-    override fun getRefreshKey(state: PagingState<Int, T>): Int? {
-        // 刷新时从起始页开始
-        return startPage
-    }
+    override fun getRefreshKey(state: PagingState<Int, T>): Int? = startPage
 }

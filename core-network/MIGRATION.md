@@ -438,19 +438,20 @@ override fun createRepository() = XxxRepository(api)
 
 ### 8.1 仓库
 
-**旧 · Rx**
+**旧 · Rx**（同样带 `PagingQuery`，禁止在仓库内强转 BaseView 取参）
 
 ```java
 public class NewsPagingRepositoryImpl
-        extends PagingRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView> {
+        extends PagingRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView, NewsPagingQuery> {
 
     public NewsPagingRepositoryImpl(ApiServiceHelper api) {
         super(api);
     }
 
     @Override
-    public Observable<List<NotificationMessageBean>> requestPaging(int currentPage, int pageSize) {
-        return apiService.getNewList(currentPage, pageSize, filter)
+    public Observable<List<NotificationMessageBean>> requestPaging(
+            int currentPage, int pageSize, NewsPagingQuery query) {
+        return apiService.getNewList(currentPage, pageSize, query.getKeyword(), query.getFilter())
                 .map(page -> page.getList() != null ? page.getList() : Collections.emptyList());
     }
 }
@@ -461,25 +462,41 @@ public class NewsPagingRepositoryImpl
 ```kotlin
 class NewsPagingRepositoryImpl(
     api: ApiServiceHelper
-) : PagingFlowRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView>(api) {
+) : PagingFlowRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView, NewsPagingQuery>(api) {
 
-    override suspend fun requestPaging(currentPage: Int, pageSize: Int): Flow<List<NotificationMessageBean>>? {
-        // …
+    override suspend fun requestPaging(
+        currentPage: Int,
+        pageSize: Int,
+        query: NewsPagingQuery
+    ): Flow<List<NotificationMessageBean>>? {
+        // 使用 query，禁止 getBaseView() 强转取参
     }
 }
 ```
 
 **新 · NetworkPagingRepository**
 
+查询参数用 `PagingQuery` 子类（无筛选可用 `EmptyPagingQuery`）。  
+**禁止**在 `fetchPage` 内 `getBaseView()` 强转 Fragment/Activity 取筛选条件。
+
 ```kotlin
+data class NewsPagingQuery(
+    val keyword: String = "",
+    val filter: Int = 0
+) : PagingQuery()
+
 class NewsPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, BaseView>() {
+) : NetworkPagingRepository<NotificationMessageBean, BaseView, NewsPagingQuery>() {
 
     // 默认 pagingRequestOptions：showLoading = false
 
-    override suspend fun fetchPage(page: Int, pageSize: Int): List<NotificationMessageBean> {
-        val pageBean = api.getNewListSuspend(page, pageSize, filter)
+    override suspend fun fetchPage(
+        page: Int,
+        pageSize: Int,
+        query: NewsPagingQuery
+    ): List<NotificationMessageBean> {
+        val pageBean = api.getNewListSuspend(page, pageSize, query.keyword, query.filter)
         return pageBean?.list ?: emptyList()
     }
 
@@ -496,14 +513,33 @@ class NewsPagingRepositoryImpl(
 
 ### 8.2 ViewModel
 
-**旧**
+**旧 · Rx ViewModel**
 
 ```java
-public class NewsPagingViewModel extends PagingViewModel<NewsPagingRepositoryImpl, ..., BaseView> {
+public class NewsPagingViewModel
+        extends PagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, BaseView, NewsPagingQuery> {
     @Override
     protected NewsPagingRepositoryImpl createRepository() {
         return new NewsPagingRepositoryImpl(api);
     }
+
+    @NonNull
+    @Override
+    protected NewsPagingQuery createPagingQuery() {
+        return new NewsPagingQuery();
+    }
+    // updatePagingQuery(query) / updatePagingQuery(query, true) / refreshData()
+}
+```
+
+**旧 · Flow ViewModel**
+
+```kotlin
+class NewsFlowPagingViewModel(...) :
+    FlowPagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, BaseView, NewsPagingQuery>(app) {
+    override fun createRepository() = NewsPagingRepositoryImpl(api)
+    override fun createPagingQuery() = NewsPagingQuery()
+    // updatePagingQuery(q) 默认不请求；refreshData() 或 updatePagingQuery(q, refresh = true)
 }
 ```
 
@@ -514,13 +550,26 @@ public class NewsPagingViewModel extends PagingViewModel<NewsPagingRepositoryImp
 class NewsPagingViewModel @Inject constructor(
     application: Application,
     private val api: ApiServiceHelper
-) : NetworkFlowPagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, BaseView>(
-    application
-) {
+) : NetworkFlowPagingViewModel<
+    NewsPagingRepositoryImpl,
+    NotificationMessageBean,
+    BaseView,
+    NewsPagingQuery
+>(application) {
+
     override fun createRepository() = NewsPagingRepositoryImpl(api)
+
+    override fun createPagingQuery() = NewsPagingQuery()
 
     // dataFlow: StateFlow<PagingData<T>>
     // items: LiveData<PagingData<T>>  // 兼容旧 Java Fragment
+
+    /** 改筛选：默认不自动请求 */
+    fun applyFilter(keyword: String, filter: Int) {
+        updatePagingQuery(NewsPagingQuery(keyword, filter)) // refresh=false
+        refreshData() // 需要拉数时再调
+        // 或：updatePagingQuery(NewsPagingQuery(keyword, filter), refresh = true)
+    }
 }
 ```
 
@@ -536,7 +585,8 @@ viewLifecycleOwner.lifecycleScope.launch {
 viewModel.items.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }
 ```
 
-刷新：`viewModel.refreshData()`（基类已实现，会重建 `Pager`）。
+刷新：`viewModel.refreshData()`（基类已实现，会按**当前** `pagingQuery` 快照重建 `Pager`）。  
+仅改 `pagingQuery` / `updatePagingQuery(query)` **不会**自动请求。
 
 ---
 

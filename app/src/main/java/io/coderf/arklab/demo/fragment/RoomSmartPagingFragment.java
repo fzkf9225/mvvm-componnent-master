@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.Objects;
+
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseSmartPagingFragment;
@@ -51,7 +53,6 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
 
     public void searcher(String keywords) {
         mViewModel.setKeywords(keywords);
-        mViewModel.keywordsKey.add("name");
         mViewModel.refreshData();
         adapter.refresh();
     }

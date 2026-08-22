@@ -1,5 +1,6 @@
 package io.coderf.arklab.demo.repository
 
+import io.coderf.arklab.core.bean.EmptyPagingQuery
 import io.coderf.arklab.core.network.NetworkPagingRepository
 import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
@@ -10,14 +11,18 @@ import io.coderf.arklab.demo.bean.NotificationMessageBean
  */
 class KtDemoPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView>() {
+) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView,EmptyPagingQuery>() {
 
-    override suspend fun fetchPage(page: Int, pageSize: Int): List<NotificationMessageBean> {
+    override suspend fun fetchPage(
+        page: Int,
+        pageSize: Int,
+        query: EmptyPagingQuery
+    ): List<NotificationMessageBean> {
         val pageBean = api.getNewListSuspend(
             page,
             pageSize,
             NotificationMessageBean().apply { type = "5" }
         )
-        return pageBean?.list ?: emptyList()
+        return pageBean.list ?: emptyList()
     }
 }

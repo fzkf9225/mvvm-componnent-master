@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.paging.PagingState;
 import androidx.paging.rxjava3.RxPagingSource;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +15,7 @@ import java.util.Set;
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.dao.BaseRoomDao;
 import io.coderf.arklab.common.repository.RoomRepositoryImpl;
+import io.coderf.arklab.core.bean.RoomPagingQuery;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -24,19 +25,25 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <p><b>分页模型：</b>使用页码 {@link Integer} 作为 key，{@code offset = page × pageSize}，
  * 数据来自 {@link RoomRepositoryImpl#findPageList} 同步查询。</p>
  *
+ * <p>查询条件由 {@link RoomPagingQuery} 在创建 Source 时快照传入（与网络分页
+ * {@code PagingQuery} 同一套约定）。ViewModel 持有 query，变更后 {@code refreshData()}。</p>
+ *
  * <p><b>用法示例：</b></p>
  * <pre>{@code
- * RxRoomPagingSource<Person, PersonDao, BaseView> source = new RxRoomPagingSource<>(
- *         personRepository,
- *         queryParams,           // 等值条件，可为 emptyMap
- *         Set.of("name", "mobile"), // 模糊列，可为 null
- *         keyword,
- *         "id"                   // 排序列，空则默认 "id"
- * );
- * Pager<Integer, Person> pager = new Pager<>(
- *         new PagingConfig(20),
- *         () -> source
- * );
+ * // ViewModel
+ * @Override
+ * protected RoomPagingQuery createPagingQuery() {
+ *     RoomPagingQuery q = new RoomPagingQuery();
+ *     q.getKeywordsKey().add("name");
+ *     q.setOrderBy("id");
+ *     return q;
+ * }
+ *
+ * @Override
+ * public LiveData<PagingData<Person>> createPagingData() {
+ *     return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(),
+ *         () -> new RxRoomPagingSource<>(iRepository, getPagingQuery())));
+ * }
  * }</pre>
  *
  * @param <T>  列表项实体
@@ -44,86 +51,27 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * @param <BV> 页面 View 类型
  * @author fz
  * @see RoomRepositoryImpl#findPageList
+ * @see RoomPagingQuery
  */
-public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView> extends RxPagingSource<Integer, T> {
+public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
+        extends RxPagingSource<Integer, T> {
 
-    /** 提供同步分页查询的仓库 */
     private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
-    /** 等值查询条件：列名 -> 值 */
-    private final Map<String, Object> queryParams;
-    /** 参与 LIKE 模糊搜索的列名集合 */
-    private final Set<String> keywordsKey;
-    /** 模糊搜索关键字 */
-    private final String keywords;
-    /** 排序列名，为空时 load 内使用 "id" */
-    private String orderBy;
+    /** 创建本 Source 时的查询参数快照 */
+    private final RoomPagingQuery query;
 
     /**
-     * 全参数构造：条件 + 关键字 + 排序。
-     *
      * @param roomRepositoryImpl 已注入 RequestUi 的 Room 仓库
-     * @param queryParams        等值条件 Map
-     * @param keywordsKey        模糊列集合
-     * @param keywords           搜索词
-     * @param orderBy            排序字段
+     * @param query              ViewModel 当前 {@link RoomPagingQuery}（建议传入副本或不可变快照）
      */
-    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
-                              Map<String, Object> queryParams,
-                              Set<String> keywordsKey,
-                              String keywords,
-                              String orderBy) {
+    public RxRoomPagingSource(
+            @NonNull RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+            @NonNull RoomPagingQuery query
+    ) {
         this.roomRepositoryImpl = roomRepositoryImpl;
-        this.queryParams = queryParams;
-        this.keywords = keywords;
-        this.keywordsKey = keywordsKey;
-        this.orderBy = orderBy;
+        this.query = query;
     }
 
-    /**
-     * 无等值条件，仅关键字 + 排序。
-     */
-    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
-                              Set<String> keywordsKey,
-                              String keywords,
-                              String orderBy) {
-        this.roomRepositoryImpl = roomRepositoryImpl;
-        this.queryParams = new HashMap<>();
-        this.keywords = keywords;
-        this.keywordsKey = keywordsKey;
-        this.orderBy = orderBy;
-    }
-
-    /**
-     * 仅排序，无条件与关键字。
-     */
-    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl, String orderBy) {
-        this.roomRepositoryImpl = roomRepositoryImpl;
-        this.queryParams = new HashMap<>();
-        this.keywords = null;
-        this.keywordsKey = null;
-        this.orderBy = orderBy;
-    }
-
-    /**
-     * 条件 + 关键字，无排序（load 时默认按 id）。
-     */
-    public RxRoomPagingSource(RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
-                              Map<String, Object> queryParams,
-                              Set<String> keywordsKey,
-                              String keywords) {
-        this.roomRepositoryImpl = roomRepositoryImpl;
-        this.queryParams = queryParams;
-        this.keywords = keywords;
-        this.keywordsKey = keywordsKey;
-    }
-
-    /**
-     * 加载一页数据。
-     * <ul>
-     *   <li>key 为 null 表示第一页（page = 0）</li>
-     *   <li>本页条数 &lt; loadSize 时认为没有下一页</li>
-     * </ul>
-     */
     @NonNull
     @Override
     public Single<LoadResult<Integer, T>> loadSingle(@NonNull LoadParams<Integer> loadParams) {
@@ -131,10 +79,15 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
             final int limit = loadParams.getLoadSize();
             final int page = loadParams.getKey() == null ? 0 : loadParams.getKey();
             final int offset = page * limit;
-            final String sortColumn = TextUtils.isEmpty(orderBy) ? "id" : orderBy;
+            final String sortColumn = TextUtils.isEmpty(query.getOrderBy()) ? "id" : query.getOrderBy();
+            final Map<String, Object> params = query.getQueryParams() != null
+                    ? query.getQueryParams()
+                    : Collections.emptyMap();
+            final Set<String> keywordKeys = query.getKeywordsKey();
+            final String keywords = query.getKeywords();
             return Single.fromCallable(() ->
                             roomRepositoryImpl.findPageList(
-                                    queryParams, keywordsKey, keywords, sortColumn, limit, offset))
+                                    params, keywordKeys, keywords, sortColumn, limit, offset))
                     .subscribeOn(Schedulers.io())
                     .map(list -> toLoadResult(list, page, limit))
                     .onErrorReturn(LoadResult.Error::new);
@@ -143,13 +96,6 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
         }
     }
 
-    /**
-     * 将查询结果转为 Paging {@link LoadResult.Page}。
-     *
-     * @param items 当前页数据
-     * @param page  当前页码（从 0 开始）
-     * @param limit 请求的 pageSize
-     */
     private LoadResult<Integer, T> toLoadResult(@NonNull List<T> items, int page, int limit) {
         Integer prevKey = page <= 0 ? null : page - 1;
         Integer nextKey = items.size() < limit ? null : page + 1;
@@ -157,9 +103,6 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
                 LoadResult.Page.COUNT_UNDEFINED, LoadResult.Page.COUNT_UNDEFINED);
     }
 
-    /**
-     * 刷新时根据锚点位置估算应加载的页码。
-     */
     @Nullable
     @Override
     public Integer getRefreshKey(@NonNull PagingState<Integer, T> pagingState) {
