@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
@@ -253,12 +252,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
             getRecyclerView().setVisibility(View.GONE);
             //刷新,加载
         } else if (emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
-            if (emptyLayout.isSkeletonLoadingEnabled()) {
-                emptyLayout.setVisibility(View.VISIBLE);
-            } else {
-                emptyLayout.setVisibility(View.GONE);
-            }
-            getRecyclerView().setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.VISIBLE);
         } else if (emptyType == EmptyLayout.State.NO_DATA) {
             onRefreshFinish(true);
             onLoadFinish(true);

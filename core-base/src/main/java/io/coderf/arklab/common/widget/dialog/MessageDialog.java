@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.DimenRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
@@ -19,7 +17,6 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogMessageBinding;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 
 

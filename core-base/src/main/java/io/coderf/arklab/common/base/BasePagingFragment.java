@@ -216,12 +216,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
             emptyLayout.setVisibility(View.VISIBLE);
             getRecyclerView().setVisibility(View.GONE);
         } else if (emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
-            if (emptyLayout.isSkeletonLoadingEnabled()) {
-                emptyLayout.setVisibility(View.VISIBLE);
-            } else {
-                emptyLayout.setVisibility(View.GONE);
-            }
-            getRecyclerView().setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.VISIBLE);
         } else if (emptyType == EmptyLayout.State.HIDE_LAYOUT) {
             emptyLayout.setVisibility(View.GONE);
             getRecyclerView().setVisibility(View.VISIBLE);

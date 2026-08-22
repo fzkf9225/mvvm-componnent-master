@@ -179,10 +179,10 @@ public class EmptyLayout extends ConstraintLayout {
 
     private void initAttr(AttributeSet attrs) {
         // 默认值初始化
-        errorTextColor = ContextCompat.getColor(getContext(), R.color.gray);
-        loadingTextColor = ContextCompat.getColor(getContext(), R.color.gray);
-        noDataTextColor = ContextCompat.getColor(getContext(), R.color.gray);
-        clickableNoDataTextColor = ContextCompat.getColor(getContext(), R.color.nv_bg_color);
+        errorTextColor = 0x4D000000;
+        loadingTextColor = ContextCompat.getColor(getContext(), R.color.dark_light);
+        noDataTextColor = 0x4D000000;
+        clickableNoDataTextColor = 0x4D000000;
 
         errorTextSize = DensityUtil.sp2px(getContext(), 14);
         loadingTextSize = DensityUtil.sp2px(getContext(), 14);

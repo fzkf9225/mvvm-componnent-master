@@ -11,7 +11,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;

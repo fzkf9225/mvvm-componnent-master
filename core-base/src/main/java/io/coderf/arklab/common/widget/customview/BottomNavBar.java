@@ -17,8 +17,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.coderf.arklab.common.R;
-
 /**
  * 底部导航栏封装：基于 Material {@link BottomNavigationView}，支持代码配置菜单项与选中监听。
  *

@@ -1,12 +1,12 @@
 package io.coderf.arklab.common.navigator
 
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
 import com.google.android.material.navigation.NavigationBarView
-import androidx.core.view.size
-import androidx.core.view.get
 
 /**
  * 与 [StateNavigator] 配套的 BottomNavigation / NavigationRail 绑定。

@@ -24,7 +24,6 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.DialogChoiceSelectBinding;
 import io.coderf.arklab.common.listener.OnChoiceSelectListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.customview.CornerButton;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 

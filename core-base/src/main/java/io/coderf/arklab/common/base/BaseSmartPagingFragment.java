@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.Observer;
@@ -226,12 +225,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
             emptyLayout.setVisibility(View.VISIBLE);
             getRecyclerView().setVisibility(View.GONE);
         } else if (emptyType == EmptyLayout.State.NETWORK_LOADING_REFRESH) {
-            if (emptyLayout.isSkeletonLoadingEnabled()) {
-                emptyLayout.setVisibility(View.VISIBLE);
-            } else {
-                emptyLayout.setVisibility(View.GONE);
-            }
-            getRecyclerView().setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.VISIBLE);
         } else if (emptyType == EmptyLayout.State.HIDE_LAYOUT) {
             emptyLayout.setVisibility(View.GONE);
             getRecyclerView().setVisibility(View.VISIBLE);
