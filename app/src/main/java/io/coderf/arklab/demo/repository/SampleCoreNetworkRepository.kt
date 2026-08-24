@@ -6,6 +6,7 @@ import io.coderf.arklab.core.request.RequestResult
 import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
+import io.coderf.arklab.demo.bean.RequestNotificationBean
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -43,7 +44,7 @@ class SampleCoreNetworkRepository(
             api.getNewListSuspend(
                 page,
                 pageSize,
-                NotificationMessageBean().apply { type = "5" }
+                RequestNotificationBean().apply { type = "5" }
             ).list ?: emptyList()
         }
     }

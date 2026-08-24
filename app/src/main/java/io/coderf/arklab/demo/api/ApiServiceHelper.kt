@@ -3,6 +3,7 @@ package io.coderf.arklab.demo.api
 import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.bean.base.PageBean
 import io.coderf.arklab.demo.bean.NotificationMessageBean
+import io.coderf.arklab.demo.bean.RequestNotificationBean
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,15 +16,6 @@ import retrofit2.http.Path
  */
 interface ApiServiceHelper : BaseApiService {
 
-    /**
-     * 获取行政区划树
-     */
-    @POST("news/findPage/{page}/{size}")
-    fun getNewList(
-        @Path("page") page: Int,
-        @Path("size") size: Int,
-        @Body notificationMessageBean: NotificationMessageBean
-    ): Observable<PageBean<NotificationMessageBean>>
 
     /**
      * 获取行政区划树
@@ -32,7 +24,7 @@ interface ApiServiceHelper : BaseApiService {
     suspend fun getNewListSuspend(
         @Path("page") page: Int,
         @Path("size") size: Int,
-        @Body notificationMessageBean: NotificationMessageBean
+        @Body request: RequestNotificationBean
     ): PageBean<NotificationMessageBean>
 
     /**

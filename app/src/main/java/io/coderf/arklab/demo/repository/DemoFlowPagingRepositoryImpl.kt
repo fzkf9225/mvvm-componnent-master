@@ -7,6 +7,7 @@ import io.coderf.arklab.core.request.RequestResult
 import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
+import io.coderf.arklab.demo.bean.RequestNotificationBean
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -15,17 +16,17 @@ import kotlinx.coroutines.flow.Flow
  */
 class DemoFlowPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView, EmptyPagingQuery>() {
+) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView, RequestNotificationBean>() {
 
     override suspend fun fetchPage(
         page: Int,
         pageSize: Int,
-        query: EmptyPagingQuery
+        query: RequestNotificationBean
     ): List<NotificationMessageBean> {
         val pageBean = api.getNewListSuspend(
             page,
             pageSize,
-            NotificationMessageBean().apply { type = "5" }
+            query
         )
         return pageBean.list ?: emptyList()
     }
