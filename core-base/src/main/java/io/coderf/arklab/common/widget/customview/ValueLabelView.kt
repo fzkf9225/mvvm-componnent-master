@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
-import io.coderf.arklab.common.utils.common.dp2px
+import io.coderf.arklab.core.utils.ext.dp2px
 
 /**
  * 自定义数值显示控件

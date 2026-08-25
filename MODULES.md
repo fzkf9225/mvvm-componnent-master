@@ -54,7 +54,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 | 职责 | `BaseActivity` / `BaseFragment` / `BaseViewModel`、历史 widget、helper、**全部 common 资源与 DataBinding** |
 | namespace | `io.coderf.arklab.common`（保留旧 R / 包名，业务 import 基本不用改） |
 | 何时用 | 一般通过 `common` 间接依赖；不要在业务里再拆第二份同名 R |
-| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成 |
+| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。 |
 
 ### `core-network`
 
@@ -99,8 +99,11 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 
 | 项 | 说明 |
 |----|------|
-| 职责 | 无 Android R 依赖的轻量工具（如 `CoreLogger`） |
-| 现状 | 预留分层；多数工具仍在 `core-base` |
+| 职责 | 无 Android R 依赖的轻量工具与通用扩展（`CoreLogger`、日期/数值/密度/View 等） |
+| 包名 | `io.coderf.arklab.core.utils`；扩展统一在 `io.coderf.arklab.core.utils.ext` |
+| 现状 | 已从 `core-base` 下沉原 `Extensions.kt`；`DrawableUtil` 等带 R / 重 UI 的仍留在 `core-base` |
+| 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
+| 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
 
 ---
 

@@ -35,3 +35,4 @@ local.properties
 /.idea
 *.hprof
 /.kotlin/
+/room-processor/bin/

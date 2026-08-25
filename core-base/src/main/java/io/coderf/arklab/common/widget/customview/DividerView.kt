@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import io.coderf.arklab.common.R
-import io.coderf.arklab.common.utils.common.dp2px
+import io.coderf.arklab.core.utils.ext.dp2px
 
 /**
  * created by fz on 2024/10/11 14:55
