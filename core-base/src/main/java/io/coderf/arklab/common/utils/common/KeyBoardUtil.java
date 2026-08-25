@@ -1,149 +1,259 @@
 package io.coderf.arklab.common.utils.common;
 
-
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
- /**
- * Created by fz on 2018/1/11.
-  * 打开或关闭软键盘
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+
+/**
+ * 打开或关闭软键盘。
+ * <p>
+ * API 30+ 优先使用 {@link WindowInsetsControllerCompat} 显示/隐藏 IME，
+ * 避免 {@link InputMethodManager#toggleSoftInput(int, int)} 等已废弃 API。
+ *
+ * @author fz
+ * @version 1.0.1
+ * @since 1.0
+ * @updated 2026/8/25 13:20
  */
-
 public class KeyBoardUtil {
-    /**
-     * 打卡软键盘
-     *
-     * @param mEditText
-     *            输入框
-     * @param mContext
-     *            上下文
-     */
-    public static void openKeyboard(EditText mEditText, Context mContext)
-    {
-        InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        mEditText.requestFocus();  // 先获取焦点
-        imm.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
-                InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+    private KeyBoardUtil() {
     }
 
     /**
-     * 关闭软键盘
+     * 打开软键盘。
      *
-     * @param mEditText
-     *            输入框
-     * @param mContext
-     *            上下文
+     * @param mEditText 输入框
+     * @param mContext  上下文（Activity 时走 InsetsController，更稳）
      */
-    public static void closeKeyboard(EditText mEditText, Context mContext)
-    {
-        InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+    public static void openKeyboard(EditText mEditText, Context mContext) {
+        if (mEditText == null || mContext == null) {
+            return;
+        }
+        mEditText.requestFocus();
+        if (!showImeWithInsets(mContext, mEditText)) {
+            InputMethodManager imm = getImm(mContext);
+            if (imm != null) {
+                // 不再使用已废弃的 toggleSoftInput / SHOW_FORCED
+                imm.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
     }
 
-     public static void setListener(Activity activity, SoftKeyBoardListener.OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
-         SoftKeyBoardListener softKeyBoardListener = new SoftKeyBoardListener(activity);
-         softKeyBoardListener.setOnSoftKeyBoardChangeListener(onSoftKeyBoardChangeListener);
-     }
+    /**
+     * 关闭软键盘。
+     *
+     * @param mEditText 输入框
+     * @param mContext  上下文
+     */
+    public static void closeKeyboard(EditText mEditText, Context mContext) {
+        if (mEditText == null || mContext == null) {
+            return;
+        }
+        if (!hideImeWithInsets(mContext, mEditText)) {
+            InputMethodManager imm = getImm(mContext);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            }
+        }
+    }
 
-     /**
-      * 在 Activity 的 dispatchTouchEvent 中调用
-      * @param activity 当前 Activity
-      * @param ev 触摸事件
-      * @return 是否消费了事件（通常返回 false 以保持原有事件传递机制）
-      */
-     public static boolean handleDispatchTouchEvent(Activity activity, MotionEvent ev) {
-         // 1. 如果是手指抬起动作（避免重复触发）
-         if (ev.getAction() == MotionEvent.ACTION_UP) {
-             View currentFocusView = activity.getCurrentFocus();
+    public static void setListener(Activity activity,
+                                   SoftKeyBoardListener.OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
+        SoftKeyBoardListener softKeyBoardListener = new SoftKeyBoardListener(activity);
+        softKeyBoardListener.setOnSoftKeyBoardChangeListener(onSoftKeyBoardChangeListener);
+    }
 
-             // 2. 如果当前焦点在 EditText 上才处理
-             if (currentFocusView != null && currentFocusView instanceof EditText) {
-                 // 3. 获取点击坐标
-                 int rawX = (int) ev.getRawX();
-                 int rawY = (int) ev.getRawY();
+    /**
+     * 在 Activity 的 dispatchTouchEvent 中调用。
+     *
+     * @deprecated 请使用 {@link io.coderf.arklab.core.ui.delegate.HideKeyboardOnTouchOutsideDelegate}；
+     * {@link io.coderf.arklab.common.base.BaseActivity} 已内置。本方法转发到 core-ui 实现。
+     */
+    @Deprecated
+    public static boolean handleDispatchTouchEvent(Activity activity, MotionEvent ev) {
+        return io.coderf.arklab.core.ui.delegate.HideKeyboardOnTouchOutsideDelegate
+                .handleTouch(activity, ev);
+    }
 
-                 // 4. 构造点击位置在焦点View中的坐标数组
-                 int[] location = new int[2];
-                 currentFocusView.getLocationOnScreen(location);
-                 int viewLeft = location[0];
-                 int viewTop = location[1];
-                 int viewRight = viewLeft + currentFocusView.getWidth();
-                 int viewBottom = viewTop + currentFocusView.getHeight();
+    /**
+     * 隐藏软键盘（基于当前焦点的 View）。
+     */
+    public static void hideSoftInput(Activity activity) {
+        if (activity == null) {
+            return;
+        }
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            // 无焦点时仍尝试通过 window 隐藏 IME
+            View decor = activity.getWindow() != null ? activity.getWindow().getDecorView() : null;
+            if (decor != null) {
+                hideImeWithInsets(activity, decor);
+            }
+            return;
+        }
+        hideSoftInput(activity, view);
+    }
 
-                 // 5. 判断点击坐标是否在 EditText 的范围之外
-                 boolean isTouchOutside = rawX < viewLeft || rawX > viewRight
-                         || rawY < viewTop || rawY > viewBottom;
+    /**
+     * 隐藏软键盘（指定 View）。
+     */
+    public static void hideSoftInput(Context context, View view) {
+        if (context == null || view == null) {
+            return;
+        }
+        if (!hideImeWithInsets(context, view)) {
+            InputMethodManager imm = getImm(context);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
 
-                 if (isTouchOutside) {
-                     // 6. 收起键盘并清除焦点
-                     hideSoftInput(activity);
-                     currentFocusView.clearFocus();
-                 }
-             }
-         }
-         // 返回 false，不消费事件，让事件继续传递给子 View
-         return false;
-     }
+    /**
+     * 显示软键盘。
+     */
+    public static void showSoftInput(Context context, View view) {
+        if (context == null || view == null) {
+            return;
+        }
+        view.requestFocus();
+        if (!showImeWithInsets(context, view)) {
+            InputMethodManager imm = getImm(context);
+            if (imm != null) {
+                imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
+    }
 
-     /**
-      * 隐藏软键盘（基于当前焦点的 View）
-      */
-     public static void hideSoftInput(Activity activity) {
-         View view = activity.getCurrentFocus();
-         if (view != null) {
-             hideSoftInput(activity, view);
-         }
-     }
+    /**
+     * 切换软键盘状态。
+     * <p>
+     * 不再调用已废弃的 {@link InputMethodManager#toggleSoftInput(int, int)}：
+     * 根据当前 IME 可见性选择 show / hide。
+     */
+    public static void toggleSoftInput(Context context) {
+        if (context == null) {
+            return;
+        }
+        View view = resolveFocusView(context);
+        if (view == null) {
+            return;
+        }
+        if (isImeVisible(view)) {
+            hideSoftInput(context, view);
+        } else {
+            showSoftInput(context, view);
+        }
+    }
 
-     /**
-      * 隐藏软键盘（指定 View）
-      */
-     public static void hideSoftInput(Context context, View view) {
-         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-         if (imm != null) {
-             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-         }
-     }
+    /**
+     * 判断软键盘是否显示。
+     * API 30+ 优先读 WindowInsets；低版本回退 {@link InputMethodManager#isActive(View)}（仅供参考）。
+     */
+    public static boolean isSoftInputActive(Activity activity) {
+        if (activity == null) {
+            return false;
+        }
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            View decor = activity.getWindow() != null ? activity.getWindow().getDecorView() : null;
+            if (decor != null) {
+                return isImeVisible(decor);
+            }
+            return false;
+        }
+        if (isImeVisible(view)) {
+            return true;
+        }
+        InputMethodManager imm = getImm(activity);
+        return imm != null && imm.isActive(view);
+    }
 
-     /**
-      * 显示软键盘
-      */
-     public static void showSoftInput(Context context, View view) {
-         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-         if (imm != null) {
-             view.requestFocus();
-             imm.showSoftInput(view, 0);
-         }
-     }
+    // -------------------------------------------------------------------------
+    // Insets / IMM helpers
+    // -------------------------------------------------------------------------
 
-     /**
-      * 切换软键盘状态
-      */
-     public static void toggleSoftInput(Context context) {
-         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-         if (imm != null) {
-             imm.toggleSoftInput(0, 0);
-         }
-     }
+    @Nullable
+    private static InputMethodManager getImm(@NonNull Context context) {
+        return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
 
-     /**
-      * 判断软键盘是否显示
-      * 注意：这个方法在不同设备上可能不准确，仅供参考
-      */
-     public static boolean isSoftInputActive(Activity activity) {
-         View view = activity.getCurrentFocus();
-         if (view != null) {
-             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-             return imm != null && imm.isActive(view);
-         }
-         return false;
-     }
+    @Nullable
+    private static View resolveFocusView(@NonNull Context context) {
+        if (context instanceof Activity activity) {
+            View focus = activity.getCurrentFocus();
+            if (focus != null) {
+                return focus;
+            }
+            Window window = activity.getWindow();
+            return window != null ? window.getDecorView() : null;
+        }
+        return null;
+    }
+
+    /**
+     * @return true 表示已用 InsetsController 处理；false 表示调用方应回退 IMM。
+     */
+    private static boolean showImeWithInsets(@NonNull Context context, @NonNull View view) {
+        WindowInsetsControllerCompat controller = resolveInsetsController(context, view);
+        if (controller == null) {
+            return false;
+        }
+        controller.show(WindowInsetsCompat.Type.ime());
+        return true;
+    }
+
+    /**
+     * @return true 表示已用 InsetsController 处理；false 表示调用方应回退 IMM。
+     */
+    private static boolean hideImeWithInsets(@NonNull Context context, @NonNull View view) {
+        WindowInsetsControllerCompat controller = resolveInsetsController(context, view);
+        if (controller == null) {
+            return false;
+        }
+        controller.hide(WindowInsetsCompat.Type.ime());
+        return true;
+    }
+
+    @Nullable
+    private static WindowInsetsControllerCompat resolveInsetsController(
+            @NonNull Context context,
+            @NonNull View view
+    ) {
+        if (context instanceof Activity) {
+            Window window = ((Activity) context).getWindow();
+            if (window != null) {
+                return WindowCompat.getInsetsController(window, view);
+            }
+        }
+        // 非 Activity Context：尝试从 View 的 window token 关联的 root 获取（可能为 null）
+        return null;
+    }
+
+    private static boolean isImeVisible(@NonNull View view) {
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(view);
+        if (insets != null) {
+            return insets.isVisible(WindowInsetsCompat.Type.ime());
+        }
+        // 低版本或 insets 尚未分发
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            Context context = view.getContext();
+            InputMethodManager imm = getImm(context);
+            return imm != null && imm.isActive(view);
+        }
+        return false;
+    }
 }

@@ -18,6 +18,7 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
+import io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.Family;
 import io.coderf.arklab.demo.bean.Person;
@@ -33,10 +34,20 @@ import io.coderf.arklab.demo.viewmodel.VerifyViewModel;
  *     <li>{@link io.coderf.arklab.annotation.annotation.Valid}：嵌套校验 {@link Family}</li>
  *     <li>紧急联系人为 {@code @Ignore} 字段，不影响 Room 表结构</li>
  * </ul>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/8/25 13:28
  */
 @AndroidEntryPoint
 public class VerifyTopActivity extends BaseActivity<VerifyViewModel, ActivityVerifyTopBinding> {
     private UseCase useCase;
+
+    {
+        // 表单页：键盘弹出时顶起底部内容，避免输入框被遮挡
+        imeInsetPolicy = ImeAdjustEnabled.INSTANCE;
+    }
 
     @Override
     protected int getLayoutId() {

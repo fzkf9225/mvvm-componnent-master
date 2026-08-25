@@ -28,14 +28,29 @@ import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
-import io.coderf.arklab.common.utils.common.KeyBoardUtil;
 import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.core.ui.delegate.AlwaysInitData;
+import io.coderf.arklab.core.ui.delegate.EdgeToEdgeEnabled;
+import io.coderf.arklab.core.ui.delegate.EdgeToEdgePolicy;
+import io.coderf.arklab.core.ui.delegate.HideKeyboardOnTouchOutsideDelegate;
+import io.coderf.arklab.core.ui.delegate.HideKeyboardOnTouchOutsidePolicy;
+import io.coderf.arklab.core.ui.delegate.ImeAdjustDisabled;
+import io.coderf.arklab.core.ui.delegate.ImeInsetPolicy;
+import io.coderf.arklab.core.ui.delegate.ImmersiveBarPolicy;
+import io.coderf.arklab.core.ui.delegate.ImmersiveBarsVisible;
 import io.coderf.arklab.core.ui.delegate.InitDataPolicy;
+import io.coderf.arklab.core.ui.delegate.PageArguments;
+import io.coderf.arklab.core.ui.delegate.PageArgumentsResolver;
+import io.coderf.arklab.core.ui.delegate.UiSafety;
+import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
+
 /**
  * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
+ * <p>
+ * UI 行为策略来自 {@code core-ui} 委托（{@link InitDataPolicy}、{@link EdgeToEdgePolicy}、
+ * {@link HideKeyboardOnTouchOutsideDelegate} 等）；子类可通过改 policy 字段或重写钩子方法定制。
  * <p>
  * <b>生命周期约定（与历史行为兼容）</b>
  * <ul>
@@ -47,6 +62,11 @@ import io.coderf.arklab.core.ui.delegate.InitDataPolicy;
  * @param <VM>  ViewModel 类型
  * @param <VDB> 页面 DataBinding 类型
  * @see BaseStatefulActivity
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @updated 2026/8/25 13:12
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
         implements BaseView, AuthManager.AuthCallback {
@@ -77,6 +97,33 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @NonNull
     protected InitDataPolicy initDataPolicy = AlwaysInitData.INSTANCE;
 
+    /** 页面参数解析；默认 Intent extras。可替换为深链/路由实现。 */
+    @Nullable
+    protected PageArgumentsResolver pageArgumentsResolver;
+
+    /** UI 安全检查；默认 Activity 未 finish/destroy。 */
+    @Nullable
+    protected UiSafetyChecker uiSafetyChecker;
+
+    /** 点击空白收键盘策略；默认跟随 {@link Config#isHideKeyboardOnTouchOutside()}。 */
+    @Nullable
+    protected HideKeyboardOnTouchOutsidePolicy hideKeyboardOnTouchOutsidePolicy;
+
+    @Nullable
+    private HideKeyboardOnTouchOutsideDelegate hideKeyboardDelegate;
+
+    /** Edge-to-Edge；默认开启。全屏视频等可改为 {@link io.coderf.arklab.core.ui.delegate.EdgeToEdgeDisabled}。 */
+    @NonNull
+    protected EdgeToEdgePolicy edgeToEdgePolicy = EdgeToEdgeEnabled.INSTANCE;
+
+    /** 键盘顶起底部；默认关闭。表单页可改为 {@link io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled}。 */
+    @NonNull
+    protected ImeInsetPolicy imeInsetPolicy = ImeAdjustDisabled.INSTANCE;
+
+    /** 全屏隐藏系统栏；默认关闭。 */
+    @NonNull
+    protected ImmersiveBarPolicy immersiveBarPolicy = ImmersiveBarsVisible.INSTANCE;
+
     protected abstract int getLayoutId();
 
     @Override
@@ -85,6 +132,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             EdgeToEdgeHelper.enable(this);
         }
         super.onCreate(savedInstanceState);
+        ensureDelegates();
         createAuthManager();
         AppManager.getAppManager().addActivity(this);
         createUIController();
@@ -98,24 +146,40 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
+     * 惰性初始化默认委托（可在 onCreate 前由子类先赋值覆盖）。
+     */
+    protected void ensureDelegates() {
+        if (pageArgumentsResolver == null) {
+            pageArgumentsResolver = PageArguments.fromActivity(this);
+        }
+        if (uiSafetyChecker == null) {
+            uiSafetyChecker = UiSafety.forActivity(this);
+        }
+        if (hideKeyboardOnTouchOutsidePolicy == null) {
+            hideKeyboardOnTouchOutsidePolicy = () -> Config.getInstance().isHideKeyboardOnTouchOutside();
+        }
+        if (hideKeyboardDelegate == null) {
+            hideKeyboardDelegate = new HideKeyboardOnTouchOutsideDelegate(this, hideKeyboardOnTouchOutsidePolicy);
+        }
+    }
+
+    /**
      * 是否在 {@code onCreate} 中调用 {@link #initData(Bundle)}。
      * <p>
-     * 默认 {@code true}，与历史版本一致。子类可改为仅首次创建时加载，例如：
-     * {@code return savedInstanceState == null;}
+     * 默认走 {@link #initDataPolicy}。子类可改为仅首次创建时加载。
      */
     protected boolean shouldRunInitData(@Nullable Bundle savedInstanceState) {
         return initDataPolicy.shouldRunInitData(savedInstanceState);
     }
 
     /**
-     * 传给 {@link #initData(Bundle)} 的页面参数，默认取自 {@link #getIntent()} extras。
-     * 子类可重写以统一处理深链、路由等参数来源。
+     * 传给 {@link #initData(Bundle)} 的页面参数。
+     * 默认 {@link PageArguments#fromActivity}；子类可赋值 {@link #pageArgumentsResolver} 或重写本方法。
      */
     @NonNull
     protected Bundle resolvePageArguments() {
-        Intent intent = getIntent();
-        Bundle extras = intent != null ? intent.getExtras() : null;
-        return extras != null ? extras : new Bundle();
+        ensureDelegates();
+        return pageArgumentsResolver.resolve();
     }
 
     /** 是否为首次创建（非配置变更/进程恢复后的重建）。 */
@@ -125,7 +189,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     /** 当前是否适合展示 Dialog/Toast（未 finish 且未 destroy）。 */
     protected boolean isUiSafe() {
-        return !isFinishing() && !isDestroyed();
+        ensureDelegates();
+        return uiSafetyChecker.isUiSafe();
     }
 
     protected void createAuthManager() {
@@ -142,16 +207,20 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 特性开关：点击空白区域关闭键盘。
+     * @deprecated 请改用 {@link #hideKeyboardOnTouchOutsidePolicy}。本方法仅作兼容转发。
      */
+    @Deprecated
     protected boolean hideKeyboardOnTouchOutside() {
-        return Config.getInstance().isHideKeyboardOnTouchOutside();
+        ensureDelegates();
+        return hideKeyboardOnTouchOutsidePolicy.isEnabled();
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        ensureDelegates();
+        // 经 hideKeyboardOnTouchOutside()，兼容仍重写该方法的子类；新代码请改 policy 字段
         if (hideKeyboardOnTouchOutside()) {
-            KeyBoardUtil.handleDispatchTouchEvent(this, ev);
+            HideKeyboardOnTouchOutsideDelegate.handleTouch(this, ev);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -188,22 +257,17 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 是否启用 Android 15 Edge-to-Edge（全屏视频等页面可返回 false）。
+     * 是否启用 Android 15 Edge-to-Edge。默认读 {@link #edgeToEdgePolicy}。
      */
     protected boolean shouldApplyEdgeToEdge() {
-        return true;
+        return edgeToEdgePolicy.shouldApply();
     }
 
     /**
-     * 软键盘弹出时，是否将底部内容顶起以避开输入法。
-     * <p>
-     * 默认 {@code false}：贴底控件（如协议勾选框）位置不变，可能被键盘遮挡。
-     * 表单页需要输入框随键盘上移时，子类可返回 {@code true}。
-     * <p>
-     * 无需修改 {@code AndroidManifest.xml} 的 {@code windowSoftInputMode}，由框架统一处理。
+     * 软键盘弹出时是否将底部内容顶起。默认读 {@link #imeInsetPolicy}。
      */
     protected boolean shouldAdjustBottomForIme() {
-        return false;
+        return imeInsetPolicy.shouldAdjustBottomForIme();
     }
 
     /**
@@ -281,13 +345,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 是否隐藏系统状态栏与导航栏，使内容铺满屏幕（全屏视频等）。
-     * <p>
-     * 默认 {@code false}，保持现有状态栏展示；返回 {@code true} 时进入沉浸式全屏。
-     * </p>
+     * 是否隐藏系统状态栏与导航栏。默认读 {@link #immersiveBarPolicy}。
      */
     protected boolean shouldHideStatusBar() {
-        return false;
+        return immersiveBarPolicy.shouldHideSystemBars();
     }
 
     /**
@@ -333,7 +394,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     protected void onDestroy() {
-        if (uiController != null) {
+        if (uiController == null) {
+            // no-op
+        } else {
             uiController.hideLoading();
         }
         if (mViewModel != null) {

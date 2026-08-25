@@ -20,6 +20,7 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
+import io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.bean.UseCase;
@@ -33,10 +34,20 @@ import io.coderf.arklab.demo.viewmodel.VerifyViewModel;
  *     <li>{@code @Ignore} 字段：教育经历 / 开学时间 / 上课时间（跨字段日期、TIME 类型）</li>
  *     <li>Room 持久化字段 schema 不变，仅扩展非持久化演示字段</li>
  * </ul>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/8/25 13:29
  */
 @AndroidEntryPoint
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
     private UseCase useCase;
+
+    {
+        // 表单页：键盘弹出时顶起底部内容，避免输入框被遮挡
+        imeInsetPolicy = ImeAdjustEnabled.INSTANCE;
+    }
 
     @Override
     protected int getLayoutId() {

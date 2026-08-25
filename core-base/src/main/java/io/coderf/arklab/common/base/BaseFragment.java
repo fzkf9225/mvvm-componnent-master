@@ -23,12 +23,26 @@ import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
+import io.coderf.arklab.core.ui.delegate.AlwaysInitData;
+import io.coderf.arklab.core.ui.delegate.InitDataPolicy;
+import io.coderf.arklab.core.ui.delegate.PageArguments;
+import io.coderf.arklab.core.ui.delegate.PageArgumentsResolver;
+import io.coderf.arklab.core.ui.delegate.UiSafety;
+import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
+
 /**
  * Fragment MVVM 基类，生命周期约定与 {@link BaseActivity} 对齐。
  * <p>
- * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}。
+ * UI 策略委托与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}。
+ * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}，或设置
+ * {@link io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData}。
  *
  * @see BaseStatefulFragment
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @updated 2026/8/25 13:12
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
@@ -52,8 +66,23 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      */
     protected UIController uiController;
 
+    /**
+     * initData 是否在配置变更后再次执行；默认每次都执行（历史行为）。
+     */
+    @NonNull
+    protected InitDataPolicy initDataPolicy = AlwaysInitData.INSTANCE;
+
+    /** 页面参数解析；默认 Fragment arguments。 */
+    @Nullable
+    protected PageArgumentsResolver pageArgumentsResolver;
+
+    /** UI 安全检查。 */
+    @Nullable
+    protected UiSafetyChecker uiSafetyChecker;
+
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ensureDelegates();
         createAuthManager();
         createUIController();
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
@@ -66,17 +95,26 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return binding.getRoot();
     }
 
+    protected void ensureDelegates() {
+        if (pageArgumentsResolver == null) {
+            pageArgumentsResolver = PageArguments.fromFragment(this);
+        }
+        if (uiSafetyChecker == null) {
+            uiSafetyChecker = UiSafety.forFragment(this);
+        }
+    }
+
     /**
-     * 是否在 {@code onCreateView} 中调用 {@link #initData(Bundle)}。默认 true，与历史行为一致。
+     * 是否在 {@code onCreateView} 中调用 {@link #initData(Bundle)}。默认走 {@link #initDataPolicy}。
      */
     protected boolean shouldRunInitData(@Nullable Bundle savedInstanceState) {
-        return true;
+        return initDataPolicy.shouldRunInitData(savedInstanceState);
     }
 
     @NonNull
     protected Bundle resolvePageArguments() {
-        Bundle args = getArguments();
-        return args != null ? args : new Bundle();
+        ensureDelegates();
+        return pageArgumentsResolver.resolve();
     }
 
     protected final boolean isFirstCreation(@Nullable Bundle savedInstanceState) {
@@ -84,7 +122,8 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     protected boolean isUiSafe() {
-        return isAdded() && getActivity() != null && !requireActivity().isFinishing() && !requireActivity().isDestroyed();
+        ensureDelegates();
+        return uiSafetyChecker.isUiSafe();
     }
 
     protected void createAuthManager() {
