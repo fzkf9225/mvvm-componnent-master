@@ -1,7 +1,10 @@
 package io.coderf.arklab.common.annotation
 
+import kotlin.reflect.KClass
+
 /**
- * 标注在 Room `@Dao` 类上，由 KSP 自动生成 RawQuery 桥接类，免去手写 6 个 `@RawQuery` 方法。
+ * 标注在 Room `@Dao` 类上，由 KSP 自动生成 RawQuery 桥接类，免去手写 `@RawQuery` 方法
+ * （含查询 / count / 条件删除返回行数共 8 个 do*）。
  *
  * ## 使用步骤
  * 1. 模块 `build.gradle` 添加：`ksp project(':room-processor')`
@@ -29,7 +32,8 @@ package io.coderf.arklab.common.annotation
  * ```
  *
  * ## 不使用的场景
- * 老项目可继续 `extends BaseRoomDao<T>()` 并手动 override 底部 6 个 `do*` RawQuery 方法。
+ * 老项目可继续 `extends BaseRoomDao<T>()` 并手动 override 底部全部 `do*` RawQuery 方法
+ * （含 doCount、doExecute）。
  *
  * @param value 本 DAO 对应的 `@Entity` 类型，用于 `@RawQuery(observedEntities = [...])`
  * @see io.coderf.arklab.common.dao.BaseRoomDao
@@ -38,5 +42,5 @@ package io.coderf.arklab.common.annotation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 annotation class RoomObservedEntity(
-    val value: kotlin.reflect.KClass<*>
+    val value: KClass<*>
 )

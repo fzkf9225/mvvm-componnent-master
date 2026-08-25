@@ -29,53 +29,49 @@ public abstract class AttachmentDatabase extends RoomDatabase {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            // 检查并添加thumbnailPath列
-            if (isColumnExists(database, "thumbnailPath")) {
+            // 列不存在时才 ADD（shouldAddColumn = 列尚不存在）
+            if (shouldAddColumn(database, "AttachmentBean", "thumbnailPath")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN thumbnailPath TEXT");
             }
-            // 检查并添加俯仰角字段
-            if (isColumnExists(database, "pitch")) {
+            if (shouldAddColumn(database, "AttachmentBean", "pitch")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN pitch REAL");
             }
-            // 检查并添加偏航角字段
-            if (isColumnExists(database, "yaw")) {
+            if (shouldAddColumn(database, "AttachmentBean", "yaw")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN yaw REAL");
             }
-            // 检查并添加翻滚角字段
-            if (isColumnExists(database, "roll")) {
+            if (shouldAddColumn(database, "AttachmentBean", "roll")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN roll REAL");
             }
-            // 检查并添加拍照时所在经度字段
-            if (isColumnExists(database, "longitude")) {
+            if (shouldAddColumn(database, "AttachmentBean", "longitude")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN longitude REAL");
             }
-            // 检查并添加拍照时所在纬度字段
-            if (isColumnExists(database, "latitude")) {
+            if (shouldAddColumn(database, "AttachmentBean", "latitude")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN latitude REAL");
             }
-            // 检查并添加拍照时所在海拔高程字段
-            if (isColumnExists(database, "height")) {
+            if (shouldAddColumn(database, "AttachmentBean", "height")) {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN height REAL");
             }
         }
 
         /**
-         * 检查表中是否存在指定列
+         * 使用 PRAGMA table_info 判断列是否需要添加。
          *
-         * @param database   SQLite数据库
-         * @param columnName 列名
-         * @return 存在返回true，否则返回false
+         * @return true 表示列尚不存在，应执行 ADD COLUMN
          */
-        private boolean isColumnExists(@NonNull SupportSQLiteDatabase database,
-                                       @NonNull String columnName) {
-            String query = "SELECT COUNT(*) FROM sqlite_master " +
-                    "WHERE type = 'table' " +
-                    "AND name = ? " +
-                    "AND sql LIKE ?";
-            String likePattern = "%" + columnName + "%";
-            try (android.database.Cursor cursor = database.query(query, new String[]{"AttachmentBean", likePattern})) {
-                if (cursor.moveToFirst()) {
-                    return cursor.getInt(0) <= 0;
+        private boolean shouldAddColumn(@NonNull SupportSQLiteDatabase database,
+                                        @NonNull String tableName,
+                                        @NonNull String columnName) {
+            try (android.database.Cursor cursor =
+                         database.query("PRAGMA table_info(`" + tableName + "`)")) {
+                int nameIndex = cursor.getColumnIndex("name");
+                if (nameIndex < 0) {
+                    return true;
+                }
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(nameIndex);
+                    if (columnName.equalsIgnoreCase(name)) {
+                        return false;
+                    }
                 }
                 return true;
             }

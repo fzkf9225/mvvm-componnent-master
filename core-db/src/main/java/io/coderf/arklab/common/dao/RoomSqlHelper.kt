@@ -2,20 +2,19 @@ package io.coderf.arklab.common.dao
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
-import io.coderf.arklab.common.dao.RoomSqlHelper.buildKeywordClause
-import io.coderf.arklab.common.dao.RoomSqlHelper.buildWhereClause
 
 /**
  * Room 动态 SQL 拼装工具（仅供 [BaseRoomDao] 内部使用）。
  *
  * ## 职责
  * - 将 **条件值** 用 `?` 占位绑定，降低 SQL 注入风险；
- * - 对 **列名 / 排序字段** 做标识符校验（仅允许字母、数字、下划线）；
+ * - 对 **表名 / 列名 / 排序字段** 做标识符校验（仅允许字母、数字、下划线）；
  * - 统一生成 [SupportSQLiteQuery]，供 `@RawQuery` 方法执行。
  *
  * ## 注意
  * - 表名 [tableName] 由子类 [BaseRoomDao.getTableName] 提供，须与 `@Entity(tableName)` 一致；
- * - `orderBy`、Map 的 key 等「标识符」不能参数化，只能白名单校验后拼接。
+ * - `orderBy`、Map 的 key 等「标识符」不能参数化，只能白名单校验后拼接；
+ * - Map 的 value 若为 [Collection] / 数组，生成 `IN (?,?,?)`，空集合会生成恒假条件 `0 = 1`。
  *
  * @author fz
  * @since 1.0
@@ -26,10 +25,10 @@ internal object RoomSqlHelper {
     private val IDENTIFIER_PATTERN = Regex("^[a-zA-Z_][a-zA-Z0-9_]*$")
 
     /**
-     * 校验列名或排序字段名是否合法。
+     * 校验列名、表名或排序字段名是否合法。
      *
      * @param name 待校验名称
-     * @param role 用途描述，用于异常信息（如 column、orderBy）
+     * @param role 用途描述，用于异常信息（如 column、table、orderBy）
      * @throws IllegalArgumentException 名称不合法时抛出
      */
     fun requireIdentifier(name: String, role: String = "column") {
@@ -39,7 +38,10 @@ internal object RoomSqlHelper {
     }
 
     /**
-     * 根据等值条件 Map 生成 `WHERE col = ? AND ...` 片段及绑定参数。
+     * 根据等值 / IN 条件 Map 生成 `WHERE col = ? AND col2 IN (?,?,?)` 片段及绑定参数。
+     *
+     * - 普通值 → `col = ?`
+     * - [Collection] 或数组 → `col IN (?,?,?)`；空集合 → `0 = 1`（恒假，避免非法 `IN ()`）
      *
      * @param params 列名 -> 值；key 会做标识符校验
      * @return Pair(Where 子句含前导空格，无则空串；绑定参数数组)
@@ -49,10 +51,43 @@ internal object RoomSqlHelper {
         val args = mutableListOf<Any>()
         val conditions = params.entries.joinToString(" AND ") { (key, value) ->
             requireIdentifier(key)
-            args.add(value)
-            "$key = ?"
+            when (val normalized = normalizeCollection(value)) {
+                is List<*> -> {
+                    val nonNull = normalized.filterNotNull()
+                    if (nonNull.isEmpty()) {
+                        "0 = 1"
+                    } else {
+                        val placeholders = nonNull.joinToString(",") { "?" }
+                        args.addAll(nonNull)
+                        "$key IN ($placeholders)"
+                    }
+                }
+                else -> {
+                    args.add(normalized)
+                    "$key = ?"
+                }
+            }
         }
         return " WHERE $conditions" to args.toTypedArray()
+    }
+
+    /**
+     * 将数组 / Collection 规范为 List；非集合原样返回。
+     */
+    private fun normalizeCollection(value: Any): Any {
+        return when (value) {
+            is Collection<*> -> value.toList()
+            is Array<*> -> value.toList()
+            is IntArray -> value.toList()
+            is LongArray -> value.toList()
+            is ShortArray -> value.toList()
+            is ByteArray -> value.toList()
+            is BooleanArray -> value.toList()
+            is FloatArray -> value.toList()
+            is DoubleArray -> value.toList()
+            is CharArray -> value.toList()
+            else -> value
+        }
     }
 
     /**
@@ -119,7 +154,7 @@ internal object RoomSqlHelper {
     /**
      * 拼装 SELECT 查询。
      *
-     * @param tableName 表名
+     * @param tableName 表名（会做标识符校验）
      * @param where WHERE 片段（可含 `WHERE`）
      * @param bindArgs 与 where 中 `?` 对应的参数
      * @param order ORDER BY 片段
@@ -134,6 +169,7 @@ internal object RoomSqlHelper {
         limit: Int? = null,
         offset: Int? = null
     ): SupportSQLiteQuery {
+        requireIdentifier(tableName, role = "table")
         val limitSql = if (limit != null) " LIMIT $limit" else ""
         val offsetSql = if (offset != null) " OFFSET $offset" else ""
         val sql = "SELECT * FROM $tableName$where$order$limitSql$offsetSql"
@@ -141,9 +177,22 @@ internal object RoomSqlHelper {
     }
 
     /**
+     * 拼装 `SELECT COUNT(*) FROM table ...`。
+     */
+    fun count(
+        tableName: String,
+        where: String = "",
+        bindArgs: Array<Any> = emptyArray()
+    ): SupportSQLiteQuery {
+        requireIdentifier(tableName, role = "table")
+        val sql = "SELECT COUNT(*) FROM $tableName$where"
+        return if (bindArgs.isEmpty()) SimpleSQLiteQuery(sql) else SimpleSQLiteQuery(sql, bindArgs)
+    }
+
+    /**
      * 拼装 DELETE 语句。
      *
-     * @param tableName 表名
+     * @param tableName 表名（会做标识符校验）
      * @param where WHERE 片段，空表示删全表
      * @param bindArgs 绑定参数
      */
@@ -152,6 +201,7 @@ internal object RoomSqlHelper {
         where: String = "",
         bindArgs: Array<Any> = emptyArray()
     ): SupportSQLiteQuery {
+        requireIdentifier(tableName, role = "table")
         val sql = "DELETE FROM $tableName$where"
         return if (bindArgs.isEmpty()) SimpleSQLiteQuery(sql) else SimpleSQLiteQuery(sql, bindArgs)
     }
@@ -168,6 +218,7 @@ internal object RoomSqlHelper {
         column: String,
         value: Any
     ): SupportSQLiteQuery {
+        requireIdentifier(tableName, role = "table")
         requireIdentifier(column)
         return SimpleSQLiteQuery(
             "SELECT * FROM $tableName WHERE $column = ?",

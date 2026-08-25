@@ -26,12 +26,8 @@ import kotlinx.coroutines.withContext
  */
 object RoomRepositoryCoroutineExt {
 
-    /**
-     * 挂起直到插入完成。
-     *
-     * @param obj 实体
-     * @param options 默认静默
-     */
+    // ==================== 写 ====================
+
     suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.insertAwait(
         obj: T,
         options: RoomRequestOptions = RoomRequestOptions.silent()
@@ -41,23 +37,136 @@ object RoomRepositoryCoroutineExt {
         }
     }
 
-    /**
-     * 挂起并返回全表列表（Flowable 首项）。
-     */
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.insertAwait(
+        objs: List<T>,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            insert(objs, options).blockingAwait()
+        }
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.upsertAwait(
+        obj: T,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            upsert(obj, options).blockingAwait()
+        }
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.upsertAwait(
+        objs: List<T>,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            upsert(objs, options).blockingAwait()
+        }
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.updateAwait(
+        obj: T,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            update(obj, options).blockingAwait()
+        }
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.updateAwait(
+        objs: List<T>,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            update(objs, options).blockingAwait()
+        }
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteAwait(
+        obj: T,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ) {
+        withContext(Dispatchers.IO) {
+            delete(obj, options).blockingAwait()
+        }
+    }
+
+    /** 条件删除，返回影响行数 */
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteByParamsCountAwait(
+        params: Map<String, Any>,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): Int = withContext(Dispatchers.IO) {
+        deleteByParamsCount(params, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteAllCountAwait(
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): Int = withContext(Dispatchers.IO) {
+        deleteAllCount(options).blockingGet()
+    }
+
+    // ==================== 查 ====================
+
     suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findAllAwait(
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): List<T> = withContext(Dispatchers.IO) {
         findAll(options).blockingFirst()
     }
 
-    /**
-     * 挂起并按字符串主键查询单条。
-     */
     suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdAwait(
         id: String,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): T = withContext(Dispatchers.IO) {
         findInfoById(id, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdAwait(
+        id: Long,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): T = withContext(Dispatchers.IO) {
+        findInfoById(id, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdAwait(
+        primaryKey: String,
+        id: String,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): T = withContext(Dispatchers.IO) {
+        findInfoById(primaryKey, id, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdAwait(
+        primaryKey: String,
+        id: Long,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): T = withContext(Dispatchers.IO) {
+        findInfoById(primaryKey, id, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findByInAwait(
+        column: String,
+        values: Collection<*>
+    ): List<T> = withContext(Dispatchers.IO) {
+        findByIn(column, values)
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.countAllAwait(
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): Long = withContext(Dispatchers.IO) {
+        countAll(options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.countAwait(
+        params: Map<String, Any>,
+        options: RoomRequestOptions = RoomRequestOptions.silent()
+    ): Long = withContext(Dispatchers.IO) {
+        count(params, options).blockingGet()
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.existsAwait(
+        params: Map<String, Any>
+    ): Boolean = withContext(Dispatchers.IO) {
+        exists(params)
     }
 
     /**
@@ -74,5 +183,14 @@ object RoomRepositoryCoroutineExt {
         offset: Int
     ): List<T> = withContext(Dispatchers.IO) {
         findPageList(params, keywordsKey, keywords, orderBy, limit, offset)
+    }
+
+    suspend fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findPageListAwait(
+        params: Map<String, Any>,
+        orderBy: String,
+        limit: Int = 10,
+        offset: Int = 0
+    ): List<T> = withContext(Dispatchers.IO) {
+        findPageList(params, orderBy, limit, offset)
     }
 }
