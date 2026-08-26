@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory;
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import io.coderf.arklab.common.base.BaseView;
+import io.coderf.arklab.common.impl.RequestUiAdapters;
+import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
@@ -22,6 +26,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 /**
  * updated by fz on 202/12/09.
  * describe：缓存工具类，包含Glide图片缓存和通用应用缓存管理
+ * <p>
+ * 带加载框的异步 API 推荐使用 {@link RequestUi}（新体系）；
+ * 以 {@link BaseView} 为参数的重载已标记 {@link Deprecated}，内部转发至 RequestUi。
  */
 public class CacheUtil {
 
@@ -49,7 +56,7 @@ public class CacheUtil {
      */
     public void clearImageMemoryCache(Context context) {
         try {
-                Glide.get(context).clearMemory();
+            Glide.get(context).clearMemory();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,43 +85,48 @@ public class CacheUtil {
         return "";
     }
 
+    // ==================== calculateCacheSize：无 UI / RequestUi（推荐） ====================
+
     /**
-     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * 获取应用总缓存大小（包括内部缓存和外部缓存），无加载框。
      * @param context 上下文
      * @return 格式化后的缓存大小字符串
      */
     public Single<String> calculateCacheSizeRxJava(Context context) {
-        return calculateCacheSize(context,null,null,false);
-    }
-    /**
-     * 获取应用总缓存大小（包括内部缓存和外部缓存）
-     * @param context 上下文
-     * @param baseView ui操作View
-     * @return 格式化后的缓存大小字符串
-     */
-    public Single<String> calculateCacheSize(Context context, BaseView baseView) {
-        return calculateCacheSize(context,baseView,null,false);
+        return calculateCacheSize(context, (RequestUi) null, null, false);
     }
 
     /**
      * 获取应用总缓存大小（包括内部缓存和外部缓存）
      * @param context 上下文
-     * @param baseView ui操作View
-     * @param message 提示信息
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
      * @return 格式化后的缓存大小字符串
      */
-    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message) {
-        return calculateCacheSize(context,baseView,message,false);
+    public Single<String> calculateCacheSize(Context context, @Nullable RequestUi requestUi) {
+        return calculateCacheSize(context, requestUi, null, false);
     }
+
     /**
      * 获取应用总缓存大小（包括内部缓存和外部缓存）
      * @param context 上下文
-     * @param baseView ui操作View
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
+     * @param message 提示信息
+     * @return 格式化后的缓存大小字符串
+     */
+    public Single<String> calculateCacheSize(Context context, @Nullable RequestUi requestUi, String message) {
+        return calculateCacheSize(context, requestUi, message, false);
+    }
+
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @param context 上下文
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
      * @param message 提示信息
      * @param enableDynamicEllipsis 动态播放省略号
      * @return 格式化后的缓存大小字符串
      */
-    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+    public Single<String> calculateCacheSize(Context context, @Nullable RequestUi requestUi,
+                                             String message, boolean enableDynamicEllipsis) {
         return Single.create((SingleOnSubscribe<String>) emitter -> {
                     long cacheSize = 0;
                     // 内部缓存
@@ -137,20 +149,49 @@ public class CacheUtil {
                 })
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
-                    if (baseView != null) {
-                        baseView.showLoading(TextUtils.isEmpty(message) ? "正在计算缓存，请稍后..." : message, enableDynamicEllipsis);
+                    if (requestUi != null) {
+                        requestUi.showLoading(TextUtils.isEmpty(message) ? "正在计算缓存，请稍后..." : message, enableDynamicEllipsis);
                     }
                 })
                 .doFinally(() -> {
-                    if (baseView != null) {
-                        baseView.hideLoading();
+                    if (requestUi != null) {
+                        requestUi.hideLoading();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    // ==================== calculateCacheSize：BaseView（已过时） ====================
+
     /**
-     * 获取应用总缓存大小（包括内部缓存和外部缓存）
+     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Single<String> calculateCacheSize(Context context, BaseView baseView) {
+        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), null, false);
+    }
+
+    /**
+     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi, String)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message) {
+        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, false);
+    }
+
+    /**
+     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi, String, boolean)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, enableDynamicEllipsis);
+    }
+
+    /**
+     * 获取应用总缓存大小（包括内部缓存和外部缓存），同步方法。
      * @param context 上下文
      * @return 格式化后的缓存大小字符串
      */
@@ -180,41 +221,44 @@ public class CacheUtil {
         return getFormatSize(cacheSize);
     }
 
+    // ==================== clearCache：无 UI / RequestUi（推荐） ====================
+
     /**
-     * 清理所有应用缓存（包括内部和外部）
+     * 清理所有应用缓存（包括内部和外部），无加载框。
      * @param context 上下文
      */
     public Completable clearCacheCompletable(Context context) {
-        return clearCache(context, null, null, false);
+        return clearCache(context, (RequestUi) null, null, false);
     }
 
     /**
      * 清理所有应用缓存（包括内部和外部）
      * @param context 上下文
-     * @param baseView ui操作View
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
      */
-    public Completable clearCache(Context context, BaseView baseView) {
-        return clearCache(context, baseView, null, false);
+    public Completable clearCache(Context context, @Nullable RequestUi requestUi) {
+        return clearCache(context, requestUi, null, false);
     }
 
     /**
      * 清理所有应用缓存（包括内部和外部）
      * @param context 上下文
-     * @param baseView ui操作View
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
      * @param message 提示信息
      */
-    public Completable clearCache(Context context, BaseView baseView, String message) {
-        return clearCache(context, baseView, message, false);
+    public Completable clearCache(Context context, @Nullable RequestUi requestUi, String message) {
+        return clearCache(context, requestUi, message, false);
     }
 
     /**
      * 清理所有应用缓存（包括内部和外部）
      * @param context 上下文
-     * @param baseView ui操作View
+     * @param requestUi 请求 UI 回调（可为 null，表示不展示加载框）
      * @param message 提示信息
      * @param enableDynamicEllipsis 动态播放省略号
      */
-    public Completable clearCache(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+    public Completable clearCache(Context context, @Nullable RequestUi requestUi,
+                                  String message, boolean enableDynamicEllipsis) {
         return Completable.create(emitter -> {
                     // 清理内部缓存
                     deleteFolderFile(context.getCacheDir().getAbsolutePath(), false);
@@ -232,20 +276,49 @@ public class CacheUtil {
                     emitter.onComplete();
                 }).subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
-                    if (baseView != null) {
-                        baseView.showLoading(TextUtils.isEmpty(message) ? "缓存清理中，请稍后..." : message, enableDynamicEllipsis);
+                    if (requestUi != null) {
+                        requestUi.showLoading(TextUtils.isEmpty(message) ? "缓存清理中，请稍后..." : message, enableDynamicEllipsis);
                     }
                 })
                 .doFinally(() -> {
-                    if (baseView != null) {
-                        baseView.hideLoading();
+                    if (requestUi != null) {
+                        requestUi.hideLoading();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    // ==================== clearCache：BaseView（已过时） ====================
+
     /**
-     * 清理所有应用缓存（包括内部和外部）
+     * @deprecated 请改用 {@link #clearCache(Context, RequestUi)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Completable clearCache(Context context, BaseView baseView) {
+        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), null, false);
+    }
+
+    /**
+     * @deprecated 请改用 {@link #clearCache(Context, RequestUi, String)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Completable clearCache(Context context, BaseView baseView, String message) {
+        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, false);
+    }
+
+    /**
+     * @deprecated 请改用 {@link #clearCache(Context, RequestUi, String, boolean)}，
+     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
+     */
+    @Deprecated
+    public Completable clearCache(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
+        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, enableDynamicEllipsis);
+    }
+
+    /**
+     * 清理所有应用缓存（包括内部和外部），同步方法。
      * @param context 上下文
      */
     public void clearCache(Context context) {
