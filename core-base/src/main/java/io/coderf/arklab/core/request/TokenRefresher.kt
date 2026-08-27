@@ -16,6 +16,11 @@ package io.coderf.arklab.core.request
  * 解析顺序见 [io.coderf.arklab.core.network.DefaultNetworkRepository.resolveTokenRefresher]：
  * 1. Repository 构造局部 TokenRefresher
  * 2. boundApiService.retrofit.builder.tokenRefresher（或 FlowRetryService as TokenRefresher）
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:08
  */
 interface TokenRefresher {
 

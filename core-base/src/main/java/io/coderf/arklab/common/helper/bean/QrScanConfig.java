@@ -15,6 +15,11 @@ import java.util.Collections;
  * 通过 {@link io.coderf.arklab.common.helper.QrScanHelper#buildScanOptions(QrScanConfig)} 转为
  * {@link ScanOptions}，供 {@link com.journeyapps.barcodescanner.ScanContract} 使用。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 16:44
  */
 public class QrScanConfig {
 

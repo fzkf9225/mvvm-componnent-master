@@ -12,6 +12,8 @@
 
         <import type="androidx.core.content.ContextCompat" />
 
+        <import type="io.coderf.arklab.common.R" />
+
         <variable
             name="context"
             type="android.content.Context" />
@@ -32,7 +34,10 @@
             android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
             android:theme="@style/ToolBarStyle_black"
             app:buttonGravity="center_vertical"
-            app:navigationIcon="@{ContextCompat.getDrawable(context,toolbarConfig.backIconRes)}"
+            app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
+            app:bindNavIconRes="@{toolbarConfig.backIconRes}"
+            app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.lightMode ? R.color.white : R.color.black)}"
+            app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
             app:popupTheme="@style/OverflowMenuStyle">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -41,10 +46,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ellipsize="end"
-                android:lines="1"
                 android:text="@{toolbarConfig.title}"
                 android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
-                android:textSize="@dimen/font_size_xxl" />
+                app:bindTitleTextSizeSp="@{toolbarConfig.titleTextSizeSp}"
+                app:bindTitleBold="@{toolbarConfig.titleBold}"
+                app:bindTitleMaxLines="@{toolbarConfig.titleMaxLines}"
+                app:bindTitleGravity="@{toolbarConfig.titleGravity}"
+                app:bindTitleFontFamily="@{toolbarConfig.titleFontFamily}"
+                app:bindTitleFontRes="@{toolbarConfig.titleFontRes}"
+                app:bindTitleLetterSpacing="@{toolbarConfig.titleLetterSpacing}"
+                app:bindTitleAllCaps="@{toolbarConfig.titleAllCaps}" />
 
         </io.coderf.arklab.common.widget.customview.ActionToolbar>
 

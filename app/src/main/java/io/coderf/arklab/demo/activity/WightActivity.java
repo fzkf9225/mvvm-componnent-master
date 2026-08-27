@@ -292,8 +292,10 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
                 .setLightMode(true)
                 .setTitle(setTitleBar())
                 .setTextColor(R.color.white)
-                .setBackIconRes(io.coderf.arklab.common.R.mipmap.icon_fh_white)
+                .setBackIconRes(io.coderf.arklab.common.R.drawable.icon_fh)
                 .setBgColor(io.coderf.arklab.common.R.color.themeColor)
+                .setHeight(DensityUtil.dp2px(this,32f))
+                .setTitleTextSizeSp(15)
                 .applyStatusBar();
     }
 

@@ -14,7 +14,12 @@ import androidx.core.view.WindowInsetsCompat;
 import io.coderf.arklab.common.widget.customview.ActionToolbar;
 
 /**
- * Android 15 Edge-to-Edge 统一适配：在基类 Activity 中启用并分发系统栏 Insets。
+ * Android Edge-to-Edge 统一适配：在基类 Activity 中启用并分发系统栏 Insets。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/8/27 14:15
  */
 public final class EdgeToEdgeHelper {
 
@@ -27,6 +32,7 @@ public final class EdgeToEdgeHelper {
 
     /**
      * Toolbar 区域：顶部留出状态栏，内容区高度为 {@code actionBarHeightPx}。
+     * <p>会覆盖 Toolbar 的 height 与 top padding。</p>
      */
     public static void applyToolbarInsets(@NonNull Toolbar toolbar, int actionBarHeightPx, boolean customHeight) {
         int contentHeightPx = customHeight ? actionBarHeightPx : 0;
@@ -100,17 +106,16 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * 无 Toolbar 页面：同时处理顶部状态栏与底部导航栏，可选是否随软键盘上顶。
+     * 无 Toolbar 页面：同时处理系统栏（含横屏侧导航），可选是否随软键盘上顶。
      *
      * @param adjustForIme {@code true} 时底部内容随输入法上移；{@code false} 时贴底控件保持原位。
      */
     public static void applySystemBarInsets(@NonNull View root, boolean adjustForIme) {
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
-            Insets navBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-            int bottom = adjustForIme ? Math.max(navBars.bottom, ime.bottom) : navBars.bottom;
-            v.setPadding(statusBars.left, statusBars.top, statusBars.right, bottom);
+            int bottom = adjustForIme ? Math.max(systemBars.bottom, ime.bottom) : systemBars.bottom;
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottom);
             return stripImeInsets(windowInsets, adjustForIme);
         });
         ViewCompat.requestApplyInsets(root);

@@ -3,83 +3,115 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
+    <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_update_dialog"
+        android:paddingTop="4dp"
+        android:paddingBottom="@dimen/vertical_margin_xxl">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/icon_gx_top"
-            android:adjustViewBounds="true"
-            app:layout_constraintVertical_weight="0"
-            app:layout_constraintBottom_toTopOf="@+id/constraint_layout_upgrade"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/ivClose"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:layout_marginEnd="@dimen/horizontal_margin_m"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/close"
+            android:padding="8dp"
+            android:src="@drawable/ic_dialog_close"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout_upgrade"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/updateTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/image_bg"
-            android:background="@mipmap/icon_gx_bottom">
+            android:layout_marginStart="@dimen/horizontal_margin_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_xxl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xxl"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/autoColor"
+            android:textSize="@dimen/font_size_xxl"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="发现新版本" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/updateTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/autoColor"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:includeFontPadding="false"
-                app:layout_constraintVertical_weight="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="是否更新到1.0.1" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvVersionChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:background="@drawable/bg_update_version_chip"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingStart="@dimen/horizontal_margin_l"
+            android:paddingTop="4dp"
+            android:paddingEnd="@dimen/horizontal_margin_l"
+            android:paddingBottom="4dp"
+            android:textColor="@color/themeColor"
+            android:textSize="@dimen/font_size_xl"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateTitle"
+            tools:text="V1.2.0"
+            tools:visibility="visible" />
+
+        <ScrollView
+            android:id="@+id/scContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_xxl"
+            android:fillViewport="true"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="vertical"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/updateBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="240dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvVersionChip"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/updateMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/horizontal_margin_xl"
-                android:layout_marginEnd="@dimen/horizontal_margin_xl"
-                android:lineSpacingExtra="@dimen/vertical_margin_l"
-                android:paddingTop="@dimen/padding_l"
-                android:paddingBottom="@dimen/padding_l"
+                android:lineSpacingExtra="4dp"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/font_size_l"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/updateBtn"
-                app:layout_constraintTop_toBottomOf="@+id/updateTitle"
-                tools:text="1、第一条\n2、第二条" />
-
-            <io.coderf.arklab.common.widget.customview.CornerButton
-                android:id="@+id/updateBtn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_xl"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="@dimen/horizontal_margin_xxxxl"
-                android:layout_marginTop="@dimen/vertical_margin_l"
-                android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
-                android:text="@string/upgrade"
-                android:textColor="@color/white"
-                app:layout_constraintVertical_weight="0"
                 android:textSize="@dimen/font_size_xl"
-                app:bgColor="@color/themeColor"
-                app:radius="@dimen/radius_l"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/updateMsg"
-                android:layout_marginBottom="@dimen/vertical_margin_xxl"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                tools:text="1、优化性能体验\n2、修复已知问题\n详情请访问 https://example.com" />
+        </ScrollView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <io.coderf.arklab.common.widget.customview.CornerButton
+            android:id="@+id/updateBtn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_xxl"
+            android:layout_marginTop="@dimen/vertical_margin_xl"
+            android:layout_marginEnd="@dimen/horizontal_margin_xxl"
+            android:gravity="center"
+            android:paddingVertical="0dp"
+            android:text="@string/upgrade"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_xxl"
+            app:bgColor="@color/themeColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scContent"
+            app:radius="@dimen/radius_xxl" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -4,12 +4,17 @@ import androidx.annotation.Nullable;
 
 /**
  * 自定义相机 {@link io.coderf.arklab.common.activity.CameraActivity} 启动参数。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 16:43
  */
 public class CameraConfig {
 
-    /** 与 {@link io.coderf.arklab.common.activity.CameraActivity.Params#DEFAULT_MAX_DURATION} 一致 */
+    /** 与 {@link io.coderf.arklab.common.activity.CameraActivity.Companion.Params#DEFAULT_MAX_DURATION} 一致 */
     private static final int DEFAULT_MAX_DURATION = 30;
-    /** 与 {@link io.coderf.arklab.common.widget.camera.CameraView.Mode#BUTTON_STATE_BOTH} 一致 */
+    /** 与 {@link io.coderf.arklab.common.widget.camera.CameraView.Companion.Mode#BUTTON_STATE_BOTH} 一致 */
     private static final int BUTTON_STATE_BOTH = 0x103;
     private static final int BUTTON_STATE_ONLY_CAPTURE = 0x101;
     private static final int BUTTON_STATE_ONLY_RECORDER = 0x102;

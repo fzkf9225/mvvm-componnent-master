@@ -2,6 +2,7 @@ package io.coderf.arklab.common.widget.customview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -80,7 +81,7 @@ public class TitleBar extends ConstraintLayout {
                     ContextCompat.getColor(context, R.color.themeColor));
             float titleSize = ta.getDimension(R.styleable.TitleBar_titleBarTitleSize,
                     DensityUtil.sp2px(context, 18f));
-            int backIcon = ta.getResourceId(R.styleable.TitleBar_titleBarBackIcon, R.mipmap.icon_fh_black);
+            int backIcon = ta.getResourceId(R.styleable.TitleBar_titleBarBackIcon, R.drawable.icon_fh);
             boolean showBack = ta.getBoolean(R.styleable.TitleBar_titleBarShowBack, true);
             ta.recycle();
 
@@ -93,9 +94,13 @@ public class TitleBar extends ConstraintLayout {
                 rightView.setVisibility(VISIBLE);
             }
             backButton.setImageDrawable(ContextCompat.getDrawable(context, backIcon));
+            backButton.setImageTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.black)));
             backButton.setVisibility(showBack ? VISIBLE : INVISIBLE);
         } else {
-            backButton.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.icon_fh_black));
+            backButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_fh));
+            backButton.setImageTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.black)));
         }
     }
 
@@ -117,6 +122,12 @@ public class TitleBar extends ConstraintLayout {
 
     public TitleBar setBackIcon(@DrawableRes int resId) {
         backButton.setImageDrawable(ContextCompat.getDrawable(getContext(), resId));
+        return this;
+    }
+
+    /** 返回图标着色（配合 {@link R.drawable#icon_fh} 使用）。 */
+    public TitleBar setBackIconTint(@ColorInt int color) {
+        backButton.setImageTintList(ColorStateList.valueOf(color));
         return this;
     }
 

@@ -12,10 +12,6 @@
 
         <import type="androidx.core.content.ContextCompat" />
 
-        <import type="androidx.annotation.LayoutRes" />
-
-        <import type="androidx.annotation.ColorRes" />
-
         <variable
             name="context"
             type="android.content.Context" />
@@ -31,21 +27,25 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/search_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:minHeight="@dimen/toolbar_height"
+            android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <androidx.appcompat.widget.Toolbar
+            <io.coderf.arklab.common.widget.customview.ActionToolbar
                 android:id="@+id/search_tool_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/themeColor"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@{ContextCompat.getColor(context, toolbarConfig.bgColor)}"
                 android:minHeight="?attr/actionBarSize"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:theme="@style/ToolBarStyle_white"
-                app:navigationIcon="@mipmap/icon_fh_white"
+                app:buttonGravity="center_vertical"
+                app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
+                app:bindNavIconRes="@{toolbarConfig.backIconRes}"
+                app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.lightMode ? R.color.white : R.color.black)}"
+                app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
                 app:popupTheme="@style/OverflowMenuStyle">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,7 +67,7 @@
                         android:textColorHint="@color/nv_bg_color"
                         android:imeOptions="actionSearch"
                         android:gravity="center_vertical"
-                        android:hint="@string/please_enter"
+                        android:hint="@{toolbarConfig.titleHint}"
                         android:inputType="text"
                         android:lines="1"
                         android:paddingStart="@dimen/padding_m"
@@ -88,11 +88,11 @@
                         android:focusable="true"
                         android:paddingEnd="@dimen/padding_l"
                         android:text="@string/search"
-                        android:textColor="@color/white"
+                        android:textColor="@{ContextCompat.getColor(context, toolbarConfig.textColor)}"
                         android:textSize="13sp" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.appcompat.widget.Toolbar>
+            </io.coderf.arklab.common.widget.customview.ActionToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout

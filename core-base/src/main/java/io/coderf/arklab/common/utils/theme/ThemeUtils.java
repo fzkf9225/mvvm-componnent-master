@@ -9,117 +9,222 @@ import android.view.WindowManager;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import io.coderf.arklab.common.utils.log.LogUtil;
 
-public class ThemeUtils {
-    private final static String TAG = ThemeUtils.class.getSimpleName();
+/**
+ * 系统栏（状态栏 / 导航栏）统一工具。
+ * <p>
+ * 约定：
+ * <ul>
+ *   <li>{@code darkIcons == true}：深色图标/文字（浅色背景）→
+ *       {@link WindowInsetsControllerCompat#setAppearanceLightStatusBars(true)}</li>
+ *   <li>{@code darkIcons == false}：浅色图标/文字（深色背景）</li>
+ *   <li>默认配合 Edge-to-Edge：状态栏背景透明，由 Toolbar / 页面背景呈现颜色</li>
+ * </ul>
+ *
+ * @author fz
+ * @version 2.0
+ * @since 1.0
+ * @updated 2026/8/27 14:15
+ */
+public final class ThemeUtils {
 
-    /**
-     * 设置状态栏颜色
-     * @param activity activity
-     * @param statusColor 状态栏颜色
-     */
-    public static void setStatusBarColor(Activity activity, int statusColor) {
-        ThemeLollipop.setStatusBarColor(activity, statusColor);
+    private static final String TAG = "ThemeUtils";
+
+    /** 相对亮度阈值：高于此值视为浅色背景，使用深色图标。 */
+    private static final float LIGHT_LUMINANCE_THRESHOLD = 0.5f;
+
+    private ThemeUtils() {
     }
 
-    /**
-     * 设置状态栏颜色，默认不隐藏状态栏背景
-     * @param activity activity
-     */
-    public static void translucentStatusBar(Activity activity) {
-        translucentStatusBar(activity, false);
-    }
+    // -------------------------------------------------------------------------
+    // 状态栏
+    // -------------------------------------------------------------------------
 
     /**
-     * 设置状态栏颜色，可控制是否完全透明(hideStatusBarBackground=true)或半透明
-     * @param activity activity
+     * 设置状态栏颜色与图标深浅。
+     * <p>非 Edge-to-Edge 场景会真正写入 statusBarColor；Edge-to-Edge 下仍写入颜色，
+     * 若业务已启用 EdgeToEdge，建议改用 {@link #setupStatusBar} 保持透明。</p>
+     *
+     * @param darkIcons {@code true} 深色图标（浅色背景），{@code false} 浅色图标（深色背景）
      */
-    public static void translucentStatusBar(Activity activity, boolean hideStatusBarBackground) {
-        ThemeLollipop.translucentStatusBar(activity, hideStatusBarBackground);
-    }
-
-    /**
-     * 为可折叠工具栏(CollapsingToolbarLayout)设置状态栏颜色
-     * 处理工具栏展开/折叠时状态栏的显示效果
-     * @param activity activity
-     * @param appBarLayout appBarLayout
-     * @param collapsingToolbarLayout collapsingToolbarLayout
-     * @param toolbar 标题栏
-     * @param statusColor 状态栏颜色
-     */
-    public static void setStatusBarColorForCollapsingToolbar(@NonNull Activity activity, AppBarLayout appBarLayout,
-                                                             CollapsingToolbarLayout collapsingToolbarLayout, Toolbar toolbar, @ColorInt int statusColor) {
-        ThemeLollipop.setStatusBarColorForCollapsingToolbar(activity, appBarLayout, collapsingToolbarLayout, toolbar, statusColor);
-    }
-
-    /**
-     * 设置沉浸式状态栏（透明状态栏，内容延伸到状态栏）
-     * @param activity 当前Activity
-     */
-    public static void setImmersiveStatusBar(Activity activity) {
-        setImmersiveStatusBar(activity, Color.TRANSPARENT, false);
-    }
-
-    /**
-     * 设置沉浸式状态栏
-     * @param activity 当前Activity
-     * @param color 状态栏背景颜色（可透明）
-     * @param lightStatusBar 是否使用浅色状态栏文字（深色背景时设为false）
-     */
-    public static void setImmersiveStatusBar(Activity activity, @ColorInt int color, boolean lightStatusBar) {
+    public static void setStatusBar(@NonNull Activity activity, @ColorInt int color, boolean darkIcons) {
         try {
             Window window = activity.getWindow();
-            View decorView = window.getDecorView();
-
-            // 清除原有flag
+            if (window == null) {
+                return;
+            }
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // 设置状态栏颜色
             window.setStatusBarColor(color);
-
-            // 设置内容延伸到状态栏
-            int systemUiVisibility = decorView.getSystemUiVisibility();
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-
-            // 设置状态栏文字颜色
-            if (lightStatusBar) {
-                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            decorView.setSystemUiVisibility(systemUiVisibility);
-
-            // 处理MIUI和Flyme的特殊情况
-            if (lightStatusBar) {
-                if (!MIUISetStatusBarLightMode(activity, true)) {
-                    FlymeSetStatusBarLightMode(activity, true);
-                }
-            }
+            applyStatusBarAppearance(window, darkIcons);
         } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.loggerE(TAG, "setImmersiveStatusBar异常：" + e);
+            LogUtil.loggerE(TAG, "setStatusBar: " + e);
         }
     }
 
     /**
-     * 隐藏状态栏与导航栏，内容铺满屏幕（全屏视频等场景）。
+     * 状态栏透明 + 指定图标深浅（内容延伸到状态栏区域）。
+     */
+    public static void setStatusBarTransparent(@NonNull Activity activity, boolean darkIcons) {
+        setStatusBar(activity, Color.TRANSPARENT, darkIcons);
+    }
+
+    /**
+     * Edge-to-Edge 场景下的状态栏配置：状态栏始终透明，仅设置图标 Appearance。
      * <p>
-     * 与 {@link #setImmersiveStatusBar(Activity)} 不同：本方法会完全隐藏系统栏，而非仅透明延伸布局。
+     * {@code darkIcons} 语义与 {@link #setStatusBar} 一致。
+     * Toolbar 背景色由业务自行设置，状态栏区域视觉效果由 Toolbar 顶到状态栏呈现。
      * </p>
+     *
+     * @param ignoredColorForEdgeToEdge 保留参数便于调用方传入 Toolbar 色；当前实现不写入状态栏
+     * @param darkIcons                 {@code true} 深色图标
+     */
+    public static void setupStatusBar(@NonNull Activity activity,
+                                      @ColorInt int ignoredColorForEdgeToEdge,
+                                      boolean darkIcons) {
+        try {
+            Window window = activity.getWindow();
+            if (window == null) {
+                return;
+            }
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            applyStatusBarAppearance(window, darkIcons);
+        } catch (Exception e) {
+            LogUtil.loggerE(TAG, "setupStatusBar: " + e);
+        }
+    }
+
+    /**
+     * 根据背景色亮度自动选择图标深浅并设置状态栏颜色。
+     */
+    public static void setStatusBarAuto(@NonNull Activity activity, @ColorInt int backgroundColor) {
+        setStatusBar(activity, backgroundColor, isColorLight(backgroundColor));
+    }
+
+    /**
+     * 仅根据背景色自动设置 Appearance（状态栏保持透明，适合 Edge-to-Edge）。
+     */
+    public static void setupStatusBarAuto(@NonNull Activity activity, @ColorInt int backgroundColor) {
+        setupStatusBar(activity, backgroundColor, isColorLight(backgroundColor));
+    }
+
+    // -------------------------------------------------------------------------
+    // 导航栏
+    // -------------------------------------------------------------------------
+
+    /**
+     * 设置导航栏颜色与图标深浅。
+     *
+     * @param darkIcons {@code true} 深色导航图标，{@code false} 浅色
+     */
+    public static void setNavigationBar(@NonNull Activity activity, @ColorInt int color, boolean darkIcons) {
+        try {
+            Window window = activity.getWindow();
+            if (window == null) {
+                return;
+            }
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setNavigationBarColor(color);
+            applyNavigationBarAppearance(window, darkIcons);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                window.setNavigationBarContrastEnforced(false);
+            }
+        } catch (Exception e) {
+            LogUtil.loggerE(TAG, "setNavigationBar: " + e);
+        }
+    }
+
+    /**
+     * 导航栏透明 + 指定图标深浅。
+     */
+    public static void setNavigationBarTransparent(@NonNull Activity activity, boolean darkIcons) {
+        setNavigationBar(activity, Color.TRANSPARENT, darkIcons);
+    }
+
+    // -------------------------------------------------------------------------
+    // 系统栏一次性设置
+    // -------------------------------------------------------------------------
+
+    /**
+     * 同时配置状态栏与导航栏颜色及图标。
+     */
+    public static void setSystemBars(@NonNull Activity activity,
+                                     @ColorInt int statusColor,
+                                     @ColorInt int navigationColor,
+                                     boolean darkStatusIcons,
+                                     boolean darkNavigationIcons) {
+        setStatusBar(activity, statusColor, darkStatusIcons);
+        setNavigationBar(activity, navigationColor, darkNavigationIcons);
+    }
+
+    // -------------------------------------------------------------------------
+    // 查询
+    // -------------------------------------------------------------------------
+
+    public static boolean isAppearanceLightStatusBars(@NonNull Activity activity) {
+        Window window = activity.getWindow();
+        if (window == null) {
+            return false;
+        }
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        return controller != null && controller.isAppearanceLightStatusBars();
+    }
+
+    public static boolean isAppearanceLightNavigationBars(@NonNull Activity activity) {
+        Window window = activity.getWindow();
+        if (window == null) {
+            return false;
+        }
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        return controller != null && controller.isAppearanceLightNavigationBars();
+    }
+
+    /**
+     * 判断颜色是否为浅色（相对亮度 ≥ {@link #LIGHT_LUMINANCE_THRESHOLD}）。
+     */
+    public static boolean isColorLight(@ColorInt int color) {
+        return ColorUtils.calculateLuminance(color) >= LIGHT_LUMINANCE_THRESHOLD;
+    }
+
+    // -------------------------------------------------------------------------
+    // 对比度强制（API 29+）
+    // -------------------------------------------------------------------------
+
+    public static void setStatusBarContrastEnforced(@NonNull Activity activity, boolean enforced) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Window window = activity.getWindow();
+            if (window != null) {
+                window.setStatusBarContrastEnforced(enforced);
+            }
+        }
+    }
+
+    public static void setNavigationBarContrastEnforced(@NonNull Activity activity, boolean enforced) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Window window = activity.getWindow();
+            if (window != null) {
+                window.setNavigationBarContrastEnforced(enforced);
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 全屏隐藏系统栏（视频等）
+    // -------------------------------------------------------------------------
+
+    /**
+     * 隐藏状态栏与导航栏，内容铺满屏幕（全屏视频等）。
+     * 使用 {@link WindowInsetsControllerCompat}，不再依赖已废弃的 systemUiVisibility 监听递归。
      */
     public static void applyHideSystemBarsImmersive(@NonNull Activity activity) {
         try {
@@ -137,35 +242,35 @@ public class ThemeUtils {
                 window.setAttributes(lp);
             }
             View decorView = window.getDecorView();
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             WindowInsetsControllerCompat controller =
                     WindowCompat.getInsetsController(window, decorView);
             if (controller != null) {
-                controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+                controller.hide(WindowInsetsCompat.Type.statusBars()
+                        | WindowInsetsCompat.Type.navigationBars());
                 controller.setSystemBarsBehavior(
                         WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
-            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    applyHideSystemBarsImmersive(activity);
-                }
-            });
         } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.loggerE(TAG, "applyHideSystemBarsImmersive异常：" + e);
+            LogUtil.loggerE(TAG, "applyHideSystemBarsImmersive: " + e);
         }
     }
 
     /**
-     * 退出全屏沉浸式后恢复系统栏（与 {@link #applyHideSystemBarsImmersive} 配对使用）。
+     * 退出全屏沉浸，显示系统栏（状态栏透明 + 深色图标；需业务再按需配置导航栏）。
      */
     public static void restoreSystemBarsAfterImmersive(@NonNull Activity activity) {
+        restoreSystemBarsAfterImmersive(activity, Color.TRANSPARENT, true);
+    }
+
+    /**
+     * 退出全屏沉浸并恢复状态栏颜色与 Appearance。
+     *
+     * @param statusColor     恢复后的状态栏颜色（Edge-to-Edge 下建议 {@link Color#TRANSPARENT}）
+     * @param darkStatusIcons 状态栏是否深色图标
+     */
+    public static void restoreSystemBarsAfterImmersive(@NonNull Activity activity,
+                                                       @ColorInt int statusColor,
+                                                       boolean darkStatusIcons) {
         try {
             Window window = activity.getWindow();
             if (window == null) {
@@ -175,161 +280,41 @@ public class ThemeUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 WindowManager.LayoutParams lp = window.getAttributes();
                 lp.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
                 window.setAttributes(lp);
             }
             View decorView = window.getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(null);
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             WindowInsetsControllerCompat controller =
-                WindowCompat.getInsetsController(window, decorView);
+                    WindowCompat.getInsetsController(window, decorView);
             if (controller != null) {
-                controller.show(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+                controller.show(WindowInsetsCompat.Type.statusBars()
+                        | WindowInsetsCompat.Type.navigationBars());
                 controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_DEFAULT);
             }
+            window.setStatusBarColor(statusColor);
+            applyStatusBarAppearance(window, darkStatusIcons);
         } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.loggerE(TAG, "restoreSystemBarsAfterImmersive异常：" + e);
+            LogUtil.loggerE(TAG, "restoreSystemBarsAfterImmersive: " + e);
         }
     }
 
-    /**
-     * 设置沉浸式状态栏
-     * @param activity 当前Activity
-     * @param color 状态栏背景颜色（可透明）
-     * @param lightStatusBar 是否使用浅色状态栏文字（深色背景时设为false）
-     */
-    public static void setStatusBarColor(Activity activity, @ColorInt int color, boolean lightStatusBar) {
-        try {
-            Window window = activity.getWindow();
-            View decorView = window.getDecorView();
+    // -------------------------------------------------------------------------
+    // internal
+    // -------------------------------------------------------------------------
 
-            // 清除原有flag
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // 设置状态栏颜色
-            window.setStatusBarColor(color);
-
-            // 设置内容延伸到状态栏
-            int systemUiVisibility = decorView.getSystemUiVisibility();
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            systemUiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-
-            // 设置状态栏文字颜色
-            if (lightStatusBar) {
-                systemUiVisibility &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                systemUiVisibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            decorView.setSystemUiVisibility(systemUiVisibility);
-
-            // 处理MIUI和Flyme的特殊情况
-            if (lightStatusBar) {
-                if (!MIUISetStatusBarLightMode(activity, true)) {
-                    FlymeSetStatusBarLightMode(activity, true);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.loggerE(TAG, "setImmersiveStatusBar异常：" + e);
-        }
-    }
-    /**
-     * 设置状态栏颜色和文字颜色
-     * @param activity activity
-     * @param statusBarColor 状态栏背景色
-     * @param lightStatusBar 是否亮色文字
-     */
-    public static void setupStatusBar(Activity activity, @ColorInt int statusBarColor, boolean lightStatusBar) {
-        try {
-            Window window = activity.getWindow();
-            WindowInsetsControllerCompat insetsController =
-                    WindowCompat.getInsetsController(window, window.getDecorView());
-            if (insetsController != null) {
-                insetsController.setAppearanceLightStatusBars(!lightStatusBar);
-            }
-            // Edge-to-Edge 下状态栏透明，由 Toolbar 背景色呈现
-            window.setStatusBarColor(Color.TRANSPARENT);
-
-            // 处理MIUI和Flyme的特殊情况
-            if (lightStatusBar) {
-                if (!MIUISetStatusBarLightMode(activity, true)) {
-                    FlymeSetStatusBarLightMode(activity, true);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.loggerE(TAG, "setupStatusBar异常：" + e);
+    private static void applyStatusBarAppearance(@NonNull Window window, boolean darkIcons) {
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(darkIcons);
         }
     }
 
-    /**
-     * 设置状态栏浅色模式(深色文字)
-     * 同时设置状态栏背景颜色
-     * @param activity activity
-     * @param color 通知栏背景色
-     */
-    public static void setStatusBarLightMode(Activity activity, int color) {
-        setupStatusBar(activity, color, true);
-    }
-
-    public static void setStatusBarLightForCollapsingToolbar(Activity activity, AppBarLayout appBarLayout,
-                                                             CollapsingToolbarLayout collapsingToolbarLayout, Toolbar toolbar, int statusBarColor) {
-        ThemeLollipop.setStatusBarWhiteForCollapsingToolbar(activity, appBarLayout, collapsingToolbarLayout, toolbar, statusBarColor);
-    }
-
-    /**
-     * MIUI的沉浸支持透明白色字体和透明黑色字体
-     * https://dev.mi.com/console/doc/detail?pId=1159
-     */
-    static boolean MIUISetStatusBarLightMode(Activity activity, boolean darkMode) {
-        try {
-            Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-
-            Window window = activity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-            Class<? extends Window> clazz = activity.getWindow().getClass();
-            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-            int darkModeFlag = field.getInt(layoutParams);
-            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-            extraFlagField.invoke(activity.getWindow(), darkMode ? darkModeFlag : 0, darkModeFlag);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void applyNavigationBarAppearance(@NonNull Window window, boolean darkIcons) {
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightNavigationBars(darkIcons);
         }
-        return false;
     }
-
-    /**
-     * 设置状态栏图标为深色和魅族特定的文字风格，Flyme4.0以上
-     */
-    static boolean FlymeSetStatusBarLightMode(Activity activity, boolean darkMode) {
-        try {
-            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-            Field darkFlag = WindowManager.LayoutParams.class
-                    .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
-            Field meizuFlags = WindowManager.LayoutParams.class
-                    .getDeclaredField("meizuFlags");
-            darkFlag.setAccessible(true);
-            meizuFlags.setAccessible(true);
-            int bit = darkFlag.getInt(null);
-            int value = meizuFlags.getInt(lp);
-            if (darkMode) {
-                value |= bit;
-            } else {
-                value &= ~bit;
-            }
-            meizuFlags.setInt(lp, value);
-            activity.getWindow().setAttributes(lp);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 }

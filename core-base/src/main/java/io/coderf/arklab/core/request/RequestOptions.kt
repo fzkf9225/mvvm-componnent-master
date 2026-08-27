@@ -2,6 +2,11 @@ package io.coderf.arklab.core.request
 
 /**
  * 统一请求选项，替代旧版 [io.coderf.arklab.common.bean.ApiRequestOptions] 的多构造与散落参数。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:07
  */
 data class RequestOptions(
     val showLoading: Boolean = true,

@@ -3,6 +3,11 @@ package io.coderf.arklab.core.request
 /**
  * 统一错误模型。网络 / 业务 / 超时 / 取消等均映射到此类型，
  * UI 层与 Repository 层只处理 [AppError]，不再散落多种 Throwable 分支。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:07
  */
 sealed class AppError(
     open val message: String,

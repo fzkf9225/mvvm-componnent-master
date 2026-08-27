@@ -28,9 +28,21 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.drawable.DrawableCompat
+import android.widget.ImageView
+import androidx.annotation.ColorRes
+import androidx.annotation.Px
+import androidx.appcompat.widget.Toolbar
 import java.io.ByteArrayOutputStream
 
-
+/**
+ * drawable工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:42
+ */
 object DrawableUtil {
     /**
      * 创建一个圆形Drawable
@@ -1344,6 +1356,196 @@ object DrawableUtil {
         }
         return null
     }
+
+    // -------------------------------------------------------------------------
+    // Vector / 图标：着色、缩放、应用到 View（mutate 后操作，不影响缓存中的原图）
+    // -------------------------------------------------------------------------
+
+    /**
+     * 加载资源并着色。返回已 mutate 的 Drawable，可安全改色。
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun withTint(
+        context: Context,
+        @DrawableRes resId: Int,
+        @ColorInt color: Int,
+        @Px width: Int = -1,
+        @Px height: Int = -1
+    ): Drawable? {
+        val src = ContextCompat.getDrawable(context, resId) ?: return null
+        return withTint(src, color, width, height)
+    }
+
+    /**
+     * 对已有 Drawable 着色；可选同时设置 bounds 尺寸（px）。
+     * width/height ≤ 0 时不改尺寸。
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun withTint(
+        drawable: Drawable,
+        @ColorInt color: Int,
+        @Px width: Int = -1,
+        @Px height: Int = -1
+    ): Drawable {
+        val wrapped = DrawableCompat.wrap(drawable.mutate())
+        DrawableCompat.setTint(wrapped, color)
+        if (width > 0 && height > 0) {
+            wrapped.setBounds(0, 0, width, height)
+        } else if (wrapped.bounds.isEmpty && wrapped.intrinsicWidth > 0) {
+            wrapped.setBounds(0, 0, wrapped.intrinsicWidth, wrapped.intrinsicHeight)
+        }
+        return wrapped
+    }
+
+    /**
+     * 加载资源并着色（颜色来自 color 资源）。
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun withTintRes(
+        context: Context,
+        @DrawableRes resId: Int,
+        @ColorRes colorRes: Int,
+        @Px width: Int = -1,
+        @Px height: Int = -1
+    ): Drawable? {
+        return withTint(context, resId, ContextCompat.getColor(context, colorRes), width, height)
+    }
+
+    /**
+     * 仅调整 Drawable 显示尺寸（px），不改颜色。
+     */
+    @JvmStatic
+    fun withSize(drawable: Drawable, @Px width: Int, @Px height: Int): Drawable {
+        val d = drawable.mutate()
+        d.setBounds(0, 0, width.coerceAtLeast(0), height.coerceAtLeast(0))
+        return d
+    }
+
+    /**
+     * 按 dp 调整尺寸。
+     */
+    @JvmStatic
+    fun withSizeDp(context: Context, drawable: Drawable, widthDp: Float, heightDp: Float): Drawable {
+        val dm = context.resources.displayMetrics
+        val w = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthDp, dm).toInt()
+        val h = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightDp, dm).toInt()
+        return withSize(drawable, w, h)
+    }
+
+    /**
+     * 加载 + 着色 + 按 dp 定尺寸（最常用组合）。
+     */
+    @JvmStatic
+    fun icon(
+        context: Context,
+        @DrawableRes resId: Int,
+        @ColorInt color: Int,
+        sizeDp: Float
+    ): Drawable? {
+        val dm = context.resources.displayMetrics
+        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sizeDp, dm).toInt()
+        return withTint(context, resId, color, px, px)
+    }
+
+    /**
+     * 加载 + 着色资源 + 按 dp 定尺寸。
+     */
+    @JvmStatic
+    fun iconRes(
+        context: Context,
+        @DrawableRes resId: Int,
+        @ColorRes colorRes: Int,
+        sizeDp: Float
+    ): Drawable? {
+        return icon(context, resId, ContextCompat.getColor(context, colorRes), sizeDp)
+    }
+
+    /**
+     * 清除着色，恢复 Drawable 原始颜色。
+     */
+    @JvmStatic
+    fun clearTint(drawable: Drawable): Drawable {
+        val wrapped = DrawableCompat.wrap(drawable.mutate())
+        DrawableCompat.setTintList(wrapped, null)
+        return wrapped
+    }
+
+    /**
+     * ImageView：设置图标资源并着色。
+     */
+    @JvmStatic
+    fun setImageTint(
+        imageView: ImageView,
+        @DrawableRes resId: Int,
+        @ColorInt color: Int
+    ) {
+        imageView.setImageDrawable(withTint(imageView.context, resId, color))
+        imageView.imageTintList = null // 颜色已烘焙进 Drawable，避免双重 tint
+    }
+
+    /**
+     * ImageView：仅改当前图着色（不换资源）。
+     */
+    @JvmStatic
+    fun setImageTintColor(imageView: ImageView, @ColorInt color: Int) {
+        imageView.imageTintList = ColorStateList.valueOf(color)
+    }
+
+    /**
+     * Toolbar 导航图标：资源 + 着色（推荐配合 [R.drawable.icon_fh]）。
+     * <p>颜色已通过 [withTint] 写入 Drawable，不依赖 Toolbar.setNavigationIconTintList
+     * （部分 AppCompat 版本无此 API）。</p>
+     */
+    @JvmStatic
+    fun setNavigationIcon(
+        toolbar: Toolbar,
+        @DrawableRes resId: Int,
+        @ColorInt tintColor: Int
+    ) {
+        toolbar.navigationIcon = withTint(toolbar.context, resId, tintColor)
+    }
+
+    /**
+     * TextView compound drawable：带颜色与尺寸的 start 图标。
+     */
+    @JvmStatic
+    fun setCompoundDrawableStart(
+        textView: AppCompatTextView,
+        @DrawableRes resId: Int,
+        @ColorInt color: Int,
+        @Px width: Int,
+        @Px height: Int
+    ) {
+        val d = withTint(textView.context, resId, color, width, height)
+        textView.setCompoundDrawablesRelative(
+            d,
+            textView.compoundDrawablesRelative[1],
+            textView.compoundDrawablesRelative[2],
+            textView.compoundDrawablesRelative[3]
+        )
+    }
+
+    /**
+     * TextView compound drawable：dp 尺寸便捷方法。
+     */
+    @JvmStatic
+    fun setCompoundDrawableStartDp(
+        textView: AppCompatTextView,
+        @DrawableRes resId: Int,
+        @ColorInt color: Int,
+        sizeDp: Float
+    ) {
+        val px = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            sizeDp,
+            textView.resources.displayMetrics
+        ).toInt()
+        setCompoundDrawableStart(textView, resId, color, px, px)
+    }
+
 }
 
 

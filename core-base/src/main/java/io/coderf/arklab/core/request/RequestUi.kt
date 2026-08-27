@@ -5,6 +5,11 @@ package io.coderf.arklab.core.request
  * 与旧版 [io.coderf.arklab.common.inter.RequestUiCallback] 对应。
  * 框架默认实现为 [io.coderf.arklab.common.base.NetworkRequestUiHost]，由 BaseViewModel 注入；
  * 亦可使用 [io.coderf.arklab.common.impl.RequestUiAdapters] 做临时桥接。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:07
  */
 interface RequestUi {
     fun showLoading(message: String, enableDynamicEllipsis: Boolean)

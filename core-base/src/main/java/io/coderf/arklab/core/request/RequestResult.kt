@@ -2,6 +2,11 @@ package io.coderf.arklab.core.request
 
 /**
  * 统一请求结果。ViewModel 只消费 Success / Error 两路。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 15:07
  */
 sealed class RequestResult<out T> {
     data class Success<T>(val data: T) : RequestResult<T>()

@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by fz on 2018/1/10.
- * 静态变量类
+ * 常用静态变量类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/8/27 14:57
  */
-
 public class ConstantsHelper {
     /**
      * 请求是RetryWhen最大默认重试次数

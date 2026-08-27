@@ -81,15 +81,12 @@
     <public name="green" type="color"/>
     <!--drawable-->
     <public name="bg_edittext" type="drawable"/>
-    <public name="border" type="drawable"/>
     <public name="ib_clear_image_selector" type="drawable"/>
     <public name="ic_red_dot" type="drawable"/>
     <public name="main_index_selector" type="drawable"/>
     <public name="main_me_selector" type="drawable"/>
     <public name="main_setting_selector" type="drawable"/>
-    <public name="nv_layout" type="drawable"/>
     <public name="pg" type="drawable"/>
-    <public name="pop_bg" type="drawable"/>
     <public name="primarybar_txt" type="drawable"/>
     <public name="round_nv_color_48" type="drawable"/>
     <public name="round_phone_code" type="drawable"/>
@@ -97,12 +94,9 @@
     <public name="round_theme_color_48" type="drawable"/>
     <public name="round_white_bg_48" type="drawable"/>
     <public name="round_white_bg_border" type="drawable"/>
-    <public name="rounded_default_bg_rect" type="drawable"/>
-    <public name="rounded_theme_rect" type="drawable"/>
     <public name="rounded_white" type="drawable"/>
     <public name="rounded_white_16" type="drawable"/>
     <public name="selector_button" type="drawable"/>
-    <public name="selector_image_media_play" type="drawable"/>
     <public name="ic_camera" type="drawable"/>
     <public name="ic_flash_auto" type="drawable"/>
     <public name="ic_flash_off" type="drawable"/>
@@ -111,7 +105,6 @@
     <!--动画资源-->
     <public name="actionsheet_dialog_in" type="anim"/>
     <public name="actionsheet_dialog_out" type="anim"/>
-    <public name="load_animation" type="anim"/>
     <public name="popup_select_image_hide" type="anim"/>
     <public name="popup_select_image_show" type="anim"/>
     <public name="scale_in" type="anim"/>
@@ -124,15 +117,11 @@
     <public name="dialog_edit_area" type="layout"/>
     <public name="dialog_input" type="layout"/>
     <public name="base_activity_constraint" type="layout"/>
-    <public name="base_activity_coordinator" type="layout"/>
     <public name="base_activity_title_search" type="layout"/>
-    <public name="base_fragment_container" type="layout"/>
-    <public name="base_recycler_view_fragment" type="layout"/>
     <public name="base_search_activity" type="layout"/>
     <public name="search_view" type="layout"/>
     <public name="base_smart_paging" type="layout"/>
     <public name="base_tablayout_viewpager" type="layout"/>
-    <public name="custom_textview" type="layout"/>
     <public name="empty_fragment" type="layout"/>
     <public name="paging_footer" type="layout"/>
     <public name="paging_recycler_view" type="layout"/>
@@ -157,17 +146,14 @@
     <public name="popup_multi_cascade" type="layout"/>
     <public name="popup_multi_view" type="layout"/>
     <public name="popup_view" type="layout"/>
-    <public name="view_error_layout" type="layout"/>
     <public name="texture_view_player_activity" type="layout"/>
     <public name="process_bar_dialog" type="layout"/>
     <public name="image_save_dialog" type="layout"/>
-    <public name="tab_text_view" type="layout"/>
     <public name="camera_view" type="layout"/>
     <public name="dialog_record" type="layout"/>
     <public name="activity_shoot" type="layout"/>
 
     <!--navigation资源-->
-    <public name="nav_empty_layout" type="navigation"/>
 
     <!--menu资源-->
     <public name="menu_browser" type="menu"/>
@@ -176,15 +162,12 @@
     <!--图片资源-->
     <public name="close" type="mipmap"/>
     <public name="ic_arrow_right" type="mipmap"/>
-    <public name="icon_gx_bottom" type="mipmap"/>
-    <public name="icon_gx_top" type="mipmap"/>
     <public name="ic_arrow_up" type="mipmap"/>
     <public name="ic_default_image" type="mipmap"/>
     <public name="icon_head_default" type="mipmap"/>
     <public name="ic_search_app_left" type="mipmap"/>
     <public name="icon_clear" type="mipmap"/>
-    <public name="icon_fh_black" type="mipmap"/>
-    <public name="icon_fh_white" type="mipmap"/>
+    <public name="icon_fh" type="drawable"/>
     <public name="icon_pause" type="mipmap"/>
     <public name="icon_play" type="mipmap"/>
     <public name="icon_stop" type="mipmap"/>
