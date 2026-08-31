@@ -10,6 +10,7 @@
         android:id="@+id/cl_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white_16"
         android:paddingStart="@dimen/padding_l"
         android:paddingEnd="@dimen/padding_l">
 
@@ -20,7 +21,7 @@
             android:gravity="center"
             android:paddingTop="@dimen/padding_xl"
             android:paddingBottom="@dimen/padding_m"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_18"
             android:textStyle="bold"
             android:visibility="gone"
@@ -76,16 +77,16 @@
             android:layout_marginBottom="@dimen/vertical_margin_l"
             android:gravity="center"
             android:text="@string/confirm"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/font_size_xl"
-            app:bgColor="@color/black"
+            app:bgColor="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btn_cancel"
             app:layout_constraintTop_toBottomOf="@+id/rv_options"
             app:radius="20dp"
-            app:strokeColor="@color/black"
+            app:strokeColor="?attr/colorPrimary"
             app:strokeWidth="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

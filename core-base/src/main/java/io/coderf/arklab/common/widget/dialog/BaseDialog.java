@@ -3,7 +3,6 @@ package io.coderf.arklab.common.widget.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -14,6 +13,7 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
 
@@ -165,7 +165,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBottomSheetBackgroundDrawable(float topCornerRadiusDp) {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
+                ContextCompat.getColor(getContext(), R.color.white),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 0,
@@ -185,7 +185,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBackgroundDrawable() {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
+                ContextCompat.getColor(getContext(), R.color.white),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),

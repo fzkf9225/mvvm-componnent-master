@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        暗色模式颜色兼容（googlegps 模块）
+        覆盖分隔线颜色，适配暗色背景。
+    -->
+    <color name="h_line_color">#FF3A3640</color>
+</resources>

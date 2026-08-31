@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        暗色模式颜色兼容（commonmedia 模块）
+        覆盖 ActionSheet / 媒体相关颜色，适配暗色背景。
+        注意：media_action_sheet_item 中的 backgroundTint 用了 @android:color/white（系统色，无法覆盖），
+        仅覆盖文字色与分隔线、ripple 等与黑白相关的颜色即可。
+    -->
+
+    <!-- 分隔线（浅色 → 深色） -->
+    <color name="media_line">#FF3A3640</color>
+
+    <!-- 次级文字色（深色 → 浅色） -->
+    <color name="media_dark_light">#FFCAC4D0</color>
+
+    <!-- 主要文字色（深色 → 浅色） -->
+    <color name="media_autoColor">#FFE6E1E5</color>
+
+    <!-- ActionSheet 分隔线（黑透明 → 白透明） -->
+    <color name="media_action_sheet_divider">#33FFFFFF</color>
+
+    <!-- ActionSheet 取消文字色 -->
+    <color name="media_action_sheet_cancel_text">#FF938F99</color>
+
+    <!-- ActionSheet 按压 ripple（黑透明 → 白透明） -->
+    <color name="media_action_sheet_ripple">#1AFFFFFF</color>
+</resources>

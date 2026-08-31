@@ -17,10 +17,10 @@
             android:id="@+id/save_local"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            app:backgroundTint="@color/white" app:cornerRadius="8dp"
+            android:background="@drawable/rounded_white"
             android:gravity="center"
             android:text="@string/save_to_local"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="17sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -28,10 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="10dp"
-            app:backgroundTint="@color/white" app:cornerRadius="8dp"
+            android:background="@drawable/rounded_white"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="#8E8E93"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="16sp" />
 
     </LinearLayout>

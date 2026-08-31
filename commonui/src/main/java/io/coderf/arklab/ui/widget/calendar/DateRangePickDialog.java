@@ -698,7 +698,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(gravity);
         dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                Color.WHITE,
+                ContextCompat.getColor(getContext(),R.color.white),
                 DensityUtil.dp2px(getContext(), 16f),
                 DensityUtil.dp2px(getContext(), 16f),
                 0,

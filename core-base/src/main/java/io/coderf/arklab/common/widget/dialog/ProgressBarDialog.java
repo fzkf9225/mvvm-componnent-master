@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.graphics.Color;
 import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -203,12 +204,9 @@ public class ProgressBarDialog extends BaseDialog {
         if (progressBarSetting == null) {
             progressBarSetting = new ProgressBarSetting(getContext());
         }
+        // 进度条背景固定为品牌色（蓝色），文字始终使用白色以保证对比度
         if (progressBarSetting.getFontColor() == -1) {
-            if (progressBarType == CIRCLE_PROGRESS_BAR) {
-                progressBarSetting.setFontColor(ContextCompat.getColor(getContext(), R.color.black));
-            } else if (progressBarType == HORIZONTAL_PROGRESS_BAR) {
-                progressBarSetting.setFontColor(ContextCompat.getColor(getContext(), R.color.white));
-            }
+            progressBarSetting.setFontColor(Color.WHITE);
         }
     }
 

@@ -50,7 +50,16 @@
     </style>
 
     <!-- 自定义loading dialog - 使用Material3风格，内容自适应 -->
-    <style name="loading_dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+    <!--
+        修复说明：原 parent=ThemeOverlay.Material3.MaterialAlertDialog 会强制设置
+        android:windowMinWidthMajor / windowMinWidthMinor / windowFixedWidthMajor /
+        windowFixedWidthMinor，导致 Dialog 宽度被硬性约束，无法随内容自适应。
+        这里改用 @android:style/Theme.Translucent.NoTitleBar 作为基底，并显式将上述
+        四个窗口宽度属性归零，确保宽度由 wrap_content 的内容布局决定。
+    -->
+    <style name="loading_dialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -69,7 +78,7 @@
     </style>
 
     <!-- 弹框dialog - 使用Material3 -->
-    <style name="ActionSheetDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+    <style name="ActionSheetDialogStyle" parent="Theme.Material3.DayNight.Dialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -147,7 +156,7 @@
     </style>
 
     <!-- 弹框dialog -->
-    <style name="ActionSheetDialogStyle_No_Bg" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+    <style name="ActionSheetDialogStyle_No_Bg" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>

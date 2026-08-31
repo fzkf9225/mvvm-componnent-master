@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xl"
             android:layout_marginTop="@dimen/vertical_margin_xl"
-            app:backgroundTint="@color/white" app:cornerRadius="8dp"
+            android:background="@drawable/rounded_white"
             android:gravity="center"
             android:text="@string/cancel"
             android:textColor="@color/dark_light"

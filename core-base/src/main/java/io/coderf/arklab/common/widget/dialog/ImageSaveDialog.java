@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -14,6 +15,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
+
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
@@ -193,9 +196,7 @@ public class ImageSaveDialog extends BaseDialog {
     }
 
     private Drawable createRoundedBackground(int fillColor, float cornerRadius, int rippleColor) {
-        GradientDrawable content = new GradientDrawable();
-        content.setColor(fillColor);
-        content.setCornerRadius(cornerRadius);
+        ShapeDrawable content = DrawableUtil.createRectDrawable(fillColor,cornerRadius);
         return DrawableUtil.createRippleDrawableCompat(content, rippleColor);
     }
 

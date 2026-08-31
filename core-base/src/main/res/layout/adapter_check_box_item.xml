@@ -11,7 +11,7 @@
         android:id="@+id/cl_item"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:foreground="?attr/selectableItemBackground">
+        style="@style/SelectableItemStyle">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_option"

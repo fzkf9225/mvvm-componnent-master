@@ -49,6 +49,11 @@
     <color name="textInputOutlineDefault">#FF79747E</color>
     <color name="textInputFilledActive">#FF1C50B5</color>
     <color name="textInputFilledDefault">#FFE7E0EC</color>
+
+    <!-- Ripple Highlight Colors -->
+    <!-- 日间模式：暗色 ripple（在半透明白色背景上可见） -->
+    <color name="selectable_item_ripple">#29000000</color>
+
     <!-- Night mode surface colors -->
     <color name="surfaceVariant_night">#FF49454F</color>
     <color name="onSurfaceVariant_night">#FFCAC4D0</color>

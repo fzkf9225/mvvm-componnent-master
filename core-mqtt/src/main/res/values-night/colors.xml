@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        暗色模式颜色兼容（core-mqtt 模块）
+        仅覆盖与日间/夜间相关的中性色，品牌色（绿/红）保持不变。
+    -->
+
+    <!-- 进度条 track（浅绿 → 深绿） -->
+    <color name="mqtt_reconnect_track">#1F19CE58</color>
+
+    <!-- 次级文字色（深色 → 浅色） -->
+    <color name="mqtt_text_secondary">#FFCAC4D0</color>
+
+    <!-- Hint 文字色 -->
+    <color name="mqtt_text_hint">#FF938F99</color>
+</resources>

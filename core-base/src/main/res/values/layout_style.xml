@@ -56,4 +56,11 @@
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
+
+    <!-- 列表项点击高亮样式：兼容暗色模式，暗色下使用浅色 ripple -->
+    <style name="SelectableItemStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="colorControlHighlight">@color/selectable_item_ripple</item>
+    </style>
 </resources>

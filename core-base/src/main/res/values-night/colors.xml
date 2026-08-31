@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        暗色模式颜色兼容
+        参考 android-architecture-master 项目的做法：通过覆盖硬编码的颜色变量，
+        配合 styles.xml 中已经配置好的 Material3 主题属性，自动适配日间/夜间模式。
+        无需为每个 drawable 创建 night 版本。
+    -->
+
+    <!-- ========== Surface / Background（白色背景 → 深色表面） ========== -->
+    <!-- 注：@color/white 保持白色不变（loading/spinner/border 等需要真实白色），不能覆盖为深色；
+         dialog/card 背景请使用 @color/cardSurface（已经在此覆盖为深色）。 -->
+    <color name="default_background">#FF141218</color>
+    <color name="background">#FF141218</color>
+    <color name="autoBg">#FF211F26</color>
+    <color name="bg_color">#FF1C1B1F</color>
+    <color name="h_area">#FF1C1B1F</color>
+
+    <!-- ========== Text Color（黑色文字 → 浅色文字） ========== -->
+    <color name="black">#FFE6E1E5</color>
+    <color name="dark_light">#FFCAC4D0</color>
+    <color name="autoColor">#FFE6E1E5</color>
+    <color name="hint_text_color">#FF938F99</color>
+    <color name="nv_bg_color">#FF938F99</color>
+    <color name="search_view_background">#FF49454F</color>
+    <color name="gray">#FFCAC4D0</color>
+
+    <!-- ========== Divider / Line（浅色 → 深色） ========== -->
+    <color name="h_line_color">#FF3A3640</color>
+
+    <!-- ========== Status Bar ========== -->
+    <color name="colorPrimaryDark">#FF000000</color>
+
+    <!-- ========== Card Colors ========== -->
+    <color name="cardSurface">#FF1C1B1F</color>
+    <color name="cardOnSurface">#FFE6E1E5</color>
+    <color name="cardSurfaceVariant">#FF49454F</color>
+    <color name="cardOnSurfaceVariant">#FFCAC4D0</color>
+
+    <!-- ========== Surface Variants（被 AppBaseTheme 引用） ========== -->
+    <color name="surfaceVariant">#FF49454F</color>
+    <color name="onSurfaceVariant">#FFCAC4D0</color>
+    <color name="surfaceInverse">#FFE6E1E5</color>
+    <color name="onSurfaceInverse">#FF313033</color>
+    <color name="outline">#FF938F99</color>
+    <color name="outlineVariant">#FF49454F</color>
+
+    <!-- ========== TextInput Colors（被 AppBaseTheme 引用） ========== -->
+    <color name="textInputOutlineDefault">#FF938F99</color>
+    <color name="textInputFilledDefault">#FF49454F</color>
+
+    <!-- Ripple Highlight（暗色模式下使用浅色 ripple，确保在深色背景上可见） ========== -->
+    <color name="selectable_item_ripple">#29FFFFFF</color>
+
+    <!--
+        以下颜色保持不变（品牌色 / 主题色 / 状态色）：
+        - themeColor, theme_red, theme_green, theme_orange, theme_yellow
+        - green, primaryInverse, scrim, transparent
+        - textInputOutlineActive, textInputFilledActive（跟随主题色，保留原色）
+    -->
+</resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        暗色模式下的 AppBaseTheme 覆盖
+        由于 values-night/colors.xml 已经覆盖了 white、default_background、autoColor 等关键颜色，
+        AppBaseTheme 中大部分主题属性会自动切换。这里仅补充少量无法通过 colors.xml 切换的属性。
+    -->
+
+    <style name="AppBaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/themeColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/themeColor</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/themeColor</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/themeColor</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+        <!-- Tertiary brand color -->
+        <item name="colorTertiary">@color/themeColor</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorTertiaryContainer">@color/themeColor</item>
+        <item name="colorOnTertiaryContainer">@color/white</item>
+        <!-- Error color -->
+        <item name="colorError">@color/theme_red</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="colorErrorContainer">@color/theme_red</item>
+        <item name="colorOnErrorContainer">@color/white</item>
+        <!-- Surface colors (Material3) - 引用 night 覆盖后的颜色变量 -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/autoColor</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
+        <!-- Background -->
+        <item name="android:colorBackground">@color/default_background</item>
+        <item name="colorOnBackground">@color/autoColor</item>
+        <!-- Outline -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outlineVariant</item>
+        <!-- Inverse -->
+        <item name="colorSurfaceInverse">@color/surfaceInverse</item>
+        <item name="colorOnSurfaceInverse">@color/onSurfaceInverse</item>
+        <item name="colorPrimaryInverse">@color/primaryInverse</item>
+        <!-- Status bar / Navigation bar：暗色模式下使用深色 + 浅色图标 -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <!-- 暗色模式下使用浅色状态栏图标（false=浅色图标，适配深色状态栏） -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <!-- PopupMenu style -->
+        <item name="android:popupMenuStyle">@style/OverflowMenuStyle</item>
+        <!-- Material3 Component styles -->
+        <item name="materialButtonStyle">@style/Widget.Material3.Button.TextButton</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
+        <item name="tabStyle">@style/customTabLayout</item>
+    </style>
+
+    <!-- Tab 暗色适配：背景跟随 surface（已通过覆盖 @color/white 自动切换） -->
+    <style name="customTabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">@color/themeColor</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/height_xxl</item>
+        <item name="tabSelectedTextColor">@color/themeColor</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">@dimen/font_size_xl</item>
+        <item name="android:textColor">@color/autoColor</item>
+    </style>
+
+    <!-- OverflowMenu 在暗色下使用 surface 色，避免亮白突兀 -->
+    <style name="OverflowMenuStyle" parent="Widget.Material3.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:dropDownVerticalOffset">5dp</item>
+        <item name="android:dropDownHorizontalOffset">0dp</item>
+        <item name="android:textColor">@color/autoColor</item>
+    </style>
+</resources>
