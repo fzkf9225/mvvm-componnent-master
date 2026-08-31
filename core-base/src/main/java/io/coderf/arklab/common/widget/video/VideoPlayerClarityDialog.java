@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.List;
@@ -54,8 +54,8 @@ public class VideoPlayerClarityDialog extends Dialog {
         for (int i = 0; i < options.size(); i++) {
             VideoPlayerClarityOption option = options.get(i);
             View item = inflater.inflate(R.layout.item_video_clarity_option, container, false);
-            AppCompatTextView nameView = item.findViewById(R.id.clarity_name);
-            AppCompatTextView descView = item.findViewById(R.id.clarity_desc);
+            MaterialTextView nameView = item.findViewById(R.id.clarity_name);
+            MaterialTextView descView = item.findViewById(R.id.clarity_desc);
             View indicator = item.findViewById(R.id.clarity_indicator);
             nameView.setText(option.name());
             if (option.description().isEmpty()) {
@@ -96,3 +96,4 @@ public class VideoPlayerClarityDialog extends Dialog {
         void onClaritySelected(int index, @NonNull VideoPlayerClarityOption option);
     }
 }
+

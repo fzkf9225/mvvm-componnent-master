@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:textSize="15sp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_input"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xl"
@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_input" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -81,7 +81,7 @@
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
             app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"

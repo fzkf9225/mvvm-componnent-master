@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.ActionMenuView;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 
 /**
- * 支持自定义内容区高度的 Toolbar，用于 Edge-to-Edge 场景下让返回键/菜单在任意高度内垂直居中。
+ * 支持自定义内容区高度的 MaterialToolbar，用于 Edge-to-Edge 场景下让返回键/菜单在任意高度内垂直居中。
  */
-public class ActionToolbar extends Toolbar {
+public class ActionToolbar extends MaterialToolbar {
 
     private int contentHeightPx = -1;
 
@@ -32,7 +32,7 @@ public class ActionToolbar extends Toolbar {
     }
 
     /**
-     * 设置 Toolbar 内容区高度（不含状态栏 padding）。
+     * 设置 MaterialToolbar 内容区高度（不含状态栏 padding）。
      * 传入 {@code <= 0} 时恢复系统默认按钮尺寸。
      */
     public void setContentHeightPx(int heightPx) {
@@ -77,3 +77,4 @@ public class ActionToolbar extends Toolbar {
         return horizontalGravity == Gravity.LEFT || horizontalGravity == Gravity.RIGHT;
     }
 }
+

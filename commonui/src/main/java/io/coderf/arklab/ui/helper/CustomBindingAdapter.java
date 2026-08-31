@@ -3,8 +3,8 @@ package io.coderf.arklab.ui.helper;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
@@ -44,7 +44,7 @@ public class CustomBindingAdapter {
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditText view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
-            AppCompatEditText editText = (AppCompatEditText) view.getTvSelection();
+            TextInputEditText editText = (TextInputEditText) view.getTvSelection();
             // 在文本更改时通知数据绑定系统
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -89,7 +89,7 @@ public class CustomBindingAdapter {
     public static void setListeners(FormSelection view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
 
-            AppCompatTextView textView = (AppCompatTextView) view.getTvSelection();
+            MaterialTextView textView = (MaterialTextView) view.getTvSelection();
             // 在文本更改时通知数据绑定系统
             textView.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -132,7 +132,7 @@ public class CustomBindingAdapter {
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditArea view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
-            AppCompatEditText editText = (AppCompatEditText) view.getTvSelection();
+            TextInputEditText editText = (TextInputEditText) view.getTvSelection();
             // 在文本更改时通知数据绑定系统
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -176,7 +176,7 @@ public class CustomBindingAdapter {
     public static void setListeners(FormRichText view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
 
-            AppCompatTextView textView = (AppCompatTextView) view.getTvSelection();
+            MaterialTextView textView = (MaterialTextView) view.getTvSelection();
             // 在文本更改时通知数据绑定系统
             textView.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -327,3 +327,4 @@ public class CustomBindingAdapter {
     }
 
 }
+

@@ -17,7 +17,7 @@ import io.coderf.arklab.common.R
  * describe :
  */
 open class ScalingTextView(context: Context, attrs: AttributeSet?) :
-    androidx.appcompat.widget.AppCompatTextView(context, attrs) {
+    com.google.android.material.textview.MaterialTextView(context, attrs) {
     /**
      * 最大展示行数
      */

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/vertical_margin_l">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_mqtt_hint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_reconnect_section"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_reconnect_hint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_connect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -245,7 +245,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edit_publish_message" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_disconnect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                 app:layout_constraintStart_toEndOf="@id/btn_connect"
                 app:layout_constraintTop_toTopOf="@id/btn_connect" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_publish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -265,7 +265,7 @@
                 app:layout_constraintStart_toEndOf="@id/btn_disconnect"
                 app:layout_constraintTop_toTopOf="@id/btn_connect" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_presence_heartbeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -275,7 +275,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_connect" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -290,7 +290,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_presence_heartbeat" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_log_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -302,7 +302,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_status" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_clear_log"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -312,7 +312,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_log_label" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_log"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

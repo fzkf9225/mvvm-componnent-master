@@ -19,9 +19,10 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+
+import com.google.android.material.textview.MaterialTextView;
 
 import java.io.File;
 
@@ -51,12 +52,12 @@ public class ImageCropActivity extends AppCompatActivity {
     /**
      * 取消按钮
      */
-    private AppCompatTextView btnCancel;
+    private MaterialTextView btnCancel;
 
     /**
      * 确定按钮
      */
-    private AppCompatTextView btnConfirm;
+    private MaterialTextView btnConfirm;
 
     /**
      * 源图 Bitmap
@@ -247,7 +248,7 @@ public class ImageCropActivity extends AppCompatActivity {
      * @param widthDp  宽度 dp
      * @param heightDp 高度 dp
      */
-    private void applyButtonSize(AppCompatTextView button, float widthDp, float heightDp) {
+    private void applyButtonSize(MaterialTextView button, float widthDp, float heightDp) {
         android.view.ViewGroup.LayoutParams lp = button.getLayoutParams();
         if (!(lp instanceof android.widget.LinearLayout.LayoutParams)) {
             return;
@@ -395,3 +396,4 @@ public class ImageCropActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+

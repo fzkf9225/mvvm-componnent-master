@@ -28,7 +28,7 @@
             android:id="@+id/search_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:theme="@style/ThemeOverlay.Material3.ActionBar"
             app:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
@@ -75,7 +75,7 @@
                         android:paddingEnd="@dimen/padding_m"
                         android:paddingBottom="0dp" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_search"
                         app:layout_constraintStart_toEndOf="@+id/input_edit"
                         app:layout_constraintEnd_toEndOf="parent"

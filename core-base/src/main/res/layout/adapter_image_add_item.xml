@@ -50,7 +50,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.67" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:src="@mipmap/ic_tweet_add"
@@ -82,7 +82,7 @@
             app:layout_constraintStart_toStartOf="@+id/iv_image_show"
             app:layout_constraintTop_toTopOf="@+id/iv_image_show" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/upload_process"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_l" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_clear_img"
             android:layout_width="@dimen/image_m"
             android:layout_height="@dimen/image_m"

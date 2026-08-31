@@ -2,7 +2,7 @@ package io.coderf.arklab.common.utils.common;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.DrawableRes;
 import androidx.databinding.BindingAdapter;
@@ -15,7 +15,7 @@ import io.coderf.arklab.common.widget.customview.RoundImageView;
 
 /**
  * Create by fz on 2020/3/27 0027
- * describe: ImageView DataBinding 适配器。
+ * describe: ShapeableImageView DataBinding 适配器。
  * <p>
  * 支持可选 placeholder / error，未配置时保持原有默认图行为。
  */
@@ -32,22 +32,22 @@ public class ImageViewAttrAdapter {
         load(imageView, url, resolve(placeholder, DEFAULT_HEAD), resolve(error, DEFAULT_HEAD));
     }
 
-    // ---------- imageUrl / imageBitmap / imageUri（普通 ImageView） ----------
+    // ---------- imageUrl / imageBitmap / imageUri（普通 ShapeableImageView） ----------
 
     @BindingAdapter(value = {"imageUrl", "placeholder", "error"}, requireAll = false)
-    public static void loadImage(ImageView imageView, String url,
+    public static void loadImage(ShapeableImageView imageView, String url,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
         load(imageView, url, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
     }
 
     @BindingAdapter(value = {"imageBitmap", "placeholder", "error"}, requireAll = false)
-    public static void loadImage(ImageView imageView, Bitmap bitmap,
+    public static void loadImage(ShapeableImageView imageView, Bitmap bitmap,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
         load(imageView, bitmap, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
     }
 
     @BindingAdapter(value = {"imageUri", "placeholder", "error"}, requireAll = false)
-    public static void loadImage(ImageView imageView, Uri uri,
+    public static void loadImage(ShapeableImageView imageView, Uri uri,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
         load(imageView, uri, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
     }
@@ -58,7 +58,7 @@ public class ImageViewAttrAdapter {
         return value != null ? value : fallback;
     }
 
-    private static void load(ImageView imageView, Object model,
+    private static void load(ShapeableImageView imageView, Object model,
                              @DrawableRes int placeholder, @DrawableRes int error) {
         if (imageView == null) {
             return;
@@ -74,3 +74,4 @@ public class ImageViewAttrAdapter {
                 .into(imageView);
     }
 }
+

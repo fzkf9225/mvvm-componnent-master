@@ -4,11 +4,10 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -21,14 +20,14 @@ import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
 
 /**
- * 表单复选框，使用 {@link AppCompatImageView} 避免系统 CheckBox 内边距导致对齐问题。
+ * 表单复选框，使用 {@link ShapeableImageView} 避免系统 MaterialCheckBox 内边距导致对齐问题。
  *
  * @author fz
  */
 public class FormCheckbox extends FormConstraintLayout {
 
     /** 复选框图标视图 */
-    protected AppCompatImageView checkIcon;
+    protected ShapeableImageView checkIcon;
     /** 选中状态双向绑定源，对应 XML {@code checked} */
     public ObservableField<Boolean> checkedSource;
     /** 图标尺寸，对应 XML {@code checkboxIconSize} */
@@ -86,9 +85,9 @@ public class FormCheckbox extends FormConstraintLayout {
 
     @Override
     public void createText() {
-        checkIcon = new AppCompatImageView(getContext());
+        checkIcon = new ShapeableImageView(getContext());
         checkIcon.setId(View.generateViewId());
-        checkIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        checkIcon.setScaleType(ShapeableImageView.ScaleType.FIT_CENTER);
         checkIcon.setPadding(0, 0, 0, 0);
         checkIcon.setClickable(true);
         checkIcon.setFocusable(true);
@@ -205,3 +204,4 @@ public class FormCheckbox extends FormConstraintLayout {
         applyCheckboxIcon(isChecked());
     }
 }
+

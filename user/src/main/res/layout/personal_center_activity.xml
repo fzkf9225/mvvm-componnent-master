@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/default_background">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_name_label"
             style="@style/user_label"
             android:text="姓名"
@@ -17,7 +17,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_name"
             style="@style/user_content"
             android:text="@{userInfo.realName}"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="张三" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_sex_label"
             style="@style/user_label"
             android:text="性别"
@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_name_label" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_sex"
             style="@style/user_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_name_label"
             tools:text="男" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_tel_label"
             style="@style/user_label"
             android:text="联系方式"
@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_sex_label" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_tel"
             style="@style/user_content"
             android:text="@{userInfo.phone}"
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_sex_label"
             tools:text="15210231234" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_role_label"
             style="@style/user_label"
             android:text="角色"
@@ -73,7 +73,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_tel_label" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_role"
             style="@style/user_content"
             android:text="@={userInfo.position}"
@@ -83,7 +83,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_tel_label"
             tools:text="男" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_user_name_label"
             style="@style/user_label"
             android:text="用户名称"
@@ -92,7 +92,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_role_label" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_user_name"
             style="@style/user_content"
             android:text="@={userInfo.userName}"
@@ -102,7 +102,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_role_label"
             tools:text="男" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_unit_label"
             style="@style/user_label"
             android:text="所属单位"
@@ -111,7 +111,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_user_name_label" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_unit"
             style="@style/user_content"
             app:layout_constraintEnd_toEndOf="parent"

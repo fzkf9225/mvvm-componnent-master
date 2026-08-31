@@ -5,7 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
@@ -49,17 +49,17 @@ public interface IPhotoView {
     Matrix getDisplayMatrix();
 
     /**
-     * @return 当前的最小缩放级别。该值的含义取决于当前 {@link ImageView.ScaleType}。
+     * @return 当前的最小缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      */
     float getMinimumScale();
 
     /**
-     * @return 当前的中等缩放级别。该值的含义取决于当前 {@link ImageView.ScaleType}。
+     * @return 当前的中等缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      */
     float getMediumScale();
 
     /**
-     * @return 当前的最大缩放级别。该值的含义取决于当前 {@link ImageView.ScaleType}。
+     * @return 当前的最大缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      */
     float getMaximumScale();
 
@@ -71,35 +71,35 @@ public interface IPhotoView {
     float getScale();
 
     /**
-     * 返回当前 ImageView 使用的缩放类型。
+     * 返回当前 ShapeableImageView 使用的缩放类型。
      *
-     * @return 当前的 ImageView.ScaleType
+     * @return 当前的 ShapeableImageView.ScaleType
      */
-    ImageView.ScaleType getScaleType();
+    ShapeableImageView.ScaleType getScaleType();
 
     /**
-     * 是否允许 ImageView 的父级在图片滚动到其水平边缘时拦截触摸事件。
+     * 是否允许 ShapeableImageView 的父级在图片滚动到其水平边缘时拦截触摸事件。
      *
      * @param allow 是否允许父级拦截事件
      */
     void setAllowParentInterceptOnEdge(boolean allow);
 
     /**
-     * 设置最小缩放级别。该值的含义取决于当前 {@link ImageView.ScaleType}。
+     * 设置最小缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      *
      * @param minimumScale 最小允许的缩放值
      */
     void setMinimumScale(float minimumScale);
 
     /*
-     * 设置中等缩放级别。该值的含义取决于当前 {@link android.widget.ImageView.ScaleType}。
+     * 设置中等缩放级别。该值的含义取决于当前 {@link com.google.android.material.imageview.ShapeableImageView.ScaleType}。
      *
      * @param mediumScale 中等缩放预设值
      */
     void setMediumScale(float mediumScale);
 
     /**
-     * 设置最大缩放级别。该值的含义取决于当前 {@link ImageView.ScaleType}。
+     * 设置最大缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      *
      * @param maximumScale 最大允许的缩放值
      */
@@ -187,15 +187,15 @@ public interface IPhotoView {
     void setScale(float scale, float focalX, float focalY, boolean animate);
 
     /**
-     * 控制图像应如何调整大小或移动以匹配 ImageView 的大小。任何缩放或平移都会在此 {@link
-     * ImageView.ScaleType} 的范围内发生。
+     * 控制图像应如何调整大小或移动以匹配 ShapeableImageView 的大小。任何缩放或平移都会在此 {@link
+     * ShapeableImageView.ScaleType} 的范围内发生。
      *
      * @param scaleType - 期望的缩放模式。
      */
-    void setScaleType(ImageView.ScaleType scaleType);
+    void setScaleType(ShapeableImageView.ScaleType scaleType);
 
     /**
-     * 允许启用/禁用 ImageView 的缩放功能。当禁用时，ImageView 会恢复为使用 FIT_CENTER 矩阵。
+     * 允许启用/禁用 ShapeableImageView 的缩放功能。当禁用时，ShapeableImageView 会恢复为使用 FIT_CENTER 矩阵。
      *
      * @param zoomable - 是否启用缩放功能。
      */
@@ -204,7 +204,7 @@ public interface IPhotoView {
     void setPhotoViewRotation(float rotationDegree);
 
     /**
-     * 提取当前可见区域并转换为 Bitmap 对象，如果尚未加载图片或 ImageView 已被销毁，则返回 {@code null}。
+     * 提取当前可见区域并转换为 Bitmap 对象，如果尚未加载图片或 ShapeableImageView 已被销毁，则返回 {@code null}。
      *
      * @return 当前可见区域的 Bitmap，或者 null
      */
@@ -232,3 +232,4 @@ public interface IPhotoView {
      */
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
 }
+

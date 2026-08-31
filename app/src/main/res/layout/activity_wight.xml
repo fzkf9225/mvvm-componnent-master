@@ -34,7 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:radius="@dimen/radius_m">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -87,7 +87,7 @@
                 app:layout_constraintStart_toEndOf="@+id/cornerButton"
                 app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -155,7 +155,7 @@
                 app:textColor="@color/theme_orange"
                 app:textSize="@dimen/font_size_l" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_code"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
@@ -190,7 +190,7 @@
                 app:starFill="@mipmap/star_full"
                 app:starSize="20dp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_star_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -228,7 +228,7 @@
                 app:textRightStyle="italic"
                 app:totalRadius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -252,7 +252,7 @@
                 app:rightBottomRadius="@dimen/radius_l"
                 app:rightTopRadius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_banner_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
                 app:rightBottomRadius="@dimen/radius_l"
                 app:rightTopRadius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_banner_text_center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -311,7 +311,7 @@
                 app:rightBottomRadius="@dimen/radius_l"
                 app:rightTopRadius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -415,7 +415,7 @@
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp" />
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/numberFormatEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
@@ -508,7 +508,7 @@
                 app:dotHeight="20dp"
                 app:dotPadding="2dp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_calendarView_single"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -533,7 +533,7 @@
                 app:weekTextColor="@color/theme_red"
                 app:workingDayTextColor="@color/autoColor" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_calendarView_multi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -698,7 +698,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/gridMenuView"
                 app:unitText="次" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_bottom_nav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

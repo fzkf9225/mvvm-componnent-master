@@ -5,10 +5,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 /**
- * CheckBox / Radio 图标选中切换动画。
+ * MaterialCheckBox / Radio 图标选中切换动画。
  */
 final class FormToggleIconAnimator {
 
@@ -18,7 +18,7 @@ final class FormToggleIconAnimator {
     private FormToggleIconAnimator() {
     }
 
-    static void applyIcon(@NonNull AppCompatImageView iconView, @NonNull Drawable drawable) {
+    static void applyIcon(@NonNull ShapeableImageView iconView, @NonNull Drawable drawable) {
         iconView.animate().cancel();
         iconView.setScaleX(1f);
         iconView.setScaleY(1f);
@@ -26,7 +26,7 @@ final class FormToggleIconAnimator {
         iconView.setImageDrawable(drawable);
     }
 
-    static void animateToggle(@NonNull AppCompatImageView iconView,
+    static void animateToggle(@NonNull ShapeableImageView iconView,
                               @NonNull Drawable drawable,
                               boolean selected) {
         iconView.animate().cancel();
@@ -55,3 +55,4 @@ final class FormToggleIconAnimator {
         }
     }
 }
+

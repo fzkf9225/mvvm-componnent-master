@@ -12,8 +12,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -44,17 +44,17 @@ public class TextPopupView extends ConstraintLayout {
     /**
      * 文本控件
      */
-    private AppCompatTextView tvLabel;
+    private MaterialTextView tvLabel;
 
     /**
      * 左侧图标控件
      */
-    private AppCompatImageView ivStartDrawable;
+    private ShapeableImageView ivStartDrawable;
 
     /**
      * 右侧图标控件
      */
-    private AppCompatImageView ivEndDrawable;
+    private ShapeableImageView ivEndDrawable;
 
     public TextPopupView(@NonNull Context context) {
         super(context);
@@ -127,15 +127,15 @@ public class TextPopupView extends ConstraintLayout {
         return labelTextSize;
     }
 
-    public AppCompatTextView getTvLabel() {
+    public MaterialTextView getTvLabel() {
         return tvLabel;
     }
 
-    public AppCompatImageView getIvStartDrawable() {
+    public ShapeableImageView getIvStartDrawable() {
         return ivStartDrawable;
     }
 
-    public AppCompatImageView getIvEndDrawable() {
+    public ShapeableImageView getIvEndDrawable() {
         return ivEndDrawable;
     }
 
@@ -149,7 +149,7 @@ public class TextPopupView extends ConstraintLayout {
     }
 
     protected void createLabel() {
-        tvLabel = new AppCompatTextView(getContext());
+        tvLabel = new MaterialTextView(getContext());
         tvLabel.setId(View.generateViewId());
         tvLabel.setLines(1);
         tvLabel.setTextColor(labelTextColor);
@@ -191,7 +191,7 @@ public class TextPopupView extends ConstraintLayout {
     }
 
     protected void createStartDrawable() {
-        ivStartDrawable = new AppCompatImageView(getContext());
+        ivStartDrawable = new ShapeableImageView(getContext());
         ivStartDrawable.setId(View.generateViewId());
         ConstraintLayout.LayoutParams params;
         if (startDrawableWidth <= 0 || startDrawableHeight <= 0) {
@@ -216,7 +216,7 @@ public class TextPopupView extends ConstraintLayout {
     }
 
     protected void createEndDrawable() {
-        ivEndDrawable = new AppCompatImageView(getContext());
+        ivEndDrawable = new ShapeableImageView(getContext());
         ivEndDrawable.setId(View.generateViewId());
         ConstraintLayout.LayoutParams params;
         if (endDrawableWidth <= 0 || endDrawableHeight <= 0) {
@@ -240,4 +240,5 @@ public class TextPopupView extends ConstraintLayout {
         constraintSet.applyTo(this);
     }
 }
+
 

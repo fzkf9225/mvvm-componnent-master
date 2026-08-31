@@ -12,7 +12,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -104,7 +104,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     /**
      * 数量标签控件
      */
-    protected AppCompatTextView tvCountLabel;
+    protected MaterialTextView tvCountLabel;
     /**
      * 拍摄视频最大时长，单位：秒，默认为30秒
      */
@@ -199,7 +199,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         return new String[]{"image/*"};
     }
 
-    public AppCompatTextView getTvCountLabel() {
+    public MaterialTextView getTvCountLabel() {
         return tvCountLabel;
     }
 
@@ -292,7 +292,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     }
 
     public void createCountLabel() {
-        tvCountLabel = new AppCompatTextView(getContext());
+        tvCountLabel = new MaterialTextView(getContext());
         tvCountLabel.setId(View.generateViewId());
         tvCountLabel.setLines(1);
         tvCountLabel.setTextColor(countLabelTextColor);
@@ -463,3 +463,4 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
     }
 
 }
+

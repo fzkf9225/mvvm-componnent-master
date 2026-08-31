@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -68,11 +68,11 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     /**
      * 空白、暂无数据控件
      */
-    protected AppCompatTextView tvEmpty;
+    protected MaterialTextView tvEmpty;
     /**
      * 附件添加控件
      */
-    protected AppCompatImageView imageAdd;
+    protected ShapeableImageView imageAdd;
 
     /**
      * 空白文字大小
@@ -180,12 +180,12 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         return new String[]{"*/*"};
     }
 
-    public AppCompatImageView getImageAdd() {
+    public ShapeableImageView getImageAdd() {
         return imageAdd;
     }
 
     public void createImageAdd() {
-        imageAdd = new AppCompatImageView(getContext());
+        imageAdd = new ShapeableImageView(getContext());
         imageAdd.setId(View.generateViewId());
         imageAdd.setImageResource(fileAddSrc);
         LayoutParams params = new LayoutParams(
@@ -205,7 +205,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
     }
 
     public void createEmptyLayout() {
-        tvEmpty = new AppCompatTextView(getContext());
+        tvEmpty = new MaterialTextView(getContext());
         tvEmpty.setText(emptyText);
         tvEmpty.setId(View.generateViewId());
         tvEmpty.setTextColor(emptyTextColor);
@@ -302,3 +302,4 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         mediaHelper.getMediaBuilder().setFileType(fileType);
     }
 }
+

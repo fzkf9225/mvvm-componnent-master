@@ -19,11 +19,10 @@ import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.ImageView.ScaleType;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 
 import java.lang.ref.WeakReference;
 
@@ -66,9 +65,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * @return true if the ImageView exists, and it's Drawable existss
+     * @return true if the ShapeableImageView exists, and it's Drawable existss
      */
-    private static boolean hasDrawable(AppCompatImageView imageView) {
+    private static boolean hasDrawable(ShapeableImageView imageView) {
         return null != imageView && null != imageView.getDrawable();
     }
 
@@ -88,9 +87,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Set's the ImageView's ScaleType to Matrix.
+     * Set's the ShapeableImageView's ScaleType to Matrix.
      */
-    private static void setImageViewScaleTypeMatrix(ImageView imageView) {
+    private static void setImageViewScaleTypeMatrix(ShapeableImageView imageView) {
         /**
          * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
          * setScaleType to this.setScaleType automatically.
@@ -102,7 +101,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    private WeakReference<AppCompatImageView> mImageView;
+    private WeakReference<ShapeableImageView> mImageView;
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
@@ -129,7 +128,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     @SuppressLint("ClickableViewAccessibility")
-    public PhotoViewAttacher(AppCompatImageView imageView) {
+    public PhotoViewAttacher(ShapeableImageView imageView) {
         mImageView = new WeakReference<>(imageView);
         imageView.setDrawingCacheEnabled(true);
         imageView.setOnTouchListener(this);
@@ -193,7 +192,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return; // cleanup already done
         }
 
-        final ImageView imageView = mImageView.get();
+        final ShapeableImageView imageView = mImageView.get();
 
         if (null != imageView) {
             // Remove this as a global layout listener
@@ -202,7 +201,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 observer.removeGlobalOnLayoutListener(this);
             }
 
-            // Remove the ImageView's reference to this
+            // Remove the ShapeableImageView's reference to this
             imageView.setOnTouchListener(null);
 
             // make sure a pending fling runnable won't be run
@@ -218,7 +217,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mPhotoTapListener = null;
         mViewTapListener = null;
 
-        // Finally, clear ImageView
+        // Finally, clear ShapeableImageView
         mImageView = null;
     }
 
@@ -234,7 +233,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             throw new IllegalArgumentException("Matrix cannot be null");
         }
 
-        ImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         if (null == imageView)
             return false;
 
@@ -265,14 +264,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkAndDisplayMatrix();
     }
 
-    public AppCompatImageView getImageView() {
-        AppCompatImageView imageView = null;
+    public ShapeableImageView getImageView() {
+        ShapeableImageView imageView = null;
 
         if (null != mImageView) {
             imageView = mImageView.get();
         }
 
-        // If we don't have an ImageView, call cleanup()
+        // If we don't have an ShapeableImageView, call cleanup()
         if (null == imageView) {
             cleanup();
         }
@@ -308,12 +307,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (mScaleDragDetector.isScaling()) {
             return; // Do not drag if we are already scaling
         }
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
 
         /**
-         * Here we decide whether to let the ImageView's parent to start taking
+         * Here we decide whether to let the ShapeableImageView's parent to start taking
          * over the touch event.
          *
          * First we check whether this function is enabled. We never want the
@@ -339,7 +338,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
                 getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
@@ -348,7 +347,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onGlobalLayout() {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         if (null != imageView) {
             if (mZoomEnabled) {
@@ -358,10 +357,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 final int left = imageView.getLeft();
 
                 /**
-                 * We need to check whether the ImageView's bounds have changed.
+                 * We need to check whether the ShapeableImageView's bounds have changed.
                  * This would be easier if we targeted API 11+ as we could just use
                  * View.OnLayoutChangeListener. Instead we have to replicate the
-                 * work, keeping track of the ImageView's bounds and then checking
+                 * work, keeping track of the ShapeableImageView's bounds and then checking
                  * if the values change.
                  */
                 if (top != mIvTop || bottom != mIvBottom || left != mIvLeft
@@ -393,7 +392,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
-        if (mZoomEnabled && hasDrawable((AppCompatImageView) v)) {
+        if (mZoomEnabled && hasDrawable((ShapeableImageView) v)) {
             ViewParent parent = v.getParent();
             switch (ev.getAction()) {
                 case ACTION_DOWN:
@@ -497,7 +496,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void setScale(float scale, boolean animate) {
-        ImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         if (null != imageView) {
             setScale(scale,
@@ -510,7 +509,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void setScale(float scale, float focalX, float focalY,
                          boolean animate) {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         if (null != imageView) {
             // Check to see if the scale is within bounds
@@ -543,7 +542,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     public void update() {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         if (null != imageView) {
             if (mZoomEnabled) {
@@ -587,7 +586,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     private void checkImageViewScaleType() {
-        ImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         /*
          * PhotoView's getScaleType() will just divert to this.getScaleType() so
@@ -596,13 +595,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 throw new IllegalStateException(
-                        "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
+                        "The ShapeableImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
             }
         }
     }
 
     private boolean checkMatrixBounds() {
-        final AppCompatImageView imageView = getImageView();
+        final ShapeableImageView imageView = getImageView();
         if (null == imageView) {
             return false;
         }
@@ -664,7 +663,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
 
         if (null != imageView) {
             Drawable d = imageView.getDrawable();
@@ -679,7 +678,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     public Bitmap getVisibleRectangleBitmap() {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         return imageView == null ? null : imageView.getDrawingCache();
     }
 
@@ -717,7 +716,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     private void setImageViewMatrix(Matrix matrix) {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         if (null != imageView) {
 
             checkImageViewScaleType();
@@ -739,7 +738,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * @param d - Drawable being displayed
      */
     private void updateBaseMatrix(Drawable d) {
-        AppCompatImageView imageView = getImageView();
+        ShapeableImageView imageView = getImageView();
         if (null == imageView || null == d) {
             return;
         }
@@ -833,13 +832,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mMaxScale = Math.max(defaultMaxScale, scaleForFullSize * extraMaxZoomRatio);
     }
 
-    private int getImageViewWidth(ImageView imageView) {
+    private int getImageViewWidth(ShapeableImageView imageView) {
         if (null == imageView)
             return 0;
         return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
     }
 
-    private int getImageViewHeight(ImageView imageView) {
+    private int getImageViewHeight(ShapeableImageView imageView) {
         if (null == imageView)
             return 0;
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
@@ -883,7 +882,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Interface definition for a callback to be invoked when the ImageView is tapped with a single
+     * Interface definition for a callback to be invoked when the ShapeableImageView is tapped with a single
      * tap.
      *
      * @author Chris Banes
@@ -891,7 +890,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public static interface OnViewTapListener {
 
         /**
-         * A callback to receive where the user taps on a ImageView. You will receive a callback if
+         * A callback to receive where the user taps on a ShapeableImageView. You will receive a callback if
          * the user taps anywhere on the view, tapping on 'whitespace' will not be ignored.
          *
          * @param view - View the user tapped.
@@ -918,7 +917,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         @Override
         public void run() {
-            ImageView imageView = getImageView();
+            ShapeableImageView imageView = getImageView();
             if (imageView == null) {
                 return;
             }
@@ -997,7 +996,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 return; // remaining post that should not be handled
             }
 
-            AppCompatImageView imageView = getImageView();
+            ShapeableImageView imageView = getImageView();
             if (null != imageView && mScroller.computeScrollOffset()) {
 
                 final int newX = mScroller.getCurrX();
@@ -1015,3 +1014,4 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 }
+

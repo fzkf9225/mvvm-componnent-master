@@ -2,7 +2,7 @@ package io.coderf.arklab.common.utils.common;
 
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,12 +27,12 @@ public class RxMenuView {
      */
     private static final long DEFAULT_CLICK_INTERVAL = 500;
 
-    public static Disposable setOnMenuItemClickListener(Toolbar toolbar, Consumer<Toolbar> onMenuItemClickListener) {
+    public static Disposable setOnMenuItemClickListener(MaterialToolbar toolbar, Consumer<MaterialToolbar> onMenuItemClickListener) {
         return setOnMenuItemClickListener(toolbar, DEFAULT_CLICK_INTERVAL, onMenuItemClickListener);
     }
 
-    public static Disposable setOnMenuItemClickListener(Toolbar toolbar, long interval, Consumer<Toolbar> onMenuItemClickListener) {
-        return Observable.create((ObservableOnSubscribe<Toolbar>)
+    public static Disposable setOnMenuItemClickListener(MaterialToolbar toolbar, long interval, Consumer<MaterialToolbar> onMenuItemClickListener) {
+        return Observable.create((ObservableOnSubscribe<MaterialToolbar>)
                         emitter -> toolbar.setOnMenuItemClickListener(item -> {
                             emitter.onNext(toolbar);
                             return false;
@@ -45,8 +45,8 @@ public class RxMenuView {
                 .subscribe(onMenuItemClickListener);
     }
 
-    public static Disposable setOnMenuItemClickListener(Toolbar toolbar, long interval,  String message, Consumer<Toolbar> onMenuItemClickListener) {
-        return Observable.create((ObservableOnSubscribe<Toolbar>)
+    public static Disposable setOnMenuItemClickListener(MaterialToolbar toolbar, long interval,  String message, Consumer<MaterialToolbar> onMenuItemClickListener) {
+        return Observable.create((ObservableOnSubscribe<MaterialToolbar>)
                         emitter -> toolbar.setOnMenuItemClickListener(item -> {
                             emitter.onNext(toolbar);
                             return false;
@@ -59,3 +59,4 @@ public class RxMenuView {
                 .subscribe(onMenuItemClickListener, throwable -> Toast.makeText(toolbar.getContext(), "操作发生异常", Toast.LENGTH_SHORT).show());
     }
 }
+

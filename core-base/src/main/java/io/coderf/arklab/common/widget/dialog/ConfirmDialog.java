@@ -108,6 +108,10 @@ public class ConfirmDialog extends BaseDialog {
         super(context);
     }
 
+    public ConfirmDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     public ConfirmDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;

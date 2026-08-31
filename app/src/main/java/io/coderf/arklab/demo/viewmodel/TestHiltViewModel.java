@@ -82,7 +82,7 @@ public class TestHiltViewModel extends BaseViewModel<BaseRepository<BaseView>, B
     @Inject
     HiltViewModelScopedToken viewModelScopedToken;
 
-    /** 演示结果输出，绑定到界面 TextView。 */
+    /** 演示结果输出，绑定到界面 MaterialTextView。 */
     public final MutableLiveData<String> demoResult = new MutableLiveData<>("点击按钮查看 Hilt 注入效果");
 
     @Inject
@@ -150,3 +150,4 @@ public class TestHiltViewModel extends BaseViewModel<BaseRepository<BaseView>, B
         }
     }
 }
+

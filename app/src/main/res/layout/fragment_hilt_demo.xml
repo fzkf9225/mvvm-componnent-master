@@ -3,7 +3,7 @@
 
     <data />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvFragmentInject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

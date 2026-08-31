@@ -10,7 +10,7 @@ import android.graphics.Region;
 import android.os.Build;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.R;
 
@@ -18,7 +18,7 @@ import io.coderf.arklab.common.R;
  * created by fz on 2019/9/3 0003
  * describe:圆角ImageView
  */
-public class CornerImageView extends AppCompatImageView {
+public class CornerImageView extends ShapeableImageView {
     /**
      * 图片宽高
      */
@@ -293,13 +293,6 @@ public class CornerImageView extends AppCompatImageView {
         this.leftBottomRadius = leftBottom;
         updateCornerClipEnabled();
         invalidate();
-    }
-
-    /**
-     * 获取边框颜色
-     */
-    public int getStrokeColor() {
-        return strokeColor;
     }
 
     /**

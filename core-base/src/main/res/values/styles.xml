@@ -1,23 +1,64 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Base Material3 Theme -->
+    <style name="AppBaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color -->
         <item name="colorPrimary">@color/themeColor</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/themeColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/themeColor</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/themeColor</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/themeColor</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+        <!-- Tertiary brand color -->
+        <item name="colorTertiary">@color/themeColor</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorTertiaryContainer">@color/themeColor</item>
+        <item name="colorOnTertiaryContainer">@color/white</item>
+        <!-- Error color -->
+        <item name="colorError">@color/theme_red</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="colorErrorContainer">@color/theme_red</item>
+        <item name="colorOnErrorContainer">@color/white</item>
+        <!-- Surface colors (Material3) -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/autoColor</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
+        <!-- Background -->
+        <item name="android:colorBackground">@color/default_background</item>
+        <item name="colorOnBackground">@color/autoColor</item>
+        <!-- Outline -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outlineVariant</item>
+        <!-- Inverse -->
+        <item name="colorSurfaceInverse">@color/surfaceInverse</item>
+        <item name="colorOnSurfaceInverse">@color/onSurfaceInverse</item>
+        <item name="colorPrimaryInverse">@color/primaryInverse</item>
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <!-- PopupMenu style -->
         <item name="android:popupMenuStyle">@style/OverflowMenuStyle</item>
-        <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
+        <!-- Material3 Component styles - 使用不覆盖背景的样式 -->
+        <item name="materialButtonStyle">@style/Widget.Material3.Button.TextButton</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
+        <item name="tabStyle">@style/customTabLayout</item>
     </style>
-    <!-- 自定义loading dialog -->
-    <style name="loading_dialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
+
+    <!-- 自定义loading dialog - 使用Material3风格，内容自适应 -->
+    <style name="loading_dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-    <!--tabLayout布局样式-->
-    <style name="customTabLayout" parent="Widget.Design.TabLayout">
+    <!-- TabLayout布局样式 -->
+    <style name="customTabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabIndicatorColor">@color/themeColor</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_xxl</item>
@@ -26,8 +67,9 @@
         <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textColor">@color/autoColor</item>
     </style>
-    <!-- 弹框dialog -->
-    <style name="ActionSheetDialogStyle" parent="@android:style/Theme.Dialog">
+
+    <!-- 弹框dialog - 使用Material3 -->
+    <style name="ActionSheetDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -44,92 +86,79 @@
         <!-- Dialog进入及退出动画 -->
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
     </style>
+
+    <!-- 专门给 ConfirmDialog 用的样式，控制按压高亮色 -->
+    <style name="DialogSoftHighlightStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="android:colorControlHighlight">#33CCCCCC</item>
+        <item name="colorControlHighlight">#33CCCCCC</item>
+    </style>
+
     <!-- ActionSheet进出动画 -->
     <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
 
-    <!--朋友圈图片全屏样式-->
-    <style name="PreviewPhotoDialog">
-        <!-- 边框 -->
+    <!-- 朋友圈图片全屏样式 -->
+    <style name="PreviewPhotoDialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowFrame">@null</item>
-        <!-- 是否浮现在activity之上 -->
         <item name="android:windowIsFloating">true</item>
-        <!-- 半透明 -->
         <item name="android:windowIsTranslucent">false</item>
-        <!-- 无标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!-- 背景 -->
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- 模糊 -->
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">1</item>
-        <!-- 动画 -->
         <item name="android:windowAnimationStyle">@style/ShowImageDialogAnimation</item>
     </style>
+
     <style name="ShowImageDialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/scale_in</item>
         <item name="android:windowExitAnimation">@anim/scale_out</item>
     </style>
 
-    <style name="dialog" parent="@android:style/Theme.Dialog">
+    <style name="dialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="ToolBarStyle_black" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="actionMenuTextColor">@android:color/black</item> <!-- menu 敲定颜色-->
-        <item name="android:textSize">@dimen/font_size_xl</item> <!--  搞掂字体大小-->
+    <style name="ToolBarStyle_black" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textStyle">normal</item>
-        <item name="colorControlNormal">@color/black</item><!--图标颜色-->
+        <item name="colorControlNormal">@color/black</item>
         <item name="overlapAnchor">false</item>
     </style>
 
-    <style name="OverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
-        <!-- 是否覆盖锚点，默认为true，即盖住Toolbar -->
+    <style name="OverflowMenuStyle" parent="Widget.Material3.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
         <item name="android:dropDownWidth">wrap_content</item>
-        <!-- 弹出层背景颜色 -->
         <item name="android:background">@android:color/white</item>
-        <!-- 弹出层垂直方向上的偏移，即在竖直方向上距离Toolbar的距离，值为负则会盖住Toolbar -->
         <item name="android:dropDownVerticalOffset">5dp</item>
-        <!-- 弹出层水平方向上的偏移，即距离屏幕左边的距离，负值会导致右边出现空隙 -->
         <item name="android:dropDownHorizontalOffset">0dp</item>
-        <!-- 设置弹出菜单文字颜色 -->
         <item name="android:textColor">@color/autoColor</item>
-
     </style>
-    <style name="ToolBarStyle_white" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="actionMenuTextColor">#ff0000</item> <!--  menu 敲定颜色-->
-        <item name="android:textSize">@dimen/font_size_xl</item> <!--  搞掂字体大小-->
+
+    <style name="ToolBarStyle_white" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textStyle">normal</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="overlapAnchor">false</item>
     </style>
 
     <!-- 弹框dialog -->
-    <style name="ActionSheetDialogStyle_No_Bg" parent="@android:style/Theme.Dialog">
-        <!-- 背景透明 -->
+    <style name="ActionSheetDialogStyle_No_Bg" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!-- 浮于Activity之上 -->
         <item name="android:windowIsFloating">true</item>
-        <!-- 边框 -->
         <item name="android:windowFrame">@null</item>
-        <!-- Dialog以外的区域模糊效果 -->
         <item name="android:backgroundDimEnabled">false</item>
-        <!-- 无标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!-- 半透明 -->
         <item name="android:windowIsTranslucent">false</item>
-        <!-- Dialog进入及退出动画 -->
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
     </style>
 
-    <style name="like_toast_dialog_style">
+    <style name="like_toast_dialog_style" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>

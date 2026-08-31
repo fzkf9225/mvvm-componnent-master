@@ -72,6 +72,7 @@ dependencies {
     implementation libs.androidx.core.ktx
     implementation platform(libs.kotlin.bom)
     implementation libs.androidx.appcompat
+    implementation libs.material
     implementation libs.activity
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.common.java8

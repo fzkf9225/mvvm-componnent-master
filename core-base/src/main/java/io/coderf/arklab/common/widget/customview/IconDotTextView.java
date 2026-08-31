@@ -14,8 +14,8 @@ import android.view.View;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -55,9 +55,9 @@ public class IconDotTextView extends ConstraintLayout {
     private int DEFAULT_DOT_TEXT_SIZE;
 
     // View组件
-    private AppCompatImageView mIconView;
-    private AppCompatTextView mTitleView;
-    private AppCompatTextView mDotView;
+    private ShapeableImageView mIconView;
+    private MaterialTextView mTitleView;
+    private MaterialTextView mDotView;
 
     // 属性值
     private int mImageWidth;
@@ -202,7 +202,7 @@ public class IconDotTextView extends ConstraintLayout {
      */
     private void createSubViews() {
         // 创建图标View
-        mIconView = new AppCompatImageView(getContext());
+        mIconView = new ShapeableImageView(getContext());
         mIconView.setId(View.generateViewId());
         // 设置图标尺寸
         ConstraintLayout.LayoutParams iconParams =
@@ -213,7 +213,7 @@ public class IconDotTextView extends ConstraintLayout {
             mIconView.setImageDrawable(mDrawableImage);
         }
         // 创建标题View
-        mTitleView = new AppCompatTextView(getContext());
+        mTitleView = new MaterialTextView(getContext());
         mTitleView.setId(View.generateViewId());
         mTitleView.setGravity(Gravity.CENTER);
         mTitleView.setIncludeFontPadding(false);
@@ -236,7 +236,7 @@ public class IconDotTextView extends ConstraintLayout {
             mTitleView.setTypeface(mTitleView.getTypeface(), Typeface.NORMAL);
         }
         // 创建角标View
-        mDotView = new AppCompatTextView(getContext());
+        mDotView = new MaterialTextView(getContext());
         mDotView.setId(View.generateViewId());
         mDotView.setGravity(Gravity.CENTER);
         mDotView.setIncludeFontPadding(false);
@@ -561,7 +561,7 @@ public class IconDotTextView extends ConstraintLayout {
      * 获取图标View，用于进一步自定义
      * @return 图标ImageView
      */
-    public AppCompatImageView getIconView() {
+    public ShapeableImageView getIconView() {
         return mIconView;
     }
 
@@ -569,7 +569,7 @@ public class IconDotTextView extends ConstraintLayout {
      * 获取标题View，用于进一步自定义
      * @return 标题TextView
      */
-    public AppCompatTextView getTitleView() {
+    public MaterialTextView getTitleView() {
         return mTitleView;
     }
 
@@ -577,7 +577,7 @@ public class IconDotTextView extends ConstraintLayout {
      * 获取角标View，用于进一步自定义
      * @return 角标TextView
      */
-    public AppCompatTextView getDotView() {
+    public MaterialTextView getDotView() {
         return mDotView;
     }
 }

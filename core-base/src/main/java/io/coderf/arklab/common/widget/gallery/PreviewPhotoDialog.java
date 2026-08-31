@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -364,7 +364,7 @@ public class PreviewPhotoDialog extends Dialog {
             llPoint.setVisibility(View.INVISIBLE);
         }
         IntStream.range(0, imageInfos.size()).forEach(i -> {
-            ImageView round = new ImageView(getContext());
+            ShapeableImageView round = new ShapeableImageView(getContext());
             if (i == position) {
                 round.setBackground(drawableResCurrent);
             } else {
@@ -376,4 +376,5 @@ public class PreviewPhotoDialog extends Dialog {
         });
     }
 }
+
 

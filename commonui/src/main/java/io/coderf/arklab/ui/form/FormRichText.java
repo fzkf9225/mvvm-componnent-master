@@ -10,7 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.databinding.Observable;
@@ -59,7 +59,7 @@ public class FormRichText extends FormTextView {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 String newValue = dataSource.get();
-                if (tvSelection instanceof AppCompatTextView textView) {
+                if (tvSelection instanceof MaterialTextView textView) {
                     if (textView.getText() == null) {
                         setRichText(newValue);
                     } else if (!textView.getText().toString().equals(newValue)) {
@@ -73,7 +73,7 @@ public class FormRichText extends FormTextView {
     @Override
     public void createText() {
         super.createText();
-        AppCompatTextView tvRichText = (AppCompatTextView) tvSelection;
+        MaterialTextView tvRichText = (MaterialTextView) tvSelection;
         tvRichText.setMaxLines(Integer.MAX_VALUE);
         tvRichText.setMovementMethod(LinkMovementMethod.getInstance());
     }
@@ -85,12 +85,12 @@ public class FormRichText extends FormTextView {
     }
 
     public void setRichText(String text){
-        AppCompatTextView tvRichText = (AppCompatTextView) tvSelection;
+        MaterialTextView tvRichText = (MaterialTextView) tvSelection;
         if (TextUtils.isEmpty(text)) {
             tvRichText.setText(null);
             return;
         }
-        // 将 HTML 转换为 Spanned 对象并显示在 TextView 中
+        // 将 HTML 转换为 Spanned 对象并显示在 MaterialTextView 中
         ThreadExecutor.getInstance().execute(() -> {
             Spanned spanned = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT, source -> {
                 // 使用Glide加载图片
@@ -117,3 +117,4 @@ public class FormRichText extends FormTextView {
         });
     }
 }
+

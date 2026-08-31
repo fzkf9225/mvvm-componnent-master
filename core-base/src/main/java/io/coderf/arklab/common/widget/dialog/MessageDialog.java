@@ -75,6 +75,10 @@ public class MessageDialog extends BaseDialog {
         super(context);
     }
 
+    public MessageDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     @Override
     public MessageDialog setCanOutSide(boolean outSide) {
         super.setCanOutSide(outSide);

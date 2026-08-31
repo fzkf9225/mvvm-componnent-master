@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -84,7 +84,7 @@ public class FormSelection extends FormConstraintLayout {
         if (tvSelection == null) {
             return;
         }
-        AppCompatTextView textView = (AppCompatTextView) tvSelection;
+        MaterialTextView textView = (MaterialTextView) tvSelection;
         Drawable drawable = selectionIcon;
         if (drawable == null) {
             textView.setCompoundDrawables(null, null, null, null);
@@ -111,3 +111,4 @@ public class FormSelection extends FormConstraintLayout {
         textView.setCompoundDrawablePadding(selectionIconPadding);
     }
 }
+

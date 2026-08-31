@@ -13,13 +13,13 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
-import net.qiujuer.genius.ui.widget.Loading;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -158,9 +158,9 @@ public class EmptyLayout extends ConstraintLayout {
     // ==================== 控件引用 ====================
     private LinearLayout containerView;  // 中间容器层（Loading / 图片 / 文字）
     private SkeletonShimmerPanel skeletonPanel; // 骨架屏层，按需显示
-    private AppCompatImageView ivImage;
-    private Loading loadingView;
-    private AppCompatTextView tvText;
+    private ShapeableImageView ivImage;
+    private CircularProgressIndicator loadingView;
+    private MaterialTextView tvText;
 
     public EmptyLayout(@NonNull Context context) {
         this(context, null);
@@ -287,15 +287,15 @@ public class EmptyLayout extends ConstraintLayout {
         a.recycle();
     }
 
-    public AppCompatTextView getTvText() {
+    public MaterialTextView getTvText() {
         return tvText;
     }
 
-    public Loading getLoadingView() {
+    public CircularProgressIndicator getLoadingView() {
         return loadingView;
     }
 
-    public AppCompatImageView getIvImage() {
+    public ShapeableImageView getIvImage() {
         return ivImage;
     }
 
@@ -349,7 +349,7 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void createImageView() {
-        ivImage = new AppCompatImageView(getContext());
+        ivImage = new ShapeableImageView(getContext());
         ivImage.setId(View.generateViewId());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -363,8 +363,10 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void createLoadingView() {
-        loadingView = new Loading(getContext());
+        loadingView = new CircularProgressIndicator(getContext());
         loadingView.setId(View.generateViewId());
+        loadingView.setIndeterminate(true);
+        loadingView.setIndicatorColor(ContextCompat.getColor(getContext(), R.color.themeColor));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 loadingWidth > 0 ? (int) loadingWidth : LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -377,7 +379,7 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void createTextView() {
-        tvText = new AppCompatTextView(getContext());
+        tvText = new MaterialTextView(getContext());
         tvText.setId(View.generateViewId());
         tvText.setGravity(Gravity.CENTER);
 
@@ -534,7 +536,6 @@ public class EmptyLayout extends ConstraintLayout {
 
     /** 隐藏转圈/图片/提示文字，骨架屏加载态不与经典 Loading 文案叠加。 */
     private void hideClassicLoadingContent() {
-        loadingView.stop();
         loadingView.setVisibility(GONE);
         ivImage.setVisibility(GONE);
         tvText.setVisibility(GONE);
@@ -576,7 +577,6 @@ public class EmptyLayout extends ConstraintLayout {
         ivImage.setVisibility(View.VISIBLE);
         ivImage.setImageResource(errorImage);
         loadingView.setVisibility(View.GONE);
-        loadingView.stop();
 
         tvText.setVisibility(VISIBLE);
         tvText.setText(errorText);
@@ -602,7 +602,6 @@ public class EmptyLayout extends ConstraintLayout {
         containerView.setVisibility(VISIBLE);
         ivImage.setVisibility(View.GONE);
         loadingView.setVisibility(View.VISIBLE);
-        loadingView.start();
 
         tvText.setVisibility(VISIBLE);
         tvText.setText(loadingText);
@@ -626,7 +625,6 @@ public class EmptyLayout extends ConstraintLayout {
         }
         ivImage.setVisibility(View.VISIBLE);
         loadingView.setVisibility(View.GONE);
-        loadingView.stop();
 
         tvText.setVisibility(VISIBLE);
         if (!customNoDataContent.isEmpty()) {

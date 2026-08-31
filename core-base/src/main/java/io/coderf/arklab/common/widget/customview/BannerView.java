@@ -17,9 +17,9 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
@@ -131,11 +131,11 @@ public class BannerView<T extends IBannerItem> extends ConstraintLayout {
     protected String indicatorSeparatorText = "/";
     /** 文字指示器子 View，动态创建 */
     @Nullable
-    protected TextView tvCurrentPage;
+    protected MaterialTextView tvCurrentPage;
     @Nullable
-    protected TextView tvSeparator;
+    protected MaterialTextView tvSeparator;
     @Nullable
-    protected TextView tvTotalPage;
+    protected MaterialTextView tvTotalPage;
     protected final Handler handler = new Handler(Looper.getMainLooper());
 
     @Nullable
@@ -462,7 +462,7 @@ public class BannerView<T extends IBannerItem> extends ConstraintLayout {
 
     private void initDotIndicator() {
         IntStream.range(0, this.bannerList.size()).forEach(i -> {
-            ImageView round = new ImageView(getContext());
+            ShapeableImageView round = new ShapeableImageView(getContext());
             round.setBackground(i == 0 ? drawableResCurrent : drawableResNormal);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -487,8 +487,8 @@ public class BannerView<T extends IBannerItem> extends ConstraintLayout {
         indicatorLayout.addView(tvTotalPage);
     }
 
-    private TextView createIndicatorTextView(@ColorInt int textColor) {
-        TextView textView = new TextView(getContext());
+    private MaterialTextView createIndicatorTextView(@ColorInt int textColor) {
+        MaterialTextView textView = new MaterialTextView(getContext());
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, indicatorTextSize);
         textView.setTextColor(textColor);
         textView.setIncludeFontPadding(false);
@@ -692,3 +692,4 @@ public class BannerView<T extends IBannerItem> extends ConstraintLayout {
         void onBannerPreview(@NonNull BannerView<T> bannerView, @NonNull List<T> items, int position);
     }
 }
+

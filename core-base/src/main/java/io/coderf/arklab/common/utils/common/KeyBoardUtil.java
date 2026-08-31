@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * 打开或关闭软键盘。
@@ -38,7 +39,7 @@ public class KeyBoardUtil {
      * @param mEditText 输入框
      * @param mContext  上下文（Activity 时走 InsetsController，更稳）
      */
-    public static void openKeyboard(EditText mEditText, Context mContext) {
+    public static void openKeyboard(TextInputEditText mEditText, Context mContext) {
         if (mEditText == null || mContext == null) {
             return;
         }
@@ -58,7 +59,7 @@ public class KeyBoardUtil {
      * @param mEditText 输入框
      * @param mContext  上下文
      */
-    public static void closeKeyboard(EditText mEditText, Context mContext) {
+    public static void closeKeyboard(TextInputEditText mEditText, Context mContext) {
         if (mEditText == null || mContext == null) {
             return;
         }

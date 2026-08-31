@@ -291,20 +291,18 @@ import io.coderf.arklab.common.utils.common.ScreenUtil;
     }
 
     private void refreshLayoutWidth() {
-        // 设置固定宽度
+        // 设置自适应宽度
         LinearLayout rootLayout = loadingDialogBinding.llProgress;
-        if (fixedWidth > 0) {
-            ViewGroup.LayoutParams params = rootLayout.getLayoutParams();
-            if (params == null) {
-                params = new LinearLayout.LayoutParams(
-                        fixedWidth,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-            } else {
-                params.width = fixedWidth + loadingDialogBinding.llProgress.getPaddingStart() + loadingDialogBinding.llProgress.getPaddingEnd();
-            }
-            rootLayout.setLayoutParams(params);
+        ViewGroup.LayoutParams params = rootLayout.getLayoutParams();
+        if (params == null) {
+            params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        } else {
+            params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
         }
+        rootLayout.setLayoutParams(params);
     }
 
     @Override

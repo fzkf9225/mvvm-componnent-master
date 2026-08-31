@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:clipChildren="false">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/tv_video" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_image_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image_video" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/choose_audio_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -106,13 +106,13 @@
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/image_video_recyclerView" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/choose_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:background="@drawable/round_theme_color"
+                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择音频文件"
@@ -120,7 +120,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_audio_result" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/choose_file_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,14 +129,14 @@
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 app:layout_constraintTop_toBottomOf="@+id/choose_audio" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/choose_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:background="@drawable/round_theme_color"
+                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择文件"
@@ -170,7 +170,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/choose_file"
                 app:radius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_old_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/waterMarkImage" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_water_mark_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -194,14 +194,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_old_image" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:background="@drawable/round_theme_color"
+                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择图片添加水印"
@@ -209,7 +209,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_water_mark_image" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_crop_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -230,40 +230,40 @@
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@+id/tv_crop_title">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_crop_circle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/round_theme_color"
+                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="圆形裁剪"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_crop_square"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/round_theme_color"
+                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="方形裁剪"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_crop_rect"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/round_theme_color"
+                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="长方形裁剪"
@@ -284,7 +284,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/ll_crop_actions"
                 app:radius="@dimen/radius_l" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_crop_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -296,7 +296,7 @@
                 android:textSize="@dimen/font_size_m"
                 app:layout_constraintTop_toBottomOf="@+id/cropResultImage" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_capture_exif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

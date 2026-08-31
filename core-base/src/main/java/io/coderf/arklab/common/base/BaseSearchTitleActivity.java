@@ -19,7 +19,7 @@ import io.coderf.arklab.common.widget.customview.CustomSearchEditText;
  * 带搜索框的标题栏 Activity。
  * <p>
  * 外壳布局 {@code base_activity_title_search}，正文通过 {@link #getLayoutId()} 嵌入
- * {@code searcher_title_container}。Toolbar 样式统一走 {@link ToolbarConfig}。
+ * {@code searcher_title_container}。MaterialToolbar 样式统一走 {@link ToolbarConfig}。
  * </p>
  */
 public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB extends ViewDataBinding>
@@ -52,7 +52,7 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         applySearchToolbarHeight(config);
 
         if (shouldApplyEdgeToEdge()) {
-            // 正文只吃导航栏；状态栏由 Toolbar insets 承担
+            // 正文只吃导航栏；状态栏由 MaterialToolbar insets 承担
             EdgeToEdgeHelper.applyNavigationBarInsets(
                     searchBinding.searcherTitleContainer, shouldAdjustBottomForIme());
         }
@@ -62,7 +62,7 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
     }
 
     /**
-     * 将 {@link ToolbarConfig#getHeight()} 应用到搜索 Toolbar；Edge-to-Edge 时叠加状态栏高度。
+     * 将 {@link ToolbarConfig#getHeight()} 应用到搜索 MaterialToolbar；Edge-to-Edge 时叠加状态栏高度。
      */
     protected void applySearchToolbarHeight(ToolbarConfig config) {
         if (searchBinding == null || config == null) {
@@ -133,3 +133,4 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         return keywordsLiveData;
     }
 }
+

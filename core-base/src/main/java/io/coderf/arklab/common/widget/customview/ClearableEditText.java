@@ -12,8 +12,9 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -28,7 +29,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * @since 1.0
  * @created 2026/7/13 9:25
  */
-public class ClearableEditText extends AppCompatEditText implements TextWatcher {
+public class ClearableEditText extends TextInputEditText implements TextWatcher {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -47,7 +48,7 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher 
     }
 
     public ClearableEditText(Context context, AttributeSet attrs) {
-        this(context, attrs, androidx.appcompat.R.attr.editTextStyle);
+        this(context, attrs, android.R.attr.editTextStyle);
     }
 
     public ClearableEditText(Context context, AttributeSet attrs, int defStyleAttr) {

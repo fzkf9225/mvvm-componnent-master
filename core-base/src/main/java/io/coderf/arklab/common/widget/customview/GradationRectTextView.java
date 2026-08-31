@@ -21,7 +21,7 @@ import android.view.Gravity;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import io.coderf.arklab.common.widget.customview.round.SpanContainer;
  * Created by fz on 2023/5/23 16:29
  * describe :渐变背景色且可以设置左右不同文字颜色的TextView
  */
-public class GradationRectTextView extends AppCompatTextView {
+public class GradationRectTextView extends MaterialTextView {
     /**
      * 空格
      */
@@ -956,3 +956,4 @@ public class GradationRectTextView extends AppCompatTextView {
 
     }
 }
+

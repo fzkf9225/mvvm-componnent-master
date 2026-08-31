@@ -2,7 +2,7 @@ package io.coderf.arklab.common.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -35,11 +35,11 @@ public class PictureAdapter<T extends IBannerItem> extends RecyclerView.Adapter<
     @NonNull
     @Override
     public BannerViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ImageView imageView = new ImageView(parent.getContext());
+        ShapeableImageView imageView = new ShapeableImageView(parent.getContext());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setScaleType(ShapeableImageView.ScaleType.CENTER_CROP);
         return new BannerViewHolder<>(imageView, this);
     }
 
@@ -59,11 +59,11 @@ public class PictureAdapter<T extends IBannerItem> extends RecyclerView.Adapter<
     }
 
     protected static class BannerViewHolder<T extends IBannerItem> extends RecyclerView.ViewHolder {
-        private final ImageView imageView;
+        private final ShapeableImageView imageView;
 
         public BannerViewHolder(@NonNull View itemView, PictureAdapter<T> pictureAdapter) {
             super(itemView);
-            imageView = (ImageView) itemView;
+            imageView = (ShapeableImageView) itemView;
             imageView.setOnClickListener(v -> {
                 if (pictureAdapter.onItemClickListener == null) {
                     return;
@@ -87,4 +87,5 @@ public class PictureAdapter<T extends IBannerItem> extends RecyclerView.Adapter<
     }
 
 }
+
 

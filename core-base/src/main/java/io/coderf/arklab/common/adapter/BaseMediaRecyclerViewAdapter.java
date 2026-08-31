@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
@@ -210,7 +210,7 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
         this.clearImageEndMargin = clearImageEndMargin;
     }
 
-    public ViewGroup.LayoutParams getClearLayoutParams(AppCompatImageView clearImage) {
+    public ViewGroup.LayoutParams getClearLayoutParams(ShapeableImageView clearImage) {
         ConstraintLayout.LayoutParams clearLayoutParams = (ConstraintLayout.LayoutParams) clearImage.getLayoutParams();
         if (clearLayoutParams == null) {
             clearLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -223,4 +223,5 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
     }
 
 }
+
 

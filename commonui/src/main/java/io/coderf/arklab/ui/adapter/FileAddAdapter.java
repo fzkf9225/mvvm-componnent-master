@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
@@ -150,7 +150,7 @@ public class FileAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean,
     }
 
     @Override
-    public ViewGroup.LayoutParams getClearLayoutParams(AppCompatImageView clearImage) {
+    public ViewGroup.LayoutParams getClearLayoutParams(ShapeableImageView clearImage) {
         ConstraintLayout.LayoutParams clearLayoutParams = (ConstraintLayout.LayoutParams) clearImage.getLayoutParams();
         if (clearLayoutParams == null) {
             clearLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -161,3 +161,4 @@ public class FileAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean,
     }
 
 }
+

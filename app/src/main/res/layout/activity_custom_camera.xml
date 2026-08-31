@@ -35,14 +35,14 @@
             app:layout_constraintTop_toBottomOf="@+id/image"
             layout="@layout/adapter_video_show_item"/>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_xl"
-            android:background="@drawable/round_theme_color"
+            app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
             android:paddingStart="@dimen/padding_m"
             android:paddingEnd="@dimen/padding_m"
             android:text="调用相机"

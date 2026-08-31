@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -263,17 +263,17 @@ public class FormDateRange extends FormSelection {
                     if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(endDate)) {
                         FormDateRange.this.selectableStartDate = null;
                         FormDateRange.this.selectableEndDate = null;
-                        ((AppCompatTextView) tvSelection).setText(null);
+                        ((MaterialTextView) tvSelection).setText(null);
                         return;
                     }
                     FormDateRange.this.selectableStartDate = DateUtil.dateFormat(startDate, startFormat);
                     FormDateRange.this.selectableEndDate = DateUtil.dateFormat(endDate, endFormat);
-                    ((AppCompatTextView) tvSelection).setText(FormDateRange.this.selectableStartDate + " ~ " + FormDateRange.this.selectableEndDate);
+                    ((MaterialTextView) tvSelection).setText(FormDateRange.this.selectableStartDate + " ~ " + FormDateRange.this.selectableEndDate);
                 })
                 .setOnClearClickListener(dialog -> {
                     FormDateRange.this.selectableStartDate = null;
                     FormDateRange.this.selectableEndDate = null;
-                    ((AppCompatTextView) tvSelection).setText(null);
+                    ((MaterialTextView) tvSelection).setText(null);
                 })
                 .builder(fragmentManager, lifecycle);
     }
@@ -387,3 +387,4 @@ public class FormDateRange extends FormSelection {
         return selectableEndDate;
     }
 }
+

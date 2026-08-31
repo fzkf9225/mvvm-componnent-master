@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -197,7 +197,7 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             updateUploadView(status, holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
         }
     }
-    public void updateUploadView(UploadStatusEnum status, AppCompatTextView uploadProcess, CornerTextView markView) {
+    public void updateUploadView(UploadStatusEnum status, MaterialTextView uploadProcess, CornerTextView markView) {
         if (status == UploadStatusEnum.UPLOADING) {
             uploadProcess.setVisibility(View.VISIBLE);
             markView.setVisibility(View.VISIBLE);
@@ -276,3 +276,4 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
         }
     }
 }
+

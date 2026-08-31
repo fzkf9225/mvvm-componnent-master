@@ -12,7 +12,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -99,7 +99,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     /**
      * 数量标签控件
      */
-    protected AppCompatTextView tvCountLabel;
+    protected MaterialTextView tvCountLabel;
 
     public FormImage(@NonNull Context context) {
         super(context);
@@ -167,7 +167,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         return new String[]{"image/*"};
     }
 
-    public AppCompatTextView getTvCountLabel() {
+    public MaterialTextView getTvCountLabel() {
         return tvCountLabel;
     }
 
@@ -206,7 +206,7 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
     }
 
     public void createCountLabel() {
-        tvCountLabel = new AppCompatTextView(getContext());
+        tvCountLabel = new MaterialTextView(getContext());
         tvCountLabel.setId(View.generateViewId());
         tvCountLabel.setLines(1);
         tvCountLabel.setTextColor(countLabelTextColor);
@@ -433,3 +433,4 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         upload(uploadUrl, Collections.singletonList(imageAddAdapter.getList().get(pos)));
     }
 }
+

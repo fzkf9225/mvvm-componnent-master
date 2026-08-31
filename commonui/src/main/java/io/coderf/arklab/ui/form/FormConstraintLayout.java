@@ -11,9 +11,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -143,11 +143,11 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     /**
      * label控件
      */
-    protected AppCompatTextView tvLabel;
+    protected MaterialTextView tvLabel;
     /**
      * 左侧文字的图标控件
      */
-    protected AppCompatImageView ivLabelIcon;
+    protected ShapeableImageView ivLabelIcon;
     /**
      * 是否展示label左侧图标，默认false
      */
@@ -183,7 +183,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     /**
      * 必填*号控件
      */
-    protected AppCompatTextView tvRequired;
+    protected MaterialTextView tvRequired;
     /**
      * 输入框、选择框正文控件
      */
@@ -298,13 +298,13 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 String newValue = dataSource.get();
-                if (tvSelection instanceof AppCompatTextView textView) {
+                if (tvSelection instanceof MaterialTextView textView) {
                     if (textView.getText() == null) {
                         textView.setText(newValue);
                     } else if (!textView.getText().toString().equals(newValue)) {
                         textView.setText(newValue);
                     }
-                } else if (tvSelection instanceof AppCompatEditText editText) {
+                } else if (tvSelection instanceof TextInputEditText editText) {
                     if (editText.getText() == null) {
                         editText.setText(newValue);
                     } else if (!editText.getText().toString().equals(newValue)) {
@@ -315,7 +315,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         });
     }
 
-    public AppCompatTextView getTvLabel() {
+    public MaterialTextView getTvLabel() {
         return tvLabel;
     }
 
@@ -323,7 +323,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         return tvSelection;
     }
 
-    public AppCompatTextView getTvRequired() {
+    public MaterialTextView getTvRequired() {
         return tvRequired;
     }
 
@@ -331,12 +331,12 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         return vBorderBottom;
     }
 
-    public AppCompatImageView getIvLabelIcon() {
+    public ShapeableImageView getIvLabelIcon() {
         return ivLabelIcon;
     }
 
     public void createLabelIcon() {
-        ivLabelIcon = new AppCompatImageView(getContext());
+        ivLabelIcon = new ShapeableImageView(getContext());
         ivLabelIcon.setId(View.generateViewId());
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 labelIconWidth <= 0 ? ConstraintLayout.LayoutParams.WRAP_CONTENT : (int) labelIconWidth,
@@ -349,7 +349,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     }
 
     public void createLabel() {
-        tvLabel = new AppCompatTextView(getContext());
+        tvLabel = new MaterialTextView(getContext());
         tvLabel.setId(View.generateViewId());
         tvLabel.setLines(1);
         tvLabel.setTextColor(labelTextColor);
@@ -370,7 +370,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     }
 
     public void createRequired() {
-        tvRequired = new AppCompatTextView(getContext());
+        tvRequired = new MaterialTextView(getContext());
         tvRequired.setId(View.generateViewId());
         tvRequired.setLines(1);
         tvRequired.setText("*");
@@ -387,7 +387,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     }
 
     public void createText() {
-        AppCompatTextView tvText = new AppCompatTextView(getContext());
+        MaterialTextView tvText = new MaterialTextView(getContext());
         tvText.setId(View.generateViewId());
         tvText.setHint(hintString);
 

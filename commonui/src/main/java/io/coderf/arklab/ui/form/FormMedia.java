@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -76,7 +76,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     /**
      * label文字控件
      */
-    protected AppCompatTextView tvLabel;
+    protected MaterialTextView tvLabel;
     /**
      * 是否隐藏顶部layout，也就是顶部的标签栏和数量栏，默认为false，也就是展示
      */
@@ -84,7 +84,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     /**
      * 左侧文字的图标控件
      */
-    protected AppCompatImageView ivLabelIcon;
+    protected ShapeableImageView ivLabelIcon;
     /**
      * 是否展示label左侧图标，默认false
      */
@@ -120,7 +120,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     /**
      * 必填*号控件
      */
-    protected AppCompatTextView tvRequired;
+    protected MaterialTextView tvRequired;
     /**
      * 图片、视频的列表
      */
@@ -438,7 +438,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
         }
     }
 
-    public AppCompatTextView getTvLabel() {
+    public MaterialTextView getTvLabel() {
         return tvLabel;
     }
 
@@ -446,7 +446,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
         return mediaRecyclerView;
     }
 
-    public AppCompatTextView getTvRequired() {
+    public MaterialTextView getTvRequired() {
         return tvRequired;
     }
 
@@ -454,12 +454,12 @@ public abstract class FormMedia extends CornerConstraintLayout {
         return vBorderBottom;
     }
 
-    public AppCompatImageView getIvLabelIcon() {
+    public ShapeableImageView getIvLabelIcon() {
         return ivLabelIcon;
     }
 
     public void createLabelIcon() {
-        ivLabelIcon = new AppCompatImageView(getContext());
+        ivLabelIcon = new ShapeableImageView(getContext());
         ivLabelIcon.setId(View.generateViewId());
         LayoutParams params = new LayoutParams(
                 labelIconWidth <= 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) labelIconWidth,
@@ -472,7 +472,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     }
 
     public void createLabel() {
-        tvLabel = new AppCompatTextView(getContext());
+        tvLabel = new MaterialTextView(getContext());
         tvLabel.setId(View.generateViewId());
         tvLabel.setLines(1);
         tvLabel.setTextColor(labelTextColor);
@@ -493,7 +493,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
     }
 
     public void createRequired() {
-        tvRequired = new AppCompatTextView(getContext());
+        tvRequired = new MaterialTextView(getContext());
         tvRequired.setId(View.generateViewId());
         tvRequired.setLines(1);
         tvRequired.setText("*");

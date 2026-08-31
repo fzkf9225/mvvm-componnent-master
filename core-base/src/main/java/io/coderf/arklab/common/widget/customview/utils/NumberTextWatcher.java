@@ -4,7 +4,10 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -23,13 +26,13 @@ public class NumberTextWatcher implements TextWatcher, InputFilter {
     private DecimalFormat dfnd;
     private boolean hasFractionalPart;
 
-    private EditText et;
+    private TextInputEditText et;
 
-    public NumberTextWatcher(EditText et) {
+    public NumberTextWatcher(TextInputEditText et) {
         this(et, true);
     }
 
-    public NumberTextWatcher(EditText et, boolean useUnderLine) {
+    public NumberTextWatcher(TextInputEditText et, boolean useUnderLine) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
         symbols.setGroupingSeparator(useUnderLine ? '_' : ',');
         df = new DecimalFormat("#,###.##", symbols);

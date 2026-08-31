@@ -14,10 +14,10 @@ import android.view.ViewConfiguration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 /**
- * 支持双指缩放、单指拖动的裁剪预览 ImageView。
+ * 支持双指缩放、单指拖动的裁剪预览 ShapeableImageView。
  * 图片拖动与裁剪框缩放互不抢占：默认拖图/双指缩放；
  * 长按裁剪框边缘后进入裁剪框缩放模式。
  *
@@ -26,7 +26,7 @@ import androidx.appcompat.widget.AppCompatImageView;
  * @since 1.0
  * @created 2026/7/31 15:51
  */
-public class GestureCropImageView extends AppCompatImageView {
+public class GestureCropImageView extends ShapeableImageView {
 
     /**
      * 图片变换矩阵
@@ -461,3 +461,4 @@ public class GestureCropImageView extends AppCompatImageView {
         }
     }
 }
+

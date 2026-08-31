@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         tools:context=".activity.TargetActivity">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_args"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_login"
             android:text="前往登录"
             android:textColor="@color/autoColor"

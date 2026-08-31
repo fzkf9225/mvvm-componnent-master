@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -10,8 +11,8 @@
 
     <LinearLayout
         android:id="@+id/ll_progress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/round_progress_dialog"
         android:gravity="center"
         android:orientation="vertical"
@@ -20,15 +21,16 @@
         android:paddingTop="@dimen/padding_xl"
         android:paddingBottom="@dimen/padding_xl">
 
-        <androidx.core.widget.ContentLoadingProgressBar
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading"
-            style="@style/Base.Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminateDuration="1500"
-            android:indeterminateTint="@color/white" />
+            android:indeterminate="true"
+            app:indicatorColor="@color/white"
+            app:indicatorSize="40dp"
+            app:trackThickness="4dp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tipTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

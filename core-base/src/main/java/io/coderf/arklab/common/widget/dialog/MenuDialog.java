@@ -143,6 +143,10 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
         super(context);
     }
 
+    public MenuDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     public MenuDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
         this.optionBottomMenuClickListener = optionBottomMenuClickListener;
         return this;

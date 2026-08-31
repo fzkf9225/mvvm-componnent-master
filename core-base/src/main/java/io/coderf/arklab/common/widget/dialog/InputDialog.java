@@ -94,6 +94,10 @@ public class InputDialog extends BaseDialog {
         super(context);
     }
 
+    public InputDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     public InputDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;

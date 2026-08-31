@@ -8,13 +8,12 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -31,8 +30,8 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
 /**
  * 表单单选组。选项使用 {@link PopupWindowBean}，与 {@link FormSpinner} 数据模型一致。
  * <p>
- * 选项 UI 使用 {@link AppCompatImageView} + {@link AppCompatTextView}，
- * 避免系统 {@link android.widget.RadioButton} 自带内边距与过大点击区域。
+ * 选项 UI 使用 {@link ShapeableImageView} + {@link MaterialTextView}，
+ * 避免系统 {@link com.google.android.material.radiobutton.MaterialRadioButton} 自带内边距与过大点击区域。
  *
  * @author fz
  */
@@ -367,8 +366,8 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
     private static final class RadioOptionView extends ConstraintLayout {
 
         private final FormRadio<?> parent;
-        private final AppCompatImageView iconView;
-        private final AppCompatTextView labelView;
+        private final ShapeableImageView iconView;
+        private final MaterialTextView labelView;
         private final PopupWindowBean<?> optionItem;
         private boolean optionSelected;
 
@@ -380,14 +379,14 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
             setClickable(true);
             setFocusable(true);
 
-            iconView = new AppCompatImageView(getContext());
+            iconView = new ShapeableImageView(getContext());
             iconView.setId(View.generateViewId());
-            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            iconView.setScaleType(ShapeableImageView.ScaleType.FIT_CENTER);
             iconView.setPadding(0, 0, 0, 0);
             iconView.setClickable(false);
             iconView.setFocusable(false);
 
-            labelView = new AppCompatTextView(getContext());
+            labelView = new MaterialTextView(getContext());
             labelView.setId(View.generateViewId());
             labelView.setText(resolveBindValue(item));
             labelView.setTextColor(parent.formTextColor);
@@ -440,3 +439,4 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
         }
     }
 }
+

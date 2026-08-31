@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.GridLayout
 import androidx.annotation.ColorInt
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
@@ -396,7 +396,7 @@ class CalendarView : ConstraintLayout {
     public fun refreshTitle() {
         binding?.calendarTitle?.removeAllViews()
         for (week in arrayOf("日", "一", "二", "三", "四", "五", "六")) {
-            val textView = AppCompatTextView(context)
+            val textView = MaterialTextView(context)
                 .apply {
                     text = week
                     gravity = android.view.Gravity.CENTER
@@ -667,4 +667,5 @@ class CalendarView : ConstraintLayout {
     }
 
 }
+
 

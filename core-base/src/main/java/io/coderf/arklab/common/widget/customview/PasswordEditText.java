@@ -20,8 +20,9 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -37,7 +38,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * @since 1.0
  * @created 2026/7/13 10:10
  */
-public class PasswordEditText extends AppCompatEditText implements TextWatcher {
+public class PasswordEditText extends TextInputEditText implements TextWatcher {
 
     private static final int INDEX_DRAWABLE_END = 2;
     private static final int ZONE_NONE = 0;
@@ -67,7 +68,7 @@ public class PasswordEditText extends AppCompatEditText implements TextWatcher {
     }
 
     public PasswordEditText(Context context, AttributeSet attrs) {
-        this(context, attrs, androidx.appcompat.R.attr.editTextStyle);
+        this(context, attrs, android.R.attr.editTextStyle);
     }
 
     public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr) {

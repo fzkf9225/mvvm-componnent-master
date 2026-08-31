@@ -12,8 +12,8 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatTextView;
+import android.widget.ImageButton;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
@@ -31,9 +31,9 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  */
 public class TitleBar extends ConstraintLayout {
 
-    private final AppCompatImageButton backButton;
-    private final AppCompatTextView titleView;
-    private final AppCompatTextView rightView;
+    private final ImageButton backButton;
+    private final MaterialTextView titleView;
+    private final MaterialTextView rightView;
 
     private OnBackClickListener onBackClickListener;
     private OnRightClickListener onRightClickListener;
@@ -163,15 +163,15 @@ public class TitleBar extends ConstraintLayout {
         return this;
     }
 
-    public AppCompatTextView getTitleView() {
+    public MaterialTextView getTitleView() {
         return titleView;
     }
 
-    public AppCompatTextView getRightView() {
+    public MaterialTextView getRightView() {
         return rightView;
     }
 
-    public AppCompatImageButton getBackButton() {
+    public ImageButton getBackButton() {
         return backButton;
     }
 
@@ -183,3 +183,4 @@ public class TitleBar extends ConstraintLayout {
         void onRightClick();
     }
 }
+

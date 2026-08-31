@@ -6,7 +6,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatEditText;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
 
@@ -15,7 +16,7 @@ import io.coderf.arklab.common.R;
  * Created by fz on 2019/5/31.
  * describe：自定义圆角矩形
  */
-public class CornerEditText extends AppCompatEditText {
+public class CornerEditText extends TextInputEditText {
     /**
      * 边框颜色
      */

@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -124,11 +124,11 @@ public class IconLabelValueView extends ConstraintLayout {
     /**
      * label控件
      */
-    protected AppCompatTextView tvLabel;
+    protected MaterialTextView tvLabel;
     /**
      * value控件
      */
-    protected AppCompatTextView tvValue;
+    protected MaterialTextView tvValue;
     /**
      * 底部边框控件
      */
@@ -136,11 +136,11 @@ public class IconLabelValueView extends ConstraintLayout {
     /**
      * 左侧图标控件
      */
-    protected AppCompatImageView leftIcon;
+    protected ShapeableImageView leftIcon;
     /**
      * 右侧图标控件
      */
-    protected AppCompatImageView rightIcon;
+    protected ShapeableImageView rightIcon;
     /**
      * value文字对齐方式
      */
@@ -284,7 +284,7 @@ public class IconLabelValueView extends ConstraintLayout {
             return;
         }
 
-        leftIcon = new AppCompatImageView(getContext());
+        leftIcon = new ShapeableImageView(getContext());
         leftIcon.setId(View.generateViewId());
         leftIcon.setImageDrawable(leftIconSrc);
         leftIcon.setVisibility(showLeftIcon ? View.VISIBLE : View.GONE);
@@ -295,7 +295,7 @@ public class IconLabelValueView extends ConstraintLayout {
     }
 
     private void createLabel() {
-        tvLabel = new AppCompatTextView(getContext());
+        tvLabel = new MaterialTextView(getContext());
         tvLabel.setId(View.generateViewId());
         tvLabel.setLines(1);
         tvLabel.setSingleLine(true);
@@ -308,7 +308,7 @@ public class IconLabelValueView extends ConstraintLayout {
     }
 
     private void createValue() {
-        tvValue = new AppCompatTextView(getContext());
+        tvValue = new MaterialTextView(getContext());
         tvValue.setId(View.generateViewId());
         tvValue.setLines(1);
         tvValue.setSingleLine(true);
@@ -334,7 +334,7 @@ public class IconLabelValueView extends ConstraintLayout {
             return;
         }
 
-        rightIcon = new AppCompatImageView(getContext());
+        rightIcon = new ShapeableImageView(getContext());
         rightIcon.setId(View.generateViewId());
         rightIcon.setImageDrawable(rightIconSrc);
         rightIcon.setVisibility(showRightIcon ? View.VISIBLE : View.GONE);
@@ -409,19 +409,19 @@ public class IconLabelValueView extends ConstraintLayout {
     }
 
     // Getter和Setter方法
-    public AppCompatTextView getTvLabel() {
+    public MaterialTextView getTvLabel() {
         return tvLabel;
     }
 
-    public AppCompatTextView getTvValue() {
+    public MaterialTextView getTvValue() {
         return tvValue;
     }
 
-    public AppCompatImageView getLeftIcon() {
+    public ShapeableImageView getLeftIcon() {
         return leftIcon;
     }
 
-    public AppCompatImageView getRightIcon() {
+    public ShapeableImageView getRightIcon() {
         return rightIcon;
     }
 

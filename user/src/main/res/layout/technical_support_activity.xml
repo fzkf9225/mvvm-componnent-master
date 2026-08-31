@@ -17,7 +17,7 @@
             android:background="@color/default_background"
             android:gravity="center">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_qrCode"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
@@ -25,7 +25,7 @@
                 android:background="@color/white"
                 android:src="@mipmap/icon_wechat" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_qrCode"
@@ -47,11 +47,11 @@
 
             <LinearLayout style="@style/list_linear_layout_min_height">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     style="@style/list_text_left"
                     android:text="邮箱\u3000\u3000" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     style="@style/list_text_right_show_all"
                     android:text="fzkf3318@163.com" />
             </LinearLayout>

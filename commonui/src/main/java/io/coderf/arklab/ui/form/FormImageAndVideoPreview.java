@@ -11,7 +11,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
@@ -37,7 +37,7 @@ public class FormImageAndVideoPreview extends FormMedia {
     /**
      * 暂无数据控件
      */
-    protected AppCompatTextView tvEmpty;
+    protected MaterialTextView tvEmpty;
 
     /**
      * 暂无数据控件文字颜色
@@ -103,12 +103,12 @@ public class FormImageAndVideoPreview extends FormMedia {
         return new String[]{"*/*"};
     }
 
-    public AppCompatTextView getTvEmpty() {
+    public MaterialTextView getTvEmpty() {
         return tvEmpty;
     }
 
     public void createEmptyLayout() {
-        tvEmpty = new AppCompatTextView(getContext());
+        tvEmpty = new MaterialTextView(getContext());
         tvEmpty.setId(View.generateViewId());
         tvEmpty.setTextColor(emptyTextColor);
         tvEmpty.setTextSize(TypedValue.COMPLEX_UNIT_PX, emptyTextSize);
@@ -153,3 +153,4 @@ public class FormImageAndVideoPreview extends FormMedia {
 
 
 }
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 弹框dialog -->
-    <style name="ActionSheetDialogStyle" parent="@android:style/Theme.Dialog">
+    <!-- 弹框dialog - 使用Material3 -->
+    <style name="ActionSheetDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -18,7 +18,8 @@
         <!-- Dialog进入及退出动画 -->
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
     </style>
-    <!-- ActionSheet进出动画 -->
+
+    <!-- ActionSheet进出动画 - 使用Material3动画 -->
     <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>

@@ -826,17 +826,6 @@
     </issue>
 
     <issue
-        id="AppCompatCustomView"
-        message="This custom view should extend `androidx.appcompat.widget.AppCompatTextView` instead"
-        errorLine1="public class CollapsedTextView extends TextView {"
-        errorLine2="                                       ~~~~~~~~">
-        <location
-            file="src/main/java/pers/fz/mvvm/wight/customlayout/CollapsedTextView.java"
-            line="26"
-            column="40"/>
-    </issue>
-
-    <issue
         id="GradleDependency"
         message="A newer version of org.aspectj:aspectjrt than 1.7.3 is available: 1.9.1"
         errorLine1="    annotationProcessor &apos;com.alibaba:arouter-compiler:1.5.2&apos;"

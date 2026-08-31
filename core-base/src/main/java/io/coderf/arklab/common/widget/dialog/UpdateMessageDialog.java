@@ -56,7 +56,21 @@ public class UpdateMessageDialog extends BaseDialog {
     private UpdateDialogBinding binding;
 
     public UpdateMessageDialog(@NonNull Context context) {
-        super(context);
+        super(context,R.style.DialogSoftHighlightStyle);
+        buttonTextColor = ContextCompat.getColor(context, R.color.white);
+        titleColor = ContextCompat.getColor(context, R.color.autoColor);
+        updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
+        bgColor = ContextCompat.getColor(context, R.color.themeColor);
+        strokeColor = ContextCompat.getColor(context, R.color.themeColor);
+        strokeWidth = 0;
+        radius = context.getResources().getDimension(R.dimen.radius_xxl);
+        titleTextSize = context.getResources().getDimension(R.dimen.font_size_xxl);
+        updateMsgTextSize = context.getResources().getDimension(R.dimen.font_size_xl);
+        buttonTextSize = context.getResources().getDimension(R.dimen.font_size_xxl);
+    }
+
+    public UpdateMessageDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
         buttonTextColor = ContextCompat.getColor(context, R.color.white);
         titleColor = ContextCompat.getColor(context, R.color.autoColor);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
@@ -269,7 +283,7 @@ public class UpdateMessageDialog extends BaseDialog {
                 dismiss();
             }
             if (NetworkStateUtil.isMobile(v.getContext())) {
-                new ConfirmDialog(v.getContext())
+                new ConfirmDialog(v.getContext(),R.style.DialogSoftHighlightStyle)
                         .setMessage("您正在使用数据流量，确定继续下载吗？")
                         .setOnPositiveClickListener(dialog -> {
                             if (onUpdateListener != null) {

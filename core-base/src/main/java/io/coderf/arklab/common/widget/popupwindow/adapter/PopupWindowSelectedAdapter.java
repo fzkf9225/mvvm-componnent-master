@@ -5,7 +5,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -151,13 +151,13 @@ public class PopupWindowSelectedAdapter<T extends PopupWindowBean> extends BaseR
                 if (adapter.getOnItemSelectedClearListener() == null) {
                     return;
                 }
-                adapter.getOnItemSelectedClearListener().onItemSelectedClear((AppCompatImageView) v, getAbsoluteAdapterPosition());
+                adapter.getOnItemSelectedClearListener().onItemSelectedClear((ShapeableImageView) v, getAbsoluteAdapterPosition());
             });
         }
     }
 
     public interface OnItemSelectedClearListener {
-        void onItemSelectedClear(AppCompatImageView ivCheckView, int position);
+        void onItemSelectedClear(ShapeableImageView ivCheckView, int position);
     }
 
     private OnItemSelectedClearListener onItemSelectedClearListener;
@@ -170,3 +170,4 @@ public class PopupWindowSelectedAdapter<T extends PopupWindowBean> extends BaseR
         return onItemSelectedClearListener;
     }
 }
+

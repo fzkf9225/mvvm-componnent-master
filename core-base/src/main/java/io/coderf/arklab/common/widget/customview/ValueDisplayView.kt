@@ -8,7 +8,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
 
@@ -18,7 +18,7 @@ import io.coderf.arklab.common.R
  *
  * 支持两种宽度模式：
  * - 父布局/自身宽度为固定或 match_parent：value 区域自动撑满中间剩余空间，文本居中（原有行为）
- * - 自身宽度为 wrap_content：三个 TextView 按内容自适应宽度，整体可左/中/右对齐，setValue 后宽度自动变化
+ * - 自身宽度为 wrap_content：三个 MaterialTextView 按内容自适应宽度，整体可左/中/右对齐，setValue 后宽度自动变化
  *
  * @author fz
  * @version 1.1
@@ -31,7 +31,7 @@ class ValueDisplayView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : androidx.constraintlayout.widget.ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val labelTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val labelTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(0xFF9C9C9C.toInt())
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
@@ -40,7 +40,7 @@ class ValueDisplayView @JvmOverloads constructor(
         ellipsize = TextUtils.TruncateAt.END
     }
 
-    private val valueTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val valueTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(Color.BLACK)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
@@ -51,7 +51,7 @@ class ValueDisplayView @JvmOverloads constructor(
         ellipsize = TextUtils.TruncateAt.END
     }
 
-    private val unitTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val unitTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(0xFF9C9C9C.toInt())
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
@@ -433,7 +433,8 @@ class ValueDisplayView @JvmOverloads constructor(
     /**
      * 获取各个TextView
      */
-    fun getLabelTextView(): AppCompatTextView = labelTextView
-    fun getValueTextView(): AppCompatTextView = valueTextView
-    fun getUnitTextView(): AppCompatTextView = unitTextView
+    fun getLabelTextView(): MaterialTextView = labelTextView
+    fun getValueTextView(): MaterialTextView = valueTextView
+    fun getUnitTextView(): MaterialTextView = unitTextView
 }
+

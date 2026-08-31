@@ -10,7 +10,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -71,7 +71,7 @@ public class NativeWebChromeClient extends SystemWebChromeClient {
             @NonNull ComponentActivity activity,
             @NonNull CordovaDialogsHelper dialogsHelper,
             @NonNull ProgressBar progressBar,
-            @Nullable TextView tvBarTitle
+            @Nullable MaterialTextView tvBarTitle
     ) {
         super(activity, dialogsHelper, progressBar, tvBarTitle);
         this.activity = activity;
@@ -424,3 +424,4 @@ public class NativeWebChromeClient extends SystemWebChromeClient {
         return perms.toArray(new String[0]);
     }
 }
+

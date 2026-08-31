@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,10 +31,10 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * Toolbar 区域：顶部留出状态栏，内容区高度为 {@code actionBarHeightPx}。
-     * <p>会覆盖 Toolbar 的 height 与 top padding。</p>
+     * MaterialToolbar 区域：顶部留出状态栏，内容区高度为 {@code actionBarHeightPx}。
+     * <p>会覆盖 MaterialToolbar 的 height 与 top padding。</p>
      */
-    public static void applyToolbarInsets(@NonNull Toolbar toolbar, int actionBarHeightPx, boolean customHeight) {
+    public static void applyToolbarInsets(@NonNull MaterialToolbar toolbar, int actionBarHeightPx, boolean customHeight) {
         int contentHeightPx = customHeight ? actionBarHeightPx : 0;
         applyContentHeight(toolbar, contentHeightPx);
         ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, windowInsets) -> {
@@ -52,9 +52,9 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * 非 Edge-to-Edge 场景下应用自定义 Toolbar 高度。
+     * 非 Edge-to-Edge 场景下应用自定义 MaterialToolbar 高度。
      */
-    public static void applyToolbarHeight(@NonNull Toolbar toolbar, int toolbarHeightPx, boolean customHeight) {
+    public static void applyToolbarHeight(@NonNull MaterialToolbar toolbar, int toolbarHeightPx, boolean customHeight) {
         ViewGroup.LayoutParams lp = toolbar.getLayoutParams();
         if (lp != null) {
             lp.height = toolbarHeightPx;
@@ -63,7 +63,7 @@ public final class EdgeToEdgeHelper {
         applyContentHeight(toolbar, customHeight ? toolbarHeightPx : 0);
     }
 
-    private static void applyContentHeight(@NonNull Toolbar toolbar, int contentHeightPx) {
+    private static void applyContentHeight(@NonNull MaterialToolbar toolbar, int contentHeightPx) {
         if (toolbar instanceof ActionToolbar) {
             ((ActionToolbar) toolbar).setContentHeightPx(contentHeightPx);
         } else if (contentHeightPx > 0) {
@@ -97,7 +97,7 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * 无 Toolbar 页面：同时处理顶部状态栏与底部导航栏；默认不随软键盘上顶。
+     * 无 MaterialToolbar 页面：同时处理顶部状态栏与底部导航栏；默认不随软键盘上顶。
      *
      * @see #applySystemBarInsets(View, boolean)
      */
@@ -106,7 +106,7 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
-     * 无 Toolbar 页面：同时处理系统栏（含横屏侧导航），可选是否随软键盘上顶。
+     * 无 MaterialToolbar 页面：同时处理系统栏（含横屏侧导航），可选是否随软键盘上顶。
      *
      * @param adjustForIme {@code true} 时底部内容随输入法上移；{@code false} 时贴底控件保持原位。
      */
@@ -134,3 +134,4 @@ public final class EdgeToEdgeHelper {
                 .build();
     }
 }
+

@@ -182,10 +182,10 @@ public final class CropUtil {
     }
 
     /**
-     * 根据 ImageView 矩阵与裁剪框，从源图裁出区域
+     * 根据 ShapeableImageView 矩阵与裁剪框，从源图裁出区域
      *
      * @param sourceBitmap 源图
-     * @param imageMatrix  ImageView 当前矩阵
+     * @param imageMatrix  ShapeableImageView 当前矩阵
      * @param cropRect     裁剪框（View 坐标）
      * @param cropShape    裁剪形状
      * @param maxOutputSize 最长边限制，&lt;=0 不限制
@@ -331,3 +331,4 @@ public final class CropUtil {
         return new File(dir, name);
     }
 }
+

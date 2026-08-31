@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,7 +29,7 @@ public final class FormTextFormatter {
     private FormTextFormatter() {
     }
 
-    public static void apply(@NonNull AppCompatEditText editText, @NonNull FormTextFormatEnum format,
+    public static void apply(@NonNull EditText editText, @NonNull FormTextFormatEnum format,
                              int digits, @Nullable TextWatcher externalWatcher) {
         if (format == FormTextFormatEnum.NORMAL) {
             return;
@@ -39,7 +38,7 @@ public final class FormTextFormatter {
         editText.addTextChangedListener(new FormatTextWatcher(editText, format, externalWatcher));
     }
 
-    private static void applyInputFilters(@NonNull AppCompatEditText editText, @NonNull FormTextFormatEnum format,
+    private static void applyInputFilters(@NonNull EditText editText, @NonNull FormTextFormatEnum format,
                                           int digits) {
         List<InputFilter> filters = new ArrayList<>();
         switch (format) {

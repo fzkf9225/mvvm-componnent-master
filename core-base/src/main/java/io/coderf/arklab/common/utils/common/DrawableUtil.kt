@@ -24,15 +24,15 @@ import android.util.TypedValue
 import android.view.Gravity
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.drawable.DrawableCompat
-import android.widget.ImageView
+import com.google.android.material.imageview.ShapeableImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.Px
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
 import java.io.ByteArrayOutputStream
 
 /**
@@ -227,7 +227,7 @@ object DrawableUtil {
     }
 
     /**
-     * 创建带文字和背景的组合 Drawable（适用于 TextView 背景）
+     * 创建带文字和背景的组合 Drawable（适用于 MaterialTextView 背景）
      * @param text 文字内容
      * @param textColor 文字颜色
      * @param bgColor 背景颜色
@@ -241,7 +241,7 @@ object DrawableUtil {
         bgColor: Int,
         cornerRadius: Float
     ): Drawable {
-        val textView = AppCompatTextView(context).apply {
+        val textView = MaterialTextView(context).apply {
             setText(text)
             setTextColor(textColor)
             textSize = 14f
@@ -1474,11 +1474,11 @@ object DrawableUtil {
     }
 
     /**
-     * ImageView：设置图标资源并着色。
+     * ShapeableImageView：设置图标资源并着色。
      */
     @JvmStatic
     fun setImageTint(
-        imageView: ImageView,
+        imageView: ShapeableImageView,
         @DrawableRes resId: Int,
         @ColorInt color: Int
     ) {
@@ -1487,21 +1487,21 @@ object DrawableUtil {
     }
 
     /**
-     * ImageView：仅改当前图着色（不换资源）。
+     * ShapeableImageView：仅改当前图着色（不换资源）。
      */
     @JvmStatic
-    fun setImageTintColor(imageView: ImageView, @ColorInt color: Int) {
+    fun setImageTintColor(imageView: ShapeableImageView, @ColorInt color: Int) {
         imageView.imageTintList = ColorStateList.valueOf(color)
     }
 
     /**
-     * Toolbar 导航图标：资源 + 着色（推荐配合 [R.drawable.icon_fh]）。
-     * <p>颜色已通过 [withTint] 写入 Drawable，不依赖 Toolbar.setNavigationIconTintList
+     * MaterialToolbar 导航图标：资源 + 着色（推荐配合 [R.drawable.icon_fh]）。
+     * <p>颜色已通过 [withTint] 写入 Drawable，不依赖 MaterialToolbar.setNavigationIconTintList
      * （部分 AppCompat 版本无此 API）。</p>
      */
     @JvmStatic
     fun setNavigationIcon(
-        toolbar: Toolbar,
+        toolbar: MaterialToolbar,
         @DrawableRes resId: Int,
         @ColorInt tintColor: Int
     ) {
@@ -1509,11 +1509,11 @@ object DrawableUtil {
     }
 
     /**
-     * TextView compound drawable：带颜色与尺寸的 start 图标。
+     * MaterialTextView compound drawable：带颜色与尺寸的 start 图标。
      */
     @JvmStatic
     fun setCompoundDrawableStart(
-        textView: AppCompatTextView,
+        textView: MaterialTextView,
         @DrawableRes resId: Int,
         @ColorInt color: Int,
         @Px width: Int,
@@ -1529,11 +1529,11 @@ object DrawableUtil {
     }
 
     /**
-     * TextView compound drawable：dp 尺寸便捷方法。
+     * MaterialTextView compound drawable：dp 尺寸便捷方法。
      */
     @JvmStatic
     fun setCompoundDrawableStartDp(
-        textView: AppCompatTextView,
+        textView: MaterialTextView,
         @DrawableRes resId: Int,
         @ColorInt color: Int,
         sizeDp: Float
@@ -1555,7 +1555,7 @@ object DrawableUtil {
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun MaterialTextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1572,7 +1572,7 @@ fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int, width: Int,
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun MaterialTextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1589,7 +1589,7 @@ fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int, width: Int, h
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun MaterialTextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1606,7 +1606,7 @@ fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int, width: Int, h
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int, height: Int) {
+fun MaterialTextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int, height: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
@@ -1623,7 +1623,7 @@ fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int, width: Int
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableStart(drawable: Drawable?, width: Int, height: Int) {
+fun MaterialTextView.setDrawableStart(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         drawable,
@@ -1639,7 +1639,7 @@ fun AppCompatTextView.setDrawableStart(drawable: Drawable?, width: Int, height: 
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableTop(drawable: Drawable?, width: Int, height: Int) {
+fun MaterialTextView.setDrawableTop(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
@@ -1655,7 +1655,7 @@ fun AppCompatTextView.setDrawableTop(drawable: Drawable?, width: Int, height: In
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableEnd(drawable: Drawable?, width: Int, height: Int) {
+fun MaterialTextView.setDrawableEnd(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
@@ -1671,7 +1671,7 @@ fun AppCompatTextView.setDrawableEnd(drawable: Drawable?, width: Int, height: In
  * @param width drawable宽度（像素）
  * @param height drawable高度（像素）
  */
-fun AppCompatTextView.setDrawableBottom(drawable: Drawable?, width: Int, height: Int) {
+fun MaterialTextView.setDrawableBottom(drawable: Drawable?, width: Int, height: Int) {
     drawable?.setBounds(0, 0, width, height)
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
@@ -1685,7 +1685,7 @@ fun AppCompatTextView.setDrawableBottom(drawable: Drawable?, width: Int, height:
  * 动态设置drawableStart（无尺寸参数，使用Drawable原始尺寸）
  * @param drawableId 图片资源ID
  */
-fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int) {
+fun MaterialTextView.setDrawableStart(@DrawableRes drawableId: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     setDrawableStart(drawable)
 }
@@ -1694,7 +1694,7 @@ fun AppCompatTextView.setDrawableStart(@DrawableRes drawableId: Int) {
  * 动态设置drawableTop（无尺寸参数，使用Drawable原始尺寸）
  * @param drawableId 图片资源ID
  */
-fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int) {
+fun MaterialTextView.setDrawableTop(@DrawableRes drawableId: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     setDrawableTop(drawable)
 }
@@ -1703,7 +1703,7 @@ fun AppCompatTextView.setDrawableTop(@DrawableRes drawableId: Int) {
  * 动态设置drawableEnd（无尺寸参数，使用Drawable原始尺寸）
  * @param drawableId 图片资源ID
  */
-fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int) {
+fun MaterialTextView.setDrawableEnd(@DrawableRes drawableId: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     setDrawableEnd(drawable)
 }
@@ -1712,7 +1712,7 @@ fun AppCompatTextView.setDrawableEnd(@DrawableRes drawableId: Int) {
  * 动态设置drawableBottom（无尺寸参数，使用Drawable原始尺寸）
  * @param drawableId 图片资源ID
  */
-fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int) {
+fun MaterialTextView.setDrawableBottom(@DrawableRes drawableId: Int) {
     val drawable = ContextCompat.getDrawable(context, drawableId)
     setDrawableBottom(drawable)
 }
@@ -1721,7 +1721,7 @@ fun AppCompatTextView.setDrawableBottom(@DrawableRes drawableId: Int) {
  * 动态设置drawableStart（无尺寸参数，使用Drawable原始尺寸）
  * @param drawable Drawable对象
  */
-fun AppCompatTextView.setDrawableStart(drawable: Drawable?) {
+fun MaterialTextView.setDrawableStart(drawable: Drawable?) {
     setCompoundDrawablesRelative(
         drawable,
         compoundDrawablesRelative[1],
@@ -1734,7 +1734,7 @@ fun AppCompatTextView.setDrawableStart(drawable: Drawable?) {
  * 动态设置drawableTop（无尺寸参数，使用Drawable原始尺寸）
  * @param drawable Drawable对象
  */
-fun AppCompatTextView.setDrawableTop(drawable: Drawable?) {
+fun MaterialTextView.setDrawableTop(drawable: Drawable?) {
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
         drawable,
@@ -1747,7 +1747,7 @@ fun AppCompatTextView.setDrawableTop(drawable: Drawable?) {
  * 动态设置drawableEnd（无尺寸参数，使用Drawable原始尺寸）
  * @param drawable Drawable对象
  */
-fun AppCompatTextView.setDrawableEnd(drawable: Drawable?) {
+fun MaterialTextView.setDrawableEnd(drawable: Drawable?) {
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
         compoundDrawablesRelative[1],
@@ -1760,7 +1760,7 @@ fun AppCompatTextView.setDrawableEnd(drawable: Drawable?) {
  * 动态设置drawableBottom（无尺寸参数，使用Drawable原始尺寸）
  * @param drawable Drawable对象
  */
-fun AppCompatTextView.setDrawableBottom(drawable: Drawable?) {
+fun MaterialTextView.setDrawableBottom(drawable: Drawable?) {
     setCompoundDrawablesRelative(
         compoundDrawablesRelative[0],
         compoundDrawablesRelative[1],

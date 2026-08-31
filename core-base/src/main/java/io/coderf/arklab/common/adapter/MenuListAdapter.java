@@ -2,7 +2,7 @@ package io.coderf.arklab.common.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
@@ -54,7 +54,7 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
      * 应用自定义样式到视图
      */
     private void applyCustomStyles(OptionTextViewBinding binding) {
-        TextView textView = binding.tvOption;
+        MaterialTextView textView = binding.tvOption;
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
 
         // 设置列表项高度
@@ -308,3 +308,4 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
         }
     }
 }
+

@@ -9,8 +9,8 @@ import android.view.ViewOutlineProvider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -38,13 +38,13 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
     private VideoPlayerConfig config = VideoPlayerConfig.embedDefaults();
 
     @Nullable
-    private AppCompatImageView btnRotate;
+    private ImageView btnRotate;
     @Nullable
-    private AppCompatTextView btnSpeed;
+    private TextView btnSpeed;
     @Nullable
-    private AppCompatTextView btnClarity;
+    private TextView btnClarity;
     @Nullable
-    private AppCompatImageView btnBottomPlay;
+    private ImageView btnBottomPlay;
 
     /** Dialog 模式下由 {@link VideoPlayerDialog} 控制的全屏展开态（非 GSY Window 全屏） */
     private boolean externalExpanded;
@@ -303,7 +303,7 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
 
     @Override
     protected void updateStartImage() {
-        if (!(mStartButton instanceof AppCompatImageView ivStart)) {
+        if (!(mStartButton instanceof ImageView ivStart)) {
             super.updateStartImage();
             return;
         }
@@ -400,17 +400,17 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
     }
 
     @Nullable
-    public AppCompatImageView getRotateButton() {
+    public ImageView getRotateButton() {
         return btnRotate;
     }
 
     @Nullable
-    public AppCompatTextView getSpeedButton() {
+    public TextView getSpeedButton() {
         return btnSpeed;
     }
 
     @Nullable
-    public AppCompatTextView getClarityButton() {
+    public TextView getClarityButton() {
         return btnClarity;
     }
 

@@ -21,4 +21,39 @@
     <color name="default_background">#FFEEF3F2</color>
     <color name="green">#FF5FB878</color>
 
+    <!-- Material3 Semantic Colors -->
+    <!-- Surface Colors -->
+    <color name="surfaceVariant">#FFE7E0EC</color>
+    <color name="onSurfaceVariant">#FF49454F</color>
+    <color name="surfaceInverse">#FF313033</color>
+    <color name="onSurfaceInverse">#FFF4EFF4</color>
+    <!-- Outline Colors -->
+    <color name="outline">#FF79747E</color>
+    <color name="outlineVariant">#FFCAC4D0</color>
+    <!-- Inverse Colors -->
+    <color name="primaryInverse">#FF6B8EFF</color>
+    <!-- Scrim -->
+    <color name="scrim">#FF000000</color>
+    <!-- Material3 Button Colors -->
+    <color name="buttonPrimaryText">#FFFFFFFF</color>
+    <color name="buttonSecondaryText">#FF1C50B5</color>
+    <color name="buttonSurfaceTint">#FF1C50B5</color>
+    <color name="buttonOutlineTint">#FF1C50B5</color>
+    <!-- Material3 Card Colors -->
+    <color name="cardSurface">#FFFFFFFF</color>
+    <color name="cardOnSurface">#FF1C1B1F</color>
+    <color name="cardSurfaceVariant">#FFE7E0EC</color>
+    <color name="cardOnSurfaceVariant">#FF49454F</color>
+    <!-- Material3 TextInput Colors -->
+    <color name="textInputOutlineActive">#FF1C50B5</color>
+    <color name="textInputOutlineDefault">#FF79747E</color>
+    <color name="textInputFilledActive">#FF1C50B5</color>
+    <color name="textInputFilledDefault">#FFE7E0EC</color>
+    <!-- Night mode surface colors -->
+    <color name="surfaceVariant_night">#FF49454F</color>
+    <color name="onSurfaceVariant_night">#FFCAC4D0</color>
+    <color name="surfaceInverse_night">#FFE6E1E5</color>
+    <color name="onSurfaceInverse_night">#FF313033</color>
+    <color name="outline_night">#FF938F99</color>
+    <color name="outlineVariant_night">#FF49454F</color>
 </resources>

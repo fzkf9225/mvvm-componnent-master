@@ -11,16 +11,17 @@
         android:layout_height="match_parent"
         android:background="@color/default_background">
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progressBar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/webView"
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="3dip"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:progressDrawable="@drawable/pg" />
+            app:indicatorColor="#31CE15"
+            app:trackColor="#E3E3E3"
+            app:trackCornerRadius="2dp" />
 
         <io.coderf.arklab.common.widget.customview.ConfigurableWebView
             android:id="@+id/webView"

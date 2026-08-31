@@ -90,6 +90,10 @@ public class EditAreaDialog extends BaseDialog {
         super(context);
     }
 
+    public EditAreaDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     public EditAreaDialog setOnPositiveClickListener(OnInputDialogInterfaceListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;

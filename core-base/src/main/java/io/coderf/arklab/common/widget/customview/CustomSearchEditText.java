@@ -15,9 +15,12 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.google.android.material.textview.MaterialTextView;
+
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -29,7 +32,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * Create by fz on 2019/12/25 0025
  * describe:自定义搜索输入框
  */
-public class CustomSearchEditText extends AppCompatEditText implements AppCompatEditText.OnEditorActionListener, TextWatcher {
+public class CustomSearchEditText extends TextInputEditText implements TextInputEditText.OnEditorActionListener, TextWatcher {
 
     private static final int DRAWABLE_LEFT = 1;
     private static final int DRAWABLE_TOP = 2;
@@ -307,3 +310,4 @@ public class CustomSearchEditText extends AppCompatEditText implements AppCompat
         return circleBackColor;
     }
 }
+

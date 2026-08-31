@@ -14,6 +14,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import com.google.android.material.imageview.ShapeableImageView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.camera.core.Camera
@@ -339,7 +340,7 @@ class CameraView @JvmOverloads constructor(
                                 binding?.videoPlayer?.setUp(uri.toString(), false, "")
 
                                 //增加封面
-                                val imageView = ImageView(context)
+                                val imageView = ShapeableImageView(context)
                                 imageView.scaleType = ImageView.ScaleType.CENTER_CROP
                                 Glide.with(context)
                                     .load(uri)
@@ -753,3 +754,4 @@ class CameraView @JvmOverloads constructor(
         private const val MIN_RECORD_DURATION = 1000
     }
 }
+

@@ -476,11 +476,11 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/verify_submit"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxxl"
-            android:background="@color/themeColor"
+            app:backgroundTint="@color/themeColor" app:cornerRadius="0dp"
             android:text="校验"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_xxl"

@@ -10,7 +10,7 @@
         android:background="@color/default_background"
         android:padding="16dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_embed_hint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

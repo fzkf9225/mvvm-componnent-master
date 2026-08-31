@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
 import io.coderf.arklab.common.R
@@ -92,8 +92,8 @@ class StyledTabLayout @JvmOverloads constructor(
     /** 选中态背景 Drawable */
     private var selectedBgResource: Drawable? = null
 
-    /** position -> 文字 TextView（外层为居中容器） */
-    private val tabViews = mutableMapOf<Int, AppCompatTextView>()
+    /** position -> 文字 MaterialTextView（外层为居中容器） */
+    private val tabViews = mutableMapOf<Int, MaterialTextView>()
 
     init {
         setSelectedTabIndicator(null)
@@ -288,7 +288,7 @@ class StyledTabLayout @JvmOverloads constructor(
         }
     }
 
-    /** 根据文字内容更新 TextView 宽度，并在 Tab 容器内保持居中 */
+    /** 根据文字内容更新 MaterialTextView 宽度，并在 Tab 容器内保持居中 */
     private fun updateTextWidth(position: Int, isSelected: Boolean) {
         val textView = tabViews[position] ?: return
         val horizontalPadding = if (isSelected) selectedPaddingHorizontal else 0
@@ -331,8 +331,8 @@ class StyledTabLayout @JvmOverloads constructor(
         (getChildAt(0) as? ViewGroup)?.requestLayout()
     }
 
-    private fun createTextView(): AppCompatTextView {
-        return AppCompatTextView(context).apply {
+    private fun createTextView(): MaterialTextView {
+        return MaterialTextView(context).apply {
             id = generateViewId()
             gravity = Gravity.CENTER
             setTextSize(TypedValue.COMPLEX_UNIT_PX, unselectedTextSizePx)
@@ -451,3 +451,4 @@ class StyledTabLayout @JvmOverloads constructor(
         )
     }
 }
+

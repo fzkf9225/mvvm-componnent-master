@@ -47,8 +47,8 @@ public class WebViewActionSheetDialog extends com.google.android.material.bottom
         RecyclerView recyclerView = content.findViewById(R.id.rvWebViewActions);
         View btnCancel = content.findViewById(R.id.btnCancel);
 
-        if (tvProviderHint instanceof android.widget.TextView) {
-            ((android.widget.TextView) tvProviderHint).setText(providerHint);
+        if (tvProviderHint instanceof com.google.android.material.textview.MaterialTextView) {
+            ((com.google.android.material.textview.MaterialTextView) tvProviderHint).setText(providerHint);
         }
 
         WebViewActionSheetAdapter adapter = new WebViewActionSheetAdapter(actions, action -> {
@@ -115,8 +115,8 @@ public class WebViewActionSheetDialog extends com.google.android.material.bottom
         }
 
         static final class Holder extends RecyclerView.ViewHolder {
-            final android.widget.ImageView iconView;
-            final android.widget.TextView titleView;
+            final com.google.android.material.imageview.ShapeableImageView iconView;
+            final com.google.android.material.textview.MaterialTextView titleView;
 
             Holder(@NonNull View itemView) {
                 super(itemView);
@@ -126,3 +126,4 @@ public class WebViewActionSheetDialog extends com.google.android.material.bottom
         }
     }
 }
+

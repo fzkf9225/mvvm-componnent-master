@@ -7,7 +7,7 @@
             type="io.coderf.arklab.common.bean.PopupWindowBean" />
     </data>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

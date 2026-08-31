@@ -1,15 +1,16 @@
 package io.coderf.arklab.core.ui.delegate
 
-import android.view.View
+import android.R
+import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
 
 /**
- * Toolbar 安装参数（无业务 R / layout 依赖）。
+ * MaterialToolbar 安装参数（无业务 R / layout 依赖）。
  *
- * 完整带 DataBinding 外壳的 Toolbar 仍由 core-base [BaseActivity] 处理；
- * 本委托供「自带 Toolbar」或组合式页面使用。
+ * 完整带 DataBinding 外壳的 MaterialToolbar 仍由 core-base [BaseActivity] 处理；
+ * 本委托供「自带 MaterialToolbar」或组合式页面使用。
  */
 data class ToolbarSetup(
     val title: CharSequence? = null,
@@ -17,56 +18,36 @@ data class ToolbarSetup(
     /** 为 null 时默认触发 OnBackPressedDispatcher。 */
     val onNavigationClick: (() -> Unit)? = null,
     /**
-     * Toolbar 内容区高度（px）。null 表示不改 LayoutParams 高度。
+     * MaterialToolbar 内容区高度（px）。null 表示不改 LayoutParams 高度。
      * 与 Edge-to-Edge 叠加时，调用方可再叠加 statusBar inset。
      */
     val heightPx: Int? = null,
-    /** 是否显示系统 ActionBar 标题（默认 false，由 Toolbar 自绘标题）。 */
+    /** 是否显示系统 ActionBar 标题（默认 false，由 MaterialToolbar 自绘标题）。 */
     val displayShowTitle: Boolean = false
 )
 
 interface ToolbarHost {
-    fun setupToolbar(toolbar: Toolbar, setup: ToolbarSetup = ToolbarSetup())
+    fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup = ToolbarSetup())
 
     fun setupToolbar(
-        toolbar: Toolbar,
+        toolbar: MaterialToolbar,
         title: CharSequence?,
         showUp: Boolean = true
     ) = setupToolbar(toolbar, ToolbarSetup(title = title, showUp = showUp))
 }
 
 /**
- * 标准 AppCompat Toolbar 委托。
+ * 标准 MaterialToolbar 委托（基于 AppCompatActivity）。
  */
 class ToolbarDelegate(
     private val activity: AppCompatActivity
 ) : ToolbarHost {
 
-    override fun setupToolbar(toolbar: Toolbar, setup: ToolbarSetup) {
-        activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.apply {
-            title = setup.title
-            setDisplayHomeAsUpEnabled(setup.showUp)
-            setDisplayShowHomeEnabled(setup.showUp)
-            setDisplayShowTitleEnabled(setup.displayShowTitle)
-        }
-        if (setup.title != null) {
-            toolbar.title = setup.title
-        }
-        setup.heightPx?.let { h ->
-            val lp = toolbar.layoutParams
-            if (lp != null) {
-                lp.height = h
-                toolbar.layoutParams = lp
-            } else {
-                toolbar.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    h
-                )
-            }
-            toolbar.minimumHeight = h
-        }
-        val navClick: View.OnClickListener = View.OnClickListener {
+    override fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup) {
+        // 不再调用 setSupportActionBar，直接配置 MaterialToolbar
+        toolbar.title = setup.title
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert) // 默认返回图标
+        toolbar.setNavigationOnClickListener {
             val custom = setup.onNavigationClick
             if (custom != null) {
                 custom.invoke()
@@ -74,20 +55,33 @@ class ToolbarDelegate(
                 activity.onBackPressedDispatcher.onBackPressed()
             }
         }
-        toolbar.setNavigationOnClickListener(navClick)
+        if (setup.heightPx != null) {
+            val lp = toolbar.layoutParams
+            if (lp != null) {
+                lp.height = setup.heightPx
+                toolbar.layoutParams = lp
+            } else {
+                toolbar.layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    setup.heightPx
+                )
+            }
+            toolbar.minimumHeight = setup.heightPx
+        }
     }
 
     /** 仅更新标题。 */
-    fun setTitle(toolbar: Toolbar, title: CharSequence?) {
+    fun setTitle(toolbar: MaterialToolbar, title: CharSequence?) {
         toolbar.title = title
-        activity.supportActionBar?.title = title
     }
 
     /** 仅更新返回键可见性。 */
-    fun setShowUp(showUp: Boolean) {
-        activity.supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(showUp)
-            setDisplayShowHomeEnabled(showUp)
+    fun setShowUp(toolbar: MaterialToolbar, showUp: Boolean) {
+        if (showUp) {
+            toolbar.setNavigationIcon(R.drawable.ic_menu_revert)
+        } else {
+            toolbar.navigationIcon = null
         }
     }
 }
+

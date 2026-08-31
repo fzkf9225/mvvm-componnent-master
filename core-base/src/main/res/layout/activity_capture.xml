@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toStartOf="@+id/capture_hint"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/capture_hint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

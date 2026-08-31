@@ -7,7 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatButton;
+import com.google.android.material.button.MaterialButton;
 
 import io.coderf.arklab.common.R;
 
@@ -16,7 +16,7 @@ import io.coderf.arklab.common.R;
  * Created by fz on 2019/5/31.
  * describe：自定义圆角矩形（支持分别设置四个圆角）
  */
-public class CornerButton extends AppCompatButton {
+public class CornerButton extends MaterialButton {
     /**
      * 边框颜色
      */
@@ -153,6 +153,8 @@ public class CornerButton extends AppCompatButton {
             gradientDrawable.setStroke((int) strokeWidth, strokeColor);
         }
 
+        // 禁用 MaterialButton 的默认 backgroundTint，否则会覆盖自定义背景
+        setBackgroundTintList(null);
         this.setBackground(gradientDrawable);
     }
 

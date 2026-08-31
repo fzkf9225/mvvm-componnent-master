@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
 import io.coderf.arklab.core.utils.ext.dp2px
@@ -60,7 +60,7 @@ class ValueLabelView @JvmOverloads constructor(
     /**
      * 数值文本控件（左侧）
      */
-    private val valueTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val valueTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(Color.BLACK)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
@@ -72,7 +72,7 @@ class ValueLabelView @JvmOverloads constructor(
     /**
      * 单位文本控件（右侧）
      */
-    private val unitTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val unitTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(Color.BLACK)
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
@@ -82,7 +82,7 @@ class ValueLabelView @JvmOverloads constructor(
     /**
      * 标签文字控件
      */
-    private val labelTextView: AppCompatTextView = AppCompatTextView(context).apply {
+    private val labelTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()
         setTextColor(0xFF9C9C9C.toInt())
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
@@ -889,7 +889,7 @@ class ValueLabelView @JvmOverloads constructor(
     /**
      * 获取各个TextView控件
      */
-    fun getLabelTextView(): AppCompatTextView = labelTextView
-    fun getValueTextView(): AppCompatTextView = valueTextView
-    fun getUnitTextView(): AppCompatTextView = unitTextView
+    fun getLabelTextView(): MaterialTextView = labelTextView
+    fun getValueTextView(): MaterialTextView = valueTextView
+    fun getUnitTextView(): MaterialTextView = unitTextView
 }

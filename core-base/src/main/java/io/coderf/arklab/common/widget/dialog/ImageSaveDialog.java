@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
+import com.google.android.material.button.MaterialButton;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
@@ -172,7 +172,7 @@ public class ImageSaveDialog extends BaseDialog {
         }
     }
 
-    private void styleActionButton(AppCompatButton button, Drawable background,
+    private void styleActionButton(MaterialButton button, Drawable background,
                                    int textColor, float textSizePx, boolean emphasize,
                                    int buttonHeight) {
         button.setBackground(background);

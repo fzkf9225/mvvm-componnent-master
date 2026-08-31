@@ -3,7 +3,8 @@
     <color name="media_line">#dddddd</color>
     <color name="media_dark_light">#5d5d5d</color>
     <color name="media_autoColor">#333333</color>
-    <color name="media_action_sheet_divider">#E8E8ED</color>
+    <color name="media_action_sheet_divider">#33000000</color>
     <color name="media_action_sheet_cancel_text">#8E8E93</color>
+    <color name="media_action_sheet_ripple">#1A000000</color>
 
 </resources>

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
@@ -181,7 +181,7 @@ public class FileShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
         }
     }
 
-    public ViewGroup.LayoutParams getFileIconLayoutParams(AppCompatImageView fileIconImage) {
+    public ViewGroup.LayoutParams getFileIconLayoutParams(ShapeableImageView fileIconImage) {
         ConstraintLayout.LayoutParams fileIconLayoutParams = (ConstraintLayout.LayoutParams) fileIconImage.getLayoutParams();
         if (fileIconLayoutParams == null) {
             fileIconLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -196,3 +196,4 @@ public class FileShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
         return fileIconLayoutParams;
     }
 }
+

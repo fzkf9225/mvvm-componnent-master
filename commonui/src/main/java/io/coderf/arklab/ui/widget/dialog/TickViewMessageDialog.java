@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.NonNull;
 
@@ -69,7 +69,7 @@ public class TickViewMessageDialog extends Dialog {
 
     private void initView() {
         View inflate = LayoutInflater.from(context).inflate(R.layout.tick_message_dialog, null);
-        TextView tvMessage = inflate.findViewById(R.id.dialog_textView);
+        MaterialTextView tvMessage = inflate.findViewById(R.id.dialog_textView);
         TickView mTickView = inflate.findViewById(R.id.tick_view);
         mTickView.getConfig().setOnCheckedChangeListener(onCheckedChangeListener);
         tvMessage.setText(content);
@@ -104,3 +104,4 @@ public class TickViewMessageDialog extends Dialog {
     }
 
 }
+

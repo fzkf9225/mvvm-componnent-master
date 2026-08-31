@@ -118,19 +118,20 @@
                 app:valueTextColor="#888888"
                 app:valueTextSize="@dimen/font_size_l" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/setting_exit"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
-                android:background="@color/theme_red"
-                android:elevation="0dp"
+                android:gravity="center"
                 android:onClick="@{setViewModel::onClick}"
                 android:text="@string/setting_exit"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_xxl"
                 android:visibility="@{UserAccountHelper.isLogin()?View.VISIBLE:View.GONE}"
+                app:backgroundTint="@color/theme_red"
+                app:cornerRadius="0dp"
                 tools:targetApi="lollipop" />
         </LinearLayout>
     </ScrollView>

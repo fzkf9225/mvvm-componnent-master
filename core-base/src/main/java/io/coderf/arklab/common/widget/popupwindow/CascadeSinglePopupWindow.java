@@ -11,7 +11,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -373,7 +373,7 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onItemSelectedClear(AppCompatImageView ivCheckView, int position) {
+    public void onItemSelectedClear(ShapeableImageView ivCheckView, int position) {
         List<T> newList;
         if (position == 0) {
             newList = dataList;
@@ -395,4 +395,5 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
         void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
     }
 }
+
 

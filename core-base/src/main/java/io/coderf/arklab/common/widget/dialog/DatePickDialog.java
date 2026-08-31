@@ -145,6 +145,11 @@ public class DatePickDialog extends BaseDialog {
         this.context = context;
     }
 
+    public DatePickDialog(@NonNull Context context, int themeResId, Context context1) {
+        super(context, themeResId);
+        this.context = context1;
+    }
+
     public DatePickDialog setOnPositiveClickListener(OnDatePickSelectedListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;

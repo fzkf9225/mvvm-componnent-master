@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 弹框dialog -->
-    <style name="media_action_sheet_dialog_style" parent="@android:style/Theme.Dialog">
+    <!-- 弹框dialog - 使用Material3 -->
+    <style name="media_action_sheet_dialog_style" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -24,21 +24,31 @@
         <item name="android:windowExitAnimation">@anim/media_actionsheet_dialog_out</item>
     </style>
 
-    <style name="media_action_sheet_item">
+    <!-- ActionSheet 按钮样式 - 使用 MaterialButton，移除 backgroundTint 冲突 -->
+    <style name="media_action_sheet_item" parent="Widget.Material3.Button.TextButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
-        <item name="android:background">@drawable/action_sheet_item_ripple</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/media_autoColor</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/action_sheet_item_text_size</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:stateListAnimator">@null</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="rippleColor">@color/media_action_sheet_ripple</item>
     </style>
 
-    <style name="media_action_sheet_cancel" parent="media_action_sheet_item">
-        <item name="android:background">@drawable/action_sheet_cancel_ripple</item>
-        <item name="android:textColor">@color/media_action_sheet_cancel_text</item>
+    <style name="media_action_sheet_cancel" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/action_sheet_item_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/action_sheet_cancel_text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="rippleColor">@color/media_action_sheet_ripple</item>
     </style>
 
     <style name="media_action_sheet_divider">
@@ -47,12 +57,13 @@
         <item name="android:background">@color/media_action_sheet_divider</item>
     </style>
 
-    <!-- 自定义loading dialog -->
-    <style name="media_loading_dialog" parent="android:style/Theme.Dialog">
+    <!-- 自定义loading dialog - 使用Material3风格，内容自适应 -->
+    <style name="media_loading_dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 </resources>

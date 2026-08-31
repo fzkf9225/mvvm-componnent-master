@@ -10,9 +10,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.appbar.MaterialToolbar;
+import android.widget.TextView;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -226,12 +226,12 @@ public class VideoPlayerController {
                 orientationHelper.toggleManualRotation(activity));
         }
 
-        AppCompatTextView speedButton = target.getSpeedButton();
+        TextView speedButton = target.getSpeedButton();
         if (speedButton != null) {
             speedButton.setOnClickListener(v -> cycleSpeed());
         }
 
-        AppCompatTextView clarityButton = target.getClarityButton();
+        TextView clarityButton = target.getClarityButton();
         if (clarityButton != null) {
             clarityButton.setOnClickListener(v -> showClarityDialog());
         }
@@ -260,14 +260,13 @@ public class VideoPlayerController {
             return;
         }
         ThemeUtils.restoreSystemBarsAfterImmersive(activity);
-        if (activity instanceof AppCompatActivity) {
-            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            View toolbar = ((AppCompatActivity) activity).findViewById(
+        if (activity instanceof AppCompatActivity fa) {
+            // 使用 MaterialToolbar 直接操作
+            View toolbar = fa.findViewById(
                 io.coderf.arklab.common.R.id.main_bar);
-            if (toolbar != null) {
+            if (toolbar instanceof MaterialToolbar) {
+                toolbar.setVisibility(View.VISIBLE);
+            } else if (toolbar != null) {
                 toolbar.setVisibility(View.VISIBLE);
             }
         }

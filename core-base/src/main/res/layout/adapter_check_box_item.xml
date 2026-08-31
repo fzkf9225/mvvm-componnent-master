@@ -13,7 +13,7 @@
         android:layout_height="35dp"
         android:foreground="?attr/selectableItemBackground">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_option"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_l" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_check"
             android:layout_width="wrap_content"
             android:layout_marginStart="@dimen/horizontal_margin_l"

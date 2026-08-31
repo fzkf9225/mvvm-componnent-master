@@ -3,7 +3,7 @@ package io.coderf.arklab.common.base;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -43,7 +43,7 @@ public abstract class BaseSearchRecyclerViewFragment<VM extends BaseRecyclerView
     public void addMenuView(String hint,View.OnClickListener onClickListener) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.option_item, null);
         binding.searchLayout.llMenu.addView(view);
-        TextView tvOptionMenu = view.findViewById(R.id.tv_option_menu);
+        MaterialTextView tvOptionMenu = view.findViewById(R.id.tv_option_menu);
         tvOptionMenu.setHint(hint);
         tvOptionMenu.setOnClickListener(onClickListener);
     }
@@ -58,3 +58,4 @@ public abstract class BaseSearchRecyclerViewFragment<VM extends BaseRecyclerView
         keywordsLiveData.postValue(null);
     }
 }
+

@@ -24,7 +24,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  *   <li>{@code darkIcons == true}：深色图标/文字（浅色背景）→
  *       {@link WindowInsetsControllerCompat#setAppearanceLightStatusBars(true)}</li>
  *   <li>{@code darkIcons == false}：浅色图标/文字（深色背景）</li>
- *   <li>默认配合 Edge-to-Edge：状态栏背景透明，由 Toolbar / 页面背景呈现颜色</li>
+ *   <li>默认配合 Edge-to-Edge：状态栏背景透明，由 MaterialToolbar / 页面背景呈现颜色</li>
  * </ul>
  *
  * @author fz
@@ -79,10 +79,10 @@ public final class ThemeUtils {
      * Edge-to-Edge 场景下的状态栏配置：状态栏始终透明，仅设置图标 Appearance。
      * <p>
      * {@code darkIcons} 语义与 {@link #setStatusBar} 一致。
-     * Toolbar 背景色由业务自行设置，状态栏区域视觉效果由 Toolbar 顶到状态栏呈现。
+     * MaterialToolbar 背景色由业务自行设置，状态栏区域视觉效果由 MaterialToolbar 顶到状态栏呈现。
      * </p>
      *
-     * @param ignoredColorForEdgeToEdge 保留参数便于调用方传入 Toolbar 色；当前实现不写入状态栏
+     * @param ignoredColorForEdgeToEdge 保留参数便于调用方传入 MaterialToolbar 色；当前实现不写入状态栏
      * @param darkIcons                 {@code true} 深色图标
      */
     public static void setupStatusBar(@NonNull Activity activity,
@@ -318,3 +318,4 @@ public final class ThemeUtils {
         }
     }
 }
+

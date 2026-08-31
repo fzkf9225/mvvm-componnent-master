@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
 
@@ -63,7 +62,7 @@ public final class VideoPlayerViewHelper {
 
     @NonNull
     public static ImageView createThumbImageView(@NonNull Context context, @NonNull String imageUrl) {
-        AppCompatImageView imageView = new AppCompatImageView(context);
+        ImageView imageView = new ImageView(context);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(context).load(imageUrl).into(imageView);
         return imageView;

@@ -108,6 +108,11 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
         this.context = context;
     }
 
+    public ChoiceSelectDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+        this.context = context;
+    }
+
     public ChoiceSelectDialog<T> setSelectionMode(int selectionMode) {
         this.selectionMode = selectionMode;
         return this;

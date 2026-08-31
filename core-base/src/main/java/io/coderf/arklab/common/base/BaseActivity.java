@@ -9,8 +9,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import com.google.android.material.appbar.MaterialToolbar;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,7 +48,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafety;
 import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 
 /**
- * Activity MVVM 基类：统一 Toolbar、DataBinding、ViewModel、登录/权限与 Loading。
+ * Activity MVVM 基类：统一 MaterialToolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
  * UI 行为策略来自 {@code core-ui} 委托（{@link InitDataPolicy}、{@link EdgeToEdgePolicy}、
  * {@link HideKeyboardOnTouchOutsideDelegate} 等）；子类可通过改 policy 字段或重写钩子方法定制。
@@ -79,7 +80,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     /** 正文 DataBinding。 */
     protected VDB binding;
 
-    /** 带 Toolbar 外壳时的根 Binding；{@link #hasToolBar()} 为 false 时为 null。 */
+    /** 带 MaterialToolbar 外壳时的根 Binding；{@link #hasToolBar()} 为 false 时为 null。 */
     @Nullable
     protected BaseActivityConstraintBinding toolbarBind;
 
@@ -271,7 +272,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 应用 {@link ToolbarConfig#getHeight()} 到 Toolbar。
+     * 应用 {@link ToolbarConfig#getHeight()} 到 MaterialToolbar。
      * 若在 {@link #initView} / {@link #initData} 中调用 {@code setHeight()}，请在此后再次调用本方法。
      */
     protected void applyToolbarHeight() {
@@ -289,10 +290,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 获取 Toolbar；{@link #hasToolBar()} 为 false 时返回 null，避免 NPE。
+     * 获取 MaterialToolbar；{@link #hasToolBar()} 为 false 时返回 null，避免 NPE。
      */
     @Nullable
-    public Toolbar getToolbar() {
+    public MaterialToolbar getToolbar() {
         return toolbarBind != null ? toolbarBind.mainBar : null;
     }
 
@@ -500,3 +501,4 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
+

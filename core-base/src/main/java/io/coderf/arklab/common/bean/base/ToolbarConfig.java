@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.ColorInt;
@@ -15,7 +15,7 @@ import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.FontRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.BaseObservable;
@@ -31,7 +31,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 
 /**
- * Toolbar 配置（DataBinding 可观察）。
+ * MaterialToolbar 配置（DataBinding 可观察）。
  * <p>
  * 链式 setter 返回 {@code this}；未显式设置的字段保持历史默认值，兼容已有项目。
  * 状态栏请在链式末尾调用 {@link #applyStatusBar()}。
@@ -110,7 +110,7 @@ public class ToolbarConfig extends BaseObservable {
     private int titleMaxLines = 1;
 
     /**
-     * 标题在 Toolbar 内的 layout_gravity；默认居中，兼容历史布局。
+     * 标题在 MaterialToolbar 内的 layout_gravity；默认居中，兼容历史布局。
      */
     private int titleGravity = TITLE_GRAVITY_CENTER;
 
@@ -137,7 +137,7 @@ public class ToolbarConfig extends BaseObservable {
     private boolean titleAllCaps = false;
 
     /**
-     * Toolbar elevation（dp）；负数表示不修改（兼容历史未设 elevation 的页面）。
+     * MaterialToolbar elevation（dp）；负数表示不修改（兼容历史未设 elevation 的页面）。
      */
     private float elevationDp = -1f;
 
@@ -196,7 +196,7 @@ public class ToolbarConfig extends BaseObservable {
         return this;
     }
 
-    /** 是否通过 {@link #setHeight(int)} 显式指定了 Toolbar 内容区高度。 */
+    /** 是否通过 {@link #setHeight(int)} 显式指定了 MaterialToolbar 内容区高度。 */
     public boolean hasCustomHeight() {
         return height > 0;
     }
@@ -437,7 +437,7 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     /**
-     * 字间距（em 单位，与 TextView.setLetterSpacing 一致）。默认 0。
+     * 字间距（em 单位，与 MaterialTextView.setLetterSpacing 一致）。默认 0。
      */
     public ToolbarConfig setTitleLetterSpacing(float titleLetterSpacing) {
         this.titleLetterSpacing = titleLetterSpacing;
@@ -465,7 +465,7 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     /**
-     * Toolbar 阴影高度（dp）。默认 -1 表示不修改，避免影响已有页面。
+     * MaterialToolbar 阴影高度（dp）。默认 -1 表示不修改，避免影响已有页面。
      * 传 0 可去掉阴影。
      */
     public ToolbarConfig setElevationDp(float elevationDp) {
@@ -495,7 +495,7 @@ public class ToolbarConfig extends BaseObservable {
     // -------------------------------------------------------------------------
 
     @BindingAdapter("bindTitleTextSizeSp")
-    public static void bindTitleTextSizeSp(TextView textView, float sizeSp) {
+    public static void bindTitleTextSizeSp(MaterialTextView textView, float sizeSp) {
         if (sizeSp > 0f) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp);
         }
@@ -506,7 +506,7 @@ public class ToolbarConfig extends BaseObservable {
             "bindTitleFontFamily",
             "bindTitleFontRes"
     }, requireAll = false)
-    public static void bindTitleTypeface(TextView textView,
+    public static void bindTitleTypeface(MaterialTextView textView,
                                          Boolean bold,
                                          @Nullable String fontFamily,
                                          Integer fontRes) {
@@ -533,17 +533,17 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     @BindingAdapter("bindTitleMaxLines")
-    public static void bindTitleMaxLines(TextView textView, int maxLines) {
+    public static void bindTitleMaxLines(MaterialTextView textView, int maxLines) {
         int lines = Math.max(1, maxLines);
         textView.setMaxLines(lines);
         textView.setSingleLine(lines == 1);
     }
 
     @BindingAdapter("bindTitleGravity")
-    public static void bindTitleGravity(TextView textView, int gravity) {
+    public static void bindTitleGravity(MaterialTextView textView, int gravity) {
         ViewGroup.LayoutParams lp = textView.getLayoutParams();
-        if (lp instanceof Toolbar.LayoutParams) {
-            Toolbar.LayoutParams tlp = (Toolbar.LayoutParams) lp;
+        if (lp instanceof MaterialToolbar.LayoutParams) {
+            MaterialToolbar.LayoutParams tlp = (MaterialToolbar.LayoutParams) lp;
             if (tlp.gravity != gravity) {
                 tlp.gravity = gravity;
                 textView.setLayoutParams(tlp);
@@ -554,17 +554,17 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     @BindingAdapter("bindTitleLetterSpacing")
-    public static void bindTitleLetterSpacing(TextView textView, float letterSpacing) {
+    public static void bindTitleLetterSpacing(MaterialTextView textView, float letterSpacing) {
         textView.setLetterSpacing(letterSpacing);
     }
 
     @BindingAdapter("bindTitleAllCaps")
-    public static void bindTitleAllCaps(TextView textView, boolean allCaps) {
+    public static void bindTitleAllCaps(MaterialTextView textView, boolean allCaps) {
         textView.setAllCaps(allCaps);
     }
 
     @BindingAdapter("bindToolbarElevationDp")
-    public static void bindToolbarElevationDp(Toolbar toolbar, float elevationDp) {
+    public static void bindToolbarElevationDp(MaterialToolbar toolbar, float elevationDp) {
         if (elevationDp < 0f) {
             return;
         }
@@ -585,7 +585,7 @@ public class ToolbarConfig extends BaseObservable {
             "bindNavIconRes",
             "bindNavIconTint"
     }, requireAll = false)
-    public static void bindNavigationIcon(Toolbar toolbar,
+    public static void bindNavigationIcon(MaterialToolbar toolbar,
                                           Boolean visible,
                                           Integer iconRes,
                                           Integer tintColor) {
@@ -602,3 +602,4 @@ public class ToolbarConfig extends BaseObservable {
         }
     }
 }
+

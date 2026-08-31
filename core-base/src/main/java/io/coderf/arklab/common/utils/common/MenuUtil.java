@@ -14,12 +14,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 
 /**
- * Toolbar / Menu 菜单项常用操作工具类。
+ * MaterialToolbar / Menu 菜单项常用操作工具类。
  * <p>
  * 封装显示隐藏、启用禁用、图标与标题、文字颜色等常见能力，便于在 Activity / Fragment 中统一处理菜单。
  *
@@ -46,14 +46,14 @@ public class MenuUtil {
     }
 
     /**
-     * 根据菜单项 id 从 {@link Toolbar} 中查找对应项。
+     * 根据菜单项 id 从 {@link MaterialToolbar} 中查找对应项。
      *
-     * @param toolbar Toolbar，可为 null
+     * @param toolbar MaterialToolbar，可为 null
      * @param itemId  菜单项 id（R.id.xxx）
      * @return 找到的菜单项；toolbar 或其 menu 为 null 或未找到时返回 null
      */
     @Nullable
-    public static MenuItem findMenuItem(@Nullable Toolbar toolbar, int itemId) {
+    public static MenuItem findMenuItem(@Nullable MaterialToolbar toolbar, int itemId) {
         if (toolbar == null) {
             return null;
         }
@@ -84,9 +84,9 @@ public class MenuUtil {
     }
 
     /**
-     * 通过 Toolbar 与菜单 id 设置菜单项是否显示。
+     * 通过 MaterialToolbar 与菜单 id 设置菜单项是否显示。
      */
-    public static void setMenuItemVisible(@Nullable Toolbar toolbar, int itemId, boolean visible) {
+    public static void setMenuItemVisible(@Nullable MaterialToolbar toolbar, int itemId, boolean visible) {
         setMenuItemVisible(findMenuItem(toolbar, itemId), visible);
     }
 
@@ -142,9 +142,9 @@ public class MenuUtil {
     }
 
     /**
-     * 通过 Toolbar 与菜单 id 设置菜单项是否可点击。
+     * 通过 MaterialToolbar 与菜单 id 设置菜单项是否可点击。
      */
-    public static void setMenuItemEnabled(@Nullable Toolbar toolbar, int itemId, boolean enabled) {
+    public static void setMenuItemEnabled(@Nullable MaterialToolbar toolbar, int itemId, boolean enabled) {
         setMenuItemEnabled(findMenuItem(toolbar, itemId), enabled);
     }
 
@@ -271,7 +271,7 @@ public class MenuUtil {
     // region 展示位置
 
     /**
-     * 设置菜单项在 Toolbar 中的展示方式。
+     * 设置菜单项在 MaterialToolbar 中的展示方式。
      *
      * @param showAsAction 如 {@link MenuItem#SHOW_AS_ACTION_ALWAYS}、
      *                     {@link MenuItem#SHOW_AS_ACTION_IF_ROOM}、
@@ -284,7 +284,7 @@ public class MenuUtil {
     }
 
     /**
-     * 将菜单项固定显示在 Toolbar 上（始终作为 Action 展示）。
+     * 将菜单项固定显示在 MaterialToolbar 上（始终作为 Action 展示）。
      */
     public static void showAsActionAlways(@Nullable MenuItem menuItem) {
         setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -333,3 +333,4 @@ public class MenuUtil {
         return checked;
     }
 }
+

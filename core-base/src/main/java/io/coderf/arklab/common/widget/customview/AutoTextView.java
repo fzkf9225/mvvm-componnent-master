@@ -18,7 +18,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.TextSwitcher;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 import android.widget.ViewSwitcher;
 
 import androidx.annotation.ColorInt;
@@ -284,14 +284,14 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
     }
 
     /**
-     * 同步更新已创建的子 TextView 样式
+     * 同步更新已创建的子 MaterialTextView 样式
      */
     private void applyChildTextStyle() {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
-            if (child instanceof TextView) {
-                TextView tv = (TextView) child;
+            if (child instanceof MaterialTextView) {
+                MaterialTextView tv = (MaterialTextView) child;
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
                 tv.setTextColor(textColor);
                 LayoutParams lp = (LayoutParams) tv.getLayoutParams();
@@ -325,7 +325,7 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
 
     @Override
     public View makeView() {
-        TextView t = new TextView(getContext());
+        MaterialTextView t = new MaterialTextView(getContext());
         t.setEllipsize(TextUtils.TruncateAt.END);
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = textGravity;
@@ -924,3 +924,4 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
         }
     }
 }
+

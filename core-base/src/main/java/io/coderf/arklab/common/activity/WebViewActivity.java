@@ -13,7 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -63,7 +63,7 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     public static final String URL_TYPE = "urlType";
     /** Intent：加载地址 */
     public static final String LOAD_URL = "loadUrl";
-    /** Intent：是否显示 Toolbar */
+    /** Intent：是否显示 MaterialToolbar */
     public static final String TOOLBAR = "toolbar";
     /** Intent：是否显示右上角菜单 */
     public static final String HAS_MENU = "hasMenu";
@@ -165,7 +165,7 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     }
 
     @Nullable
-    protected TextView getWebTitleTextView() {
+    protected MaterialTextView getWebTitleTextView() {
         return toolbarBind == null ? null : toolbarBind.tvTitle;
     }
 
@@ -482,3 +482,4 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         return super.onKeyDown(keyCode, event);
     }
 }
+

@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -25,7 +25,7 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
 public class FormSwitch extends FormConstraintLayout {
 
     /** 开关控件 */
-    protected SwitchCompat switchCompat;
+    protected MaterialSwitch materialSwitch;
     /** 选中状态双向绑定源，对应 XML {@code checked} */
     public ObservableField<Boolean> checkedSource;
     /** 滑块颜色，对应 XML {@code switchThumbTint} */
@@ -65,16 +65,16 @@ public class FormSwitch extends FormConstraintLayout {
 
     @Override
     public void createText() {
-        switchCompat = new SwitchCompat(getContext());
-        switchCompat.setId(View.generateViewId());
+        materialSwitch = new MaterialSwitch(getContext());
+        materialSwitch.setId(View.generateViewId());
         applySwitchStyle();
         if (switchThumbTint != null) {
-            switchCompat.setThumbTintList(android.content.res.ColorStateList.valueOf(switchThumbTint));
+            materialSwitch.setThumbTintList(android.content.res.ColorStateList.valueOf(switchThumbTint));
         } else {
-            switchCompat.setThumbTintList(ContextCompat.getColorStateList(getContext(), io.coderf.arklab.common.R.color.themeColor));
+            materialSwitch.setThumbTintList(ContextCompat.getColorStateList(getContext(), io.coderf.arklab.common.R.color.themeColor));
         }
         if (switchTrackTint != null) {
-            switchCompat.setTrackTintList(android.content.res.ColorStateList.valueOf(switchTrackTint));
+            materialSwitch.setTrackTintList(android.content.res.ColorStateList.valueOf(switchTrackTint));
         }
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
@@ -88,9 +88,9 @@ public class FormSwitch extends FormConstraintLayout {
         }
         params.topMargin = (int) defaultTextMargin;
         params.bottomMargin = (int) defaultTextMargin;
-        tvSelection = switchCompat;
-        addView(switchCompat, params);
-        switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        tvSelection = materialSwitch;
+        addView(materialSwitch, params);
+        materialSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             checkedSource.set(isChecked);
             dataSource.set(String.valueOf(isChecked));
         });
@@ -99,20 +99,20 @@ public class FormSwitch extends FormConstraintLayout {
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Boolean checked = checkedSource.get();
                 boolean value = checked != null && checked;
-                if (switchCompat.isChecked() != value) {
-                    switchCompat.setChecked(value);
+                if (materialSwitch.isChecked() != value) {
+                    materialSwitch.setChecked(value);
                 }
             }
         });
     }
 
     private void applySwitchStyle() {
-        switchCompat.setPadding(0, 0, 0, 0);
-        switchCompat.setMinimumWidth(0);
-        switchCompat.setMinimumHeight(0);
-        switchCompat.setShowText(false);
-        switchCompat.setBackground(null);
-        switchCompat.setSwitchMinWidth(DensityUtil.dp2px(getContext(), 34f));
+        materialSwitch.setPadding(0, 0, 0, 0);
+        materialSwitch.setMinimumWidth(0);
+        materialSwitch.setMinimumHeight(0);
+        materialSwitch.setShowText(false);
+        materialSwitch.setBackground(null);
+        materialSwitch.setSwitchMinWidth(DensityUtil.dp2px(getContext(), 28f));
     }
 
     @Override
@@ -148,9 +148,9 @@ public class FormSwitch extends FormConstraintLayout {
         constraintSet.applyTo(this);
     }
 
-    /** 获取内部 {@link SwitchCompat} 实例，便于进一步定制 */
-    public SwitchCompat getSwitchCompat() {
-        return switchCompat;
+    /** 获取内部 {@link MaterialSwitch} 实例，便于进一步定制 */
+    public MaterialSwitch getMaterialSwitch() {
+        return materialSwitch;
     }
 
     /** 当前是否开启 */

@@ -3,6 +3,7 @@ package io.coderf.arklab.demo.viewmodel;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -11,12 +12,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.PopupWindowCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
@@ -110,6 +113,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
     }
 
     public void onClick(View view) {
+        // 安全获取 Activity 的辅助方法
+        FragmentActivity activity = getActivityFromView(view);
+
         if (R.id.bottomSheetDialog == view.getId()) {
             new BottomSheetDialog<>(view.getContext())
                     .setData(dataList)
@@ -424,16 +430,18 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .builder()
                     .show();
         } else if (R.id.dateRangePickDialog == view.getId()) {
-            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
-            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            if (activity == null) return;
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            Lifecycle lifecycle = activity.getLifecycle();
             new DateRangePickDialog(view.getContext())
                     .setGravity(Gravity.BOTTOM)
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.customDateRangePickDialog == view.getId()) {
-            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
-            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            if (activity == null) return;
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            Lifecycle lifecycle = activity.getLifecycle();
             ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
             shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green));
             ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
@@ -466,8 +474,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.dateRangePickClear == view.getId()) {
-            FragmentManager fragmentManager = ((AppCompatActivity) view.getContext()).getSupportFragmentManager();
-            Lifecycle lifecycle = ((AppCompatActivity) view.getContext()).getLifecycle();
+            if (activity == null) return;
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            Lifecycle lifecycle = activity.getLifecycle();
             new DateRangePickDialog(view.getContext())
                     .setTitle("请选择日期范围")
                     .setShowClearView(true)
@@ -480,6 +489,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.popupSingleDialog == view.getId()) {
+            if (activity == null) return;
             String json = loadJSONFromAsset(view.getContext(), "aor.json");
             List<PopupWindowBean> dataList = new GsonBuilder()
                     .registerTypeAdapter(PopupWindowBean.class, new PopupWindowDeserializer())
@@ -487,7 +497,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .fromJson(json, new TypeToken<List<PopupWindowBean>>() {
                     }.getType());
             CascadeSinglePopupWindow<?> cascadeSinglePopupWindow = new CascadeSinglePopupWindow(
-                    (Activity) view.getContext(),
+                    activity,
                     dataList,
                     (CascadeSinglePopupWindow.SelectedListener<PopupWindowBean>) (popupWindow, dataList1) -> baseView.showToast("选中：" + dataList1.get(dataList1.size() - 1).getPopupName())
             );
@@ -501,6 +511,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     cascadeSinglePopupWindow, view, 0, 0, Gravity.CENTER
             );
         } else if (R.id.popupMultiDialog == view.getId()) {
+            if (activity == null) return;
             String json = loadJSONFromAsset(view.getContext(), "aor.json");
             List<PopupWindowBean<?>> dataList = new GsonBuilder()
                     .registerTypeAdapter(PopupWindowBean.class, new PopupWindowDeserializer())
@@ -508,7 +519,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .fromJson(json, new TypeToken<List<PopupWindowBean<?>>>() {
                     }.getType());
             CascadeMultiPopupWindow<PopupWindowBean<?>> cascadeMultiPopupWindow = new CascadeMultiPopupWindow<>(
-                    (Activity) view.getContext(),
+                    activity,
                     dataList,
                     (popupWindow, dataList2) -> baseView.showToast("选中：" + new Gson().toJson(dataList2.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())))
             );
@@ -720,5 +731,41 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
     }
 
     private Runnable horizontalRunnable = null;
+
+    /**
+     * 安全地从 View 获取 FragmentActivity。
+     * 解决 DataBinding onClick 中 view.getContext() 可能返回 ContextThemeWrapper 而非 Activity 的问题。
+     */
+    private FragmentActivity getActivityFromView(View view) {
+        Context context = view.getContext();
+        // 1. 直接检查 context 是否为 FragmentActivity
+        if (context instanceof FragmentActivity) {
+            return (FragmentActivity) context;
+        }
+        // 2. 检查 ContextThemeWrapper 并尝试获取其 baseContext
+        if (context instanceof androidx.appcompat.view.ContextThemeWrapper) {
+            Context baseContext = ((androidx.appcompat.view.ContextThemeWrapper) context).getBaseContext();
+            if (baseContext instanceof FragmentActivity) {
+                return (FragmentActivity) baseContext;
+            }
+        }
+        // 3. 检查 ContextWrapper 并尝试获取其 baseContext
+        if (context instanceof ContextWrapper) {
+            Context baseContext = ((ContextWrapper) context).getBaseContext();
+            if (baseContext instanceof FragmentActivity) {
+                return (FragmentActivity) baseContext;
+            }
+        }
+        // 4. 尝试从 View 层级向上查找 FragmentActivity
+        ViewGroup parent = (ViewGroup) view.getParent();
+        while (parent != null) {
+            Context parentContext = parent.getContext();
+            if (parentContext instanceof FragmentActivity) {
+                return (FragmentActivity) parentContext;
+            }
+            parent = (ViewGroup) parent.getParent();
+        }
+        return null;
+    }
 
 }

@@ -17,7 +17,7 @@
             android:background="@drawable/action_sheet_panel_bg"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/takePhoto"
                 style="@style/media_action_sheet_item"
                 android:text="@string/media_camera" />
@@ -26,16 +26,17 @@
                 android:id="@+id/v_line"
                 style="@style/media_action_sheet_divider" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/choosePhoto"
                 style="@style/media_action_sheet_item"
                 android:text="@string/media_album" />
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_cancel"
             style="@style/media_action_sheet_cancel"
             android:layout_marginTop="@dimen/action_sheet_group_gap"
+            android:background="@drawable/action_sheet_panel_bg"
             android:text="@string/media_cancel" />
 
     </LinearLayout>

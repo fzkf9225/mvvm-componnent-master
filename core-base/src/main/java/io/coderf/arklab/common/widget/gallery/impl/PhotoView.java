@@ -10,14 +10,14 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 
 
-public class PhotoView extends AppCompatImageView implements IPhotoView {
+public class PhotoView extends ShapeableImageView implements IPhotoView {
 
     private final PhotoViewAttacher mAttacher;
 

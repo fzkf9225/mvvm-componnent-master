@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.listener.CaptureListener;
 import io.coderf.arklab.common.listener.TypeListener;
@@ -54,11 +54,11 @@ public class CaptureLayout extends FrameLayout {
     /**
      * 左边自定义按钮
      */
-    private AppCompatImageView ivCustomLeft;
+    private ShapeableImageView ivCustomLeft;
     /**
      * 右边自定义按钮
      */
-    private AppCompatImageView ivCustomRight;
+    private ShapeableImageView ivCustomRight;
 
     private final int layoutWidth;
     private final int layoutHeight;
@@ -146,11 +146,11 @@ public class CaptureLayout extends FrameLayout {
         return btnCapture;
     }
 
-    public AppCompatImageView getIvCustomLeft() {
+    public ShapeableImageView getIvCustomLeft() {
         return ivCustomLeft;
     }
 
-    public AppCompatImageView getIvCustomRight() {
+    public ShapeableImageView getIvCustomRight() {
         return ivCustomRight;
     }
 
@@ -249,7 +249,7 @@ public class CaptureLayout extends FrameLayout {
         btnReturnParam.gravity = Gravity.CENTER_VERTICAL;
         btnReturnParam.setMargins(layoutWidth / 6, 0, 0, 0);
         //左边自定义按钮
-        ivCustomLeft = new AppCompatImageView(getContext());
+        ivCustomLeft = new ShapeableImageView(getContext());
         LayoutParams ivCustomParamLeft = new LayoutParams((int) (buttonSize / 2.5f), (int) (buttonSize / 2.5f));
         ivCustomParamLeft.gravity = Gravity.CENTER_VERTICAL;
         ivCustomParamLeft.setMargins(layoutWidth / 6, 0, 0, 0);
@@ -262,7 +262,7 @@ public class CaptureLayout extends FrameLayout {
         });
 
         //右边自定义按钮
-        ivCustomRight = new AppCompatImageView(getContext());
+        ivCustomRight = new ShapeableImageView(getContext());
         LayoutParams ivCustomParamRight = new LayoutParams((int) (buttonSize / 2.5f), (int) (buttonSize / 2.5f));
         ivCustomParamRight.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
         ivCustomParamRight.setMargins(0, 0, layoutWidth / 6, 0);
@@ -325,3 +325,4 @@ public class CaptureLayout extends FrameLayout {
         this.rightClickListener = rightClickListener;
     }
 }
+

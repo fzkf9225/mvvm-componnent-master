@@ -7,8 +7,8 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatEditText
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
@@ -43,10 +43,10 @@ class CounterEditText @JvmOverloads constructor(
     /**
      *  输入框
      */
-    private val editText: AppCompatEditText
+    private val editText: TextInputEditText
 
-    // 字数统计 TextView
-    private val counterTextView: TextView
+    // 字数统计 MaterialTextView
+    private val counterTextView: MaterialTextView
 
     // 最大字数限制（默认无限制，设为0表示无限制）
     var maxLength: Int = 0
@@ -69,7 +69,7 @@ class CounterEditText @JvmOverloads constructor(
 
     init {
         // 创建输入框
-        editText = AppCompatEditText(context).apply {
+        editText = TextInputEditText(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT
@@ -92,8 +92,8 @@ class CounterEditText @JvmOverloads constructor(
             isVerticalScrollBarEnabled = false
         }
 
-        // 创建计数器 TextView
-        counterTextView = TextView(context).apply {
+        // 创建计数器 MaterialTextView
+        counterTextView = MaterialTextView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT
@@ -144,7 +144,7 @@ class CounterEditText @JvmOverloads constructor(
         })
     }
 
-    public fun getEditText(): AppCompatEditText {
+    public fun getEditText(): TextInputEditText {
         return editText
     }
 

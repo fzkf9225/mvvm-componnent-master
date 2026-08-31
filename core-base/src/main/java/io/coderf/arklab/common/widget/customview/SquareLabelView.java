@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -17,7 +17,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * created by fz on 2025/9/1 14:35
  * describe:左侧带方块的TextView，一般用于模块名文本
  */
-public class SquareLabelView extends AppCompatTextView {
+public class SquareLabelView extends MaterialTextView {
     /**
      * 默认方块颜色
      */
@@ -257,3 +257,4 @@ public class SquareLabelView extends AppCompatTextView {
         return squareHeight;
     }
 }
+

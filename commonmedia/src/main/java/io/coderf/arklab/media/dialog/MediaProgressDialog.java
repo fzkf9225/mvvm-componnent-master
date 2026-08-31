@@ -68,7 +68,7 @@ public class MediaProgressDialog extends Dialog {
         setCancelable(isCanCancel);
         setOnCancelListener(onCancelListener);
         setContentView(loadingDialogBinding.getRoot(), new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 

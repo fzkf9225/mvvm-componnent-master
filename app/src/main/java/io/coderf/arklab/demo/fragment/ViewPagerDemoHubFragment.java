@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import com.google.android.material.slider.Slider;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
@@ -52,9 +52,9 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
     }
 
     private void bindStyledConfig() {
-        binding.seekStyledSelectedSize.setProgress(spToProgress(config.styledSelectedTextSizeSp));
-        binding.seekStyledUnselectedSize.setProgress(spToProgress(config.styledUnselectedTextSizeSp));
-        binding.seekStyledCornerRadius.setProgress(config.styledCornerRadiusDp - 8);
+        binding.seekStyledSelectedSize.setValue(spToProgress(config.styledSelectedTextSizeSp));
+        binding.seekStyledUnselectedSize.setValue(spToProgress(config.styledUnselectedTextSizeSp));
+        binding.seekStyledCornerRadius.setValue(config.styledCornerRadiusDp - 8);
         binding.switchStyledSelectedBold.setChecked(config.styledSelectedBold);
         bindColorChips(
                 binding.chipsStyledSelectedColor,
@@ -72,37 +72,28 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
                 });
         updateStyledLabels();
 
-        binding.seekStyledSelectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.styledSelectedTextSizeSp = progressToSp(progress);
-                updateStyledLabels();
-            }
+        binding.seekStyledSelectedSize.addOnChangeListener((slider, value, fromUser) -> {
+            config.styledSelectedTextSizeSp = progressToSp(Math.round(value));
+            updateStyledLabels();
         });
-        binding.seekStyledUnselectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.styledUnselectedTextSizeSp = progressToSp(progress);
-                updateStyledLabels();
-            }
+        binding.seekStyledUnselectedSize.addOnChangeListener((slider, value, fromUser) -> {
+            config.styledUnselectedTextSizeSp = progressToSp(Math.round(value));
+            updateStyledLabels();
         });
-        binding.seekStyledCornerRadius.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.styledCornerRadiusDp = progress + 8;
-                updateStyledLabels();
-            }
+        binding.seekStyledCornerRadius.addOnChangeListener((slider, value, fromUser) -> {
+            config.styledCornerRadiusDp = Math.round(value) + 8;
+            updateStyledLabels();
         });
         binding.switchStyledSelectedBold.setOnCheckedChangeListener((buttonView, isChecked) ->
                 config.styledSelectedBold = isChecked);
     }
 
     private void bindIndicatorConfig() {
-        binding.seekIndicatorWidth.setProgress(config.indicatorWidthDp - 8);
-        binding.seekIndicatorHeight.setProgress(config.indicatorHeightDp - 2);
-        binding.seekIndicatorCornerRadius.setProgress(config.indicatorCornerRadiusDp);
-        binding.seekIndicatorSelectedSize.setProgress(spToProgress(config.indicatorSelectedTextSizeSp));
-        binding.seekIndicatorUnselectedSize.setProgress(spToProgress(config.indicatorUnselectedTextSizeSp));
+        binding.seekIndicatorWidth.setValue(config.indicatorWidthDp - 8);
+        binding.seekIndicatorHeight.setValue(config.indicatorHeightDp - 2);
+        binding.seekIndicatorCornerRadius.setValue(config.indicatorCornerRadiusDp);
+        binding.seekIndicatorSelectedSize.setValue(spToProgress(config.indicatorSelectedTextSizeSp));
+        binding.seekIndicatorUnselectedSize.setValue(spToProgress(config.indicatorUnselectedTextSizeSp));
         binding.switchIndicatorSelectedBold.setChecked(config.indicatorSelectedBold);
         bindColorChips(
                 binding.chipsIndicatorSelectedColor,
@@ -127,40 +118,25 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
                 });
         updateIndicatorLabels();
 
-        binding.seekIndicatorWidth.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.indicatorWidthDp = progress + 8;
-                updateIndicatorLabels();
-            }
+        binding.seekIndicatorWidth.addOnChangeListener((slider, value, fromUser) -> {
+            config.indicatorWidthDp = Math.round(value) + 8;
+            updateIndicatorLabels();
         });
-        binding.seekIndicatorHeight.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.indicatorHeightDp = progress + 2;
-                updateIndicatorLabels();
-            }
+        binding.seekIndicatorHeight.addOnChangeListener((slider, value, fromUser) -> {
+            config.indicatorHeightDp = Math.round(value) + 2;
+            updateIndicatorLabels();
         });
-        binding.seekIndicatorCornerRadius.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.indicatorCornerRadiusDp = progress;
-                updateIndicatorLabels();
-            }
+        binding.seekIndicatorCornerRadius.addOnChangeListener((slider, value, fromUser) -> {
+            config.indicatorCornerRadiusDp = Math.round(value);
+            updateIndicatorLabels();
         });
-        binding.seekIndicatorSelectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.indicatorSelectedTextSizeSp = progressToSp(progress);
-                updateIndicatorLabels();
-            }
+        binding.seekIndicatorSelectedSize.addOnChangeListener((slider, value, fromUser) -> {
+            config.indicatorSelectedTextSizeSp = progressToSp(Math.round(value));
+            updateIndicatorLabels();
         });
-        binding.seekIndicatorUnselectedSize.setOnSeekBarChangeListener(new SimpleSeekListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                config.indicatorUnselectedTextSizeSp = progressToSp(progress);
-                updateIndicatorLabels();
-            }
+        binding.seekIndicatorUnselectedSize.addOnChangeListener((slider, value, fromUser) -> {
+            config.indicatorUnselectedTextSizeSp = progressToSp(Math.round(value));
+            updateIndicatorLabels();
         });
         binding.switchIndicatorSelectedBold.setOnCheckedChangeListener((buttonView, isChecked) ->
                 config.indicatorSelectedBold = isChecked);
@@ -173,7 +149,7 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
         int chipMinWidth = DensityUtil.dp2px(requireContext(), 40);
         for (int i = 0; i < TabLayoutDemoColorPresets.COLOR_RES.length; i++) {
             final int index = i;
-            TextView chip = new TextView(requireContext());
+            MaterialTextView chip = new MaterialTextView(requireContext());
             chip.setText(TabLayoutDemoColorPresets.COLOR_LABELS[i]);
             chip.setTextSize(11f);
             chip.setGravity(Gravity.CENTER);
@@ -240,13 +216,5 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
         void onColorIndexSelected(int index);
     }
 
-    private abstract static class SimpleSeekListener implements SeekBar.OnSeekBarChangeListener {
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-        }
-    }
 }
+

@@ -58,7 +58,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -67,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cl_search"
             app:layout_constraintBottom_toBottomOf="@+id/cl_search"
-            android:background="@drawable/round_theme_color"
+            app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
             android:gravity="center"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:minWidth="0dp"

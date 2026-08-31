@@ -6,7 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
 
@@ -15,7 +15,7 @@ import io.coderf.arklab.common.R;
  * Created by fz on 2019/5/31.
  * describe：自定义圆角矩形（支持分别设置四个圆角）
  */
-public class CornerTextView extends AppCompatTextView {
+public class CornerTextView extends MaterialTextView {
     /**
      * 边框颜色
      */

@@ -61,6 +61,10 @@ public class ProtectionGuidelinesDialog extends BaseDialog {
         super(context);
     }
 
+    public ProtectionGuidelinesDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+    }
+
     public ProtectionGuidelinesDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
         this.onPositiveClickListener = onPositiveClickListener;
         return this;

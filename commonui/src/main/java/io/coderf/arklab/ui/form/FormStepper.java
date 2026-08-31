@@ -8,12 +8,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -55,11 +54,11 @@ public class FormStepper extends FormConstraintLayout {
     /** 加减号颜色，对应 XML {@code stepperIconColor} */
     protected int stepperIconColor;
     /** 减号按钮 */
-    protected AppCompatImageView btnMinus;
+    protected ShapeableImageView btnMinus;
     /** 加号按钮 */
-    protected AppCompatImageView btnPlus;
+    protected ShapeableImageView btnPlus;
     /** 数值输入框 */
-    protected AppCompatEditText etValue;
+    protected TextInputEditText etValue;
     /** 当前值双向绑定源，对应 XML {@code stepperValue} */
     public ObservableInt stepperValue;
 
@@ -115,7 +114,7 @@ public class FormStepper extends FormConstraintLayout {
 
         btnMinus = createStepperButton(false);
         btnPlus = createStepperButton(true);
-        etValue = new AppCompatEditText(getContext());
+        etValue = new TextInputEditText(getContext());
         etValue.setPadding(0, 0, 0, 0);
         etValue.setId(View.generateViewId());
         etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -188,10 +187,10 @@ public class FormStepper extends FormConstraintLayout {
         addView(container, params);
     }
 
-    private AppCompatImageView createStepperButton(boolean isPlus) {
-        AppCompatImageView imageView = new AppCompatImageView(getContext());
+    private ShapeableImageView createStepperButton(boolean isPlus) {
+        ShapeableImageView imageView = new ShapeableImageView(getContext());
         imageView.setId(View.generateViewId());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setScaleType(ShapeableImageView.ScaleType.CENTER);
         imageView.setBackground(DrawableUtil.createCircleWithStroke(
                 stepperBtnBgColor, stepperBtnBorderColor, stepperBtnBorderWidth));
         imageView.setImageDrawable(buildStepperIcon(isPlus));
@@ -263,3 +262,4 @@ public class FormStepper extends FormConstraintLayout {
         }
     }
 }
+

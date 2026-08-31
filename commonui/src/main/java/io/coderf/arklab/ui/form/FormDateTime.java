@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
@@ -96,12 +96,12 @@ public class FormDateTime extends FormSelection {
                     String text = year + "-" + NumberUtil.formatMonthOrDay(month) + "-" + NumberUtil.formatMonthOrDay(day)
                             + " " + NumberUtil.formatMonthOrDay(hour) + ":" + NumberUtil.formatMonthOrDay(minute) + ":" + NumberUtil.formatMonthOrDay(second);
                     if (DateUtil.DEFAULT_DATE_TIME_FORMAT.equals(format)) {
-                        ((AppCompatTextView) tvSelection).setText(text);
+                        ((MaterialTextView) tvSelection).setText(text);
                         return;
                     }
-                    ((AppCompatTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
+                    ((MaterialTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_DATE_TIME_FORMAT));
                 })
-                .setOnClearClickListener(dialog -> ((AppCompatTextView) tvSelection).setText(null));
+                .setOnClearClickListener(dialog -> ((MaterialTextView) tvSelection).setText(null));
         if (typedArray != null) {
             FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
             typedArray.recycle();
@@ -119,7 +119,7 @@ public class FormDateTime extends FormSelection {
     public void createText() {
         super.createText();
         tvSelection.setOnClickListener(v -> {
-            AppCompatTextView textView = (AppCompatTextView) tvSelection;
+            MaterialTextView textView = (MaterialTextView) tvSelection;
             try {
                 if (!TextUtils.isEmpty(textView.getText())) {
                     Date date = DateUtil.getDateByFormat(textView.getText().toString(), format);
@@ -140,3 +140,4 @@ public class FormDateTime extends FormSelection {
         });
     }
 }
+

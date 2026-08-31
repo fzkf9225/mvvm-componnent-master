@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -11,16 +12,23 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/choose_file"
-            style="@style/media_action_sheet_item"
-            android:background="@drawable/action_sheet_cancel_ripple"
-            android:text="@string/media_file" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/action_sheet_panel_bg"
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/choose_file"
+                style="@style/media_action_sheet_item"
+                android:text="@string/media_file" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/choose_file_cancel"
             style="@style/media_action_sheet_cancel"
             android:layout_marginTop="@dimen/action_sheet_group_gap"
+            android:background="@drawable/action_sheet_panel_bg"
             android:text="@string/media_cancel" />
 
     </LinearLayout>

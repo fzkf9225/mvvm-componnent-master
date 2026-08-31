@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -12,7 +13,7 @@
         android:paddingTop="@dimen/vertical_margin_xl"
         android:paddingBottom="@dimen/vertical_margin_xl">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvProviderHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,11 +38,11 @@
         android:background="@color/h_line_color"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_xxl"
-        android:background="@color/white"
+        app:backgroundTint="@color/white" app:cornerRadius="0dp"
         android:gravity="center"
         android:text="@string/cancel"
         android:textAllCaps="false"

@@ -27,7 +27,7 @@
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_clear"
             android:layout_width="20dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_option"

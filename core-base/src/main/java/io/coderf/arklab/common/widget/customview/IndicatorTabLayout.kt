@@ -10,7 +10,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
-import android.widget.TextView
+import com.google.android.material.textview.MaterialTextView
 import io.coderf.arklab.common.R
 import kotlin.math.roundToInt
 
@@ -176,7 +176,7 @@ class IndicatorTabLayout @JvmOverloads constructor(
         val drawWidth: Float = when (indicatorWidthMode) {
             1 -> indicatorWidth
             0 -> {
-                val textView = tab.customView as? TextView
+                val textView = tab.customView as? MaterialTextView
                 textView?.paint?.measureText(tab.text?.toString() ?: "") ?: 0f
             }
             else -> tabView.width.toFloat()
@@ -196,7 +196,7 @@ class IndicatorTabLayout @JvmOverloads constructor(
         for (i in 0 until tabCount) {
             val tab = getTabAt(i) ?: continue
             if (tab.customView == null) {
-                val tv = TextView(context).apply {
+                val tv = MaterialTextView(context).apply {
                     gravity = Gravity.CENTER
                     includeFontPadding = false
                     textAlignment = TEXT_ALIGNMENT_CENTER
@@ -209,7 +209,7 @@ class IndicatorTabLayout @JvmOverloads constructor(
     }
 
     private fun updateTabStyle(tab: Tab?, isSelected: Boolean) {
-        val tv = tab?.customView as? TextView ?: return
+        val tv = tab?.customView as? MaterialTextView ?: return
         if (isSelected) {
             tv.setTextColor(selectedTextColor)
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, selectedTextSizePx)
@@ -314,3 +314,4 @@ class IndicatorTabLayout @JvmOverloads constructor(
     private fun sp2px(sp: Float): Float =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
 }
+

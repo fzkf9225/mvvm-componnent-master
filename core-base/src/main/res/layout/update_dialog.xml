@@ -12,7 +12,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="@dimen/vertical_margin_xxl">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivClose"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/updateTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="发现新版本" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvVersionChip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             app:layout_constraintVertical_bias="0"
             app:layout_constraintVertical_chainStyle="packed">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/updateMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

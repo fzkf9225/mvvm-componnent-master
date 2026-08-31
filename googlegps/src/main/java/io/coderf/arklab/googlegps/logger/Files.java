@@ -35,7 +35,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -317,7 +317,7 @@ public class Files {
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    public static void setFilePathAsClickableLink(Context context, TextView txtFilename, String gpsLoggerFolder){
+    public static void setFilePathAsClickableLink(Context context, MaterialTextView txtFilename, String gpsLoggerFolder){
         txtFilename.setTextIsSelectable(true);
         txtFilename.setSelectAllOnFocus(true);
 
@@ -341,7 +341,8 @@ public class Files {
         Spannable spanText = new SpannableString(txtFilename.getText());
         //Make the folder path clickable but not the filename itself.
         spanText.setSpan(clickSpan, txtFilename.getText().toString().indexOf("\n"), txtFilename.getText().toString().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        txtFilename.setText(spanText, TextView.BufferType.SPANNABLE);
+        txtFilename.setText(spanText, MaterialTextView.BufferType.SPANNABLE);
         txtFilename.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
+

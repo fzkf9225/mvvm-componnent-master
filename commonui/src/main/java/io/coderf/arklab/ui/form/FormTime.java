@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
@@ -87,12 +87,12 @@ public class FormTime extends FormSelection {
                 .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
                     String text = NumberUtil.formatMonthOrDay(hour) + separator + NumberUtil.formatMonthOrDay(minute) + separator + NumberUtil.formatMonthOrDay(second);
                     if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
-                        ((AppCompatTextView) tvSelection).setText(text);
+                        ((MaterialTextView) tvSelection).setText(text);
                         return;
                     }
-                    ((AppCompatTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                    ((MaterialTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
                 })
-                .setOnClearClickListener(dialog -> ((AppCompatTextView) tvSelection).setText(null));
+                .setOnClearClickListener(dialog -> ((MaterialTextView) tvSelection).setText(null));
         if (typedArray != null) {
             FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
             typedArray.recycle();
@@ -110,7 +110,7 @@ public class FormTime extends FormSelection {
     public void createText() {
         super.createText();
         tvSelection.setOnClickListener(v -> {
-            AppCompatTextView textView = (AppCompatTextView) tvSelection;
+            MaterialTextView textView = (MaterialTextView) tvSelection;
             try {
                 if (!TextUtils.isEmpty(textView.getText())) {
                     Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
@@ -130,3 +130,4 @@ public class FormTime extends FormSelection {
 
 
 }
+

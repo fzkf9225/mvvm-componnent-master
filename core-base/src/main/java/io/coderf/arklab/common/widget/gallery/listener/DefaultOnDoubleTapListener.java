@@ -3,7 +3,7 @@ package io.coderf.arklab.common.widget.gallery.listener;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.NonNull;
 
@@ -41,7 +41,7 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         if (this.photoViewAttacher == null) {
             return false;
         }
-        ImageView imageView = photoViewAttacher.getImageView();
+        ShapeableImageView imageView = photoViewAttacher.getImageView();
         if (null != photoViewAttacher.getOnPhotoTapListener()) {
             final RectF displayRect = photoViewAttacher.getDisplayRect();
 
@@ -92,3 +92,4 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
     }
 
 }
+

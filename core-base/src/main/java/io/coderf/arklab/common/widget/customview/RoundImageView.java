@@ -15,7 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.R;
 
@@ -23,7 +23,7 @@ import io.coderf.arklab.common.R;
  * created by fz on 2025/02/13 09:33
  * describe：自定义的ImageView控件，用来设置圆形头像
  */
-public class RoundImageView extends AppCompatImageView {
+public class RoundImageView extends ShapeableImageView {
 
     protected static final ScaleType SCALE_TYPE = ScaleType.FIT_XY;
 
@@ -240,3 +240,4 @@ public class RoundImageView extends AppCompatImageView {
 
 
 }
+

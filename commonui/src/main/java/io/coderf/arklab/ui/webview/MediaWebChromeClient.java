@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -38,7 +38,7 @@ public class MediaWebChromeClient extends NativeWebChromeClient {
             @NonNull ComponentActivity activity,
             @NonNull CordovaDialogsHelper dialogsHelper,
             @NonNull ProgressBar progressBar,
-            @Nullable TextView tvBarTitle,
+            @Nullable MaterialTextView tvBarTitle,
             @NonNull MediaHelper mediaHelper
     ) {
         super(activity, dialogsHelper, progressBar, tvBarTitle);
@@ -154,3 +154,4 @@ public class MediaWebChromeClient extends NativeWebChromeClient {
         pendingFileCallback = null;
     }
 }
+

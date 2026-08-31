@@ -20,7 +20,6 @@ import io.coderf.arklab.media.utils.MediaUtil;
 import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
  * Created by fz on 2021/2/7 9:10
@@ -1252,3 +1251,4 @@ public class MediaBuilder {
     }
 
 }
+

@@ -98,6 +98,11 @@ public class VideoPlayerDialog extends Dialog {
         hostContext = context;
     }
 
+    public VideoPlayerDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
+        hostContext = context;
+    }
+
     public VideoPlayerDialog setVideoUrl(@Nullable String videoUrl) {
         this.videoUrl = videoUrl;
         return this;

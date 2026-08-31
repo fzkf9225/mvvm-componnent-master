@@ -16,8 +16,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -34,7 +35,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * @since 1.0
  * @created 2026/7/2 9:00
  */
-public class VerificationCodeInputView extends AppCompatEditText implements View.OnFocusChangeListener {
+public class VerificationCodeInputView extends TextInputEditText implements View.OnFocusChangeListener {
 
     /** 光标闪烁间隔（毫秒） */
     private static final long CURSOR_BLINK_INTERVAL_MS = 500;

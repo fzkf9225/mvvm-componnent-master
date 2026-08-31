@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_scan_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_scan_info" />
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_custom_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:text="https://www.baidu.com"
                 app:layout_constraintTop_toBottomOf="@+id/button_custom_scan" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/create_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_create_qrcode" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/create_qr_code" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_uri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                 android:textSize="@dimen/font_size_m"
                 app:layout_constraintTop_toBottomOf="@+id/button_uri" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_string"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_string" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_base64"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
                 android:text="https://preview.qiantucdn.com/58pic/35/86/34/75Z58PICYCezkFBN88FiZ_PIC2018.png%21w1024_new_0"
                 app:layout_constraintTop_toBottomOf="@+id/button_base64" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

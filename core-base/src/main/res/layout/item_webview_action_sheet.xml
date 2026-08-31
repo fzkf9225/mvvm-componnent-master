@@ -12,7 +12,7 @@
         android:layout_height="42dp"
         android:background="@drawable/bg_webview_action_tile">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivActionIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:contentDescription="@null" />
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvActionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

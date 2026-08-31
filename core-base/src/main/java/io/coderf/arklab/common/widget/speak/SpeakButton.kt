@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatTextView
+import com.google.android.material.textview.MaterialTextView
 import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.DateUtil
 import io.coderf.arklab.common.utils.common.FileUtil
@@ -59,7 +59,7 @@ class SpeakButton @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) :
-    androidx.appcompat.widget.AppCompatButton(context, attrs, defStyle) {
+    com.google.android.material.button.MaterialButton(context, attrs, defStyle) {
     companion object {
         const val TAG = "SpeakButton"
     }
@@ -78,7 +78,7 @@ class SpeakButton @JvmOverloads constructor(
      */
     private val maxIntervalTime = 1000 * 60
 
-    private var mStateTV: AppCompatTextView? = null
+    private var mStateTV: MaterialTextView? = null
 
     @Volatile
     private var mRecorder: MediaRecorder? = null
@@ -364,3 +364,4 @@ class SpeakButton @JvmOverloads constructor(
         fun onFinishedRecord(bytes: ByteArray?, time: Int)
     }
 }
+

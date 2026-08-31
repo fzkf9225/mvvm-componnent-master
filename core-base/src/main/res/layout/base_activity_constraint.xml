@@ -40,7 +40,7 @@
             app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
             app:popupTheme="@style/OverflowMenuStyle">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

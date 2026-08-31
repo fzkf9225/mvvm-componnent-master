@@ -53,7 +53,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.67" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/video_play"
             android:layout_width="0dp"
             android:layout_height="0dp"

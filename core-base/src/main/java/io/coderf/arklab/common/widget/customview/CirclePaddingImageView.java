@@ -6,7 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import io.coderf.arklab.common.R;
 
@@ -14,7 +14,7 @@ import io.coderf.arklab.common.R;
  * Created by fz on 2023/11/10 8:57
  * describe :自带内边距的ImageView，有选中样式、取消样式等
  */
-public class CirclePaddingImageView extends AppCompatImageView {
+public class CirclePaddingImageView extends ShapeableImageView {
     /**
      * 边框颜色
      */

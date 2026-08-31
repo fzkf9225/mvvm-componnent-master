@@ -11,7 +11,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -338,7 +338,7 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onItemSelectedChanged(AppCompatImageView ivCheckView, int position) {
+    public void onItemSelectedChanged(ShapeableImageView ivCheckView, int position) {
         if (!binding.mRecyclerviewSelected.isShown()) {
             binding.mRecyclerviewSelected.setVisibility(View.VISIBLE);
         }
@@ -354,7 +354,7 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onItemSelectedClear(AppCompatImageView ivCheckView, int position) {
+    public void onItemSelectedClear(ShapeableImageView ivCheckView, int position) {
         popupWindowSelectedAdapter.getList().remove(position);
         popupWindowSelectedAdapter.notifyDataSetChanged();
         popupWindowAdapter.notifyDataSetChanged();
@@ -364,4 +364,5 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
          void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
     }
 }
+
 

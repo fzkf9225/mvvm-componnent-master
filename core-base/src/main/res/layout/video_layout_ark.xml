@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +29,7 @@
         android:paddingEnd="12dp"
         tools:ignore="RtlSymmetry">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/back"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -36,7 +37,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_ark_video_back" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/lock_screen"
         android:layout_width="44dp"
         android:layout_height="44dp"
@@ -79,14 +80,14 @@
         android:paddingBottom="8dp"
         android:visibility="invisible">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_bottom_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:src="@drawable/ic_ark_video_play" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/btn_clarity"
             android:layout_width="wrap_content"
             android:layout_height="23dp"
@@ -99,7 +100,7 @@
             android:textSize="11sp"
             android:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/btn_speed"
             android:layout_width="wrap_content"
             android:layout_height="23dp"
@@ -112,7 +113,7 @@
             android:textSize="11sp"
             android:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,7 +121,7 @@
             android:text="00:00"
             android:textColor="#E6FFFFFF"
             android:textSize="11sp" />
-        <androidx.appcompat.widget.AppCompatSeekBar
+        <SeekBar
             android:id="@+id/progress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -134,7 +135,7 @@
             android:progressDrawable="@drawable/video_seek_progress"
             android:thumb="@drawable/video_seek_thumb" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,7 +143,7 @@
             android:textColor="#E6FFFFFF"
             android:textSize="11sp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_rotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -153,7 +154,7 @@
             android:src="@drawable/ic_ark_video_rotate"
             android:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/fullscreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -164,16 +165,16 @@
             android:src="@drawable/ic_ark_video_expand" />
     </LinearLayout>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/bottom_progressbar"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentBottom="true"
+        app:indicatorColor="#FFD600"
         android:max="100"
-        android:progressDrawable="@drawable/video_progress" />
+        app:trackThickness="2dp" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/back_tiny"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -188,7 +189,7 @@
         android:layout_centerInParent="true"
         android:visibility="invisible" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/start"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -198,7 +199,7 @@
         android:scaleType="centerInside"
         android:src="@drawable/ic_ark_video_play" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/small_close"
         android:layout_width="30dp"
         android:layout_height="30dp"

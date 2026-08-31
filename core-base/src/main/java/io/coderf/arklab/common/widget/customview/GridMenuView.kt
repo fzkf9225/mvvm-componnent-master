@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatImageView
+import com.google.android.material.imageview.ShapeableImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.size
 import androidx.fragment.app.FragmentManager
@@ -426,7 +426,7 @@ open class GridMenuView : CornerConstraintLayout {
             return
         }
         for (i in 0 until pageCount) {
-            val round = AppCompatImageView(context)
+            val round = ShapeableImageView(context)
             round.background = if (i == 0) {
                 drawableResCurrent ?: defaultDrawableResCurrent
             } else {
@@ -532,3 +532,4 @@ open class GridMenuView : CornerConstraintLayout {
         super.onDetachedFromWindow()
     }
 }
+

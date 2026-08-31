@@ -12,7 +12,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -105,7 +105,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     /**
      * 显示数量标签控件
      */
-    protected AppCompatTextView tvCountLabel;
+    protected MaterialTextView tvCountLabel;
 
     public FormVideo(@NonNull Context context) {
         super(context);
@@ -155,7 +155,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         this.mediaType = mediaType;
     }
 
-    public AppCompatTextView getTvCountLabel() {
+    public MaterialTextView getTvCountLabel() {
         return tvCountLabel;
     }
 
@@ -278,7 +278,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     }
 
     public void createCountLabel() {
-        tvCountLabel = new AppCompatTextView(getContext());
+        tvCountLabel = new MaterialTextView(getContext());
         tvCountLabel.setId(View.generateViewId());
         tvCountLabel.setLines(1);
         tvCountLabel.setTextColor(countLabelTextColor);
@@ -449,3 +449,4 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
     }
 
 }
+

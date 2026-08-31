@@ -15,7 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import com.google.android.material.textview.MaterialTextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -36,7 +36,7 @@ public class SystemWebChromeClient extends WebChromeClient {
     private final CordovaDialogsHelper dialogsHelper;
     private final ProgressBar progressBar;
     protected final Context mContext;
-    private TextView tvBarTitle;
+    private MaterialTextView tvBarTitle;
     /**
      * 文件服务
      */
@@ -49,7 +49,7 @@ public class SystemWebChromeClient extends WebChromeClient {
         fileLauncher = activity.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> chooseFileCallback(result.getResultCode(), result.getData()));
     }
 
-    public SystemWebChromeClient(ComponentActivity activity, CordovaDialogsHelper dialogsHelper, ProgressBar progressBar, TextView tvBarTitle) {
+    public SystemWebChromeClient(ComponentActivity activity, CordovaDialogsHelper dialogsHelper, ProgressBar progressBar, MaterialTextView tvBarTitle) {
         this.mContext = activity;
         this.dialogsHelper = dialogsHelper;
         this.progressBar = progressBar;
@@ -219,3 +219,4 @@ public class SystemWebChromeClient extends WebChromeClient {
         tvBarTitle.setText(title);
     }
 }
+

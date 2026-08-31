@@ -374,3 +374,4 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
         getRequestUi()?.refreshLoading(message)
     }
 }
+

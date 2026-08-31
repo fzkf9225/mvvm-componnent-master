@@ -19,6 +19,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +64,10 @@ public class FormEditText extends FormConstraintLayout {
      * 输入框高度
      */
     protected float inputHeight;
+    /**
+     * 输入框控件引用
+     */
+    protected TextInputEditText editText;
 
     public FormEditText(@NonNull Context context) {
         super(context);
@@ -152,13 +158,20 @@ public class FormEditText extends FormConstraintLayout {
 
     @Override
     public void createText() {
-        AppCompatEditText editText = new AppCompatEditText(getContext());
+        editText = new TextInputEditText(getContext());
         editText.setId(View.generateViewId());
         editText.setHint(hintString);
-        editText.setBackground(inputDrawable);
+        editText.setHintTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
+        // 先设置背景为透明，再设置自定义背景
+        editText.setBackground(null);
+        if (inputDrawable != null) {
+            editText.setBackground(inputDrawable);
+        } else {
+            // 默认透明背景
+            editText.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        }
         editText.setEllipsize(android.text.TextUtils.TruncateAt.END);
         editText.setTextColor(formTextColor);
-        editText.setHintTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
         editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
         editText.setImeOptions(imeOptions);
         editText.setInputType(inputType);
@@ -201,7 +214,7 @@ public class FormEditText extends FormConstraintLayout {
         }
         editText.setLines(1);
         tvSelection = editText;
-        addView(tvSelection, params);
+        addView(editText, params);
     }
 
     @Override
@@ -231,7 +244,6 @@ public class FormEditText extends FormConstraintLayout {
      * 不要使用这个因为会导致databinding双向绑定无效
      */
     public void addTextChangedListener(TextWatcher watcher) {
-        AppCompatEditText editText = (AppCompatEditText) tvSelection;
         editText.addTextChangedListener(watcher);
     }
 

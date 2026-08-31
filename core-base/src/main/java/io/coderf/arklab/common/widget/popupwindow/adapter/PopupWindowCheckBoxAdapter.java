@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -133,13 +133,13 @@ public class PopupWindowCheckBoxAdapter<T extends PopupWindowBean> extends BaseR
                 if (adapter.getOnItemSelectedChangedListener() == null) {
                     return;
                 }
-                adapter.getOnItemSelectedChangedListener().onItemSelectedChanged((AppCompatImageView) v, getAbsoluteAdapterPosition());
+                adapter.getOnItemSelectedChangedListener().onItemSelectedChanged((ShapeableImageView) v, getAbsoluteAdapterPosition());
             });
         }
     }
 
     public interface OnItemSelectedChangedListener {
-        void onItemSelectedChanged(AppCompatImageView ivCheckView, int position);
+        void onItemSelectedChanged(ShapeableImageView ivCheckView, int position);
     }
 
     private OnItemSelectedChangedListener onItemSelectedChangedListener;
@@ -152,3 +152,4 @@ public class PopupWindowCheckBoxAdapter<T extends PopupWindowBean> extends BaseR
         return onItemSelectedChangedListener;
     }
 }
+

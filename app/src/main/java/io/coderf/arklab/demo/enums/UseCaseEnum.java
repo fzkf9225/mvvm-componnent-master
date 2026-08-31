@@ -70,7 +70,7 @@ public enum UseCaseEnum {
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),
     LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
-    WEB_VIEW(WebViewNetworkDemoActivity.class, "WebView 网络示例", "加载 https 页面，Toolbar 菜单复制/浏览器打开", null),
+    WEB_VIEW(WebViewNetworkDemoActivity.class, "WebView 网络示例", "加载 https 页面，MaterialToolbar 菜单复制/浏览器打开", null),
     WEB_VIEW_BASIC(WebViewBasicDemoActivity.class, "WebView 基础能力", "仅 common：原生选文件/定位/扫码 JSBridge，assets+沙盒演示页", null),
     WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "commonui：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
     CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
@@ -133,3 +133,4 @@ public enum UseCaseEnum {
         return useCases;
     }
 }
+

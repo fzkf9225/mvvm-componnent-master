@@ -8,16 +8,16 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 
 /**
  * Created by fz on 2019/5/30.
- * describe:圆形AppCompatTextView
+ * describe:圆形TextView
  */
-public class CircleTextView extends AppCompatTextView {
+public class CircleTextView extends MaterialTextView {
     protected final Paint circlePaint;
     protected final Paint backPaint;
     protected final Paint textPaint;
@@ -116,3 +116,4 @@ public class CircleTextView extends AppCompatTextView {
         invalidate();
     }
 }
+

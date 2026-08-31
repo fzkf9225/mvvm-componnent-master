@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/action_sheet_panel_bg">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/media_height_xl"
@@ -65,7 +65,7 @@
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
             app:layout_constraintTop_toTopOf="@id/dialog_cancel" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/media_height_xl"
