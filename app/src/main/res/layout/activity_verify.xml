@@ -483,6 +483,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxxl"
             app:backgroundTint="@color/themeColor"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="校验"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/font_size_xxl"

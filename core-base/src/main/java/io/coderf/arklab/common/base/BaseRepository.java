@@ -23,6 +23,11 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * <p>
  * <b>{@link #baseView}</b>：仍表示「当前绑定的页面」，供非请求类遗留逻辑读取；
  * 新代码请勿在子类里对 {@code baseView} 调用 showLoading / onErrorCode，应统一走 {@link RequestUiCallback}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BaseRepository<BV extends BaseView> implements IRepository<BV> {
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();

@@ -10,6 +10,11 @@ package io.coderf.arklab.core.utils.ext
  * ```
  * textView.whatIf(showHint) { hint = "请输入" }
  * ```
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 inline fun <T> T.whatIf(condition: Boolean, block: T.() -> Unit): T {
     if (condition) block()

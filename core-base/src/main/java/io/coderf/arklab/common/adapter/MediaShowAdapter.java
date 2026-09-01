@@ -25,8 +25,12 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2021/4/2
- * describe:添加视频
+ * 添加视频
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/4/2
  */
 public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterMediaShowItemBinding> {
     public final String TAG = this.getClass().getSimpleName();

@@ -3,8 +3,12 @@ package io.coderf.arklab.common.inter;
 import io.coderf.arklab.common.api.ApiRetrofit;
 
 /**
- * created by fz on 2025/7/29 14:09
- * describe:
+ * ApiRetrofitService 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/29 14:09
  */
 public interface ApiRetrofitService {
 

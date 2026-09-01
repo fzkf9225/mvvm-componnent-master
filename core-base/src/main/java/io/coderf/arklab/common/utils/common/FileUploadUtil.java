@@ -29,6 +29,11 @@ import okhttp3.RequestBody;
 
 /**
  * 文件上传工具类，负责构建 OkHttp Multipart 上传请求体。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class FileUploadUtil {
 

@@ -15,6 +15,11 @@ import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel;
 
 /**
  * 在 {@link DemoSmartPagingFragment} 基础上增加列表头（示例为 16:9 图片），分页与空态逻辑与父类一致。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class DemoSmartPagingHeaderFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, NotificationMessageBean> {

@@ -3,8 +3,12 @@ package io.coderf.arklab.demo.bean;
 import javax.inject.Inject;
 
 /**
- * Created by fz on 2024/5/31 14:28
- * describe :
+ * HiltTestBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/5/31 14:28
  */
 public class HiltTestBean {
     private String name;

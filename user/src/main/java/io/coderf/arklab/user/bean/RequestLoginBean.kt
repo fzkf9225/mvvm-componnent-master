@@ -2,7 +2,11 @@ package io.coderf.arklab.user.bean
 
 /**
  * Create by fz on 2024/11/8 0018
- * describe:
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 data class RequestLoginBean(
     var accountId: String? = null,

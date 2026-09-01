@@ -25,10 +25,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * updated by fz on 202/12/09.
- * describe：缓存工具类，包含Glide图片缓存和通用应用缓存管理
+ * 缓存工具类，包含Glide图片缓存和通用应用缓存管理
  * <p>
  * 带加载框的异步 API 推荐使用 {@link RequestUi}（新体系）；
  * 以 {@link BaseView} 为参数的重载已标记 {@link Deprecated}，内部转发至 RequestUi。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CacheUtil {
 

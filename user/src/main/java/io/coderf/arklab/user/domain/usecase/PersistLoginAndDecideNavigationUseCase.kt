@@ -8,6 +8,11 @@ import javax.inject.Inject
 
 /**
  * 登录成功后的本地持久化与导航决策（原 [LoginViewModel.loginCallback] 中的业务分支）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class PersistLoginAndDecideNavigationUseCase @Inject constructor() {
 

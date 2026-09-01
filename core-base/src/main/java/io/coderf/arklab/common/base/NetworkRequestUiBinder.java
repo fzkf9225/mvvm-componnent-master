@@ -13,6 +13,11 @@ import androidx.lifecycle.LifecycleOwner;
  * <p>
  * {@code refreshLoading} 通过再次 post 可见的 {@link NetworkRequestUiHost.RequestLoadingState} 体现，
  * 无需单独通道。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class NetworkRequestUiBinder {
 

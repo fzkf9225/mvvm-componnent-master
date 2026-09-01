@@ -31,6 +31,11 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
  * 实体类注解校验器。
  * <p>
  * 反射元数据默认走 {@link EntityValidatorCache}，可通过 {@link #setReflectionCacheEnabled(boolean)} 关闭。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class EntityValidator {
 

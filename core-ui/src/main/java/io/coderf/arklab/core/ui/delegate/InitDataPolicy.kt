@@ -7,6 +7,11 @@ import android.os.Bundle
  *
  * [BaseActivity] / [BaseFragment] 默认使用 [AlwaysInitData]（与历史行为一致）。
  * 仅首次进入拉数时改用 [FirstCreateOnlyInitData]，或继承 Stateful 基类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun interface InitDataPolicy {
     fun shouldRunInitData(savedInstanceState: Bundle?): Boolean

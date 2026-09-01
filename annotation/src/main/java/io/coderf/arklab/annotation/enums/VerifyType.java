@@ -1,8 +1,12 @@
 package io.coderf.arklab.annotation.enums;
 
 /**
- * Created by fz on 2023/9/5 16:03
- * describe :
+ * VerifyType 枚举。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/5 16:03
  */
 public enum VerifyType {
     /**

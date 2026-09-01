@@ -18,8 +18,12 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.googlegps.service.GpsService;
 
 /**
- * Created by fz on 2024/3/26 10:56
- * describe :
+ * GoogleGpsViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/3/26 10:56
  */
 public class GoogleGpsViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
     /**

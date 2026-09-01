@@ -15,9 +15,14 @@ import io.coderf.arklab.common.widget.customview.RoundImageView;
 
 /**
  * Create by fz on 2020/3/27 0027
- * describe: ShapeableImageView DataBinding 适配器。
+ * ShapeableImageView DataBinding 适配器。
  * <p>
  * 支持可选 placeholder / error，未配置时保持原有默认图行为。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ImageViewAttrAdapter {
 

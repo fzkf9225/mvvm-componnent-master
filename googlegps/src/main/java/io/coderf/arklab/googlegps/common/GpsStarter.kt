@@ -63,6 +63,11 @@ import kotlinx.coroutines.launch
  *
  * @param lifecycleOwner 生命周期拥有者（Activity或Fragment），用于自动管理生命周期
  * @param context 上下文对象
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class GpsStarter(
     private val lifecycleOwner: LifecycleOwner,

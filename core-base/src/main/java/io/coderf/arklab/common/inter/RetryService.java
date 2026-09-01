@@ -7,8 +7,12 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
- * Created by fz on 2023/5/17 10:43
- * describe : 接口请求错误重试接口，需要重写这个实现无感刷新token等作用
+ * 接口请求错误重试接口，需要重写这个实现无感刷新token等作用
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/17 10:43
  */
 public interface RetryService{
     /**

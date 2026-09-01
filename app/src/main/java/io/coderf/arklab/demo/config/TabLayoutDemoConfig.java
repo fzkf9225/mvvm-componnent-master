@@ -2,6 +2,11 @@ package io.coderf.arklab.demo.config;
 
 /**
  * TabLayout 示例页运行时配置，由 Hub 页修改，各 Sample Fragment 进入时读取并应用。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class TabLayoutDemoConfig {
 

@@ -27,6 +27,11 @@ import io.coderf.arklab.common.utils.common.WebViewUtil;
 /**
  * 可配置 URL 类型的 WebView：支持网络、APK assets、应用沙盒/下载目录本地文件。
  * <p>本地与 assets 均通过 {@link WebViewAssetLoader} 映射为 <b>https</b> 虚拟域名（安全源，支持 Geolocation 等 API）。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ConfigurableWebView extends WebView {
 

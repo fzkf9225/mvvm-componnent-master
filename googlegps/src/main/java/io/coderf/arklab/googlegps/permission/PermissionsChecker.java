@@ -8,8 +8,12 @@ import androidx.core.content.ContextCompat;
 import java.util.List;
 
 /**
- * Created by fz on 2024/10/31.
- * describe:检查权限的工具类
+ * 检查权限的工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/31
  */
 
 public class PermissionsChecker {

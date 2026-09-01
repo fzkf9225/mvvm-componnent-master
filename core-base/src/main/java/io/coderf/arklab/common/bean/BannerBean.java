@@ -11,7 +11,7 @@ import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2017/6/14 00:00
+ * @created 2017/6/14 0:00
  */
 public class BannerBean extends BaseObservable implements IBannerItem {
     /**

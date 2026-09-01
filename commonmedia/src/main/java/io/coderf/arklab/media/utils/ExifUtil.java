@@ -19,6 +19,11 @@ import java.io.InputStream;
 /**
  * 拍照元数据读写：GPS 使用标准 EXIF 标签，姿态角写入 USER_COMMENT（JSON）。
  * 写入失败时不抛异常，不影响原有拍照流程。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ExifUtil {
 

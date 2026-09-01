@@ -6,6 +6,11 @@ package io.coderf.arklab.common.widget.gallery;
  *   <li>{@link #defaultMaxScale}：小图/常规图在适配屏幕后的最大附加缩放倍数（默认 10）</li>
  *   <li>{@link #extraMaxZoomRatio}：高分辨率图达到 1:1 像素显示后，可继续放大的倍率（默认 3，即约 7.4×3≈22.2 倍）</li>
  * </ul>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class PreviewGalleryZoomConfig {
 

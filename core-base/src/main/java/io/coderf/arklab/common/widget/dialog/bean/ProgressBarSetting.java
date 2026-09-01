@@ -10,8 +10,12 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * Created by fz on 2023/11/2 16:30
- * describe :
+ * ProgressBarSetting 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/2 16:30
  */
 public class ProgressBarSetting extends BaseObservable {
     private Context context;

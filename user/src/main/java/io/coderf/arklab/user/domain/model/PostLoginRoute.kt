@@ -2,6 +2,11 @@ package io.coderf.arklab.user.domain.model
 
 /**
  * 登录成功并完成本地持久化后的界面走向（由 ViewModel 根据结果调用 [io.coderf.arklab.user.view.UserView] 对应方法）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 enum class PostLoginRoute {
     /** 清空栈并进入主页 */

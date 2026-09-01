@@ -11,7 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * updated by fz on 2024/12/28.
- * describe:RecyclerView的通用ViewHolder，此次修改主要把单击和长按事件放在了ViewHolder中，减少滑动带来的资源消耗
+ * RecyclerView的通用ViewHolder，此次修改主要把单击和长按事件放在了ViewHolder中，减少滑动带来的资源消耗
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class BaseViewHolder<VDB extends ViewDataBinding> extends RecyclerView.ViewHolder {
 

@@ -19,8 +19,12 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
- * created by fz on 2025/8/6 9:22
- * describe:添加水印
+ * 添加水印
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/6 9:22
  */
 public class WaterMarkHandlerCallback implements Handler.Callback {
     private final MediaHelper mediaHelper;

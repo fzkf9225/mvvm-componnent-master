@@ -22,8 +22,12 @@ import io.coderf.arklab.ui.form.FormRating;
 
 
 /**
- * Created by fz on 2024/1/10 16:01
- * describe :
+ * CustomBindingAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/1/10 16:01
  */
 public class CustomBindingAdapter {
 

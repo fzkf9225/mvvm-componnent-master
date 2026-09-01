@@ -8,8 +8,12 @@ import androidx.room.PrimaryKey;
 import java.util.UUID;
 
 /**
- * created by fz on 2024/11/6 13:29
- * describe:
+ * BaseDaoBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 13:29
  */
 @Entity
 public abstract class BaseDaoBean extends BaseObservable {

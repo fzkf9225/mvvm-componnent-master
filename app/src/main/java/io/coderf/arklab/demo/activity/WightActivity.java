@@ -54,6 +54,14 @@ import io.coderf.arklab.demo.enums.UseCaseEnum;
 import io.coderf.arklab.demo.viewmodel.WightViewModel;
 
 
+/**
+ * WightActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @AndroidEntryPoint
 public class WightActivity extends BaseStatefulActivity<WightViewModel, ActivityWightBinding> {
     private UseCase useCase;

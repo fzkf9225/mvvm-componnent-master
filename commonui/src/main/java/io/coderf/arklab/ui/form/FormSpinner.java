@@ -27,6 +27,9 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
  * 数据项使用 {@link PopupWindowBean}，支持泛型扩展。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
 

@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/5/10 14:08
- * describe :默认值，如果配置文件中没有则取值这里的，如果配置文件中有就以配置文件的为准
+ * 默认值，如果配置文件中没有则取值这里的，如果配置文件中有就以配置文件的为准
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/10 14:08
  */
 public class ConstantsHelper {
     public static final String CHANNEL_ID = "10001";

@@ -14,8 +14,12 @@ import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.functions.Function;
 
 /**
- * Created by fz on 2023/5/18 9:48
- * describe :
+ * DefaultRetryServiceImpl 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/18 9:48
  */
 public class DefaultRetryServiceImpl implements RetryService {
     // 最大可重试次数

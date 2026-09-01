@@ -8,8 +8,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by fz on 2023/5/31 9:19
- * describe :线程池
+ * 线程池
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/31 9:19
  */
 public class SendMessageThreadExecutor extends ThreadPoolExecutor {
     private static final int CORE_POOL_SIZE = 1;

@@ -31,8 +31,12 @@ import io.coderf.arklab.ui.impl.DecimalDigitsInputFilter;
 import io.coderf.arklab.ui.impl.FormTextFormatter;
 
 /**
- * Created by fz on 2023/12/26 16:27
- * describe :
+ * FormEditText 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/26 16:27
  */
 public class FormEditText extends FormConstraintLayout {
     /**

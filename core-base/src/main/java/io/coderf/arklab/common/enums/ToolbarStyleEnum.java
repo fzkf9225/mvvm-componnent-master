@@ -3,8 +3,12 @@ package io.coderf.arklab.common.enums;
 import android.text.TextUtils;
 
 /**
- * created by fz on 2024/10/24 11:08
- * describe:BaseActivity的toolbar样式,暂时未实现，后续添加
+ * BaseActivity的toolbar样式,暂时未实现，后续添加
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/24 11:08
  */
 public enum ToolbarStyleEnum {
     /**

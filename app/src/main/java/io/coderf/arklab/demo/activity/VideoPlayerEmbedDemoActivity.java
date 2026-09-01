@@ -18,6 +18,11 @@ import io.coderf.arklab.demo.databinding.ActivityVideoPlayerEmbedBinding;
 
 /**
  * 嵌入模式播放器 Demo：View 嵌入 Activity，非全屏仅全屏按钮。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VideoPlayerEmbedDemoActivity extends BaseActivity<VideoPlayerViewModel, ActivityVideoPlayerEmbedBinding> {
 

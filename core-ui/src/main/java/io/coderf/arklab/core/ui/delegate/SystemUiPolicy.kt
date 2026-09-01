@@ -7,7 +7,14 @@ package io.coderf.arklab.core.ui.delegate
  * 此处只定义开关与默认值，供 [BaseActivity] 组合。
  */
 
-/** 是否启用 Edge-to-Edge（内容延伸到系统栏）。 */
+/**
+ * 是否启用 Edge-to-Edge（内容延伸到系统栏）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 fun interface EdgeToEdgePolicy {
     fun shouldApply(): Boolean
 }

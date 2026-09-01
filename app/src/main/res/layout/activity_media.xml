@@ -116,7 +116,7 @@
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择音频文件"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_audio_result" />
 
@@ -140,7 +140,7 @@
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择文件"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file_result" />
 
@@ -205,7 +205,7 @@
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择图片添加水印"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_water_mark_image" />
 
@@ -240,7 +240,7 @@
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="圆形裁剪"
-                    android:textColor="@color/white"
+                    android:textColor="@color/onPrimary"
                     android:textSize="12sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -254,7 +254,7 @@
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="方形裁剪"
-                    android:textColor="@color/white"
+                    android:textColor="@color/onPrimary"
                     android:textSize="12sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -267,7 +267,7 @@
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="长方形裁剪"
-                    android:textColor="@color/white"
+                    android:textColor="@color/onPrimary"
                     android:textSize="12sp" />
             </LinearLayout>
 

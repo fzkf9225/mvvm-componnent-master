@@ -41,6 +41,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * MP4Writer 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class MP4Writer {
     private MdatBox mdat = null;
     private Mp4Movie currentMp4Movie = null;

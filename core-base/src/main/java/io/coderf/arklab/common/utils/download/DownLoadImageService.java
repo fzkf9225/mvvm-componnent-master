@@ -20,9 +20,13 @@ import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * Created by fz on 2017/6/14.
  * Glide缓存照片到本地
  * new Thread(service).start();千万不要忘了开启线程。很重要，很重要，很重要！！！
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/6/14
  */
 
 public class DownLoadImageService implements Runnable {

@@ -13,6 +13,11 @@ import java.io.OutputStream;
 
 /**
  * WebView 混合能力 Demo：将 assets 中的示例文件复制到应用沙盒，供 {@code local://} 加载验证。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class WebViewDemoFileHelper {
 

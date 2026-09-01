@@ -4,8 +4,12 @@ package io.coderf.arklab.demo.bean;
 import io.coderf.arklab.common.bean.base.BasePagingBean;
 
 /**
- * Created by fz on 2023/12/1 15:28
- * describe :
+ * NotificationMessageBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 15:28
  */
 public class NotificationMessageBean extends BasePagingBean {
     private String createDate;

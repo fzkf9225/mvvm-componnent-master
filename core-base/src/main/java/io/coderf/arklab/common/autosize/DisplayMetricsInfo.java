@@ -20,13 +20,13 @@ import android.os.Parcelable;
 import android.util.DisplayMetrics;
 
 /**
- * ================================================
  * {@link DisplayMetrics} 封装类
  * <p>
- * Created by JessYan on 2018/8/11 16:42
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/11 16:42
  */
 public class DisplayMetricsInfo implements Parcelable {
     private float density;

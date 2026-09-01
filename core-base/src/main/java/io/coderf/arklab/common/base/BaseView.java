@@ -3,9 +3,12 @@ package io.coderf.arklab.common.base;
 import androidx.annotation.StringRes;
 
 /**
- * 作者： fz
- * 时间： 2019/7/30
- * 描述：
+ * BaseView 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/7/30
  */
 
 public interface BaseView {

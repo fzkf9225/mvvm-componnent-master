@@ -21,8 +21,12 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 
 /**
- * Created by fz on 2023/11/22 11:38
- * describe :
+ * WebSocketClientHandler 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/22 11:38
  */
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     private final WebSocketServer webSocketServer;

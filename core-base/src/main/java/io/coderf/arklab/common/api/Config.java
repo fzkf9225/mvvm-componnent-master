@@ -2,6 +2,7 @@ package io.coderf.arklab.common.api;
 
 import android.app.Application;
 
+import com.google.android.material.color.DynamicColors;
 import com.tencent.mmkv.MMKV;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,8 +14,12 @@ import io.coderf.arklab.log.ArkLog;
 import io.coderf.arklab.log.FileLogLevel;
 
 /**
- * Created by fz on 2023/8/8 13:54
- * describe :
+ * Config 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/8 13:54
  */
 public class Config {
     private Application application;
@@ -28,6 +33,13 @@ public class Config {
      * 空白处可以点击收起键盘
      */
     private boolean hideKeyboardOnTouchOutside = true;
+
+    /**
+     * 是否启用 Material You 动态取色（Android 12+）。
+     * 品牌组件库默认关闭，由宿主在 {@link #init(Application)} 前通过
+     * {@link #setDynamicColorEnabled(boolean)} 打开。
+     */
+    private boolean dynamicColorEnabled = false;
 
     /**
      * 本地文件夹名称
@@ -65,6 +77,21 @@ public class Config {
         this.folderName = folderName;
     }
 
+    public boolean isDynamicColorEnabled() {
+        return dynamicColorEnabled;
+    }
+
+    /**
+     * 是否启用壁纸动态取色。须在 {@link #init(Application)} 之前调用才对首个 Activity 生效。
+     */
+    public Config setDynamicColorEnabled(boolean dynamicColorEnabled) {
+        this.dynamicColorEnabled = dynamicColorEnabled;
+        if (dynamicColorEnabled && application != null) {
+            DynamicColors.applyToActivitiesIfAvailable(application);
+        }
+        return this;
+    }
+
     /**
      * 是否开启debug
      */
@@ -75,6 +102,9 @@ public class Config {
         MMKV.initialize(application);
         AutoSize.initCompatMultiProcess(application);
         CrashHandler.getInstance().init(application);
+        if (dynamicColorEnabled) {
+            DynamicColors.applyToActivitiesIfAvailable(application);
+        }
     }
 
     public void setErrorService(ErrorService errorService) {

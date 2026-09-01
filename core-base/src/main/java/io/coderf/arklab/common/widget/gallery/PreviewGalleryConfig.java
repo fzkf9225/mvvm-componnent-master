@@ -8,6 +8,11 @@ import io.coderf.arklab.common.widget.dialog.ImageSaveDialogConfig;
 
 /**
  * 大图预览全局配置，在 {@link Application#onCreate()} 中初始化。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class PreviewGalleryConfig {
 

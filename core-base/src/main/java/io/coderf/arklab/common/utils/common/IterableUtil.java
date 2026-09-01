@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 /**
- * created by fz on 2024/9/23 10:21
- * describe:集合相关函数
+ * 集合相关函数
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/9/23 10:21
  */
 
 public class IterableUtil {

@@ -2,8 +2,8 @@
 
 可选校验注解库（纯 Java Library，非 Android Library）：声明式字段 / Bean 校验与运行时校验器。
 
-当前版本：**3.2.0**  
-Maven：`io.coderf.arklab.annotation:annotation:3.2.0`
+当前版本：**3.3.0**  
+Maven：`io.coderf.arklab.annotation:annotation:3.3.0`
 
 ---
 
@@ -25,7 +25,7 @@ Maven：`io.coderf.arklab.annotation:annotation:3.2.0`
 需要声明式实体 / 参数校验时：
 
 ```gradle
-implementation 'io.coderf.arklab.annotation:annotation:3.2.0'
+implementation 'io.coderf.arklab.annotation:annotation:3.3.0'
 // 若使用注解处理器：
 annotationProcessor project(':annotation')   // 或对应 Maven classifier / 处理器配置
 ```

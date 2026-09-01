@@ -10,8 +10,12 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 
 /**
- * Created by fz on 2023/7/13 9:35
- * describe :空页面
+ * 空页面
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/7/13 9:35
  */
 @AndroidEntryPoint
 public class EmptyFragment extends BaseFragment<EmptyViewModel, EmptyFragmentBinding> {

@@ -11,6 +11,6 @@
         android:layout_marginVertical="@dimen/vertical_margin_s"
         android:background="?attr/colorSurface"
         android:padding="@dimen/horizontal_margin_s"
-        android:textColor="@android:color/black"
+        android:textColor="@color/onSurfacePrimary"
         android:textSize="13sp" />
 </layout>

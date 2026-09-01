@@ -1,39 +1,38 @@
 package io.coderf.arklab.common.widget.customview;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import android.widget.ImageButton;
-import com.google.android.material.textview.MaterialTextView;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * 通用标题栏：返回按钮 + 居中标题 + 可选右侧文字操作区。
- * 可在 XML 直接使用，也可通过 {@link #bind(String, OnBackClickListener)} 快速绑定。
+ * 通用标题栏：MaterialToolbar + 居中标题 + 可选右侧文字操作。
+ * 对外 API 与历史 TitleBar 一致，内部走官方 Top App Bar。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2026/7/13 10:15
+ * @updated 2026/9/1 22:51
  */
-public class TitleBar extends ConstraintLayout {
+public class TitleBar extends MaterialToolbar {
 
-    private final ImageButton backButton;
-    private final MaterialTextView titleView;
-    private final MaterialTextView rightView;
+    private final MaterialButton rightButton;
 
     private OnBackClickListener onBackClickListener;
     private OnRightClickListener onRightClickListener;
@@ -43,107 +42,147 @@ public class TitleBar extends ConstraintLayout {
     }
 
     public TitleBar(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, androidx.appcompat.R.attr.toolbarStyle);
     }
 
     public TitleBar(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.view_title_bar, this, true);
-        backButton = findViewById(R.id.title_bar_back);
-        titleView = findViewById(R.id.title_bar_title);
-        rightView = findViewById(R.id.title_bar_right);
+        setTitleCentered(true);
+        setMinimumHeight(DensityUtil.dp2px(context, 48f));
+        setContentInsetsRelative(0, 0);
+        setContentInsetStartWithNavigation(0);
 
-        int defaultHeight = DensityUtil.dp2px(context, 48f);
-        setMinimumHeight(defaultHeight);
+        // 主题把 borderlessButtonStyle 映射到 Widget.Material3.Button.TextButton
+        rightButton = new MaterialButton(context, null, androidx.appcompat.R.attr.borderlessButtonStyle);
+        rightButton.setId(R.id.title_bar_right);
+        rightButton.setInsetTop(0);
+        rightButton.setInsetBottom(0);
+        rightButton.setMinWidth(DensityUtil.dp2px(context, 48f));
+        rightButton.setMinimumWidth(DensityUtil.dp2px(context, 48f));
+        rightButton.setMinHeight(DensityUtil.dp2px(context, 48f));
+        rightButton.setTextSize(15f);
+        rightButton.setAllCaps(false);
+        rightButton.setPadding(
+                DensityUtil.dp2px(context, 12f),
+                0,
+                DensityUtil.dp2px(context, 12f),
+                0);
+        rightButton.setVisibility(GONE);
+        LayoutParams rightLp = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.MATCH_PARENT,
+                Gravity.END | Gravity.CENTER_VERTICAL);
+        addView(rightButton, rightLp);
 
-        backButton.setOnClickListener(v -> {
+        setNavigationOnClickListener(v -> {
             if (onBackClickListener != null) {
                 onBackClickListener.onBackClick();
                 return;
             }
-            if (getContext() instanceof Activity activity) {
-                activity.onBackPressed();
+            if (getContext() instanceof AppCompatActivity activity) {
+                activity.getOnBackPressedDispatcher().onBackPressed();
             }
         });
-        rightView.setOnClickListener(v -> {
+        rightButton.setOnClickListener(v -> {
             if (onRightClickListener != null) {
                 onRightClickListener.onRightClick();
             }
         });
 
+        int defaultOnSurface = ContextCompat.getColor(context, R.color.cardOnSurface);
+        int defaultPrimary = ContextCompat.getColor(context, R.color.themeColor);
+        setTitleTextColor(defaultOnSurface);
+        setNavigationIconTint(defaultOnSurface);
+        rightButton.setTextColor(defaultPrimary);
+
         if (attrs != null) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TitleBar);
             CharSequence title = ta.getText(R.styleable.TitleBar_titleBarTitle);
             CharSequence rightText = ta.getText(R.styleable.TitleBar_titleBarRightText);
-            int titleColor = ta.getColor(R.styleable.TitleBar_titleBarTitleColor,
-                    ContextCompat.getColor(context, R.color.cardOnSurface));
-            int rightColor = ta.getColor(R.styleable.TitleBar_titleBarRightTextColor,
-                    ContextCompat.getColor(context, R.color.themeColor));
+            int titleColor = ta.getColor(R.styleable.TitleBar_titleBarTitleColor, defaultOnSurface);
+            int rightColor = ta.getColor(R.styleable.TitleBar_titleBarRightTextColor, defaultPrimary);
             float titleSize = ta.getDimension(R.styleable.TitleBar_titleBarTitleSize,
                     DensityUtil.sp2px(context, 18f));
             int backIcon = ta.getResourceId(R.styleable.TitleBar_titleBarBackIcon, R.drawable.icon_fh);
             boolean showBack = ta.getBoolean(R.styleable.TitleBar_titleBarShowBack, true);
             ta.recycle();
 
-            titleView.setText(title);
-            titleView.setTextColor(titleColor);
-            titleView.setTextSize(DensityUtil.px2sp(context,titleSize));
-            rightView.setTextColor(rightColor);
+            setTitle(title);
+            setTitleTextColor(titleColor);
+            applyTitleTextSizePx(titleSize);
+            rightButton.setTextColor(rightColor);
             if (rightText != null && rightText.length() > 0) {
-                rightView.setText(rightText);
-                rightView.setVisibility(VISIBLE);
+                rightButton.setText(rightText);
+                rightButton.setVisibility(VISIBLE);
             }
-            backButton.setImageDrawable(ContextCompat.getDrawable(context, backIcon));
-            backButton.setImageTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.cardOnSurface)));
-            backButton.setVisibility(showBack ? VISIBLE : INVISIBLE);
+            if (showBack) {
+                setNavigationIcon(backIcon);
+                setNavigationIconTint(titleColor);
+            } else {
+                setNavigationIcon(null);
+            }
         } else {
-            backButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_fh));
-            backButton.setImageTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.cardOnSurface)));
+            setNavigationIcon(R.drawable.icon_fh);
         }
     }
 
-
-    public TitleBar setTitle(@Nullable CharSequence title) {
-        titleView.setText(title);
-        return this;
+    private void applyTitleTextSizePx(float sizePx) {
+        post(() -> {
+            TextView titleView = findTitleTextView();
+            if (titleView != null) {
+                titleView.setTextSize(DensityUtil.px2sp(getContext(), sizePx));
+            }
+        });
     }
 
-    public TitleBar setTitle(@StringRes int resId) {
-        titleView.setText(resId);
-        return this;
+    @Nullable
+    private TextView findTitleTextView() {
+        CharSequence title = getTitle();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof TextView tv && child != rightButton) {
+                if (title == null || title.equals(tv.getText())) {
+                    return tv;
+                }
+            }
+        }
+        return null;
     }
 
     public TitleBar setTitleColor(@ColorInt int color) {
-        titleView.setTextColor(color);
+        setTitleTextColor(color);
         return this;
     }
 
     public TitleBar setBackIcon(@DrawableRes int resId) {
-        backButton.setImageDrawable(ContextCompat.getDrawable(getContext(), resId));
+        setNavigationIcon(resId);
         return this;
     }
 
-    /** 返回图标着色（配合 {@link R.drawable#icon_fh} 使用）。 */
     public TitleBar setBackIconTint(@ColorInt int color) {
-        backButton.setImageTintList(ColorStateList.valueOf(color));
+        setNavigationIconTint(color);
         return this;
     }
 
     public TitleBar setShowBackButton(boolean show) {
-        backButton.setVisibility(show ? VISIBLE : INVISIBLE);
+        if (show) {
+            if (getNavigationIcon() == null) {
+                setNavigationIcon(R.drawable.icon_fh);
+            }
+        } else {
+            setNavigationIcon(null);
+        }
         return this;
     }
 
     public TitleBar setRightText(@Nullable CharSequence text) {
-        rightView.setText(text);
-        rightView.setVisibility(text == null || text.length() == 0 ? GONE : VISIBLE);
+        rightButton.setText(text);
+        rightButton.setVisibility(text == null || text.length() == 0 ? GONE : VISIBLE);
         return this;
     }
 
     public TitleBar setRightTextColor(@ColorInt int color) {
-        rightView.setTextColor(color);
+        rightButton.setTextColor(color);
         return this;
     }
 
@@ -163,16 +202,24 @@ public class TitleBar extends ConstraintLayout {
         return this;
     }
 
-    public MaterialTextView getTitleView() {
-        return titleView;
+    @Nullable
+    public TextView getTitleView() {
+        return findTitleTextView();
     }
 
-    public MaterialTextView getRightView() {
-        return rightView;
+    public TextView getRightView() {
+        return rightButton;
     }
 
+    @Nullable
     public ImageButton getBackButton() {
-        return backButton;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof ImageButton) {
+                return (ImageButton) child;
+            }
+        }
+        return null;
     }
 
     public interface OnBackClickListener {
@@ -183,4 +230,3 @@ public class TitleBar extends ConstraintLayout {
         void onRightClick();
     }
 }
-

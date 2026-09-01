@@ -26,6 +26,11 @@ import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
  *     <li>{@code file:///android_asset/xxx} — 兼容旧写法，转为 assets 虚拟路径</li>
  *     <li>绝对路径 {@code /storage/...} — 若文件存在则走 {@code files} 映射（需落在已注册根目录内）</li>
  * </ul>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class WebViewLocalUrlResolver {
 

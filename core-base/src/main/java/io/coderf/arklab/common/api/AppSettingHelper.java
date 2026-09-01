@@ -4,8 +4,12 @@ package io.coderf.arklab.common.api;
 import android.content.Context;
 
 /**
- * Created by fz on 2017/11/21.
  * app相关设置
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/11/21
  */
 public class AppSettingHelper {
     private static final String TAG = AppSettingHelper.class.getSimpleName();

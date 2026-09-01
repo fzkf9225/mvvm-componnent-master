@@ -28,6 +28,11 @@ import kotlin.random.Random
 
 /**
  * 登录页 ViewModel：新版 [LoginRepositoryImpl] + Flow 收集。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(

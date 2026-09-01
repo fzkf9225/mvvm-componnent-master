@@ -3,6 +3,11 @@ package io.coderf.arklab.base.gateway
 /**
  * 消息通道抽象（MQTT / WebSocket / 其它推送）。
  * 业务模块禁止直接依赖 mqttcomponent / wscomponent。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 interface MessageGateway {
     fun connect()

@@ -16,6 +16,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * Track 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class Track {
     private long trackId = 0;
     private ArrayList<Sample> samples = new ArrayList<Sample>();

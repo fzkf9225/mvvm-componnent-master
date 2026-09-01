@@ -3,6 +3,11 @@ package io.coderf.arklab.core.utils
 /**
  * core 模块轻量日志门面，避免 core-* 反向依赖 common 的 LogUtil。
  * 业务侧仍可继续使用 common 的 LogUtil。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 object CoreLogger {
     @JvmStatic

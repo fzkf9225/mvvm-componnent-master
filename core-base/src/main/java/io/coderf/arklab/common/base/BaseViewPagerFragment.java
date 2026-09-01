@@ -14,7 +14,12 @@ import io.coderf.arklab.common.bean.PagerInfo;
 
 /**
  * Create by fz on 2019/8/1
- * describe: tabLayout+viewpager侧滑fragment布局封装
+ * tabLayout+viewpager侧滑fragment布局封装
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BaseViewPagerFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseFragment<VM, VDB> {
     protected ViewPager2 mBaseViewPager;

@@ -8,8 +8,12 @@ import io.coderf.arklab.demo.inter.HiltUserService;
 
 
 /**
- * Created by fz on 2024/5/31 13:50
- * describe :
+ * ContextHiltUserServiceImpl 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/5/31 13:50
  */
 public class ContextHiltUserServiceImpl implements HiltUserService {
     private Application application;

@@ -14,6 +14,11 @@ import io.coderf.arklab.annotation.enums.CrossFieldOperator;
 
 /**
  * 条件校验与跨字段比较工具。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class CompareUtil {
 

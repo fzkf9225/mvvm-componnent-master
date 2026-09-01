@@ -7,6 +7,11 @@ import io.coderf.arklab.log.FileLogLevel;
 
 /**
  * Media 模块 debug 开关（控制台）。本地落盘请优先使用 {@link ArkLog#startFileLog}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class DebugUtil {
     public static boolean enableDebug = false;

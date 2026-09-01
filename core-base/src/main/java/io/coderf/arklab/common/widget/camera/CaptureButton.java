@@ -24,7 +24,12 @@ import io.coderf.arklab.common.listener.CaptureListener;
 
 /**
  * created fz on 2024/10/22 19:56
- * describe：自定义相机中的拍照按钮，仿微信
+ * 自定义相机中的拍照按钮，仿微信
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CaptureButton extends View {
 

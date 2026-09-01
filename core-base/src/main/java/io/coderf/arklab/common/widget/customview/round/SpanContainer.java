@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fz on 2023/5/23 16:33
- * describe :
+ * SpanContainer 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/23 16:33
  */
 public class SpanContainer {
     public List<Object> spans;

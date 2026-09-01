@@ -31,27 +31,30 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <p><b>用法示例：</b></p>
  * <pre>{@code
  * // ViewModel
- * @Override
  * protected RoomPagingQuery createPagingQuery() {
  *     RoomPagingQuery q = new RoomPagingQuery();
  *     q.getKeywordsKey().add("name");
  *     q.setOrderBy("id");
  *     return q;
  * }
- *
- * @Override
  * public LiveData<PagingData<Person>> createPagingData() {
  *     return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(),
  *         () -> new RxRoomPagingSource<>(iRepository, getPagingQuery())));
  * }
  * }</pre>
  *
+ * @Override
+ * @Override
  * @param <T>  列表项实体
  * @param <DB> 继承 {@link BaseRoomDao} 的 Dao
  * @param <BV> 页面 View 类型
- * @author fz
  * @see RoomRepositoryImpl#findPageList
  * @see RoomPagingQuery
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
         extends RxPagingSource<Integer, T> {

@@ -27,8 +27,12 @@ import io.coderf.arklab.demo.database.PersonDatabase;
 import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
 
 /**
- * Created by fz on 2023/4/27 14:58
- * describe :
+ * DemoRoomPagingViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/27 14:58
  */
 @HiltViewModel
 public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositoryImpl, Person, BaseView, RoomPagingQuery> {

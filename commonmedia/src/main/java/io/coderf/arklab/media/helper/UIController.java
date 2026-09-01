@@ -13,8 +13,12 @@ import io.coderf.arklab.media.dialog.MediaProgressDialog;
 
 
 /**
- * created by fz on 2025/6/4 9:56
- * describe:
+ * UIController 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/4 9:56
  */
 public class UIController implements LifecycleObserver {
     private final Context context;

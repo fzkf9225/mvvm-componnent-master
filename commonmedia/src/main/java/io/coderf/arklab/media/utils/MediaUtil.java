@@ -26,8 +26,12 @@ import java.util.Random;
 
 
 /**
- * Created by fz on 2021/4/12 10:35
- * describe:
+ * MediaUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/4/12 10:35
  */
 public class MediaUtil {
     private final String TAG = this.getClass().getSimpleName();

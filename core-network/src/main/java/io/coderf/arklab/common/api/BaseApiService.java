@@ -10,10 +10,12 @@ import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 /**
- * 作者： fz
- * 时间： 2019/7/30
- * 描述：
  * 来源：
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/7/30
  */
 
 public interface BaseApiService extends ApiRetrofitService {

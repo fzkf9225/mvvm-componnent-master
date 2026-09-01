@@ -30,7 +30,12 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
  * Create by fz on 2019/12/25 0025
- * describe:自定义搜索输入框
+ * 自定义搜索输入框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CustomSearchEditText extends TextInputEditText implements TextInputEditText.OnEditorActionListener, TextWatcher {
 
@@ -48,7 +53,8 @@ public class CustomSearchEditText extends TextInputEditText implements TextInput
     protected int circleBackColor;
     protected float radius;
     protected float strokeWidth;
-    protected GradientDrawable gradientDrawable = new GradientDrawable();
+    /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
+    protected GradientDrawable gradientDrawable;
     protected boolean enableBgStyle = false;
 
     private OnInputSubmitListener onInputSubmitListener;
@@ -148,12 +154,9 @@ public class CustomSearchEditText extends TextInputEditText implements TextInput
     }
 
     private void applyBackground() {
-        gradientDrawable.setColor(circleBackColor);
-        gradientDrawable.setCornerRadius(radius);
-        if (strokeWidth > 0) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        }
-        setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                radius, radius, radius, radius,
+                true, circleBackColor, strokeWidth > 0, strokeWidth, strokeColor));
     }
 
     private boolean isTouchOnClearButton(MotionEvent event) {
@@ -270,7 +273,18 @@ public class CustomSearchEditText extends TextInputEditText implements TextInput
             return;
         }
         this.gradientDrawable = gradientDrawable;
-        setBackground(this.gradientDrawable);
+        if (gradientDrawable == null) {
+            return;
+        }
+        float[] radii = new float[4];
+        int[] fill = new int[1];
+        boolean[] hasFill = new boolean[1];
+        CornerShapeHelper.copyFromGradient(gradientDrawable, radii, fill, hasFill);
+        radius = radii[0];
+        if (hasFill[0]) {
+            circleBackColor = fill[0];
+        }
+        applyBackground();
     }
 
     public void setRadius(float radius) {

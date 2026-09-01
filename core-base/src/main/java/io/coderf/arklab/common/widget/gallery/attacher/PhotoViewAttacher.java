@@ -34,6 +34,14 @@ import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 import io.coderf.arklab.common.widget.gallery.listener.DefaultOnDoubleTapListener;
 import io.coderf.arklab.common.widget.gallery.scrollerproxy.ScrollerProxy;
 
+/**
+ * PhotoViewAttacher 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
         ViewTreeObserver.OnGlobalLayoutListener {

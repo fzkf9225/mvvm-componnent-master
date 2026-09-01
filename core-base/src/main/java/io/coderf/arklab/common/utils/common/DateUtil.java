@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * </ul>
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @updated 2026/8/26 15:57
  */

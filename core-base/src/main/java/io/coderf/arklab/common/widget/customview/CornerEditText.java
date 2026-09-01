@@ -13,8 +13,12 @@ import io.coderf.arklab.common.R;
 
 
 /**
- * Created by fz on 2019/5/31.
- * describe：自定义圆角矩形
+ * 圆角输入框：XML / 代码 API 不变，背景走 Material3 {@code ShapeAppearance}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CornerEditText extends TextInputEditText {
     /**
@@ -41,10 +45,8 @@ public class CornerEditText extends TextInputEditText {
      * 是否设置了描边
      */
     protected boolean hasStroke = false;
-    /**
-     * 背景样式
-     */
-    private GradientDrawable gradientDrawable = new GradientDrawable();
+    /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
+    private GradientDrawable gradientDrawable;
 
     public CornerEditText(Context context) {
         this(context, null);
@@ -88,15 +90,9 @@ public class CornerEditText extends TextInputEditText {
     }
 
     private void applyBackground() {
-        gradientDrawable = new GradientDrawable();
-        if (hasBgColor) {
-            gradientDrawable.setColor(circleBackColor);
-        }
-        gradientDrawable.setCornerRadius(radius);
-        if (hasStroke) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        }
-        this.setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                radius, radius, radius, radius,
+                hasBgColor, circleBackColor, hasStroke, strokeWidth, strokeColor));
     }
 
     public void setBackColor(@ColorInt int color) {
@@ -120,7 +116,19 @@ public class CornerEditText extends TextInputEditText {
 
     public void setGradientDrawable(GradientDrawable gradientDrawable) {
         this.gradientDrawable = gradientDrawable;
-        this.setBackground(this.gradientDrawable);
+        if (gradientDrawable == null) {
+            return;
+        }
+        float[] radii = new float[4];
+        int[] fill = new int[1];
+        boolean[] hasFill = new boolean[1];
+        CornerShapeHelper.copyFromGradient(gradientDrawable, radii, fill, hasFill);
+        radius = radii[0];
+        if (hasFill[0]) {
+            hasBgColor = true;
+            circleBackColor = fill[0];
+        }
+        applyBackground();
     }
 
     public void setRadius(float radius) {

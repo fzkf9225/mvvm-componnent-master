@@ -23,8 +23,12 @@ import io.coderf.arklab.ui.helper.CalendarDataSource;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * Created by fz on 2023/5/7 15:03
- * describe:
+ * ApplicationHelper 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/7 15:03
  */
 @HiltAndroidApp
 public class ApplicationHelper extends BaseApplication {

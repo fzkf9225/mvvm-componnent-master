@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Camera;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -96,8 +95,6 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
     private boolean flipping;
     /** 是否向上翻页方向（true 向上，false 向下） */
     private boolean flipUp = true;
-    /** 圆角背景 Drawable */
-    private final GradientDrawable gradientDrawable = new GradientDrawable();
     /** 主线程 Handler，用于自动翻页 */
     private final Handler flipHandler = new Handler(Looper.getMainLooper());
     /** 自动翻页任务 */
@@ -258,29 +255,9 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
      */
     private void applyBackground() {
         customBackgroundEnabled = true;
-        if (hasBgColor) {
-            gradientDrawable.setColor(bgColor);
-        } else {
-            gradientDrawable.setColor(Color.TRANSPARENT);
-        }
-        if (leftTopRadius == radius && rightTopRadius == radius
-                && rightBottomRadius == radius && leftBottomRadius == radius) {
-            gradientDrawable.setCornerRadius(radius);
-        } else {
-            float[] radii = new float[]{
-                    leftTopRadius, leftTopRadius,
-                    rightTopRadius, rightTopRadius,
-                    rightBottomRadius, rightBottomRadius,
-                    leftBottomRadius, leftBottomRadius
-            };
-            gradientDrawable.setCornerRadii(radii);
-        }
-        if (strokeWidth > 0f) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        } else {
-            gradientDrawable.setStroke(0, Color.TRANSPARENT);
-        }
-        setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius,
+                hasBgColor, bgColor, strokeWidth > 0f, strokeWidth, strokeColor));
     }
 
     /**

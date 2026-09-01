@@ -11,6 +11,11 @@ import java.util.List;
  *
  * <p>采用单例模式，用于在整个应用生命周期中维护 GPS 日志记录会话的运行时状态，
  * 包括当前位置、上一个位置、总行程距离、各种时间戳等。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class Session {
 

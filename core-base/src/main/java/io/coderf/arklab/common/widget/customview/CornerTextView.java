@@ -6,14 +6,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
+
 import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
 
 
 /**
- * Created by fz on 2019/5/31.
- * describe：自定义圆角矩形（支持分别设置四个圆角）
+ * 圆角 TextView：XML / 代码 API 不变，背景走 Material3 {@code ShapeAppearance}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CornerTextView extends MaterialTextView {
     /**
@@ -60,10 +65,8 @@ public class CornerTextView extends MaterialTextView {
      * 是否应用自定义圆角背景
      */
     protected boolean customBackgroundEnabled = false;
-    /**
-     * 圆角矩形
-     */
-    protected GradientDrawable gradientDrawable = new GradientDrawable();
+    /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
+    protected GradientDrawable gradientDrawable;
 
     public CornerTextView(Context context) {
         this(context, null);
@@ -123,38 +126,11 @@ public class CornerTextView extends MaterialTextView {
         }
     }
 
-    /**
-     * 应用背景（圆角+描边）
-     */
     private void applyBackground() {
         customBackgroundEnabled = true;
-        gradientDrawable = new GradientDrawable();
-        if (hasBgColor) {
-            gradientDrawable.setColor(circleBackColor);
-        }
-
-        // 设置圆角
-        if (leftTopRadius == radius && rightTopRadius == radius &&
-                rightBottomRadius == radius && leftBottomRadius == radius) {
-            // 所有圆角相同，使用统一的圆角半径
-            gradientDrawable.setCornerRadius(radius);
-        } else {
-            // 分别设置四个角的圆角半径
-            float[] radii = new float[]{
-                    leftTopRadius, leftTopRadius,      // 左上角 x, y
-                    rightTopRadius, rightTopRadius,    // 右上角 x, y
-                    rightBottomRadius, rightBottomRadius, // 右下角 x, y
-                    leftBottomRadius, leftBottomRadius    // 左下角 x, y
-            };
-            gradientDrawable.setCornerRadii(radii);
-        }
-
-        // 设置描边
-        if (hasStroke) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        }
-
-        this.setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius,
+                hasBgColor, circleBackColor, hasStroke, strokeWidth, strokeColor));
     }
 
     public void setBackColor(@ColorInt int color) {
@@ -178,7 +154,23 @@ public class CornerTextView extends MaterialTextView {
 
     public void setGradientDrawable(GradientDrawable gradientDrawable) {
         this.gradientDrawable = gradientDrawable;
-        this.setBackground(this.gradientDrawable);
+        if (gradientDrawable == null) {
+            return;
+        }
+        float[] radii = new float[4];
+        int[] fill = new int[1];
+        boolean[] hasFill = new boolean[1];
+        CornerShapeHelper.copyFromGradient(gradientDrawable, radii, fill, hasFill);
+        leftTopRadius = radii[0];
+        rightTopRadius = radii[1];
+        rightBottomRadius = radii[2];
+        leftBottomRadius = radii[3];
+        radius = leftTopRadius;
+        if (hasFill[0]) {
+            hasBgColor = true;
+            circleBackColor = fill[0];
+        }
+        applyBackground();
     }
 
     /**

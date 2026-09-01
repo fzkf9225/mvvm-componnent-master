@@ -14,8 +14,12 @@ import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.databinding.RoomPagingItemBinding;
 
 /**
- * Created by fz on 2023/12/1 16:50
- * describe :
+ * PagingRoomAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 16:50
  */
 public class PagingRoomAdapter extends BasePagingAdapter<Person, RoomPagingItemBinding> {
     public PagingRoomAdapter() {

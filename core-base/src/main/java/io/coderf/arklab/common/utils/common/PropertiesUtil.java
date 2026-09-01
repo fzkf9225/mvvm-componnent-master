@@ -13,9 +13,13 @@ import io.coderf.arklab.common.R;
 
 
 /**
- * created by fz on 2023/4/23 10:05
- * describe:
- **/
+ * PropertiesUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/23 10:05
+ */
 public class PropertiesUtil extends Properties {
     private final static String TAG = PropertiesUtil.class.getSimpleName();
 

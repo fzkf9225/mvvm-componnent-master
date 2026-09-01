@@ -24,11 +24,12 @@ import android.view.Display;
 import android.view.WindowManager;
 
 /**
- * ================================================
- * Created by JessYan on 26/09/2016 16:59
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ * ScreenUtils 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 26/09/2016 16:59
  */
 public class ScreenUtils {
 

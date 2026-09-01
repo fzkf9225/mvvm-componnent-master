@@ -11,8 +11,12 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 /**
- * Created by fz on 2020/2/7
- * describe:接口相关配置
+ * 接口相关配置
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2020/2/7
  */
 interface ApiServiceHelper : BaseApiService {
 

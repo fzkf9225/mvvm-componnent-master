@@ -33,7 +33,7 @@ import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
  * 添加图片适配器
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @created 2026/3/5 9:40
  */

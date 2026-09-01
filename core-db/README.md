@@ -2,8 +2,8 @@
 
 本地持久化：Room Database / DAO / Entity，以及 `RoomRepository*` 等封装。
 
-当前版本：**1.0.1**  
-Maven：`io.coderf.arklab.core:db:1.0.1`  
+当前版本：**1.1.0**  
+Maven：`io.coderf.arklab.core:db:1.1.0`  
 namespace：`io.coderf.arklab.core.db`
 
 ---
@@ -30,7 +30,7 @@ namespace：`io.coderf.arklab.core.db`
 需要本地 Room 持久化时：
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.0.1'
+implementation 'io.coderf.arklab.core:db:1.1.0'
 // 或
 implementation project(':core-db')
 ```

@@ -8,8 +8,12 @@ import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.databinding.MediaLoadingDialogBinding;
 
 /**
- * Created by fz on 2024/12/20.
  * 自定义加载dialog
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/20
  */
 public class MediaProgressDialog extends Dialog {
     private MediaLoadingDialogBinding loadingDialogBinding;

@@ -51,7 +51,12 @@ import java.util.concurrent.Executors
 
 /**
  * Create by fz on 2024/10/22 17:30
- * describe:自定义拍照
+ * 自定义拍照
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class CameraView @JvmOverloads constructor(
     context: Context,

@@ -8,8 +8,12 @@ import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.demo.impl.ErrorServiceImpl;
 
 /**
- * Created by fz on 2023/5/17 11:20
- * describe :
+ * ErrorServiceModule 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/17 11:20
  */
 @Module//必须配置的注解，表示这个对象是Module的配置规则
 @InstallIn(SingletonComponent.class)//表示这个module中的配置是用来注入到Activity中的

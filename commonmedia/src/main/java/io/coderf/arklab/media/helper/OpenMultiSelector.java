@@ -18,8 +18,12 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 
 /**
- * created by fz on 2025/8/7 9:13
- * describe:
+ * OpenMultiSelector 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/7 9:13
  */
 public class OpenMultiSelector extends ActivityResultContract<SelectorOptions, List<Uri>> {
     private SelectorOptions selectorOptions;

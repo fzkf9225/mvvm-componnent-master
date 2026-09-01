@@ -15,8 +15,12 @@ import dagger.internal.MapBuilder;
 
 
 /**
- * created by fz on 2024/9/23 10:11
- * describe:
+ * MapUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/9/23 10:11
  */
 public class MapUtil {
 

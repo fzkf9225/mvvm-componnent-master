@@ -11,9 +11,13 @@ import java.util.Properties;
 
 
 /**
- * created by fz on 2023/4/23 10:05
- * describe:
- **/
+ * PropertiesUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/23 10:05
+ */
 public class PropertiesUtil {
     private final static String TAG = PropertiesUtil.class.getSimpleName();
     private volatile Properties properties = null;

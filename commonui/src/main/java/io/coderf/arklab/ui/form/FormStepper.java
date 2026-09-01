@@ -28,6 +28,9 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
  * 表单步进器：减号 / 数值 / 加号。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormStepper extends FormConstraintLayout {
 

@@ -9,8 +9,9 @@ package io.coderf.arklab.mqtt.session
  * 框架不解析业务 payload；宿主自行决定主题字符串与消息处理。
  *
  * @author fz
- * @version 1.5
- * @since 1.5
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 enum class MqttSubscribePolicy {
 

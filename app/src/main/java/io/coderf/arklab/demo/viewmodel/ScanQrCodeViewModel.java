@@ -11,8 +11,12 @@ import io.coderf.arklab.demo.view.ScanQrCodeView;
 
 
 /**
- * Created by fz on 2023/11/9 9:26
- * describe :
+ * ScanQrCodeViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/9 9:26
  */
 public class ScanQrCodeViewModel extends BaseViewModel<BaseRepository<ScanQrCodeView>,ScanQrCodeView> {
 

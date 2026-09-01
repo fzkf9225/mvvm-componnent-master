@@ -18,7 +18,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- *
  * 功能说明：
  * 1. 支持两种样式：TYPE_MINE（自己发送）和TYPE_OTHER（他人发送），显示位置和对齐方式不同
  * 2. 播放语音时显示扩散波形动画，包含一个实心扇形和两个空心圆弧
@@ -39,8 +38,12 @@ import java.io.FileOutputStream
  * speakerView.start(messageId, ".mp3", base64AudioData) // 开始播放
  * ```
  *
- * created by fz on 2024/11/5 16:40
- * describe：语音消息播放控件（带波形动画）
+ * 语音消息播放控件（带波形动画）
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/5 16:40
  */
 class SpeakerView : View {
     companion object {

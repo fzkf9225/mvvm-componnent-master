@@ -20,8 +20,12 @@ import io.coderf.arklab.demo.databinding.ActivityMainBinding;
 import io.coderf.arklab.demo.viewmodel.MainViewModel;
 
 /**
- * created by fz on 2023/4/27 14:51
- * describe：
+ * MainActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/27 14:51
  */
 @AndroidEntryPoint
 public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBinding>{

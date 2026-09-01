@@ -23,13 +23,13 @@ import android.util.TypedValue;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * ================================================
  * AndroidAutoSize 常用工具类
  * <p>
- * Created by JessYan on 2018/8/25 15:24
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/25 15:24
  */
 public class AutoSizeUtils {
 

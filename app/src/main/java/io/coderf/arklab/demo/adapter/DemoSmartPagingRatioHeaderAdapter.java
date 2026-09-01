@@ -11,6 +11,11 @@ import io.coderf.arklab.demo.R;
 
 /**
  * SmartPaging + 头布局示例：单条 16:9 区域展示图片，仅作演示，封装对任意 {@link RecyclerView.Adapter} 生效。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class DemoSmartPagingRatioHeaderAdapter extends RecyclerView.Adapter<DemoSmartPagingRatioHeaderAdapter.Holder> {
 

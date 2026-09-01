@@ -13,6 +13,11 @@ import io.coderf.arklab.media.module.ActivityMediaHelper
 
 /**
  * Demo 组装层绑定 [MediaGateway]；业务模块只依赖 :base。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Module
 @InstallIn(ActivityComponent::class)

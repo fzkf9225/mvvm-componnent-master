@@ -5,6 +5,14 @@ import android.os.Build
 import android.webkit.WebSettings
 import android.webkit.WebView
 
+/**
+ * WebViewUtil 对象。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 object WebViewUtil {
     const val TAG = "WebViewUtil"
 

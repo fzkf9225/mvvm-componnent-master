@@ -18,8 +18,12 @@ import io.coderf.arklab.common.listener.OnProgressEndListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * Created by fz on 2023/11/2 9:20
- * describe :自定义圆形进度条
+ * 自定义圆形进度条
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/2 9:20
  */
 public class CircleProgressBar extends View {
     protected final String TAG = CircleProgressBar.class.getSimpleName();

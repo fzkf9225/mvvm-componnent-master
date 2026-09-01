@@ -1,8 +1,12 @@
 package io.coderf.arklab.ui.api;
 
 /**
- * created by fz on 2025/9/11 14:37
- * describe:文件自动上传配置，目前只支持图片视频
+ * 文件自动上传配置，目前只支持图片视频
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/9/11 14:37
  */
 public class MediaUploadConfig {
     /**

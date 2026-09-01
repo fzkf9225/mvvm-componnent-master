@@ -23,7 +23,6 @@ import java.io.File
 import kotlin.concurrent.Volatile
 import kotlin.math.min
 /**
- *
  * 功能说明：
  * 1. 长按录音，松开发送，上滑取消
  * 2. 录音时显示悬浮对话框，包含音量波形动画和操作提示
@@ -48,11 +47,16 @@ import kotlin.math.min
  *     // 处理录音结果
  * }
  * ```
- * created by fz on 2024/11/5 16:40
- * describe：语音录制按钮控件
+ * 语音录制按钮控件
+ *
  * @param context 上下文
  * @param attrs 属性集
  * @param defStyle 默认样式
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/5 16:40
  */
 class SpeakButton @JvmOverloads constructor(
     context: Context,

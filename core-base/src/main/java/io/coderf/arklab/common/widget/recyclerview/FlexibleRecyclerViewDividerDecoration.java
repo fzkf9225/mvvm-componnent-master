@@ -21,6 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 网格/瀑布流请继续使用 {@link GridSpacingItemDecoration} 等专用实现。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class FlexibleRecyclerViewDividerDecoration extends RecyclerView.ItemDecoration {
 

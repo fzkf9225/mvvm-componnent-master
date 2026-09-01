@@ -12,6 +12,14 @@ import io.coderf.arklab.common.databinding.BaseSearchActivityBinding;
 import io.coderf.arklab.common.widget.customview.CustomSearchEditText;
 
 
+/**
+ * BaseSearchActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public abstract class BaseSearchActivity<VM extends BaseViewModel> extends BaseActivity<VM, BaseSearchActivityBinding> implements View.OnClickListener,
         CustomSearchEditText.OnInputSubmitListener {
     private final MutableLiveData<String> keywordsLiveData = new MutableLiveData<>();

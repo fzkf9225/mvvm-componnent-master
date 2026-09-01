@@ -9,6 +9,14 @@ import dagger.hilt.components.SingletonComponent
 import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.PropertiesUtil
 
+/**
+ * PropertiesModule 对象。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object PropertiesModule {

@@ -6,6 +6,11 @@ import java.util.List;
 
 /**
  * 实体类验证结果
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VerifyResult {
 

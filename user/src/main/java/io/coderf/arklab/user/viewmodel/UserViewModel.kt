@@ -16,6 +16,11 @@ import javax.inject.Inject
 
 /**
  * 用户资料 ViewModel（新版 Flow）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @HiltViewModel
 class UserViewModel @Inject constructor(

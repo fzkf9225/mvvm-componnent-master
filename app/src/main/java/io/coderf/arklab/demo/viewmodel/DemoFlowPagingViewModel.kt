@@ -14,6 +14,11 @@ import javax.inject.Inject
 
 /**
  * 新闻分页 ViewModel（新版 [NetworkFlowPagingViewModel]）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @HiltViewModel
 class DemoFlowPagingViewModel @Inject constructor(

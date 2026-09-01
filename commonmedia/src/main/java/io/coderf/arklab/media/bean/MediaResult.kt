@@ -6,6 +6,11 @@ import io.coderf.arklab.media.enums.MediaTypeEnum
  * 媒体操作统一结果：选择 / 压缩 / 水印。
  * <p>
  * 与历史 {@code mutableLiveData} 等并存，便于逐步迁移到单路观察。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 sealed class MediaResult(open val mediaBean: MediaBean) {
 

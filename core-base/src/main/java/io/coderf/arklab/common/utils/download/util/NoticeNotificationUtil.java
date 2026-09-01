@@ -16,8 +16,12 @@ import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.api.ConstantsHelper;
 
 /**
- * Created by fz on 2017/10/13.
- * describe: 更新通知
+ * 更新通知
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/10/13
  */
 public class NoticeNotificationUtil extends ContextWrapper {
     private static NotificationManager mManager;

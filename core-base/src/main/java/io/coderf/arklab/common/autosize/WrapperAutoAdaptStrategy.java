@@ -18,13 +18,13 @@ package io.coderf.arklab.common.autosize;
 import android.app.Activity;
 
 /**
- * ================================================
  * {@link AutoAdaptStrategy} 的包装者, 用于给 {@link AutoAdaptStrategy} 的实现类增加一些额外的职责
  * <p>
- * Created by JessYan on 2018/10/30 15:07
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/10/30 15:07
  */
 public class WrapperAutoAdaptStrategy implements AutoAdaptStrategy {
     private final AutoAdaptStrategy mAutoAdaptStrategy;

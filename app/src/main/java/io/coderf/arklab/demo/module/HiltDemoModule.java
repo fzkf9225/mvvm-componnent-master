@@ -19,6 +19,11 @@ import io.coderf.arklab.demo.inter.HiltLogPlugin;
 
 /**
  * Hilt 进阶用法演示 Module：@Named、@Singleton、@IntoSet 等。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Module
 @InstallIn(SingletonComponent.class)

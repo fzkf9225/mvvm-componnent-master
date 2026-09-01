@@ -15,6 +15,14 @@ import io.coderf.arklab.demo.viewmodel.GoogleGpsViewModel
 import io.coderf.arklab.googlegps.common.GpsStarter
 import kotlinx.coroutines.Job
 
+/**
+ * GoogleGPSActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @AndroidEntryPoint
 class GoogleGPSActivity : BaseActivity<GoogleGpsViewModel, ActivityGoogleGpsBinding>() {
     private var useCase: UseCase? = null

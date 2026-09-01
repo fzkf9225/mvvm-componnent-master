@@ -28,7 +28,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * </ul>
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @updated 2026/8/27 14:15
  */

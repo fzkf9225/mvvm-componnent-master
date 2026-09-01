@@ -23,7 +23,7 @@ import io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData;
  * 接入方式：将 {@code extends BaseActivity} 改为 {@code extends BaseStatefulActivity}，并按需重写钩子。
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @updated 2026/8/25 13:14
  */

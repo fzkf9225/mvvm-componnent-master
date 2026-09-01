@@ -20,7 +20,9 @@ import okhttp3.ResponseBody;
  * 断点续传容错：服务端返回 {@code 416 Range Not Satisfiable} 时，移除 {@code Range} 头重新请求全量文件。
  *
  * @author fz
- * @since 2024/11/7
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 public class DownloadInterceptor implements Interceptor {
 

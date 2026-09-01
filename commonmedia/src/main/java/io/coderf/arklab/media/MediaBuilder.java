@@ -22,8 +22,12 @@ import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
 
 /**
- * Created by fz on 2021/2/7 9:10
- * describe:mediaUtil配置类
+ * mediaUtil配置类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/2/7 9:10
  */
 public class MediaBuilder {
     /**

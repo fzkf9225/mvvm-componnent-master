@@ -9,6 +9,11 @@ import io.coderf.arklab.common.widget.dialog.MessageDialog;
 
 /**
  * Helper class for WebViews to implement prompt(), alert(), confirm() dialogs.
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CordovaDialogsHelper {
     private final Context context;

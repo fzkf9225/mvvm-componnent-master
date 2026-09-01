@@ -79,6 +79,12 @@
     <public name="h_area" type="color"/>
     <public name="default_background" type="color"/>
     <public name="green" type="color"/>
+    <public name="onPrimary" type="color"/>
+    <public name="onSurfacePrimary" type="color"/>
+    <public name="surfacePrimary" type="color"/>
+    <public name="cardSurface" type="color"/>
+    <public name="cardOnSurface" type="color"/>
+    <public name="onSurfaceSecondary" type="color"/>
     <!--drawable-->
     <public name="bg_edittext" type="drawable"/>
     <public name="ib_clear_image_selector" type="drawable"/>
@@ -195,6 +201,8 @@
     <public name="Widget.App.Button.TextButton" type="style"/>
     <public name="Widget.App.Button.OutlinedButton" type="style"/>
     <public name="Widget.App.Button.IconButton" type="style"/>
+    <public name="Widget.App.Toolbar" type="style"/>
+    <public name="Widget.App.Toolbar.OnPrimary" type="style"/>
     <public name="loading_dialog" type="style"/>
     <public name="ActionSheetDialogStyle" type="style"/>
     <public name="ActionSheetDialogAnimation" type="style"/>

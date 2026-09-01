@@ -9,6 +9,11 @@ import java.util.WeakHashMap;
 
 /**
  * 底部 ActionSheet 在未选择「相册/拍照/文件」等项即关闭时回调（点取消或点外部）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class ActionSheetDismissTracker {
 

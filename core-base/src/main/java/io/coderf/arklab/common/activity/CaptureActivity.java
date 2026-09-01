@@ -36,8 +36,12 @@ import io.coderf.arklab.common.utils.zxing.CustomViewfinderView;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 
 /**
- * created by fz on 2023/11/8 11:10
- * describe:自定义扫码页面
+ * 自定义扫码页面
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/8 11:10
  */
 @AndroidEntryPoint
 public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptureBinding> {

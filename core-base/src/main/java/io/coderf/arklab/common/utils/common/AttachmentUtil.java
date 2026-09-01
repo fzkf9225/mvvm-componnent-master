@@ -39,8 +39,12 @@ import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * Created by fz on 2024/2/28 10:53
- * describe :
+ * AttachmentUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/2/28 10:53
  */
 public class AttachmentUtil {
 

@@ -26,16 +26,16 @@ import io.coderf.arklab.common.autosize.utils.Preconditions;
 
 
 /**
- * ================================================
  * 管理三方库的适配信息和状态, 通过 {@link AutoSizeConfig#getExternalAdaptManager()} 获取, 切勿自己 new
  * AndroidAutoSize 通过实现接口的方式来让每个 {@link Activity} 都具有自定义适配参数的功能, 从而让每个 {@link Activity} 都可以自定义适配效果
  * 但通过远程依赖的三方库并不能修改源码, 所以也不能让三方库的 {@link Activity} 实现接口, 实现接口的方式就显得无能为力
  * {@link ExternalAdaptManager} 就是专门用来处理这个问题, 项目初始化时把对应的三方库 {@link Activity} 传入 {@link ExternalAdaptManager} 即可
  * <p>
- * Created by JessYan on 2018/8/10 14:40
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/10 14:40
  */
 public class ExternalAdaptManager {
     private List<String> mCancelAdaptList;

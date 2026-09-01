@@ -29,12 +29,12 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 
 
 /**
- * ================================================
  * 通过声明 {@link ContentProvider} 自动完成初始化
- * Created by JessYan on 2018/8/19 11:55
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/19 11:55
  */
 public class InitProvider extends ContentProvider {
     @Override

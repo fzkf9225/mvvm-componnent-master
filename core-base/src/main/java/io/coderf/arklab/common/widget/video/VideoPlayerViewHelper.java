@@ -17,6 +17,11 @@ import io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig;
  * <p>
  * 负责 setUp、封面图、标题显隐等一次性配置；播放控制与生命周期请用 {@link VideoPlayerController}。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class VideoPlayerViewHelper {
 

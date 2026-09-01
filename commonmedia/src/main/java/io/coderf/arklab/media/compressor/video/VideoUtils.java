@@ -19,8 +19,12 @@ import java.io.InputStream;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
- * created by fz on 2024/11/14 9:15
- * describe:
+ * VideoUtils 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/14 9:15
  */
 public class VideoUtils {
     public static VideoInfo getVideoInfo(Context context, Uri sourcePath) {

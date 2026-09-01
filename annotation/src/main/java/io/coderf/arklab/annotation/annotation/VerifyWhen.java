@@ -14,6 +14,11 @@ import io.coderf.arklab.annotation.inter.VerifyGroup;
  * <p>
  * 可标注在字段上（作用于该字段全部 {@link VerifyParams}），
  * 也可作为 {@link VerifyParams#when()} 的单条规则条件。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

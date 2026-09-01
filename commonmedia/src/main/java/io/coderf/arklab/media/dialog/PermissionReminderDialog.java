@@ -24,7 +24,12 @@ import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
 
 /**
  * updated by fz on 2025/8/5 17:53
- * describe：请求权限提示弹框
+ * 请求权限提示弹框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class PermissionReminderDialog extends Dialog {
     private String content;

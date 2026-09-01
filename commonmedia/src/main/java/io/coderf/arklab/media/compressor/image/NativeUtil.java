@@ -11,8 +11,12 @@ import java.io.IOException;
 
 
 /**
- * Created by fz on 2017/11/6.
  * 图片压缩工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/11/6
  */
 
 public class NativeUtil {

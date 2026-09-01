@@ -3,8 +3,12 @@ package io.coderf.arklab.common.utils.common;
 import android.graphics.Bitmap;
 
 /**
- * created by fz on 2025/11/25 11:32
- * describe:高斯模糊、快速模糊化工具
+ * 高斯模糊、快速模糊化工具
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/11/25 11:32
  */
 public class FastBlur {
     public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {

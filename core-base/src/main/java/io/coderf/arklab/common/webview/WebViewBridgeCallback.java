@@ -5,6 +5,11 @@ import androidx.annotation.NonNull;
 /**
  * {@link WebViewJsBridge} 与原生能力之间的回调接口，由 {@link io.coderf.arklab.common.activity.WebViewActivity} 实现。
  * <p>将扫码、定位等能力从 WebView 层解耦，便于单测与替换实现。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public interface WebViewBridgeCallback {
 

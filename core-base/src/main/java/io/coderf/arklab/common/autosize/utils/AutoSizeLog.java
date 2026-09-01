@@ -18,11 +18,12 @@ package io.coderf.arklab.common.autosize.utils;
 import android.util.Log;
 
 /**
- * ================================================
- * Created by JessYan on 2018/8/8 18:48
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ * AutoSizeLog 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/8 18:48
  */
 public class AutoSizeLog {
     private static final String TAG = "AndroidAutoSize";

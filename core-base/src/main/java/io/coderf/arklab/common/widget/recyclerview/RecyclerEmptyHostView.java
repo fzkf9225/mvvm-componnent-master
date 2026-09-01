@@ -22,6 +22,11 @@ import io.coderf.arklab.common.widget.empty.EmptyLayout;
  * {@link RecyclerView} 与 {@link EmptyLayout}，子 View 均通过代码创建（不依赖 merge 布局）。
  * <p>
  * 供新业务按需引用；基类与现有 XML 布局保持不变。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class RecyclerEmptyHostView extends FrameLayout {
 

@@ -26,7 +26,7 @@ import io.coderf.arklab.mqtt.databinding.DialogMqttReconnectBinding
  * ```
  *
  * @author fz
- * @version 1.3
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/27 10:10
  */

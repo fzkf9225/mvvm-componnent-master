@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 用户资料仓库（新版 [BaseNetworkRepository]）。
  * 鉴权：优先构造 [tokenRefresher]，否则用 [api] 所属 ApiRetrofit.Builder 上的配置。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class UserRepositoryImpl(
     private val apiService: UserApiService,

@@ -31,8 +31,12 @@ import io.coderf.arklab.demo.inter.HiltUserService;
 import io.coderf.arklab.demo.module.HiltUserServiceModule;
 
 /**
- * Created by fz on 2024/5/31 11:31
- * describe :
+ * TestHiltViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/5/31 11:31
  */
 @HiltViewModel
 public class TestHiltViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {

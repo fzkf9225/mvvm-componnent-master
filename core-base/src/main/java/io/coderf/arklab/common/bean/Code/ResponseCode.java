@@ -1,8 +1,12 @@
 package io.coderf.arklab.common.bean.Code;
 
 /**
- * Created by fz on 2017/10/16.
- * describe：服务器返回码
+ * 服务器返回码
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/10/16
  */
 public class ResponseCode {
     /**

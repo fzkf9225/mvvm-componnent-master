@@ -14,6 +14,11 @@ import io.coderf.arklab.annotation.inter.VerifyGroup;
  * <p>
  * 示例：endDate 字段上配置 {@code refField = "startDate", operator = GREATER_THAN_OR_EQUAL}
  * 表示 endDate 必须大于等于 startDate。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

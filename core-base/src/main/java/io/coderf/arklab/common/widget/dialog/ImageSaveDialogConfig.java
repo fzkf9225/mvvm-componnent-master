@@ -5,6 +5,11 @@ import androidx.annotation.Nullable;
 
 /**
  * {@link ImageSaveDialog} 样式与文案配置；字段为 null 表示使用当前默认样式。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ImageSaveDialogConfig {
 

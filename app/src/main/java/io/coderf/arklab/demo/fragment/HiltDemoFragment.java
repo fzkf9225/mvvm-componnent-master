@@ -14,6 +14,11 @@ import io.coderf.arklab.demo.databinding.FragmentHiltDemoBinding;
 
 /**
  * 演示 Fragment 字段注入（@AndroidEntryPoint + @Inject）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class HiltDemoFragment extends BaseFragment<EmptyViewModel, FragmentHiltDemoBinding> {

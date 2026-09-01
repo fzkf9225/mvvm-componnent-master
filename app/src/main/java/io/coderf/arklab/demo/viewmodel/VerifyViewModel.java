@@ -23,8 +23,12 @@ import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * created by fz on 2024/11/6 10:57
- * describe:
+ * VerifyViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 10:57
  */
 public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, BaseView> {
 

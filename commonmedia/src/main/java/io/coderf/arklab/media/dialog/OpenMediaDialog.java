@@ -14,8 +14,12 @@ import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.databinding.ChooseMediaDialogBinding;
 
 /**
- * Created by fz on 2024/10/31.
- * describe:选择照片和拍照弹框
+ * 选择照片和拍照弹框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/31
  */
 public class OpenMediaDialog extends Dialog implements View.OnClickListener {
     private OnOpenMediaClickListener onOpenMediaClickListener;

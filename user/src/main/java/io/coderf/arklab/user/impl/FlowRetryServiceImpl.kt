@@ -19,6 +19,11 @@ import javax.inject.Singleton
  *
  * Single-Flight：[CompletableDeferred] 多路 await，等价 RxJava `share()`，
  * 避免并发 401 时重复消费 refresh_token。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Singleton
 class FlowRetryServiceImpl @Inject constructor(

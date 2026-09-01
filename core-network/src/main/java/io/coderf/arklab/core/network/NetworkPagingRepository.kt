@@ -25,6 +25,11 @@ import kotlinx.coroutines.flow.map
  * @param T  列表元素类型
  * @param BV BaseView
  * @param Q  分页查询参数，继承 [PagingQuery]
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 abstract class NetworkPagingRepository<T : Any, BV : BaseView, Q : PagingQuery>(
     requestUi: RequestUi = NoOpRequestUi,

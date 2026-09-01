@@ -8,7 +8,14 @@ import android.view.View
  * 仅依赖 Android View API，无 R / 业务控件依赖，适合放在 core-utils。
  */
 
-/** 设为 [View.VISIBLE]。 */
+/**
+ * 设为 [View.VISIBLE]。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 fun View.visible() {
     visibility = View.VISIBLE
 }

@@ -3,8 +3,12 @@ package io.coderf.arklab.common.listener;
 import android.view.View;
 
 /**
- * Created by fz on 2023/12/4 9:06
- * describe :PagingAdapter监听器
+ * PagingAdapter监听器
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/4 9:06
  */
 public interface PagingAdapterListener<T> {
 

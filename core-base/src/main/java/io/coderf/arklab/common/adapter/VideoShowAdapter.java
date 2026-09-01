@@ -21,8 +21,12 @@ import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * Created by fz on 2024/10/20.
- * describe:视频列表
+ * 视频列表
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/20
  */
 public class VideoShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterVideoShowItemBinding> {
 

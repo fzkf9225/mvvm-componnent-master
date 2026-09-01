@@ -12,7 +12,7 @@ import io.coderf.arklab.core.request.RequestUiHost;
 
 /**
  * Create by fz on 2020/3/19 0019
- * describe:baseViewMode封装
+ * baseViewMode封装
  * <p>
  * <b>请求 UI（长期方案）</b>：默认持有 {@link NetworkRequestUiHost}，经
  * {@link #attachRepositoryRequestUi()} 注入旧 {@link BaseRepository} 与新 {@link RequestUiHost}。
@@ -20,6 +20,11 @@ import io.coderf.arklab.core.request.RequestUiHost;
  * 不再把请求 loading/toast/error 直连到 {@link BaseView}。
  * <p>
  * {@link #baseView} 仍可绑定，仅供遗留非请求 UI；新代码请勿在 Repository 内对 baseView 调 showLoading 等。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseView> extends BaseViewViewModel<BV> {
 

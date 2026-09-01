@@ -13,6 +13,11 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 新闻分页仓库（新版 [NetworkPagingRepository]）。
  * 自动解析 data、错误 UI、Token 刷新均由框架 + [TokenRefresher] 完成。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class DemoFlowPagingRepositoryImpl(
     private val api: ApiServiceHelper

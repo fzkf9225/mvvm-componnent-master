@@ -5,8 +5,12 @@ import android.graphics.Bitmap;
 import com.google.zxing.LuminanceSource;
 
 /**
- * Created by fz on 2023/11/9 14:56
- * describe :
+ * BitmapLuminanceSource 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/9 14:56
  */
 public class BitmapLuminanceSource extends LuminanceSource {
 

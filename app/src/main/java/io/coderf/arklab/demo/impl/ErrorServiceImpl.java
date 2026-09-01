@@ -20,7 +20,12 @@ import io.coderf.arklab.userapi.router.UserRouterService;
 import io.coderf.arklab.user.api.UserAccountHelper;
 
 /**
- * created by fz on 2023/04/25 13:04
+ * ErrorServiceImpl 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/25 13:04
  */
 public class ErrorServiceImpl implements ErrorService {
     @Inject

@@ -46,6 +46,8 @@
         android:layout_height="@dimen/height_xxxl"
         android:gravity="center"
         android:text="@string/cancel"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:textAllCaps="false"
         android:textColor="@color/autoColor"
         android:textSize="@dimen/font_size_xl"

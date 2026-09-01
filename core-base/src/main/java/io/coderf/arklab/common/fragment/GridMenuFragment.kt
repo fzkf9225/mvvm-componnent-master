@@ -18,6 +18,14 @@ import io.coderf.arklab.common.widget.customview.GridMenuView
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration
 
+/**
+ * GridMenuFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 class GridMenuFragment<T : GridMenuBean> : BaseFragment<EmptyViewModel, FragmentGridMenuBinding>() {
     private var menuList: List<GridMenuBean>? = null
     private var adapter: BasePagingAdapter<GridMenuBean, ViewDataBinding>? = null

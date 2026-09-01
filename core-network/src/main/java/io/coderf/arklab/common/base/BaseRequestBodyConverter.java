@@ -19,10 +19,12 @@ import okio.ByteString;
 import retrofit2.Converter;
 
 /**
- * 作者： ch
- * 时间： 2019/2/15 0015-上午 11:10
- * 描述：
  * 来源：
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/2/15
  */
 
 public class BaseRequestBodyConverter<T> implements Converter<T, RequestBody> {

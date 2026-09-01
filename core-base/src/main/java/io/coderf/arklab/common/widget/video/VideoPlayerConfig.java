@@ -14,6 +14,11 @@ import java.util.List;
  * 请使用 {@link #embedDefaults()}、{@link #activityDefaults()}、{@link #dialogDefaults()} 作为各宿主场景的起点，
  * 再按需链式修改显隐、倍速档位、清晰度列表等。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VideoPlayerConfig implements Serializable {
 

@@ -1,8 +1,12 @@
 package io.coderf.arklab.googlegps.socket;
 
 /**
- * Created by fz on 2023/10/19 13:59
- * describe :
+ * OnConnectionChangedListener 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/10/19 13:59
  */
 public interface OnConnectionChangedListener {
     /**

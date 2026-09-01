@@ -30,8 +30,12 @@ import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
- * created by fz on 2025/8/6 17:10
- * describe:
+ * MediaCompressHandler 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/6 17:10
  */
 public class MediaCompressHandler extends Handler {
     private final List<Uri> compressedList;

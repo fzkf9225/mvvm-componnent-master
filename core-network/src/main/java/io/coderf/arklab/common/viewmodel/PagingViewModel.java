@@ -17,14 +17,18 @@ import io.coderf.arklab.common.repository.PagingRepositoryImpl;
 import io.coderf.arklab.core.bean.PagingQuery;
 
 /**
- * Created by fz on 2023/12/1 14:17
- * describe : Rx 分页 ViewModel。查询参数由 [pagingQuery] 持有，经 PagingSource 快照传给 Repository。
+ * Rx 分页 ViewModel。查询参数由 [pagingQuery] 持有，经 PagingSource 快照传给 Repository。
  * 更新 query 默认不自动请求，需显式 [refreshData] 或 [updatePagingQuery] 的 refresh=true。
  *
  * @param IR Repository
  * @param T  列表元素
  * @param V  BaseView
  * @param Q  查询参数
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 14:17
  */
 public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends BaseView, Q extends PagingQuery>
         extends BasePagingViewModel<IR, V> {

@@ -16,6 +16,11 @@ import io.coderf.arklab.common.widget.feedback.ToastHelper;
 
 /**
  * 页面级 UI 辅助：Loading、Toast；绑定 Lifecycle，在 ON_DESTROY 时自动关闭 Loading，避免 Window 泄漏。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class UIController implements DefaultLifecycleObserver {
 

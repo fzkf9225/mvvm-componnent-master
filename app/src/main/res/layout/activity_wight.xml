@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="CornerConstraintLayout"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/onPrimary" />
             </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
             <io.coderf.arklab.common.widget.customview.CornerTextView
@@ -49,7 +49,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:gravity="center"
                 android:text="CornerTextView"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 app:bgColor="@color/themeColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
@@ -65,7 +65,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:text="CornerButton"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 app:bgColor="@color/themeColor"
                 app:layout_constraintEnd_toStartOf="@+id/cornerLabelView"
                 app:layout_constraintHorizontal_weight="1"
@@ -92,7 +92,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="CornerLabelView"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/onPrimary" />
 
                 <io.coderf.arklab.common.widget.customview.CornerLabelView
                     android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                     app:position="rightTop"
                     app:sideLength="28dp"
                     app:text="标签"
-                    app:textColor="@color/white"
+                    app:textColor="@color/onPrimary"
                     app:textSize="@dimen/font_size_m" />
             </FrameLayout>
 
@@ -337,7 +337,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:hint="这是一个自定义输入框CustomSearchEditText"
                 android:inputType="text"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_l"
                 app:bgColor="@color/cardSurface"
@@ -392,7 +392,7 @@
                 app:titleBarRightText="保存"
                 app:titleBarShowBack="true"
                 app:titleBarTitle="TitleBar 示例"
-                app:titleBarTitleColor="@color/black"
+                app:titleBarTitleColor="@color/cardOnSurface"
                 app:titleBarRightTextColor="@color/themeColor" />
 
             <io.coderf.arklab.common.widget.customview.CornerEditText
@@ -467,7 +467,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"
                 app:progressColor="@color/theme_green"
                 app:showText="true"
-                app:textColor="@color/white"
+                app:textColor="@color/onPrimary"
                 app:textSize="12sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -617,9 +617,9 @@
                 app:valueText="5"
                 app:labelSpacing="0dp"
                 app:valueTextSize="15sp"
-                app:valueTextColor="@color/black"
+                app:valueTextColor="@color/onSurfacePrimary"
                 app:labelTextSize="@dimen/font_size_l"
-                app:unitTextColor="@color/black"
+                app:unitTextColor="@color/onSurfacePrimary"
                 app:unitTextSize="10sp"
                 app:valueUnitSpacing="4dp"
                 app:valueUnitAlignment="start"
@@ -640,10 +640,10 @@
                 app:valueText="5"
                 app:labelSpacing="0dp"
                 app:valueTextSize="15sp"
-                app:unitTextColor="@color/black"
+                app:unitTextColor="@color/onSurfacePrimary"
                 app:unitTextSize="10sp"
                 app:valueUnitSpacing="4dp"
-                app:valueTextColor="@color/black"
+                app:valueTextColor="@color/onSurfacePrimary"
                 app:labelTextSize="@dimen/font_size_l"
                 app:valueUnitAlignment="center"
                 app:labelTextColor="@color/gray"
@@ -663,9 +663,9 @@
                 app:valueText="5"
                 app:labelSpacing="0dp"
                 app:valueTextSize="15sp"
-                app:unitTextColor="@color/black"
+                app:unitTextColor="@color/onSurfacePrimary"
                 app:unitTextSize="10sp"
-                app:valueTextColor="@color/black"
+                app:valueTextColor="@color/onSurfacePrimary"
                 app:labelTextSize="@dimen/font_size_l"
                 app:valueUnitAlignment="spaceBetween"
                 app:labelTextColor="@color/gray"
@@ -686,9 +686,9 @@
                 app:labelSpacing="0dp"
                 app:valueTextSize="15sp"
                 app:valueUnitSpacing="4dp"
-                app:unitTextColor="@color/black"
+                app:unitTextColor="@color/onSurfacePrimary"
                 app:unitTextSize="10sp"
-                app:valueTextColor="@color/black"
+                app:valueTextColor="@color/onSurfacePrimary"
                 app:labelTextSize="@dimen/font_size_l"
                 app:valueUnitAlignment="end"
                 app:labelTextColor="@color/gray"

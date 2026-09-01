@@ -22,6 +22,11 @@ import io.coderf.arklab.common.helper.WebViewLocalUrlResolver;
 /**
  * {@link io.coderf.arklab.common.widget.customview.ConfigurableWebView} 专用 WebViewClient。
  * <p>职责：AssetLoader 拦截、外链/电话/邮件跳转、加载错误与 SSL 策略。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ConfigurableWebViewClient extends WebViewClient {
 

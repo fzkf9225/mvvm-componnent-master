@@ -18,6 +18,11 @@ import io.coderf.arklab.user.api.UserApiService;
  * 注意：{@link UserApiService} 客户端<strong>不</strong>挂载 RetryService / FlowRetryService，
  * 避免 refresh-token 请求再触发鉴权刷新形成递归；业务仓库通过构造注入
  * {@link io.coderf.arklab.core.request.TokenRefresher} 完成无感刷新。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Module
 @InstallIn(SingletonComponent.class)

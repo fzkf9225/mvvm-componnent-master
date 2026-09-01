@@ -18,8 +18,14 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * Create by fz on 2019/11/5
- * describe:自定义三角形角标view，可以自定义在四个角落和角标的宽度背景色
+ * 三角形角标（四角缎带），不是圆角矩形。
+ * Material3 {@code ShapeAppearance} 只覆盖矩形容器的圆角/切角，无法表达本控件的三角几何，
+ * 因此仍用 Path 绘制；XML / 代码接入方式不变。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CornerLabelView extends View {
     protected float mHalfWidth;//View宽度的一半，取宽高的最小值，即：短的一边，然后取正方形

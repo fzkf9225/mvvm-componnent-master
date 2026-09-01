@@ -6,8 +6,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 /**
- * created by fz on 2024/10/24 10:46
- * describe:软键盘弹出时调整Activity的布局，避免键盘遮挡输入框
+ * 软键盘弹出时调整Activity的布局，避免键盘遮挡输入框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/24 10:46
  */
 public class SoftHideKeyBoardUtil {
     public static void assistActivity(Activity activity) {

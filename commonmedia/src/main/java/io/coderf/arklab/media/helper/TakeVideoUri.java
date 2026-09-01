@@ -23,8 +23,12 @@ import io.coderf.arklab.media.utils.LogUtil;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
- * Created by fz on 2023/4/25 17:23
- * describe :
+ * TakeVideoUri 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/25 17:23
  */
 public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
     /**

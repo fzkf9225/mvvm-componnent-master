@@ -2,6 +2,11 @@ package io.coderf.arklab.annotation.enums;
 
 /**
  * 条件校验操作符，用于 {@link io.coderf.arklab.annotation.annotation.VerifyWhen}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public enum ConditionOperator {
     /** 等于指定值 */

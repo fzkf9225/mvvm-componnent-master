@@ -15,10 +15,12 @@ import io.coderf.arklab.common.R;
  * 自动换行
  * 修复：对齐逻辑错误，新增清除子View等API
  *
- * @author fz
- * @version 1.1
- * @since 1.0
  * @update 2026/6/22 23:09
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class AutoNextLineLinearlayout extends ViewGroup {
 

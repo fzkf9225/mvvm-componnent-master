@@ -19,7 +19,12 @@ import io.coderf.arklab.common.listener.TypeListener;
 
 /**
  * created fz on 2024/10/22 19:56
- * describe：自定义相机中的底部操作按钮视图
+ * 自定义相机中的底部操作按钮视图
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CaptureLayout extends FrameLayout {
     /**

@@ -15,8 +15,12 @@ import io.coderf.arklab.media.databinding.ShootDialogBinding;
 
 
 /**
- * Created by fz on 2024/10/31.
- * describe：相册——拍摄dialog
+ * 相册——拍摄dialog
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/31
  */
 
 public class OpenShootDialog extends Dialog implements View.OnClickListener {

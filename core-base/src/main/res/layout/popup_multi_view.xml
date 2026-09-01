@@ -57,7 +57,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_xxxl"
                 android:layout_marginEnd="@dimen/horizontal_margin_xxxxl"
                 android:text="@string/confirm"
-                android:textColor="@color/white"
+                android:textColor="@color/onPrimary"
                 android:textSize="13sp"
                 app:bgColor="@color/themeColor"
                 app:layout_constraintBottom_toBottomOf="parent"

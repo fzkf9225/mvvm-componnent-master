@@ -7,7 +7,7 @@ import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 
 /**
- *
+ * ViewModelHelper 类。
  *
  * @author fz
  * @version 1.0

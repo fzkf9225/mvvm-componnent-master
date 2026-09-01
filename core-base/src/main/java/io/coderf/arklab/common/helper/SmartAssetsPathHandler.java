@@ -13,8 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * created by fz on 2025/8/26 9:07
- * describe:
+ * SmartAssetsPathHandler 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/26 9:07
  */
 public class SmartAssetsPathHandler  implements WebViewAssetLoader.PathHandler {
     private final Context context;

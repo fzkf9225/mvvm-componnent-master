@@ -15,19 +15,22 @@ import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.ui.webview.MediaWebChromeClient;
 
 /**
-
  * commonui 增强 WebView：在 {@link WebViewActivity} 基础上仅增强<b>文件选择</b>（commonmedia {@link MediaHelper}）。
-
+ *
  * <p>
-
+ *
  * 定位仍使用 common 模块原生 {@link io.coderf.arklab.common.helper.WebViewNativeLocationHelper}，
-
+ *
  * 不依赖 googlegps 轨迹/上传等复杂能力。
-
+ *
  * </p>
-
+ *
  * <p>对比：仅需 common 依赖时用 {@link WebViewActivity}；需要相册选图/媒体 Dialog 时用本类。</p>
-
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class UiWebViewActivity extends WebViewActivity {
 

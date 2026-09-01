@@ -14,30 +14,33 @@ import kotlin.reflect.KClass
  *
  * ## Kotlin 示例
  * ```kotlin
- * @Dao
- * @RoomObservedEntity(AttachmentBean::class)
  * abstract class AttachmentDao : AttachmentDaoRawQueryBridge() {
  *     override fun getTableName() = "AttachmentBean"
  * }
  * ```
- *
  * ## Java 示例
  * ```java
- * @Dao
- * @RoomObservedEntity(Person.class)
  * public abstract class PersonDao extends PersonDaoRawQueryBridge {
  *     @Override
  *     public String getTableName() { return "Person"; }
  * }
  * ```
- *
  * ## 不使用的场景
  * 老项目可继续 `extends BaseRoomDao<T>()` 并手动 override 底部全部 `do*` RawQuery 方法
  * （含 doCount、doExecute）。
  *
+ * @Dao
+ * @RoomObservedEntity(AttachmentBean::class)
+ * @Dao
+ * @RoomObservedEntity(Person.class)
  * @param value 本 DAO 对应的 `@Entity` 类型，用于 `@RawQuery(observedEntities = [...])`
  * @see io.coderf.arklab.common.dao.BaseRoomDao
  * @see io.coderf.arklab.room.processor.RoomObservedEntityProcessor
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)

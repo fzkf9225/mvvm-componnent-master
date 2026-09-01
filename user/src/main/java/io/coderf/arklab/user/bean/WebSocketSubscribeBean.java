@@ -8,8 +8,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by fz on 2023/5/10 8:42
- * describe :WebSocket订阅信息
+ * WebSocket订阅信息
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/10 8:42
  */
 public class WebSocketSubscribeBean implements Parcelable {
     @SerializedName("device_sn")

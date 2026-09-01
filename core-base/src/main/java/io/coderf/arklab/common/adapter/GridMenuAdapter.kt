@@ -15,8 +15,12 @@ import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.widget.customview.GridMenuView
 
 /**
- * created by fz on 2024/10/10 14:39
- * describe:工作菜单
+ * 工作菜单
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/10 14:39
  */
 class GridMenuAdapter(val gridMenuView: GridMenuView?) :
     io.coderf.arklab.common.base.BasePagingAdapter<GridMenuBean, AdapterGridMenuItemBinding>(

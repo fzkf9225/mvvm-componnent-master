@@ -4,6 +4,9 @@ package io.coderf.arklab.ui.enums;
  * 输入框文本格式化类型，对应 {@code FormUI_formatText}。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public enum FormTextFormatEnum {
     /** 不格式化（默认） */

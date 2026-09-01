@@ -32,6 +32,11 @@ import io.coderf.arklab.common.utils.theme.ThemeUtils;
  * 典型用法：{@code attach(onBack)} → {@link #bindLifecycle(LifecycleOwner)} →
  * {@link #bindBackPressed(OnBackPressedDispatcher, LifecycleOwner)}。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VideoPlayerController {
 

@@ -12,6 +12,11 @@ import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 /**
  * WebView <b>网络页</b>演示：在 app 模块提供 Hilt 入口。
  * <p>默认加载公网 https 页面；无网络时会在加载前提示。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class WebViewNetworkDemoActivity extends WebViewActivity {

@@ -20,8 +20,12 @@ import io.coderf.arklab.demo.bean.Person;
  *
  * <p>模块需配置：{@code ksp project(':room-processor')}</p>
  *
- * @author fz
  * @see PersonDatabase
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Dao
 @RoomObservedEntity(Person.class)

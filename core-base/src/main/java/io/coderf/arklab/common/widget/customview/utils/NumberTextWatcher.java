@@ -16,8 +16,12 @@ import java.util.Locale;
 
 
 /**
- * Created by fz on 2023/9/7 9:47
- * describe :自动格式化数字输入
+ * 自动格式化数字输入
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/7 9:47
  */
 public class NumberTextWatcher implements TextWatcher, InputFilter {
     private static final String TAG = NumberTextWatcher.class.getSimpleName();

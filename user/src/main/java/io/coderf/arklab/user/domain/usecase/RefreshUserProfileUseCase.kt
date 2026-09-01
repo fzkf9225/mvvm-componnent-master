@@ -15,6 +15,11 @@ import javax.inject.Inject
  *
  * **推荐**：当前页面 ViewModel 主仓库已是 [UserRepositoryImpl] 时用 [execute]。
  * **其它 ViewModel**：用 [executeWithApiService]，可传入 [requestUi] / [tokenRefresher]。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class RefreshUserProfileUseCase @Inject constructor() {
 

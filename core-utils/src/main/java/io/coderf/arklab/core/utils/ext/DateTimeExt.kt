@@ -18,6 +18,11 @@ import java.util.Locale
  * 时间戳转格式化字符串。
  *
  * @param pattern 格式，默认 `"yyyy-MM-dd HH:mm"`
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun Long.toDateTimeString(pattern: String = "yyyy-MM-dd HH:mm"): String {
     return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(this))

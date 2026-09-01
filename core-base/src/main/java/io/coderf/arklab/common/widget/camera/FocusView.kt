@@ -12,8 +12,12 @@ import io.coderf.arklab.common.R
 import io.coderf.arklab.common.utils.common.DensityUtil
 
 /**
- * created by fz on 2025/8/28 9:01
- * describe:对焦框视图（四个角样式）
+ * 对焦框视图（四个角样式）
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/28 9:01
  */
 class FocusView @JvmOverloads constructor(
     context: Context,

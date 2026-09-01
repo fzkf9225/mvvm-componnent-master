@@ -14,8 +14,12 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.dao.AttachmentDao;
 
 /**
- * created by fz on 2024/11/6 10:44
- * describe:
+ * AttachmentDatabase 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 10:44
  */
 @Database(entities = {AttachmentBean.class}, version = 2, exportSchema = false)
 public abstract class AttachmentDatabase extends RoomDatabase {

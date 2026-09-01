@@ -1,7 +1,7 @@
 # 模块说明与使用指南
 
-> 对应版本：**common 4.5.1 / core-\* 1.0.1**（见文末 Maven 坐标）  
-> 本文说明各模块职责、依赖关系与日常用法。升级与迁移请看 [UPGRADE.md](./UPGRADE.md)。
+> 对应版本：**common 4.6.0 / core-\* 1.1.0**（Material3 DayNight，见文末 Maven 坐标）  
+> 本文说明各模块职责、依赖关系与日常用法。从 AppCompat 主题线或 4.4.x 升级请看 [UPGRADE.md](./UPGRADE.md)。
 
 ---
 
@@ -25,7 +25,7 @@ app（组装：Hilt / Demo）
 **业务侧推荐入口：**
 
 ```gradle
-implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.5.1
+implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.6.0
 implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
 implementation project(':userapi')  // 仅需要用户契约时
 ```
@@ -54,7 +54,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 | 职责 | `BaseActivity` / `BaseFragment` / `BaseViewModel`、历史 widget、helper、**全部 common 资源与 DataBinding** |
 | namespace | `io.coderf.arklab.common`（保留旧 R / 包名，业务 import 基本不用改） |
 | 何时用 | 一般通过 `common` 间接依赖；不要在业务里再拆第二份同名 R |
-| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。 |
+| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。**4.6.0** 起主题为 Material3，`ActionToolbar` / `TitleBar` 为 `MaterialToolbar`。 |
 
 ### `core-network`
 
@@ -164,19 +164,24 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 ```bash
 ./gradlew :common:publish
-./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish
+./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish :core-log:publish
 ```
 
 | 模块 | 坐标 |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.5.1` |
-| core-base | `io.coderf.arklab.core:base:1.0.1` |
-| core-network | `io.coderf.arklab.core:network:1.0.1` |
-| core-db | `io.coderf.arklab.core:db:1.0.1` |
-| core-ui | `io.coderf.arklab.core:ui:1.0.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.0.1` |
-| commonmedia | `io.coderf.arklab.media:media:3.3.1` |
-| commonui | `io.coderf.arklab.ui:ui:3.5.1`（`api` → core-base / core-network，另依赖 media） |
+| common | `io.coderf.arklab.common:common:4.6.0` |
+| core-base | `io.coderf.arklab.core:base:1.1.0` |
+| core-network | `io.coderf.arklab.core:network:1.1.0` |
+| core-db | `io.coderf.arklab.core:db:1.1.0` |
+| core-ui | `io.coderf.arklab.core:ui:1.1.0` |
+| core-utils | `io.coderf.arklab.core:utils:1.1.0` |
+| core-log | `io.coderf.arklab.core:log:1.1.0` |
+| room-processor | `io.coderf.arklab.room:room-processor:1.1.0` |
+| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.0` |
+| commonmedia | `io.coderf.arklab.media:media:3.4.0` |
+| commonui | `io.coderf.arklab.ui:ui:3.6.0`（`api` → core-base / core-network，另依赖 media） |
+| googlegps | `io.coderf.arklab.googlegps:googlegps:3.2.0` |
+| annotation | `io.coderf.arklab.annotation:annotation:3.3.0` |
 
 宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。
 
@@ -189,3 +194,5 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 3. Repository 内不要直接 `baseView.showLoading` / `showToast`，走 `RequestUi`。
 4. `core-*` 禁止依赖 `user` / `app`。
 5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
+6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。
+7. `Config.setDynamicColorEnabled` 默认关；若打开须在 `Config.init()` 之前。

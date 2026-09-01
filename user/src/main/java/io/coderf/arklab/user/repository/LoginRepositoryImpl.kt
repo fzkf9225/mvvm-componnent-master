@@ -15,6 +15,11 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 登录仓库（新版 [BaseNetworkRepository]）。
  * 登录 / 验证码关闭鉴权刷新，避免与 refresh-token 递归。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class LoginRepositoryImpl(
     private val api: UserApiService

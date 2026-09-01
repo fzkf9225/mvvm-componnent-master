@@ -10,6 +10,11 @@ import kotlinx.coroutines.flow.firstOrNull
  *
  * [query] 为创建本 Source 时的查询参数快照；一次分页过程内条件不变。
  * 变更条件须由 ViewModel [NetworkFlowPagingViewModel.refreshData] 重建 Source。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class NetworkPagingSource<T : Any, Q : PagingQuery>(
     private val repository: NetworkPagingRepository<T, *, Q>,

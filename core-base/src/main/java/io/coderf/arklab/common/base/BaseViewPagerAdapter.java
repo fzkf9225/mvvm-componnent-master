@@ -9,8 +9,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import io.coderf.arklab.common.bean.PagerInfo;
 
 /**
- * created by fz on 2025/2/12 9:16
- * describe:
+ * BaseViewPagerAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/2/12 9:16
  */
 public class BaseViewPagerAdapter extends FragmentStateAdapter {
     private final PagerInfo[] mInfoList;

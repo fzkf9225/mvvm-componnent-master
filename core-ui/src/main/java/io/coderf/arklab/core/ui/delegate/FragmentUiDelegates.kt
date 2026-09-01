@@ -13,6 +13,11 @@ import androidx.fragment.app.Fragment
  * - [UiMessageHost] / [LifecycleUiMessageHost]
  *
  * 本文件提供便捷装配，避免业务手写样板。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class FragmentUiKit(
     val fragment: Fragment,

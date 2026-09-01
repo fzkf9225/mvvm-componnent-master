@@ -30,8 +30,12 @@ import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAda
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
- * created by fz on 2025/7/4 17:38
- * describe:多选级联
+ * 多选级联
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/4 17:38
  */
 public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowCheckBoxAdapter.OnItemSelectedChangedListener, PopupWindowSelectedAdapter.OnItemSelectedClearListener {
     public final static String TAG = "PopupMultiCascadeView";

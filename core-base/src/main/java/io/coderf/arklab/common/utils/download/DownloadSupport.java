@@ -8,6 +8,11 @@ import io.coderf.arklab.common.base.BaseException;
  * 下载/更新公共前置校验（包内使用）。
  * <p>
  * 权限相关逻辑已迁移至 {@link DownloadPermissionHelper}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 final class DownloadSupport {
 

@@ -22,8 +22,12 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * created by fz on 2025/7/4 8:54
- * describe：PopupWindow的按钮，不是PopupWindow弹框
+ * PopupWindow的按钮，不是PopupWindow弹框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/4 8:54
  */
 public class TextPopupView extends ConstraintLayout {
 

@@ -1,8 +1,12 @@
 package io.coderf.arklab.media.enums;
 
 /**
- * created by fz on 2025/8/5 11:39
- * describe:媒体选择器类型
+ * 媒体选择器类型
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/5 11:39
  */
 public enum MediaPickerTypeEnum {
     /**

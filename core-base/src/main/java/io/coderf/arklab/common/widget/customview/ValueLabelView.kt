@@ -31,8 +31,8 @@ import io.coderf.arklab.core.utils.ext.dp2px
  * - 支持整体内容的左/右内边距调节
  *
  * @author fz
- * @version 2.0
- * @since 2.0
+ * @version 1.0
+ * @since 1.0
  * @created 2026/4/9
  */
 class ValueLabelView @JvmOverloads constructor(

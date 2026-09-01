@@ -2,8 +2,8 @@
 
 可复用的 Android MQTT 组件库（Eclipse Paho MQTT **v5**），面向多通道、可配置、Java / Kotlin 双友好。
 
-当前版本：**1.5.1**
-Maven 坐标：`io.coderf.arklab.mqtt:mqtt:1.5.1`
+当前版本：**1.6.0**
+Maven 坐标：`io.coderf.arklab.mqtt:mqtt:1.6.0`
 
 > **边界**：本库只提供连接 / 订退 / Presence / Lifecycle 编排等基础能力。  
 > 业务信封、bizCode、设备 SN 匹配等请在宿主项目二次扩展，不要写进框架。
@@ -239,7 +239,7 @@ dialog.updateReconnectState(attempt, maxAttempts, delaySec);
 ## 依赖
 
 ```gradle
-implementation 'io.coderf.arklab.mqtt:mqtt:1.5.1'
+implementation 'io.coderf.arklab.mqtt:mqtt:1.6.0'
 ```
 
 宿主 Manifest 需声明：
@@ -263,4 +263,4 @@ implementation 'io.coderf.arklab.mqtt:mqtt:1.5.1'
 ## 作者
 
 - **author**: fz
-- **module version**: 1.5.1
+- **module version**: 1.6.0

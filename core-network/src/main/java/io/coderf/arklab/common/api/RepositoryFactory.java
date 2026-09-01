@@ -15,8 +15,12 @@ import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.repository.RoomRepositoryImpl;
 
 /**
- * created by fz on 2025/6/25 11:20
- * describe:
+ * RepositoryFactory 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/25 11:20
  */
 public class RepositoryFactory {
     private RepositoryFactory() {

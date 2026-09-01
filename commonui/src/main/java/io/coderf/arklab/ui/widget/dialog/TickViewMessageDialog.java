@@ -21,8 +21,12 @@ import io.coderf.arklab.ui.widget.tickview.TickView;
 
 
 /**
- * Created by fz on 2019/10/11.
  * 提示弹框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/11
  */
 public class TickViewMessageDialog extends Dialog {
     private final Context context;

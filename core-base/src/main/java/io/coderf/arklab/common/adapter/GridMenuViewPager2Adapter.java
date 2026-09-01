@@ -13,7 +13,12 @@ import io.coderf.arklab.common.widget.customview.GridMenuView;
 
 
 /**
- * Created by fz on 2024/11/22
+ * GridMenuViewPager2Adapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/22
  */
 public class GridMenuViewPager2Adapter<T extends GridMenuBean> extends FragmentStateAdapter {
     private final List<List<T>> mInfoList;

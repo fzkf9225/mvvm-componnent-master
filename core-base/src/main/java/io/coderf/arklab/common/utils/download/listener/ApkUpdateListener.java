@@ -26,9 +26,12 @@ import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
  * {@code downloadMap} 通常传入 {@link io.coderf.arklab.common.utils.download.UpdateManager#getDownloadingUrls()}，
  * 与静默更新共享防重复状态。
  *
- * @author fz
  * @see io.coderf.arklab.common.utils.download.UpdateManager#checkUpdateInfo(io.coderf.arklab.common.utils.download.core.UpdateConfig)
- * @since 2024/11/7
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
 

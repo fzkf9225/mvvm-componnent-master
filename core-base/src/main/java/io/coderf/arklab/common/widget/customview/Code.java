@@ -8,11 +8,15 @@ import android.graphics.Paint;
 import java.util.Random;
 
 /**
- * Created by fz on 2017/6/9.
  * 随机生成验证码，通过算法生成随机字符串，并且转为bitmap
  * ivShowCode为控件ImageView
  * ivShowCode.setImageBitmap(Code.getInstance().createBitmap());
  * realCode = Code.getInstance().getCode().toLowerCase();
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/6/9
  */
 
 public class Code {

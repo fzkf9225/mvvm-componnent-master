@@ -9,8 +9,12 @@ import io.coderf.arklab.user.databinding.ModifyPasswordActivityBinding;
 import io.coderf.arklab.user.viewmodel.UserViewModel;
 
 /**
- * Created by fz on 2020/12/25 13:48
- * describe:修改密码
+ * 修改密码
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2020/12/25 13:48
  */
 @AndroidEntryPoint
 public class ModifyPasswordActivity extends BaseActivity<UserViewModel, ModifyPasswordActivityBinding> {

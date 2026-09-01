@@ -1,8 +1,12 @@
 package io.coderf.arklab.media.enums;
 
 /**
- * created by fz on 2025/8/5 11:38
- * describe: 视频质量等级
+ * 视频质量等级
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/5 11:38
  */
 public enum VideoQualityEnum {
     /**

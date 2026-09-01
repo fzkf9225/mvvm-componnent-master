@@ -18,7 +18,9 @@ import java.util.Random;
  * API 24+ 安装前会发送全屏通知（可点击跳转安装）。
  *
  * @author fz
- * @since 2023/10/27
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/10/27
  */
 public class DownloadUtil {
 

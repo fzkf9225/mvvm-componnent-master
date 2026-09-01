@@ -9,8 +9,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by fz on 2024/11/22.
+ * PageBean 类。
  *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/22
  */
 public class PageBean<T> implements Parcelable {
     @SerializedName(value = "data", alternate = {"list","records"})

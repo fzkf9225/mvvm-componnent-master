@@ -17,8 +17,12 @@ import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.demo.api.ApiServiceHelper;
 
 /**
- * Created by fz on 2023/4/27 14:58
- * describe :
+ * MainViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/27 14:58
  */
 @HiltViewModel
 public class MainViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> implements DefaultLifecycleObserver {

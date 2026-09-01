@@ -7,8 +7,12 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
- * Created by fz on 2024/1/8 18:28
- * describe :
+ * MathUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/1/8 18:28
  */
 public class MathUtil {
     // 默认精度10, 应该是2,4, 特别是做金额计算，到分和到毫

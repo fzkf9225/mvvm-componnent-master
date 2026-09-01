@@ -14,13 +14,17 @@ import io.coderf.arklab.core.bean.PagingQuery;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
- * Created by fz on 2023/12/1 11:14
- * describe : Rx 分页仓库。查询参数由 ViewModel 经 PagingSource 快照传入，禁止在 requestPaging 内强转 BaseView 取参。
+ * Rx 分页仓库。查询参数由 ViewModel 经 PagingSource 快照传入，禁止在 requestPaging 内强转 BaseView 取参。
  *
  * @param API ApiService
  * @param T   列表元素
  * @param BV  BaseView
  * @param Q   分页查询参数
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 11:14
  */
 public abstract class PagingRepositoryImpl<API extends BaseApiService, T, BV extends BaseView, Q extends PagingQuery>
         extends RepositoryImpl<API, BV> {

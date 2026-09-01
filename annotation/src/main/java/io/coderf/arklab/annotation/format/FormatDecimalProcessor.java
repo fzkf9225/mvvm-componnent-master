@@ -23,8 +23,12 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
- * created by fz on 2024/9/29 8:46
- * describe:java中AbstractProcessor自定义注解处理器演示demo，自动生成代码
+ * java中AbstractProcessor自定义注解处理器演示demo，自动生成代码
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/9/29 8:46
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("io.coderf.arklab.annotation.format.FormatDecimal")

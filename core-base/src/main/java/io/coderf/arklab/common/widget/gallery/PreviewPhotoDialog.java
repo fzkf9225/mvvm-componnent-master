@@ -34,7 +34,12 @@ import io.coderf.arklab.common.widget.gallery.adapter.PreviewViewPagerAdapter;
 
 /**
  * created by fz 2024/12/20
- * describe：大图预览dialog，支持视频预览，但是默认为图片，如果希望是视频的话必须提前指定AttachmentBean的type
+ * 大图预览dialog，支持视频预览，但是默认为图片，如果希望是视频的话必须提前指定AttachmentBean的type
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class PreviewPhotoDialog extends Dialog {
     public final static String TAG = PreviewPhotoDialog.class.getSimpleName();

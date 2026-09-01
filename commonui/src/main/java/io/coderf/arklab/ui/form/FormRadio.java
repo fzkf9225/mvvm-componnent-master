@@ -34,6 +34,9 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
  * 避免系统 {@link com.google.android.material.radiobutton.MaterialRadioButton} 自带内边距与过大点击区域。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayout {
 

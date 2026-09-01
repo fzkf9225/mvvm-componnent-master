@@ -9,6 +9,11 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 /**
  * MaterialCheckBox / Radio 图标选中切换动画。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 final class FormToggleIconAnimator {
 

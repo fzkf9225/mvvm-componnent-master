@@ -81,8 +81,12 @@ import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
 import io.coderf.arklab.ui.widget.dialog.TickViewMessageDialog;
 
 /**
- * Created by fz on 2023/8/14 10:56
- * describe :
+ * DialogViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 10:56
  */
 public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
     List<PopupWindowBean> dataList = Arrays.asList(

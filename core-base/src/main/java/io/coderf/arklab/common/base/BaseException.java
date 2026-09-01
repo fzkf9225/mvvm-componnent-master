@@ -4,7 +4,12 @@ import androidx.annotation.NonNull;
 
 /**
  * Create by fz on 2019/8/1
- * describe: 自定义异常封装
+ * 自定义异常封装
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class BaseException extends RuntimeException {
 

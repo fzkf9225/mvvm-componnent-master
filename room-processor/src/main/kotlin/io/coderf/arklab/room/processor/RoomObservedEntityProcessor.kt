@@ -10,6 +10,14 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import java.io.OutputStreamWriter
 
+/**
+ * private 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 private const val ANNOTATION_NAME = "io.coderf.arklab.common.annotation.RoomObservedEntity"
 private const val BASE_DAO_NAME = "io.coderf.arklab.common.dao.BaseRoomDao"
 

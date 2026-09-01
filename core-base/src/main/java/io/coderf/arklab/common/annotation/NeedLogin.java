@@ -6,6 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
+/**
+ * NeedLogin 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @Target(value = {ElementType.TYPE,ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME) //运行时有效
 public @interface NeedLogin {

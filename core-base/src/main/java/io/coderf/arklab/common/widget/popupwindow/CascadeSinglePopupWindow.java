@@ -29,8 +29,12 @@ import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAda
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
- * created by fz on 2025/7/4 17:38
- * describe:单选级联
+ * 单选级联
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/4 17:38
  */
 public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends PopupWindow implements PopupWindowSelectedAdapter.OnItemSelectedClearListener {
     public final static String TAG = "PopupSingleCascadeView";
@@ -98,7 +102,7 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
         //默认参数
         itemHeight = DensityUtil.dp2px(context, 40f);
         selectionTextColor = ContextCompat.getColor(context, R.color.autoColor);
-        selectTextColor = ContextCompat.getColor(context, R.color.white);
+        selectTextColor = ContextCompat.getColor(context, R.color.onPrimary);
         unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
         radius = DensityUtil.dp2px(context, 6f);
         selectBgColor = ContextCompat.getColor(context, R.color.themeColor);

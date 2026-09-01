@@ -2,14 +2,16 @@ package io.coderf.arklab.common.utils.download.listener;
 
 import java.io.File;
 
-/**
- * 文件下载进度与结果回调。
- * <p>
- * 所有回调均在<b>主线程</b>触发（由 {@link io.coderf.arklab.common.utils.download.core.DownloadObservable} 保证）。
- * 通过 {@link io.coderf.arklab.common.utils.download.core.DownloadConfig.Builder#setDownloadListener} 传入。
- *
- * @author fz
- * @since 2025/10/29
+/**
+ * 文件下载进度与结果回调。
+ * <p>
+ * 所有回调均在<b>主线程</b>触发（由 {@link io.coderf.arklab.common.utils.download.core.DownloadObservable} 保证）。
+ * 通过 {@link io.coderf.arklab.common.utils.download.core.DownloadConfig.Builder#setDownloadListener} 传入。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/10/29
  */
 public interface DownloadListener {
 

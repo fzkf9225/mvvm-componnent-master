@@ -8,6 +8,14 @@ import com.googlecode.mp4parser.util.Matrix;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Mp4Movie 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class Mp4Movie {
     private Matrix matrix = Matrix.ROTATE_0;
     private final ArrayList<Track> tracks = new ArrayList<Track>();

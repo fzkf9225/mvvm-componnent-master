@@ -32,8 +32,12 @@ import io.coderf.arklab.common.widget.customview.round.ShapeBuilder;
 import io.coderf.arklab.common.widget.customview.round.SpanContainer;
 
 /**
- * Created by fz on 2023/5/23 16:29
- * describe :渐变背景色且可以设置左右不同文字颜色的TextView
+ * 渐变背景色且可以设置左右不同文字颜色的TextView
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/23 16:29
  */
 public class GradationRectTextView extends MaterialTextView {
     /**

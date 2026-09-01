@@ -3,8 +3,12 @@ package io.coderf.arklab.media.helper;
 import android.Manifest;
 
 /**
- * created by fz on 2024/10/25 13:53
- * describe:
+ * ConstantsHelper 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/25 13:53
  */
 public class ConstantsHelper {
 

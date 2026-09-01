@@ -2,8 +2,12 @@ package io.coderf.arklab.common.enums;
 
 
 /**
- * created by fz on 2025/6/27 09:08
- * describe:WebView的地址类型
+ * WebView的地址类型
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/27 9:08
  */
 public enum WebViewUrlTypeEnum {
     /**

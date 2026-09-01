@@ -6,8 +6,12 @@ import android.net.Uri;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
- * Created by fz on 2023/9/2.
- * describe：媒体类型
+ * 媒体类型
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/2
  */
 public enum MediaTypeEnum {
     /*

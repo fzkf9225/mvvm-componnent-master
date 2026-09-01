@@ -20,9 +20,12 @@ import io.coderf.arklab.common.utils.download.listener.DownloadListener;
  *   <li>额外包含更新说明、版本号展示、对话框是否可取消</li>
  * </ul>
  *
- * @author fz
  * @see UpdateManager#checkUpdateInfo(UpdateConfig)
- * @since 2026/3/31
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/3/31
  */
 public class UpdateConfig extends DownloadConfig {
 

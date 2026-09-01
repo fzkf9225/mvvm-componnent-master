@@ -2,6 +2,11 @@ package io.coderf.arklab.demo.inter;
 
 /**
  * 演示 @IntoSet 多绑定：同一接口的多个实现会被收集到 Set 中注入。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public interface HiltLogPlugin {
 

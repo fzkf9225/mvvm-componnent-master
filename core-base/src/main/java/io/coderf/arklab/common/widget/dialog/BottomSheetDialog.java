@@ -28,7 +28,7 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
  * Create by fz on 2020/6/23 0023
- * describe:底部选择框
+ * 底部选择框
  * 支持自定义菜单项样式：
  * - 列表项高度
  * - 字体大小
@@ -36,6 +36,11 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
  * - 单行/多行显示
  * - 左右margin
  * - 上下padding
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.android.material.bottomsheet.BottomSheetDialog {
     /**

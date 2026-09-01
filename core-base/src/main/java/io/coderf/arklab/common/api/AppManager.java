@@ -26,14 +26,14 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- *  * 应用程序Activity管理类：用于Activity管理和应用程序退出
- *  * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
- *  * <p>
- *  * 添加Activity到堆栈
- *  * AppManager.getAppManager().addActivity(this);
- *  * onDestroy 中仅从堆栈移除（勿再次 finish，否则配置变更后无法重建）：
- *  * AppManager.getAppManager().removeActivity(this);
- *  * 主动结束页面：AppManager.getAppManager().finishActivity(activity);
+ * 应用程序Activity管理类：用于Activity管理和应用程序退出
+ * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
+ * <p>
+ * 添加Activity到堆栈
+ * AppManager.getAppManager().addActivity(this);
+ * onDestroy 中仅从堆栈移除（勿再次 finish，否则配置变更后无法重建）：
+ * AppManager.getAppManager().removeActivity(this);
+ * 主动结束页面：AppManager.getAppManager().finishActivity(activity);
  *
  * @author fz
  * @version 1.0

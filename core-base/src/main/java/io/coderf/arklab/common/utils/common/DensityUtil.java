@@ -11,8 +11,12 @@ import android.util.DisplayMetrics;
 import androidx.annotation.NonNull;
 
 /**
- * Created by fz on 2018/7/12.
  * px与dp互转
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/7/12
  */
 public class DensityUtil {
     private final static String TAG = DensityUtil.class.getSimpleName();

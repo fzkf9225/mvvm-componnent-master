@@ -3,8 +3,12 @@ package io.coderf.arklab.user.api;
 import io.coderf.arklab.common.api.BaseApplication;
 
 /**
- * Created by fz on 2021/2/7 15:03
- * describe:
+ * ApplicationHelper 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/2/7 15:03
  */
 public class ApplicationHelper extends BaseApplication {
 

@@ -3,8 +3,12 @@ package io.coderf.arklab.ui.enums;
 import android.text.TextUtils;
 
 /**
- * Created by fz on 2025/6/5 14:25
- * describe :label文字是否加粗
+ * label文字是否加粗
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/5 14:25
  */
 public enum LabelTextStyleEnum {
     /**

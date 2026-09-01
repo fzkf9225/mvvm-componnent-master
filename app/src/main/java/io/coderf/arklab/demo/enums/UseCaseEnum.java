@@ -38,8 +38,12 @@ import io.coderf.arklab.demo.activity.WightActivity;
 import io.coderf.arklab.demo.bean.UseCase;
 
 /**
- * Created by fz on 2023/8/14 10:19
- * describe :
+ * UseCaseEnum 枚举。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 10:19
  */
 public enum UseCaseEnum {
     /**

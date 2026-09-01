@@ -26,7 +26,9 @@ import io.coderf.arklab.common.api.ConstantsHelper;
  * APK 更新完成或失败时使用 {@link #sendNotificationFullScreen}。
  *
  * @author fz
- * @since 2017/10/13
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/10/13
  */
 public class DownloadNotificationUtil extends ContextWrapper {
 

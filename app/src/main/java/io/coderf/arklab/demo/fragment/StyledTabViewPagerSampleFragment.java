@@ -11,6 +11,11 @@ import io.coderf.arklab.demo.config.TabLayoutDemoApplier;
 
 /**
  * BaseStyledViewPagerFragment 示例：圆角背景选中态 Tab。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class StyledTabViewPagerSampleFragment

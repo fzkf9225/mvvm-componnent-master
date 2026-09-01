@@ -39,6 +39,11 @@ import io.coderf.arklab.mqtt.widget.MqttReconnectDialog;
  * </ul>
  * <p>
  * 默认 Broker 为 EMQX 公共测试节点，仅供联调；生产环境请替换为服务端下发的连接参数。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class MqttDemoActivity extends BaseActivity<EmptyViewModel, ActivityMqttDemoBinding> {

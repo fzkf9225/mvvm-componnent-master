@@ -35,9 +35,13 @@ import io.reactivex.rxjava3.core.Single
  * @param T 实体类型
  * @param DB 继承 [BaseRoomDao] 的 Dao
  * @param BV 页面 View，可为 null（无 UI 的后台仓库）
- * @author fz
  * @see RoomRequestOptions
  * @see RxRoomPagingSource
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
     private val roomDao: DB,

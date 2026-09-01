@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/5/5 10:05
- * describe :
+ * HeaderBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/5 10:05
  */
 public class HeaderBean {
     /**

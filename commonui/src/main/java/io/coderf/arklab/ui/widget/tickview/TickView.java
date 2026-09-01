@@ -24,8 +24,12 @@ import io.coderf.arklab.ui.R;
 
 
 /**
- * Created by fz on 2019/10/22.
- * describe:自定义打钩动画
+ * 自定义打钩动画
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/22
  */
 public class TickView extends View {
 

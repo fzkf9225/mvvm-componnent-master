@@ -31,7 +31,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * </p>
  *
  * @author fz
- * @version 1.1
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/2 9:00
  */

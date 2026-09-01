@@ -27,6 +27,9 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
  * 内边距导致右侧对齐问题。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormSwitch extends FormConstraintLayout {
 

@@ -10,6 +10,11 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Demo 组装层：将框架 [MqttClient] 适配为 case 侧 [MessageGateway]。
  * mqttcomponent 不依赖 :base / userapi。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class MqttMessageGateway(
     private val client: MqttClient,

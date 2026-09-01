@@ -2,15 +2,15 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.5.1**  
-Maven：`io.coderf.arklab.ui:ui:3.5.1`  
+当前版本：**3.6.0**  
+Maven：`io.coderf.arklab.ui:ui:3.6.0`  
 namespace：`io.coderf.arklab.ui`
 
 ---
 
 ## 职责
 
-- 表单组件与通用 UI 封装
+- 表单组件与通用 UI 封装（日历选中日默认字色为 `onPrimary`，与品牌色底配对）
 - 依赖核心栈（`core-base` / `core-network`），部分能力内部使用 `commonmedia`
 
 ---
@@ -29,7 +29,7 @@ namespace：`io.coderf.arklab.ui`
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.5.1'
+implementation 'io.coderf.arklab.ui:ui:3.6.0'
 // 或
 implementation project(':commonui')
 ```

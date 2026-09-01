@@ -26,7 +26,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@{item.name}"
-            android:textColor="@color/black"
+            android:textColor="@color/onSurfacePrimary"
             android:textSize="16sp"
             app:squareColor="@color/theme_green"
             app:squareWidth="3dp"

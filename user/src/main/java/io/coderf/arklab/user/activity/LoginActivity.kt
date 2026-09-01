@@ -39,8 +39,12 @@ import io.coderf.arklab.common.R as CommonR
 
 
 /**
- * Created by fz on 2024/10/09 15:56.
- * describe：登录，登录方式：账号密码登录
+ * 登录，登录方式：账号密码登录
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/9 15:56
  */
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), UserView {

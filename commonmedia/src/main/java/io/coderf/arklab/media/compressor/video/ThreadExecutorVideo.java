@@ -8,8 +8,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by fz on 2023/4/26 15:47
- * describe :
+ * ThreadExecutorVideo 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/26 15:47
  */
 public class ThreadExecutorVideo extends ThreadPoolExecutor {
     private static final int CORE_POOL_SIZE = 1;

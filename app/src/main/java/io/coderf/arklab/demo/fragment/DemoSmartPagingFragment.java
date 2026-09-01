@@ -13,8 +13,12 @@ import io.coderf.arklab.demo.bean.NotificationMessageBean;
 import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel;
 
 /**
- * Created by fz on 2023/12/1 16:40
- * describe :
+ * DemoSmartPagingFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 16:40
  */
 @AndroidEntryPoint
 public class DemoSmartPagingFragment extends BaseSmartPagingFragment<DemoPagingViewModel, BaseSmartPagingBinding, NotificationMessageBean> {

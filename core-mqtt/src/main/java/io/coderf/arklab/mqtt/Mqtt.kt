@@ -36,8 +36,9 @@ import io.coderf.arklab.mqtt.utils.MqttLog
  * 业务消息解析（信封 / bizCode 等）请在宿主模块自行扩展，本入口不提供。
  *
  * @author fz
- * @version 1.5
- * @since 1.4
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 object Mqtt {
 

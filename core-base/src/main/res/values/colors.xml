@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Material3 DayNight 语义色。
-        亮色数值对齐升级前 AppCompat 工程，暗色只在 values-night/colors.xml 覆盖。
-        布局/代码请用这些语义色或 ?attr/colorSurface，不要把 white/black 当表面色。
+        Material3 tonal palette，种子色 #1C50B5。
+        亮色表面数值对齐升级前 AppCompat 工程；角色分层按官方 M3 token。
+        暗色只在 values-night/colors.xml 覆盖。
+        布局请用这些语义色或 ?attr/colorSurface，不要把 white/black 当表面色。
     -->
 
-    <!-- ========== 品牌 / 状态（不随模式变化） ========== -->
+    <!-- ========== 品牌 / 状态 ========== -->
     <color name="themeColor">#FF1C50B5</color>
     <color name="theme_red">#FFEA3F25</color>
     <color name="theme_green">#FF08A04B</color>
@@ -24,12 +25,9 @@
     <color name="h_area">#FFF3F3F3</color>
     <color name="search_view_background">#FF9B9B9B</color>
 
-    <!-- 卡片/控件表面：对应升级前 @color/white 的使用场景 -->
     <color name="surfacePrimary">#FFFFFFFF</color>
     <color name="surfaceSecondary">#FFF3F3F3</color>
-    <!-- 主文字：升级前 autoColor -->
     <color name="onSurfacePrimary">#FF333333</color>
-    <!-- 次文字：升级前 nv_bg_color -->
     <color name="onSurfaceSecondary">#FF999999</color>
 
     <color name="autoColor">@color/onSurfacePrimary</color>
@@ -40,19 +38,48 @@
     <color name="gray">#FF666666</color>
     <color name="dark_light">#FF5D5D5D</color>
 
-    <!-- ========== Material3 token 映射 ========== -->
+    <!-- ========== M3 Primary / Container ========== -->
+    <color name="primaryContainer">#FFD6E3FF</color>
+    <color name="onPrimary">#FFFFFFFF</color>
+    <color name="onPrimaryContainer">#FF001B3D</color>
+    <color name="primaryInverse">#FFA9C7FF</color>
+
+    <!-- ========== M3 Secondary ========== -->
+    <color name="secondary">#FF515F73</color>
+    <color name="onSecondary">#FFFFFFFF</color>
+    <color name="secondaryContainer">#FFD5E3FB</color>
+    <color name="onSecondaryContainer">#FF0D1C2E</color>
+
+    <!-- ========== M3 Tertiary ========== -->
+    <color name="tertiary">#FF6A5778</color>
+    <color name="onTertiary">#FFFFFFFF</color>
+    <color name="tertiaryContainer">#FFF1DAFF</color>
+    <color name="onTertiaryContainer">#FF251432</color>
+
+    <!-- ========== M3 Error ========== -->
+    <color name="onError">#FFFFFFFF</color>
+    <color name="errorContainer">#FFFFDAD6</color>
+    <color name="onErrorContainer">#FF410002</color>
+
+    <!-- ========== M3 Surface container 分层 ========== -->
+    <color name="surfaceDim">#FFE4E3E3</color>
+    <color name="surfaceBright">#FFFFFFFF</color>
+    <color name="surfaceContainerLowest">#FFFFFFFF</color>
+    <color name="surfaceContainerLow">#FFF3F3F3</color>
+    <color name="surfaceContainer">#FFEEF0F3</color>
+    <color name="surfaceContainerHigh">#FFEDEDED</color>
+    <color name="surfaceContainerHighest">#FFE4E3E3</color>
     <color name="surfaceVariant">@color/surfaceSecondary</color>
     <color name="surfaceInverse">#FF313033</color>
     <color name="onSurfaceInverse">#FFF4EFF4</color>
     <color name="outline">@color/nv_bg_color</color>
     <color name="outlineVariant">@color/h_line_color</color>
-    <color name="primaryInverse">#FF6B8EFF</color>
     <color name="scrim">#FF000000</color>
 
-    <color name="buttonPrimaryText">#FFFFFFFF</color>
-    <color name="buttonSecondaryText">#FF1C50B5</color>
-    <color name="buttonSurfaceTint">#FF1C50B5</color>
-    <color name="buttonOutlineTint">#FF1C50B5</color>
+    <color name="buttonPrimaryText">@color/onPrimary</color>
+    <color name="buttonSecondaryText">@color/themeColor</color>
+    <color name="buttonSurfaceTint">@color/themeColor</color>
+    <color name="buttonOutlineTint">@color/themeColor</color>
 
     <color name="cardSurface">@color/surfacePrimary</color>
     <color name="cardOnSurface">@color/onSurfacePrimary</color>

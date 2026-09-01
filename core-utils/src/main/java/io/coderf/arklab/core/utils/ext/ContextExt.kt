@@ -16,6 +16,11 @@ import androidx.annotation.StringRes
  *
  * @param message  消息内容
  * @param duration 显示时长，默认 [Toast.LENGTH_SHORT]
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()

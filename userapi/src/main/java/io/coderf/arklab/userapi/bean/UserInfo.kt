@@ -4,6 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.UUID
 
+/**
+ * UserInfo 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 data class UserInfo(
     /**
      * 主键

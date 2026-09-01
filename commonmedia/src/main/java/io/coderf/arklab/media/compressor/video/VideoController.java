@@ -26,6 +26,14 @@ import java.util.List;
 
 import io.coderf.arklab.media.utils.LogUtil;
 
+/**
+ * VideoController 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class VideoController {
     private static final String TAG = "VideoController";
     static final int COMPRESS_QUALITY_HIGH = 1;

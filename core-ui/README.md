@@ -2,8 +2,8 @@
 
 轻量 Activity 委托层：Toolbar / 初始化策略等（`ToolbarDelegate`、`InitDataPolicy` …）。大量历史控件仍在 `core-base`。
 
-当前版本：**1.0.1**  
-Maven：`io.coderf.arklab.core:ui:1.0.1`  
+当前版本：**1.1.0**  
+Maven：`io.coderf.arklab.core:ui:1.1.0`  
 namespace：`io.coderf.arklab.core.ui`
 
 ---
@@ -26,7 +26,7 @@ namespace：`io.coderf.arklab.core.ui`
 一般随 `common` / `core-base` 带入；仅在做极细拆分时显式依赖：
 
 ```gradle
-implementation 'io.coderf.arklab.core:ui:1.0.1'
+implementation 'io.coderf.arklab.core:ui:1.1.0'
 // 或
 implementation project(':core-ui')
 ```

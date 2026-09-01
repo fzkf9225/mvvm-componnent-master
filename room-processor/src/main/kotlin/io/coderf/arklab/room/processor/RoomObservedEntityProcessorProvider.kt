@@ -12,6 +12,11 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
  *
  * @see RoomObservedEntityProcessor
  * @see io.coderf.arklab.common.annotation.RoomObservedEntity
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class RoomObservedEntityProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {

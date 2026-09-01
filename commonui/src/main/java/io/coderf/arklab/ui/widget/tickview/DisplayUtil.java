@@ -3,8 +3,12 @@ package io.coderf.arklab.ui.widget.tickview;
 import android.content.Context;
 
 /**
- * Created by fz on 2019/10/22.
- * describe:
+ * DisplayUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/22
  */
 class DisplayUtil {
     static int dp2px(Context context, float dpValue) {

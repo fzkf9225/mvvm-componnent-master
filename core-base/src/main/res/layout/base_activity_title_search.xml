@@ -28,19 +28,22 @@
             android:id="@+id/search_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.Material3.ActionBar"
+            android:background="@android:color/transparent"
             app:elevation="0dp"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:liftOnScroll="false"
+            app:paddingTopSystemWindowInsets="false"
+            app:paddingBottomSystemWindowInsets="false">
 
             <io.coderf.arklab.common.widget.customview.ActionToolbar
                 android:id="@+id/search_tool_bar"
+                style="@style/Widget.App.Toolbar.OnPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@{ContextCompat.getColor(context, toolbarConfig.bgColor)}"
                 android:minHeight="?attr/actionBarSize"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:theme="@style/ToolBarStyle_white"
+                app:titleCentered="false"
                 app:buttonGravity="center_vertical"
                 app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
                 app:bindNavIconRes="@{toolbarConfig.backIconRes}"

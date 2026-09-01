@@ -14,6 +14,9 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
  * {@link EntityValidator} 反射元数据缓存，可通过 {@link #setCacheEnabled(boolean)} 开关。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class EntityValidatorCache {
 

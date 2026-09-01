@@ -4,8 +4,12 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 /**
- * created by fz on 2024/11/12 16:10
- * describe:
+ * FormBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/12 16:10
  */
 public class FormBean extends BaseObservable {
     private String id;

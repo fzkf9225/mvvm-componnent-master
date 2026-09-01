@@ -31,6 +31,11 @@ import io.coderf.arklab.common.utils.common.FileUtil;
  * <h3>全局捕获异常</h3>
  * <br>
  * 当程序发生Uncaught异常的时候,有该类来接管程序,并记录错误日志
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CrashHandler implements UncaughtExceptionHandler {
 

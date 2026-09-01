@@ -15,9 +15,13 @@ import kotlinx.coroutines.flow.flowOn
  * 通过 callbackFlow 桥接既有 RxJava3 API，不替换原有 Completable / Flowable / Single。
  * 多数为「发射一次后结束」的桥接，持续观察表变更请用 LiveData。
  *
- * @author fz
  * @see RoomRepositoryCoroutineExt
  * @see RoomRepositoryImpl
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 object RoomRepositoryFlowExt {
 

@@ -15,19 +15,26 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import com.google.android.material.textview.MaterialTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
+import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.helper.CordovaDialogsHelper;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * Created by fz on 2024/2/1 14:59
- * describe :
+ * SystemWebChromeClient 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/2/1 14:59
  */
 public class SystemWebChromeClient extends WebChromeClient {
     public final static String TAG = "SystemWebChromeClient";
@@ -36,7 +43,7 @@ public class SystemWebChromeClient extends WebChromeClient {
     private final CordovaDialogsHelper dialogsHelper;
     private final ProgressBar progressBar;
     protected final Context mContext;
-    private MaterialTextView tvBarTitle;
+    private TextView tvBarTitle;
     /**
      * 文件服务
      */
@@ -49,7 +56,7 @@ public class SystemWebChromeClient extends WebChromeClient {
         fileLauncher = activity.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> chooseFileCallback(result.getResultCode(), result.getData()));
     }
 
-    public SystemWebChromeClient(ComponentActivity activity, CordovaDialogsHelper dialogsHelper, ProgressBar progressBar, MaterialTextView tvBarTitle) {
+    public SystemWebChromeClient(ComponentActivity activity, CordovaDialogsHelper dialogsHelper, ProgressBar progressBar, TextView tvBarTitle) {
         this.mContext = activity;
         this.dialogsHelper = dialogsHelper;
         this.progressBar = progressBar;
@@ -209,14 +216,20 @@ public class SystemWebChromeClient extends WebChromeClient {
     @Override
     public void onReceivedTitle(WebView view, String title) {
         super.onReceivedTitle(view, title);
-        if (tvBarTitle == null) {
-            return;
-        }
         boolean isStartHttp = !TextUtils.isEmpty(title) && (title.startsWith("http") || title.startsWith("HTTP"));
         if (isStartHttp) {
             return;
         }
-        tvBarTitle.setText(title);
+        if (tvBarTitle != null) {
+            tvBarTitle.setText(title);
+            return;
+        }
+        if (mContext instanceof Activity activity) {
+            View toolbar = activity.findViewById(R.id.main_bar);
+            if (toolbar instanceof MaterialToolbar materialToolbar) {
+                materialToolbar.setTitle(title);
+            }
+        }
     }
 }
 

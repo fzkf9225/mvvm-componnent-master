@@ -24,8 +24,12 @@ import io.coderf.arklab.media.enums.VideoQualityEnum;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
- * created by fz on 2025/8/6 9:16
- * describe:视频压缩handler
+ * 视频压缩handler
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/6 9:16
  */
 public class VideoCompressHandler extends Handler {
     private final List<Uri> uriList;

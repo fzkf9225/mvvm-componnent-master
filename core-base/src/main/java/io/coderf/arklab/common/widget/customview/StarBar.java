@@ -19,8 +19,12 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 
 /**
- * Created by fz on 2017/1/13.
  * 自定义   星星控件，空心实心的五角心
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/1/13
  */
 
 public class StarBar extends View {

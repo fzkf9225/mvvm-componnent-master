@@ -21,8 +21,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by fz on 2023/10/31 14:00
- * describe:唯一识别号
+ * 唯一识别号
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/10/31 14:00
  */
 public class GpsSockerUtils {
     private final static String TAG = GpsSockerUtils.class.getSimpleName();

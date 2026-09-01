@@ -19,35 +19,36 @@ import io.reactivex.rxjava3.core.Single
  *
  * ## 快速接入
  * ```kotlin
- * @Dao
- * @RoomObservedEntity(YourEntity::class)  // 推荐：KSP 生成 XxxDaoRawQueryBridge
  * abstract class YourDao : YourDaoRawQueryBridge() {
  *     override fun getTableName() = "YourEntity"  // 与 @Entity(tableName) 一致
  * }
  * ```
- *
  * ```java
- * @Dao
- * @RoomObservedEntity(Person.class)
  * public abstract class PersonDao extends PersonDaoRawQueryBridge {
  *     @Override public String getTableName() { return "Person"; }
  * }
  * ```
- *
  * ## RawQuery 观察实体（二选一）
  * 1. **推荐**：[@RoomObservedEntity][io.coderf.arklab.common.annotation.RoomObservedEntity] +
  *    `extends XxxDaoRawQueryBridge`（KSP 自动生成 observedEntities 正确的方法）；
  * 2. **兼容老项目**：`extends BaseRoomDao<T>()` 并手动 override 底部 `do*` 方法
  *    （含 [doCount]、[doExecute]）。
- *
  * ## 上层配合
  * - 业务仓库继承 [io.coderf.arklab.common.repository.RoomRepositoryImpl]；
  * - 分页列表可配合 [io.coderf.arklab.common.datasource.RxRoomPagingSource]。
  *
+ * @Dao
+ * @RoomObservedEntity(YourEntity::class)  // 推荐：KSP 生成 XxxDaoRawQueryBridge
+ * @Dao
+ * @RoomObservedEntity(Person.class)
  * @param T 表实体类型
- * @author fz
  * @see RoomSqlHelper
  * @see io.coderf.arklab.common.annotation.RoomObservedEntity
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 abstract class BaseRoomDao<T : Any> {
 

@@ -13,6 +13,11 @@ import io.coderf.arklab.ui.R;
 
 /**
  * FormSpinner 下拉列表项样式。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormSpinnerDropdownStyle {
 

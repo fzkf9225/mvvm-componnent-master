@@ -14,6 +14,11 @@ import java.math.RoundingMode
 
 /**
  * 若集合非空则执行 [block]，并返回其结果；否则返回 null。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 inline fun <T, R> Collection<T>.ifNotEmpty(block: (Collection<T>) -> R): R? {
     return if (isNotEmpty()) block(this) else null

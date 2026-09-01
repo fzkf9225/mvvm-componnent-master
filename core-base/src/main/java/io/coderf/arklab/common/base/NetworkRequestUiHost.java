@@ -16,6 +16,11 @@ import io.coderf.arklab.core.request.RequestUi;
  * <p>
  * Repository / 网络层<strong>不再</strong>直接持有或调用页面 {@link BaseView} 的 showLoading / showToast 等；
  * 仅向本 Host 写状态，由 Lifecycle 安全地派发到当前可见页面。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
 

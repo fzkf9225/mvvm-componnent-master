@@ -23,8 +23,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 /**
- * created by fz on 2024/9/23 10:08
- * describe:集合工具类
+ * 集合工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/9/23 10:08
  */
 public class CollectionUtil {
 

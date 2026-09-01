@@ -59,21 +59,23 @@
 
 ---
 
-# 文档索引（4.5.1）
+# 文档索引（4.6.0）
 
 | 文档 | 说明 |
 |------|------|
 | [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
-| [UPGRADE.md](UPGRADE.md) | 从 common 4.4.x 升到 4.5.1 的迁移清单与验收 |
-| [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、配置、页面脚手架） |
+| [UPGRADE.md](UPGRADE.md) | **4.6.0 Material3 主题升级**（相对 AppCompat 线）；附录为 4.4.x → 4.5.1 拆分 |
+| [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、主题、配置、页面脚手架） |
 
-当前主干版本：**common `4.5.0`（facade）+ core-base/network/db `1.0.1`**。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。
+当前主干版本：**common `4.6.0`（facade）+ core-\* `1.1.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。相对 AppCompat 工程（common 4.5.1 / core-base 1.0.9）的变更见 [UPGRADE.md](UPGRADE.md)。
 
 # 框架简介
-框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，最高兼容到`Android 14`。
+框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，`targetSdk` 对齐 Demo（当前 35）。
 从架构上根本的进行拆解，充分发挥解耦的思路，从原始的`Activity`干所有事件，拆分成各个分开的模块，发挥`ViewModel`特性专门使用`Repository`进行数据处理，接口通过`Hilt`依赖注入的方式进行一键注入省去大量的`New`操作。
 
 **4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
+
+**4.6.0**：`AppBaseTheme` 从 AppCompat Light 升级为 `Theme.Material3.DayNight.NoActionBar`；暗色走 `values-night` tonal 色板（关闭系统 `forceDarkAllowed`）。控件仍是 Views，不是 Compose。对外 API 与旧工程对齐，详见 [UPGRADE.md](UPGRADE.md)。
 
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
@@ -88,10 +90,11 @@
 10. 使用`properties`配置文件，配置文件会自动拆分环境，防止频繁切换环境导致的一系列问题
 11. 单独拆分`annotation`模块，一键注解校验字段表单参数是否满足约束条件
 12. 架构上通过模块拆分 + Gateway 解耦，业务只依赖 `*api`，实现由 app 组装层绑定
+13. Material3 主题与 Top App Bar / 按钮 / 圆角色（`AppBaseTheme`，动态取色默认关）
 
 # 工程介绍
     - **core-utils**：无 R 依赖的轻量工具（预留分层）
-    - **core-base**：Base* / widget / helper / res（namespace 仍为 `io.coderf.arklab.common`）
+    - **core-base**：Base* / widget / helper / res（namespace 仍为 `io.coderf.arklab.common`）；主题与 Material 控件入口在此
     - **core-network**：Retrofit / Repository / `DefaultNetworkRepository`
     - **core-db**：Room DAO / Database / RoomRepository
     - **core-ui**：Activity 委托（如 `InitDataPolicy`）
@@ -116,20 +119,20 @@
 
 ## MVVM架构示例代码，重构版本
 
-### 业务侧依赖入口：继续用 `common`（4.5.1 facade）
+### 业务侧依赖入口：继续用 `common`（4.6.0 facade）
 
 #### 在线引用（Maven）
 
 仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.5.1'
+implementation 'io.coderf.arklab.common:common:4.6.0'
 // 一般可由 common POM 传递；若解析不全可显式补：
-// implementation 'io.coderf.arklab.core:base:1.0.1'
-// implementation 'io.coderf.arklab.core:network:1.0.1'
-// implementation 'io.coderf.arklab.core:db:1.0.1'
-// implementation 'io.coderf.arklab.core:ui:1.0.0'
-// implementation 'io.coderf.arklab.core:utils:1.0.0'
+// implementation 'io.coderf.arklab.core:base:1.1.0'
+// implementation 'io.coderf.arklab.core:network:1.1.0'
+// implementation 'io.coderf.arklab.core:db:1.1.0'
+// implementation 'io.coderf.arklab.core:ui:1.1.0'
+// implementation 'io.coderf.arklab.core:utils:1.1.0'
 ```
 
 本仓库发布：`./gradlew :common:publish` / `:core-*:publish`（详见 [MODULES.md](MODULES.md)）。
@@ -177,6 +180,8 @@ implementation project(':userapi')   // 需要用户契约时
 在app中的Application中调用初始化方法
 
 ```
+        // 可选：壁纸动态取色（Android 12+），须在 init 之前；默认关闭
+        // Config.getInstance().setDynamicColorEnabled(true);
         Config.getInstance().init(this);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
@@ -243,19 +248,19 @@ implementation project(':userapi')   // 需要用户契约时
 
 #### 自定义View相关
 1. `AutoNextLineLinearlayout`：自动换行的`ViewGroup`
-2. `CircleTextView`：圆形背景的 `AppCompatTextView`，支持边框、背景色、文字居中显示
-3. `CornerImageView`：圆角 `ImageView`，支持四个角独立设置圆角半径
-4. `CirclePaddingImageView`：带内边距的圆形 `ImageView`，支持选中/按下样式切换
+2. `CircleTextView`：圆形背景的 `MaterialTextView`，支持边框、背景色、文字居中显示
+3. `CornerImageView`：圆角 `ShapeableImageView`，支持四个角独立设置圆角半径
+4. `CirclePaddingImageView`：圆形**背景** + `android:padding` 内缩图标（父类 `AppCompatImageView`，不是裁圆头像）
 5. `CustomScrollView`：支持下拉回弹效果的 `ScrollView`
 6. `Code`：生成图形验证码的工具类，可绘制随机字符和干扰线
 7. `DividerView`：可绘制横线或竖线的虚线控件（Kotlin 实现）
 8. `CircleProgressBar`：圆形进度条，支持文字显示、动画进度更新
 9. `GradationRectTextView`：支持渐变背景、左右文字样式不同的 `TextView`
 10. `GridMenuView`：分页网格菜单视图，支持圆点指示器与圆角描边（`Kotlin` 实现）
-11. `CornerEditText`：圆角背景的 `EditText`，支持边框和背景色设置
+11. `CornerEditText`：圆角背景的 `TextInputEditText`，支持边框和背景色设置
 12. `CornerLabelView`：三角形角标控件，可显示在四个角落，支持文字和背景色
-13. `CornerTextView`：圆角背景的 `TextView`，支持边框和背景色
-14. `CornerButton`：圆角背景的 `Button`，支持边框和背景色
+13. `CornerTextView`：圆角背景的 `MaterialTextView`，支持边框和背景色
+14. `CornerButton`：圆角 `MaterialButton`（`ShapeAppearance` + tint/stroke），支持边框和背景色
 15. `HorizontalProgressBar`：水平横向进度条，支持圆角背景和文字显示
 16. `ConfigurableWebView`：可配置的 `WebView`，支持加载本地 assets 或网络 URL
 17. `AutoTextView：带 3D 翻转动画的文字切换控件（基于 `TextSwitcher`）
@@ -268,11 +273,11 @@ implementation project(':userapi')   // 需要用户契约时
 24. `SquareLabelView`：左侧带方块的`TextView`，用于模块名称等场景，支持方块形状（矩形、椭圆、圆角矩形）和位置自定义
 25. `IconLabelValueView`：图标-标签-值-图标的布局视图，常用于设置项或详情展示，支持左右图标开关、底部边框、值对齐方式等配置
 26. `VerificationCodeInputView`：验证码输入控件，支持多格独立输入框、光标闪烁、输入类型限制（数字、字母等）、边框样式自定义
-27. `RoundImageView`：圆形`ImageView`，用于头像等圆形图片显示，支持边框宽度和颜色设置
+27. `RoundImageView`：圆形裁剪 `ShapeableImageView`，用于头像等，支持边框宽度和颜色设置
 28. `ScalingTextView`：可展开/收起的文本控件，默认显示指定行数，支持“查看全文/收起全文”点击切换
 29. `LoadingProgressDialog`：加载进度对话框，支持动态省略号动画效果、自定义提示文字、可设置是否可取消
 30. `DatePickDialog`：年月日选择对话框，支持多种日期模式（年月日、年月、年份、时间等）、自定义日期范围和标签
-31. `BottomSheetDialog`：底部选择框（基于Material Design），支持列表选项显示、自定义分割线样式和取消按钮
+31. `BottomSheetDialog`：底部选择框（Material `BottomSheetDialog`），支持列表选项显示、自定义分割线样式和取消按钮
 32. `MenuDialog`：底部菜单对话框，功能类似·BottomSheetDialog·但使用传统Dialog实现，支持自定义位置和样式
 33. `ImageSaveDialog`：图片保存选择对话框，提供“保存到本地”等选项，用于图片保存场景
 34. `EmptyLayout`：空白占位布局控件，可显示加载中、加载失败、无数据等状态，支持自定义图标和点击重试

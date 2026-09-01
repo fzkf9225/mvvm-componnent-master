@@ -29,7 +29,10 @@ import io.coderf.arklab.googlegps.utils.LogUtil;
  *     <li>处理定位提供者的状态变化，必要时重启定位管理器</li>
  * </ul>
  *
- * @author mendhak
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class GnssLocationListener extends GnssStatus.Callback implements LocationListener, OnNmeaMessageListener {
 

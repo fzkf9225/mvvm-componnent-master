@@ -10,8 +10,12 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 
 /**
- * Created by fz on 2017/12/28.
  * 下拉回弹
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/12/28
  */
 
 public class CustomScrollView extends ScrollView {

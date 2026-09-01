@@ -12,7 +12,7 @@ import org.eclipse.paho.mqttv5.common.MqttException
  * Java 项目可继承 [AbstractMqttListener]，只覆写关心的方法。
  *
  * @author fz
- * @version 1.3
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/27 10:10
  */

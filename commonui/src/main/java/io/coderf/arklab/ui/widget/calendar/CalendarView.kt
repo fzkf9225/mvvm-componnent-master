@@ -36,8 +36,12 @@ import java.text.ParseException
 
 
 /**
- * created by fz on 2024/12/2 15:28
- * describe:自定义日历
+ * 自定义日历
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2 15:28
  */
 class CalendarView : ConstraintLayout {
     var binding: ViewCalendarBinding? = null
@@ -270,7 +274,7 @@ class CalendarView : ConstraintLayout {
                 selectedTextColor =
                     getColor(
                         R.styleable.CalendarView_selectedTextColor,
-                        ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white)
+                        ContextCompat.getColor(context, io.coderf.arklab.common.R.color.onPrimary)
                     )
                 selectedBg = getDrawable(R.styleable.CalendarView_selectedBg)
                 normalBg = getDrawable(R.styleable.CalendarView_normalBg)
@@ -326,7 +330,7 @@ class CalendarView : ConstraintLayout {
         } ?: run {
             workingDayTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
             weekTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
-            selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white)
+            selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.onPrimary)
             textSize = DensityUtil.sp2px(context, 14f).toFloat()
             mode = Mode.SINGLE
             itemWidth = DensityUtil.dp2px(context, 36f)

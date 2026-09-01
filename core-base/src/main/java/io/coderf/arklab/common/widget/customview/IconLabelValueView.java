@@ -21,8 +21,12 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * created by fz on 2025/9/1 11:15
- * describe: 图标-标签-值-图标布局视图
+ * 图标-标签-值-图标布局视图
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/9/1 11:15
  */
 public class IconLabelValueView extends ConstraintLayout {
     /**

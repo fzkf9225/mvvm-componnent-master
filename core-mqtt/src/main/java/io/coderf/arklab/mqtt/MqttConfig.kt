@@ -13,7 +13,7 @@ package io.coderf.arklab.mqtt
  * Java 接入请使用 [builder] 构建，避免 Kotlin 默认参数兼容问题。
  *
  * @author fz
- * @version 1.3
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/27 10:10
  */

@@ -14,8 +14,12 @@ import io.coderf.arklab.media.databinding.ChooseFileDialogBinding;
 
 
 /**
- * Created by fz on 2018/3/29.
- * describe:选择照片和拍照弹框
+ * 选择照片和拍照弹框
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/3/29
  */
 public class OpenFileDialog extends Dialog {
     private OnOpenFileClickListener openFileClickListener;

@@ -10,9 +10,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import java.util.Map;
 
 /**
- * created by fz on 2023/4/24 13:04
- * describe:
- **/
+ * ErrorService 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/24 13:04
+ */
 public interface ErrorService {
 
     /**

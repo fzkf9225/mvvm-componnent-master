@@ -24,8 +24,12 @@ import io.coderf.arklab.media.utils.LogUtil;
 
 
 /**
- * Created by fz on 2023/11/20 15:00
- * describe :
+ * CameraCallBack 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/20 15:00
  */
 public class CameraCallBack implements ActivityResultCallback<Uri> {
     private final MediaBuilder mediaBuilder;

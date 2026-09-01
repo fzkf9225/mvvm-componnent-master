@@ -15,10 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList
  *   registry.dispatch(bizCode, topic, payload);
  * ```
  *
- *
  * @author fz
- * @version 1.3
- * @since 1.2
+ * @version 1.0
+ * @since 1.0
  * @created 2026/7/27 10:10
  */
 class MqttHandlerRegistry {

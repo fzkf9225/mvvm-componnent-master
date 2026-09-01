@@ -1,8 +1,12 @@
 package io.coderf.arklab.common.enums;
 
 /**
- * created by fz on 2024/12/2 11:08
- * describe:日期选择日模式
+ * 日期选择日模式
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2 11:08
  */
 public enum DateMode {
     /**

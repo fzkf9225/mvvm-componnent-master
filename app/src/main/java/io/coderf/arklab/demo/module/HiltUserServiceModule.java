@@ -15,8 +15,12 @@ import io.coderf.arklab.demo.impl.NewHiltUserServiceImpl;
 import io.coderf.arklab.demo.inter.HiltUserService;
 
 /**
- * Created by fz on 2024/5/31 13:51
- * describe :
+ * HiltUserServiceModule 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/5/31 13:51
  */
 @Module
 @InstallIn(SingletonComponent.class)

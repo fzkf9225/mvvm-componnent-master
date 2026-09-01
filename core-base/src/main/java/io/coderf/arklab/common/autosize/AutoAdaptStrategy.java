@@ -20,15 +20,15 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 
 /**
- * ================================================
  * 屏幕适配逻辑策略类, 可通过 {@link AutoSizeConfig#init(Application, boolean, AutoAdaptStrategy)}
  * 和 {@link AutoSizeConfig#setAutoAdaptStrategy(AutoAdaptStrategy)} 切换策略
  *
  * @see DefaultAutoAdaptStrategy
- * Created by JessYan on 2018/8/9 15:13
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/9 15:13
  */
 public interface AutoAdaptStrategy {
 

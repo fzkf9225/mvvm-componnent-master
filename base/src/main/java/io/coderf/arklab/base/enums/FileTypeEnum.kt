@@ -4,6 +4,11 @@ import android.text.TextUtils
 
 /**
  * 通用附件/媒体类型 code（与多数 Blade 风格后端约定一致；可按项目调整）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 enum class FileTypeEnum(
     val type: String,

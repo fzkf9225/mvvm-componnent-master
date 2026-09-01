@@ -22,6 +22,11 @@ import io.coderf.arklab.common.utils.permission.WebViewPermissionHelper;
 /**
  * WebView JSBridge 单次定位：仅使用 Android 原生 {@link LocationManager}，不依赖 googlegps。
  * <p>Android 12+ 优先 {@link LocationManager#getCurrentLocation}；低版本使用 lastKnown + 单次更新。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class WebViewNativeLocationHelper {
 

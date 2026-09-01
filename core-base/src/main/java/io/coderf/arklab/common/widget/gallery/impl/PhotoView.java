@@ -17,6 +17,14 @@ import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 
 
+/**
+ * PhotoView 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class PhotoView extends ShapeableImageView implements IPhotoView {
 
     private final PhotoViewAttacher mAttacher;

@@ -12,8 +12,12 @@ import android.view.WindowInsets;
 import androidx.core.view.WindowInsetsCompat;
 
 /**
- * Created by fz on 2018/1/11.
  * 获得屏幕相关的辅助类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/1/11
  */
 
 public class ScreenUtil {

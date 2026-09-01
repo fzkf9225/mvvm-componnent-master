@@ -20,8 +20,12 @@ import io.coderf.arklab.base.gateway.MediaGateway;
 import io.coderf.arklab.userapi.router.UserRouterService;
 
 /**
- * Created by fz on 2020/03/26.
- * describe：我的页面
+ * 我的页面
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2020/3/26
  */
 @AndroidEntryPoint
 public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> {

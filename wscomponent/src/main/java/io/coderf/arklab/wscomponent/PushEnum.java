@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/5/5 09:52
- * describe:长链接消息类型
+ * 长链接消息类型
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/5 9:52
  */
 public enum PushEnum {
     /**

@@ -15,8 +15,12 @@ import io.coderf.arklab.demo.api.ApiServiceHelper;
 import io.coderf.arklab.ui.api.FileApiService;
 
 /**
- * created by fz on 2024/9/26 14:53
- * describe: 网络 API 绑定；baseUrl 等来自注入的 {@link AppPropertiesConfig}
+ * 网络 API 绑定；baseUrl 等来自注入的 {@link AppPropertiesConfig}
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/9/26 14:53
  */
 @Module
 @InstallIn(SingletonComponent.class)

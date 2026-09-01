@@ -16,8 +16,12 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
 /**
- * Created by fz on 2023/10/31 10:54
- * describe :
+ * InboundClientHandler 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/10/31 10:54
  */
 @ChannelHandler.Sharable
 public class InboundClientHandler extends ChannelInboundHandlerAdapter {

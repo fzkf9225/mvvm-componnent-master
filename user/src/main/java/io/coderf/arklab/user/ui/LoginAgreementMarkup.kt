@@ -11,6 +11,11 @@ import io.coderf.arklab.common.enums.WebViewUrlTypeEnum
 
 /**
  * 登录页协议富文本（纯 UI 侧，不进入 ViewModel）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 object LoginAgreementMarkup {
 

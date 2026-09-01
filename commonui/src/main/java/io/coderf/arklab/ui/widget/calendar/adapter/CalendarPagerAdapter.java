@@ -22,8 +22,12 @@ import io.coderf.arklab.ui.databinding.ItemCalendarDayBinding;
 import io.coderf.arklab.ui.widget.calendar.CalendarView;
 
 /**
- * created by fz on 2024/11/20 15:10
- * describe:
+ * CalendarPagerAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/20 15:10
  */
 public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, ItemCalendarDayBinding> {
     private final CalendarView calendarView;
@@ -57,7 +61,7 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         if (isEnable(day)) {
             if (isSelected) {
-                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.white) : calendarView.getSelectedTextColor());
+                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.onPrimary) : calendarView.getSelectedTextColor());
                 holder.getBinding().dayNumber.setBackground(calendarView.getSelectedBg());
             } else {
                 if (mList.get(pos).isWeekend()) {

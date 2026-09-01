@@ -15,6 +15,11 @@ import java.io.InputStream;
 /**
  * {@link WebViewAssetLoader.PathHandler} 实现：从指定根目录提供 html、pdf 等静态文件。
  * <p>用于沙盒 {@code files}、{@code external}、系统 {@code download} 等路径映射。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class StoragePathHandler implements WebViewAssetLoader.PathHandler {
 

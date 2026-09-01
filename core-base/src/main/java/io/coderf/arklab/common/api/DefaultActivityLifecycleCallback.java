@@ -12,8 +12,12 @@ import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * created by fz on 2024/12/18 11:24
- * describe: 登录拦截器，配合注解NeedLogin使用
+ * 登录拦截器，配合注解NeedLogin使用
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/18 11:24
  */
 public class DefaultActivityLifecycleCallback implements Application.ActivityLifecycleCallbacks {
     public final static String TAG = DefaultActivityLifecycleCallback.class.getSimpleName();

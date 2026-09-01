@@ -1,8 +1,12 @@
 package io.coderf.arklab.userapi;
 
 /**
- * Created by fz on 2021/6/30 9:23
- * describe:
+ * UserService 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/6/30 9:23
  */
 public interface UserService{
     /**

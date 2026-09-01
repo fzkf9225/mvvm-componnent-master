@@ -6,8 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by @author fz on 2023/9/5 15:59
- * describe :自定义实体类验证注解
+ * 自定义实体类验证注解
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/5 15:59
  */
 @Target(value = {ElementType.TYPE,ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME) //运行时有效

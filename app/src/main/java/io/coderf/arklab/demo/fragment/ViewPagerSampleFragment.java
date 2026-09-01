@@ -9,8 +9,12 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ViewPagerSampleFragmentBinding;
 
 /**
- * Created by fz on 2023/8/17 10:57
- * describe :
+ * ViewPagerSampleFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/17 10:57
  */
 
 @AndroidEntryPoint

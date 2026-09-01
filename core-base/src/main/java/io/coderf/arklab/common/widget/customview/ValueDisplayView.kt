@@ -21,7 +21,7 @@ import io.coderf.arklab.common.R
  * - 自身宽度为 wrap_content：三个 MaterialTextView 按内容自适应宽度，整体可左/中/右对齐，setValue 后宽度自动变化
  *
  * @author fz
- * @version 1.1
+ * @version 1.0
  * @since 1.0
  * @created 2026/3/24 22:38
  */

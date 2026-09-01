@@ -21,8 +21,8 @@ import io.coderf.arklab.googlegps.utils.AppUtil;
  *
  * @author fz
  * @version 1.0
- * @created 2026/4/18 10:04
  * @since 1.0
+ * @created 2026/4/18 10:04
  */
 public class GpsCallback {
     protected NotificationCompat.Builder nfc;

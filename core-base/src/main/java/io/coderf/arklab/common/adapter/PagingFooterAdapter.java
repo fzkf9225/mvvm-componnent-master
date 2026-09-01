@@ -21,6 +21,11 @@ import io.coderf.arklab.common.databinding.PagingFooterBinding;
  * 「暂无数据」占位重叠。</p>
  *
  * @see io.coderf.arklab.common.base.BaseSmartPagingFragment
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingFooterBinding>> {
     private final Runnable retry;

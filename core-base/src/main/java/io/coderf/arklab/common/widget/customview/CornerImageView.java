@@ -1,13 +1,10 @@
 package io.coderf.arklab.common.widget.customview;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Region;
-import android.os.Build;
 import android.util.AttributeSet;
 
 import com.google.android.material.imageview.ShapeableImageView;
@@ -15,8 +12,12 @@ import com.google.android.material.imageview.ShapeableImageView;
 import io.coderf.arklab.common.R;
 
 /**
- * created by fz on 2019/9/3 0003
- * describe:圆角ImageView
+ * 圆角 ImageView：XML / 代码 API 不变，裁剪与描边走 Material3 {@code ShapeableImageView}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CornerImageView extends ShapeableImageView {
     /**
@@ -70,7 +71,6 @@ public class CornerImageView extends ShapeableImageView {
     protected boolean hasStroke = false;
 
     protected Paint mPaint;
-    protected final Path mPath = new Path();
 
     public CornerImageView(Context context) {
         this(context, null);
@@ -139,15 +139,32 @@ public class CornerImageView extends ShapeableImageView {
         array.recycle();
 
         hasStroke = strokeWidth > 0;
-        cornerClipEnabled = hasRadiusAttr || hasLeftTop || hasRightTop || hasRightBottom || hasLeftBottom;
-        if (cornerClipEnabled) {
-            updateCornerClipEnabled();
+        updateCornerClipEnabled();
+        if (cornerClipEnabled || hasBgColor || hasStroke) {
+            applyMaterialShape();
         }
     }
 
     private void updateCornerClipEnabled() {
         cornerClipEnabled = leftTopRadius > 0 || rightTopRadius > 0
                 || rightBottomRadius > 0 || leftBottomRadius > 0;
+    }
+
+    private void applyMaterialShape() {
+        setShapeAppearanceModel(CornerShapeHelper.shapeModel(
+                leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius));
+        if (hasBgColor) {
+            setBackground(CornerShapeHelper.createBackground(
+                    leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius,
+                    true, bgColor, false, 0, Color.TRANSPARENT));
+        }
+        if (hasStroke) {
+            setStrokeWidth(strokeWidth);
+            setStrokeColor(ColorStateList.valueOf(strokeColor));
+        } else {
+            setStrokeWidth(0f);
+            setStrokeColor(ColorStateList.valueOf(Color.TRANSPARENT));
+        }
     }
 
     /**
@@ -160,7 +177,7 @@ public class CornerImageView extends ShapeableImageView {
         rightBottomRadius = radius;
         leftBottomRadius = radius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -169,7 +186,7 @@ public class CornerImageView extends ShapeableImageView {
     public void setLeftTopRadius(int leftTopRadius) {
         this.leftTopRadius = leftTopRadius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -178,7 +195,7 @@ public class CornerImageView extends ShapeableImageView {
     public void setLeftBottomRadius(int leftBottomRadius) {
         this.leftBottomRadius = leftBottomRadius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -187,7 +204,7 @@ public class CornerImageView extends ShapeableImageView {
     public void setRightBottomRadius(int rightBottomRadius) {
         this.rightBottomRadius = rightBottomRadius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -196,7 +213,7 @@ public class CornerImageView extends ShapeableImageView {
     public void setRightTopRadius(int rightTopRadius) {
         this.rightTopRadius = rightTopRadius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -208,7 +225,7 @@ public class CornerImageView extends ShapeableImageView {
         this.rightBottomRadius = rightBottom;
         this.leftBottomRadius = leftBottom;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -224,7 +241,7 @@ public class CornerImageView extends ShapeableImageView {
     public void setBgColor(int color) {
         this.bgColor = color;
         this.hasBgColor = true;
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -242,11 +259,11 @@ public class CornerImageView extends ShapeableImageView {
         this.strokeColor = color;
         this.strokeWidth = strokeWidth;
         this.hasStroke = strokeWidth > 0;
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
-     * 一次性设置描边、背景色和统一圆角，仅触发一次 invalidate，避免分别设置带来的重复重绘。
+     * 一次性设置描边、背景色和统一圆角，仅触发一次 apply。
      *
      * @param strokeColor 描边颜色
      * @param strokeWidth 描边宽度（像素）
@@ -265,11 +282,11 @@ public class CornerImageView extends ShapeableImageView {
         this.rightBottomRadius = radius;
         this.leftBottomRadius = radius;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
-     * 一次性设置描边、背景色和四个角圆角，仅触发一次 invalidate。
+     * 一次性设置描边、背景色和四个角圆角，仅触发一次 apply。
      *
      * @param strokeColor  描边颜色
      * @param strokeWidth  描边宽度（像素）
@@ -292,7 +309,7 @@ public class CornerImageView extends ShapeableImageView {
         this.rightBottomRadius = rightBottom;
         this.leftBottomRadius = leftBottom;
         updateCornerClipEnabled();
-        invalidate();
+        applyMaterialShape();
     }
 
     /**
@@ -315,7 +332,6 @@ public class CornerImageView extends ShapeableImageView {
     public void setPaint(Paint paint) {
         if (paint != null) {
             this.mPaint = paint;
-            invalidate();
         }
     }
 
@@ -323,58 +339,6 @@ public class CornerImageView extends ShapeableImageView {
      * 刷新圆角裁剪（当宽高变化时调用）
      */
     public void refreshCornerClip() {
-        invalidate();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (!cornerClipEnabled) {
-            super.onDraw(canvas);
-            return;
-        }
-
-        int maxLeft = Math.max(leftTopRadius, leftBottomRadius);
-        int maxRight = Math.max(rightTopRadius, rightBottomRadius);
-        int minWidth = maxLeft + maxRight;
-        int maxTop = Math.max(leftTopRadius, rightTopRadius);
-        int maxBottom = Math.max(leftBottomRadius, rightBottomRadius);
-        int minHeight = maxTop + maxBottom;
-        if (width >= minWidth && height > minHeight) {
-            mPath.reset();
-            mPath.moveTo(leftTopRadius, 0);
-            mPath.lineTo(width - rightTopRadius, 0);
-            mPath.quadTo(width, 0, width, rightTopRadius);
-
-            mPath.lineTo(width, height - rightBottomRadius);
-            mPath.quadTo(width, height, width - rightBottomRadius, height);
-
-            mPath.lineTo(leftBottomRadius, height);
-            mPath.quadTo(0, height, 0, height - leftBottomRadius);
-
-            mPath.lineTo(0, leftTopRadius);
-            mPath.quadTo(0, 0, leftTopRadius, 0);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                canvas.clipPath(mPath);
-            } else {
-                canvas.clipPath(mPath, Region.Op.INTERSECT);
-            }
-
-            // 绘制背景色
-            if (hasBgColor && Color.alpha(bgColor) > 0) {
-                mPaint.setStyle(Paint.Style.FILL);
-                mPaint.setColor(bgColor);
-                canvas.drawPath(mPath, mPaint);
-            }
-
-            // 绘制描边
-            if (hasStroke) {
-                mPaint.setStyle(Paint.Style.STROKE);
-                mPaint.setStrokeWidth(strokeWidth);
-                mPaint.setColor(strokeColor);
-                canvas.drawPath(mPath, mPaint);
-            }
-        }
-        super.onDraw(canvas);
+        applyMaterialShape();
     }
 }

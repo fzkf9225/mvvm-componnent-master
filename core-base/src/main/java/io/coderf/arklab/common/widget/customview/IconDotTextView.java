@@ -32,7 +32,11 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 /**
  * 图标+文字+数字角标的自定义View
  * 支持多种布局方向和角标自定义
- * Created by fz on 2017/4/24.
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/4/24
  */
 public class IconDotTextView extends ConstraintLayout {
 

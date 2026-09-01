@@ -16,6 +16,11 @@ import io.coderf.arklab.common.widget.customview.StyledTabLayout;
  * StyledTabLayout + ViewPager2 Activity 基类。
  *
  * <p>用法与 {@link BaseStyledViewPagerFragment} 相同，适用于 Activity 层封装。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BaseStyledViewPagerActivity<VM extends BaseViewModel, VDB extends ViewDataBinding>
         extends BaseActivity<VM, VDB> {

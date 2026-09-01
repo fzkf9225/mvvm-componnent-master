@@ -13,6 +13,11 @@ import androidx.core.content.ContextCompat;
  * WebView 场景下的运行时权限分组与申请。
  * <p>权限<b>检查</b>仅使用 {@link ContextCompat} / {@link PermissionsChecker}，避免在 RESUMED 阶段
  * 误 new {@link PermissionManager} 触发 ActivityResult 注册崩溃。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class WebViewPermissionHelper {
 

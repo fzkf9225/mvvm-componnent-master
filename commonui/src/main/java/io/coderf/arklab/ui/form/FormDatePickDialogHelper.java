@@ -11,6 +11,11 @@ import io.coderf.arklab.ui.R;
 
 /**
  * 将 FormUI 中与 DatePickDialog 相关的样式属性同步到 Dialog。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 final class FormDatePickDialogHelper {
 

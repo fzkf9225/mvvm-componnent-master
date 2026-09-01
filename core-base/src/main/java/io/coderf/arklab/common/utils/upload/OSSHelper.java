@@ -33,8 +33,12 @@ import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * Created by fz on 2023/5/29 15:54
- * describe :对象存储
+ * 对象存储
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/29 15:54
  */
 public class OSSHelper {
     public static final String TAG = OSSHelper.class.getSimpleName();

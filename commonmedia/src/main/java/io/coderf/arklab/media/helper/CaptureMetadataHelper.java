@@ -13,6 +13,11 @@ import io.coderf.arklab.media.utils.ExifUtil;
 
 /**
  * 拍照瞬间采集设备姿态与位置（尽力而为，无权限或无传感器时不填充对应字段）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CaptureMetadataHelper {
 

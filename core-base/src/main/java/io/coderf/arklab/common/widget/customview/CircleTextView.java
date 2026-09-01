@@ -14,8 +14,12 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 
 /**
- * Created by fz on 2019/5/30.
- * describe:圆形TextView
+ * 圆形TextView
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/5/30
  */
 public class CircleTextView extends MaterialTextView {
     protected final Paint circlePaint;

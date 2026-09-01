@@ -2,7 +2,12 @@ package io.coderf.arklab.user.bean;
 
 /**
  * Create by fz on 2019/10/21 0021
- * describe:忘记密码
+ * 忘记密码
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ForgetPasswordBean {
     private String userName;

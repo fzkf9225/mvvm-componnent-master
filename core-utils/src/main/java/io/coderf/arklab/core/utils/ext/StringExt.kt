@@ -8,6 +8,11 @@ package io.coderf.arklab.core.utils.ext
 
 /**
  * 是否为非空且非纯空白（与 [String.isNullOrBlank] 相反的「有效内容」判断）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun String?.isNotNullOrBlank(): Boolean = !isNullOrBlank()
 

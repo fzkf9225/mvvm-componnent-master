@@ -22,6 +22,11 @@ import io.coderf.arklab.common.R;
 
 /**
  * 清晰度选择弹窗，由 {@link VideoPlayerController} 在点击清晰度 Chip 时弹出。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VideoPlayerClarityDialog extends Dialog {
 

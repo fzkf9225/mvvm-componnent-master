@@ -19,8 +19,9 @@ package io.coderf.arklab.mqtt.presence
  * | Access Token 刷新成功     | [reconnectIfNeeded]（MQTT 密码为 JWT 时需重连） |
  *
  * @author fz
- * @version 1.4
+ * @version 1.0
  * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 interface PresenceManager {
 

@@ -34,8 +34,12 @@ import io.coderf.arklab.ui.databinding.AdapterFileAddItemBinding;
 
 
 /**
- * Created by fz on 2024/3/11
- * describe：添加文件
+ * 添加文件
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/3/11
  */
 public class FileAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterFileAddItemBinding> {
     public FileClearListener fileClearListener;

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  * @author fz
  * @version 1.0
  * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class StringUtil {
 

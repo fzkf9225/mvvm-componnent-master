@@ -13,6 +13,14 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.FormBean;
 import io.coderf.arklab.demo.databinding.ActivityFormDetailBinding;
 
+/**
+ * FormDetailActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class FormDetailActivity extends BaseActivity<EmptyViewModel, ActivityFormDetailBinding> {
     private final List<AttachmentBean> imageList = new ArrayList<>();
     private final List<AttachmentBean> videoList = new ArrayList<>();

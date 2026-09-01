@@ -4,6 +4,11 @@ import java.util.UUID;
 
 /**
  * 绑定在 ViewModelComponent，生命周期与 ViewModel 相同。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class HiltViewModelScopedToken {
 

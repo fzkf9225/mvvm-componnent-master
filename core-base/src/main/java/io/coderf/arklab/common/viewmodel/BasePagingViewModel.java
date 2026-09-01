@@ -9,8 +9,12 @@ import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.IRepository;
 
 /**
- * created by fz on 2024/11/6 11:36
- * describe:
+ * BasePagingViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 11:36
  */
 public abstract class BasePagingViewModel<IR extends IRepository<BV>,BV extends BaseView> extends BaseViewModel<IR, BV> {
 

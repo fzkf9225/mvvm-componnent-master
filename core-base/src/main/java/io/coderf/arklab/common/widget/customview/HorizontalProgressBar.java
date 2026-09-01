@@ -24,8 +24,12 @@ import io.coderf.arklab.common.listener.OnProgressEndListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * Created by fz on 2023/11/2 9:20
- * describe :自定义水平横向进度条
+ * 自定义水平横向进度条
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/2 9:20
  */
 public class HorizontalProgressBar extends View {
     private final String TAG = HorizontalProgressBar.class.getSimpleName();

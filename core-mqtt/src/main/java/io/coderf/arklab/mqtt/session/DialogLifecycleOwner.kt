@@ -22,8 +22,9 @@ import androidx.lifecycle.LifecycleRegistry
  * 请先调用 [MqttSession.observeDialog]，再自行包装，或改用 DialogFragment / ComponentDialog。
  *
  * @author fz
- * @version 1.4
- * @since 1.4
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class DialogLifecycleOwner(
     dialog: Dialog,

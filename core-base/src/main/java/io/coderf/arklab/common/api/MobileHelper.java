@@ -37,8 +37,12 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 
 /**
- * Created by fz on 2017/8/18.
- * describe:存放应用相关常见
+ * 存放应用相关常见
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/8/18
  */
 public class MobileHelper {
     private final static String TAG = MobileHelper.class.getSimpleName();

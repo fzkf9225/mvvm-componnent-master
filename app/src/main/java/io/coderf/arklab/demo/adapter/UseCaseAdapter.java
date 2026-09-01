@@ -9,8 +9,12 @@ import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.UseCaseItemBinding;
 
 /**
- * Created by fz on 2023/8/14 10:39
- * describe :
+ * UseCaseAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 10:39
  */
 public class UseCaseAdapter extends BaseRecyclerViewAdapter<UseCase, UseCaseItemBinding> {
     public UseCaseAdapter() {

@@ -2,29 +2,39 @@ package io.coderf.arklab.common.widget.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import com.google.android.material.imageview.ShapeableImageView;
+import androidx.appcompat.widget.AppCompatImageView;
+
+import com.google.android.material.shape.MaterialShapeDrawable;
 
 import io.coderf.arklab.common.R;
 
 /**
- * Created by fz on 2023/11/10 8:57
- * describe :自带内边距的ImageView，有选中样式、取消样式等
+ * 带内边距的圆形 ImageView：圆形只作为背景，src 仍按 {@code android:padding} 内缩。
+ * 选中 / 按下背景走 Material3 oval {@code MaterialShapeDrawable}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:54
  */
-public class CirclePaddingImageView extends ShapeableImageView {
+public class CirclePaddingImageView extends AppCompatImageView {
     /**
      * 边框颜色
      */
     protected int borderColor;
     /**
+     * 按下/选中边框颜色
+     */
+    protected int borderFocusColor;
+    /**
      * 默认背景色
      */
     protected int defaultBackgroundColor;
     /**
-     * 选中或按下时的北背景颜色
+     * 选中或按下时的背景颜色
      */
     protected int focusBackgroundColor;
     /**
@@ -40,13 +50,13 @@ public class CirclePaddingImageView extends ShapeableImageView {
      */
     protected int borderWidth;
     /**
-     * 按下时的背景样式资源
+     * 按下时的背景
      */
-    protected GradientDrawable bgFocusedDrawable;
+    protected MaterialShapeDrawable bgFocusedDrawable;
     /**
-     * 默认的背景样式资源
+     * 默认的背景
      */
-    protected GradientDrawable bgDefaultDrawable;
+    protected MaterialShapeDrawable bgDefaultDrawable;
 
     public CirclePaddingImageView(Context context) {
         super(context);
@@ -64,9 +74,7 @@ public class CirclePaddingImageView extends ShapeableImageView {
     }
 
     private void init(@Nullable AttributeSet attrs) {
-        int borderFocusColor;
         if (attrs != null) {
-            // 从XML中获取自定义属性
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircleImageView);
             borderColor = a.getColor(R.styleable.CircleImageView_borderColor, 0xFFB4B4B4);
             borderFocusColor = a.getColor(R.styleable.CircleImageView_borderFocusColor, 0xFFFFFFFF);
@@ -83,17 +91,15 @@ public class CirclePaddingImageView extends ShapeableImageView {
             focusBackgroundColor = 0xFF0F0F0F;
         }
 
-        bgDefaultDrawable = new GradientDrawable();
-        // 设置背景为圆形
-        bgDefaultDrawable.setColor(defaultBackgroundColor);
-        bgDefaultDrawable.setShape(GradientDrawable.OVAL);
-        bgDefaultDrawable.setStroke(borderWidth, borderColor);
-
-        bgFocusedDrawable = new GradientDrawable();
-        bgFocusedDrawable.setColor(focusBackgroundColor);
-        bgFocusedDrawable.setShape(GradientDrawable.OVAL);
-        bgFocusedDrawable.setStroke(borderWidth, borderFocusColor);
+        rebuildBackgrounds();
         setBackground(bgDefaultDrawable);
+    }
+
+    private void rebuildBackgrounds() {
+        bgDefaultDrawable = CornerShapeHelper.createOvalBackground(
+                defaultBackgroundColor, borderWidth, borderColor);
+        bgFocusedDrawable = CornerShapeHelper.createOvalBackground(
+                focusBackgroundColor, borderWidth, borderFocusColor);
     }
 
     @Override
@@ -102,11 +108,7 @@ public class CirclePaddingImageView extends ShapeableImageView {
         if (!enableSelected) {
             return;
         }
-        if (selected) {
-            setBackground(bgFocusedDrawable);
-        } else {
-            setBackground(bgDefaultDrawable);
-        }
+        setBackground(selected ? bgFocusedDrawable : bgDefaultDrawable);
     }
 
     @Override
@@ -116,11 +118,7 @@ public class CirclePaddingImageView extends ShapeableImageView {
             return;
         }
         if (enablePressed) {
-            if (pressed) {
-                setBackground(bgFocusedDrawable);
-            } else {
-                setBackground(bgDefaultDrawable);
-            }
+            setBackground(pressed ? bgFocusedDrawable : bgDefaultDrawable);
             return;
         }
         if (pressed) {
@@ -130,12 +128,13 @@ public class CirclePaddingImageView extends ShapeableImageView {
 
     public void setBorderColor(int color) {
         borderColor = color;
-        invalidate();
+        rebuildBackgrounds();
+        setBackground(isSelected() ? bgFocusedDrawable : bgDefaultDrawable);
     }
 
     public void setBorderWidth(int width) {
         borderWidth = width;
-        invalidate();
+        rebuildBackgrounds();
+        setBackground(isSelected() ? bgFocusedDrawable : bgDefaultDrawable);
     }
-
 }

@@ -18,13 +18,13 @@ package io.coderf.arklab.common.autosize;
 import android.app.Activity;
 
 /**
- * ================================================
  * 屏幕适配监听器，用于监听屏幕适配时的一些事件
  * <p>
- * Created by JessYan on 2018/10/30 16:29
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/10/30 16:29
  */
 public interface onAdaptListener {
     /**

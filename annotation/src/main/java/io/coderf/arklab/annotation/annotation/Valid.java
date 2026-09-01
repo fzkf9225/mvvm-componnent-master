@@ -8,8 +8,12 @@ import java.lang.annotation.Target;
 import io.coderf.arklab.annotation.inter.VerifyGroup;
 
 /**
- * Created by  @author fz on 2023/9/5 19:33
- * describe :注解实体类中的对象和集合，用于是否验证子类数据
+ * 注解实体类中的对象和集合，用于是否验证子类数据
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/5 19:33
  */
 @Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)

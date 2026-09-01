@@ -43,6 +43,11 @@ import io.coderf.arklab.common.helper.bean.QrScanConfig;
  *     .setShowFlashLight(false)
  *     .setShowGallery(false));
  * }</pre>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class QrScanHelper {
 

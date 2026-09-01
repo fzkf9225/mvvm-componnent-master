@@ -7,6 +7,11 @@ import io.coderf.arklab.common.widget.dialog.ChoiceSelectDialog;
 
 /**
  * 单选/多选列表弹框确认回调
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public interface OnChoiceSelectListener<T extends PopupWindowBean> {
 

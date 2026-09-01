@@ -30,6 +30,14 @@ import io.coderf.arklab.ui.enums.TextAlignEnum;
 import io.coderf.arklab.ui.inter.FormTextWatcher;
 import io.coderf.arklab.ui.inter.FormTextWatcherAfter;
 
+/**
+ * FormConstraintLayout 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class FormConstraintLayout extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
     /**

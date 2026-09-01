@@ -19,6 +19,11 @@ import io.coderf.arklab.common.widget.customview.CustomSearchEditText;
  * 外壳布局 {@code base_activity_title_search}，正文通过 {@link #getLayoutId()} 嵌入
  * {@code searcher_title_container}。MaterialToolbar 样式统一走 {@link ToolbarConfig}。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB extends ViewDataBinding>
         extends BaseActivity<VM, VDB> {
@@ -109,7 +114,7 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         return new ToolbarConfig(this)
                 .setTitle(setTitleBar())
                 .setTitleHint(getSearchHint())
-                .setTextColor(R.color.white)
+                .setTextColor(R.color.onPrimary)
                 .setBackIconRes(R.drawable.icon_fh)
                 .setBgColor(R.color.themeColor)
                 .setLightMode(true)

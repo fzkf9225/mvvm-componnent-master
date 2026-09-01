@@ -3,8 +3,12 @@ package io.coderf.arklab.media.bean;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 /**
- * created by fz on 2025/8/7 9:20
- * describe:
+ * SelectorOptions 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/7 9:20
  */
 public class SelectorOptions {
     private String[] type;

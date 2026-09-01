@@ -11,6 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * ValidatorUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class ValidatorUtil {
     /**
      * 判断分组是否包含当前验证的这个组别

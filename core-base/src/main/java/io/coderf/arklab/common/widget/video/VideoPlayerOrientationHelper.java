@@ -16,6 +16,11 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
  * <p>
  * 由 {@link VideoPlayerController} 内部持有，业务侧一般无需直接使用。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class VideoPlayerOrientationHelper {
 

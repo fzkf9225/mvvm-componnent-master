@@ -26,6 +26,11 @@ import kotlinx.coroutines.launch
  *
  * 更新 [pagingQuery] 默认不会自动请求；需重新拉数时调用 [refreshData]，
  * 或 [updatePagingQuery] 传入 `refresh = true`。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 abstract class FlowPagingViewModel<
         IR : PagingFlowRepositoryImpl<*, T, V, Q>,

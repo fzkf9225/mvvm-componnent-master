@@ -9,6 +9,14 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
+/**
+ * OutputSurface 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class OutputSurface implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final int EGL_OPENGL_ES2_BIT = 4;

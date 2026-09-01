@@ -15,8 +15,12 @@ import java.util.function.Consumer;
 
 
 /**
- * created by fz on 2025/6/4 9:09
- * describe:
+ * PermissionManager 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/4 9:09
  */
 public class PermissionManager {
     private final ActivityResultLauncher<String[]> launcher;

@@ -8,8 +8,8 @@ package io.coderf.arklab.mqtt.handler
  * 路由键由调用方从 payload / topic 中自行提取后传入 [MqttHandlerRegistry.dispatch]。
  *
  * @author fz
- * @version 1.3
- * @since 1.2
+ * @version 1.0
+ * @since 1.0
  * @created 2026/7/27 10:10
  */
 interface MqttMessageHandler {

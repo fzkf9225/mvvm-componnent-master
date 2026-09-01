@@ -7,8 +7,12 @@ import io.coderf.arklab.common.databinding.BaseTablayoutViewpagerBinding;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 
 /**
- * Created by fz on 2023/8/17 11:01
- * describe :
+ * ViewPagerTabSampleFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/17 11:01
  */
 @AndroidEntryPoint
 public class ViewPagerTabSampleFragment extends BaseViewPagerFragment<EmptyViewModel, BaseTablayoutViewpagerBinding> {

@@ -11,6 +11,11 @@ import io.coderf.arklab.common.utils.common.DensityUtil
 /**
  * 宿主/业务 Activity 通用基类：统一 MaterialToolbar / 状态栏样式。
  * 属于 case `:base`，不是框架封装。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 abstract class BaseAppActivity<VM : BaseViewModel<*, *>?, VDB : ViewDataBinding?> :
     BaseActivity<VM, VDB>(), SystemUiRestoreable {

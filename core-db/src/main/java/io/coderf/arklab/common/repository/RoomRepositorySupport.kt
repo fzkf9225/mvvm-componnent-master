@@ -24,9 +24,13 @@ import java.util.concurrent.TimeUnit
  * ## 调用方
  * 仅由 [RoomRepositoryImpl] 委托调用；业务代码请使用 Repository 公开 API。
  *
- * @author fz
  * @see RoomRepositoryImpl
  * @see RepositoryImpl
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 internal object RoomRepositorySupport {
 

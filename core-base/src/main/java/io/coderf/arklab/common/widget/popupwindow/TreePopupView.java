@@ -28,7 +28,12 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
  * updated by fz on 2026/3/12
- * describe：PopupWindow 下拉框，树结构的PopupWindow（支持单选/多选）
+ * PopupWindow 下拉框，树结构的PopupWindow（支持单选/多选）
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
     /**

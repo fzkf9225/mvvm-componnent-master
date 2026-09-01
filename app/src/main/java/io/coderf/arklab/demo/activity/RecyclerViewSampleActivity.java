@@ -22,6 +22,14 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityRecyclerViewSampleBinding;
 
+/**
+ * RecyclerViewSampleActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @AndroidEntryPoint
 public class RecyclerViewSampleActivity extends BaseActivity<EmptyViewModel, ActivityRecyclerViewSampleBinding> {
     private UseCase useCase;

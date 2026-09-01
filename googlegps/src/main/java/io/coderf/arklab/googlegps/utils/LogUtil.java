@@ -5,6 +5,11 @@ import io.coderf.arklab.log.LogChannel;
 
 /**
  * GPS 模块日志入口，委托 {@link ArkLog#gps()}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class LogUtil {
 

@@ -38,7 +38,8 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
     private int circleBackColor;
     private float radius;
     private float strokeWidth;
-    private GradientDrawable gradientDrawable = new GradientDrawable();
+    /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
+    private GradientDrawable gradientDrawable;
     private boolean enableBgStyle = true;
 
     private OnClearListener onClearListener;
@@ -100,12 +101,9 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
     }
 
     private void applyBackground() {
-        gradientDrawable.setColor(circleBackColor);
-        gradientDrawable.setCornerRadius(radius);
-        if (strokeWidth > 0) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        }
-        setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                radius, radius, radius, radius,
+                true, circleBackColor, strokeWidth > 0, strokeWidth, strokeColor));
     }
 
     private boolean isTouchOnClearButton(MotionEvent event) {
@@ -204,7 +202,18 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
             return;
         }
         this.gradientDrawable = gradientDrawable;
-        setBackground(this.gradientDrawable);
+        if (gradientDrawable == null) {
+            return;
+        }
+        float[] radii = new float[4];
+        int[] fill = new int[1];
+        boolean[] hasFill = new boolean[1];
+        CornerShapeHelper.copyFromGradient(gradientDrawable, radii, fill, hasFill);
+        radius = radii[0];
+        if (hasFill[0]) {
+            circleBackColor = fill[0];
+        }
+        applyBackground();
     }
 
     public void setRadius(float radius) {

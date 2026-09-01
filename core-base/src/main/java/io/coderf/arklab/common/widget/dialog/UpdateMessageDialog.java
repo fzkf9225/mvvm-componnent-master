@@ -31,9 +31,9 @@ import io.coderf.arklab.common.utils.network.NetworkStateUtil;
  * 下载逻辑由 {@link OnUpdateListener} 交给调用方（如 {@code UpdateManager}）处理。
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
- * @created 2025/12/09
+ * @created 2025/12/9
  */
 public class UpdateMessageDialog extends BaseDialog {
 
@@ -57,7 +57,7 @@ public class UpdateMessageDialog extends BaseDialog {
 
     public UpdateMessageDialog(@NonNull Context context) {
         super(context,R.style.DialogSoftHighlightStyle);
-        buttonTextColor = ContextCompat.getColor(context, R.color.white);
+        buttonTextColor = ContextCompat.getColor(context, R.color.onPrimary);
         titleColor = ContextCompat.getColor(context, R.color.autoColor);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
         bgColor = ContextCompat.getColor(context, R.color.themeColor);
@@ -71,7 +71,7 @@ public class UpdateMessageDialog extends BaseDialog {
 
     public UpdateMessageDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        buttonTextColor = ContextCompat.getColor(context, R.color.white);
+        buttonTextColor = ContextCompat.getColor(context, R.color.onPrimary);
         titleColor = ContextCompat.getColor(context, R.color.autoColor);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
         bgColor = ContextCompat.getColor(context, R.color.themeColor);

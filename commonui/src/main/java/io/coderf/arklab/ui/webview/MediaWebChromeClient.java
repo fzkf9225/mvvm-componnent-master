@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import com.google.android.material.textview.MaterialTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -26,6 +26,11 @@ import io.coderf.arklab.media.dialog.OpenShootDialog;
 
 /**
  * 增强版 WebChromeClient：文件选择走 commonmedia {@link MediaHelper} 已有能力。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class MediaWebChromeClient extends NativeWebChromeClient {
 
@@ -38,7 +43,7 @@ public class MediaWebChromeClient extends NativeWebChromeClient {
             @NonNull ComponentActivity activity,
             @NonNull CordovaDialogsHelper dialogsHelper,
             @NonNull ProgressBar progressBar,
-            @Nullable MaterialTextView tvBarTitle,
+            @Nullable TextView tvBarTitle,
             @NonNull MediaHelper mediaHelper
     ) {
         super(activity, dialogsHelper, progressBar, tvBarTitle);

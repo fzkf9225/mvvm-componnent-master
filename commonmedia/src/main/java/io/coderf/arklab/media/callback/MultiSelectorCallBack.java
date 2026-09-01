@@ -16,8 +16,12 @@ import io.coderf.arklab.media.helper.OpenPickMultipleMediaSelector;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
- * Created by fz on 2023/11/20 15:00
- * describe :
+ * MultiSelectorCallBack 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/20 15:00
  */
 public class MultiSelectorCallBack implements ActivityResultCallback<List<Uri>> {
     private final MediaHelper mediaHelper;

@@ -56,7 +56,7 @@ class StyledTabLayout @JvmOverloads constructor(
 
     /** 选中态文字颜色 */
     private var selectedTextColor: Int =
-        ContextCompat.getColor(context, android.R.color.white)
+        ContextCompat.getColor(context, R.color.onPrimary)
 
     /** 未选中态文字颜色 */
     private var unselectedTextColor: Int =

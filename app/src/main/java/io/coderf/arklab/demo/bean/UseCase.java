@@ -8,8 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 
 /**
- * Created by fz on 2023/8/14 10:19
- * describe :
+ * UseCase 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 10:19
  */
 public class UseCase extends BaseObservable implements Parcelable {
     private Class<?> clx;

@@ -29,7 +29,12 @@ import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 
 /**
  * updated by fz on 2025/2/13 14:17
- * describe：PopupWindow 多选下拉框（不是级联），为网格布局样式
+ * PopupWindow 多选下拉框（不是级联），为网格布局样式
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow implements PopupWindowAdapter.OnItemClickListener {
     /**
@@ -82,7 +87,7 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
         this.selectedListener = selectedListener;
         this.dataList = dataList;
         this.context = context;
-        selectTextColor = ContextCompat.getColor(context, R.color.white);
+        selectTextColor = ContextCompat.getColor(context, R.color.onPrimary);
         unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
         selectBgDrawable = DrawableUtil.createShapeDrawable(ContextCompat.getColor(context, R.color.themeColor),
                 DensityUtil.dp2px(context, 5f));

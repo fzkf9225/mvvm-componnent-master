@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/6/13 11:36
- * describe :
+ * WebSocketEvent 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/6/13 11:36
  */
 public class WebSocketEvent<T>{
     private T message;

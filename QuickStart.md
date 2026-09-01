@@ -1,6 +1,7 @@
 # 五分钟快速入门
 
-> 对应框架 **common 4.5.1**（facade）+ **core-\* 1.0.1**。模块说明见 [MODULES.md](MODULES.md)，从 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
+> 对应框架 **common 4.6.0**（facade）+ **core-\* 1.1.0**，主题为 **Material3 DayNight**。  
+> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
@@ -36,13 +37,13 @@
 ### 添加基础库依赖
 打开`libs.versions.toml`文件，添加基础库配置
 ```toml
-annotation = "3.1.2"
-roomProcessor = "1.0.0"
-commonui = "3.5.1"
-commongps = "3.1.6"
-commonmedia = "3.2.5"
-commonVersion = "4.5.1"
-coreVersion = "1.0.1"
+annotation = "3.3.0"
+roomProcessor = "1.1.0"
+commonui = "3.6.0"
+commongps = "3.2.0"
+commonmedia = "3.4.0"
+commonVersion = "4.6.0"
+coreVersion = "1.1.0"
 [libraries]
 # 基础：common 为 facade；core-* 一般由 common 传递，也可显式声明
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
@@ -62,7 +63,7 @@ room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref 
 使用 `@RoomObservedEntity` 时，在 **app / 含 @Dao 的模块** 的 `build.gradle` 增加：
 
 ```groovy
-ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.0.0"
+ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.1.0"
 ```
 
 并确保已依赖 `common`（注解包名仍为 `io.coderf.arklab.common.annotation`，实现在 core 分层中）。
@@ -91,9 +92,11 @@ implementation libs.base.annotation
 ### 权限添加
 权限添加可以参考case项目的示例，按需添加
 ### 配置图标和application
-1. 新建一个`Application`类，继承`BaseApplication`类，并添加到`AndroidManifest.xml`中，如果主题不需要修改的话默认就可以配置`android:theme="@style/AppBaseTheme"`
+1. 新建一个`Application`类，继承`BaseApplication`类，并添加到`AndroidManifest.xml`中。默认主题使用`android:theme="@style/AppBaseTheme"`（父类为 `Theme.Material3.DayNight.NoActionBar`，不要改回 `Theme.AppCompat.*`）。暗色由 `values-night` 色板处理，系统强制暗色已关闭。
 在`onCreate`中初始化框架的初始化方法
 ```kotlin
+        // 可选：Material You 动态取色，必须在 init 之前；默认关闭
+        // Config.getInstance().setDynamicColorEnabled(true)
         Config.getInstance().init(this)
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true)
@@ -496,7 +499,7 @@ repository.setRequestUi(RequestUiAdapters.fromBaseView(activityAsBaseView))
 2. 新建具体的业务模块，比如：`business`模块，这里写具体的业务代码
 3. 新建`businessapi`模块，这里提供对外接口服务，在`business`模块实现接口，并提供`module`,在别的模块需要使用`business`模块功能的时候，就通过`Hilt`注入接口调用服务
 
-### Gateway（媒体 / MQTT，4.5.0 推荐）
+### Gateway（媒体 / MQTT，4.5.0 起）
 
 业务模块**禁止**直接依赖 `commonmedia` / `mqttcomponent`，只依赖 api 中的接口：
 

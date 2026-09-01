@@ -10,6 +10,11 @@ import androidx.lifecycle.LifecycleOwner
 
 /**
  * Loading 契约（与 NetworkRequestUiHost / BaseView 对齐的能力子集）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 interface LoadingHost {
     fun showLoading(message: String = DEFAULT_LOADING_MESSAGE, enableDynamicEllipsis: Boolean = false)

@@ -30,10 +30,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  *   <li>兼容：{@code download(Activity, String, ...)} 等重载，内部均委托到 Config 入口</li>
  * </ul>
  *
- * @author fz
  * @see DownloadConfig
  * @see BatchDownloadConfig
- * @since 2024/11/7
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 public class DownloadManager {
 

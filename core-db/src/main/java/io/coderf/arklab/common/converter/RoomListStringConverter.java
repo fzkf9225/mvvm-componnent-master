@@ -6,8 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * created by fz on 2024/11/6 10:52
- * describe:room数据库字符串集合类型转换器
+ * room数据库字符串集合类型转换器
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 10:52
  */
 public class RoomListStringConverter {
     @TypeConverter

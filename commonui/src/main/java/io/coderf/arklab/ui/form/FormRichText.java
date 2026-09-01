@@ -20,8 +20,12 @@ import com.bumptech.glide.Glide;
 import io.coderf.arklab.common.utils.common.ThreadExecutor;
 
 /**
- * Created by fz on 2024/11/13 14:21
- * describe :富文本
+ * 富文本
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/13 14:21
  */
 public class FormRichText extends FormTextView {
     /**

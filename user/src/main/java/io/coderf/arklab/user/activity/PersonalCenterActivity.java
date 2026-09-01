@@ -10,8 +10,12 @@ import io.coderf.arklab.user.databinding.PersonalCenterActivityBinding;
 import io.coderf.arklab.user.viewmodel.UserViewModel;
 
 /**
- * Created by fz on 2020/12/25 13:48
- * describe:
+ * PersonalCenterActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2020/12/25 13:48
  */
 @AndroidEntryPoint
 public class PersonalCenterActivity extends BaseActivity<UserViewModel, PersonalCenterActivityBinding> {

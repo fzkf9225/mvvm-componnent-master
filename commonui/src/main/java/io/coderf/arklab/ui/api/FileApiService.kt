@@ -9,8 +9,12 @@ import retrofit2.http.Part
 import retrofit2.http.Url
 
 /**
- * created by fz on 2025/9/9 9:30
- * describe:附件上传，未初始化，需要单独初始化，使用retrofit代理
+ * 附件上传，未初始化，需要单独初始化，使用retrofit代理
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/9/9 9:30
  */
 interface FileApiService : BaseApiService {
     /**

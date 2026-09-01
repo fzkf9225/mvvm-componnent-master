@@ -9,8 +9,9 @@ package io.coderf.arklab.mqtt.session
  * 仅做主题集合编排，不含任何业务消息解析。
  *
  * @author fz
- * @version 1.5
- * @since 1.5
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class OverlayTopicBook {
 

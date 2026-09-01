@@ -24,6 +24,9 @@ import io.coderf.arklab.ui.enums.LabelAlignEnum;
  * 表单评分控件，基于 {@link StarBar} 实现，尺寸与样式更易控制。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class FormRating extends FormConstraintLayout {
 

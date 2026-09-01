@@ -8,8 +8,12 @@ import io.coderf.arklab.ui.fragment.CalendarMonthFragment
 import io.coderf.arklab.ui.widget.calendar.CalendarView
 
 /**
- * created by fz on 2024/11/21 9:00
- * describe:
+ * MonthViewPagerAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/21 9:00
  */
 class MonthViewPagerAdapter(
     private val fragmentManager: FragmentManager,

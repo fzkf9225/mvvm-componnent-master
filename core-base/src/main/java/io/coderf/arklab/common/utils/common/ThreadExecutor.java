@@ -9,8 +9,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by fz on 2023/5/31 9:19
- * describe :线程池，核心线程为1，边界为CPU2倍，超过会报异常，一般用于不是同时执行多个任务，比如下载多个文件，或者同时播放多个音频
+ * 线程池，核心线程为1，边界为CPU2倍，超过会报异常，一般用于不是同时执行多个任务，比如下载多个文件，或者同时播放多个音频
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/31 9:19
  */
 public class ThreadExecutor extends ThreadPoolExecutor {
     /**

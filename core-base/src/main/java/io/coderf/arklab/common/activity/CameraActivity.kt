@@ -12,8 +12,12 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.camera.CameraView
 
 /**
- * created by fz on 2024/10/22 17:21
- * describe:拍摄
+ * 拍摄
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/22 17:21
  */
 @AndroidEntryPoint
 class CameraActivity : BaseActivity<EmptyViewModel, ActivityShootBinding>() {

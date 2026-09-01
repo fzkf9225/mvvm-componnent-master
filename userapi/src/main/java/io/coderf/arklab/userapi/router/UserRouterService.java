@@ -7,8 +7,12 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 
 /**
- * Created by fz on 2023/5/17 14:20
- * describe :
+ * UserRouterService 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/17 14:20
  */
 public interface UserRouterService {
     /**

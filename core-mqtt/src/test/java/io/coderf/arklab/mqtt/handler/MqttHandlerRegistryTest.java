@@ -8,8 +8,8 @@ import static org.junit.Assert.assertEquals;
  * [MqttHandlerRegistry] 单元测试。
  *
  * @author fz
- * @version 1.2
- * @since 1.2
+ * @version 1.0
+ * @since 1.0
  * @created 2026/7/27 10:10
  */
 public class MqttHandlerRegistryTest {

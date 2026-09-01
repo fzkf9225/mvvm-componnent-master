@@ -5,8 +5,12 @@ import android.graphics.Paint;
 import android.text.style.ReplacementSpan;
 
 /**
- * Created by fz on 2023/5/23 16:32
- * describe :
+ * EasyVerticalCenterSpan 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/23 16:32
  */
 public class EasyVerticalCenterSpan extends ReplacementSpan {
     private final float fontSizeSp;    //字体大小sp

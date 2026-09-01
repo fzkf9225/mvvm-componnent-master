@@ -20,56 +20,55 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <io.coderf.arklab.common.widget.customview.ActionToolbar
-            android:id="@+id/main_bar"
-            app:layout_constraintTop_toTopOf="parent"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/main_container"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
-            android:theme="@style/ToolBarStyle_black"
-            app:contentInsetStart="0dp"
-            app:contentInsetEnd="0dp"
-            app:contentInsetStartWithNavigation="0dp"
-            app:contentInsetEndWithActions="0dp"
-            app:buttonGravity="center_vertical"
-            app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
-            app:bindNavIconRes="@{toolbarConfig.backIconRes}"
-            app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.textColor)}"
-            app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
-            app:popupTheme="@style/OverflowMenuStyle">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
+            app:liftOnScroll="false"
+            app:paddingTopSystemWindowInsets="false"
+            app:paddingBottomSystemWindowInsets="false">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:ellipsize="end"
-                android:text="@{toolbarConfig.title}"
-                android:textColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
+            <io.coderf.arklab.common.widget.customview.ActionToolbar
+                android:id="@+id/main_bar"
+                style="@style/Widget.App.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@{ContextCompat.getColor(context,toolbarConfig.bgColor)}"
+                app:title="@{toolbarConfig.title}"
+                app:titleCentered="@{toolbarConfig.titleCentered}"
+                app:titleTextColor="@{ContextCompat.getColor(context,toolbarConfig.textColor)}"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:contentInsetEndWithActions="0dp"
+                app:buttonGravity="center_vertical"
+                app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
+                app:bindNavIconRes="@{toolbarConfig.backIconRes}"
+                app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.textColor)}"
+                app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
                 app:bindTitleTextSizeSp="@{toolbarConfig.titleTextSizeSp}"
                 app:bindTitleBold="@{toolbarConfig.titleBold}"
-                app:bindTitleMaxLines="@{toolbarConfig.titleMaxLines}"
-                app:bindTitleGravity="@{toolbarConfig.titleGravity}"
                 app:bindTitleFontFamily="@{toolbarConfig.titleFontFamily}"
                 app:bindTitleFontRes="@{toolbarConfig.titleFontRes}"
+                app:bindTitleMaxLines="@{toolbarConfig.titleMaxLines}"
+                app:bindTitleGravity="@{toolbarConfig.titleGravity}"
                 app:bindTitleLetterSpacing="@{toolbarConfig.titleLetterSpacing}"
-                app:bindTitleAllCaps="@{toolbarConfig.titleAllCaps}" />
-        </io.coderf.arklab.common.widget.customview.ActionToolbar>
+                app:bindTitleAllCaps="@{toolbarConfig.titleAllCaps}"
+                app:popupTheme="@style/OverflowMenuStyle" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
             android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintVertical_weight="1"
-            app:layout_constraintTop_toBottomOf="@+id/main_bar"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

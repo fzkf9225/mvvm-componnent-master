@@ -3,8 +3,12 @@ package io.coderf.arklab.common.bean.base;
 import androidx.databinding.BaseObservable;
 
 /**
- * created by fz on 2024/10/14 13:14
- * describe:
+ * BasePagingBean 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/14 13:14
  */
 public class BasePagingBean extends BaseObservable {
     private String id;

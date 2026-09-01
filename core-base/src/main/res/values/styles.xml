@@ -1,101 +1,108 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base Material3 Theme -->
     <style name="AppBaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color -->
         <item name="colorPrimary">@color/themeColor</item>
-        <item name="colorOnPrimary">@color/buttonPrimaryText</item>
-        <item name="colorPrimaryContainer">@color/themeColor</item>
-        <item name="colorOnPrimaryContainer">@color/buttonPrimaryText</item>
-        <!-- Secondary brand color -->
-        <item name="colorSecondary">@color/themeColor</item>
-        <item name="colorOnSecondary">@color/buttonPrimaryText</item>
-        <item name="colorSecondaryContainer">@color/themeColor</item>
-        <item name="colorOnSecondaryContainer">@color/buttonPrimaryText</item>
-        <!-- Tertiary brand color -->
-        <item name="colorTertiary">@color/themeColor</item>
-        <item name="colorOnTertiary">@color/buttonPrimaryText</item>
-        <item name="colorTertiaryContainer">@color/themeColor</item>
-        <item name="colorOnTertiaryContainer">@color/buttonPrimaryText</item>
-        <!-- Error color -->
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/onTertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainer</item>
         <item name="colorError">@color/theme_red</item>
-        <item name="colorOnError">@color/buttonPrimaryText</item>
-        <item name="colorErrorContainer">@color/theme_red</item>
-        <item name="colorOnErrorContainer">@color/buttonPrimaryText</item>
-        <!-- Surface colors (Material3) - 使用语义颜色 -->
+        <item name="colorOnError">@color/onError</item>
+        <item name="colorErrorContainer">@color/errorContainer</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainer</item>
         <item name="colorSurface">@color/cardSurface</item>
         <item name="colorOnSurface">@color/cardOnSurface</item>
         <item name="colorSurfaceVariant">@color/cardSurfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
-        <!-- Background -->
+        <item name="colorSurfaceDim">@color/surfaceDim</item>
+        <item name="colorSurfaceBright">@color/surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighest</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/autoColor</item>
-        <!-- Outline -->
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
-        <!-- Inverse -->
         <item name="colorSurfaceInverse">@color/surfaceInverse</item>
         <item name="colorOnSurfaceInverse">@color/onSurfaceInverse</item>
         <item name="colorPrimaryInverse">@color/primaryInverse</item>
-        <!-- Navigation bar -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/cardSurface</item>
         <item name="android:windowLightStatusBar">@bool/window_light_status_bar</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/window_light_navigation_bar</item>
-        <!-- PopupMenu style -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:popupMenuStyle">@style/OverflowMenuStyle</item>
-        <!-- Material3 Component styles -->
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Filled</item>
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
         <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
         <item name="tabStyle">@style/customTabLayout</item>
-        <!-- MaterialButton 去掉默认 6dp 上下 inset，layout_height 才是实际可视高度 -->
-        <item name="materialButtonStyle">@style/Widget.App.Button</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
-        <item name="borderlessButtonStyle">@style/Widget.App.Button.TextButton</item>
-        <item name="materialIconButtonStyle">@style/Widget.App.Button.IconButton</item>
+        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Material3.Button.OutlinedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.Material3.Button.TextButton</item>
+        <item name="materialIconButtonStyle">@style/Widget.Material3.Button.IconButton</item>
     </style>
 
-    <!--
-        Material3 Button 默认 insetTop/Bottom=6dp，指定高度时背景会被裁掉一圈。
-        布局不要再写 android:insetTop/Bottom=0dp，用本样式或主题默认即可。
-    -->
+    <!-- 兼容仍写 style="@style/Widget.App.Button" 的布局；触控高度走 M3 默认 inset + minHeight -->
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
-
     <style name="Widget.App.Button.TextButton" parent="Widget.Material3.Button.TextButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
-
     <style name="Widget.App.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+    <style name="Widget.App.Button.IconButton" parent="Widget.Material3.Button.IconButton" />
+
+    <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="Widget.App.Button.IconButton" parent="Widget.Material3.Button.IconButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
+        <item name="titleCentered">true</item>
+        <item name="subtitleCentered">true</item>
+        <item name="navigationIconTint">?attr/colorOnSurface</item>
     </style>
 
-    <!-- Dialog 共用语义色，避免 Theme.Material3.Dialog 不继承 AppBaseTheme 导致暗色仍是浅色表面 -->
+    <!-- 品牌色 Toolbar（搜索页等）：标题/图标走 onPrimary -->
+    <style name="Widget.App.Toolbar.OnPrimary" parent="Widget.App.Toolbar">
+        <item name="navigationIconTint">?attr/colorOnPrimary</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+    </style>
+
     <style name="App.Material3.Dialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/themeColor</item>
-        <item name="colorOnPrimary">@color/buttonPrimaryText</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
         <item name="colorSurface">@color/cardSurface</item>
         <item name="colorOnSurface">@color/cardOnSurface</item>
         <item name="colorSurfaceVariant">@color/cardSurfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainer</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
-        <item name="materialButtonStyle">@style/Widget.App.Button</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
-        <item name="borderlessButtonStyle">@style/Widget.App.Button.TextButton</item>
-        <item name="materialIconButtonStyle">@style/Widget.App.Button.IconButton</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Material3.Button.OutlinedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.Material3.Button.TextButton</item>
+        <item name="materialIconButtonStyle">@style/Widget.Material3.Button.IconButton</item>
     </style>
 
-    <!-- 自定义loading dialog - 使用Material3风格，内容自适应 -->
     <style name="loading_dialog" parent="App.Material3.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -105,7 +112,6 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-    <!-- TabLayout布局样式 - 使用语义颜色 -->
     <style name="customTabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabIndicatorColor">@color/themeColor</item>
         <item name="android:layout_width">match_parent</item>
@@ -116,39 +122,28 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <!-- 弹框dialog - 使用Material3 -->
     <style name="ActionSheetDialogStyle" parent="App.Material3.Dialog">
-        <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!-- 浮于Activity之上 -->
         <item name="android:windowIsFloating">true</item>
-        <!-- 边框 -->
         <item name="android:windowFrame">@null</item>
-        <!-- Dialog以外的区域模糊效果 -->
         <item name="android:backgroundDimEnabled">true</item>
-        <!-- 无标题 -->
         <item name="android:windowNoTitle">true</item>
-        <!-- 半透明 -->
         <item name="android:windowIsTranslucent">true</item>
-        <!-- Dialog进入及退出动画 -->
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
     </style>
 
-    <!-- 专门给 ConfirmDialog 用的样式，控制按压高亮色 -->
     <style name="DialogSoftHighlightStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="android:colorControlHighlight">?attr/colorPrimary</item>
         <item name="colorControlHighlight">?attr/colorPrimary</item>
     </style>
 
-    <!-- ActionSheet进出动画 -->
     <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
 
-    <!-- 朋友圈图片全屏样式 -->
-    <style name="PreviewPhotoDialog" parent="Theme.Material3.DayNight.Dialog">
+    <style name="PreviewPhotoDialog" parent="App.Material3.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">false</item>
@@ -164,22 +159,15 @@
         <item name="android:windowExitAnimation">@anim/scale_out</item>
     </style>
 
-    <style name="dialog" parent="Theme.Material3.DayNight.Dialog">
+    <style name="dialog" parent="App.Material3.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <!-- Toolbar 样式 - 使用 Material3 -->
-    <style name="ToolBarStyle_black" parent="Widget.Material3.Toolbar">
-        <item name="android:textSize">@dimen/font_size_xl</item>
-        <item name="android:textStyle">normal</item>
-        <item name="colorControlNormal">?attr/colorOnSurface</item>
-        <item name="overlapAnchor">false</item>
-    </style>
+    <style name="ToolBarStyle_black" parent="Widget.App.Toolbar" />
 
-    <!-- OverflowMenu 样式 - 使用语义颜色 -->
     <style name="OverflowMenuStyle" parent="Widget.Material3.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
         <item name="android:dropDownWidth">wrap_content</item>
@@ -189,16 +177,9 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <!-- Toolbar 白色图标样式 - 使用 Material3 -->
-    <style name="ToolBarStyle_white" parent="Widget.Material3.Toolbar">
-        <item name="android:textSize">@dimen/font_size_xl</item>
-        <item name="android:textStyle">normal</item>
-        <item name="colorControlNormal">@color/buttonPrimaryText</item>
-        <item name="overlapAnchor">false</item>
-    </style>
+    <style name="ToolBarStyle_white" parent="Widget.App.Toolbar.OnPrimary" />
 
-    <!-- 弹框dialog 无背景 -->
-    <style name="ActionSheetDialogStyle_No_Bg" parent="Theme.Material3.DayNight.Dialog">
+    <style name="ActionSheetDialogStyle_No_Bg" parent="App.Material3.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -209,7 +190,7 @@
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
     </style>
 
-    <style name="like_toast_dialog_style" parent="Theme.Material3.DayNight.Dialog">
+    <style name="like_toast_dialog_style" parent="App.Material3.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>

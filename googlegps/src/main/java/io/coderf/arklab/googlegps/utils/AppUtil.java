@@ -8,7 +8,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 
 /**
- * Created by fz on 2017/6/15.
  * 应用程序Activity管理类：用于Activity管理和应用程序退出
  * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
  * <p>
@@ -16,6 +15,11 @@ import android.graphics.drawable.shapes.RoundRectShape;
  * AppManager.getAppManager().addActivity(this);
  * 结束Activity&从堆栈中移除
  * AppManager.getAppManager().finishActivity(this);
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/6/15
  */
 public class AppUtil {
     public final static String TAG = AppUtil.class.getSimpleName();

@@ -15,6 +15,11 @@ import java.util.Map;
  * @param url         该清晰度对应的播放地址
  * @param description 可选说明文案
  * @param headers     切换地址时的 HTTP 请求头
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public record VideoPlayerClarityOption(String name, String url, @NonNull String description,
                                        @NonNull Map<String, String> headers) implements Serializable {

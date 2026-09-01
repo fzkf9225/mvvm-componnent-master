@@ -26,7 +26,7 @@ import io.coderf.arklab.common.utils.common.StringUtil;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2019/10/11 00:00
+ * @created 2019/10/11 0:00
  */
 public class MessageDialog extends BaseDialog {
     /**

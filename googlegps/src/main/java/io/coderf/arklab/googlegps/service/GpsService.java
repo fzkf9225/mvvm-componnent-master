@@ -40,6 +40,11 @@ import io.coderf.arklab.googlegps.utils.LogUtil;
  *
  * <p>前台服务，负责管理 GPS 和网络定位的请求、位置过滤、文件记录等核心功能。
  * 支持持续定位和单次定位模式，可通过闹钟定时获取位置点。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @SuppressLint("MissingPermission")
 public class GpsService extends Service {

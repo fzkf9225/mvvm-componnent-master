@@ -21,7 +21,12 @@ import retrofit2.Converter;
 
 /**
  * Create by fz on 2019/8/1
- * describe:解析接口统一返回数据
+ * 解析接口统一返回数据
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private final TypeAdapter<T> adapter;

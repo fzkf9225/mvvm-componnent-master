@@ -16,8 +16,12 @@ import io.coderf.arklab.demo.viewmodel.DemoFlowPagingViewModel
 import kotlinx.coroutines.launch
 
 /**
- * Created by fz on 2023/12/1 16:40
- * describe :
+ * DemoSmartFlowPagingFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 16:40
  */
 @AndroidEntryPoint
 class DemoSmartFlowPagingFragment :

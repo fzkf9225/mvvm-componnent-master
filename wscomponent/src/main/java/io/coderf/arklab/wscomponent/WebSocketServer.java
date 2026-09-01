@@ -39,8 +39,12 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * Created by fz on 2023/11/22 11:30
- * describe:长链接socket
+ * 长链接socket
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/22 11:30
  */
 public class WebSocketServer {
     private volatile static WebSocketServer instance = null;

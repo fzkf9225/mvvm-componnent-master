@@ -7,8 +7,12 @@ import java.lang.reflect.Proxy;
 import io.coderf.arklab.common.api.ApiRetrofit;
 
 /**
- * created by fz on 2025/7/29 14:15
- * describe:
+ * ApiServiceWrapper 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/29 14:15
  */
 public class ApiServiceWrapper<T> implements InvocationHandler {
     private final T retrofitProxy;      // Retrofit 动态代理对象

@@ -21,9 +21,12 @@ import io.coderf.arklab.common.utils.download.listener.DownloadListener;
  * {@link io.coderf.arklab.common.utils.common.FileUtil#getDefaultDownloadDir}。
  * APK 更新请使用 {@link UpdateConfig}，其默认开启防重复下载并提供默认 APK 文件名。
  *
- * @author fz
  * @see DownloadManager#download(DownloadConfig)
- * @since 2026/3/31
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/3/31
  */
 public class DownloadConfig {
     /** 普通文件下载默认不拦截重复 URL；更新场景请使用 {@link UpdateConfig}（默认开启） */

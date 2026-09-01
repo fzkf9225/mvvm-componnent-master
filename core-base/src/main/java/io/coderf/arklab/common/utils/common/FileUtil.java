@@ -48,6 +48,11 @@ import okhttp3.ResponseBody;
 /**
  * 文件工具类，提供文件读写、复制、删除、大小格式化等能力。
  * <p>上传相关方法已迁移至 {@link FileUploadUtil}，此处保留委托以兼容旧调用。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class FileUtil {
     private static final String TAG = "FileUtils";

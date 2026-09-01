@@ -27,14 +27,14 @@ import io.coderf.arklab.common.autosize.utils.Preconditions;
 
 
 /**
- * ================================================
  * 当遇到本来适配正常的布局突然出现适配失效，适配异常等问题, 重写当前 {@link Activity} 的 {@link Activity#getResources()} 并调用
  * {@link AutoSizeCompat} 的对应方法即可解决问题
  * <p>
- * Created by JessYan on 2018/8/8 19:20
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/8 19:20
  */
 public final class AutoSizeCompat {
     private static final SparseArray<DisplayMetricsInfo> mCache = new SparseArray<>();

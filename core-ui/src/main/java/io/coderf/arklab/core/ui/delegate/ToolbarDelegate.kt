@@ -1,5 +1,6 @@
 package io.coderf.arklab.core.ui.delegate
 
+import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.appcompat.R as AppcompatR
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,11 @@ import com.google.android.material.appbar.MaterialToolbar
  *
  * 完整带 DataBinding 外壳的 MaterialToolbar 仍由 core-base [BaseActivity] 处理；
  * 本委托供「自带 MaterialToolbar」或组合式页面使用。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 data class ToolbarSetup(
     val title: CharSequence? = null,
@@ -21,6 +27,8 @@ data class ToolbarSetup(
      * 与 Edge-to-Edge 叠加时，调用方可再叠加 statusBar inset。
      */
     val heightPx: Int? = null,
+    /** 是否水平居中标题（对应 MaterialToolbar titleCentered）。 */
+    val titleCentered: Boolean = true,
     /** 是否显示系统 ActionBar 标题（本委托不走 ActionBar，标题始终写在 MaterialToolbar 上）。 */
     val displayShowTitle: Boolean = false
 )
@@ -45,8 +53,9 @@ class ToolbarDelegate(
 
     override fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup) {
         toolbar.title = setup.title
+        toolbar.isTitleCentered = setup.titleCentered
         if (setup.showUp) {
-            toolbar.setNavigationIcon(AppcompatR.drawable.abc_ic_ab_back_material)
+            toolbar.setNavigationIcon(resolveUpIndicator())
         } else {
             toolbar.navigationIcon = null
         }
@@ -81,9 +90,20 @@ class ToolbarDelegate(
     /** 仅更新返回键可见性。 */
     fun setShowUp(toolbar: MaterialToolbar, showUp: Boolean) {
         if (showUp) {
-            toolbar.setNavigationIcon(AppcompatR.drawable.abc_ic_ab_back_material)
+            toolbar.setNavigationIcon(resolveUpIndicator())
         } else {
             toolbar.navigationIcon = null
+        }
+    }
+
+    private fun resolveUpIndicator(): Int {
+        val typedValue = TypedValue()
+        return if (activity.theme.resolveAttribute(AppcompatR.attr.homeAsUpIndicator, typedValue, true)
+            && typedValue.resourceId != 0
+        ) {
+            typedValue.resourceId
+        } else {
+            AppcompatR.drawable.abc_ic_ab_back_material
         }
     }
 }

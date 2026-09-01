@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.GradientDrawable;
 import android.os.SystemClock;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -87,8 +86,6 @@ public class MarqueeTextView extends View {
     private boolean scrolling;
     /** 上一帧时间戳 */
     private long lastFrameTime;
-    /** 圆角背景 */
-    private final GradientDrawable gradientDrawable = new GradientDrawable();
     /** 裁剪区域 */
     private final RectF clipRect = new RectF();
 
@@ -237,29 +234,9 @@ public class MarqueeTextView extends View {
      */
     private void applyBackground() {
         customBackgroundEnabled = true;
-        if (hasBgColor) {
-            gradientDrawable.setColor(bgColor);
-        } else {
-            gradientDrawable.setColor(Color.TRANSPARENT);
-        }
-        if (leftTopRadius == radius && rightTopRadius == radius
-                && rightBottomRadius == radius && leftBottomRadius == radius) {
-            gradientDrawable.setCornerRadius(radius);
-        } else {
-            float[] radii = new float[]{
-                    leftTopRadius, leftTopRadius,
-                    rightTopRadius, rightTopRadius,
-                    rightBottomRadius, rightBottomRadius,
-                    leftBottomRadius, leftBottomRadius
-            };
-            gradientDrawable.setCornerRadii(radii);
-        }
-        if (strokeWidth > 0f) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        } else {
-            gradientDrawable.setStroke(0, Color.TRANSPARENT);
-        }
-        setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius,
+                hasBgColor, bgColor, strokeWidth > 0f, strokeWidth, strokeColor));
     }
 
     /**

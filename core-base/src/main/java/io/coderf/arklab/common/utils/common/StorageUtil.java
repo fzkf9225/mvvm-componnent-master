@@ -17,8 +17,12 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
- * Created by fz on 2023/5/4 17:05
- * describe :内存大小工具类
+ * 内存大小工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/4 17:05
  */
 public class StorageUtil {
     /**

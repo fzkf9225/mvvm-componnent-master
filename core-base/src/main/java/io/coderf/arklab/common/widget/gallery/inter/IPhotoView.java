@@ -11,6 +11,14 @@ import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 
 
+/**
+ * IPhotoView 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public interface IPhotoView {
 
     /** 与 {@link io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig#DEFAULT_MAX_SCALE} 保持一致 */

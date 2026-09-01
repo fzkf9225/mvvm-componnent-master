@@ -7,8 +7,9 @@ import org.eclipse.paho.mqttv5.common.MqttException
  * Presence 简化连接回调，供 Java 项目只关心 onConnected 时使用。
  *
  * @author fz
- * @version 1.3
+ * @version 1.0
  * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun interface PresenceConnectCallback {
     fun onConnected(reconnect: Boolean)

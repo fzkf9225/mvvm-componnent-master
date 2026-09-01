@@ -13,8 +13,12 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
- * created by fz on 2024/12/2 15:40
- * describe:
+ * CalendarDataSource 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2 15:40
  */
 public class CalendarDataSource {
 

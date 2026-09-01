@@ -25,6 +25,9 @@ import io.coderf.arklab.ui.R;
  * FormSpinner 锚点下拉列表，复用 {@link PopupWindowBean} 与 {@link PopupWindowAdapter}。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class FormSpinnerDropdownWindow<T extends PopupWindowBean<?>> extends PopupWindow {
 

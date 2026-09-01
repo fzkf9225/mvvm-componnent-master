@@ -6,8 +6,12 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Security;
 
 /**
- * created by fz on 2024/11/8 14:29
- * describe:
+ * SM3Utils 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/8 14:29
  */
 public class SM3Utils {
     static {

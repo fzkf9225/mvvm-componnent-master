@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
  *
  * @author fz
  * @version 1.0
- * @created 2026/3/20 23:22
  * @since 1.0
+ * @created 2026/3/20 23:22
  */
 public class DeviceOrientationHelper {
 

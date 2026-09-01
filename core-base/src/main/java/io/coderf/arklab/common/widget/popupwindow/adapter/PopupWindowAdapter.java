@@ -28,8 +28,8 @@ import io.coderf.arklab.common.utils.common.CollectionUtil;
  * 文本选项Adapter - 支持单选/多选，支持自定义样式
  *
  * @author fz
- * @version 2.0
- * @since 2.0
+ * @version 1.0
+ * @since 1.0
  * @created 2026/3/12
  */
 public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionTextViewBinding> {

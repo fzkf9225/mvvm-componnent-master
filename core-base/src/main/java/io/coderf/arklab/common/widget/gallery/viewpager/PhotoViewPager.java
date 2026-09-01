@@ -10,8 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 /**
- * created by fz on 2024/12/26 15:55
- * describe:
+ * PhotoViewPager 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/26 15:55
  */
 public class PhotoViewPager extends ViewPager {
     public PhotoViewPager(@NonNull Context context) {

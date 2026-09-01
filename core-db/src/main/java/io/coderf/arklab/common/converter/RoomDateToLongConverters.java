@@ -5,8 +5,12 @@ import androidx.room.TypeConverter;
 import java.util.Date;
 
 /**
- * created by fz on 2024/11/7 9:11
- * describe:room数据库Date类型转换器
+ * room数据库Date类型转换器
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7 9:11
  */
 public class RoomDateToLongConverters {
     @TypeConverter

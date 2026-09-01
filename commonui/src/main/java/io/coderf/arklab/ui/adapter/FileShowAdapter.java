@@ -34,8 +34,12 @@ import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.databinding.AdapterFileShowItemBinding;
 
 /**
- * Created by fz on 2024/2/26.
- * describe：文件展示
+ * 文件展示
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/2/26
  */
 public class FileShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterFileShowItemBinding> {
     private @ColorInt int textColor = 0x333333;

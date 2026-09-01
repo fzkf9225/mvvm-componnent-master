@@ -26,7 +26,6 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 
 /**
- * Created by fz on 2019/10/31.
  * 底部确认弹框
  * 支持自定义菜单项样式：
  * - 列表项高度
@@ -35,6 +34,11 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
  * - 单行/多行显示
  * - 左右margin
  * - 上下padding
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/31
  */
 public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
     /**

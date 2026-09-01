@@ -5,8 +5,12 @@ import androidx.annotation.NonNull;
 import java.util.Map;
 
 /**
- * Created by fz on 2023/12/1 8:54
- * describe :
+ * ApiRequestOptions 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 8:54
  */
 public class ApiRequestOptions {
     /**

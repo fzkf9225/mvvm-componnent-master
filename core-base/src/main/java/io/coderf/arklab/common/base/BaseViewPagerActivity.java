@@ -13,8 +13,12 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PagerInfo;
 
 /**
- * Created by fz on 2021/2/7 14:13
- * describe:自定义toolbar样式baseActivity
+ * 自定义toolbar样式baseActivity
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/2/7 14:13
  */
 public abstract class BaseViewPagerActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends BaseActivity<VM, VDB> {
     protected ViewPager2 mBaseViewPager;

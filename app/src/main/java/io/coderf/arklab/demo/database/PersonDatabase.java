@@ -9,8 +9,12 @@ import androidx.room.RoomDatabase;
 import io.coderf.arklab.demo.bean.Person;
 
 /**
- * created by fz on 2024/11/6 10:44
- * describe:
+ * PersonDatabase 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/6 10:44
  */
 @Database(entities = {Person.class}, version = 1, exportSchema = false)
 public abstract class PersonDatabase extends RoomDatabase {

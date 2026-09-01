@@ -1,83 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Material3 DayNight 主题 - 暗色模式适配
-
-        本文件遵循 Material3 语义颜色体系：
-        暗色模式下，通过覆盖 Material3 主题属性值来实现自动适配。
-
-        不再使用"偷梁换柱"方案覆盖 white/black/autoColor 等颜色名，
-        而是直接覆盖语义颜色值。
+        Material3 DayNight - 暗色 tonal palette。
+        Primary 使用种子色的浅色角色，保证在深色表面上的对比度。
     -->
 
-    <!-- ========== 基础背景色（暗色模式） ========== -->
+    <color name="themeColor">#FFA9C7FF</color>
+    <color name="colorPrimaryDark">#FF000000</color>
+
     <color name="default_background">#FF121212</color>
     <color name="background">#FF121212</color>
 
-    <!-- ========== 语义颜色定义（暗色模式值） ========== -->
-    <!-- Surface 相关 -->
     <color name="surfacePrimary">#FF1C1B1F</color>
     <color name="surfaceSecondary">#FF2B2930</color>
     <color name="onSurfacePrimary">#FFE6E1E5</color>
     <color name="onSurfaceSecondary">#FFCAC4D0</color>
 
-    <!-- ========== Material3 兼容性颜色（向后兼容 - 暗色模式） ========== -->
-    <!-- 主要文字色 - 暗色模式 -->
     <color name="autoColor">@color/onSurfacePrimary</color>
-
-    <!-- 次要文字色 - 暗色模式 -->
     <color name="onSurfaceVariant">@color/onSurfaceSecondary</color>
     <color name="nv_bg_color">@color/onSurfaceSecondary</color>
-
-
-    <!-- 提示文字色 - 暗色模式 -->
     <color name="hint_text_color">#FF938F99</color>
-
-    <!-- 背景色 - 暗色模式 -->
     <color name="autoBg">#FF1C1B1F</color>
     <color name="bg_color">#FF1C1B1F</color>
     <color name="h_area">#FF1C1B1F</color>
-
-    <!-- 分隔线色 - 暗色模式 -->
     <color name="h_line_color">#FF3A3640</color>
-
-    <!-- 次要文字色 - 暗色模式 -->
     <color name="gray">#FFCAC4D0</color>
     <color name="dark_light">#FF938F99</color>
-
-    <!-- 搜索框背景 - 暗色模式 -->
     <color name="search_view_background">#FF49454F</color>
 
-    <!-- ========== Material3 Surface Colors（暗色模式） ========== -->
+    <color name="primaryContainer">#FF003F8F</color>
+    <color name="onPrimary">#FF002F67</color>
+    <color name="onPrimaryContainer">#FFD6E3FF</color>
+    <color name="primaryInverse">#FF1C50B5</color>
+
+    <color name="secondary">#FFB9C7E1</color>
+    <color name="onSecondary">#FF233148</color>
+    <color name="secondaryContainer">#FF3A475C</color>
+    <color name="onSecondaryContainer">#FFD5E3FB</color>
+
+    <color name="tertiary">#FFD5BEE4</color>
+    <color name="onTertiary">#FF3A2B4A</color>
+    <color name="tertiaryContainer">#FF524061</color>
+    <color name="onTertiaryContainer">#FFF1DAFF</color>
+
+    <color name="onError">#FF690005</color>
+    <color name="errorContainer">#FF93000A</color>
+    <color name="onErrorContainer">#FFFFDAD6</color>
+
+    <color name="surfaceDim">#FF121212</color>
+    <color name="surfaceBright">#FF3A3840</color>
+    <color name="surfaceContainerLowest">#FF0F0E11</color>
+    <color name="surfaceContainerLow">#FF1C1B1F</color>
+    <color name="surfaceContainer">#FF201F24</color>
+    <color name="surfaceContainerHigh">#FF2B2930</color>
+    <color name="surfaceContainerHighest">#FF36343B</color>
     <color name="surfaceVariant">#FF49454F</color>
     <color name="surfaceInverse">#FFE6E1E5</color>
     <color name="onSurfaceInverse">#FF313033</color>
-
-    <!-- ========== Material3 Outline Colors（暗色模式） ========== -->
     <color name="outline">#FF938F99</color>
     <color name="outlineVariant">#FF49454F</color>
 
-    <!-- ========== Material3 Card Colors（暗色模式） ========== -->
+    <color name="buttonPrimaryText">@color/onPrimary</color>
+    <color name="buttonSecondaryText">@color/themeColor</color>
+    <color name="buttonSurfaceTint">@color/themeColor</color>
+    <color name="buttonOutlineTint">@color/themeColor</color>
+
     <color name="cardSurface">@color/surfacePrimary</color>
     <color name="cardOnSurface">@color/onSurfacePrimary</color>
     <color name="cardSurfaceVariant">@color/surfaceSecondary</color>
     <color name="cardOnSurfaceVariant">@color/onSurfaceSecondary</color>
 
-    <!-- ========== Material3 TextInput Colors（暗色模式） ========== -->
     <color name="textInputOutlineDefault">#FF938F99</color>
     <color name="textInputFilledDefault">#FF49454F</color>
 
-    <!-- ========== Ripple Highlight Colors（暗色模式） ========== -->
-    <!-- 暗色模式下使用浅色 ripple，确保在深色背景上可见 -->
     <color name="selectable_item_ripple">#29FFFFFF</color>
-
-    <!-- ========== Status Bar（暗色模式） ========== -->
-    <color name="colorPrimaryDark">#FF000000</color>
-
-    <!--
-        以下颜色保持不变（品牌色 / 主题色 / 状态色）：
-        - themeColor, theme_red, theme_green, theme_orange, theme_yellow
-        - green, primaryInverse, scrim, transparent
-        - textInputOutlineActive, textInputFilledActive（跟随主题色，保留原色）
-    -->
 </resources>

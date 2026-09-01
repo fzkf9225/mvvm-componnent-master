@@ -10,6 +10,11 @@ import io.coderf.arklab.ui.activity.UiWebViewActivity;
 /**
  * WebView <b>增强版</b>演示：commonui {@link UiWebViewActivity}（MediaHelper 相册选图 + 原生定位）。
  * <p>对比基础版见 {@link WebViewBasicDemoActivity}。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class WebViewHybridDemoActivity extends UiWebViewActivity {

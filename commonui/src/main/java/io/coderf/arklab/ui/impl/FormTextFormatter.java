@@ -23,6 +23,9 @@ import io.coderf.arklab.ui.enums.FormTextFormatEnum;
  * 文本格式化工具；{@link FormTextFormatEnum#NORMAL} 时不做任何处理。
  *
  * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class FormTextFormatter {
 

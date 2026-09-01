@@ -2,10 +2,13 @@
 
 统一的 Android 日志模块：PrettyLogger 初始化与本地 Logcat 落盘由本模块集中管理；各业务/框架模块只保留自己的控制台 debug 开关。
 
+当前版本：**1.1.0**  
+Maven：`io.coderf.arklab.core:log:1.1.0`
+
 ## 坐标
 
 ```gradle
-implementation 'io.coderf.arklab.core:log:1.0.0'
+implementation 'io.coderf.arklab.core:log:1.1.0'
 ```
 
 发布命令（需环境变量 `ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）：

@@ -12,8 +12,12 @@ import io.coderf.arklab.userapi.router.UserRouterService;
 import io.coderf.arklab.user.activity.LoginActivity;
 
 /**
- * Created by fz on 2023/5/17 14:23
- * describe :
+ * UserRouterServiceImpl 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/17 14:23
  */
 public class UserRouterServiceImpl implements UserRouterService {
 

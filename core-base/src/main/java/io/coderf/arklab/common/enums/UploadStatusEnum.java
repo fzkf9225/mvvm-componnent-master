@@ -1,8 +1,12 @@
 package io.coderf.arklab.common.enums;
 
 /**
- * created by fz on 2025/8/6 11:11
- * describe:
+ * UploadStatusEnum 枚举。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/6 11:11
  */
 public enum UploadStatusEnum {
     /**

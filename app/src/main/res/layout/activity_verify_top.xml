@@ -473,6 +473,8 @@
             style="@style/Widget.App.Button.TextButton"
             app:cornerRadius="0dp"
             android:text="校验"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/font_size_xxl"
             app:backgroundTint="@color/themeColor"

@@ -33,7 +33,12 @@ import io.coderf.arklab.media.utils.MediaUtil;
 
 
 /**
- * Created by guizhigang on 16/5/25.
+ * ImgCompressor 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 16/5/25
  */
 public class ImgCompressor {
     @SuppressLint("StaticFieldLeak")

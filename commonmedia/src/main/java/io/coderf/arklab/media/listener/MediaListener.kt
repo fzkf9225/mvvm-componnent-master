@@ -1,8 +1,12 @@
 package io.coderf.arklab.media.listener
 
 /**
- * Created by fz on 2023/8/18 14:35
- * describe :
+ * MediaListener 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/18 14:35
  */
 interface MediaListener {
     fun onSelectedCount(): Int = 0

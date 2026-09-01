@@ -7,8 +7,12 @@ import androidx.databinding.BaseObservable;
 import java.util.List;
 
 /**
- * created by fz on 2024/12/2 10:25
- * describe:
+ * CalendarData 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2 10:25
  */
 public class CalendarData extends BaseObservable {
     private int year;

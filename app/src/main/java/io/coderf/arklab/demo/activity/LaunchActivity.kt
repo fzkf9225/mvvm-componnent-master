@@ -36,8 +36,12 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * created by fz on 2026/2/25 10:35
- * describe:启动页
+ * 启动页
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/2/25 10:35
  */
 @AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")

@@ -31,6 +31,8 @@
  * }</pre>
  *
  * @author fz
- * @since 2024/11/7
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 package io.coderf.arklab.common.utils.download;

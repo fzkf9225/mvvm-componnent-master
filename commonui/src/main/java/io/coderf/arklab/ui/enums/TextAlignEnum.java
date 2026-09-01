@@ -3,8 +3,12 @@ package io.coderf.arklab.ui.enums;
 import android.text.TextUtils;
 
 /**
- * Created by fz on 2024/2/28 10:46
- * describe :表单中label文字对齐方式，默认为左侧
+ * 表单中label文字对齐方式，默认为左侧
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/2/28 10:46
  */
 public enum TextAlignEnum {
     /**

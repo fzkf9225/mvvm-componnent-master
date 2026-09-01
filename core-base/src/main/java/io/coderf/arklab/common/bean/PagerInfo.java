@@ -4,8 +4,12 @@ import androidx.databinding.BaseObservable;
 import androidx.fragment.app.Fragment;
 
 /**
- * created by fz on 2025/2/12 9:17
- * describe:
+ * PagerInfo 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/2/12 9:17
  */
 public class PagerInfo extends BaseObservable {
     /**

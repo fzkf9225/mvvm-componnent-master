@@ -8,7 +8,7 @@
         <item name="android:paddingLeft">@dimen/horizontal_margin_l</item>
         <item name="android:paddingRight">@dimen/horizontal_margin_l</item>
         <item name="android:textSize">@dimen/font_size_xl</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/onSurfacePrimary</item>
     </style>
 
     <style name="user_content">

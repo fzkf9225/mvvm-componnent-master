@@ -10,6 +10,11 @@ import io.coderf.arklab.demo.repository.KtDemoPagingRepositoryImpl;
 /**
  * ViewModel 作用域仓库提供。
  * Token 刷新使用 [io.coderf.arklab.core.request.TokenRefresherHolder] 全局默认，无需再注入 TokenRefresher。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Module
 @InstallIn(ViewModelComponent.class)

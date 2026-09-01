@@ -6,6 +6,11 @@ import io.coderf.arklab.common.inter.RequestUiCallback;
 /**
  * 多个 {@link RequestUiCallback} 串联（例如：同时写入 ViewModel 的 LiveData + 仍走页面 BaseView 弹 Toast）。
  * 各 delegate 中可含 null，会自动跳过。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class CompositeRequestUi implements RequestUiCallback {
 

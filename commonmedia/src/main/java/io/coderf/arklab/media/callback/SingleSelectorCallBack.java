@@ -16,8 +16,12 @@ import io.coderf.arklab.media.utils.LogUtil;
 
 
 /**
- * Created by fz on 2023/11/20 15:00
- * describe :
+ * SingleSelectorCallBack 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/20 15:00
  */
 public class SingleSelectorCallBack implements ActivityResultCallback<Uri> {
     private OpenSingleSelector singleSelector;

@@ -43,6 +43,11 @@ import io.reactivex.rxjava3.disposables.Disposable;
 /**
  * 二维码能力演示：实时扫码、相册识码、Base64/URL/本地路径识别、生成二维码。
  * <p>扫码页统一使用 {@link CaptureActivity}（支持相册选图识码），与 {@link io.coderf.arklab.common.activity.WebViewActivity} JSBridge 一致。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding>

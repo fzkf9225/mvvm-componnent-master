@@ -2,6 +2,11 @@ package io.coderf.arklab.base.api
 
 /**
  * assets 配置文件映射（通用字段；宿主可按项目扩展 data class 或另建 Config）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 data class AppPropertiesConfig(
     val baseUrl: String,

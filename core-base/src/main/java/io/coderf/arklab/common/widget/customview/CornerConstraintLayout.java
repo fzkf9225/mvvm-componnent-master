@@ -2,7 +2,6 @@ package io.coderf.arklab.common.widget.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
@@ -14,8 +13,12 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 
 /**
- * Created by fz on 2023/8/14 10:12
- * describe : 支持分别设置四个圆角和描边的ConstraintLayout
+ * 圆角 ConstraintLayout：XML / 代码 API 不变，背景走 Material3 {@code ShapeAppearance}。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class CornerConstraintLayout extends ConstraintLayout {
     /**
@@ -124,37 +127,10 @@ public class CornerConstraintLayout extends ConstraintLayout {
         }
     }
 
-    /**
-     * 应用背景（圆角+描边）
-     */
     private void applyBackground() {
-        GradientDrawable gd = new GradientDrawable();
-        if (hasBgColor) {
-            gd.setColor(circleBackColor);
-        }
-
-        // 设置圆角
-        if (leftTopRadius == radius && rightTopRadius == radius &&
-                rightBottomRadius == radius && leftBottomRadius == radius) {
-            // 所有圆角相同，使用统一的圆角半径
-            gd.setCornerRadius(radius);
-        } else {
-            // 分别设置四个角的圆角半径
-            float[] radii = new float[]{
-                    leftTopRadius, leftTopRadius,      // 左上角 x, y
-                    rightTopRadius, rightTopRadius,    // 右上角 x, y
-                    rightBottomRadius, rightBottomRadius, // 右下角 x, y
-                    leftBottomRadius, leftBottomRadius    // 左下角 x, y
-            };
-            gd.setCornerRadii(radii);
-        }
-
-        // 设置描边（边框）
-        if (hasStroke) {
-            gd.setStroke((int) strokeWidth, strokeColor);
-        }
-
-        this.setBackground(gd);
+        setBackground(CornerShapeHelper.createBackground(
+                leftTopRadius, rightTopRadius, rightBottomRadius, leftBottomRadius,
+                hasBgColor, circleBackColor, hasStroke, strokeWidth, strokeColor));
     }
 
     public void setBackColor(@ColorInt int color) {

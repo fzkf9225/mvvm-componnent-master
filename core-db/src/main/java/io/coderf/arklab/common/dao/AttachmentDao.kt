@@ -17,8 +17,12 @@ import io.coderf.arklab.common.bean.AttachmentBean
  * 配合 [io.coderf.arklab.common.repository.AttachmentRepositoryImpl] 与
  * [io.coderf.arklab.common.database.AttachmentDatabase] 使用。
  *
- * @author fz
  * @see RoomObservedEntity
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Dao
 @RoomObservedEntity(AttachmentBean::class)

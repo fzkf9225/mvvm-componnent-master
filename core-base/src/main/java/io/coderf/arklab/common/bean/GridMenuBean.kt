@@ -13,7 +13,7 @@ import androidx.databinding.BaseObservable
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2024/11/22 00:00
+ * @created 2024/11/22 0:00
  */
 open class GridMenuBean : BaseObservable, Parcelable {
     var id: Int

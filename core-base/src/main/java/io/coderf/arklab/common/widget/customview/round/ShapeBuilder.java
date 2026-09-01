@@ -8,7 +8,7 @@ import android.view.View;
  * GradientDrawable 构建器，支持圆角、描边、渐变等；保留历史拼写 API 并标记 {@link Deprecated}。
  *
  * @author fz
- * @version 1.1
+ * @version 1.0
  * @since 1.0
  * @created 2023/5/23 16:33
  */

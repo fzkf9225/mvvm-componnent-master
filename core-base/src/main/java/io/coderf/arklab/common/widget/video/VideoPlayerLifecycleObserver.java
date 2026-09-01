@@ -15,6 +15,11 @@ import androidx.lifecycle.LifecycleOwner;
  * <p>
  * 通过 {@link VideoPlayerController#bindLifecycle(LifecycleOwner)} 注册，包内可见。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 final class VideoPlayerLifecycleObserver implements DefaultLifecycleObserver, ComponentCallbacks {
 

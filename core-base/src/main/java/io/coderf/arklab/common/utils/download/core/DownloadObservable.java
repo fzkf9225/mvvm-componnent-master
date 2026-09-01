@@ -33,9 +33,12 @@ import okio.BufferedSource;
  * </ol>
  * 取消订阅（dispose）时会关闭通知并触发 {@link DownloadListener#onCancel()}。
  *
- * @author fz
  * @see DownloadRetrofitFactory
- * @since 2024/11/7
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 public class DownloadObservable implements ObservableOnSubscribe<File> {
     /** 断点续传临时文件（{@code .download} 后缀） */

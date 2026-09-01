@@ -6,8 +6,12 @@ import io.coderf.arklab.common.base.BaseView;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * Created by fz on 2024/6/18 14:32
- * describe :
+ * IRepository 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/6/18 14:32
  */
 public interface IRepository<BV extends BaseView> {
 

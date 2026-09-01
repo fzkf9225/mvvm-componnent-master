@@ -8,8 +8,12 @@ import java.util.Objects;
 import io.coderf.arklab.common.bean.base.BasePagingBean;
 
 /**
- * created by fz on 2024/10/14 13:31
- * describe:必须继承BasePagingBean类，不然会报错
+ * 必须继承BasePagingBean类，不然会报错
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/14 13:31
  */
 public class DefaultDiffCallback<T extends BasePagingBean> extends DiffUtil.ItemCallback<T>{
     @Override

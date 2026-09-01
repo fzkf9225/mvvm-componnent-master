@@ -27,9 +27,13 @@ import androidx.annotation.NonNull;
  * {@link io.coderf.arklab.common.base.BaseRepository#getRequestUi()} 展示，
  * 需由 {@link io.coderf.arklab.common.base.BaseViewModel} 注入，勿直接调 BaseView。</p>
  *
- * @author fz
  * @see io.coderf.arklab.common.repository.RoomRepositoryImpl
  * @see ApiRequestOptions
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class RoomRequestOptions {
 

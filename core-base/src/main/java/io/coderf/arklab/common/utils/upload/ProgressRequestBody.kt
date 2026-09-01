@@ -12,8 +12,12 @@ import okio.Sink
 import okio.buffer
 
 /**
- * created by fz on 2024/11/12 10:12
- * describe:
+ * ProgressRequestBody 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/12 10:12
  */
 class ProgressRequestBody(
     private val requestBody: RequestBody,

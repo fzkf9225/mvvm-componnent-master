@@ -24,6 +24,11 @@ import kotlin.math.max
  * 在录音的时候可以通过 [.addVoiceSize] 来设置一个音量条的高度
  *
  * 如果不使用该控件的时候需要使用[.quit] 方法来停止显示，避免内存泄露
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class VoiceView : View {
     private val minVoiceSize = 20

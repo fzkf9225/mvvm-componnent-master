@@ -5,8 +5,12 @@ import io.coderf.arklab.common.bean.Code.ResponseCode;
 import io.coderf.arklab.userapi.bean.UserInfo;
 
 /**
- * Created by fz on 2017/5/23.
  * 用户登录等相关信息
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/5/23
  */
 
 public class UserAccountHelper {

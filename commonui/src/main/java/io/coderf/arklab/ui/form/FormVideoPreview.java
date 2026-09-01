@@ -26,8 +26,12 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
 
 /**
- * Created by fz on 2023/12/26 16:27
- * describe :
+ * FormVideoPreview 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/26 16:27
  */
 public class FormVideoPreview extends FormMedia {
     /**

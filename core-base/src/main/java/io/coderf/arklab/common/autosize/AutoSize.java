@@ -35,7 +35,6 @@ import io.coderf.arklab.common.autosize.utils.Preconditions;
 
 
 /**
- * ================================================
  * AndroidAutoSize 用于屏幕适配的核心方法都在这里, 核心原理来自于 <a href="https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA">今日头条官方适配方案</a>
  * 此方案只要应用到 {@link Activity} 上, 这个 {@link Activity} 下的所有 Fragment、{@link Dialog}、
  * 自定义 {@link View} 都会达到适配的效果, 如果某个页面不想使用适配请让该 {@link Activity} 实现 {@link CancelAdapt}
@@ -43,10 +42,11 @@ import io.coderf.arklab.common.autosize.utils.Preconditions;
  * 任何方案都不可能完美, 在成本和收益中做出取舍, 选择出最适合自己的方案即可, 在没有更好的方案出来之前, 只有继续忍耐它的不完美, 或者自己作出改变
  * 既然选择, 就不要抱怨, 感谢 今日头条技术团队 和 张鸿洋 等人对 Android 屏幕适配领域的的贡献
  * <p>
- * Created by JessYan on 2018/8/8 19:20
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/8 19:20
  */
 public final class AutoSize {
     private static final SparseArray<DisplayMetricsInfo> mCache = new SparseArray<>();

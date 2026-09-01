@@ -13,8 +13,12 @@ import io.coderf.arklab.user.databinding.TechnicalSupportActivityBinding;
 
 
 /**
- * Created by fz on 2019/12/23
- * describe:技术支持
+ * 技术支持
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/12/23
  */
 @AndroidEntryPoint
 public class TechnicalSupportActivity extends BaseActivity<EmptyViewModel, TechnicalSupportActivityBinding> {

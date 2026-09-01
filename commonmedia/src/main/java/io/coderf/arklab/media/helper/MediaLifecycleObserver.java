@@ -32,8 +32,12 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
- * created by fz on 2025/7/30 9:35
- * describe:
+ * MediaLifecycleObserver 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/7/30 9:35
  */
 public class MediaLifecycleObserver implements DefaultLifecycleObserver {
     private final MediaHelper mediaHelper;

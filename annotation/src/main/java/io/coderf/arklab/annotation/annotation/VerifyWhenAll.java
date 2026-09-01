@@ -7,6 +7,11 @@ import java.lang.annotation.Target;
 
 /**
  * 支持在同一字段上声明多个 {@link VerifyWhen}（全部满足时才继续校验，AND 关系）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -2,8 +2,8 @@
 
 轻量工具层：尽量不绑定 Android `R` / DataBinding，供 `core-base` 等上层复用（如日志等）。
 
-当前版本：**1.0.1**  
-Maven：`io.coderf.arklab.core:utils:1.0.1`  
+当前版本：**1.1.0**  
+Maven：`io.coderf.arklab.core:utils:1.1.0`  
 namespace：`io.coderf.arklab.core.utils`
 
 ---
@@ -26,7 +26,7 @@ namespace：`io.coderf.arklab.core.utils`
 一般经 `core-base` / `common` 间接使用；需要纯工具、避免 UI/R 耦合时可显式：
 
 ```gradle
-implementation 'io.coderf.arklab.core:utils:1.0.1'
+implementation 'io.coderf.arklab.core:utils:1.1.0'
 // 或
 implementation project(':core-utils')
 ```

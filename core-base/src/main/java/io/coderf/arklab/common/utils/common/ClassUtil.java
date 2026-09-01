@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * created by fz on 2025/6/26 11:35
- * describe:
+ * ClassUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/26 11:35
  */
 public class ClassUtil {
     /**

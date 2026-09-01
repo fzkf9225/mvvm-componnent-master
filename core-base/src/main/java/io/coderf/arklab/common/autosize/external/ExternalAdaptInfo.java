@@ -20,15 +20,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * ================================================
  * {@link ExternalAdaptInfo} 用来存储外部三方库的适配参数, 因为 AndroidAutoSize 默认会对项目中的所有模块都进行适配
  * 三方库的 {@link Activity} 也不例外, 但三方库的适配参数可能和自己项目中的适配参数不一致, 导致三方库的适配效果和理想的效果差别很大
  * 所以需要向 AndroidAutoSize 提供三方库的适配参数, 已完成对三方库的屏幕适配
  * <p>
- * Created by JessYan on 2018/8/9 18:19
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/9 18:19
  */
 public class ExternalAdaptInfo implements Parcelable {
     /**

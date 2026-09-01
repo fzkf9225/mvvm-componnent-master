@@ -1,29 +1,104 @@
-# 4.5.0 版本升级与迁移说明
+# 升级与迁移说明
 
-> 从 **common 4.4.x 单体** 升级到 **common 4.5.1 + core-\* 1.0.1**。  
+> 当前主干：**common 4.6.0 + core-\* 1.1.0**（Views + Material Components 1.14）。  
+> 从 **AppCompat 主题线**（common 4.5.1 / core-base 1.0.9）升级：看下面 §1。  
+> 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)，再看 §1。  
 > 模块职责与日常用法见 [MODULES.md](./MODULES.md)。
 
 ---
 
-## 1. 本次升级摘要
+## 1. 4.6.0：AppCompat 主题 → Material3
+
+这是一次 **主题与控件风格** 的大版本，不是再拆模块。官方路线是 **Views + Material Components for Android**，不是 Jetpack Compose。业务 API、页面结构、自定义 Dialog 形态与 AppCompat 工程对齐，观感保持不变。
+
+### 1.1 版本号（相对 AppCompat 工程）
+
+中间位 +1、补丁归零。文档里的坐标以 **build.gradle 发布号** 为准（4.5.x 文档曾落后于实际 `core-base 1.0.9` 等）。
+
+| 模块 | AppCompat 线 | 现（Material3） |
+|------|----------------|-----------------|
+| common | 4.5.1 | **4.6.0** |
+| core-base | 1.0.9 | **1.1.0** |
+| core-network | 1.0.3 | **1.1.0** |
+| core-db / core-ui / core-utils | 1.0.2 | **1.1.0** |
+| core-log | 1.0.0 | **1.1.0** |
+| room-processor | 1.0.1 | **1.1.0** |
+| core-mqtt | 1.5.1 | **1.6.0** |
+| commonui | 3.5.1 | **3.6.0** |
+| commonmedia | 3.3.2 | **3.4.0** |
+| googlegps | 3.1.7 | **3.2.0** |
+| annotation | 3.2.0 | **3.3.0** |
+
+Maven 示例：
+
+```gradle
+implementation 'io.coderf.arklab.common:common:4.6.0'
+// 一般由 common POM 传递；解析不全时可显式：
+// implementation 'io.coderf.arklab.core:base:1.1.0'
+// implementation 'io.coderf.arklab.core:network:1.1.0'
+```
+
+### 1.2 主题（必须知悉）
+
+| 项 | AppCompat 线 | 4.6.0 |
+|----|----------------|--------|
+| `AppBaseTheme` 父类 | `Theme.AppCompat.Light.NoActionBar` | `Theme.Material3.DayNight.NoActionBar` |
+| 暗色 | 多为 `forceDarkAllowed=true` 系统强行转暗 | `forceDarkAllowed=false`，走 `values-night` tonal 色板 |
+| Primary（亮） | `#1C50B5` | 同种子色，角色拆成完整 M3 token |
+| Primary（暗） | 仍偏深品牌蓝 | `#A9C7FF`，字/图标用 `onPrimary`（`#002F67`） |
+| Material 库 | 较低 | **1.14.0** |
+
+宿主 Manifest 继续 `android:theme="@style/AppBaseTheme"` 即可，不要改回 `Theme.AppCompat.*`。
+
+### 1.3 行为约定（API 尽量不变）
+
+- **Toolbar**：页面壳为 `CoordinatorLayout > AppBarLayout > MaterialToolbar`（`ActionToolbar` / `TitleBar`），标题仍居中，右侧操作仍是 TextButton。对外 `ToolbarConfig` 未断。
+- **圆角控件**：`CornerButton` 等走 `ShapeAppearance` + tint/stroke；XML 属性名不变。
+- **`CirclePaddingImageView`**：圆形只做**背景**，`android:padding` 仍内缩图标。不要把它当成裁圆头像（头像用 `RoundImageView`）。
+- **自定义确认框 / 底部 ActionSheet**：不改成 `MaterialAlertDialog` / 换 Dialog 父类，链式 API 保持。
+- **动态取色（Material You）**：`Config.setDynamicColorEnabled(true)` 须在 `Config.init()` **之前**调用；**默认关**，品牌色不跟壁纸走。
+- **登录输入框**：仍是自定义圆角底 + `TextInputEditText`，没有强行包 `TextInputLayout`（会改形态）。
+
+### 1.4 宿主要改的（通常很少）
+
+1. 依赖升到上表坐标，Clean 后重编译。
+2. 自绘「品牌色底 + 写死白字」的地方，暗色下改成 `R.color.onPrimary` / `?attr/colorOnPrimary`（亮色 `onPrimary` 仍是白）。框架内 Tab 选中字、默认日历选中日、GPS 对话框 Primary 已按此处理。
+3. 不要把相机 / 视频 / 裁剪叠层上的白字改成语义色。
+4. Release 混淆：主题升级**不必改 ProGuard**；`material.**` 与 `io.coderf.arklab.common.**` 已 keep。minify 包请回归登录 JSON（`user.bean` 未单独 keep，属旧债）。
+
+### 1.5 验证建议
+
+- [ ] 亮色 / 暗色：页面底、字色、状态栏图标
+- [ ] 普通页 Toolbar、搜索页（品牌底 + onPrimary 字）
+- [ ] 登录按钮、圆角输入
+- [ ] Tab 选中 pill、默认日历选中日（暗色浅底深字）
+- [ ] GPS 确认按钮（暗色浅色 Primary）
+- [ ] 相机 / 扫码按钮 padding 与按下态
+
+```bash
+./gradlew :app:assembleDebug
+./gradlew :app:assembleRelease   # minify 时加测登录
+```
+
+---
+
+## 附录 A：4.5.1（从 4.4.x 单体拆到 core）
+
+> 以下是 **4.4.x → 4.5.1** 的历史说明。若工程已经在 4.5.1 / AppCompat 主题线上，只需看上文 §1，不必再做附录里的模块拆分。
+
+### A.1 当时升级摘要
 
 | 类别 | 变更 |
 |------|------|
 | 模块 | 新增 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`；`common` 改为 facade |
-| 包名 | 业务仍使用 `io.coderf.arklab.common.*`（源码在 `core-base` 等，一般 **import 不用改**） |
+| 包名 | 业务仍使用 `io.coderf.arklab.common.*`（一般 **import 不用改**） |
 | 网络 | 新增 `DefaultNetworkRepository` + `RequestResult`；旧 Repository **已 Deprecated，未删除** |
 | 解耦 | `user` 去掉对 `mqttcomponent` / `commonmedia` 的直接依赖，改走 Gateway |
-| 稳定 | ViewModel UI 重绑、Dialog Context 泄漏、`startActivity` extras、ABI、`ANDROID_ID` 等已修 |
-| 安全 | 去掉 `o-appSecret` 请求头；release 网络安全配置不再信任用户 CA |
 | 发布 | `common` 与各 `core-*` 补齐 `maven-publish`；混淆规则按模块拆到 `consumer-rules.pro` |
 
----
+### A.2 宿主工程怎么升（4.4 → 4.5）
 
-## 2. 宿主工程怎么升
-
-### 2.1 仍用工程依赖（本仓库 / 多 module）
-
-依赖入口可不变：
+**仍用工程依赖：**
 
 ```gradle
 implementation project(':common')
@@ -31,134 +106,39 @@ implementation project(':common')
 
 确保 `settings.gradle` 已 `include` 全部 `core-*` 与 `:common`。
 
-### 2.2 改用 Maven
+**当时 Maven 坐标（已被 4.6.0 取代，勿再新接入）：**
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.5.1'
-// 若 POM 未完整传递，按需显式补：
-// implementation 'io.coderf.arklab.core:base:1.0.1'
-// implementation 'io.coderf.arklab.core:network:1.0.1'
-// …
 ```
 
-媒体 / MQTT 仍按需单独依赖实现库，并在 **app 组装层** 做 Hilt 绑定（业务模块不要直接依赖实现）。
+必查：Clean 后重装（`InitProvider` 在 `core-base`）；宿主若拷贝过旧 Manifest，删掉错误包名的相对组件。
 
-### 2.3 必查项
+### A.3 代码迁移清单
 
-1. **Clean 后重装**（Manifest 合并变化：`InitProvider` 在 `core-base`，facade 不再声明组件）。
-2. 若宿主曾拷贝旧 `common` 的 `AndroidManifest` 到自己的 facade，删掉相对名 `InitProvider` / Activity，避免解析成错误包名。
-3. Release 开启混淆时，确认各 AAR 的 `consumer-rules` 已合并，或参考 app 内对 `io.coderf.arklab.common.**` / `core.**` / gateway 的 keep。
+**业务模块依赖：** 不要在业务 module 写 `mqttcomponent` / `commonmedia`，改 `@Inject MessageGateway` / `MediaGateway`（接口在 `:base`）。app 侧绑定见 `GatewayModule`、`MediaGatewayModule`。
 
----
+**网络：** 旧 `sendRequest` 可编译但勿新增；新代码用 `repository.request(RequestOptions) { api.xxx() }`。
 
-## 3. 代码迁移清单
+**安全：** 请求头不再带 `o-appSecret`；Release 不信任用户安装的 CA。
 
-### 3.1 业务模块依赖（必须）
-
-**之前：**
-
-```gradle
-implementation project(':common')
-implementation project(':mqttcomponent')
-implementation project(':commonmedia')
-```
-
-**之后：**
-
-```gradle
-implementation project(':common')
-implementation project(':base')
-implementation project(':userapi')
-// mqtt / media：禁止写在业务 module，由 app 绑定 Gateway
-```
-
-Java / Kotlin 中：
-
-| 旧写法 | 新写法 |
-|--------|--------|
-| 直接 `MqttClient` / mqtt API | `@Inject MessageGateway`（接口在 `:base`） |
-| 直接 `MediaHelper` / `MediaBuilder` | `@Inject MediaGateway`（接口在 `:base`） |
-
-app 侧绑定参考：
-
-- `MessageGateway` → `app/.../GatewayModule.kt` + `app/.../mqtt/MqttMessageGateway`
-- `MediaGateway` → `app/.../MediaGatewayModule.kt` + `app/.../media/MediaHelperGateway`（app 依赖 `commonmedia`）
-
-### 3.2 网络请求（建议逐步）
-
-旧代码可继续编译：
-
-```java
-// @Deprecated — 勿新增
-repository.sendRequest(api.xxx(), options, liveData, …);
-```
-
-新代码：
-
-```kotlin
-repository.request(RequestOptions(showLoading = true)) { api.xxx() }
-    .collect { result ->
-        when (result) {
-            is RequestResult.Success -> { /* data */ }
-            is RequestResult.Error -> { /* AppError */ }
-            else -> Unit
-        }
-    }
-```
-
-新旧 UI 桥接：`common` 内 `RequestUiBridge`（可选）。
-
-### 3.3 Base / 生命周期（行为变化，无需改调用）
-
-- 配置变更后会 **重新绑定** ViewModel 的 UI / `RequestUi`，并在销毁时 `unbindView()`。
-- `MediaHelper` 必须 `bindLifeCycle`；若在 Activity 已 `RESUMED` 后才创建，内部会走安全的 Activity Result 注册（避免崩溃）。
-
-### 3.4 安全相关（必须知悉）
-
-- 请求头不再带 `o-appSecret`；签名仍用本地 secret。
-- assets 中 `APP_SECRET` 请换成环境占位 / 本地配置，勿提交真实生产密钥。
-- Debug 与 Release 的网络安全配置不同：Release 不信任用户安装的 CA。
-
----
-
-## 4. 验证建议
+### A.4 验证（4.5 拆分）
 
 ```bash
-# 编译 Demo
 ./gradlew :app:assembleDebug
-
-# user 不应再直接依赖 mqtt / media 实现
 ./gradlew :user:dependencies --configuration debugCompileClasspath
 # 输出中不应出现 mqttcomponent、commonmedia
 ```
 
-手动回归：
+- [ ] 冷启动 / 旋转屏后 Loading、Toast 正常
+- [ ] 底部 Tab「我的」、选图、登录 / 反馈媒体能力
+- [ ] MQTT 连接与收发（若启用）
 
-- [ ] 冷启动 / 旋转屏后 Loading、Toast 正常  
-- [ ] 底部 Tab 切到「我的」不崩溃，选图可用  
-- [ ] 登录 / 反馈页媒体能力正常  
-- [ ] MQTT 连接与收发（若启用）  
-
----
-
-## 5. 已知未完成（升级后仍存在）
-
-以下不影响「能跑」，但后续还会继续改：
+### A.5 当时已知未完成（4.6.0 仍部分存在）
 
 | 项 | 说明 |
 |----|------|
 | `core-base` 二次削片 | widget / 重 utils 仍集中在此 |
-| `core-ui` / `core-utils` | 预留模块，代码量少 |
-| ToolbarDelegate | 已预埋，未全面改写 Base |
 | 旧网络 API | 仅 Deprecated，未删除 |
 | 库模块自身 R8 | library 仍 `minifyEnabled false`，靠宿主 + consumer-rules |
-
----
-
-## 6. 版本号对照
-
-| 组件 | 旧（约） | 现 |
-|------|----------|-----|
-| common | 4.4.x（单体） | **4.5.1**（facade） |
-| core-\* | 无 | **1.0.1** |
-| media | 3.2.x | 3.2.5（发布脚本已对齐） |
+| user Gson Bean keep | 开启 minify 时登录 JSON 需回归（见 §1.4） |

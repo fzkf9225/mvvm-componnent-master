@@ -2,6 +2,11 @@ package io.coderf.arklab.demo.bean;
 
 /**
  * 演示 Lazy / Provider：每次 Provider.get() 或 Lazy.get() 首次访问时会创建新实例。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class HiltExpensiveService {
 

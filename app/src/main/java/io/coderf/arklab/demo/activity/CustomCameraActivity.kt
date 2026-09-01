@@ -16,6 +16,14 @@ import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityCustomCameraBinding
 import io.coderf.arklab.media.helper.ConstantsHelper
 
+/**
+ * CustomCameraActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @AndroidEntryPoint
 class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBinding>() {
 

@@ -14,8 +14,12 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
- * created by fz on 2025/9/1 14:35
- * describe:左侧带方块的TextView，一般用于模块名文本
+ * 左侧带方块的TextView，一般用于模块名文本
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/9/1 14:35
  */
 public class SquareLabelView extends MaterialTextView {
     /**

@@ -10,8 +10,12 @@ import io.coderf.arklab.demo.bean.NotificationMessageBean;
 import io.coderf.arklab.demo.databinding.PagingItemBinding;
 
 /**
- * Created by fz on 2023/12/1 16:50
- * describe :
+ * PagingDemoAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 16:50
  */
 public class PagingDemoAdapter extends BasePagingAdapter<NotificationMessageBean, PagingItemBinding> {
     public PagingDemoAdapter() {

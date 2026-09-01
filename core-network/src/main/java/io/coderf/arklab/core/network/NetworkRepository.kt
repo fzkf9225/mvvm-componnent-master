@@ -35,6 +35,11 @@ import kotlin.time.Duration.Companion.milliseconds
  *
  * 响应体 `code/msg/data` 自动拆包仍由 Retrofit [io.coderf.arklab.common.base.BaseConverterFactory] 完成，
  * 业务 `block` 拿到的已是成功 data（与旧栈一致）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 interface NetworkRepository {
     /**

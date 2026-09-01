@@ -21,6 +21,11 @@ import org.reactivestreams.Subscription
  * 3. 都没有则不鉴权重试
  *
  * 推荐写法：把当前仓库使用的 ApiService 传入 [boundApiService]，Module 里只给需要鉴权的 Builder 配置即可。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 open class BaseNetworkRepository<BV : BaseView>(
     requestUi: RequestUi = NoOpRequestUi,

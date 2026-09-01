@@ -10,7 +10,7 @@ import io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData;
  * 通过 {@link FirstCreateOnlyInitData} 策略实现；老 Fragment 可继续继承 {@link BaseFragment}。
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @updated 2026/8/25 13:13
  */

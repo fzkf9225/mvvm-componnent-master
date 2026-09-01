@@ -4,8 +4,12 @@ import android.text.InputFilter;
 import android.text.Spanned;
 
 /**
- * Created by fz on 2024/5/30 17:30
- * describe :限制小数输入位数
+ * 限制小数输入位数
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/5/30 17:30
  */
 public class DecimalDigitsInputFilter implements InputFilter {
     private final int decimalDigits;

@@ -75,7 +75,7 @@
             android:paddingStart="@dimen/padding_xl"
             android:paddingEnd="@dimen/padding_xl"
             android:text="@string/search"
-            android:textColor="@color/white"
+            android:textColor="@color/onPrimary"
             android:textSize="@dimen/font_size_l" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

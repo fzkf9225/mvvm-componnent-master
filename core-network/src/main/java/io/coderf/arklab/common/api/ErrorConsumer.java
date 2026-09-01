@@ -16,8 +16,12 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.reactivex.rxjava3.functions.Consumer;
 
 /**
- * Created by fz on 2023/11/30 15:52
- * describe : 统一错误处理消费者；内部只依赖 {@link RequestUiCallback}，与数据层约定一致。
+ * 统一错误处理消费者；内部只依赖 {@link RequestUiCallback}，与数据层约定一致。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/30 15:52
  */
 public class ErrorConsumer implements Consumer<Throwable> {
     @Nullable

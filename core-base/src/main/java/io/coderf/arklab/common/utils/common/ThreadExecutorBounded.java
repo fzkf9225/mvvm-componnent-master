@@ -9,8 +9,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by fz on 2023/5/31 9:19
- * describe :线程池,核心线程为3，且边界跟更大
+ * 线程池,核心线程为3，且边界跟更大
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/31 9:19
  */
 public class ThreadExecutorBounded extends ThreadPoolExecutor {
     /**

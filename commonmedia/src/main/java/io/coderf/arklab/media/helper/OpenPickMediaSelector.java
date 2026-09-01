@@ -10,8 +10,12 @@ import androidx.annotation.NonNull;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 /**
- * created by fz on 2025/8/7 15:16
- * describe:
+ * OpenPickMediaSelector 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/7 15:16
  */
 public class OpenPickMediaSelector extends ActivityResultContracts.PickVisualMedia {
     private PickVisualMediaRequest pickVisualMediaRequest;

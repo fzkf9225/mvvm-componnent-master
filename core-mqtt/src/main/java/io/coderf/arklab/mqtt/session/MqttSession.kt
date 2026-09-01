@@ -25,8 +25,9 @@ import java.util.WeakHashMap
  * @param subscribePolicy 焦点栈如何贡献页面侧主题；Overlay 始终并入最终集合
  *
  * @author fz
- * @version 1.5
- * @since 1.2
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class MqttSession @JvmOverloads constructor(
     private val client: MqttClient,

@@ -7,8 +7,12 @@ import java.util.List;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 /**
- * Created by fz on 2021/2/5 15:48
- * describe:媒体工具类
+ * 媒体工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/2/5 15:48
  */
 public class MediaBean {
     private List<Uri> mediaList;

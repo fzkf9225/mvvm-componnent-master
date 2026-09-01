@@ -8,6 +8,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * ConfigLoader 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @Singleton
 class ConfigLoader @Inject constructor(
     @ApplicationContext private val context: Context

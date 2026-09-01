@@ -2,8 +2,8 @@
 
 兼容门面（facade）：业务侧推荐的 **单一入口**，通过 `api` 透出 `core-*`，本身几乎无业务实现。
 
-当前版本：**4.5.1**  
-Maven：`io.coderf.arklab.common:common:4.5.1`  
+当前版本：**4.6.0**  
+Maven：`io.coderf.arklab.common:common:4.6.0`  
 namespace：`io.coderf.arklab.common.facade`
 
 ---
@@ -21,7 +21,7 @@ namespace：`io.coderf.arklab.common.facade`
 宿主 / 业务模块希望「一个依赖拿齐核心能力」时使用：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.5.1'
+implementation 'io.coderf.arklab.common:common:4.6.0'
 // 或工程内：
 implementation project(':common')
 ```

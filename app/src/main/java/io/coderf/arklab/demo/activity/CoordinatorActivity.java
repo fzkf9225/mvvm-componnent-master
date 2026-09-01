@@ -12,8 +12,12 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityCoordinatorBinding;
 
 /**
- * Created by fz on 2023/8/17 16:12
- * describe :
+ * CoordinatorActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/17 16:12
  */
 @AndroidEntryPoint
 public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCoordinatorBinding> {

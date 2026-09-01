@@ -5,8 +5,12 @@ import android.util.Log;
 
 
 /**
- * Created by 方舟 on 2023/5/5 09:52
  * Log日志的打印
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/5 9:52
  */
 
 public class LogUtil {

@@ -10,7 +10,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import com.google.android.material.textview.MaterialTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -35,6 +35,11 @@ import io.coderf.arklab.common.utils.permission.WebViewPermissionHelper;
  * <p>
  * 能力：系统文件选择器（图/视频/任意文件）、拍照、录像、Geolocation 与 Web 相机/麦克风权限。
  * </p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class NativeWebChromeClient extends SystemWebChromeClient {
 
@@ -71,7 +76,7 @@ public class NativeWebChromeClient extends SystemWebChromeClient {
             @NonNull ComponentActivity activity,
             @NonNull CordovaDialogsHelper dialogsHelper,
             @NonNull ProgressBar progressBar,
-            @Nullable MaterialTextView tvBarTitle
+            @Nullable TextView tvBarTitle
     ) {
         super(activity, dialogsHelper, progressBar, tvBarTitle);
         this.activity = activity;

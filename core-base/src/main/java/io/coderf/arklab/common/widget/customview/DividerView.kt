@@ -10,8 +10,12 @@ import io.coderf.arklab.common.R
 import io.coderf.arklab.core.utils.ext.dp2px
 
 /**
- * created by fz on 2024/10/11 14:55
- * describe:横向竖向虚线
+ * 横向竖向虚线
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/11 14:55
  */
 class DividerView : View {
     /**

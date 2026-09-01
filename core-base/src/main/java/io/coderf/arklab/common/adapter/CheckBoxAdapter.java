@@ -30,8 +30,8 @@ import io.coderf.arklab.common.utils.common.CollectionUtil;
  * 复选框adapter - 支持单选/多选，支持头布局全选
  *
  * @author fz
- * @version 3.0
- * @since 3.0
+ * @version 1.0
+ * @since 1.0
  * @created 2026/3/12
  */
 public class CheckBoxAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, AdapterCheckBoxItemBinding> {

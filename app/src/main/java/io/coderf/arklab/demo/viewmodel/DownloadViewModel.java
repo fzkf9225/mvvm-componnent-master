@@ -10,8 +10,12 @@ import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 
 /**
- * Created by fz on 2023/8/14 10:56
- * describe :
+ * DownloadViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 10:56
  */
 public class DownloadViewModel extends BaseViewModel<BaseRepository<BaseView>,BaseView> {
 

@@ -14,7 +14,10 @@ package io.coderf.arklab.googlegps.common;
  *     <li><b>RMC</b> - 推荐最小定位信息</li>
  * </ul>
  *
- * @author mendhak
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class NmeaSentence {
 

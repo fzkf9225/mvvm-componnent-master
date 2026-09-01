@@ -10,6 +10,11 @@ import io.coderf.arklab.core.request.RequestUi
  * 新旧 RequestUi 桥接：
  * - 新代码使用 [RequestUi]
  * - 旧 Repository 仍使用 [RequestUiCallback]
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 object RequestUiBridge {
 

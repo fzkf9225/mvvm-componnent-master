@@ -42,8 +42,12 @@ import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter;
 
 
 /**
- * Created by fz on 2024/12/2.
- * describe：年月日范围选择dialog
+ * 年月日范围选择dialog
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/2
  */
 public class DateRangePickDialog extends Dialog implements DefaultLifecycleObserver {
     private final Context context;
@@ -203,7 +207,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.themeColor));
         selectedBg = shapeDrawableSelected;
 
-        selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.white);
+        selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.onPrimary);
         weekTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
         workingDayTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
 

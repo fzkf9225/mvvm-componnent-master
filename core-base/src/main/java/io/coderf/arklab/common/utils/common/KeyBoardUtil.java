@@ -24,7 +24,7 @@ import com.google.android.material.textfield.TextInputEditText;
  * 避免 {@link InputMethodManager#toggleSoftInput(int, int)} 等已废弃 API。
  *
  * @author fz
- * @version 1.0.1
+ * @version 1.0
  * @since 1.0
  * @updated 2026/8/25 13:20
  */

@@ -18,14 +18,14 @@ package io.coderf.arklab.common.autosize.unit;
 import android.util.DisplayMetrics;
 
 /**
- * ================================================
  * AndroidAutoSize 支持一些在 Android 系统上比较少见的单位作为副单位, 用于规避修改 {@link DisplayMetrics#density}
  * 所造成的对于其他使用 dp 布局的系统控件或三方库控件的不良影响
  * <p>
- * Created by JessYan on 2018/8/28 10:27
- * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
- * <a href="https://github.com/JessYanCoding">Follow me</a>
- * ================================================
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/8/28 10:27
  */
 public enum Subunits {
     /**

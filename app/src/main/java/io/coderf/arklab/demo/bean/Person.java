@@ -27,8 +27,12 @@ import io.coderf.arklab.common.converter.RoomListStringConverter;
 import io.coderf.arklab.demo.BR;
 
 /**
- * Created by fz on 2023/9/5 18:32
- * describe :
+ * Person 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/9/5 18:32
  */
 @Entity
 @VerifyEntity(sort = true)

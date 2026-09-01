@@ -49,8 +49,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.MultipartBody;
 
 /**
- * Created by fz on 2023/12/26 16:27
- * describe :
+ * FormImageAndVideo 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/26 16:27
  */
 public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.MediaAddListener, MediaAddAdapter.MediaClearListener , OnUploadRetryClickListener {
     /**

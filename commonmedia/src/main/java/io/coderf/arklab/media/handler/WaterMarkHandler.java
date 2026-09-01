@@ -20,8 +20,12 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
- * created by fz on 2025/8/6 9:29
- * describe:
+ * WaterMarkHandler 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/6 9:29
  */
 public class WaterMarkHandler extends Handler {
     private final MediaHelper mediaHelper;

@@ -40,9 +40,12 @@ import io.reactivex.rxjava3.disposables.Disposable;
  *   <li>兼容：多参数 {@code update(...)} / {@code checkUpdateInfo(...)} 重载</li>
  * </ul>
  *
- * @author fz
  * @see UpdateConfig
- * @since 2024/11/7
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/7
  */
 public class UpdateManager {
 

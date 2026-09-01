@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/5/10 10:38
- * describe :订阅
+ * 订阅
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/10 10:38
  */
 public class SubscribeBean {
     /**

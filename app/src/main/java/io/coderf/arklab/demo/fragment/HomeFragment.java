@@ -21,8 +21,12 @@ import io.coderf.arklab.demo.viewmodel.HomeFragmentViewModel;
 import io.coderf.arklab.user.api.UserAccountHelper;
 
 /**
- * created by fz on 2023/4/28
- * describe：
+ * HomeFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/28
  */
 @AndroidEntryPoint
 public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHomeBinding> implements BaseRecyclerViewAdapter.OnItemClickListener {

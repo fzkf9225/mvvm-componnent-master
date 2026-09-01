@@ -33,11 +33,12 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  *     <li>{@link LoadingStyle#SKELETON} — 骨架屏 Shimmer 占位（可通过 XML {@code app:loadingStyle="skeleton"} 或代码开启）</li>
  * </ul>
  *
- * @author fz
- * @version 2.1
- * @since 1.0
- * @created 2025/12/09 16:30
  * @update 2026/7/13 11:00
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/12/9 16:30
  */
 public class EmptyLayout extends ConstraintLayout {
 

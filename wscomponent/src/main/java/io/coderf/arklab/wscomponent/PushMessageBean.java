@@ -1,8 +1,12 @@
 package io.coderf.arklab.wscomponent;
 
 /**
- * Created by fz on 2023/5/5 09:52
- * describe:服务器回调消息
+ * 服务器回调消息
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/5 9:52
  */
 public class PushMessageBean<T> {
     private String biz_code;

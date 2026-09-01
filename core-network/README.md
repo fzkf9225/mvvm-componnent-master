@@ -2,8 +2,8 @@
 
 网络层：Retrofit / OkHttp、Repository 基类，以及推荐使用的请求 API（`RequestOptions` / `RequestResult` / `RequestUi` 等）。
 
-当前版本：**1.0.1**  
-Maven：`io.coderf.arklab.core:network:1.0.1`  
+当前版本：**1.1.0**  
+Maven：`io.coderf.arklab.core:network:1.1.0`  
 namespace：`io.coderf.arklab.core.network`
 
 ---
@@ -29,7 +29,7 @@ namespace：`io.coderf.arklab.core.network`
 需要 HTTP / Repository 网络栈时：
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.0.1'
+implementation 'io.coderf.arklab.core:network:1.1.0'
 // 或
 implementation project(':core-network')
 ```

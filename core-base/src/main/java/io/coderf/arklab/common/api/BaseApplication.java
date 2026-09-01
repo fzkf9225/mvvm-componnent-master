@@ -3,8 +3,12 @@ package io.coderf.arklab.common.api;
 import android.app.Application;
 
 /**
- * Created by fz on 2017/6/20.
  * Application
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/6/20
  */
 
 public abstract class BaseApplication extends Application {

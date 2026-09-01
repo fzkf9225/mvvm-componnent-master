@@ -12,8 +12,12 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 
 /**
- * Created by fz on 2023/12/1 15:25
- * describe :
+ * AttachmentRepositoryImpl 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/1 15:25
  */
 class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?) :
     RoomRepositoryImpl<AttachmentBean, AttachmentDao, BaseView?>(attachmentDao, baseView) {

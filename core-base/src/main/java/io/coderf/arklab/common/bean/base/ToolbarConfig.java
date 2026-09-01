@@ -7,7 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.android.material.textview.MaterialTextView;
+import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.ColorInt;
@@ -15,6 +15,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.FontRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
 import androidx.appcompat.widget.Toolbar;
@@ -384,6 +385,7 @@ public class ToolbarConfig extends BaseObservable {
     public ToolbarConfig setTitleGravity(int titleGravity) {
         this.titleGravity = titleGravity;
         notifyPropertyChanged(BR.titleGravity);
+        notifyPropertyChanged(BR.titleCentered);
         return this;
     }
 
@@ -400,6 +402,16 @@ public class ToolbarConfig extends BaseObservable {
     /** 标题靠结束边。 */
     public ToolbarConfig setTitleGravityEnd() {
         return setTitleGravity(TITLE_GRAVITY_END);
+    }
+
+    /**
+     * 是否使用 MaterialToolbar {@code titleCentered}（默认 true，对齐历史居中标题）。
+     */
+    @Bindable
+    public boolean isTitleCentered() {
+        int hgrav = Gravity.getAbsoluteGravity(titleGravity, View.LAYOUT_DIRECTION_LTR)
+                & Gravity.HORIZONTAL_GRAVITY_MASK;
+        return hgrav == Gravity.CENTER_HORIZONTAL;
     }
 
     @Bindable
@@ -494,11 +506,52 @@ public class ToolbarConfig extends BaseObservable {
     // DataBinding adapters（供布局 app:bindXxx 使用）
     // -------------------------------------------------------------------------
 
-    @BindingAdapter("bindTitleTextSizeSp")
-    public static void bindTitleTextSizeSp(MaterialTextView textView, float sizeSp) {
-        if (sizeSp > 0f) {
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp);
+    @Nullable
+    public static TextView findToolbarTitleView(@NonNull MaterialToolbar toolbar) {
+        CharSequence title = toolbar.getTitle();
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View child = toolbar.getChildAt(i);
+            if (child instanceof TextView tv
+                    && !(child instanceof com.google.android.material.button.MaterialButton)) {
+                if (title == null || title.equals(tv.getText())) {
+                    return tv;
+                }
+            }
         }
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View child = toolbar.getChildAt(i);
+            if (child instanceof TextView tv
+                    && !(child instanceof com.google.android.material.button.MaterialButton)) {
+                return tv;
+            }
+        }
+        return null;
+    }
+
+    private static void withTitleView(@NonNull MaterialToolbar toolbar, @NonNull TitleViewAction action) {
+        TextView titleView = findToolbarTitleView(toolbar);
+        if (titleView != null) {
+            action.apply(titleView);
+            return;
+        }
+        toolbar.post(() -> {
+            TextView delayed = findToolbarTitleView(toolbar);
+            if (delayed != null) {
+                action.apply(delayed);
+            }
+        });
+    }
+
+    private interface TitleViewAction {
+        void apply(@NonNull TextView titleView);
+    }
+
+    @BindingAdapter("bindTitleTextSizeSp")
+    public static void bindTitleTextSizeSp(MaterialToolbar toolbar, float sizeSp) {
+        if (sizeSp <= 0f) {
+            return;
+        }
+        withTitleView(toolbar, tv -> tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp));
     }
 
     @BindingAdapter(value = {
@@ -506,63 +559,71 @@ public class ToolbarConfig extends BaseObservable {
             "bindTitleFontFamily",
             "bindTitleFontRes"
     }, requireAll = false)
-    public static void bindTitleTypeface(MaterialTextView textView,
+    public static void bindTitleTypeface(MaterialToolbar toolbar,
                                          Boolean bold,
                                          @Nullable String fontFamily,
                                          Integer fontRes) {
-        boolean isBold = bold != null && bold;
-        int style = isBold ? Typeface.BOLD : Typeface.NORMAL;
-        Typeface typeface = null;
-        int res = fontRes != null ? fontRes : 0;
-        if (res != 0) {
-            try {
-                typeface = ResourcesCompat.getFont(textView.getContext(), res);
-            } catch (Exception ignored) {
-                // 资源缺失时回退
+        withTitleView(toolbar, textView -> {
+            boolean isBold = bold != null && bold;
+            int style = isBold ? Typeface.BOLD : Typeface.NORMAL;
+            Typeface typeface = null;
+            int res = fontRes != null ? fontRes : 0;
+            if (res != 0) {
+                try {
+                    typeface = ResourcesCompat.getFont(textView.getContext(), res);
+                } catch (Exception ignored) {
+                    // 资源缺失时回退
+                }
             }
-        }
-        if (typeface == null && fontFamily != null && !fontFamily.isEmpty()) {
-            typeface = Typeface.create(fontFamily, style);
-        }
-        if (typeface != null) {
-            textView.setTypeface(typeface, style);
-        } else {
-            Typeface base = textView.getTypeface();
-            textView.setTypeface(Typeface.create(base, style));
-        }
+            if (typeface == null && fontFamily != null && !fontFamily.isEmpty()) {
+                typeface = Typeface.create(fontFamily, style);
+            }
+            if (typeface != null) {
+                textView.setTypeface(typeface, style);
+            } else {
+                Typeface base = textView.getTypeface();
+                textView.setTypeface(Typeface.create(base, style));
+            }
+        });
     }
 
     @BindingAdapter("bindTitleMaxLines")
-    public static void bindTitleMaxLines(MaterialTextView textView, int maxLines) {
+    public static void bindTitleMaxLines(MaterialToolbar toolbar, int maxLines) {
         int lines = Math.max(1, maxLines);
-        textView.setMaxLines(lines);
-        textView.setSingleLine(lines == 1);
+        withTitleView(toolbar, textView -> {
+            textView.setMaxLines(lines);
+            textView.setSingleLine(lines == 1);
+        });
     }
 
     @BindingAdapter("bindTitleGravity")
-    public static void bindTitleGravity(MaterialTextView textView, int gravity) {
-        ViewGroup.LayoutParams lp = textView.getLayoutParams();
-        if (lp instanceof Toolbar.LayoutParams tlp) {
-            if (tlp.gravity != gravity) {
-                tlp.gravity = gravity;
-                textView.setLayoutParams(tlp);
+    public static void bindTitleGravity(MaterialToolbar toolbar, int gravity) {
+        int hgrav = Gravity.getAbsoluteGravity(gravity, toolbar.getLayoutDirection())
+                & Gravity.HORIZONTAL_GRAVITY_MASK;
+        toolbar.setTitleCentered(hgrav == Gravity.CENTER_HORIZONTAL);
+        if (hgrav == Gravity.CENTER_HORIZONTAL) {
+            return;
+        }
+        withTitleView(toolbar, textView -> {
+            ViewGroup.LayoutParams lp = textView.getLayoutParams();
+            if (lp instanceof Toolbar.LayoutParams tlp) {
+                if (tlp.gravity != gravity) {
+                    tlp.gravity = gravity;
+                    textView.setLayoutParams(tlp);
+                }
             }
-        }
-        textView.setGravity(gravity);
-        View parent = textView.getParent() instanceof View ? (View) textView.getParent() : null;
-        if (parent != null) {
-            parent.requestLayout();
-        }
+            textView.setGravity(gravity);
+        });
     }
 
     @BindingAdapter("bindTitleLetterSpacing")
-    public static void bindTitleLetterSpacing(MaterialTextView textView, float letterSpacing) {
-        textView.setLetterSpacing(letterSpacing);
+    public static void bindTitleLetterSpacing(MaterialToolbar toolbar, float letterSpacing) {
+        withTitleView(toolbar, tv -> tv.setLetterSpacing(letterSpacing));
     }
 
     @BindingAdapter("bindTitleAllCaps")
-    public static void bindTitleAllCaps(MaterialTextView textView, boolean allCaps) {
-        textView.setAllCaps(allCaps);
+    public static void bindTitleAllCaps(MaterialToolbar toolbar, boolean allCaps) {
+        withTitleView(toolbar, tv -> tv.setAllCaps(allCaps));
     }
 
     @BindingAdapter("bindToolbarElevationDp")

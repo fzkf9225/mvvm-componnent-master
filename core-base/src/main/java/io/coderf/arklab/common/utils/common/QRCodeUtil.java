@@ -31,8 +31,12 @@ import java.util.Vector;
 import io.coderf.arklab.common.utils.zxing.BitmapLuminanceSource;
 
 /**
- * Created by fz on 2023/11/9 13:35
- * describe :
+ * QRCodeUtil 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/11/9 13:35
  */
 public class QRCodeUtil {
 

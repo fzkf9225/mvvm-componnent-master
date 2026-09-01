@@ -12,7 +12,7 @@ import io.coderf.arklab.common.databinding.OptionTextViewBinding;
 
 /**
  * Updated by fz on 2026/3/18.
- * describe：底部选择菜单
+ * 底部选择菜单
  * 支持自定义样式属性：
  * - 列表项高度
  * - 字体大小
@@ -20,6 +20,11 @@ import io.coderf.arklab.common.databinding.OptionTextViewBinding;
  * - 单行/多行显示
  * - 左右margin
  * - 上下padding
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T,OptionTextViewBinding> {
 

@@ -34,8 +34,8 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * - 自定义按钮样式
  *
  * @author fz
- * @version 2.0
- * @since 2.0
+ * @version 1.0
+ * @since 1.0
  * @created 2026/3/18
  */
 public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {

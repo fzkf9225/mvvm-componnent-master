@@ -26,8 +26,12 @@ import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
 
 /**
- * Created by fz on 2023/12/26 16:27
- * describe :
+ * FormDateRange 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/12/26 16:27
  */
 public class FormDateRange extends FormSelection {
     protected String selectableStartDate;
@@ -102,7 +106,7 @@ public class FormDateRange extends FormSelection {
             weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             startRangeDate = typedArray.getString(R.styleable.FormUI_selectableStartDate);
             endRangeDate = typedArray.getString(R.styleable.FormUI_selectableEndDate);
-            selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.white));
+            selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.onPrimary));
             selectedBg = typedArray.getDrawable(R.styleable.FormUI_selectedBg);
             normalBg = typedArray.getDrawable(R.styleable.FormUI_normalBg);
             textSize = typedArray.getDimension(R.styleable.FormUI_textSize,
@@ -172,7 +176,7 @@ public class FormDateRange extends FormSelection {
             textSize = (float) DensityUtil.sp2px(getContext(), 14f);
             itemWidth = DensityUtil.dp2px(getContext(), 36f);
             itemHeight = DensityUtil.dp2px(getContext(), 36f);
-            selectedTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.white);
+            selectedTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.onPrimary);
             weekTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
             workingDayTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
             ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());

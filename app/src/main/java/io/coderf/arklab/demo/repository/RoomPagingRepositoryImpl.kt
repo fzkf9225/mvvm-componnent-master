@@ -30,8 +30,12 @@ import java.util.concurrent.TimeUnit
  *
  * Loading 通过 [getRequestUi] 展示，由 ViewModel 注入，勿使用 baseView.showLoading。
  *
- * @author fz
  * @see io.coderf.arklab.common.datasource.RxRoomPagingSource
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class RoomPagingRepositoryImpl :
     RoomRepositoryImpl<Person, PersonDao, BaseView> {

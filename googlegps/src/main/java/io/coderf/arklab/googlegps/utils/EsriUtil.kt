@@ -4,8 +4,12 @@ import android.location.Location
 
 
 /**
- * created by fz on 2024/10/16 17:17
- * describe：arcgis工具类
+ * arcgis工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/10/16 17:17
  */
 object EsriUtil {
 

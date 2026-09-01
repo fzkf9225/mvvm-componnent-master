@@ -11,8 +11,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by fz on 2019/10/22.
- * describe:
+ * TickViewConfig 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/22
  */
 public class TickViewConfig implements Serializable {
 

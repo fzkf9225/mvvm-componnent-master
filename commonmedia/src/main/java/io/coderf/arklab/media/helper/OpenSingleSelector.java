@@ -14,9 +14,13 @@ import io.coderf.arklab.media.bean.SelectorOptions;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 /**
-  * created by fz on 2025/8/7 15:12 
-  * describe: 
-  */
+ * OpenSingleSelector 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/8/7 15:12
+ */
 public class OpenSingleSelector extends ActivityResultContract<SelectorOptions, Uri> {
     private SelectorOptions selectorOptions;
 

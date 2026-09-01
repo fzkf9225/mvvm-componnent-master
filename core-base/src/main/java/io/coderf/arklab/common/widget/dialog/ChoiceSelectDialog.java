@@ -32,6 +32,11 @@ import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
  * 单选/多选列表弹框，复用 {@link CheckBoxAdapter} 的勾选样式与交互。
  * <p>
  * 支持标题、确认/取消按钮、列表项高度、文字、勾选图标、全选头等全面配置。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
 

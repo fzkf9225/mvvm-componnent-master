@@ -4,8 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by fz on 2023/5/6 17:20
- * describe :无人机工作空间
+ * 无人机工作空间
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/6 17:20
  */
 public class WorkSpaceBean implements Parcelable {
 

@@ -13,8 +13,12 @@ import androidx.core.content.ContextCompat
 import io.coderf.arklab.common.R
 
 /**
- * Created by fz on 2023/8/14 16:31
- * describe :
+ * ScalingTextView 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/14 16:31
  */
 open class ScalingTextView(context: Context, attrs: AttributeSet?) :
     com.google.android.material.textview.MaterialTextView(context, attrs) {

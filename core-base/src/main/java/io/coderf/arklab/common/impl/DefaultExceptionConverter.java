@@ -21,11 +21,15 @@ import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
- * created by fz on 2025/10/11 10:41
- * describe: 统一异常转换。
+ * 统一异常转换。
  * <p>
  * 部分接口在 HTTP 非 2xx（如 500）时仍返回业务 JSON（code/msg），
  * 需优先解析 errorBody，避免一律提示「服务器或网络异常」。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/10/11 10:41
  */
 public class DefaultExceptionConverter implements ExceptionConverter {
     @Override

@@ -36,8 +36,12 @@ import io.coderf.arklab.common.widget.dialog.ImageSaveDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * created by fz on 2024/12/20 14:09
- * describe:
+ * PreviewViewPagerAdapter 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/12/20 14:09
  */
 public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentBean, ItemPicShowBinding> {
     private final PreviewPhotoDialog previewPhotoDialog;

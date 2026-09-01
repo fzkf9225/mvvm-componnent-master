@@ -1,7 +1,7 @@
 # core-network 升级迁移说明
 
 > 面向从 **RxJava3 / 旧 Flow 中间层** 迁到 **新版 Kotlin Flow 网络栈** 的完整对照。  
-> 模块版本：`core-network 1.0.x` · 包名：`io.coderf.arklab.core.network` / `io.coderf.arklab.common.*`
+> 模块版本：`core-network 1.1.0` · 包名：`io.coderf.arklab.core.network` / `io.coderf.arklab.common.*`
 
 ---
 
@@ -98,7 +98,7 @@ implementation project(':core-base')
 Maven：
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.0.1'
+implementation 'io.coderf.arklab.core:network:1.1.0'
 ```
 
 ### 3.2 ApiService（新旧共用）

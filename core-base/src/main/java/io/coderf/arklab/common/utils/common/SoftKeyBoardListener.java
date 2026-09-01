@@ -5,8 +5,12 @@ import android.graphics.Rect;
 import android.view.View;
 
 /**
- * Created by fz on 2017/9/6.
  *  监听软键盘
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/9/6
  */
 
 public class SoftKeyBoardListener {

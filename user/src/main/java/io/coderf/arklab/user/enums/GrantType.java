@@ -1,8 +1,12 @@
 package io.coderf.arklab.user.enums;
 
 /**
- * Created by fz on 2023/5/17 10:24
- * describe :
+ * GrantType 枚举。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/5/17 10:24
  */
 public enum GrantType {
     /**

@@ -16,8 +16,12 @@ import retrofit2.http.PUT
 import retrofit2.http.Query
 
 /**
- * Created by fz on 2023/4/25 13:08
- * describe :
+ * UserApiService 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/25 13:08
  */
 interface UserApiService : BaseApiService {
     /**

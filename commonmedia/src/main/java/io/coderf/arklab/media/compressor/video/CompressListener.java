@@ -1,8 +1,12 @@
 package io.coderf.arklab.media.compressor.video;
 
 /**
- * created by fz on 2024/11/14 9:12
- * describe:
+ * CompressListener 接口。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/14 9:12
  */
 public interface CompressListener {
     void onStart();

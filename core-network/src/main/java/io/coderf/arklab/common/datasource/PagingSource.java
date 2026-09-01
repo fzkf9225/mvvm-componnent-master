@@ -19,8 +19,12 @@ import io.coderf.arklab.core.bean.PagingQuery;
 import io.reactivex.rxjava3.core.Single;
 
 /**
- * Created by fz on 2023/8/7 9:17
- * describe : Rx PagingSource；[query] 为创建时快照，一轮分页内不变。
+ * Rx PagingSource；[query] 为创建时快照，一轮分页内不变。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/8/7 9:17
  */
 public class PagingSource<T, BV extends BaseView, Q extends PagingQuery> extends RxPagingSource<Integer, T> {
     private Integer startPage = 1;

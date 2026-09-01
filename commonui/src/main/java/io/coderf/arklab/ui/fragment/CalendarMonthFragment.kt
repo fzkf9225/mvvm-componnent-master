@@ -17,8 +17,12 @@ import io.coderf.arklab.ui.widget.calendar.CalendarView
 import io.coderf.arklab.ui.widget.calendar.adapter.CalendarPagerAdapter
 
 /**
- * created by fz on 2024/11/20 15:11
- * describe:
+ * CalendarMonthFragment 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/11/20 15:11
  */
 class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonthBinding>(),
     BaseRecyclerViewAdapter.OnItemClickListener {

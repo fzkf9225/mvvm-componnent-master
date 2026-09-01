@@ -11,7 +11,12 @@ import io.coderf.arklab.user.viewmodel.SettingViewModel;
 
 /**
  * Create by fz on 2019/10/11
- * describe:设置
+ * 设置
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class SettingActivity extends BaseActivity<SettingViewModel, SettingBinding> {

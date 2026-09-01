@@ -9,6 +9,11 @@ import io.coderf.arklab.demo.bean.RequestNotificationBean
 
 /**
  * Kotlin 分页 Demo（已迁到新版 [NetworkPagingRepository]，替代旧 Rx [PagingRepositoryImpl]）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class KtDemoPagingRepositoryImpl(
     private val api: ApiServiceHelper

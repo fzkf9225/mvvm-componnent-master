@@ -11,8 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by fz on 2023/4/26 14:43
- * describe :MMKV工具类
+ * MMKV工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2023/4/26 14:43
  */
 public class MMKVHelper {
     private static volatile MMKVHelper mmkvHelper;

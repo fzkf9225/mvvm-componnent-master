@@ -18,7 +18,7 @@ package io.coderf.arklab.mqtt.presence
  * @param reconnectIntervalSeconds 自定义重连间隔（秒）；仅当 maxReconnectAttempts 非 null 时生效
  *
  * @author fz
- * @version 1.3
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/27 10:10
  */

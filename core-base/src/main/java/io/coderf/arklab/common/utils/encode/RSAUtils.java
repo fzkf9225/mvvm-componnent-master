@@ -20,9 +20,9 @@ import java.security.PublicKey;
  * </p>
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
- * @updated 2026-08-27 13:44
+ * @updated 2026/8/27 13:44
  */
 public final class RSAUtils {
 

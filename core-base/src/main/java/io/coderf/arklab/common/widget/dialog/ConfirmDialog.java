@@ -28,7 +28,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2024/12/2 00:00
+ * @created 2024/12/2 0:00
  */
 public class ConfirmDialog extends BaseDialog {
     /**

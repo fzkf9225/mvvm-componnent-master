@@ -11,8 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
- * created by fz on 2025/6/4 9:28
- * describe:
+ * AuthManager 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/4 9:28
  */
 public class AuthManager {
     public interface AuthCallback {

@@ -4,6 +4,11 @@ import javax.inject.Inject
 
 /**
  * 登录表单校验（纯规则，无 UI）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 class ValidateLoginFormUseCase @Inject constructor() {
 

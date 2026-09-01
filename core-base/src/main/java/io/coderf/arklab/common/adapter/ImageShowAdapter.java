@@ -17,8 +17,12 @@ import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * Created by fz on 2025/10/20.
- * describe:展示图片适配器
+ * 展示图片适配器
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/10/20
  */
 public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean, AdapterImageShowItemBinding> {
 

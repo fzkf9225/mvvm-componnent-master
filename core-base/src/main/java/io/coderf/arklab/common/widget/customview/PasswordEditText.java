@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -34,7 +33,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * 样式属性与 {@link ClearableEditText} 保持一致，便于 XML 复用。
  *
  * @author fz
- * @version 1.1
+ * @version 1.0
  * @since 1.0
  * @created 2026/7/13 10:10
  */
@@ -54,7 +53,6 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     private int circleBackColor;
     private float radius;
     private float strokeWidth;
-    private final GradientDrawable gradientDrawable = new GradientDrawable();
     private boolean enableBgStyle = true;
     private boolean passwordVisible = false;
     private boolean enableToggle = true;
@@ -247,12 +245,9 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         if (!enableBgStyle) {
             return;
         }
-        gradientDrawable.setColor(circleBackColor);
-        gradientDrawable.setCornerRadius(radius);
-        if (strokeWidth > 0) {
-            gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        }
-        setBackground(gradientDrawable);
+        setBackground(CornerShapeHelper.createBackground(
+                radius, radius, radius, radius,
+                true, circleBackColor, strokeWidth > 0, strokeWidth, strokeColor));
     }
 
     @Override

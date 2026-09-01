@@ -15,6 +15,11 @@ import io.coderf.arklab.core.request.RequestUi;
  * 长期默认路径已改为 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}
  * （同时实现 {@link RequestUiCallback} 与 {@link RequestUi}），本类保留供：
  * 自定义 callback 转新 {@link RequestUi}、或遗留直接从 {@link BaseView} 适配的场景。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class RequestUiAdapters {
 

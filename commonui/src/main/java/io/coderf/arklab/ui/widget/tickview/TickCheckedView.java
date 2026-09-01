@@ -9,10 +9,14 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 /**
- * Created by 陈岗不姓陈 on 2017/10/17.
  * <p>
  * 自定义view -- checkbox
  * 一个打钩的小动画
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2017/10/17
  */
 
 public class TickCheckedView extends View {

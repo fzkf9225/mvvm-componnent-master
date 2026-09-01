@@ -5,6 +5,11 @@ import android.net.Uri
 /**
  * 媒体能力抽象（case / :base，非框架）。
  * 业务只依赖本接口；app 组装层把框架 MediaHelper 适配进来。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 fun interface MediaResultCallback {
     fun onResult(uris: List<Uri>)

@@ -2,8 +2,12 @@ package io.coderf.arklab.ui.widget.tickview;
 
 
 /**
- * Created by fz on 2019/10/22.
- * describe:
+ * TickRateEnum 枚举。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2019/10/22
  */
 enum TickRateEnum {
     /**

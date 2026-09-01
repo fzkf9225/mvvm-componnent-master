@@ -3,6 +3,14 @@ package io.coderf.arklab.media.compressor.image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * CompressServiceParam 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class CompressServiceParam implements Parcelable {
 
     private int outWidth;

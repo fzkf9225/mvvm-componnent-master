@@ -11,8 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 
 /**
- * created by fz on 2025/6/26 9:38
- * describe:
+ * BaseViewViewModel 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2025/6/26 9:38
  */
 public class BaseViewViewModel<BV extends BaseView> extends AndroidViewModel {
     protected final String TAG = this.getClass().getSimpleName();

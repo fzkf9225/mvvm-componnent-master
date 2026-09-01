@@ -4,6 +4,11 @@ import io.coderf.arklab.common.R;
 
 /**
  * Hub 页颜色预设，供示例运行时切换 Tab 文字/指示条颜色。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public final class TabLayoutDemoColorPresets {
 

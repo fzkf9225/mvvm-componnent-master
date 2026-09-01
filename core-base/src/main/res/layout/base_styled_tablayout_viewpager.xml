@@ -22,7 +22,7 @@
             app:selectedBackgroundCornerRadius="23dp"
             app:selectedPaddingHorizontal="8dp"
             app:selectedTextBold="true"
-            app:selectedTextColor="@android:color/white"
+            app:selectedTextColor="@color/onPrimary"
             app:selectedTextSize="12sp"
             app:tabHeight="29dp"
             app:tabPaddingBottom="0dp"

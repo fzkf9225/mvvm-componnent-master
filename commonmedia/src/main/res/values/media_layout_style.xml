@@ -24,24 +24,18 @@
     </style>
 
     <style name="Widget.Media.Button" parent="Widget.Material3.Button">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
     <style name="Widget.Media.Button.TextButton" parent="Widget.Material3.Button.TextButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
     <style name="Widget.Media.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
-    <style name="Widget.Media.Button.IconButton" parent="Widget.Material3.Button.IconButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-    </style>
+    <style name="Widget.Media.Button.IconButton" parent="Widget.Material3.Button.IconButton" />
 
     <!-- ActionSheet进出动画 -->
     <style name="media_action_sheet_dialog_animation" parent="@android:style/Animation.Dialog">

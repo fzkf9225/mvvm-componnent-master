@@ -18,7 +18,7 @@ import io.coderf.arklab.common.enums.UploadStatusEnum;
  * 附件表
  *
  * @author fz
- * @version 2.0
+ * @version 1.0
  * @since 1.0
  * @created 2023/12/28 17:00
  * @updated 2026/4/9 0:03

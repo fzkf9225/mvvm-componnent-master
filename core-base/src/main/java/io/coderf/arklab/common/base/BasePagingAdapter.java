@@ -18,7 +18,12 @@ import io.coderf.arklab.common.widget.recyclerview.SimpleItemTouchHelperCallback
 
 /**
  * updated by fz on 2024/10/31
- * describe：Paging 列表；可选在 ConcatAdapter 中前置自定义头（见 {@link #setPagingHeaderAdapter}）。
+ * Paging 列表；可选在 ConcatAdapter 中前置自定义头（见 {@link #setPagingHeaderAdapter}）。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {

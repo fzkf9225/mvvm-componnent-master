@@ -1,5 +1,13 @@
 package io.coderf.arklab.common.bean;
 
+/**
+ * Gps 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 public class Gps {
     //纬度
     private Double longitude;

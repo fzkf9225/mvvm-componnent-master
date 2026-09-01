@@ -11,13 +11,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.webkit.WebViewClient;
-import com.google.android.material.textview.MaterialTextView;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -27,6 +28,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.WebViewBinding;
 import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 import io.coderf.arklab.common.helper.CordovaDialogsHelper;
@@ -50,6 +52,11 @@ import io.coderf.arklab.common.widget.dialog.WebViewActionSheetDialog;
  *     <li>原生单次定位（{@link WebViewNativeLocationHelper}）与扫码 JSBridge</li>
  * </ul>
  * <p>需要 MediaHelper / GpsStarter 增强能力请使用 commonui 的 {@code UiWebViewActivity}。</p>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 @AndroidEntryPoint
 public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding>
@@ -163,8 +170,18 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
     }
 
     @Nullable
-    protected MaterialTextView getWebTitleTextView() {
-        return toolbarBind == null ? null : toolbarBind.tvTitle;
+    protected TextView getWebTitleTextView() {
+        MaterialToolbar toolbar = getToolbar();
+        if (toolbar == null) {
+            return null;
+        }
+        TextView titleView = ToolbarConfig.findToolbarTitleView(toolbar);
+        if (titleView != null) {
+            return titleView;
+        }
+        CharSequence current = toolbar.getTitle();
+        toolbar.setTitle(current != null ? current : "");
+        return ToolbarConfig.findToolbarTitleView(toolbar);
     }
 
     @Override

@@ -13,6 +13,11 @@ import io.coderf.arklab.common.base.BaseResponse;
  *   <li>{@link io.coderf.arklab.common.base.BaseView} 仍可由 {@link io.coderf.arklab.common.repository.IRepository#setBaseView} 持有，
  *   表示「当前页面」，供非网络 UI 的遗留逻辑使用；请求相关 UI 一律走本接口。</li>
  * </ul>
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
  */
 public interface RequestUiCallback {
 

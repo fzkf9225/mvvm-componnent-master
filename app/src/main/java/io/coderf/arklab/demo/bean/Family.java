@@ -5,8 +5,12 @@ import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.enums.VerifyType;
 
 /**
- * created by fz on 2024/8/12 17:01
- * describe:
+ * Family 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2024/8/12 17:01
  */
 @VerifyEntity(sort = true)
 public class Family {

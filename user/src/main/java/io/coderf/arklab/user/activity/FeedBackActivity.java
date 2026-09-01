@@ -20,8 +20,12 @@ import io.coderf.arklab.user.databinding.FeedbackBinding;
 import io.coderf.arklab.base.gateway.MediaGateway;
 
 /**
- * Created by fz on 2018/1/22.
- * describe：问题反馈（经 MediaGateway 选图，不直接依赖 commonmedia）
+ * 问题反馈（经 MediaGateway 选图，不直接依赖 commonmedia）
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2018/1/22
  */
 @AndroidEntryPoint
 public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBinding> implements ImageAddAdapter.ImageViewAddListener,

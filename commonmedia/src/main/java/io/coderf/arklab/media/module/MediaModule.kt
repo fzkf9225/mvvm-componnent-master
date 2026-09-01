@@ -13,6 +13,14 @@ import io.coderf.arklab.media.MediaHelper
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum
 import javax.inject.Qualifier
 
+/**
+ * ActivityMediaHelper 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ActivityMediaHelper

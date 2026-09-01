@@ -42,8 +42,12 @@ import io.coderf.arklab.media.helper.MediaResultPublisher;
 import io.coderf.arklab.media.helper.UIController;
 
 /**
- * Created by fz on 2021/2/5 14:19
- * describe:拍照、拍摄视频、图片视频压缩工具类
+ * 拍照、拍摄视频、图片视频压缩工具类
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2021/2/5 14:19
  */
 public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, OpenShootDialog.OnOpenVideoClickListener,
         OpenFileDialog.OnOpenFileClickListener, OpenMediaDialog.OnOpenMediaClickListener {

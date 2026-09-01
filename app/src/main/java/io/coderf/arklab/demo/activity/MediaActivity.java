@@ -52,6 +52,14 @@ import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.module.ActivityMediaHelper;
 import io.coderf.arklab.media.utils.ExifUtil;
 
+/**
+ * MediaActivity 类。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @updated 2026/9/1 22:51
+ */
 @AndroidEntryPoint
 public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBinding> implements ImageAddAdapter.ImageViewAddListener, ImageAddAdapter.ImageViewClearListener,
         VideoAddAdapter.VideoAddListener, VideoAddAdapter.VideoClearListener, MediaAddAdapter.MediaClearListener, MediaAddAdapter.MediaAddListener {
