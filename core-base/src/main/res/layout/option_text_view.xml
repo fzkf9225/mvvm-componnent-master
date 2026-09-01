@@ -9,6 +9,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_option"
+        style="@style/SelectableItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

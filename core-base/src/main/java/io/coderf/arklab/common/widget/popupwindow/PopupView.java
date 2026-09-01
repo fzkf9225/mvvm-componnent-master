@@ -94,7 +94,7 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow {
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(
                 ContextCompat.getColor(context, R.color.default_background));
         unSelectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ContextCompat.getColor(context, R.color.white));
+                ContextCompat.getColor(context, R.color.cardSurface));
 
         initView();
     }

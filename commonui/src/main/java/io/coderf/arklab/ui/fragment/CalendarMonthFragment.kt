@@ -26,12 +26,10 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
     private var calendarView: CalendarView? = null
     private var monthOfYears: List<CalendarData>? = null
     private var itemDecoration: GridSpacingItemDecoration? = null
+    private var attachListener: View.OnAttachStateChangeListener? = null
 
-    val adapter: CalendarPagerAdapter by lazy {
-        CalendarPagerAdapter(calendarView!!).apply {
-            setOnItemClickListener(this@CalendarMonthFragment)
-        }
-    }
+    var adapter: CalendarPagerAdapter? = null
+        private set
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_calendar_month
@@ -49,9 +47,62 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                     return false
                 }
             }
+        if (!bindCalendarIfReady()) {
+            val listener = object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {
+                    v.removeOnAttachStateChangeListener(this)
+                    attachListener = null
+                    bindCalendarIfReady()
+                }
+
+                override fun onViewDetachedFromWindow(v: View) = Unit
+            }
+            attachListener = listener
+            binding.root.addOnAttachStateChangeListener(listener)
+        }
+    }
+
+    override fun onDestroyView() {
+        attachListener?.let { binding.root.removeOnAttachStateChangeListener(it) }
+        attachListener = null
+        adapter = null
+        itemDecoration = null
+        super.onDestroyView()
+    }
+
+    /**
+     * ViewPager2 重建 Fragment 时不会再走 [newInstance]，需从父级 [CalendarView] 找回引用。
+     */
+    private fun bindCalendarIfReady(): Boolean {
+        val calendar = calendarView ?: findCalendarView() ?: return false
+        calendarView = calendar
+        if (monthOfYears == null) {
+            val year = arguments?.getInt(ARG_YEAR, 0) ?: 0
+            val month = arguments?.getInt(ARG_MONTH, 0) ?: 0
+            monthOfYears = calendar.calendarPagerAdapter?.dateList
+                ?.firstOrNull { it.year == year && it.month == month }
+                ?.calendarDataList
+                ?: emptyList()
+        }
+        val pagerAdapter = adapter ?: CalendarPagerAdapter(calendar).also { created ->
+            created.setOnItemClickListener(this)
+            adapter = created
+        }
+        pagerAdapter.list = monthOfYears
+        binding.recyclerCalendar.adapter = pagerAdapter
         applyItemDecoration()
-        adapter.list = monthOfYears
-        binding.recyclerCalendar.adapter = adapter
+        return true
+    }
+
+    private fun findCalendarView(): CalendarView? {
+        var parent = binding.root.parent
+        while (parent is View) {
+            if (parent is CalendarView) {
+                return parent
+            }
+            parent = parent.parent
+        }
+        return null
     }
 
     fun refreshItemDecoration() {
@@ -63,6 +114,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
 
     private fun applyItemDecoration() {
         val calendar = calendarView ?: return
+        val pagerAdapter = adapter ?: return
         itemDecoration?.let { binding.recyclerCalendar.removeItemDecoration(it) }
         val horizontalSpacing = calendar.itemHorizontalSpacing
             ?: DensityUtil.dp2px(requireContext(), 8f)
@@ -70,7 +122,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
             ?: DensityUtil.dp2px(requireContext(), 8f)
         val builder = GridSpacingItemDecoration.Builder()
             .spacing(horizontalSpacing, verticalSpacing)
-            .selectionProvider { position -> adapter.isSelectedPosition(position) }
+            .selectionProvider { position -> pagerAdapter.isSelectedPosition(position) }
         calendar.itemGapColorUnselected?.let { builder.unselectedGapColor(it) }
         calendar.itemGapColorSelected?.let { builder.selectedGapColor(it) }
         itemDecoration = builder.build()
@@ -84,11 +136,13 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onItemClick(view: View, position: Int) {
+        val pagerAdapter = adapter ?: return
+        val data = pagerAdapter.list.getOrNull(position) ?: return
         val selectedDay =
-            "${adapter.list[position].year}-" +
-                    "${NumberUtil.formatMonthOrDay(adapter.list[position].month)}-" +
-                    NumberUtil.formatMonthOrDay(adapter.list[position].day)
-        if (!adapter.isEnable(selectedDay)) {
+            "${data.year}-" +
+                    "${NumberUtil.formatMonthOrDay(data.month)}-" +
+                    NumberUtil.formatMonthOrDay(data.day)
+        if (!pagerAdapter.isEnable(selectedDay)) {
             Toast.makeText(requireContext(), "抱歉，超出可选日期范围", Toast.LENGTH_SHORT).show()
             return
         }
@@ -97,7 +151,7 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                 calendarView?.selectedEndDate = null
                 calendarView?.selectedStartDate = selectedDay
                 calendarView?.getOnSelectedChangedListener()?.onDateSelected(selectedDay, null)
-                adapter.notifyDataSetChanged()
+                pagerAdapter.notifyDataSetChanged()
                 binding.recyclerCalendar.invalidateItemDecorations()
                 calendarView?.notifyAllMonthsChanged()
             }
@@ -121,14 +175,19 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
                     calendarView?.selectedStartDate,
                     calendarView?.selectedEndDate
                 )
-                adapter.notifyDataSetChanged()
+                pagerAdapter.notifyDataSetChanged()
                 binding.recyclerCalendar.invalidateItemDecorations()
                 calendarView?.notifyAllMonthsChanged()
             }
+
+            else -> Unit
         }
     }
 
     companion object {
+        private const val ARG_YEAR = "calendar_year"
+        private const val ARG_MONTH = "calendar_month"
+
         @JvmStatic
         fun newInstance(
             calendarView: CalendarView,
@@ -137,6 +196,11 @@ class CalendarMonthFragment : BaseFragment<EmptyViewModel, FragmentCalendarMonth
             val fragment = CalendarMonthFragment()
             fragment.monthOfYears = monthOfYears
             fragment.calendarView = calendarView
+            val sample = monthOfYears.firstOrNull { it.day > 0 } ?: monthOfYears.firstOrNull()
+            fragment.arguments = Bundle().apply {
+                putInt(ARG_YEAR, sample?.year ?: 0)
+                putInt(ARG_MONTH, sample?.month ?: 0)
+            }
             return fragment
         }
     }

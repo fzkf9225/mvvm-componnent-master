@@ -49,7 +49,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_scan" />
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_create_qrcode"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -90,7 +90,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_qr_code" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_local_path"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -124,7 +124,7 @@
                 android:padding="@dimen/padding_m"
                 android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/white"
+                app:bgColor="@color/cardSurface"
                 app:radius="@dimen/radius_l"
                 app:strokeColor="@color/h_line_color"
                 app:strokeWidth="1dp"
@@ -143,7 +143,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_base64" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_url"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

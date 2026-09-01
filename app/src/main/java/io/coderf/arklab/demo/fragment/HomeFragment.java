@@ -34,7 +34,8 @@ public class HomeFragment extends BaseFragment<HomeFragmentViewModel, FragmentHo
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.default_background), true);
+        ThemeUtils.setupStatusBarAuto(requireActivity(),
+                ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.default_background));
     }
 
     @Override

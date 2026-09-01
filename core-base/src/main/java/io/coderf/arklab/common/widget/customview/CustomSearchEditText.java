@@ -74,14 +74,14 @@ public class CustomSearchEditText extends TextInputEditText implements TextInput
             drawableSearch = ta.getDrawable(R.styleable.CustomEditText_searchIcon);
             drawableClear = ta.getDrawable(R.styleable.CustomEditText_clearIcon);
             enableBgStyle = ta.getBoolean(R.styleable.CustomEditText_enableBgStyle, false);
-            strokeColor = ta.getColor(R.styleable.CustomEditText_strokeColor, ContextCompat.getColor(getContext(), R.color.white));
-            circleBackColor = ta.getColor(R.styleable.CustomEditText_bgColor, ContextCompat.getColor(getContext(), R.color.white));
+            strokeColor = ta.getColor(R.styleable.CustomEditText_strokeColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
+            circleBackColor = ta.getColor(R.styleable.CustomEditText_bgColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
             strokeWidth = ta.getDimension(R.styleable.CustomEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.CustomEditText_radius, 0);
             ta.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(getContext(), R.color.white);
-            circleBackColor = ContextCompat.getColor(getContext(), R.color.white);
+            strokeColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+            circleBackColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
         }
 
         if (drawableSearch == null) {

@@ -141,10 +141,12 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
 
     public MenuDialog(@NonNull Context context) {
         super(context);
+        itemHeight = DensityUtil.dp2px(context,52f);
     }
 
     public MenuDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
+        itemHeight = DensityUtil.dp2px(context,52f);
     }
 
     public MenuDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {

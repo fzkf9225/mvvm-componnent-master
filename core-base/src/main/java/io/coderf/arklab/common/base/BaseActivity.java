@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -15,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -233,9 +232,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             toolbarBind.setContext(this);
             binding = DataBindingUtil.inflate(getLayoutInflater(), getLayoutId(), toolbarBind.mainContainer, true);
             binding.setLifecycleOwner(this);
-            setSupportActionBar(toolbarBind.mainBar);
-            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbarBind.setToolbarConfig(createdToolbarConfig());
             applyToolbarHeight();
             if (shouldApplyEdgeToEdge()) {
@@ -297,8 +293,22 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         return toolbarBind != null ? toolbarBind.mainBar : null;
     }
 
+    /**
+     * 向 MaterialToolbar 填充菜单。不走 {@code setSupportActionBar} / {@code onCreateOptionsMenu}。
+     */
+    protected void inflateToolbarMenu(@MenuRes int menuRes,
+                                      @Nullable MaterialToolbar.OnMenuItemClickListener listener) {
+        MaterialToolbar toolbar = getToolbar();
+        if (toolbar == null) {
+            return;
+        }
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(menuRes);
+        toolbar.setOnMenuItemClickListener(listener);
+    }
+
     public ToolbarConfig createdToolbarConfig() {
-        return new ToolbarConfig(this).setEnableImmersionBar(enableImmersionBar()).setLightMode(false).setTitle(setTitleBar()).setBgColor(R.color.white).applyStatusBar();
+        return new ToolbarConfig(this).setEnableImmersionBar(enableImmersionBar()).setLightMode(false).setTitle(setTitleBar()).setBgColor(R.color.cardSurface).applyStatusBar();
     }
 
     /**

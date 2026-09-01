@@ -10,7 +10,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.ComponentActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import android.widget.TextView;
 import androidx.lifecycle.LifecycleOwner;
@@ -260,7 +260,7 @@ public class VideoPlayerController {
             return;
         }
         ThemeUtils.restoreSystemBarsAfterImmersive(activity);
-        if (activity instanceof AppCompatActivity fa) {
+        if (activity instanceof ComponentActivity fa) {
             // 使用 MaterialToolbar 直接操作
             View toolbar = fa.findViewById(
                 io.coderf.arklab.common.R.id.main_bar);

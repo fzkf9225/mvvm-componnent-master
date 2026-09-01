@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:background="@color/white"
+                android:background="?attr/colorSurface"
                 android:padding="@dimen/padding_s"
                 android:textColor="@color/themeColor"
                 android:textSize="@dimen/font_size_m"
@@ -146,7 +146,7 @@
                 android:layout_width="0dp"
                 android:layout_height="320dp"
                 android:layout_marginTop="@dimen/vertical_margin_l"
-                android:background="@color/white"
+                android:background="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnError">

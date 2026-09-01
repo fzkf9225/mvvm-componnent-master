@@ -386,7 +386,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
             View bottomSheet = this.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
                 bottomSheet.setBackground(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                        Color.WHITE,
+                        ContextCompat.getColor(getContext(), R.color.cardSurface),
                         DensityUtil.dp2px(getContext(), 16f),
                         DensityUtil.dp2px(getContext(), 16f),
                         0,

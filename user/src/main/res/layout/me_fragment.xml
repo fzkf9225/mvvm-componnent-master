@@ -26,7 +26,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/themeColor"
+                android:background="?attr/colorPrimary"
                 android:paddingStart="@dimen/horizontal_margin_xl"
                 android:paddingEnd="@dimen/horizontal_margin_xl"
                 android:paddingBottom="79dp">
@@ -49,7 +49,7 @@
                     android:layout_toEndOf="@+id/headImg"
                     android:includeFontPadding="false"
                     android:text='@{StringUtil.isEmpty(user.realName)?"点击登录":user.realName}'
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="@dimen/font_size_xxl"
                     tools:ignore="RelativeOverlap" />
 
@@ -64,7 +64,7 @@
                     android:includeFontPadding="false"
                     tools:text="15210233333"
                     android:text="@{user.phone}"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="@dimen/font_size_l" />
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -102,7 +102,7 @@
                     app:showRightIcon="true"
                     app:rightIconWidth="12dp"
                     app:rightIconHeight="24dp"
-                    app:valueTextColor="#888888"
+                    app:valueTextColor="@color/onSurfaceSecondary"
                     app:valueTextSize="@dimen/font_size_l" />
                 <io.coderf.arklab.common.widget.customview.IconLabelValueView
                     android:id="@+id/tv_setting"
@@ -120,7 +120,7 @@
                     app:showRightIcon="true"
                     app:rightIconWidth="12dp"
                     app:rightIconHeight="24dp"
-                    app:valueTextColor="#888888"
+                    app:valueTextColor="@color/onSurfaceSecondary"
                     app:valueTextSize="@dimen/font_size_l" />
             </LinearLayout>
         </FrameLayout>

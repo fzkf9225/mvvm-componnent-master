@@ -45,7 +45,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/mqtt_reconnect_dialog_title"
-        android:textColor="#FF1A1A1A"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="17sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +84,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="22dp"
-        android:background="#FFF0F0F0"
+        android:background="?attr/colorSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_detail" />

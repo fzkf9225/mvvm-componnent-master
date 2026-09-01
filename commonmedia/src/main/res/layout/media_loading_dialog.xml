@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="#FFFFFF"
+            app:indicatorColor="?attr/colorOnSurface"
             app:indicatorSize="@dimen/media_padding_xl"
             app:trackThickness="3dp" />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/media_vertical_margin_l"
             android:text="@={message}"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/media_font_size_xl" />
     </LinearLayout>
 </layout>

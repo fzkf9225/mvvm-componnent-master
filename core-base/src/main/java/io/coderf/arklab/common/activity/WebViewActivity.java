@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebViewClient;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -177,13 +175,22 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         domain = bundle.getString(DOMAIN);
         enableJsBridge = bundle.getBoolean(ENABLE_JS_BRIDGE, true);
 
+        if (hasToolbar && toolbarBind != null) {
+            toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
+        }
+        if (hasToolbar && hasMenu) {
+            inflateToolbarMenu(R.menu.menu_browser, item -> {
+                if (item.getItemId() == R.id.toolbar_web_menu) {
+                    showWebViewActionSheet();
+                    return true;
+                }
+                return false;
+            });
+        }
+
         if (TextUtils.isEmpty(url)) {
             showToast("目标地址不存在！");
             return;
-        }
-
-        if (hasToolbar && toolbarBind != null) {
-            toolbarBind.getToolbarConfig().setTitle(bundle.getString(TITLE));
         }
 
         binding.webView.setUrlType(urlType);
@@ -220,27 +227,6 @@ public class WebViewActivity extends BaseActivity<EmptyViewModel, WebViewBinding
         }
 
         binding.webView.loadConfiguredUrl(url);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!hasToolbar || !hasMenu) {
-            return super.onCreateOptionsMenu(menu);
-        }
-        getMenuInflater().inflate(R.menu.menu_browser, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!hasToolbar || !hasMenu) {
-            return super.onOptionsItemSelected(item);
-        }
-        if (item.getItemId() == R.id.toolbar_web_menu) {
-            showWebViewActionSheet();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

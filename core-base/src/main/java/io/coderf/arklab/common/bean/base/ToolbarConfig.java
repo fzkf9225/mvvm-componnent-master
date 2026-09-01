@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -16,6 +17,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.FontRes;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.BaseObservable;
@@ -64,13 +66,13 @@ public class ToolbarConfig extends BaseObservable {
      */
     private boolean defaultTheme = true;
     /**
-     * 标题字体颜色
+     * 标题字体颜色（默认语义色，暗色模式自动适配）
      */
-    private @ColorRes int textColor = R.color.black;
+    private @ColorRes int textColor = R.color.cardOnSurface;
     /**
-     * 标题背景色
+     * 标题背景色（默认语义色，暗色模式自动适配）
      */
-    private @ColorRes int bgColor = R.color.white;
+    private @ColorRes int bgColor = R.color.cardSurface;
     /**
      * toolbar 高度（px）；0 表示使用 actionBarSize
      */
@@ -475,18 +477,16 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     /**
-     * 应用状态栏：Edge-to-Edge 下状态栏透明，仅按 {@link #isLightMode} 设置图标深浅。
-     * <p>
-     * {@code isLightMode == true} → 浅色图标（白色文字）；{@code false} → 深色图标（黑色文字）。
-     * </p>
+     * 应用状态栏：Edge-to-Edge 下状态栏透明，图标深浅跟 {@link #statusBarColor} /
+     * {@link #bgColor} 的实际亮度走（暗色表面用浅色图标）。
+     * {@link #isLightMode} 仅作历史兼容，不再单独决定图标颜色。
      */
     public ToolbarConfig applyStatusBar() {
         if (activity == null || activity.isFinishing()) {
             return this;
         }
         int color = ContextCompat.getColor(activity, Objects.requireNonNullElseGet(statusBarColor, () -> bgColor));
-        boolean darkIcons = !isLightMode;
-        ThemeUtils.setupStatusBar(activity, color, darkIcons);
+        ThemeUtils.setupStatusBarAuto(activity, color);
         return this;
     }
 
@@ -542,14 +542,16 @@ public class ToolbarConfig extends BaseObservable {
     @BindingAdapter("bindTitleGravity")
     public static void bindTitleGravity(MaterialTextView textView, int gravity) {
         ViewGroup.LayoutParams lp = textView.getLayoutParams();
-        if (lp instanceof MaterialToolbar.LayoutParams) {
-            MaterialToolbar.LayoutParams tlp = (MaterialToolbar.LayoutParams) lp;
+        if (lp instanceof Toolbar.LayoutParams tlp) {
             if (tlp.gravity != gravity) {
                 tlp.gravity = gravity;
                 textView.setLayoutParams(tlp);
             }
-        } else {
-            textView.setGravity(gravity);
+        }
+        textView.setGravity(gravity);
+        View parent = textView.getParent() instanceof View ? (View) textView.getParent() : null;
+        if (parent != null) {
+            parent.requestLayout();
         }
     }
 

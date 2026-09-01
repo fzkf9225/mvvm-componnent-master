@@ -123,11 +123,11 @@ public class ImageSaveDialog extends BaseDialog {
         float cornerRadius = cfg.getCornerRadiusPx() != null
                 ? cfg.getCornerRadiusPx() : DensityUtil.dp2px(ctx, 12f);
         int white = cfg.getButtonBackgroundColor() != null
-                ? cfg.getButtonBackgroundColor() : ContextCompat.getColor(ctx, R.color.white);
+                ? cfg.getButtonBackgroundColor() : ContextCompat.getColor(ctx, R.color.cardSurface);
         int saveTextColor = cfg.getSaveTextColor() != null
                 ? cfg.getSaveTextColor() : ContextCompat.getColor(ctx, R.color.autoColor);
         int cancelTextColor = cfg.getCancelTextColor() != null
-                ? cfg.getCancelTextColor() : 0xFF8E8E93;
+                ? cfg.getCancelTextColor() : ContextCompat.getColor(ctx, R.color.onSurfaceVariant);
         int rippleMask = cfg.getRippleColor() != null
                 ? cfg.getRippleColor() : ContextCompat.getColor(ctx, R.color.h_line_color);
         boolean saveBold = cfg.getSaveTextBold() != null ? cfg.getSaveTextBold() : true;

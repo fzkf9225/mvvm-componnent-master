@@ -96,6 +96,7 @@
     <public name="round_white_bg_border" type="drawable"/>
     <public name="rounded_white" type="drawable"/>
     <public name="rounded_white_16" type="drawable"/>
+    <public name="common_bg_rounded_surface_16" type="drawable"/>
     <public name="selector_button" type="drawable"/>
     <public name="ic_camera" type="drawable"/>
     <public name="ic_flash_auto" type="drawable"/>
@@ -190,6 +191,10 @@
     <public name="h_area" type="style"/>
     <public name="WarpLinearLayoutDefault" type="style"/>
     <public name="AppBaseTheme" type="style"/>
+    <public name="Widget.App.Button" type="style"/>
+    <public name="Widget.App.Button.TextButton" type="style"/>
+    <public name="Widget.App.Button.OutlinedButton" type="style"/>
+    <public name="Widget.App.Button.IconButton" type="style"/>
     <public name="loading_dialog" type="style"/>
     <public name="ActionSheetDialogStyle" type="style"/>
     <public name="ActionSheetDialogAnimation" type="style"/>

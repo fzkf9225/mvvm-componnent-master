@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_white_16">
+        android:background="@drawable/common_bg_rounded_surface_16">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_message_type"
@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginBottom="@dimen/horizontal_margin_xl"
             android:gravity="center"
-            android:textColor="@color/dark_light"
+            android:textColor="@color/onSurfaceSecondary"
             android:textSize="@dimen/font_14"
             app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
             tools:ignore="MissingConstraints"

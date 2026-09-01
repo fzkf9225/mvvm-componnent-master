@@ -45,13 +45,13 @@ public class CircleTextView extends MaterialTextView {
         strokeWidth = 0;
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
-            strokeColor = typedArray.getColor(R.styleable.CircleTextView_strokeColor, ContextCompat.getColor(context, R.color.white));
-            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_bgColor, ContextCompat.getColor(context, R.color.white));
+            strokeColor = typedArray.getColor(R.styleable.CircleTextView_strokeColor, ContextCompat.getColor(context, R.color.cardSurface));
+            circleBackColor = typedArray.getColor(R.styleable.CircleTextView_bgColor, ContextCompat.getColor(context, R.color.cardSurface));
             strokeWidth = typedArray.getDimension(R.styleable.CircleTextView_strokeWidth, strokeWidth);
             typedArray.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(context, R.color.white);
-            circleBackColor = ContextCompat.getColor(context, R.color.white);
+            strokeColor = ContextCompat.getColor(context, R.color.cardSurface);
+            circleBackColor = ContextCompat.getColor(context, R.color.cardSurface);
         }
         if (strokeWidth != 0) {
             circlePaint.setStrokeWidth(strokeWidth);

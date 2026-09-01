@@ -86,15 +86,15 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             enableToggle = ta.getBoolean(R.styleable.PasswordEditText_enablePasswordToggle, true);
             enableClear = ta.getBoolean(R.styleable.PasswordEditText_enableClear, false);
             strokeColor = ta.getColor(R.styleable.PasswordEditText_strokeColor,
-                    ContextCompat.getColor(getContext(), R.color.white));
+                    ContextCompat.getColor(getContext(), R.color.cardSurface));
             circleBackColor = ta.getColor(R.styleable.PasswordEditText_bgColor,
-                    ContextCompat.getColor(getContext(), R.color.white));
+                    ContextCompat.getColor(getContext(), R.color.cardSurface));
             strokeWidth = ta.getDimension(R.styleable.PasswordEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.PasswordEditText_radius, 0);
             ta.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(getContext(), R.color.white);
-            circleBackColor = ContextCompat.getColor(getContext(), R.color.white);
+            strokeColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+            circleBackColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
         }
 
         if (drawableVisible == null) {

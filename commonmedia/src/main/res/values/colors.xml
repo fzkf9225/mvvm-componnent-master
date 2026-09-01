@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="media_line">#dddddd</color>
-    <color name="media_dark_light">#5d5d5d</color>
-    <color name="media_autoColor">#333333</color>
-    <color name="media_action_sheet_divider">#33000000</color>
-    <color name="media_action_sheet_cancel_text">#8E8E93</color>
-    <color name="media_action_sheet_ripple">#1A000000</color>
+    <!--
+        具体色值（禁止在 <color> 里写 ?attr：MaterialButton 的 rippleColor/ColorStateList 会按 XML 解析，type=attr 会崩溃）。
+        布局/样式/drawable 请直接用 ?attr/colorSurface 等主题属性。
+        本文件仅给仍通过 @color/media_* 引用的布局与对外 public 色使用。
+    -->
+    <color name="media_line">#FFdddddd</color>
+    <color name="media_autoColor">#FF333333</color>
+    <color name="media_dark_light">#FF5D5D5D</color>
+    <color name="media_action_sheet_cancel_text">#FF999999</color>
+    <color name="media_action_sheet_divider">#1A000000</color>
+    <color name="media_action_sheet_ripple">#29000000</color>
+    <color name="media_panel_bg">#FFFFFFFF</color>
 
+    <color name="media_loading_bg">#B0000000</color>
+    <color name="media_crop_bottom_bg">#CC1C1B1F</color>
+    <color name="media_crop_btn_text">@android:color/white</color>
+    <color name="media_crop_cancel_border">#66FFFFFF</color>
+    <color name="media_crop_cancel_fill">#1AFFFFFF</color>
 </resources>

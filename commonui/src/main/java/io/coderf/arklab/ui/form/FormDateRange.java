@@ -11,9 +11,11 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textview.MaterialTextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -95,7 +97,7 @@ public class FormDateRange extends FormSelection {
             startFormat = typedArray.getString(R.styleable.FormUI_startFormat);
             endFormat = typedArray.getString(R.styleable.FormUI_endFormat);
             dialogBgDrawable = typedArray.getDrawable(R.styleable.FormUI_dialogBgDrawable);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface));
             workingDayTextColor = typedArray.getColor(R.styleable.FormUI_workingDayTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
             startRangeDate = typedArray.getString(R.styleable.FormUI_selectableStartDate);
@@ -166,7 +168,7 @@ public class FormDateRange extends FormSelection {
             negativeText = typedArray.getString(R.styleable.FormUI_negativeText);
             typedArray.recycle();
         } else {
-            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.black);
+            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface);
             textSize = (float) DensityUtil.sp2px(getContext(), 14f);
             itemWidth = DensityUtil.dp2px(getContext(), 36f);
             itemHeight = DensityUtil.dp2px(getContext(), 36f);
@@ -279,14 +281,12 @@ public class FormDateRange extends FormSelection {
     }
 
     private void resolveFragmentHost() {
-        if (getContext() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getContext();
+        if (getContext() instanceof AppCompatActivity activity) {
             setFragmentManager(activity.getSupportFragmentManager());
             setLifecycle(activity.getLifecycle());
         } else if (getContext() instanceof ContextWrapper) {
             Context baseContext = ((ContextWrapper) getContext()).getBaseContext();
-            if (baseContext instanceof AppCompatActivity) {
-                AppCompatActivity activity = (AppCompatActivity) baseContext;
+            if (baseContext instanceof AppCompatActivity activity) {
                 setFragmentManager(activity.getSupportFragmentManager());
                 setLifecycle(activity.getLifecycle());
             }

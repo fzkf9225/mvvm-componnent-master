@@ -507,7 +507,7 @@ public class EmptyLayout extends ConstraintLayout {
 
     /** 骨架屏加载时铺满不透明背景，避免重试态透出下层列表/文案。 */
     private void applySkeletonLoadingOverlay() {
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.cardSurface));
     }
 
     private void clearSkeletonLoadingOverlay() {

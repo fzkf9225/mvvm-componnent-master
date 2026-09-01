@@ -33,19 +33,22 @@
             android:paddingStart="@dimen/horizontal_margin_l"
             android:paddingEnd="@dimen/horizontal_margin_l" />
     </LinearLayout>
+
     <View
         android:id="@+id/v_line"
-        android:background="@color/h_line_color"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="@color/h_line_color" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_xxl"
-        app:backgroundTint="@color/white" app:cornerRadius="0dp"
+        android:layout_height="@dimen/height_xxxl"
         android:gravity="center"
         android:text="@string/cancel"
         android:textAllCaps="false"
         android:textColor="@color/autoColor"
-        android:textSize="@dimen/font_size_xl" />
+        android:textSize="@dimen/font_size_xl"
+        app:backgroundTint="?attr/colorSurface"
+        app:cornerRadius="0dp" />
 </LinearLayout>

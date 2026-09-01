@@ -7,8 +7,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityTitleSearchBinding;
@@ -43,9 +41,6 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         binding = DataBindingUtil.inflate(getLayoutInflater(), getLayoutId(),
                 searchBinding.searcherTitleContainer, true);
         binding.setLifecycleOwner(this);
-        setSupportActionBar(searchBinding.searchToolBar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ToolbarConfig config = createdToolbarConfig();
         searchBinding.setToolbarConfig(config);

@@ -2,7 +2,10 @@
 <resources>
     <!--
         暗色模式颜色兼容（googlegps 模块）
-        覆盖分隔线颜色，适配暗色背景。
+        对齐宿主 App 的 cardSurface / onSurface，避免确认框仍是白底黑字。
     -->
     <color name="h_line_color">#FF3A3640</color>
+    <color name="gps_dialog_surface">#FF1C1B1F</color>
+    <color name="gps_dialog_on_surface">#FFE6E1E5</color>
+    <color name="gps_dialog_on_surface_variant">#FFCAC4D0</color>
 </resources>

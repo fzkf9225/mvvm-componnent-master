@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.SplashScreen" parent="Theme.SplashScreen">
-        <!--背景颜色-->
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <!--背景颜色 - 使用语义颜色 -->
+        <item name="windowSplashScreenBackground">?attr/colorSurface</item>
         <!--设置动画或图片,注意动画在Android12 以下不生效 很难受...-->
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <!--动画执行时间-->
@@ -10,11 +10,13 @@
         <item name="postSplashScreenTheme">@style/AppBaseTheme</item>
     </style>
     <style name="CollapsingToolbarTitleStyle" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="android:textColor">@color/black</item>
+        <!-- 使用语义颜色 -->
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/font_size_xxl</item>
     </style>
     <style name="ExpandedToolbarTitleStyle" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="android:textColor">@color/white</item>
+        <!-- 展开标题使用白色以在图片上可见 -->
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/font_size_xxxl</item>
     </style>
 

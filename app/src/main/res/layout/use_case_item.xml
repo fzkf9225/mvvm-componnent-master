@@ -13,7 +13,7 @@
     <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:bgColor="@color/white"
+        app:bgColor="@color/cardSurface"
         app:radius="@dimen/radius_m"
         android:layout_marginStart="@dimen/horizontal_margin_l"
         android:layout_marginEnd="@dimen/horizontal_margin_l"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{useCase.name}"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             tools:text="这是标题"
             app:layout_constraintTop_toTopOf="parent"
             android:ellipsize="end"

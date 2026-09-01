@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 白底圆角卡片 -->
+    <!-- 白底圆角卡片 - 使用语义颜色 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
+            <solid android:color="?attr/colorSurface" />
             <corners android:radius="@dimen/radius_xl" />
         </shape>
     </item>

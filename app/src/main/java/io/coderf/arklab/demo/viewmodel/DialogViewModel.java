@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.ComponentActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.PopupWindowCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -216,7 +216,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setSelectionMode(ChoiceSelectDialog.MODE_SINGLE)
                     .setData(singleChoiceData)
                     .setTitleText("请选择城市（单选）")
-                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.black))
+                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
@@ -251,7 +251,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setHeaderTextSizeSp(13f)
                     .setHeaderTextColor(themeColor)
                     .setTitleText("请选择城市（多选）")
-                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.black))
+                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
@@ -304,7 +304,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new UpdateMessageDialog(view.getContext())
                     .setOnUpdateListener(v -> baseView.showToast("点击这个按钮可以开始下载操作了"))
                     .setButtonText("更新")
-                    .setTitleColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.black))
+                    .setTitleColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
                     .setTitleTextSize(DensityUtil.sp2px(view.getContext(), 18))
                     .setBgColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setUpdateMsgString("修复已知问题，更多更新内容请查看 \nhttps://www.baidu.com")

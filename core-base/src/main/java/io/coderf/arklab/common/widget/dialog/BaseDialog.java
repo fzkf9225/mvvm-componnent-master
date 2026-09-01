@@ -165,7 +165,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBottomSheetBackgroundDrawable(float topCornerRadiusDp) {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.white),
+                ContextCompat.getColor(getContext(), R.color.cardSurface),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 0,
@@ -185,7 +185,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBackgroundDrawable() {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.white),
+                ContextCompat.getColor(getContext(), R.color.cardSurface),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),

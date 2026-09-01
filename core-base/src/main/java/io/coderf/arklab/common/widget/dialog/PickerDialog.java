@@ -1,18 +1,25 @@
 package io.coderf.arklab.common.widget.dialog;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.DialogPickerBinding;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -469,9 +476,10 @@ public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
         if (textSize > 0f) {
             binding.dataPicker.setTextSize(textSize);
         }
-        if (textColor != -1) {
-            binding.dataPicker.setTextColor(textColor);
-        }
+        int pickerTextColor = textColor != -1
+                ? textColor
+                : ContextCompat.getColor(context, R.color.autoColor);
+        applyNumberPickerTextColor(binding.dataPicker, pickerTextColor);
         binding.dataPicker.setSelectionDividerHeight(dividerHeight);
         binding.dataPicker.setVisibility(visibility);
         binding.dataPicker.setMinValue(0);
@@ -479,6 +487,34 @@ public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
         binding.dataPicker.setDisplayedValues(displayValues);
         binding.dataPicker.setValue(selectedPosition);
         binding.dataPicker.setWrapSelectorWheel(wrapSelectorWheel);
+    }
+
+    /**
+     * NumberPicker 默认文字是系统黑，暗色模式下需显式套语义色。
+     */
+    private void applyNumberPickerTextColor(NumberPicker picker, @ColorInt int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            picker.setTextColor(color);
+        }
+        int count = picker.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = picker.getChildAt(i);
+            if (child instanceof EditText editText) {
+                editText.setTextColor(color);
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            try {
+                Field selectorWheelPaintField = NumberPicker.class.getDeclaredField("mSelectorWheelPaint");
+                selectorWheelPaintField.setAccessible(true);
+                Paint paint = (Paint) selectorWheelPaintField.get(picker);
+                if (paint != null) {
+                    paint.setColor(color);
+                }
+                picker.invalidate();
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     /**

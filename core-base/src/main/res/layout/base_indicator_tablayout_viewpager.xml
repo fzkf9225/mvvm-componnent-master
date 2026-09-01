@@ -18,7 +18,7 @@
             android:id="@+id/tabLayout"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            app:indicatorColor="@color/black"
+            app:indicatorColor="?attr/colorPrimary"
             app:indicatorCornerRadius="8dp"
             app:indicatorHeight="4dp"
             app:indicatorWidth="12dp"

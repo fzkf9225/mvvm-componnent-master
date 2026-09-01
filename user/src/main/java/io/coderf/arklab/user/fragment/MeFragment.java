@@ -39,7 +39,8 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        ThemeUtils.setupStatusBar(requireActivity(), ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.themeColor), false);
+        ThemeUtils.setupStatusBarAuto(requireActivity(),
+                ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.themeColor));
         binding.imagePersonalCenter.setOnClickListener(v -> startActivity(PersonalCenterActivity.class));
         binding.tvUserName.setOnClickListener(v -> {
             if (UserAccountHelper.isLogin()) {

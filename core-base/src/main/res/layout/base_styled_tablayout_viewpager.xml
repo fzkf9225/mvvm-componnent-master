@@ -18,7 +18,7 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/white"
+            android:background="?attr/colorSurface"
             app:selectedBackgroundCornerRadius="23dp"
             app:selectedPaddingHorizontal="8dp"
             app:selectedTextBold="true"

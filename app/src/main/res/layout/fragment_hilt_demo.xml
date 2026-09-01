@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/horizontal_margin_m"
         android:layout_marginVertical="@dimen/vertical_margin_s"
-        android:background="@android:color/white"
+        android:background="?attr/colorSurface"
         android:padding="@dimen/horizontal_margin_s"
         android:textColor="@android:color/black"
         android:textSize="13sp" />

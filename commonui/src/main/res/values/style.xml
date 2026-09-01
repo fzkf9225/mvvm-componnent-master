@@ -25,15 +25,7 @@
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
 
-    <!-- Material3 表单样式 -->
-    <style name="Widget.Material3.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">8dp</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="boxCornerRadiusBottomStart">8dp</item>
-        <item name="boxCornerRadiusBottomEnd">8dp</item>
-    </style>
-
-    <style name="Widget.Material3.Button.FormButton" parent="Widget.Material3.Button">
+    <style name="Widget.App.Button.FormButton" parent="Widget.App.Button">
         <item name="android:textAllCaps">false</item>
         <item name="cornerRadius">8dp</item>
     </style>

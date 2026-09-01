@@ -29,7 +29,7 @@
         <item name="android:layout_height">@dimen/height_xxxxl</item>
         <item name="android:maxLines">1</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:textColorHint">@color/dark_light</item>
+        <item name="android:textColorHint">@color/hint_text_color</item>
         <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textColor">@color/autoColor</item>
     </style>

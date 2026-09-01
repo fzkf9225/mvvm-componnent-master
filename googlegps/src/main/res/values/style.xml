@@ -2,6 +2,10 @@
 <resources>
     <!-- 弹框dialog - 使用Material3 -->
     <style name="ActionSheetDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/gps_dialog_surface</item>
+        <item name="colorOnSurface">@color/gps_dialog_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/gps_dialog_on_surface_variant</item>
+        <item name="colorPrimary">@color/gps_dialog_primary</item>
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

@@ -2,6 +2,7 @@ package io.coderf.arklab.base.base
 
 import androidx.databinding.ViewDataBinding
 import io.coderf.arklab.base.R
+import io.coderf.arklab.common.R as CommonR
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.base.BaseViewModel
 import io.coderf.arklab.common.bean.base.ToolbarConfig
@@ -21,11 +22,11 @@ abstract class BaseAppActivity<VM : BaseViewModel<*, *>?, VDB : ViewDataBinding?
     override fun createdToolbarConfig(): ToolbarConfig {
         return ToolbarConfig(this)
             .setTitle(setTitleBar())
-            .setTextColor(android.R.color.black)
-            .setBgColor(R.color.base_default_background)
+            .setTextColor(CommonR.color.cardOnSurface)
+            .setBgColor(CommonR.color.cardSurface)
             .setBackIconRes(R.drawable.base_icon_fh)
             .setHeight(DensityUtil.dp2px(this, 31f))
-            .setStatusBarColor(R.color.base_default_background)
+            .setStatusBarColor(CommonR.color.cardSurface)
             .setLightMode(false)
             .applyStatusBar()
     }

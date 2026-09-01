@@ -22,11 +22,13 @@
             android:id="@+id/button_cancel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxl"
+            style="@style/Widget.App.Button.TextButton"
             android:layout_marginTop="@dimen/vertical_margin_xl"
-            app:backgroundTint="@color/white" app:cornerRadius="8dp"
+            app:backgroundTint="?attr/colorSurface"
+            app:cornerRadius="8dp"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_16" />
     </LinearLayout>
 </layout>

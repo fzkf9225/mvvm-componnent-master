@@ -15,10 +15,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
@@ -37,7 +37,7 @@ import io.coderf.arklab.media.R;
  * @since 1.0
  * @created 2026/7/31 15:51
  */
-public class ImageCropActivity extends AppCompatActivity {
+public class ImageCropActivity extends ComponentActivity {
 
     /**
      * 可缩放拖动的图片预览

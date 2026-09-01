@@ -291,7 +291,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         return new ToolbarConfig(this)
                 .setLightMode(true)
                 .setTitle(setTitleBar())
-                .setTextColor(R.color.white)
+                .setTextColor(android.R.color.white)
                 .setBackIconRes(io.coderf.arklab.common.R.drawable.icon_fh)
                 .setBgColor(io.coderf.arklab.common.R.color.themeColor)
                 .setHeight(DensityUtil.dp2px(this,32f))

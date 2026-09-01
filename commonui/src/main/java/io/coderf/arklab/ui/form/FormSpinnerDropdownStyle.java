@@ -53,7 +53,7 @@ public class FormSpinnerDropdownStyle {
         style.textColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
         style.textSelectedColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.themeColor);
         style.textSizePx = null;
-        style.itemBackground = ContextCompat.getDrawable(context, io.coderf.arklab.common.R.color.white);
+        style.itemBackground = ContextCompat.getDrawable(context, io.coderf.arklab.common.R.color.cardSurface);
         style.itemSelectedBackground = ContextCompat.getDrawable(
                 context, io.coderf.arklab.common.R.color.default_background);
         style.spinnerBackground = ContextCompat.getDrawable(

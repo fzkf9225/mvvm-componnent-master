@@ -245,7 +245,7 @@ open class GridMenuView : CornerConstraintLayout {
         }
         if (background == null) {
             setBgColorAndRadius(
-                ContextCompat.getColor(context, R.color.white),
+                ContextCompat.getColor(context, R.color.cardSurface),
                 DensityUtil.dp2px(context, 16f).toFloat()
             )
         }

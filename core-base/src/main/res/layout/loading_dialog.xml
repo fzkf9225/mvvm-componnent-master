@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="@color/white"
+            app:indicatorColor="@color/buttonPrimaryText"
             app:indicatorSize="40dp"
             app:trackThickness="4dp" />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:text="@{message}"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/buttonPrimaryText"
             android:textSize="@dimen/font_size_xl" />
     </LinearLayout>
 </layout>

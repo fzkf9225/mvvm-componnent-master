@@ -53,7 +53,7 @@
                 android:gravity="top"
                 android:hint="请输入遇到的问题或者功能意见..."
                 android:padding="@dimen/padding_m"
-                android:textColorHint="#AAAAAA"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_xl" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_l"
                     android:text="联系人\u3000"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/font_size_xl" />
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_l"
                     android:text="联系方式"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/font_size_xl" />
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -126,10 +126,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/feedBackBtn"
                 android:textSize="@dimen/font_size_xl"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_xl"
-                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                 android:layout_marginTop="@dimen/vertical_margin_xxxl"
                 android:text="提交" />
         </LinearLayout>

@@ -21,7 +21,7 @@
             android:layout_height="120dp"
             android:scaleType="centerCrop"
             app:radius="@dimen/radius_l"
-            app:bgColor="@color/white"
+            app:bgColor="@color/cardSurface"
             android:layout_marginTop="@dimen/vertical_margin_xxxl"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

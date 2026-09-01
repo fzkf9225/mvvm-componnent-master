@@ -22,7 +22,7 @@
             android:lineSpacingExtra="4dp"
             android:paddingTop="24dp"
             android:paddingBottom="20dp"
-            android:textColor="#333333"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="@string/gps_cancel"
-            android:textColor="#666666"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@id/s_line"
             app:layout_constraintHorizontal_weight="1"
@@ -72,7 +72,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="@string/gps_confirm"
-            android:textColor="#333333"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
@@ -98,7 +98,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
-                android:textColor="#1677FF"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 tools:text="Go to settings" />
 
@@ -115,7 +115,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
-                android:textColor="#333333"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"
                 tools:text="App info" />
 
@@ -132,7 +132,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
-                android:textColor="#999999"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="16sp"
                 tools:text="Not now" />
         </LinearLayout>

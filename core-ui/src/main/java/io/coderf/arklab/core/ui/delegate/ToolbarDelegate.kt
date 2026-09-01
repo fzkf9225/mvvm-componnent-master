@@ -1,8 +1,7 @@
 package io.coderf.arklab.core.ui.delegate
 
-import android.R
-import android.graphics.drawable.Drawable
 import android.view.ViewGroup
+import androidx.appcompat.R as AppcompatR
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -22,7 +21,7 @@ data class ToolbarSetup(
      * 与 Edge-to-Edge 叠加时，调用方可再叠加 statusBar inset。
      */
     val heightPx: Int? = null,
-    /** 是否显示系统 ActionBar 标题（默认 false，由 MaterialToolbar 自绘标题）。 */
+    /** 是否显示系统 ActionBar 标题（本委托不走 ActionBar，标题始终写在 MaterialToolbar 上）。 */
     val displayShowTitle: Boolean = false
 )
 
@@ -38,15 +37,19 @@ interface ToolbarHost {
 
 /**
  * 标准 MaterialToolbar 委托（基于 AppCompatActivity）。
+ * 直接配置 MaterialToolbar，不走 setSupportActionBar。
  */
 class ToolbarDelegate(
     private val activity: AppCompatActivity
 ) : ToolbarHost {
 
     override fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup) {
-        // 不再调用 setSupportActionBar，直接配置 MaterialToolbar
         toolbar.title = setup.title
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert) // 默认返回图标
+        if (setup.showUp) {
+            toolbar.setNavigationIcon(AppcompatR.drawable.abc_ic_ab_back_material)
+        } else {
+            toolbar.navigationIcon = null
+        }
         toolbar.setNavigationOnClickListener {
             val custom = setup.onNavigationClick
             if (custom != null) {
@@ -78,10 +81,9 @@ class ToolbarDelegate(
     /** 仅更新返回键可见性。 */
     fun setShowUp(toolbar: MaterialToolbar, showUp: Boolean) {
         if (showUp) {
-            toolbar.setNavigationIcon(R.drawable.ic_menu_revert)
+            toolbar.setNavigationIcon(AppcompatR.drawable.abc_ic_ab_back_material)
         } else {
             toolbar.navigationIcon = null
         }
     }
 }
-

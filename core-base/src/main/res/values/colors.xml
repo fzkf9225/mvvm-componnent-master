@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#FF272a30</color>
-    <color name="gray">#666666</color>
-    <color name="background">#FFE4E3E3</color>
+    <!--
+        Material3 DayNight 语义色。
+        亮色数值对齐升级前 AppCompat 工程，暗色只在 values-night/colors.xml 覆盖。
+        布局/代码请用这些语义色或 ?attr/colorSurface，不要把 white/black 当表面色。
+    -->
+
+    <!-- ========== 品牌 / 状态（不随模式变化） ========== -->
     <color name="themeColor">#FF1C50B5</color>
     <color name="theme_red">#FFEA3F25</color>
     <color name="theme_green">#FF08A04B</color>
     <color name="theme_orange">#FFF77832</color>
     <color name="theme_yellow">#FFF4D000</color>
-    <color name="hint_text_color">#FFC4C4C4</color>
-    <color name="h_line_color">#FFdddddd</color>
-    <color name="dark_light">#FF5d5d5d</color>
+    <color name="green">#FF5FB878</color>
     <color name="transparent">#00000000</color>
-    <color name="search_view_background">#FF9B9B9B</color>
-    <color name="autoColor">#FF333333</color>
+    <color name="colorPrimaryDark">#FF272a30</color>
+
+    <!-- ========== 页面 / 表面（亮色 = 升级前原值） ========== -->
+    <color name="default_background">#FFEEF3F2</color>
+    <color name="background">#FFE4E3E3</color>
     <color name="autoBg">#FFEEF0F3</color>
-    <color name="nv_bg_color">#FF999999</color>
     <color name="bg_color">#FFEDEDED</color>
     <color name="h_area">#FFF3F3F3</color>
-    <color name="default_background">#FFEEF3F2</color>
-    <color name="green">#FF5FB878</color>
+    <color name="search_view_background">#FF9B9B9B</color>
 
-    <!-- Material3 Semantic Colors -->
-    <!-- Surface Colors -->
-    <color name="surfaceVariant">#FFE7E0EC</color>
-    <color name="onSurfaceVariant">#FF49454F</color>
+    <!-- 卡片/控件表面：对应升级前 @color/white 的使用场景 -->
+    <color name="surfacePrimary">#FFFFFFFF</color>
+    <color name="surfaceSecondary">#FFF3F3F3</color>
+    <!-- 主文字：升级前 autoColor -->
+    <color name="onSurfacePrimary">#FF333333</color>
+    <!-- 次文字：升级前 nv_bg_color -->
+    <color name="onSurfaceSecondary">#FF999999</color>
+
+    <color name="autoColor">@color/onSurfacePrimary</color>
+    <color name="onSurfaceVariant">@color/onSurfaceSecondary</color>
+    <color name="nv_bg_color">#FF999999</color>
+    <color name="hint_text_color">#FFC4C4C4</color>
+    <color name="h_line_color">#FFdddddd</color>
+    <color name="gray">#FF666666</color>
+    <color name="dark_light">#FF5D5D5D</color>
+
+    <!-- ========== Material3 token 映射 ========== -->
+    <color name="surfaceVariant">@color/surfaceSecondary</color>
     <color name="surfaceInverse">#FF313033</color>
     <color name="onSurfaceInverse">#FFF4EFF4</color>
-    <!-- Outline Colors -->
-    <color name="outline">#FF79747E</color>
-    <color name="outlineVariant">#FFCAC4D0</color>
-    <!-- Inverse Colors -->
+    <color name="outline">@color/nv_bg_color</color>
+    <color name="outlineVariant">@color/h_line_color</color>
     <color name="primaryInverse">#FF6B8EFF</color>
-    <!-- Scrim -->
     <color name="scrim">#FF000000</color>
-    <!-- Material3 Button Colors -->
+
     <color name="buttonPrimaryText">#FFFFFFFF</color>
     <color name="buttonSecondaryText">#FF1C50B5</color>
     <color name="buttonSurfaceTint">#FF1C50B5</color>
     <color name="buttonOutlineTint">#FF1C50B5</color>
-    <!-- Material3 Card Colors -->
-    <color name="cardSurface">#FFFFFFFF</color>
-    <color name="cardOnSurface">#FF1C1B1F</color>
-    <color name="cardSurfaceVariant">#FFE7E0EC</color>
-    <color name="cardOnSurfaceVariant">#FF49454F</color>
-    <!-- Material3 TextInput Colors -->
-    <color name="textInputOutlineActive">#FF1C50B5</color>
-    <color name="textInputOutlineDefault">#FF79747E</color>
-    <color name="textInputFilledActive">#FF1C50B5</color>
-    <color name="textInputFilledDefault">#FFE7E0EC</color>
 
-    <!-- Ripple Highlight Colors -->
-    <!-- 日间模式：暗色 ripple（在半透明白色背景上可见） -->
+    <color name="cardSurface">@color/surfacePrimary</color>
+    <color name="cardOnSurface">@color/onSurfacePrimary</color>
+    <color name="cardSurfaceVariant">@color/surfaceSecondary</color>
+    <color name="cardOnSurfaceVariant">@color/onSurfaceSecondary</color>
+
+    <color name="textInputOutlineActive">@color/themeColor</color>
+    <color name="textInputOutlineDefault">@color/nv_bg_color</color>
+    <color name="textInputFilledActive">@color/themeColor</color>
+    <color name="textInputFilledDefault">@color/autoBg</color>
+
     <color name="selectable_item_ripple">#29000000</color>
-
-    <!-- Night mode surface colors -->
-    <color name="surfaceVariant_night">#FF49454F</color>
-    <color name="onSurfaceVariant_night">#FFCAC4D0</color>
-    <color name="surfaceInverse_night">#FFE6E1E5</color>
-    <color name="onSurfaceInverse_night">#FF313033</color>
-    <color name="outline_night">#FF938F99</color>
-    <color name="outlineVariant_night">#FF49454F</color>
 </resources>

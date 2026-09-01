@@ -1,56 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        暗色模式颜色兼容
-        参考 android-architecture-master 项目的做法：通过覆盖硬编码的颜色变量，
-        配合 styles.xml 中已经配置好的 Material3 主题属性，自动适配日间/夜间模式。
-        无需为每个 drawable 创建 night 版本。
+        Material3 DayNight 主题 - 暗色模式适配
+
+        本文件遵循 Material3 语义颜色体系：
+        暗色模式下，通过覆盖 Material3 主题属性值来实现自动适配。
+
+        不再使用"偷梁换柱"方案覆盖 white/black/autoColor 等颜色名，
+        而是直接覆盖语义颜色值。
     -->
 
-    <!-- ========== Surface / Background（白色背景 → 深色表面） ========== -->
-    <!-- 注：@color/white 保持白色不变（loading/spinner/border 等需要真实白色），不能覆盖为深色；
-         dialog/card 背景请使用 @color/cardSurface（已经在此覆盖为深色）。 -->
-    <color name="default_background">#FF141218</color>
-    <color name="background">#FF141218</color>
-    <color name="autoBg">#FF211F26</color>
+    <!-- ========== 基础背景色（暗色模式） ========== -->
+    <color name="default_background">#FF121212</color>
+    <color name="background">#FF121212</color>
+
+    <!-- ========== 语义颜色定义（暗色模式值） ========== -->
+    <!-- Surface 相关 -->
+    <color name="surfacePrimary">#FF1C1B1F</color>
+    <color name="surfaceSecondary">#FF2B2930</color>
+    <color name="onSurfacePrimary">#FFE6E1E5</color>
+    <color name="onSurfaceSecondary">#FFCAC4D0</color>
+
+    <!-- ========== Material3 兼容性颜色（向后兼容 - 暗色模式） ========== -->
+    <!-- 主要文字色 - 暗色模式 -->
+    <color name="autoColor">@color/onSurfacePrimary</color>
+
+    <!-- 次要文字色 - 暗色模式 -->
+    <color name="onSurfaceVariant">@color/onSurfaceSecondary</color>
+    <color name="nv_bg_color">@color/onSurfaceSecondary</color>
+
+
+    <!-- 提示文字色 - 暗色模式 -->
+    <color name="hint_text_color">#FF938F99</color>
+
+    <!-- 背景色 - 暗色模式 -->
+    <color name="autoBg">#FF1C1B1F</color>
     <color name="bg_color">#FF1C1B1F</color>
     <color name="h_area">#FF1C1B1F</color>
 
-    <!-- ========== Text Color（黑色文字 → 浅色文字） ========== -->
-    <color name="black">#FFE6E1E5</color>
-    <color name="dark_light">#FFCAC4D0</color>
-    <color name="autoColor">#FFE6E1E5</color>
-    <color name="hint_text_color">#FF938F99</color>
-    <color name="nv_bg_color">#FF938F99</color>
-    <color name="search_view_background">#FF49454F</color>
-    <color name="gray">#FFCAC4D0</color>
-
-    <!-- ========== Divider / Line（浅色 → 深色） ========== -->
+    <!-- 分隔线色 - 暗色模式 -->
     <color name="h_line_color">#FF3A3640</color>
 
-    <!-- ========== Status Bar ========== -->
-    <color name="colorPrimaryDark">#FF000000</color>
+    <!-- 次要文字色 - 暗色模式 -->
+    <color name="gray">#FFCAC4D0</color>
+    <color name="dark_light">#FF938F99</color>
 
-    <!-- ========== Card Colors ========== -->
-    <color name="cardSurface">#FF1C1B1F</color>
-    <color name="cardOnSurface">#FFE6E1E5</color>
-    <color name="cardSurfaceVariant">#FF49454F</color>
-    <color name="cardOnSurfaceVariant">#FFCAC4D0</color>
+    <!-- 搜索框背景 - 暗色模式 -->
+    <color name="search_view_background">#FF49454F</color>
 
-    <!-- ========== Surface Variants（被 AppBaseTheme 引用） ========== -->
+    <!-- ========== Material3 Surface Colors（暗色模式） ========== -->
     <color name="surfaceVariant">#FF49454F</color>
-    <color name="onSurfaceVariant">#FFCAC4D0</color>
     <color name="surfaceInverse">#FFE6E1E5</color>
     <color name="onSurfaceInverse">#FF313033</color>
+
+    <!-- ========== Material3 Outline Colors（暗色模式） ========== -->
     <color name="outline">#FF938F99</color>
     <color name="outlineVariant">#FF49454F</color>
 
-    <!-- ========== TextInput Colors（被 AppBaseTheme 引用） ========== -->
+    <!-- ========== Material3 Card Colors（暗色模式） ========== -->
+    <color name="cardSurface">@color/surfacePrimary</color>
+    <color name="cardOnSurface">@color/onSurfacePrimary</color>
+    <color name="cardSurfaceVariant">@color/surfaceSecondary</color>
+    <color name="cardOnSurfaceVariant">@color/onSurfaceSecondary</color>
+
+    <!-- ========== Material3 TextInput Colors（暗色模式） ========== -->
     <color name="textInputOutlineDefault">#FF938F99</color>
     <color name="textInputFilledDefault">#FF49454F</color>
 
-    <!-- Ripple Highlight（暗色模式下使用浅色 ripple，确保在深色背景上可见） ========== -->
+    <!-- ========== Ripple Highlight Colors（暗色模式） ========== -->
+    <!-- 暗色模式下使用浅色 ripple，确保在深色背景上可见 -->
     <color name="selectable_item_ripple">#29FFFFFF</color>
+
+    <!-- ========== Status Bar（暗色模式） ========== -->
+    <color name="colorPrimaryDark">#FF000000</color>
 
     <!--
         以下颜色保持不变（品牌色 / 主题色 / 状态色）：

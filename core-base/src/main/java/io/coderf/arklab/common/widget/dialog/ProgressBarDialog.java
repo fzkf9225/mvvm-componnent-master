@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.ProcessBarDialogBinding;
 import io.coderf.arklab.common.listener.OnProgressEndListener;
+import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 
 /**
@@ -293,11 +295,22 @@ public class ProgressBarDialog extends BaseDialog {
             }
             onButtonClickListener.onClick(v);
         });
+        applySurfaceBackground();
         setCanceledOnTouchOutside(false);
         setCancelable(isCanCancel);
         setOnCancelListener(onCancelListener);
         setContentView(processBarDialogBinding.getRoot());
         applyCenterWindow();
+    }
+
+    private void applySurfaceBackground() {
+        if (bgDrawable != null) {
+            processBarDialogBinding.getRoot().setBackground(bgDrawable);
+            return;
+        }
+        processBarDialogBinding.getRoot().setBackground(DrawableUtil.createRectDrawable(
+                ContextCompat.getColor(getContext(), R.color.cardSurface),
+                DensityUtil.dp2px(getContext(), 16f)));
     }
 
     @Override

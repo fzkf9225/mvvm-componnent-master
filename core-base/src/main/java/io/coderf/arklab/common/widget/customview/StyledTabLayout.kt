@@ -216,7 +216,7 @@ class StyledTabLayout @JvmOverloads constructor(
 
     private fun createDefaultSelectedBackground(): Drawable {
         return DrawableUtil.createRectDrawable(
-            ContextCompat.getColor(context, android.R.color.black),
+            ContextCompat.getColor(context, R.color.themeColor),
             selectedBackgroundCornerRadius
         )
     }

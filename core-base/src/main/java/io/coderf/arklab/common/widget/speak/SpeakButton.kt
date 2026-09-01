@@ -57,7 +57,7 @@ import kotlin.math.min
 class SpeakButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = 0
+    defStyle: Int = com.google.android.material.R.attr.materialButtonStyle
 ) :
     com.google.android.material.button.MaterialButton(context, attrs, defStyle) {
     companion object {

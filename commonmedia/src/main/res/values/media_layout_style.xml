@@ -17,7 +17,32 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- Dialog进入及退出动画 -->
         <item name="android:windowAnimationStyle">@style/media_action_sheet_dialog_animation</item>
+        <item name="materialButtonStyle">@style/Widget.Media.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Media.Button.OutlinedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.Media.Button.TextButton</item>
+        <item name="materialIconButtonStyle">@style/Widget.Media.Button.IconButton</item>
     </style>
+
+    <style name="Widget.Media.Button" parent="Widget.Material3.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.Media.Button.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.Media.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.Media.Button.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
     <!-- ActionSheet进出动画 -->
     <style name="media_action_sheet_dialog_animation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/media_actionsheet_dialog_in</item>
@@ -25,35 +50,34 @@
     </style>
 
     <!-- ActionSheet 按钮样式 - 使用 MaterialButton，移除 backgroundTint 冲突 -->
-    <style name="media_action_sheet_item" parent="Widget.Material3.Button.TextButton">
+    <style name="media_action_sheet_item" parent="Widget.Media.Button.TextButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/black</item>
+        <!-- 使用语义颜色，自动适配暗色模式 -->
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/action_sheet_item_text_size</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="rippleColor">@color/media_action_sheet_ripple</item>
+        <item name="rippleColor">?attr/colorControlHighlight</item>
     </style>
 
-    <style name="media_action_sheet_cancel" parent="Widget.Material3.Button.TextButton">
+    <style name="media_action_sheet_cancel" parent="Widget.Media.Button.TextButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/black</item>
+        <!-- 使用语义颜色，自动适配暗色模式 -->
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textSize">@dimen/action_sheet_cancel_text_size</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="backgroundTint">@android:color/white</item>
-        <item name="rippleColor">@color/media_action_sheet_ripple</item>
+        <!-- 背景使用语义颜色 -->
+        <item name="backgroundTint">?attr/colorSurface</item>
+        <item name="rippleColor">?attr/colorControlHighlight</item>
     </style>
 
     <style name="media_action_sheet_divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/media_action_sheet_divider</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
     </style>
 
     <!-- 自定义loading dialog - 使用Material3风格，内容自适应 -->

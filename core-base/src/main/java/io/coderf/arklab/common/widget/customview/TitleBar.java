@@ -76,7 +76,7 @@ public class TitleBar extends ConstraintLayout {
             CharSequence title = ta.getText(R.styleable.TitleBar_titleBarTitle);
             CharSequence rightText = ta.getText(R.styleable.TitleBar_titleBarRightText);
             int titleColor = ta.getColor(R.styleable.TitleBar_titleBarTitleColor,
-                    ContextCompat.getColor(context, R.color.black));
+                    ContextCompat.getColor(context, R.color.cardOnSurface));
             int rightColor = ta.getColor(R.styleable.TitleBar_titleBarRightTextColor,
                     ContextCompat.getColor(context, R.color.themeColor));
             float titleSize = ta.getDimension(R.styleable.TitleBar_titleBarTitleSize,
@@ -95,12 +95,12 @@ public class TitleBar extends ConstraintLayout {
             }
             backButton.setImageDrawable(ContextCompat.getDrawable(context, backIcon));
             backButton.setImageTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.black)));
+                    ContextCompat.getColor(context, R.color.cardOnSurface)));
             backButton.setVisibility(showBack ? VISIBLE : INVISIBLE);
         } else {
             backButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_fh));
             backButton.setImageTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.black)));
+                    ContextCompat.getColor(context, R.color.cardOnSurface)));
         }
     }
 

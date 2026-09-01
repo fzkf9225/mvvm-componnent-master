@@ -60,14 +60,14 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
         if (ta != null) {
             drawableClear = ta.getDrawable(R.styleable.ClearableEditText_clearIcon);
             enableBgStyle = ta.getBoolean(R.styleable.ClearableEditText_enableBgStyle, true);
-            strokeColor = ta.getColor(R.styleable.ClearableEditText_strokeColor, ContextCompat.getColor(getContext(), R.color.white));
-            circleBackColor = ta.getColor(R.styleable.ClearableEditText_bgColor, ContextCompat.getColor(getContext(), R.color.white));
+            strokeColor = ta.getColor(R.styleable.ClearableEditText_strokeColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
+            circleBackColor = ta.getColor(R.styleable.ClearableEditText_bgColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
             strokeWidth = ta.getDimension(R.styleable.ClearableEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.ClearableEditText_radius, 0);
             ta.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(getContext(), R.color.white);
-            circleBackColor = ContextCompat.getColor(getContext(), R.color.white);
+            strokeColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+            circleBackColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
         }
 
         if (drawableClear == null) {

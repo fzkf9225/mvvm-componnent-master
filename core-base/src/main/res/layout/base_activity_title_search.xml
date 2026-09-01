@@ -44,7 +44,7 @@
                 app:buttonGravity="center_vertical"
                 app:bindNavIconVisible="@{toolbarConfig.showBackButton}"
                 app:bindNavIconRes="@{toolbarConfig.backIconRes}"
-                app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.lightMode ? R.color.white : R.color.black)}"
+                app:bindNavIconTint="@{ContextCompat.getColor(context, toolbarConfig.textColor)}"
                 app:bindToolbarElevationDp="@{toolbarConfig.elevationDp}"
                 app:popupTheme="@style/OverflowMenuStyle">
 

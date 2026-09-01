@@ -22,7 +22,7 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_work_menu_name"
             android:textSize="12sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:includeFontPadding="false"
             tools:text="菜单名称"
             android:layout_marginTop="10dp"

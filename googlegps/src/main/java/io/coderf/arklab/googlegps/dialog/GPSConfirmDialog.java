@@ -3,12 +3,12 @@ package io.coderf.arklab.googlegps.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -436,13 +436,35 @@ public class GPSConfirmDialog extends Dialog {
         }
 
         dialogWindow.setGravity(Gravity.CENTER);
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> AppUtil.createRectDrawable(
-                Color.WHITE,
-                AppUtil.dp2px(getContext(), 8f),
-                AppUtil.dp2px(getContext(), 8f),
-                AppUtil.dp2px(getContext(), 8f),
-                AppUtil.dp2px(getContext(), 8f)
-        )));
+        Drawable surfaceDrawable = Objects.requireNonNullElseGet(bgDrawable, this::createDefaultSurfaceDrawable);
+        binding.clConfirm.setBackground(surfaceDrawable);
+        dialogWindow.setBackgroundDrawable(surfaceDrawable);
+    }
+
+    private Drawable createDefaultSurfaceDrawable() {
+        int radius = AppUtil.dp2px(getContext(), 8f);
+        return AppUtil.createRectDrawable(
+                resolveDialogSurfaceColor(),
+                radius,
+                radius,
+                radius,
+                radius
+        );
+    }
+
+    private int resolveDialogSurfaceColor() {
+        TypedValue typedValue = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(
+                com.google.android.material.R.attr.colorSurface, typedValue, true)) {
+            if (typedValue.resourceId != 0) {
+                return ContextCompat.getColor(getContext(), typedValue.resourceId);
+            }
+            if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT
+                    && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                return typedValue.data;
+            }
+        }
+        return ContextCompat.getColor(getContext(), R.color.gps_dialog_surface);
     }
 
     private void initTwoButtonLayout(int lineColorValue) {

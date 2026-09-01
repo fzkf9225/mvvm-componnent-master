@@ -107,7 +107,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(
                 ContextCompat.getColor(activity, R.color.default_background));
         unSelectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ContextCompat.getColor(activity, R.color.white));
+                ContextCompat.getColor(activity, R.color.cardSurface));
 
         init();
         initParent();

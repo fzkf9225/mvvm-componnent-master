@@ -617,6 +617,10 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
         if (bgDrawable != null) {
             binding.clDate.setBackground(bgDrawable);
+        } else {
+            binding.clDate.setBackground(DrawableUtil.createRectDrawable(
+                    ContextCompat.getColor(getContext(), R.color.cardSurface),
+                    DensityUtil.dp2px(getContext(), 16f)));
         }
 
         binding.dialogConfirm.setOnClickListener(v -> {
@@ -698,7 +702,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(gravity);
         dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(),R.color.white),
+                ContextCompat.getColor(getContext(), R.color.cardSurface),
                 DensityUtil.dp2px(getContext(), 16f),
                 DensityUtil.dp2px(getContext(), 16f),
                 0,

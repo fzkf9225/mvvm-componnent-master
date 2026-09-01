@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 深色表面：状态栏/导航栏用浅色图标 -->
+    <bool name="window_light_status_bar">false</bool>
+    <bool name="window_light_navigation_bar">false</bool>
+</resources>

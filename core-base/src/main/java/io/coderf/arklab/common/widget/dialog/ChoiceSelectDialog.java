@@ -24,6 +24,7 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.DialogChoiceSelectBinding;
 import io.coderf.arklab.common.listener.OnChoiceSelectListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.customview.CornerButton;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
@@ -450,10 +451,21 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
         setupButtons();
         setupRecyclerView();
         applyLayoutAppearance();
+        applySurfaceBackground();
 
         setContentView(binding.getRoot());
         applyCancelableOutside(outSide);
         applyBottomSheetWindow(gravity);
+    }
+
+    private void applySurfaceBackground() {
+        if (bgDrawable != null) {
+            binding.getRoot().setBackground(bgDrawable);
+            return;
+        }
+        binding.getRoot().setBackground(DrawableUtil.createRectDrawable(
+                ContextCompat.getColor(context, R.color.cardSurface),
+                DensityUtil.dp2px(context, 16f)));
     }
 
     private void setupTitle() {

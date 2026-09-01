@@ -194,9 +194,9 @@ public class VerificationCodeInputView extends TextInputEditText implements View
      */
     private void initDefaultValue() {
         mStrokeFocusedColor = ContextCompat.getColor(getContext(), R.color.themeColor);
-        mStrokeFocusedBgColor = ContextCompat.getColor(getContext(), R.color.white);
+        mStrokeFocusedBgColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
         mCursorFocusedBgColor = ContextCompat.getColor(getContext(), R.color.themeColor);
-        mStrokeDefaultColor = ContextCompat.getColor(getContext(), R.color.white);
+        mStrokeDefaultColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
         mStrokeDefaultBgColor = ContextCompat.getColor(getContext(), R.color.transparent);
         mCursorDefaultBgColor = ContextCompat.getColor(getContext(), R.color.transparent);
         mStrokeWidth = DensityUtil.dp2px(getContext(), 30);
@@ -231,9 +231,9 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedTrue,
                 ContextCompat.getColor(getContext(), R.color.themeColor));
         mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedFalse,
-                ContextCompat.getColor(getContext(), R.color.white));
+                ContextCompat.getColor(getContext(), R.color.cardSurface));
         mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedTrue,
-                ContextCompat.getColor(getContext(), R.color.white));
+                ContextCompat.getColor(getContext(), R.color.cardSurface));
         mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedFalse,
                 ContextCompat.getColor(getContext(), R.color.transparent));
         mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursorWidth,

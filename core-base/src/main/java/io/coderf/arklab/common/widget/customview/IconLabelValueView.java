@@ -173,11 +173,11 @@ public class IconLabelValueView extends ConstraintLayout {
             bottomBorder = typedArray.getBoolean(R.styleable.IconLabelValueView_bottomBorder, true);
 
             valueTextColor = typedArray.getColor(R.styleable.IconLabelValueView_valueTextColor,
-                    ContextCompat.getColor(getContext(), android.R.color.black));
+                    ContextCompat.getColor(getContext(), R.color.cardOnSurface));
             borderBottomColor = typedArray.getColor(R.styleable.IconLabelValueView_borderBottomColor,
                     ContextCompat.getColor(getContext(), R.color.h_line_color));
             labelTextColor = typedArray.getColor(R.styleable.IconLabelValueView_labelTextColor,
-                    ContextCompat.getColor(getContext(), android.R.color.black));
+                    ContextCompat.getColor(getContext(), R.color.cardOnSurface));
 
             labelTextSize = typedArray.getDimension(R.styleable.IconLabelValueView_labelTextSize,
                     DensityUtil.sp2px(getContext(), 14));
