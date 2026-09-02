@@ -137,6 +137,8 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
     private Drawable cancelButtonBackgroundDrawable;
     /** 底部取消按钮 layout_marginTop (px)，小于 0 表示沿用 XML */
     private int cancelButtonMarginTopPx = -1;
+    /** 底部取消按钮 高度 (px)，小于 0 表示沿用 XML */
+    private int cancelButtonHeightPx = -1;
     /** RecyclerView 四边 padding (px)，小于 0 表示不改该边 */
     private int recyclerPaddingStartPx = -1;
     private int recyclerPaddingTopPx = -1;
@@ -145,12 +147,12 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
 
     public MenuDialog(@NonNull Context context) {
         super(context);
-        itemHeight = DensityUtil.dp2px(context,52f);
+        itemHeight = DensityUtil.dp2px(context, 52f);
     }
 
     public MenuDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        itemHeight = DensityUtil.dp2px(context,52f);
+        itemHeight = DensityUtil.dp2px(context, 52f);
     }
 
     public MenuDialog<T> setOnOptionBottomMenuClickListener(OnOptionBottomMenuClickListener<T> optionBottomMenuClickListener) {
@@ -333,6 +335,11 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
         return this;
     }
 
+    public MenuDialog<T> setRecyclerPaddingBottomPx(int recyclerPaddingBottomPx) {
+        this.recyclerPaddingBottomPx = recyclerPaddingBottomPx;
+        return this;
+    }
+
     /**
      * 设置列表区域 padding（px），传入小于 0 的值表示保持该侧不变。
      */
@@ -442,6 +449,12 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
             ViewGroup.MarginLayoutParams lp =
                     (ViewGroup.MarginLayoutParams) binding.buttonCancel.getLayoutParams();
             lp.topMargin = cancelButtonMarginTopPx;
+            binding.buttonCancel.setLayoutParams(lp);
+        }
+        if (cancelButtonHeightPx >= 0) {
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) binding.buttonCancel.getLayoutParams();
+            lp.height = cancelButtonHeightPx;
             binding.buttonCancel.setLayoutParams(lp);
         }
     }

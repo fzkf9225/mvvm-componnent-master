@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -133,9 +134,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
     public final ChoiceSelectDialog<T> setData(T... data) {
         List<T> list = new ArrayList<>();
         if (data != null) {
-            for (T item : data) {
-                list.add(item);
-            }
+            Collections.addAll(list, data);
         }
         return setData(list);
     }
