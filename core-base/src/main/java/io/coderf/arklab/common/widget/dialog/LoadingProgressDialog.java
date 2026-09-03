@@ -137,9 +137,19 @@ import io.coderf.arklab.common.utils.common.ScreenUtil;
             handler.removeCallbacks(updateTextRunnable);
             handler.post(updateTextRunnable);
         } else {
+            handler.removeCallbacks(updateTextRunnable);
             loadingDialogBinding.setMessage(message);
         }
         refreshLayoutWidth();
+    }
+
+    /**
+     * 已在展示时原地刷新文案与行为，避免 dismiss 后再 show 造成闪烁。
+     */
+    public void refreshShowing(String message, boolean enableDynamicEllipsis, boolean isCanCancel) {
+        this.enableDynamicEllipsis = enableDynamicEllipsis;
+        refreshCanCancel(isCanCancel);
+        refreshMessage(message);
     }
 
     public LoadingProgressDialog(Context context, int theme) {
@@ -154,6 +164,7 @@ import io.coderf.arklab.common.utils.common.ScreenUtil;
     public void refreshCanCancel(boolean isCanCancel) {
         this.isCanCancel = isCanCancel;
         setCancelable(isCanCancel);
+        setCanceledOnTouchOutside(isCanCancel);
     }
 
     public LoadingProgressDialog setCanCelListener(OnCancelListener onCancelListener) {
