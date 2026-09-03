@@ -8,7 +8,9 @@ namespace：`io.coderf.arklab.common`
 
 > 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。
 
-**1.1.0（相对 AppCompat 1.0.9）**：`AppBaseTheme` 为 Material3 DayNight；Toolbar 为 `AppBarLayout` + `MaterialToolbar`；圆角控件走 `ShapeAppearance`。对外 API 不变。详见仓库 [UPGRADE.md](../UPGRADE.md)。
+**1.1.0（相对 AppCompat 1.0.9）**：`AppBaseTheme` 为 Material3 DayNight；Toolbar 为 `AppBarLayout` + `MaterialToolbar`。详见仓库 [UPGRADE.md](../UPGRADE.md)。
+
+**Widget 拆除（建议随 1.2.0 发布）**：已删除 `CornerButton` 等包装类，官方控件 + `CornerShapeHelper`。业务对照 [WIDGET_MIGRATION.md](../WIDGET_MIGRATION.md)。`ClearableEditText` / `PasswordEditText` 保留。
 
 ---
 

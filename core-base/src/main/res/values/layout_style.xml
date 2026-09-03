@@ -51,6 +51,14 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/radius_l</item>
     </style>
+    <style name="RoundedShapeAppearanceXs">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
+    </style>
+    <style name="RoundedShapeAppearanceXxl">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_xxl</item>
+    </style>
 
     <style name="PopupWindowAnimation" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>

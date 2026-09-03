@@ -29,6 +29,7 @@ import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.databinding.AdapterFileShowItemBinding;
@@ -170,7 +171,8 @@ public class FileShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
                 binding.tvFile.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.sp2px(binding.getRoot().getContext(), 12f));
             }
             binding.tvFile.setTextColor(adapter.textColor);
-            binding.layout.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
+            CornerShapeHelper.apply(binding.layout, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.imageFile.setLayoutParams(adapter.getFileIconLayoutParams(binding.imageFile));
             if (adapter.isShowFileDrawable) {
                 binding.imageFile.setVisibility(View.VISIBLE);

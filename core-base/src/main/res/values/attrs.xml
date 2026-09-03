@@ -212,28 +212,6 @@
         <attr name="skeletonShimmerDuration" />
         <attr name="skeletonPadding" />
     </declare-styleable>
-    <declare-styleable name="CounterEditText">
-        <!-- 输入框高度，设置为0或负数时使用最低高度 -->
-        <attr name="inputHeight" format="dimension" />
-        <!-- 最低高度，当inputHeight<=0时生效 -->
-        <attr name="minHeight" format="dimension" />
-
-        <!-- 最大输入字数，0表示无限制 -->
-        <attr name="maxLength" format="integer" />
-
-        <!-- 计数器文字颜色 -->
-        <attr name="counterColor" format="color" />
-
-        <!-- 计数器文字大小 -->
-        <attr name="counterTextSize" format="dimension" />
-
-        <!-- 复用系统的文字相关属性 -->
-        <attr name="android:textSize" />
-        <attr name="android:textColor" />
-        <attr name="android:hint" />
-        <attr name="android:background" />
-        <attr name="android:fontFamily" />
-    </declare-styleable>
 
     <!-- 选中时文字颜色 -->
     <attr name="selectedTextColor" format="color" />
@@ -389,11 +367,6 @@
         <attr name="dotOffsetX" format="dimension" />
         <attr name="dotOffsetY" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="CircleTextView">
-        <attr name="strokeColor" />
-        <attr name="bgColor" />
-        <attr name="strokeWidth" />
-    </declare-styleable>
 
     <declare-styleable name="Custom_Progress_Bar">
         <attr name="bgColor" />
@@ -475,27 +448,15 @@
         <attr name="iconUnselected" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="CornerTextView">
+    <declare-styleable name="ShapeView">
         <attr name="strokeColor" />
         <attr name="bgColor" />
-        <attr name="strokeWidth" />
-        <attr name="radius" />
-        <!-- 新增四个圆角属性 -->
-        <attr name="leftTopRadius" />
-        <attr name="rightTopRadius" />
-        <attr name="rightBottomRadius" />
-        <attr name="leftBottomRadius" />
-    </declare-styleable>
-
-    <declare-styleable name="Custom_Round_Image_View">
-        <attr name="strokeColor" />
         <attr name="strokeWidth" />
         <attr name="radius" />
         <attr name="leftTopRadius" />
         <attr name="rightTopRadius" />
         <attr name="rightBottomRadius" />
         <attr name="leftBottomRadius" />
-        <attr name="bgColor" />
     </declare-styleable>
 
     <declare-styleable name="CornerLabelView">
@@ -809,6 +770,10 @@
         <attr name="labelTextSize" />
         <!-- 图标与文字间距 -->
         <attr name="labelIconMargin" format="dimension" />
+        <attr name="bgColor" />
+        <attr name="radius" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
     </declare-styleable>
     <attr name="labelTextStyle">
         <enum name="normal" value="0" />

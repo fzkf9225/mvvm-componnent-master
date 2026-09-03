@@ -7,10 +7,10 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/header_image"
+            android:scaleType="centerCrop"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@null"
-        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="16:9"

@@ -31,13 +31,15 @@
                 android:paddingEnd="@dimen/horizontal_margin_xl"
                 android:paddingBottom="79dp">
 
-                <io.coderf.arklab.common.widget.customview.RoundImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/headImg"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginTop="48dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_head_default"
                     app:headerUrl="@{user.userIcon}"
-                    android:src="@mipmap/icon_head_default" />
+                    app:shapeAppearanceOverlay="@style/CircleShapeAppearance" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_user_name"

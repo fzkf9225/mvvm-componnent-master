@@ -45,23 +45,93 @@
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
         <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
         <item name="tabStyle">@style/customTabLayout</item>
-        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.Material3.Button.OutlinedButton</item>
-        <item name="borderlessButtonStyle">@style/Widget.Material3.Button.TextButton</item>
-        <item name="materialIconButtonStyle">@style/Widget.Material3.Button.IconButton</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.App.Button.TextButton</item>
+        <item name="materialIconButtonStyle">@style/Widget.App.Button.IconButton</item>
     </style>
 
-    <!-- 兼容仍写 style="@style/Widget.App.Button" 的布局；触控高度走 M3 默认 inset + minHeight -->
+    <!-- 主题默认按钮：去掉 M3 inset，layout_height 就是可视高度 -->
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
-        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
     <style name="Widget.App.Button.TextButton" parent="Widget.Material3.Button.TextButton">
-        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
     <style name="Widget.App.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
-    <style name="Widget.App.Button.IconButton" parent="Widget.Material3.Button.IconButton" />
+    <style name="Widget.App.Button.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <!-- 铺满 layout_height：去掉 M3 默认 inset，圆角/填充走 XML 官方属性 -->
+    <style name="Widget.App.Button.Flush" parent="Widget.Material3.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="Widget.App.Button.Flush.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="Widget.App.Button.Flush.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.App.Card.Flush" parent="Widget.Material3.CardView.Filled">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout.Dense" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputEditText.Dense</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_l</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_l</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_l</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_l</item>
+        <item name="boxBackgroundColor">@color/cardSurface</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="endIconMinSize">24dp</item>
+    </style>
+    <style name="ThemeOverlay.App.TextInputEditText.Dense" parent="">
+        <item name="editTextStyle">@style/Widget.App.TextInputEditText.Dense</item>
+    </style>
+    <style name="Widget.App.TextInputEditText.Dense" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:minHeight">@dimen/height_xl</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">@dimen/padding_l</item>
+        <item name="android:paddingEnd">@dimen/padding_l</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 
     <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textSize">17sp</item>

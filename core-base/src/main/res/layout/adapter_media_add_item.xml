@@ -11,12 +11,10 @@
         android:layout_height="wrap_content"
         android:clipChildren="false">
 
-        <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/media_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            app:radius="@dimen/radius_s"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,15 +58,15 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
                 app:layout_constraintTop_toTopOf="@id/guideline_top" />
-        </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <io.coderf.arklab.common.widget.customview.CornerImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_media_show"
+            android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
             android:visibility="gone"
-            app:radius="@dimen/radius_s"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -126,7 +124,7 @@
                 app:layout_constraintTop_toTopOf="@id/media_guideline_top" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <io.coderf.arklab.common.widget.customview.CornerTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/upload_mark"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -34,7 +34,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <io.coderf.arklab.common.widget.customview.CornerButton
+            <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
                 android:id="@+id/button_clear"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
@@ -42,15 +43,16 @@
                 android:text="@string/clear"
                 android:textColor="@color/nv_bg_color"
                 android:textSize="13sp"
-                app:bgColor="#F2F1F6"
+            app:backgroundTint="#F2F1F6"
                 app:layout_constraintBottom_toBottomOf="@+id/button_submit"
                 app:layout_constraintEnd_toStartOf="@+id/button_submit"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/button_submit"
-                app:radius="@dimen/radius_s"/>
+            app:cornerRadius="@dimen/radius_s"/>
 
-            <io.coderf.arklab.common.widget.customview.CornerButton
+            <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
                 android:id="@+id/button_submit"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
@@ -59,7 +61,7 @@
                 android:text="@string/confirm"
                 android:textColor="@color/onPrimary"
                 android:textSize="13sp"
-                app:bgColor="@color/themeColor"
+            app:backgroundTint="@color/themeColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
@@ -67,7 +69,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 app:layout_constraintStart_toEndOf="@+id/button_clear"
                 app:layout_constraintTop_toBottomOf="@+id/multi_recycler_category"
-                app:radius="@dimen/radius_s"/>
+            app:cornerRadius="@dimen/radius_s"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <!-- 遮罩层 -->
         <View

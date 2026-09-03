@@ -604,7 +604,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         }
 
         if (positiveTextColor != null) {
-            binding.dialogConfirm.setBackColor(positiveTextColor);
+            binding.dialogConfirm.setBackgroundTintList(positiveTextColor);
         }
 
         if (negativeTextColor != null) {

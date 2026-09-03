@@ -10,16 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/video_add"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:radius="@dimen/radius_s">
+            app:layout_constraintTop_toTopOf="parent">
             <!-- 左侧百分比引导线 -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_left"
@@ -59,19 +57,19 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
                 app:layout_constraintTop_toTopOf="@id/guideline_top" />
-        </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <io.coderf.arklab.common.widget.customview.CornerImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_video_show"
+            android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
             android:visibility="gone"
             app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:radius="@dimen/radius_s" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/iv_player"
@@ -124,7 +122,7 @@
                 app:layout_constraintTop_toTopOf="@id/player_guideline_top" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <io.coderf.arklab.common.widget.customview.CornerTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/upload_mark"
             android:layout_width="0dp"
             android:layout_height="0dp"

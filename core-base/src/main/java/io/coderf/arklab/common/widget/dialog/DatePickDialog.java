@@ -405,7 +405,7 @@ public class DatePickDialog extends BaseDialog {
             binding.dialogCancel.setText(negativeText);
         }
         if (positiveTextColor != null) {
-            binding.dialogConfirm.setBackColor(positiveTextColor);
+            binding.dialogConfirm.setBackgroundTintList(positiveTextColor);
         }
 
         if (negativeTextColor != null) {

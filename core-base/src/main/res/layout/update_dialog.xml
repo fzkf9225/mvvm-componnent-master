@@ -94,7 +94,8 @@
                 tools:text="1、优化性能体验\n2、修复已知问题\n详情请访问 https://example.com" />
         </ScrollView>
 
-        <io.coderf.arklab.common.widget.customview.CornerButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
             android:id="@+id/updateBtn"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -106,12 +107,12 @@
             android:text="@string/upgrade"
             android:textColor="@color/onPrimary"
             android:textSize="@dimen/font_size_xxl"
-            app:bgColor="@color/themeColor"
+            app:backgroundTint="@color/themeColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scContent"
-            app:radius="@dimen/radius_xxl" />
+            app:cornerRadius="@dimen/radius_xxl" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

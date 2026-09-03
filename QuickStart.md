@@ -1,7 +1,8 @@
 # 五分钟快速入门
 
 > 对应框架 **common 4.6.0**（facade）+ **core-\* 1.1.0**，主题为 **Material3 DayNight**。  
-> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。
+> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。  
+> 升到拆除 `CornerButton` 等包装类的新库版本时，对照 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) 改业务布局（建议 common 4.7.0）。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成

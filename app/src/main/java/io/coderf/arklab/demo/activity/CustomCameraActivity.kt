@@ -46,10 +46,11 @@ class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBi
             override fun onCancel() {
             }
         })
-        binding.layoutVideo.imageVideo.setBgColor(
+        io.coderf.arklab.common.widget.customview.CornerShapeHelper.apply(
+            binding.layoutVideo.imageVideo,
+            DensityUtil.dp2px(this, 12f).toFloat(),
             Color.WHITE
         )
-        binding.layoutVideo.imageVideo.setRadius(DensityUtil.dp2px(this, 12f))
         binding.buttonCamera.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (permissionManager?.lacksPermissions(

@@ -144,31 +144,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file_result" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/oldImage"
+            android:scaleType="centerCrop"
                 imageUri="@{sourceImagePath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file"
-                app:radius="@dimen/radius_l" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/waterMarkImage"
+            android:scaleType="centerCrop"
                 imageUri="@{waterMarkImagePath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:scaleType="centerCrop"
                 app:layout_constraintStart_toEndOf="@+id/oldImage"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file"
-                app:radius="@dimen/radius_l" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_old_image"
@@ -271,18 +271,18 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/cropResultImage"
+            android:scaleType="centerCrop"
                 imageUri="@{cropResultImagePath}"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_crop_actions"
-                app:radius="@dimen/radius_l" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_crop_result"

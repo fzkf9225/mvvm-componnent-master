@@ -11,10 +11,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.widget.customview.RoundImageView;
 
 /**
- * Create by fz on 2020/3/27 0027
  * ShapeableImageView DataBinding 适配器。
  * <p>
  * 支持可选 placeholder / error，未配置时保持原有默认图行为。
@@ -29,10 +27,10 @@ public class ImageViewAttrAdapter {
     private static final int DEFAULT_HEAD = R.mipmap.icon_head_default;
     private static final int DEFAULT_IMAGE = R.mipmap.ic_default_image;
 
-    // ---------- headerUrl（RoundImageView，默认头像图） ----------
+    // ---------- headerUrl（圆形头像，默认头像图） ----------
 
     @BindingAdapter(value = {"headerUrl", "placeholder", "error"}, requireAll = false)
-    public static void loadHeader(RoundImageView imageView, String url,
+    public static void loadHeader(ShapeableImageView imageView, String url,
                                   @DrawableRes Integer placeholder, @DrawableRes Integer error) {
         load(imageView, url, resolve(placeholder, DEFAULT_HEAD), resolve(error, DEFAULT_HEAD));
     }

@@ -6,7 +6,7 @@
 
     </data>
 
-    <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,5 +39,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_file"
             app:layout_constraintTop_toTopOf="parent" />
-    </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

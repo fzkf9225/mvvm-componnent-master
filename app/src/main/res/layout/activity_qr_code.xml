@@ -112,7 +112,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_local_path" />
 
-            <io.coderf.arklab.common.widget.customview.CornerEditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_input_outlined"
                 android:id="@+id/edit_base64"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
@@ -124,10 +125,6 @@
                 android:padding="@dimen/padding_m"
                 android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/cardSurface"
-                app:radius="@dimen/radius_l"
-                app:strokeColor="@color/h_line_color"
-                app:strokeWidth="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_string" />

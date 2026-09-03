@@ -14,6 +14,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
@@ -53,8 +54,8 @@ public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
 
         public <T> ViewHolder(@NotNull AdapterImageShowItemBinding binding, ImageShowAdapter adapter) {
             super(binding, adapter);
-            binding.cornerImage.setRadius((int) adapter.radius);
-            binding.cornerImage.setBgColor(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
+            CornerShapeHelper.apply(binding.cornerImage, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.cornerImage.setOnClickListener(v -> {
                 try {
                     new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();

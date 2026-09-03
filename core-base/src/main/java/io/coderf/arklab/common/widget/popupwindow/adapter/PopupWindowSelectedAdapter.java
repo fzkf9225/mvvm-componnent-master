@@ -15,6 +15,7 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionSelectedViewBinding;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 
 
 /**
@@ -70,10 +71,10 @@ public class PopupWindowSelectedAdapter<T extends PopupWindowBean> extends BaseR
     public void onBindHolder(BaseViewHolder<OptionSelectedViewBinding> holder, int pos) {
         if (pos == mList.size() - 1) {
             holder.getBinding().tvOption.setTextColor(selectTextColor);
-            holder.getBinding().tvOption.setBgColorAndRadius(selectBgColor,radius);
+            CornerShapeHelper.apply(holder.getBinding().tvOption, radius, selectBgColor);
         } else {
             holder.getBinding().tvOption.setTextColor(unSelectTextColor);
-            holder.getBinding().tvOption.setBgColorAndRadius(unSelectBgColor,radius);
+            CornerShapeHelper.apply(holder.getBinding().tvOption, radius, unSelectBgColor);
         }
         holder.getBinding().tvOption.setText(mList.get(pos).getPopupName());
     }
@@ -175,4 +176,3 @@ public class PopupWindowSelectedAdapter<T extends PopupWindowBean> extends BaseR
         return onItemSelectedClearListener;
     }
 }
-

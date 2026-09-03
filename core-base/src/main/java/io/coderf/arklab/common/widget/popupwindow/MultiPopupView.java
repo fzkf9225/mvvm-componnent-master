@@ -187,7 +187,8 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
      * @param textColor 颜色
      */
     public void setSubmitTextColor(@ColorInt int textColor) {
-        binding.buttonSubmit.setBackColor(textColor);
+        binding.buttonSubmit.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(textColor));
     }
 
     /**

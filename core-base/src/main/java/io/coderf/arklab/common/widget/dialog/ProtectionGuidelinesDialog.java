@@ -167,7 +167,7 @@ public class ProtectionGuidelinesDialog extends BaseDialog {
         }
 
         if (positiveBackgroundColor != null) {
-            binding.dialogAgree.setBackColor(positiveBackgroundColor);
+            binding.dialogAgree.setBackgroundTintList(positiveBackgroundColor);
         }
 
         if (negativeTextColor != null) {

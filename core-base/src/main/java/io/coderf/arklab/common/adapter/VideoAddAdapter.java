@@ -30,7 +30,7 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.widget.customview.CornerTextView;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 
 /**
  * 添加视频适配器
@@ -197,7 +197,7 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             updateUploadView(status, holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
         }
     }
-    public void updateUploadView(UploadStatusEnum status, MaterialTextView uploadProcess, CornerTextView markView) {
+    public void updateUploadView(UploadStatusEnum status, MaterialTextView uploadProcess, MaterialTextView markView) {
         if (status == UploadStatusEnum.UPLOADING) {
             uploadProcess.setVisibility(View.VISIBLE);
             markView.setVisibility(View.VISIBLE);
@@ -236,9 +236,10 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
 
         public <T> ViewHolder(@NotNull AdapterVideoAddItemBinding binding, VideoAddAdapter adapter) {
             super(binding, adapter);
-            binding.ivVideoShow.setRadius((int) adapter.radius);
-            binding.videoAdd.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
-            binding.uploadMark.setBgColorAndRadius(0x80000000, adapter.radius);
+            CornerShapeHelper.apply(binding.ivVideoShow, adapter.radius);
+            CornerShapeHelper.apply(binding.videoAdd, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
+            CornerShapeHelper.apply(binding.uploadMark, adapter.radius, 0x80000000);
             binding.uploadProcess.setOnClickListener(v -> {
                 if (UploadStatusEnum.CANCELED.typeValue != adapter.getList().get(getAbsoluteAdapterPosition()).getUploading() &&
                         UploadStatusEnum.FAILURE.typeValue != adapter.getList().get(getAbsoluteAdapterPosition()).getUploading()) {

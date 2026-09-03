@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:background="@color/default_background"
         tools:context=".activity.DownloadActivity">
-        <io.coderf.arklab.common.widget.customview.CornerEditText
+        <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_input_outlined"
             android:id="@+id/edit_url"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
@@ -23,10 +24,6 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:bgColor="@color/cardSurface"
-            app:radius="@dimen/radius_l"
-            app:strokeColor="@color/h_line_color"
-            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +39,8 @@
             android:layout_marginTop="@dimen/vertical_margin_m"
             app:layout_constraintTop_toBottomOf="@+id/edit_url"
             app:layout_constraintStart_toStartOf="parent"/>
-        <io.coderf.arklab.common.widget.customview.CornerEditText
+        <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_input_outlined"
             android:id="@+id/edit_apk"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
@@ -53,10 +51,6 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:bgColor="@color/cardSurface"
-            app:radius="@dimen/radius_l"
-            app:strokeColor="@color/h_line_color"
-            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +67,8 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_apk"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <io.coderf.arklab.common.widget.customview.CornerEditText
+        <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_input_outlined"
             android:id="@+id/edit_multi"
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
@@ -84,10 +79,6 @@
             android:padding="@dimen/padding_m"
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
-            app:bgColor="@color/cardSurface"
-            app:radius="@dimen/radius_l"
-            app:strokeColor="@color/h_line_color"
-            app:strokeWidth="1dp"
             android:text="http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk"
             android:layout_height="120dp"
             app:layout_constraintEnd_toEndOf="parent"

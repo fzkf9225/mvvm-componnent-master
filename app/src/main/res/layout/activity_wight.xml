@@ -24,54 +24,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cornerConstraintLayout"
+                style="@style/Widget.App.Card.Flush"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
-                app:bgColor="@color/themeColor"
+                app:cardBackgroundColor="@color/themeColor"
+                app:cardCornerRadius="@dimen/radius_m"
                 app:layout_constraintEnd_toStartOf="@+id/cornerTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:radius="@dimen/radius_m">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="CornerConstraintLayout"
+                    android:text="MaterialCardView"
                     android:textColor="@color/onPrimary" />
-            </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <io.coderf.arklab.common.widget.customview.CornerTextView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cornerTextView"
+                style="@style/Widget.App.Card.Flush"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
-                android:gravity="center"
-                android:text="CornerTextView"
-                android:textColor="@color/onPrimary"
-                app:bgColor="@color/themeColor"
+                app:cardBackgroundColor="@color/themeColor"
+                app:cardCornerRadius="@dimen/radius_m"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
                 app:layout_constraintTop_toTopOf="parent"
-                app:radius="@dimen/radius_m"
                 app:strokeColor="@color/theme_red"
-                app:strokeWidth="2dp" />
+                app:strokeWidth="2dp">
 
-            <io.coderf.arklab.common.widget.customview.CornerButton
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="MaterialCardView"
+                    android:textColor="@color/onPrimary" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cornerButton"
+                style="@style/Widget.App.Button.Flush"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:text="CornerButton"
+                android:text="MaterialButton"
                 android:textAllCaps="false"
                 android:textColor="@color/onPrimary"
-                app:bgColor="@color/themeColor"
+                app:backgroundTint="@color/themeColor"
+                app:cornerRadius="@dimen/radius_xxl"
                 app:layout_constraintEnd_toStartOf="@+id/cornerLabelView"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cornerConstraintLayout"
-                app:radius="@dimen/radius_xxl"
                 app:strokeColor="@color/theme_red"
                 app:strokeWidth="2dp" />
 
@@ -319,7 +327,7 @@
                 android:text="自定义ImageView"
                 app:layout_constraintTop_toBottomOf="@+id/customBannerTextCenter" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/cornersImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -328,7 +336,7 @@
                 app:imageUrl="@{imageUrl}"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/tv_image"
-                app:radius="@dimen/radius_l" />
+                app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL" />
 
             <io.coderf.arklab.common.widget.customview.CustomSearchEditText
                 android:id="@+id/customEditText"
@@ -375,8 +383,8 @@
                 android:textSize="@dimen/font_size_l"
                 app:bgColor="@color/cardSurface"
                 app:enableBgStyle="true"
-                app:enablePasswordToggle="true"
                 app:enableClear="true"
+                app:enablePasswordToggle="true"
                 app:layout_constraintTop_toBottomOf="@+id/clearableEditText"
                 app:radius="@dimen/radius_m"
                 app:strokeColor="@color/themeColor"
@@ -395,7 +403,8 @@
                 app:titleBarTitleColor="@color/cardOnSurface"
                 app:titleBarRightTextColor="@color/themeColor" />
 
-            <io.coderf.arklab.common.widget.customview.CornerEditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:background="@drawable/bg_input_outlined"
                 android:id="@+id/edit_area"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
@@ -407,13 +416,9 @@
                 android:padding="@dimen/padding_m"
                 android:textColorHint="@color/nv_bg_color"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/cardSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/demoTitleBar"
-                app:radius="@dimen/radius_l"
-                app:strokeColor="@color/h_line_color"
-                app:strokeWidth="1dp" />
+                app:layout_constraintTop_toBottomOf="@+id/demoTitleBar" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/numberFormatEditText"

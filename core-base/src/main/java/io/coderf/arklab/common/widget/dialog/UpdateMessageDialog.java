@@ -18,6 +18,7 @@ import androidx.core.text.HtmlCompat;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.UpdateDialogBinding;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 
 /**
  * 应用更新提示弹窗。
@@ -275,7 +276,7 @@ public class UpdateMessageDialog extends BaseDialog {
         if (drawable != null) {
             binding.updateBtn.setBackground(drawable);
         } else {
-            binding.updateBtn.setButtonStyle(strokeColor, strokeWidth, bgColor, radius);
+            CornerShapeHelper.apply(binding.updateBtn, radius, bgColor, strokeWidth, strokeColor);
         }
 
         binding.updateBtn.setOnClickListener(v -> {

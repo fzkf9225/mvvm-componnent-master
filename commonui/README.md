@@ -36,6 +36,8 @@ implementation project(':commonui')
 
 > 勿与 `io.coderf.arklab.core:ui`（`:core-ui`）混淆。
 
+`FormConstraintLayout` / `FormMedia` 现继承 `ConstraintLayout`（不再继承已删除的 `CornerConstraintLayout`）。XML 的 `app:bgColor` / `app:radius` 仍有效。业务工程其它 Corner\* 替换见 [WIDGET_MIGRATION.md](../WIDGET_MIGRATION.md)（建议本库 **3.7.0** 与 common 4.7.0 同发）。
+
 ---
 
 ## 发布

@@ -28,6 +28,7 @@ import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.databinding.AdapterFileAddItemBinding;
@@ -119,7 +120,8 @@ public class FileAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean,
         public <T> ViewHolder(@NotNull AdapterFileAddItemBinding binding, FileAddAdapter adapter) {
             super(binding, adapter);
             binding.tvFile.setTextColor(adapter.textColor);
-            binding.layout.setBgColorAndRadius(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT), adapter.radius);
+            CornerShapeHelper.apply(binding.layout, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.ivClearImg.setOnClickListener(v -> {
                 if (adapter.fileClearListener == null) {
                     return;

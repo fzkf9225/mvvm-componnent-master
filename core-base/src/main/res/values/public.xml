@@ -201,6 +201,11 @@
     <public name="Widget.App.Button.TextButton" type="style"/>
     <public name="Widget.App.Button.OutlinedButton" type="style"/>
     <public name="Widget.App.Button.IconButton" type="style"/>
+    <public name="Widget.App.Button.Flush" type="style"/>
+    <public name="Widget.App.Button.Flush.TextButton" type="style"/>
+    <public name="Widget.App.Button.Flush.Outlined" type="style"/>
+    <public name="Widget.App.Card.Flush" type="style"/>
+    <public name="Widget.App.TextInputLayout.Dense" type="style"/>
     <public name="Widget.App.Toolbar" type="style"/>
     <public name="Widget.App.Toolbar.OnPrimary" type="style"/>
     <public name="loading_dialog" type="style"/>
@@ -219,6 +224,8 @@
     <public name="RoundedShapeAppearanceS" type="style"/>
     <public name="RoundedShapeAppearanceM" type="style"/>
     <public name="RoundedShapeAppearanceL" type="style"/>
+    <public name="RoundedShapeAppearanceXs" type="style"/>
+    <public name="RoundedShapeAppearanceXxl" type="style"/>
     <public name="like_toast_dialog_style" type="style"/>
 
     <!--字符串资源-->

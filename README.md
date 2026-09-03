@@ -59,15 +59,16 @@
 
 ---
 
-# 文档索引（4.6.0）
+# 文档索引（4.6.0 / Widget 拆除见 4.7.0 建议号）
 
 | 文档 | 说明 |
 |------|------|
 | [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
-| [UPGRADE.md](UPGRADE.md) | **4.6.0 Material3 主题升级**（相对 AppCompat 线）；附录为 4.4.x → 4.5.1 拆分 |
+| [UPGRADE.md](UPGRADE.md) | **4.6.0 Material3 主题升级**；§2 为自定义 View 拆除摘要；附录为 4.4.x → 4.5.1 拆分 |
+| [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) | **业务工程对照手册**：已删除 Corner\* 的标签 / 属性 / 方法 / DataBinding 全量替换 |
 | [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、主题、配置、页面脚手架） |
 
-当前主干版本：**common `4.6.0`（facade）+ core-\* `1.1.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。相对 AppCompat 工程（common 4.5.1 / core-base 1.0.9）的变更见 [UPGRADE.md](UPGRADE.md)。
+当前主干版本：**common `4.6.0`（facade）+ core-\* `1.1.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。即将随库发布的 **自定义 View 拆除** 为破坏性变更（建议 common `4.7.0` / core-base `1.2.0` / commonui `3.7.0`），业务必须按 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) 整改后再升依赖。包名多为 `io.coderf.arklab.common.*`。相对 AppCompat 工程的主题变更见 [UPGRADE.md](UPGRADE.md)。
 
 # 框架简介
 框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，`targetSdk` 对齐 Demo（当前 35）。
@@ -75,7 +76,9 @@
 
 **4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
 
-**4.6.0**：`AppBaseTheme` 从 AppCompat Light 升级为 `Theme.Material3.DayNight.NoActionBar`；暗色走 `values-night` tonal 色板（关闭系统 `forceDarkAllowed`）。控件仍是 Views，不是 Compose。对外 API 与旧工程对齐，详见 [UPGRADE.md](UPGRADE.md)。
+**4.6.0**：`AppBaseTheme` 从 AppCompat Light 升级为 `Theme.Material3.DayNight.NoActionBar`；暗色走 `values-night` tonal 色板（关闭系统 `forceDarkAllowed`）。控件仍是 Views，不是 Compose。主题侧与旧工程对齐见 [UPGRADE.md](UPGRADE.md)。
+
+**自定义 View 拆除（建议随 4.7.0 发布）**：已删除 `CornerButton` / `CornerImageView` / `RoundImageView` / `CornerTextView` / `CircleTextView` / `CornerConstraintLayout` / `CornerEditText` / `CounterEditText`，改为官方 `MaterialButton`、`ShapeableImageView`、`MaterialCardView`、`TextInputLayout`。代码侧圆角用 `CornerShapeHelper`。`ClearableEditText`、`PasswordEditText` 保留。业务工程对照 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。
 
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
@@ -115,7 +118,7 @@
 
 # 五分钟快读开始
 [五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI 与 `BaseView` 分工（`RequestUiCallback`）** 说明与示例。）  
-从旧版升级请先读 [UPGRADE.md](UPGRADE.md)。
+从旧版升级请先读 [UPGRADE.md](UPGRADE.md)；升到拆除 Corner\* 的新库版本时再对照 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) 全量替换。
 
 ## MVVM架构示例代码，重构版本
 
@@ -247,59 +250,67 @@ implementation project(':userapi')   // 需要用户契约时
 24. `ThreadExecutorBounded`：线程池工具类，边界更大默认为128
 
 #### 自定义View相关
-1. `AutoNextLineLinearlayout`：自动换行的`ViewGroup`
-2. `CircleTextView`：圆形背景的 `MaterialTextView`，支持边框、背景色、文字居中显示
-3. `CornerImageView`：圆角 `ShapeableImageView`，支持四个角独立设置圆角半径
-4. `CirclePaddingImageView`：圆形**背景** + `android:padding` 内缩图标（父类 `AppCompatImageView`，不是裁圆头像）
-5. `CustomScrollView`：支持下拉回弹效果的 `ScrollView`
-6. `Code`：生成图形验证码的工具类，可绘制随机字符和干扰线
-7. `DividerView`：可绘制横线或竖线的虚线控件（Kotlin 实现）
-8. `CircleProgressBar`：圆形进度条，支持文字显示、动画进度更新
-9. `GradationRectTextView`：支持渐变背景、左右文字样式不同的 `TextView`
-10. `GridMenuView`：分页网格菜单视图，支持圆点指示器与圆角描边（`Kotlin` 实现）
-11. `CornerEditText`：圆角背景的 `TextInputEditText`，支持边框和背景色设置
-12. `CornerLabelView`：三角形角标控件，可显示在四个角落，支持文字和背景色
-13. `CornerTextView`：圆角背景的 `MaterialTextView`，支持边框和背景色
-14. `CornerButton`：圆角 `MaterialButton`（`ShapeAppearance` + tint/stroke），支持边框和背景色
-15. `HorizontalProgressBar`：水平横向进度条，支持圆角背景和文字显示
-16. `ConfigurableWebView`：可配置的 `WebView`，支持加载本地 assets 或网络 URL
-17. `AutoTextView：带 3D 翻转动画的文字切换控件（基于 `TextSwitcher`）
-18. `CustomSearchEditText：带搜索图标和清除功能的 `EditText`，支持圆角背景
-19. `CornerConstraintLayout`：圆角背景的 `ConstraintLayout`
-20. `BannerView`：轮播图控件，支持圆点指示器、自动轮播、圆角裁剪
-21. `Code`：生成图形验证码的工具类，可绘制随机字符和干扰线
-22. `StarBar`：自定义星星评分控件，支持实心/空心五角星、整数/小数评分、触摸滑动评分等功能
-23. `IconDotTextView`：图标+文字+数字角标的组合控件，支持多种布局方向（图标上下位置）和角标自定义
-24. `SquareLabelView`：左侧带方块的`TextView`，用于模块名称等场景，支持方块形状（矩形、椭圆、圆角矩形）和位置自定义
-25. `IconLabelValueView`：图标-标签-值-图标的布局视图，常用于设置项或详情展示，支持左右图标开关、底部边框、值对齐方式等配置
-26. `VerificationCodeInputView`：验证码输入控件，支持多格独立输入框、光标闪烁、输入类型限制（数字、字母等）、边框样式自定义
-27. `RoundImageView`：圆形裁剪 `ShapeableImageView`，用于头像等，支持边框宽度和颜色设置
-28. `ScalingTextView`：可展开/收起的文本控件，默认显示指定行数，支持“查看全文/收起全文”点击切换
-29. `LoadingProgressDialog`：加载进度对话框，支持动态省略号动画效果、自定义提示文字、可设置是否可取消
-30. `DatePickDialog`：年月日选择对话框，支持多种日期模式（年月日、年月、年份、时间等）、自定义日期范围和标签
-31. `BottomSheetDialog`：底部选择框（Material `BottomSheetDialog`），支持列表选项显示、自定义分割线样式和取消按钮
-32. `MenuDialog`：底部菜单对话框，功能类似·BottomSheetDialog·但使用传统Dialog实现，支持自定义位置和样式
-33. `ImageSaveDialog`：图片保存选择对话框，提供“保存到本地”等选项，用于图片保存场景
-34. `EmptyLayout`：空白占位布局控件，可显示加载中、加载失败、无数据等状态，支持自定义图标和点击重试
-35. `InputDialog`：单行输入对话框，支持文本输入、最大字数限制、输入类型设置和提示文字
-36. `EditAreaDialog`：多行文本输入对话框，功能类似`InputDialog`但支持多行文本编辑
-37. `UpdateMessageDialog`：应用更新提示对话框，显示版本信息和更新内容，支持链接识别和流量提醒
-38. `ConfirmDialog`：确认对话框，提供确定和取消按钮，支持富文本内容显示和按钮可见性控制
-39. `ProgressBarDialog`：进度条对话框，支持圆形和水平两种进度条样式，可自定义进度条外观和按钮
-40. `MessageDialog`：信息提示对话框，单按钮设计，用于简单信息提示场景
-41. `ProtectionGuidelinesDialog`：启动页的用户权限隐私指引，请求权限提示弹框，支持富文本内容、自定义按钮文字和样式，用于权限申请场景
-42. `CascadeSinglePopupWindow`：单选项级联弹窗
-43. `PopupView`：普通下拉选择弹窗（单选）
-44. `TextPopupView`：自定义文本+图标组合控件
-45. `MultiPopupView`：多选（非级联）弹窗
-46. `TreePopupView`：二级树形选择弹窗
-47. `CascadeMultiPopupWindow`：多选项级联弹窗
-48. `TxSlideRecyclerView`：支持侧滑的`RecyclerView`
-49. `SpeakButton`：仿微信的长按说话View
-50. `VoiceView`：语音播放条控件
+圆角按钮 / 圆角图 / 圆角卡片 / 普通圆角输入框 **不再提供包装类**，业务直接写官方控件。对照替换见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。
+
+**已删除（升新库后编不过）：** `CornerButton`、`CornerImageView`、`RoundImageView`、`CornerTextView`、`CircleTextView`、`CornerConstraintLayout`、`CornerEditText`、`CounterEditText`。
+
+**官方替换（写在业务 XML 里）：**
+- 按钮：`MaterialButton`（`app:backgroundTint` / `app:cornerRadius` / `app:stroke*`）；主题默认 `Widget.App.Button` 已去掉 M3 inset，`layout_height` 即可视高度
+- 图片 / 头像：`ShapeableImageView` + `app:shapeAppearanceOverlay`（`CircleShapeAppearance` / `RoundedShapeAppearance*`），`android:scaleType="centerCrop"`
+- 圆角容器 / 色块：`MaterialCardView`（`app:cardBackgroundColor` / `app:cardCornerRadius`）或 `ConstraintLayout` + `CornerShapeHelper`
+- 普通输入：`TextInputEditText` + `@drawable/bg_input_outlined`，或 `TextInputLayout`（紧凑用 `Widget.App.TextInputLayout.Dense` + `placeholderText`）
+- 字数统计：`TextInputLayout` 的 `app:counterEnabled`
+
+**代码铺圆角：** `CornerShapeHelper`（`apply` / `applyFromAttributes`，读取 `R.styleable.ShapeView` 的 `bgColor`/`radius`/`stroke*`）。
+
+1. `CornerShapeHelper`：给官方 `View` / `MaterialButton` / `ShapeableImageView` 铺圆角、填充、描边
+2. `AutoNextLineLinearlayout`：自动换行的`ViewGroup`
+3. `CirclePaddingImageView`：圆形**背景** + `android:padding` 内缩图标（父类 `AppCompatImageView`，不是裁圆头像；头像用 `ShapeableImageView` + `CircleShapeAppearance`）
+4. `CustomScrollView`：支持下拉回弹效果的 `ScrollView`
+5. `Code`：生成图形验证码的工具类，可绘制随机字符和干扰线
+6. `DividerView`：可绘制横线或竖线的虚线控件（Kotlin 实现）
+7. `CircleProgressBar`：圆形进度条，支持文字显示、动画进度更新
+8. `GradationRectTextView`：支持渐变背景、左右文字样式不同的 `TextView`
+9. `GridMenuView`：分页网格菜单视图，支持圆点指示器；`app:bgColor`/`app:radius` 仍可用（内部 `CornerShapeHelper`）
+10. `CornerLabelView`：三角形角标控件，可显示在四个角落，支持文字和背景色
+11. `HorizontalProgressBar`：水平横向进度条，支持圆角背景和文字显示
+12. `ConfigurableWebView`：可配置的 `WebView`，支持加载本地 assets 或网络 URL
+13. `AutoTextView`：带 3D 翻转动画的文字切换控件（基于 `TextSwitcher`）
+14. `CustomSearchEditText`：带搜索图标和清除功能的 `TextInputEditText`，支持圆角背景
+15. `ClearableEditText`：右侧清除图标的输入框（compound drawable + 可选圆角底）
+16. `PasswordEditText`：密码可见切换，可同时 `app:enableClear="true"`（官方 `TextInputLayout` 无法同时两种 endIcon）
+17. `BannerView`：轮播图控件，支持圆点指示器、自动轮播、圆角裁剪
+18. `StarBar`：自定义星星评分控件，支持实心/空心五角星、整数/小数评分、触摸滑动评分等功能
+19. `IconDotTextView`：图标+文字+数字角标的组合控件，支持多种布局方向（图标上下位置）和角标自定义
+20. `SquareLabelView`：左侧带方块的`TextView`，用于模块名称等场景，支持方块形状（矩形、椭圆、圆角矩形）和位置自定义
+21. `IconLabelValueView`：图标-标签-值-图标的布局视图，常用于设置项或详情展示，支持左右图标开关、底部边框、值对齐方式等配置
+22. `VerificationCodeInputView`：验证码输入控件，支持多格独立输入框、光标闪烁、输入类型限制（数字、字母等）、边框样式自定义
+23. `ScalingTextView`：可展开/收起的文本控件，默认显示指定行数，支持“查看全文/收起全文”点击切换
+24. `LoadingProgressDialog`：加载进度对话框，支持动态省略号动画效果、自定义提示文字、可设置是否可取消
+25. `DatePickDialog`：年月日选择对话框，支持多种日期模式（年月日、年月、年份、时间等）、自定义日期范围和标签
+26. `BottomSheetDialog`：底部选择框（Material `BottomSheetDialog`），支持列表选项显示、自定义分割线样式和取消按钮
+27. `MenuDialog`：底部菜单对话框，功能类似 BottomSheetDialog 但使用传统 Dialog 实现，支持自定义位置和样式
+28. `ImageSaveDialog`：图片保存选择对话框，提供“保存到本地”等选项，用于图片保存场景
+29. `EmptyLayout`：空白占位布局控件，可显示加载中、加载失败、无数据等状态，支持自定义图标和点击重试
+30. `InputDialog`：单行输入对话框，支持文本输入、最大字数限制、输入类型设置和提示文字
+31. `EditAreaDialog`：多行文本输入对话框，功能类似`InputDialog`但支持多行文本编辑
+32. `UpdateMessageDialog`：应用更新提示对话框，显示版本信息和更新内容，支持链接识别和流量提醒
+33. `ConfirmDialog`：确认对话框，提供确定和取消按钮，支持富文本内容显示和按钮可见性控制
+34. `ProgressBarDialog`：进度条对话框，支持圆形和水平两种进度条样式，可自定义进度条外观和按钮
+35. `MessageDialog`：信息提示对话框，单按钮设计，用于简单信息提示场景
+36. `ProtectionGuidelinesDialog`：启动页的用户权限隐私指引，请求权限提示弹框，支持富文本内容、自定义按钮文字和样式，用于权限申请场景
+37. `CascadeSinglePopupWindow`：单选项级联弹窗
+38. `PopupView`：普通下拉选择弹窗（单选）
+39. `TextPopupView`：自定义文本+图标组合控件
+40. `MultiPopupView`：多选（非级联）弹窗
+41. `TreePopupView`：二级树形选择弹窗
+42. `CascadeMultiPopupWindow`：多选项级联弹窗
+43. `TxSlideRecyclerView`：支持侧滑的`RecyclerView`
+44. `SpeakButton`：仿微信的长按说话View（`MaterialButton`，主题已清 inset）
+45. `VoiceView`：语音播放条控件
 
 #### Form表单相关控件
-主要用于常见的一些表单输入和回显情况
+主要用于常见的一些表单输入和回显情况。`FormConstraintLayout` / `FormMedia` 现继承官方 `ConstraintLayout`，XML `app:bgColor` / `app:radius` 仍有效。
 1. `FormDate`：日期选择控件
 2. `FormDateRange`：日期范围选择控件
 3. `FormDateTime`：日期+时间选择控件

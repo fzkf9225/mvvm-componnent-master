@@ -184,7 +184,7 @@
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/image_icon_verification_code" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_verification_code"
                 android:layout_width="89dp"
                 android:layout_height="match_parent"
@@ -192,10 +192,10 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
                 android:clickable="true"
-                app:bgColor="@color/cardSurface"
+            app:backgroundTint="@color/cardSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edit_verification_code"
-                app:radius="2dp" />
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceXs" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -257,7 +257,8 @@
                 tools:ignore="PrivateResource" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <io.coderf.arklab.common.widget.customview.CornerButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
             android:id="@+id/login_submit"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxxl"
@@ -266,8 +267,8 @@
             android:layout_marginEnd="26dp"
             android:text="@string/user_login"
             android:textColor="?attr/colorOnPrimary"
-            app:bgColor="@color/theme_green"
-            app:radius="48dp"
+            app:backgroundTint="@color/theme_green"
+            app:cornerRadius="48dp"
             android:textSize="@dimen/font_size_xxl"
             app:layout_constraintTop_toBottomOf="@+id/cl_sms_code" />
 

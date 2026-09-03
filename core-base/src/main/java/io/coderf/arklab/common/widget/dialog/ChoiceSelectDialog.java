@@ -26,7 +26,8 @@ import io.coderf.arklab.common.databinding.DialogChoiceSelectBinding;
 import io.coderf.arklab.common.listener.OnChoiceSelectListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.widget.customview.CornerButton;
+import com.google.android.material.button.MaterialButton;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 
 /**
@@ -524,12 +525,12 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
         binding.btnConfirm.setOnClickListener(v -> dispatchConfirm());
     }
 
-    private void applyButtonRadius(CornerButton button, float radiusPx, @ColorInt int bgColor) {
+    private void applyButtonRadius(MaterialButton button, float radiusPx, @ColorInt int bgColor) {
         float radius = radiusPx >= 0 ? radiusPx : DensityUtil.dp2px(context, DEFAULT_BUTTON_RADIUS_DP);
         if (bgColor != -1) {
-            button.setBgColorAndRadius(bgColor, radius);
+            CornerShapeHelper.apply(button, radius, bgColor);
         } else {
-            button.setRadius(radius);
+            CornerShapeHelper.apply(button, radius);
         }
     }
 

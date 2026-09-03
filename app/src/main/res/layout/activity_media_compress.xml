@@ -36,24 +36,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image"
+            android:scaleType="centerCrop"
                 imageUri="@{sourceImagePath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:scaleType="centerCrop"
-                app:radius="@dimen/radius_l"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_compress"
+            android:scaleType="centerCrop"
                 imageUri="@{compressImagePath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
-                android:scaleType="centerCrop"
-                app:radius="@dimen/radius_l"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
                 app:layout_constraintStart_toEndOf="@+id/image"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,26 +87,26 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_image_compress" />
 
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/video"
+            android:scaleType="centerCrop"
                 imageUri="@{sourceVideoPath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginTop="@dimen/vertical_margin_l"
-                android:scaleType="centerCrop"
-                app:radius="@dimen/radius_l"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_image" />
 
-            <io.coderf.arklab.common.widget.customview.CornerImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/video_compress"
+            android:scaleType="centerCrop"
                 imageUri="@{compressVideoPath}"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
-                android:scaleType="centerCrop"
-                app:radius="@dimen/radius_l"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
                 app:layout_constraintStart_toEndOf="@+id/video"
                 app:layout_constraintTop_toBottomOf="@+id/button_image" />
 

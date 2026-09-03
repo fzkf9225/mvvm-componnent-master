@@ -28,6 +28,8 @@ implementation project(':common')
 
 也可不经 facade，直接依赖各个 `core-*`（见仓库根目录 [MODULES.md](../MODULES.md)）。
 
+升到拆除 Corner\* 的新版本时，业务布局/代码必须按 [WIDGET_MIGRATION.md](../WIDGET_MIGRATION.md) 替换（建议坐标 common **4.7.0**）。
+
 ---
 
 ## 发布

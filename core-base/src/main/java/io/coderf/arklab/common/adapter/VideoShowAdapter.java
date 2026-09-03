@@ -19,6 +19,7 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterVideoShowItemBinding;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 
 /**
  * 视频列表
@@ -57,8 +58,8 @@ public class VideoShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
 
         public <T> ViewHolder(@NotNull AdapterVideoShowItemBinding binding, VideoShowAdapter adapter) {
             super(binding, adapter);
-            binding.imageVideo.setRadius((int) adapter.radius);
-            binding.imageVideo.setBgColor(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
+            CornerShapeHelper.apply(binding.imageVideo, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.videoPlay.setOnClickListener(v -> {
                 try {
                     Bundle bundleVideo = new Bundle();

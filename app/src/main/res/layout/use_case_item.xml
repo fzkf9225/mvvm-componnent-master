@@ -10,13 +10,18 @@
             type="io.coderf.arklab.demo.bean.UseCase" />
     </data>
 
-    <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.App.Card.Flush"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:bgColor="@color/cardSurface"
-        app:radius="@dimen/radius_m"
         android:layout_marginStart="@dimen/horizontal_margin_l"
         android:layout_marginEnd="@dimen/horizontal_margin_l"
+        app:cardBackgroundColor="@color/cardSurface"
+        app:cardCornerRadius="@dimen/radius_m">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingStart="@dimen/padding_l"
         android:paddingTop="@dimen/padding_m"
         android:paddingEnd="@dimen/padding_l"
@@ -43,5 +48,6 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_name"
             android:textColor="@color/dark_light"
             android:textSize="@dimen/font_size_m" />
-    </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

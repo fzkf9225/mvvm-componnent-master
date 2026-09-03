@@ -815,6 +815,14 @@
         <attr name="stepperValue" format="integer"/>
         <!--FormRating 当前评分-->
         <attr name="ratingValue" format="float"/>
+        <attr name="bgColor" />
+        <attr name="radius" />
+        <attr name="strokeColor" />
+        <attr name="strokeWidth" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
     </declare-styleable>
     <!--日历宽度，不包括圆点-->
     <attr name="itemWidth" format="dimension"/>

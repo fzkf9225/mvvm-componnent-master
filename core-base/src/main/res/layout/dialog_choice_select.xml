@@ -46,7 +46,8 @@
             android:overScrollMode="never"
             app:layout_constraintTop_toBottomOf="@+id/v_title_line" />
 
-        <io.coderf.arklab.common.widget.customview.CornerButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -57,17 +58,18 @@
             android:text="@string/cancel"
             android:textColor="@color/autoColor"
             android:textSize="@dimen/font_size_xl"
-            app:bgColor="@color/hint_text_color"
+            app:backgroundTint="@color/hint_text_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_confirm"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_options"
-            app:radius="20dp"
+            app:cornerRadius="20dp"
             app:strokeColor="@color/hint_text_color"
             app:strokeWidth="0dp" />
 
-        <io.coderf.arklab.common.widget.customview.CornerButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.Flush"
             android:id="@+id/btn_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
@@ -79,13 +81,13 @@
             android:text="@string/confirm"
             android:textColor="@color/buttonPrimaryText"
             android:textSize="@dimen/font_size_xl"
-            app:bgColor="@color/themeColor"
+            app:backgroundTint="@color/themeColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btn_cancel"
             app:layout_constraintTop_toBottomOf="@+id/rv_options"
-            app:radius="20dp"
+            app:cornerRadius="20dp"
             app:strokeColor="@color/themeColor"
             app:strokeWidth="0dp" />
 

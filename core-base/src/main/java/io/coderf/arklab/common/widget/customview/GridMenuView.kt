@@ -25,14 +25,14 @@ import io.coderf.arklab.common.utils.common.DrawableUtil
 /**
  * 分页网格菜单。默认数据模型为 {@link io.coderf.arklab.common.bean.GridMenuBean}；
  * 轻量场景可实现 {@link io.coderf.arklab.common.widget.customview.inter.IGridMenuItem} 后映射为本类。
- * 圆角/描边等外观属性继承自 {@link CornerConstraintLayout}（bgColor、radius、stroke* 等）。
+ * 圆角/描边通过 {@link CornerShapeHelper} 铺到 ConstraintLayout 背景。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @updated 2026/8/4
  */
-open class GridMenuView : CornerConstraintLayout {
+open class GridMenuView : androidx.constraintlayout.widget.ConstraintLayout {
     private var lifecycleOwner: LifecycleOwner? = null
     private var fragmentManager: FragmentManager? = null
 
@@ -243,10 +243,14 @@ open class GridMenuView : CornerConstraintLayout {
         } else {
             parseAttributes(context, attrs)
         }
+        if (attrs != null) {
+            CornerShapeHelper.applyFromAttributes(this, attrs)
+        }
         if (background == null) {
-            setBgColorAndRadius(
-                ContextCompat.getColor(context, R.color.cardSurface),
-                DensityUtil.dp2px(context, 16f).toFloat()
+            CornerShapeHelper.apply(
+                this,
+                DensityUtil.dp2px(context, 16f).toFloat(),
+                ContextCompat.getColor(context, R.color.cardSurface)
             )
         }
         removeAllViews()

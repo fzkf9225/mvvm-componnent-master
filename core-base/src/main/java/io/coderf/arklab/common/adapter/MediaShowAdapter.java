@@ -22,6 +22,7 @@ import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
@@ -69,8 +70,8 @@ public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
     private static class ViewHolder extends BaseViewHolder<AdapterMediaShowItemBinding> {
         public <T> ViewHolder(@NotNull AdapterMediaShowItemBinding binding, MediaShowAdapter adapter) {
             super(binding, adapter);
-            binding.imageVideo.setBgColor(Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
-            binding.imageVideo.setRadius((int) adapter.radius);
+            CornerShapeHelper.apply(binding.imageVideo, adapter.radius,
+                    Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.imageVideo.setOnClickListener(v -> {
                 try {
                     new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();

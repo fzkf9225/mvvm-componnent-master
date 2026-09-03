@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
+import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 import io.coderf.arklab.ui.R;
@@ -39,7 +39,7 @@ import io.coderf.arklab.ui.enums.LabelTextStyleEnum;
  * @since 1.0
  * @updated 2026/9/1 22:51
  */
-public abstract class FormMedia extends CornerConstraintLayout {
+public abstract class FormMedia extends ConstraintLayout {
     public static final String TAG = "FormUi";
     /**
      * 主要用于适配器中图片item、视频item等背景颜色
@@ -244,18 +244,21 @@ public abstract class FormMedia extends CornerConstraintLayout {
 
     public FormMedia(@NonNull Context context) {
         super(context);
+        CornerShapeHelper.applyFromAttributes(this, null);
         initAttr(null);
         init();
     }
 
     public FormMedia(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        CornerShapeHelper.applyFromAttributes(this, attrs);
         initAttr(attrs);
         init();
     }
 
     public FormMedia(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        CornerShapeHelper.applyFromAttributes(this, attrs);
         initAttr(attrs);
         init();
     }
