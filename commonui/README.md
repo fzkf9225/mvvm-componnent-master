@@ -2,9 +2,29 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.6.0**  
-Maven：`io.coderf.arklab.ui:ui:3.6.0`  
+当前版本：**3.6.1**  
+Maven：`io.coderf.arklab.ui:ui:3.6.1`  
 namespace：`io.coderf.arklab.ui`
+
+需要与 **core-base 1.1.1** 一起使用（`api` 传递）。
+
+---
+
+## 版本
+
+### 3.6.1（相对 3.6.0）
+
+跟随 core-base 1.1.1 的控件落地，表单容器不再自己铺圆角背景。
+
+- `FormConstraintLayout` / `FormMedia` 改为继承 `CornerConstraintLayout`，XML `app:radius` / `app:bgColor` / `app:stroke*` 由父类处理
+- 文件选择适配器等圆角改为 `CornerShapeHelper` + `ShapeableImageView`
+- 登录等页的 `ShapeableImageView` 填色改为 `android:background`（`backgroundTint` 无效）
+
+业务 XML 里若仍写已删除的 `CornerButton` / `CornerImageView` / `CornerEditText`，请改成官方控件，见 [core-base/README.md](../core-base/README.md)。
+
+### 3.6.0（相对 3.5.1）
+
+Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [UPGRADE.md](../UPGRADE.md)。
 
 ---
 
@@ -29,14 +49,12 @@ namespace：`io.coderf.arklab.ui`
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.6.0'
+implementation 'io.coderf.arklab.ui:ui:3.6.1'
 // 或
 implementation project(':commonui')
 ```
 
 > 勿与 `io.coderf.arklab.core:ui`（`:core-ui`）混淆。
-
-`FormConstraintLayout` / `FormMedia` 现继承 `ConstraintLayout`（不再继承已删除的 `CornerConstraintLayout`）。XML 的 `app:bgColor` / `app:radius` 仍有效。业务工程其它 Corner\* 替换见 [WIDGET_MIGRATION.md](../WIDGET_MIGRATION.md)（建议本库 **3.7.0** 与 common 4.7.0 同发）。
 
 ---
 

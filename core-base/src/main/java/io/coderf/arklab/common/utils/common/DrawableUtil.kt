@@ -1496,8 +1496,8 @@ object DrawableUtil {
 
     /**
      * MaterialToolbar 导航图标：资源 + 着色（推荐配合 [R.drawable.icon_fh]）。
-     * <p>颜色已通过 [withTint] 写入 Drawable，不依赖 MaterialToolbar.setNavigationIconTintList
-     * （部分 AppCompat 版本无此 API）。</p>
+     * <p>必须 [MaterialToolbar.setNavigationIconTint]：主题里的 {@code navigationIconTint}
+     * 会在 [MaterialToolbar.setNavigationIcon] 时覆盖 Drawable 上已有着色。</p>
      */
     @JvmStatic
     fun setNavigationIcon(
@@ -1505,7 +1505,8 @@ object DrawableUtil {
         @DrawableRes resId: Int,
         @ColorInt tintColor: Int
     ) {
-        toolbar.navigationIcon = withTint(toolbar.context, resId, tintColor)
+        toolbar.setNavigationIcon(resId)
+        toolbar.setNavigationIconTint(tintColor)
     }
 
     /**

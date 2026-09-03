@@ -1,8 +1,7 @@
 # 五分钟快速入门
 
-> 对应框架 **common 4.6.0**（facade）+ **core-\* 1.1.0**，主题为 **Material3 DayNight**。  
-> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。  
-> 升到拆除 `CornerButton` 等包装类的新库版本时，对照 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) 改业务布局（建议 common 4.7.0）。
+> 对应框架 **common 4.6.0**（facade）+ **core-base 1.1.1** + 其余 **core-\* 1.1.0** + **commonui 3.6.1**，主题为 **Material3 DayNight**。  
+> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
@@ -40,15 +39,16 @@
 ```toml
 annotation = "3.3.0"
 roomProcessor = "1.1.0"
-commonui = "3.6.0"
+commonui = "3.6.1"
 commongps = "3.2.0"
 commonmedia = "3.4.0"
 commonVersion = "4.6.0"
 coreVersion = "1.1.0"
+coreBase = "1.1.1"
 [libraries]
 # 基础：common 为 facade；core-* 一般由 common 传递，也可显式声明
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
-base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreVersion" }
+base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreBase" }
 base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreVersion" }
 base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreVersion" }
 base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }

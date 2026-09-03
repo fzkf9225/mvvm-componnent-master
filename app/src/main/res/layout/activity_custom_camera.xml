@@ -17,14 +17,14 @@
         tools:context=".activity.CustomCameraActivity">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image"
-            android:scaleType="centerCrop"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL"
-            app:backgroundTint="@color/cardSurface"
             android:layout_marginTop="@dimen/vertical_margin_xxxl"
+            android:background="@color/cardSurface"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceL" />
 
         <include
             android:id="@+id/layout_video"

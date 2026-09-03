@@ -23,7 +23,8 @@ import io.coderf.arklab.common.R;
 
 /**
  * 把圆角 / 填充 / 描边映射到 Material3 {@link ShapeAppearanceModel}。
- * 新代码不要再包一层自定义 View，直接对官方控件调用这里的 apply。
+ * XML 需要这些属性时用 {@link CornerTextView}、{@link CircleTextView}、{@link CornerConstraintLayout}；
+ * {@link MaterialButton} / {@link ShapeableImageView} 直接走官方控件或 {@link #apply}。
  *
  * @author fz
  * @version 1.0
@@ -111,6 +112,9 @@ public final class CornerShapeHelper {
         imageView.setShapeAppearanceModel(shapeModel(radius));
     }
 
+    /**
+     * 填色必须 {@link View#setBackground}，{@code backgroundTint} 在没有 background 时无效。
+     */
     public static void apply(@NonNull ShapeableImageView imageView, float radius, @ColorInt int bgColor) {
         apply(imageView, radius);
         imageView.setBackground(createBackground(

@@ -1,6 +1,6 @@
 # AppCompat → Material3 主题升级：API 差异与开发注意点
 
-> **Corner\* 包装类已删除。** 圆角按钮/图/卡片/输入框的标签、属性、方法对照以 **[WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)** 为准。本文保留主题色、Toolbar、Dialog 等 Material3 差异。
+> **core-base 1.1.1**：下文 4.6 / 4.7 / 4.8 中的 `CornerButton`、`CornerImageView`、`RoundImageView`、`CornerEditText` 已删除，请改用官方 `MaterialButton` / `ShapeableImageView` / `TextInputLayout`。对照见 [core-base/README.md](core-base/README.md) 与 [UPGRADE.md](UPGRADE.md) §1.6。
 
 对比范围：
 
@@ -36,16 +36,14 @@ Material 库版本两边都是 `com.google.android.material:material:1.14.0`，`
 
 ```xml
 <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
-<item name="materialButtonStyle">@style/Widget.App.Button</item>
-<item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
-<item name="borderlessButtonStyle">@style/Widget.App.Button.TextButton</item>
-<item name="materialIconButtonStyle">@style/Widget.App.Button.IconButton</item>
+<item name="materialButtonStyle">@style/Widget.Material3.Button</item>
 <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
 <item name="bottomNavigationStyle">@style/Widget.Material3.BottomNavigationView</item>
 <item name="tabStyle">@style/customTabLayout</item>
+<item name="borderlessButtonStyle">@style/Widget.Material3.Button.TextButton</item>
 ```
 
-`Widget.App.Button` 已去掉 M3 默认 inset / minHeight，`layout_height` 即可视高度，业务不必再逐个写 `insetTop/Bottom`。Dialog 底栏若还要清 padding / minWidth / elevation，用 `Widget.App.Button.Flush`。
+布局里写 `<MaterialButton>` / `<MaterialToolbar>` 时，即使不写 `style`，也会吃到这些默认值。需要扁平、无 inset 的按钮时，必须显式覆盖（见第 6 节）。
 
 ### 2.2 颜色 attr 对照（开发时最容易写错）
 
@@ -261,46 +259,87 @@ public class ActionToolbar extends MaterialToolbar
 
 布局里可以继续写 `<io.coderf.arklab.common.widget.customview.ActionToolbar>`。新能力：`app:titleCentered`、`app:navigationIconTint`。请加 `style="@style/Widget.App.Toolbar"`。
 
-### 4.6 `MaterialButton`：禁止 `setBackground`（`CornerButton` 已删除）
-
-直接使用 `com.google.android.material.button.MaterialButton`。属性 / 方法对照见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。
+### 4.6 `CornerButton`：方法还在，禁止再 `setBackground`
 
 ```java
-// 错误
-button.setBackground(drawable);
-button.setBackgroundColor(Color.WHITE);
-button.setBackgroundResource(R.drawable.round_theme_color);
+// 前
+public class CornerButton extends AppCompatButton
+    // 内部 GradientDrawable + setBackground()
 
-// 正确
-button.setBackgroundTintList(ColorStateList.valueOf(color));
-button.setCornerRadius(Math.round(radiusPx));
-CornerShapeHelper.apply(button, radiusPx, color, strokeWidthPx, strokeColor);
+// 后
+public class CornerButton extends MaterialButton
+    // ShapeAppearanceModel + setBackgroundTintList + setStrokeColor
 ```
 
-主题默认已清 inset。Dialog 底栏再铺满时加 `style="@style/Widget.App.Button.Flush"`。
+对外方法名保持：`setBackColor`、`setRadius`、`setStroke`、`setBgColorAndRadius`、`setGradientDrawable` 等。
 
-### 4.7 `ShapeableImageView`（`CornerImageView` / `RoundImageView` 已删除）
+**关键行为变化：**
 
-头像：`app:shapeAppearanceOverlay="@style/CircleShapeAppearance"`。圆角图：`RoundedShapeAppearanceS/M/L/...`。必须 `android:scaleType="centerCrop"`。代码用 `CornerShapeHelper.apply(imageView, radius)`。
+1. `setGradientDrawable(GradientDrawable)` 不再把 drawable 设为 background，只读取颜色/圆角再映射到 Shape。传入的 GradientDrawable 不会显示渐变。
+2. 启用自定义圆角时会 `setInsetTop/Bottom(0)`、`setElevation(0)`，否则会露出 MaterialButton 默认上下 inset（看起来比旧按钮矮一截、两边有空隙）。
+3. XML 里不要写 `android:background`；用 `app:bgColor`、`app:radius`、`app:strokeColor`（仍走原来的 `CornerTextView` attrs）。
 
-唯一仍继承 `AppCompatImageView` 的是 `CirclePaddingImageView`（圆形底 + 内边距图标，不是图片圆角裁剪）。
+错误 vs 正确：
 
-### 4.8 输入框：`ClearableEditText` / `PasswordEditText` / `CustomSearchEditText`
+```java
+// 错误：会被 MaterialShapeDrawable 盖掉或行为异常
+cornerButton.setBackground(drawable);
+cornerButton.setBackgroundColor(Color.WHITE);
+cornerButton.setBackgroundResource(R.drawable.round_theme_color);
 
-`CornerEditText` / `CounterEditText` 已删除。普通输入用 `TextInputEditText` + `@drawable/bg_input_outlined`，或 `TextInputLayout`。密码+清除继续用 `PasswordEditText`。
+// 正确
+cornerButton.setBackColor(color);
+cornerButton.setBgColorAndRadius(color, radiusPx);
+cornerButton.setStroke(strokeColor, strokeWidthPx);
+```
 
-`ClearableEditText` / `CustomSearchEditText` 基类为 `TextInputEditText`。自定义圆角背景前必须清掉默认 underline/box：
+无自定义 attrs 的 `CornerButton` 会保留 Material3 Filled Button 的 inset / elevation。Dialog 底部按钮如果要铺满，必须设 `bgColor`/`radius`，或 XML：
+
+```xml
+android:insetTop="0dp"
+android:insetBottom="0dp"
+app:elevation="0dp"
+```
+
+### 4.7 `CornerImageView` / `RoundImageView`
+
+| | 升级前 | 升级后 |
+|---|---|---|
+| 基类 | `AppCompatImageView` | `ShapeableImageView` |
+| 裁剪 | 自己 `Canvas`/`Path`/`BitmapShader` | `ShapeAppearanceModel` |
+| 描边 | 自绘 Paint | `setStrokeColor` / `setStrokeWidth` |
+
+XML 的 `app:radius` 等自定义 attr 仍可用。也可以直接用 Material 属性：
+
+```xml
+<io.coderf.arklab.common.widget.customview.CornerImageView
+    app:shapeAppearance="@style/..."
+    app:strokeColor="?attr/colorOutline"
+    app:strokeWidth="1dp" />
+```
+
+不要再 override `onDraw` 做 clip，也不要再对这两个类 `setScaleType` 期望旧 BitmapShader 行为。`RoundImageView` 现在是 50% 圆角的 `ShapeableImageView`。
+
+唯一仍继承 `AppCompatImageView` 的是 `CirclePaddingImageView`（圆形底 + 内边距图标，不是图片圆角裁剪）。新需求不要再扩展 AppCompat 控件。
+
+### 4.8 `CornerEditText` / `ClearableEditText` / `CustomSearchEditText`
+
+基类：`AppCompatEditText` → `TextInputEditText`。
+
+自定义圆角背景前必须清掉默认 underline/box：
 
 ```java
 editText.setBackground(null);
 editText.setBackground(customDrawable); // 或 CornerShapeHelper.createBackground(...)
 ```
 
-`ClearableEditText` / `CustomSearchEditText` 的 `setGradientDrawable()` 只映射颜色/圆角，不会把渐变 drawable 设为 background。`CounterEditText` 已删除，字数统计改用 `TextInputLayout` 的 `counterEnabled`。
+`CornerEditText.setGradientDrawable()` 同样只映射颜色/圆角，不再 `setBackground(gradientDrawable)`。
+
+`CounterEditText.getEditText()` 返回类型从 `AppCompatEditText` 改为 `TextInputEditText`，外部强转要改。
 
 ### 4.9 TextView 家族
 
-`CornerTextView` / `CircleTextView` 已删除，改用 `MaterialCardView` 或 `MaterialTextView` + `CornerShapeHelper`。`SquareLabelView`、`GradationRectTextView`、`ScalingTextView` 基类为 `MaterialTextView`，会继承 M3 的 lineHeight / textAppearance。
+`CornerTextView`、`CircleTextView`、`SquareLabelView`、`GradationRectTextView`、`ScalingTextView` 基类都改为 `MaterialTextView`。自绘/渐变逻辑基本不变，但会继承 M3 的 lineHeight / textAppearance。
 
 返回类型 breaking：
 
@@ -312,11 +351,11 @@ editText.setBackground(customDrawable); // 或 CornerShapeHelper.createBackgroun
 
 ### 4.10 `SpeakButton`
 
-`AppCompatButton` → `MaterialButton`。长按录音逻辑不变。主题默认 `Widget.App.Button` 已清 inset / minHeight，一般不必再单独处理。
+`AppCompatButton` → `MaterialButton`。长按录音逻辑不变，但会吃到主题 `minHeight=48dp` 和 inset。若视觉变「更高/更扁」，需要像 `CornerButton` 一样清 inset。
 
 ### 4.11 表单控件
 
-`FormConstraintLayout` / `FormMedia` 现继承 `ConstraintLayout`（不再继承已删除的 `CornerConstraintLayout`），构造里 `CornerShapeHelper.applyFromAttributes`。内部创建的子 View 类型全部换了，`instanceof` / 强转必须更新。
+`FormConstraintLayout` 内部创建的子 View 类型全部换了，`instanceof` / 强转必须更新。
 
 | 控件 | 升级前 | 升级后 | 注意 |
 |---|---|---|---|
@@ -446,7 +485,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 | 描边按钮 | 带 stroke 的 shape | `style="@style/Widget.App.Button.OutlinedButton"` + `app:strokeColor` |
 | 文字按钮 | 透明 background | `style="@style/Widget.App.Button.TextButton"` |
 | 图标按钮 | `ImageButton` + ripple | `style="@style/Widget.App.Button.IconButton"` |
-| 铺满高度 | 再写一遍 inset（主题默认已是 0） | 只设 `layout_height`；还要清 padding/minWidth 时用 `Widget.App.Button.Flush` |
+| 铺满高度 | 只设 `layout_height` | 同时 `android:insetTop="0dp"` `android:insetBottom="0dp"` |
 | 字色（主色底） | `@color/white` | `@color/onPrimary` 或 `?attr/colorOnPrimary` |
 | 水波纹 | 自定义 ripple drawable | 默认即可，或 `app:rippleColor="?attr/colorControlHighlight"` |
 
@@ -489,7 +528,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 - `WindowCompat` / `WindowInsetsControllerCompat` / `EdgeToEdgeHelper`
 - `Snackbar.make`（样式由主题提供）
 - `BottomSheetDialog` 仍继承 Material 的 `BottomSheetDialog`
-- `ClearableEditText` / `PasswordEditText` / Form / GridMenu 的 `app:bgColor`、`app:radius` 等仍可用（`R.styleable.ShapeView`，原 `CornerTextView` styleable 已改名）
+- 自定义 attr（`attrs.xml`）基本未改，`CornerTextView_bgColor` 等 XML 属性名可继续用
 
 ---
 
@@ -499,12 +538,14 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 |---|---|---|---|
 | `TitleBar` | `ConstraintLayout` | `MaterialToolbar` | 结构变了；getter 类型/空安全变了 |
 | `ActionToolbar` | `Toolbar` | `MaterialToolbar` | 菜单走 inflateMenu |
-| `SpeakButton` | `AppCompatButton` | `MaterialButton` | 主题已清 inset |
+| `CornerButton` | `AppCompatButton` | `MaterialButton` | 禁止 setBackground；用 tint/shape |
+| `SpeakButton` | `AppCompatButton` | `MaterialButton` | 注意 inset/minHeight |
+| `CornerImageView` | `AppCompatImageView` | `ShapeableImageView` | 裁剪走 ShapeAppearance |
+| `RoundImageView` | `AppCompatImageView` | `ShapeableImageView` | 不再自绘 BitmapShader |
 | `PhotoView` | `AppCompatImageView` | `ShapeableImageView` | 缩放手势仍在 |
-| `CirclePaddingImageView` | `AppCompatImageView` | **仍是 AppCompatImageView** | 有意保留；不是头像 |
-| `ClearableEditText` / `PasswordEditText` / `CustomSearchEditText` | `AppCompatEditText` | `TextInputEditText` | 自定义底先 `setBackground(null)` |
-| `FormConstraintLayout` / `FormMedia` / `GridMenuView` | `CornerConstraintLayout` | `ConstraintLayout` | XML `bgColor`/`radius` 仍走 helper |
-| `CornerButton` 等包装类 | — | **已删除** | 见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) |
+| `CirclePaddingImageView` | `AppCompatImageView` | **仍是 AppCompatImageView** | 有意保留 |
+| `CornerTextView` 等 | `AppCompatTextView` | `MaterialTextView` | getter 返回类型 |
+| `CornerEditText` 等 | `AppCompatEditText` | `TextInputEditText` | 先 setBackground(null) |
 | `FormSwitch` | 内含 `SwitchCompat` | 内含 `ShapeableImageView` | `getSwitchCompat` → `getSwitchIcon` |
 
 ---
@@ -514,7 +555,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 写布局
 
 - [ ] 不用 `AppCompatTextView` / `AppCompatButton` / `AppCompatEditText` / `AppCompatImageView`
-- [ ] 按钮用 `MaterialButton` + `backgroundTint` / `cornerRadius`；主题已清 inset。Dialog 铺满再加 `Widget.App.Button.Flush`
+- [ ] 按钮用 `MaterialButton` + `backgroundTint` / `cornerRadius`，需要贴边时加 `insetTop/Bottom=0dp`
 - [ ] 颜色用 `?attr/colorSurface`、`?attr/colorOnSurface`、`?attr/colorPrimary`、`?attr/colorOnPrimary`
 - [ ] 不用 `@color/white`、`@color/black` 当表面/正文（图标资源本身除外）
 
@@ -552,7 +593,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 | 亮色 / 暗色 palette | `core-base/src/main/res/values/colors.xml`、`values-night/colors.xml` |
 | Toolbar 逻辑 | `BaseActivity.java`、`ToolbarConfig.java`、`core-ui/.../ToolbarDelegate.kt` |
 | 标题栏 | `TitleBar.java`、`ActionToolbar.java` |
-| 圆角 / 按钮 / 图 | `CornerShapeHelper.java`；业务写法见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md) |
+| 圆角按钮 / 图 | `CornerButton.java`、`CornerImageView.java`、`CornerShapeHelper.java` |
 | 表单 | `commonui/.../form/FormEditText.java`、`FormSwitch.java` |
 | Dialog 基类 | `BaseDialog.java`、`ChoiceSelectDialog.java`、`MenuDialog.java` |
 | 菜单示例 | `WebViewActivity.java` |

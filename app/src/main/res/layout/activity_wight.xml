@@ -24,46 +24,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.card.MaterialCardView
+            <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
                 android:id="@+id/cornerConstraintLayout"
-                style="@style/Widget.App.Card.Flush"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
-                app:cardBackgroundColor="@color/themeColor"
-                app:cardCornerRadius="@dimen/radius_m"
+                app:bgColor="@color/themeColor"
                 app:layout_constraintEnd_toStartOf="@+id/cornerTextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:radius="@dimen/radius_m">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="MaterialCardView"
+                    android:text="CornerConstraintLayout"
                     android:textColor="@color/onPrimary" />
-            </com.google.android.material.card.MaterialCardView>
+            </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
-            <com.google.android.material.card.MaterialCardView
+            <io.coderf.arklab.common.widget.customview.CornerTextView
                 android:id="@+id/cornerTextView"
-                style="@style/Widget.App.Card.Flush"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
-                app:cardBackgroundColor="@color/themeColor"
-                app:cardCornerRadius="@dimen/radius_m"
+                android:gravity="center"
+                android:text="CornerTextView"
+                android:textColor="@color/onPrimary"
+                app:bgColor="@color/themeColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
                 app:layout_constraintTop_toTopOf="parent"
+                app:radius="@dimen/radius_m"
                 app:strokeColor="@color/theme_red"
-                app:strokeWidth="2dp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="MaterialCardView"
-                    android:textColor="@color/onPrimary" />
-            </com.google.android.material.card.MaterialCardView>
+                app:strokeWidth="2dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cornerButton"
@@ -566,6 +559,22 @@
                 app:weekTextColor="@color/theme_red"
                 app:workingDayTextColor="@color/autoColor" />
 
+            <io.coderf.arklab.common.widget.customview.CircleTextView
+                android:id="@+id/circleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_l"
+                android:padding="@dimen/padding_xl"
+                android:text="圆"
+                android:textColor="@color/onPrimary"
+                android:textSize="@dimen/font_size_xl"
+                app:bgColor="@color/themeColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
+                app:strokeColor="@color/theme_green"
+                app:strokeWidth="3dp" />
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/circleShapeableImageView"
                 android:layout_width="120dp"
@@ -574,7 +583,7 @@
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
+                app:layout_constraintTop_toBottomOf="@+id/circleTextView"
                 app:shapeAppearanceOverlay="@style/CircleShapeAppearance"
                 app:strokeColor="@color/theme_green"
                 app:strokeWidth="3dp" />

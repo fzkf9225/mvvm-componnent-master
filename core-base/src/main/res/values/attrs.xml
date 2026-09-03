@@ -458,6 +458,31 @@
         <attr name="rightBottomRadius" />
         <attr name="leftBottomRadius" />
     </declare-styleable>
+    <declare-styleable name="CornerTextView">
+        <attr name="strokeColor" />
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
+    </declare-styleable>
+    <declare-styleable name="CornerConstraintLayout">
+        <attr name="strokeColor" />
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+        <attr name="radius" />
+        <attr name="leftTopRadius" />
+        <attr name="rightTopRadius" />
+        <attr name="rightBottomRadius" />
+        <attr name="leftBottomRadius" />
+    </declare-styleable>
+    <declare-styleable name="CircleTextView">
+        <attr name="strokeColor" />
+        <attr name="bgColor" />
+        <attr name="strokeWidth" />
+    </declare-styleable>
 
     <declare-styleable name="CornerLabelView">
         <attr name="sideLength" format="dimension" />

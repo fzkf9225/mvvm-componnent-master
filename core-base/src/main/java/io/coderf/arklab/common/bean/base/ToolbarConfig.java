@@ -2,7 +2,6 @@ package io.coderf.arklab.common.bean.base;
 
 
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.activity.ComponentActivity;
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
@@ -30,7 +28,6 @@ import java.util.Objects;
 import io.coderf.arklab.common.BR;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 
 /**
@@ -70,6 +67,10 @@ public class ToolbarConfig extends BaseObservable {
      * 标题字体颜色（默认语义色，暗色模式自动适配）
      */
     private @ColorRes int textColor = R.color.cardOnSurface;
+    /**
+     * 返回图标着色；0 表示跟随 {@link #textColor}。
+     */
+    private @ColorRes int backIconColor = 0;
     /**
      * 标题背景色（默认语义色，暗色模式自动适配）
      */
@@ -286,6 +287,28 @@ public class ToolbarConfig extends BaseObservable {
     public ToolbarConfig setTextColor(@ColorRes int textColor) {
         this.textColor = textColor;
         notifyPropertyChanged(BR.textColor);
+        if (backIconColor == 0) {
+            notifyPropertyChanged(BR.backIconColor);
+        }
+        return this;
+    }
+
+    /**
+     * 返回图标着色色值。未单独设置时跟随 {@link #getTextColor()}。
+     */
+    @Bindable
+    public int getBackIconColor() {
+        return backIconColor != 0 ? backIconColor : textColor;
+    }
+
+    /**
+     * 单独设置返回图标颜色，与标题色解耦。
+     *
+     * @param backIconColor 颜色资源；传 0 恢复跟随 {@link #setTextColor}
+     */
+    public ToolbarConfig setBackIconColor(@ColorRes int backIconColor) {
+        this.backIconColor = backIconColor;
+        notifyPropertyChanged(BR.backIconColor);
         return this;
     }
 
@@ -641,7 +664,11 @@ public class ToolbarConfig extends BaseObservable {
 
     /**
      * 导航图标：显示开关 + 资源 + 着色色值（int）。
-     * 不使用 app:navigationIconTint（DataBinding 对 int 无对应 setter）。
+     * <p>
+     * 必须走 {@link MaterialToolbar#setNavigationIconTint(int)}。
+     * {@code Widget.App.Toolbar} 默认 {@code navigationIconTint=?attr/colorOnSurface}，
+     * {@link MaterialToolbar#setNavigationIcon} 会用该 tint 覆盖 Drawable 上已有着色。
+     * </p>
      */
     @BindingAdapter(value = {
             "bindNavIconVisible",
@@ -657,11 +684,9 @@ public class ToolbarConfig extends BaseObservable {
             toolbar.setNavigationIcon(null);
             return;
         }
+        toolbar.setNavigationIcon(iconRes);
         if (tintColor != null) {
-            Drawable d = DrawableUtil.withTint(toolbar.getContext(), iconRes, tintColor);
-            toolbar.setNavigationIcon(d);
-        } else {
-            toolbar.setNavigationIcon(iconRes);
+            toolbar.setNavigationIconTint(tintColor);
         }
     }
 }

@@ -1,7 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本：**common 4.6.0 / core-\* 1.1.0**（Material3 DayNight，见文末 Maven 坐标）。  
-> 自定义 View 拆除（建议 common 4.7.0 / core-base 1.2.0 / commonui 3.7.0）见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。  
+> 对应版本：**common 4.6.0 / core-base 1.1.1 / 其余 core-\* 1.1.0 / commonui 3.6.1**（Material3 DayNight，见文末 Maven 坐标）  
 > 本文说明各模块职责、依赖关系与日常用法。从 AppCompat 主题线或 4.4.x 升级请看 [UPGRADE.md](./UPGRADE.md)。
 
 ---
@@ -55,7 +54,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 | 职责 | `BaseActivity` / `BaseFragment` / `BaseViewModel`、历史 widget、helper、**全部 common 资源与 DataBinding** |
 | namespace | `io.coderf.arklab.common`（保留旧 R / 包名，业务 import 基本不用改） |
 | 何时用 | 一般通过 `common` 间接依赖；不要在业务里再拆第二份同名 R |
-| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。**4.6.0** 起主题为 Material3，`ActionToolbar` / `TitleBar` 为 `MaterialToolbar`。圆角包装类已拆除，见 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。 |
+| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。**4.6.0** 起主题为 Material3，`ActionToolbar` / `TitleBar` 为 `MaterialToolbar`。 |
 
 ### `core-network`
 
@@ -171,7 +170,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.6.0` |
-| core-base | `io.coderf.arklab.core:base:1.1.0` |
+| core-base | `io.coderf.arklab.core:base:1.1.1` |
 | core-network | `io.coderf.arklab.core:network:1.1.0` |
 | core-db | `io.coderf.arklab.core:db:1.1.0` |
 | core-ui | `io.coderf.arklab.core:ui:1.1.0` |
@@ -180,7 +179,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | room-processor | `io.coderf.arklab.room:room-processor:1.1.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.0` |
 | commonmedia | `io.coderf.arklab.media:media:3.4.0` |
-| commonui | `io.coderf.arklab.ui:ui:3.6.0`（`api` → core-base / core-network，另依赖 media） |
+| commonui | `io.coderf.arklab.ui:ui:3.6.1`（`api` → core-base / core-network，另依赖 media） |
 | googlegps | `io.coderf.arklab.googlegps:googlegps:3.2.0` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.0` |
 

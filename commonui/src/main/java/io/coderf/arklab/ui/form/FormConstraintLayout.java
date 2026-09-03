@@ -21,7 +21,7 @@ import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
 import io.coderf.arklab.ui.enums.LabelTextStyleEnum;
@@ -38,7 +38,7 @@ import io.coderf.arklab.ui.inter.FormTextWatcherAfter;
  * @since 1.0
  * @updated 2026/9/1 22:51
  */
-public class FormConstraintLayout extends ConstraintLayout {
+public class FormConstraintLayout extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
     /**
      * label文字内容
@@ -203,21 +203,18 @@ public class FormConstraintLayout extends ConstraintLayout {
 
     public FormConstraintLayout(@NonNull Context context) {
         super(context);
-        CornerShapeHelper.applyFromAttributes(this, null);
         initAttr(null);
         init();
     }
 
     public FormConstraintLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        CornerShapeHelper.applyFromAttributes(this, attrs);
         initAttr(attrs);
         init();
     }
 
     public FormConstraintLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        CornerShapeHelper.applyFromAttributes(this, attrs);
         initAttr(attrs);
         init();
     }

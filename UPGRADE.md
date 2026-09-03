@@ -1,8 +1,8 @@
 # 升级与迁移说明
 
-> 当前主干：**common 4.6.0 + core-\* 1.1.0**（Views + Material Components 1.14）。  
-> 即将发布的 **Widget 拆除**（建议 common **4.7.0** / core-base **1.2.0** / commonui **3.7.0**）是破坏性变更，对照手册：[WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。  
-> 从 **AppCompat 主题线**（common 4.5.1 / core-base 1.0.9）升级：先看 §1，再按 Widget 手册改布局。  
+> 当前主干：**common 4.6.0 + core-base 1.1.1 + 其余 core-\* 1.1.0 + commonui 3.6.1**（Views + Material Components 1.14）。  
+> 从 **AppCompat 主题线**（common 4.5.1 / core-base 1.0.9）升级：看下面 §1。  
+> 控件包装类删除与官方替代见 **§1.6**（core-base 1.1.1）。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)，再看 §1。  
 > 模块职责与日常用法见 [MODULES.md](./MODULES.md)。
 
@@ -19,13 +19,13 @@
 | 模块 | AppCompat 线 | 现（Material3） |
 |------|----------------|-----------------|
 | common | 4.5.1 | **4.6.0** |
-| core-base | 1.0.9 | **1.1.0** |
+| core-base | 1.0.9 | **1.1.0**（控件补丁 **1.1.1**，见 §1.6） |
 | core-network | 1.0.3 | **1.1.0** |
 | core-db / core-ui / core-utils | 1.0.2 | **1.1.0** |
 | core-log | 1.0.0 | **1.1.0** |
 | room-processor | 1.0.1 | **1.1.0** |
 | core-mqtt | 1.5.1 | **1.6.0** |
-| commonui | 3.5.1 | **3.6.0** |
+| commonui | 3.5.1 | **3.6.0**（随控件补丁 **3.6.1**） |
 | commonmedia | 3.3.2 | **3.4.0** |
 | googlegps | 3.1.7 | **3.2.0** |
 | annotation | 3.2.0 | **3.3.0** |
@@ -35,7 +35,7 @@ Maven 示例：
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.6.0'
 // 一般由 common POM 传递；解析不全时可显式：
-// implementation 'io.coderf.arklab.core:base:1.1.0'
+// implementation 'io.coderf.arklab.core:base:1.1.1'
 // implementation 'io.coderf.arklab.core:network:1.1.0'
 ```
 
@@ -54,7 +54,7 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 ### 1.3 行为约定（API 尽量不变）
 
 - **Toolbar**：页面壳为 `CoordinatorLayout > AppBarLayout > MaterialToolbar`（`ActionToolbar` / `TitleBar`），标题仍居中，右侧操作仍是 TextButton。对外 `ToolbarConfig` 未断。
-- **圆角控件（4.6.0 当时）**：曾保留 `CornerButton` 等包装类。后续拆除见下文 §2 与 [WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)。
+- **圆角控件**：按钮 / 图片直接用 `MaterialButton`、`ShapeableImageView`（见 §1.6）。需要 XML `radius` / `bgColor` / `stroke*` 时用 `CornerTextView` / `CircleTextView` / `CornerConstraintLayout`。
 - **`CirclePaddingImageView`**：圆形只做**背景**，`android:padding` 仍内缩图标。不要把它当成裁圆头像（头像用 `ShapeableImageView` + `@style/CircleShapeAppearance`）。
 - **自定义确认框 / 底部 ActionSheet**：不改成 `MaterialAlertDialog` / 换 Dialog 父类，链式 API 保持。
 - **动态取色（Material You）**：`Config.setDynamicColorEnabled(true)` 须在 `Config.init()` **之前**调用；**默认关**，品牌色不跟壁纸走。
@@ -81,37 +81,27 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 ./gradlew :app:assembleRelease   # minify 时加测登录
 ```
 
----
+### 1.6 补丁：core-base 1.1.1 / commonui 3.6.1
 
-## 2. 4.7.0（建议）：自定义 View 拆除（破坏性）
+这是 4.6.0 主题之后的 **控件落地**，不是再改主题父类。详细对照见 [core-base/README.md](core-base/README.md)、[commonui/README.md](commonui/README.md)。
 
-相对 4.6.0：**没有兼容层**。删除 `CornerButton` / `CornerImageView` / `RoundImageView` / `CornerTextView` / `CircleTextView` / `CornerConstraintLayout` / `CornerEditText` / `CounterEditText`。业务工程必须改 XML 标签、属性和 Java 方法。
+| 已删除 | 替代 |
+|--------|------|
+| `CornerButton` | `MaterialButton`（`cornerRadius` / `backgroundTint` / `stroke*`） |
+| `CornerImageView` / `RoundImageView` | `ShapeableImageView` + `shapeAppearanceOverlay`；填色用 **`android:background`**，不要 `backgroundTint` |
+| `CornerEditText` / `CounterEditText` | `TextInputLayout` + `TextInputEditText` |
 
-**完整对照（属性、方法、View 替换、检索清单）只维护在一份文档里，请打开：**
+**仍保留**：`CornerTextView`、`CircleTextView`、`CornerConstraintLayout`（官方没有 XML 圆角属性，背景改为 `MaterialShapeDrawable`）；`ClearableEditText` / `PasswordEditText`（官方 TIL 无法同时清 + 眼）。
 
-**[WIDGET_MIGRATION.md](WIDGET_MIGRATION.md)**
+主题默认按钮 `inset` / `minHeight` 已清零。`commonui` 的 `FormConstraintLayout` / `FormMedia` 改为继承 `CornerConstraintLayout`。
 
-摘要：
-
-| 删除 | 替换 |
-|------|------|
-| `CornerButton` | `MaterialButton`（`backgroundTint` / `cornerRadius` / `stroke*`） |
-| `CornerImageView` / `RoundImageView` | `ShapeableImageView` + `shapeAppearanceOverlay` |
-| `CornerTextView` / `CornerConstraintLayout` | `MaterialCardView` 或 `ConstraintLayout` + `CornerShapeHelper` |
-| `CornerEditText` | `TextInputEditText` + `@drawable/bg_input_outlined`，或 `TextInputLayout` |
-| `CounterEditText` | `TextInputLayout` `counterEnabled` |
-
-**保留：** `ClearableEditText`、`PasswordEditText`（`app:enableClear` + `enablePasswordToggle`）、`CustomSearchEditText`、Form\*、`TitleBar`、Banner、进度条等。
-
-主题默认按钮已是 `Widget.App.Button`（inset/minHeight=0），`layout_height` 即可视高度，业务不必再逐个写 inset。
-
-建议坐标：`common:4.7.0`、`core-base:1.2.0`、`commonui:3.7.0`（发布前改 gradle；当前仓库若仍写 4.6.0，以实际发布号为准）。
+Maven：`io.coderf.arklab.core:base:1.1.1`、`io.coderf.arklab.ui:ui:3.6.1`。
 
 ---
 
 ## 附录 A：4.5.1（从 4.4.x 单体拆到 core）
 
-> 以下是 **4.4.x → 4.5.1** 的历史说明。若工程已经在 4.5.1 / AppCompat 主题线上，只需看上文 §1（主题）和 §2（Widget 拆除），不必再做附录里的模块拆分。
+> 以下是 **4.4.x → 4.5.1** 的历史说明。若工程已经在 4.5.1 / AppCompat 主题线上，只需看上文 §1，不必再做附录里的模块拆分。
 
 ### A.1 当时升级摘要
 
