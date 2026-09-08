@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 线性列表（{@link LinearLayoutManager}）分割线装饰器。
@@ -60,7 +61,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
      * 默认分割线：高度 1px，颜色为主题色 {@link R.color#h_line_color}（历史 API，会绘制）。
      */
     public RecycleViewDivider(Context context, int orientation) {
-        this(context, orientation, 1, ContextCompat.getColor(context, R.color.h_line_color));
+        this(context, orientation, 1, ThemeAttrs.outlineVariant(context));
     }
 
     /**

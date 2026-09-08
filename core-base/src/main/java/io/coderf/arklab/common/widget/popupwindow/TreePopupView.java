@@ -25,6 +25,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * updated by fz on 2026/3/12
@@ -107,12 +108,12 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
 
         // 设置默认值
         itemHeight = (float) DensityUtil.dp2px(activity, 48f);
-        selectTextColor = ContextCompat.getColor(activity, R.color.themeColor);
-        unSelectTextColor = ContextCompat.getColor(activity, R.color.autoColor);
+        selectTextColor = ThemeAttrs.primary(activity);
+        unSelectTextColor = ThemeAttrs.onSurface(activity);
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(
                 ContextCompat.getColor(activity, R.color.default_background));
         unSelectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ContextCompat.getColor(activity, R.color.cardSurface));
+                ThemeAttrs.surfaceContainerHigh(activity));
 
         init();
         initParent();
@@ -331,7 +332,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.parentCategory.setAdapter(popupWindowAdapter);
         binding.parentCategory.addItemDecoration(
                 new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
-                        ContextCompat.getColor(activity, R.color.h_line_color)));
+                        ThemeAttrs.outlineVariant(activity)));
 
         // 延迟测量 RecyclerView 高度
         binding.getRoot().post(() -> {
@@ -377,7 +378,7 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.childrenCategory.setAdapter(childAdapter);
         binding.childrenCategory.addItemDecoration(
                 new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
-                        ContextCompat.getColor(activity, R.color.h_line_color)));
+                        ThemeAttrs.outlineVariant(activity)));
     }
 
     private void onParentItemClick(View view, int position) {

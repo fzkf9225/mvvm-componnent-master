@@ -28,6 +28,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 传统分页列表 Fragment 基类，默认使用 {@link EmptyLayout} 展示加载/空态/错误；
@@ -95,7 +96,7 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         return new RecycleViewDivider(requireContext(),
                 LinearLayoutManager.VERTICAL,
                 DensityUtil.dp2px(requireActivity(), 1),
-                ContextCompat.getColor(requireActivity(), R.color.h_line_color));
+                ThemeAttrs.outlineVariant(requireActivity()));
     }
 
     protected void requestData() {

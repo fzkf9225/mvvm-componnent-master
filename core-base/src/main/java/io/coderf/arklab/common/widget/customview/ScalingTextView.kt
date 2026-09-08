@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.widget.customview
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
@@ -58,7 +59,7 @@ open class ScalingTextView(context: Context, attrs: AttributeSet?) :
         isCollapsed = typedValue.getBoolean(R.styleable.scaling_text_view_defaultCollapsed, false)
         scalingTextColor = typedValue.getColor(
             R.styleable.scaling_text_view_scalingTextColor,
-            ContextCompat.getColor(context, R.color.themeColor)
+            ThemeAttrs.primary(context)
         )
         text = mOriginText
     }

@@ -58,6 +58,7 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 - **`CirclePaddingImageView`**：圆形只做**背景**，`android:padding` 仍内缩图标。不要把它当成裁圆头像（头像用 `ShapeableImageView` + `@style/CircleShapeAppearance`）。
 - **自定义确认框 / 底部 ActionSheet**：不改成 `MaterialAlertDialog` / 换 Dialog 父类，链式 API 保持。
 - **动态取色（Material You）**：`Config.setDynamicColorEnabled(true)` 须在 `Config.init()` **之前**调用；**默认关**，品牌色不跟壁纸走。
+- **屏幕适配 / 崩溃捕获 / 夜间模式 / Edge-to-Edge / 默认占位图**：均在 `Config` 上配置，须在 `init()` 前设置；默认行为与改前一致（适配开、崩溃捕获开且保留 5 天、跟随系统夜间、Edge-to-Edge 开、内置 `ic_default_image`）。接入 Bugly 等请 `setCrashHandlerEnabled(false)`。
 - **登录输入框**：仍是自定义圆角底 + `TextInputEditText`，没有强行包 `TextInputLayout`（会改形态）。
 
 ### 1.4 宿主要改的（通常很少）

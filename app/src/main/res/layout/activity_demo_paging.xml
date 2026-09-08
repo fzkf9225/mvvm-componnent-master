@@ -8,7 +8,7 @@
     </data>
 
     <androidx.fragment.app.FragmentContainerView
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:id="@+id/demo_paging_fragment_view"
         android:layout_width="match_parent"

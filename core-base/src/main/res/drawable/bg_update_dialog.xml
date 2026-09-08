@@ -3,7 +3,7 @@
     <!-- 白底圆角卡片 - 使用语义颜色 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="?attr/colorSurfaceContainerHigh" />
             <corners android:radius="@dimen/radius_xl" />
         </shape>
     </item>

@@ -4,7 +4,7 @@
         android:height="16dp" >
         <shape
             android:shape="rectangle">
-            <solid android:color="@color/themeColor"/>
+            <solid android:color="?attr/colorPrimary"/>
             <size
                 android:width="16dp"
                 android:height="16dp" />

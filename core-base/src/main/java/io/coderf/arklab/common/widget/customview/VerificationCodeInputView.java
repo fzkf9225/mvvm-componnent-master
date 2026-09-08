@@ -193,10 +193,10 @@ public class VerificationCodeInputView extends TextInputEditText implements View
      * 使用内置默认值初始化样式（无 XML 属性时）。
      */
     private void initDefaultValue() {
-        mStrokeFocusedColor = ContextCompat.getColor(getContext(), R.color.themeColor);
-        mStrokeFocusedBgColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
-        mCursorFocusedBgColor = ContextCompat.getColor(getContext(), R.color.themeColor);
-        mStrokeDefaultColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+        mStrokeFocusedColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
+        mStrokeFocusedBgColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.surface(getContext());
+        mCursorFocusedBgColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
+        mStrokeDefaultColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outline(getContext());
         mStrokeDefaultBgColor = ContextCompat.getColor(getContext(), R.color.transparent);
         mCursorDefaultBgColor = ContextCompat.getColor(getContext(), R.color.transparent);
         mStrokeWidth = DensityUtil.dp2px(getContext(), 30);
@@ -229,11 +229,11 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         mRadius = ta.getDimensionPixelSize(R.styleable.verification_code_radius,
                 DensityUtil.dp2px(getContext(), 4));
         mStrokeFocusedColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedTrue,
-                ContextCompat.getColor(getContext(), R.color.themeColor));
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext()));
         mStrokeDefaultColor = ta.getColor(R.styleable.verification_code_codeStrokeColorStateFocusedFalse,
-                ContextCompat.getColor(getContext(), R.color.cardSurface));
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.outline(getContext()));
         mStrokeFocusedBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedTrue,
-                ContextCompat.getColor(getContext(), R.color.cardSurface));
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.surface(getContext()));
         mStrokeDefaultBgColor = ta.getColor(R.styleable.verification_code_codeBgColorStateFocusedFalse,
                 ContextCompat.getColor(getContext(), R.color.transparent));
         mCursorWidth = ta.getDimensionPixelSize(R.styleable.verification_code_cursorWidth,
@@ -241,7 +241,7 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         mCursorHeight = ta.getDimensionPixelSize(R.styleable.verification_code_cursorHeight,
                 DensityUtil.dp2px(getContext(), 15));
         mCursorFocusedBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedTrue,
-                ContextCompat.getColor(getContext(), R.color.themeColor));
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext()));
         mCursorDefaultBgColor = ta.getColor(R.styleable.verification_code_cursorBgColorStateFocusedFalse,
                 ContextCompat.getColor(getContext(), R.color.transparent));
         mMaxLength = ta.getInt(R.styleable.verification_code_codeMaxLength, 6);

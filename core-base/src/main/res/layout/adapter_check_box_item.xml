@@ -28,7 +28,7 @@
             android:layout_marginStart="23dp"
             android:ellipsize="middle"
             tools:text="我是选项内容"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_l" />
 
         <com.google.android.material.imageview.ShapeableImageView

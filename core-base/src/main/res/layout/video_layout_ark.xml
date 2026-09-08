@@ -58,7 +58,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/bg_ark_video_tool_btn"
         android:contentDescription="@string/video_lock"
         android:padding="9dp"
         android:scaleType="centerInside"
@@ -148,7 +147,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="@drawable/bg_ark_video_tool_btn"
             android:contentDescription="@string/video_rotate"
             android:scaleType="centerInside"
             android:src="@drawable/ic_ark_video_rotate"
@@ -159,7 +157,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="@drawable/bg_ark_video_tool_btn"
             android:contentDescription="@string/video_fullscreen"
             android:scaleType="centerInside"
             android:src="@drawable/ic_ark_video_expand" />
@@ -194,7 +191,6 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/bg_ark_video_tool_btn"
         android:padding="16dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_ark_video_play" />

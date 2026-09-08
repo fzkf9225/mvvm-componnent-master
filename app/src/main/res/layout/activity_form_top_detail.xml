@@ -13,7 +13,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".activity.AddWorkBulletinActivity">
 
@@ -84,7 +84,7 @@
             <View
                 android:id="@+id/v_base_info"
                 style="@style/h_area"
-                android:background="@color/default_background"
+                android:background="?android:attr/colorBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_rich_text" />
@@ -94,7 +94,7 @@
                 android:id="@+id/form_screen_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bgColor="@color/default_background"
+                app:bgColor="?android:attr/colorBackground"
                 app:bottomBorder="true"
                 app:formImeOptions="actionNext"
                 app:label="现场图片"
@@ -108,7 +108,7 @@
                 android:id="@+id/form_screen_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bgColor="@color/default_background"
+                app:bgColor="?android:attr/colorBackground"
                 app:bottomBorder="true"
                 app:formImeOptions="actionNext"
                 app:label="现场视频"
@@ -122,7 +122,7 @@
                 android:id="@+id/form_image_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bgColor="@color/default_background"
+                app:bgColor="?android:attr/colorBackground"
                 app:bottomBorder="true"
                 app:formImeOptions="actionNext"
                 app:label="图片视频混合"
@@ -135,7 +135,7 @@
                 android:id="@+id/form_screen_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bgColor="@color/default_background"
+                app:bgColor="?android:attr/colorBackground"
                 app:bottomBorder="false"
                 app:fileDrawable="@mipmap/icon_file"
                 app:formImeOptions="actionNext"

@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * PopupWindow的按钮，不是PopupWindow弹框
@@ -90,8 +91,8 @@ public class TextPopupView extends ConstraintLayout {
             startPadding = DensityUtil.dp2px(getContext(), 8f);
             endPadding = DensityUtil.dp2px(getContext(), 8f);
             hiltText = "请选择";
-            hiltTextColor = ContextCompat.getColor(getContext(), R.color.hint_text_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.autoColor);
+            hiltTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+            labelTextColor = ThemeAttrs.onSurface(getContext());
             labelTextSize = DensityUtil.sp2px(getContext(), 14);
             isBold = false;
         } else {
@@ -100,8 +101,8 @@ public class TextPopupView extends ConstraintLayout {
             this.startDrawable = typedArray.getDrawable(R.styleable.PopupView_startDrawable);
             this.endDrawable = typedArray.getDrawable(R.styleable.PopupView_endDrawable);
             this.hiltText = typedArray.getString(R.styleable.PopupView_hiltText);
-            this.hiltTextColor = typedArray.getColor(R.styleable.PopupView_hiltTextColor, ContextCompat.getColor(getContext(), R.color.hint_text_color));
-            this.labelTextColor = typedArray.getColor(R.styleable.PopupView_labelTextColor, ContextCompat.getColor(getContext(), R.color.autoColor));
+            this.hiltTextColor = typedArray.getColor(R.styleable.PopupView_hiltTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
+            this.labelTextColor = typedArray.getColor(R.styleable.PopupView_labelTextColor, ThemeAttrs.onSurface(getContext()));
             this.labelTextSize = typedArray.getDimension(R.styleable.PopupView_textSize, DensityUtil.sp2px(getContext(), 14));
             this.startDrawableWidth = (int) typedArray.getDimension(R.styleable.PopupView_startDrawableWidth, 0f);
             this.startDrawableHeight = (int) typedArray.getDimension(R.styleable.PopupView_startDrawableHeight, 0f);

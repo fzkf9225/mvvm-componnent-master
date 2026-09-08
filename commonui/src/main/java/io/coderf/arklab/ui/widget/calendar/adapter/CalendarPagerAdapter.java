@@ -20,6 +20,7 @@ import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.ItemCalendarDayBinding;
 import io.coderf.arklab.ui.widget.calendar.CalendarView;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * CalendarPagerAdapter 类。
@@ -61,19 +62,19 @@ public class CalendarPagerAdapter extends BaseRecyclerViewAdapter<CalendarData, 
          */
         if (isEnable(day)) {
             if (isSelected) {
-                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.onPrimary) : calendarView.getSelectedTextColor());
+                holder.getBinding().dayNumber.setTextColor(calendarView.getSelectedTextColor() == null ? ThemeAttrs.onPrimary(holder.itemView.getContext()) : calendarView.getSelectedTextColor());
                 holder.getBinding().dayNumber.setBackground(calendarView.getSelectedBg());
             } else {
                 if (mList.get(pos).isWeekend()) {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.autoColor) : calendarView.getWeekTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWeekTextColor() == null ? ThemeAttrs.onSurface(holder.itemView.getContext()) : calendarView.getWeekTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 } else {
-                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor() == null ? ContextCompat.getColor(holder.itemView.getContext(), io.coderf.arklab.common.R.color.autoColor) : calendarView.getWorkingDayTextColor());
+                    holder.getBinding().dayNumber.setTextColor(calendarView.getWorkingDayTextColor() == null ? ThemeAttrs.onSurface(holder.itemView.getContext()) : calendarView.getWorkingDayTextColor());
                     holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
                 }
             }
         } else {
-            holder.getBinding().dayNumber.setTextColor(ContextCompat.getColor(calendarView.getContext(), io.coderf.arklab.common.R.color.hint_text_color));
+            holder.getBinding().dayNumber.setTextColor(ThemeAttrs.onSurfaceVariant(calendarView.getContext()));
             holder.getBinding().dayNumber.setBackground(calendarView.getNormalBg());
         }
     }

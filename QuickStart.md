@@ -96,8 +96,15 @@ implementation libs.base.annotation
 1. 新建一个`Application`类，继承`BaseApplication`类，并添加到`AndroidManifest.xml`中。默认主题使用`android:theme="@style/AppBaseTheme"`（父类为 `Theme.Material3.DayNight.NoActionBar`，不要改回 `Theme.AppCompat.*`）。暗色由 `values-night` 色板处理，系统强制暗色已关闭。
 在`onCreate`中初始化框架的初始化方法
 ```kotlin
-        // 可选：Material You 动态取色，必须在 init 之前；默认关闭
-        // Config.getInstance().setDynamicColorEnabled(true)
+        // 以下均须在 init 之前；不写则用默认值
+        // Config.getInstance().setDynamicColorEnabled(true)           // Material You，默认关
+        // Config.getInstance().setAutoSizeEnabled(false)              // 屏幕适配，默认开
+        // Config.getInstance().setCrashHandlerEnabled(false)          // 自带崩溃捕获，默认开
+        // Config.getInstance().setCrashLogRetainDays(7)               // 崩溃日志保留天数，默认 5；<=0 不清理
+        // Config.getInstance().setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        // Config.getInstance().setEdgeToEdgeEnabled(false)            // BaseActivity 全局默认，默认开
+        // Config.getInstance().setDefaultPlaceholderRes(R.drawable.my_placeholder)
+        // Config.getInstance().setDefaultErrorImageRes(R.drawable.my_error)
         Config.getInstance().init(this)
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true)

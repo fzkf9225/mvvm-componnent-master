@@ -48,6 +48,7 @@ import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 自定义 Banner 轮播：支持圆点/文字指示器、自动轮播、链接跳转与大图预览。
@@ -221,7 +222,8 @@ public class BannerView<T extends IBannerItem> extends ConstraintLayout {
             return;
         }
         bgColor = ta.getColor(R.styleable.BannerView_bgColor, Color.TRANSPARENT);
-        placeholderImage = ta.getResourceId(R.styleable.BannerView_bannerPlaceholderImage, R.mipmap.ic_default_image);
+        placeholderImage = ta.getResourceId(R.styleable.BannerView_bannerPlaceholderImage,
+                Config.getInstance().getDefaultPlaceholderRes());
         previewLarger = ta.getBoolean(R.styleable.BannerView_previewLarger, false);
         autoLoop = ta.getBoolean(R.styleable.BannerView_autoLoop, true);
         loopInterval = ta.getInt(R.styleable.BannerView_loopInterval, 3000);

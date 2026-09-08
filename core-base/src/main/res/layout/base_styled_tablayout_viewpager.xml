@@ -22,12 +22,12 @@
             app:selectedBackgroundCornerRadius="23dp"
             app:selectedPaddingHorizontal="8dp"
             app:selectedTextBold="true"
-            app:selectedTextColor="@color/onPrimary"
+            app:selectedTextColor="?attr/colorOnPrimary"
             app:selectedTextSize="12sp"
             app:tabHeight="29dp"
             app:tabPaddingBottom="0dp"
             app:tabPaddingTop="0dp"
-            app:unselectedTextColor="@color/autoColor"
+            app:unselectedTextColor="?attr/colorOnSurface"
             app:unselectedTextSize="12sp" />
 
         <androidx.viewpager2.widget.ViewPager2

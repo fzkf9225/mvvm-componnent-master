@@ -47,6 +47,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.MultipartBody;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * FormImageAndVideo 类。
@@ -135,7 +136,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
             compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
-            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
+            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             compressImageSize = typedArray.getInt(R.styleable.FormUI_compressImageSize, 300);
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenMediaDialog.CAMERA_SHOOT_ALBUM);
@@ -145,12 +146,12 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             mediaType = OpenMediaDialog.CAMERA_SHOOT_ALBUM;
             showCountLabel = true;
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            countLabelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
+            countLabelTextColor = ThemeAttrs.onSurfaceVariant(getContext());
             compress = true;
             compressImageSize = 300;
             maxVideoDuration = 30;
             compressVideo = VideoQualityEnum.LOW.value;
-            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            labelTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
         }
     }
 

@@ -56,6 +56,8 @@ public class FormDate extends FormSelection {
      * dialog
      */
     protected DatePickDialog datePickDialog;
+    /** {@link FormMaterialPickers#UI_WHEEL} 或 {@link FormMaterialPickers#UI_CALENDAR} */
+    protected int datePickerUi;
 
     public FormDate(Context context) {
         super(context);
@@ -81,11 +83,13 @@ public class FormDate extends FormSelection {
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY.model);
             startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
             endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
+            datePickerUi = typedArray.getInt(R.styleable.FormUI_datePickerUi, FormMaterialPickers.UI_WHEEL);
         } else {
             datePickModel = DateMode.YEAR_MONTH_DAY.model;
-            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface);
+            confirmTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
+            datePickerUi = FormMaterialPickers.UI_WHEEL;
             startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
             endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
             showClearButton = true;
@@ -140,6 +144,27 @@ public class FormDate extends FormSelection {
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.logger(TAG, "解析默认日志异常:" + e);
+            }
+            if (datePickerUi == FormMaterialPickers.UI_CALENDAR) {
+                Calendar initial = Calendar.getInstance();
+                try {
+                    if (!TextUtils.isEmpty(textView.getText())) {
+                        Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
+                        initial.setTime(date);
+                    }
+                } catch (Exception ignored) {
+                }
+                FormMaterialPickers.showDate(getContext(), labelString, initial, calendar -> {
+                    String text = calendar.get(Calendar.YEAR) + separator
+                            + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MONTH) + 1) + separator
+                            + NumberUtil.formatMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
+                    if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
+                        textView.setText(text);
+                    } else {
+                        textView.setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
+                    }
+                });
+                return;
             }
             datePickDialog.show();
         });

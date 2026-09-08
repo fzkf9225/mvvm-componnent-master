@@ -20,6 +20,7 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.config.TabLayoutDemoColorPresets;
 import io.coderf.arklab.demo.config.TabLayoutDemoConfig;
 import io.coderf.arklab.demo.databinding.ViewPagerDemoHubFragmentBinding;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * ViewPager TabLayout 各基类示例入口，并提供运行时参数配置。
@@ -160,14 +161,14 @@ public class ViewPagerDemoHubFragment extends BaseFragment<EmptyViewModel, ViewP
             chip.setGravity(Gravity.CENTER);
             chip.setMinWidth(chipMinWidth);
             chip.setPadding(margin, 0, margin, 0);
-            chip.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
+            chip.setTextColor(ThemeAttrs.onPrimary(requireContext()));
             chip.setTypeface(null, index == selectedIndex ? Typeface.BOLD : Typeface.NORMAL);
             GradientDrawable bg = new GradientDrawable();
             bg.setCornerRadius(DensityUtil.dp2px(requireContext(), 16));
             bg.setColor(ContextCompat.getColor(requireContext(), TabLayoutDemoColorPresets.COLOR_RES[i]));
             if (index == selectedIndex) {
                 bg.setStroke(DensityUtil.dp2px(requireContext(), 2),
-                        ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.autoColor));
+                        ThemeAttrs.onSurface(requireContext()));
             }
             chip.setBackground(bg);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(

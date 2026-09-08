@@ -19,7 +19,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         tools:context=".fragment.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
                 android:layout_marginTop="48dp"
                 android:gravity="center_horizontal"
                 android:text="@={token}"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

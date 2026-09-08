@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.widget.customview
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
@@ -245,7 +246,7 @@ open class GridMenuView : CornerConstraintLayout {
         }
         if (background == null) {
             setBgColorAndRadius(
-                ContextCompat.getColor(context, R.color.cardSurface),
+                ThemeAttrs.surface(context),
                 DensityUtil.dp2px(context, 16f).toFloat()
             )
         }

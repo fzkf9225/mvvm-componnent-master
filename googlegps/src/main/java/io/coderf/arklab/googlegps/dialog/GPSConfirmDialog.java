@@ -373,7 +373,8 @@ public class GPSConfirmDialog extends Dialog {
     private void initView() {
         binding = DialogGpsConfirmBinding.inflate(layoutInflater, null, false);
 
-        int defaultLineColor = ContextCompat.getColor(getContext(), R.color.h_line_color);
+        int defaultLineColor = resolveThemeColor(
+                com.google.android.material.R.attr.colorOutlineVariant, R.color.gps_dialog_on_surface_variant);
         int lineColorValue = lineColor == null ? defaultLineColor : lineColor;
 
         if (isThreeButtonMode) {
@@ -458,9 +459,14 @@ public class GPSConfirmDialog extends Dialog {
     }
 
     private int resolveDialogSurfaceColor() {
+        return resolveThemeColor(
+                com.google.android.material.R.attr.colorSurfaceContainerHigh, R.color.gps_dialog_surface);
+    }
+
+    @ColorInt
+    private int resolveThemeColor(int attr, int fallbackRes) {
         TypedValue typedValue = new TypedValue();
-        if (getContext().getTheme().resolveAttribute(
-                com.google.android.material.R.attr.colorSurface, typedValue, true)) {
+        if (getContext().getTheme().resolveAttribute(attr, typedValue, true)) {
             if (typedValue.resourceId != 0) {
                 return ContextCompat.getColor(getContext(), typedValue.resourceId);
             }
@@ -469,7 +475,7 @@ public class GPSConfirmDialog extends Dialog {
                 return typedValue.data;
             }
         }
-        return ContextCompat.getColor(getContext(), R.color.gps_dialog_surface);
+        return ContextCompat.getColor(getContext(), fallbackRes);
     }
 
     private void initTwoButtonLayout(int lineColorValue) {

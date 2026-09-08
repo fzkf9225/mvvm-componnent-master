@@ -52,6 +52,7 @@ import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityWightBinding;
 import io.coderf.arklab.demo.enums.UseCaseEnum;
 import io.coderf.arklab.demo.viewmodel.WightViewModel;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 
 /**
@@ -250,7 +251,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     }
 
     private void initBottomNavDemo() {
-        int themeColor = ContextCompat.getColor(this, io.coderf.arklab.common.R.color.themeColor);
+        int themeColor = ThemeAttrs.primary(this);
         int normalColor = ContextCompat.getColor(this, io.coderf.arklab.common.R.color.gray);
         binding.demoBottomNavBar
                 .setNavItems(Arrays.asList(
@@ -299,7 +300,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         return new ToolbarConfig(this)
                 .setLightMode(true)
                 .setTitle(setTitleBar())
-                .setTextColor(android.R.color.white)
+                .setTextColor(io.coderf.arklab.common.R.color.onPrimary)
                 .setBackIconRes(io.coderf.arklab.common.R.drawable.icon_fh)
                 .setBgColor(io.coderf.arklab.common.R.color.themeColor)
                 .setHeight(DensityUtil.dp2px(this,32f))

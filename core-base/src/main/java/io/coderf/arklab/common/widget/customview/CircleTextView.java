@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 圆形 {@link MaterialTextView}。官方控件没有圆形背景属性，
@@ -63,14 +64,14 @@ public class CircleTextView extends MaterialTextView {
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
             strokeColor = typedArray.getColor(R.styleable.CircleTextView_strokeColor,
-                    ContextCompat.getColor(context, R.color.cardSurface));
+                    ThemeAttrs.surface(context));
             circleBackColor = typedArray.getColor(R.styleable.CircleTextView_bgColor,
-                    ContextCompat.getColor(context, R.color.cardSurface));
+                    ThemeAttrs.surface(context));
             strokeWidth = typedArray.getDimension(R.styleable.CircleTextView_strokeWidth, 0);
             typedArray.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(context, R.color.cardSurface);
-            circleBackColor = ContextCompat.getColor(context, R.color.cardSurface);
+            strokeColor = ThemeAttrs.surface(context);
+            circleBackColor = ThemeAttrs.surface(context);
         }
         applyBackground();
     }

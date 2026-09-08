@@ -20,40 +20,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="修改管理员密码"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textStyle="bold"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:textSize="15sp" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialog_input"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_xl"
-            android:gravity="center_vertical"
-            android:hint="@string/please_entry_something"
-            android:maxLines="1"
-            android:inputType="text"
-            android:textColorHint="@color/hint_text_color"
-            app:layout_constraintTop_toBottomOf="@+id/dialog_tips"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dialog_input_layout"
+            style="@style/Widget.App.TextInputLayout.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
-            android:paddingStart="@dimen/padding_l"
-            android:paddingEnd="@dimen/padding_l"
-            android:background="@drawable/round_white_bg_border"
-            android:textSize="@dimen/font_size_xl" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_tips">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/please_entry_something"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
+                android:textSize="@dimen/font_size_xl" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:id="@+id/h_line"
             android:layout_height="1dp"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/vertical_margin_xl"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialog_input" />
+            app:layout_constraintTop_toBottomOf="@id/dialog_input_layout" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_cancel"
@@ -75,7 +81,7 @@
             android:id="@+id/s_line"
             android:layout_height="0dp"
             android:layout_width="1dp"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
             app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
@@ -91,7 +97,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/confirm"
             app:layout_constraintHorizontal_weight="1"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/s_line"

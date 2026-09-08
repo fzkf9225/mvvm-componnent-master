@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/padding_xl"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:scrollbars="none">
 
         <LinearLayout

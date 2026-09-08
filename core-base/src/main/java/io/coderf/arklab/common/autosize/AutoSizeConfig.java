@@ -306,6 +306,13 @@ public final class AutoSizeConfig {
     }
 
     /**
+     * 停止框架的运行（Application 启动阶段无当前 Activity 时使用）。
+     */
+    public void stop() {
+        stop(null);
+    }
+
+    /**
      * 停止框架的运行
      * 框架具有 热插拔 特性, 支持在项目运行中动态停止和重新启动适配功能
      */
@@ -314,7 +321,9 @@ public final class AutoSizeConfig {
         synchronized (AutoSizeConfig.class) {
             if (!isStop) {
                 mApplication.unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-                AutoSize.cancelAdapt(activity);
+                if (activity != null) {
+                    AutoSize.cancelAdapt(activity);
+                }
                 isStop = true;
             }
         }

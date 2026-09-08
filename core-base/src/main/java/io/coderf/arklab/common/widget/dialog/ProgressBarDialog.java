@@ -16,6 +16,7 @@ import io.coderf.arklab.common.listener.OnProgressEndListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 自定义进度条弹窗。
@@ -309,7 +310,7 @@ public class ProgressBarDialog extends BaseDialog {
             return;
         }
         processBarDialogBinding.getRoot().setBackground(DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.cardSurface),
+                ThemeAttrs.surfaceContainerHigh(getContext()),
                 DensityUtil.dp2px(getContext(), 16f)));
     }
 

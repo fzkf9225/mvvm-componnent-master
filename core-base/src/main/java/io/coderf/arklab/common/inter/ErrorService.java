@@ -80,12 +80,6 @@ public interface ErrorService {
     boolean unifyHandling();
 
     /**
-     * 崩溃日志
-     * @param errorInfo 上传登录日志
-     */
-    void uploadErrorInfo(String errorInfo);
-
-    /**
      * app主页Activity，因为登录页在其他模块，这个主要是其他子模块使用
      * @return app主页Activity
      */

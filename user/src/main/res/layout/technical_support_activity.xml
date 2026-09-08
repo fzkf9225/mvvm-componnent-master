@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/default_background"
+            android:background="?android:attr/colorBackground"
             android:gravity="center">
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -34,7 +34,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:layout_marginEnd="@dimen/vertical_margin_xl"
                 android:text="青穗"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/font_size_xxl" />
         </RelativeLayout>
 

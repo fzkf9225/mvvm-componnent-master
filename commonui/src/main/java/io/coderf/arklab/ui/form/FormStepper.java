@@ -85,12 +85,12 @@ public class FormStepper extends FormConstraintLayout {
         stepperStep = 1;
         stepperSize = DensityUtil.dp2px(getContext(), 20f);
         stepperEditWidth = DensityUtil.dp2px(getContext(), 48f);
-        stepperBtnBgColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.default_background);
-        stepperBtnBorderColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color);
+        stepperBtnBgColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.surface(getContext());
+        stepperBtnBorderColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
         stepperBtnBorderWidth = DensityUtil.dp2px(getContext(), 1f);
         stepperBtnTextSize = 15f;
         stepperBtnMargin = DensityUtil.dp2px(getContext(), 8f);
-        stepperIconColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+        stepperIconColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
@@ -236,6 +236,11 @@ public class FormStepper extends FormConstraintLayout {
             constraintSet.setHorizontalBias(tvSelection.getId(), 1f);
         }
         constraintSet.applyTo(this);
+    }
+
+    @Override
+    protected boolean selectionUsesMatchConstraint() {
+        return false;
     }
 
     /** 设置当前值，自动限制在 {@link #stepperMin} ~ {@link #stepperMax} 范围内 */

@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/padding_l"
         android:paddingBottom="@dimen/padding_l"
         android:text="@{item.popupName}"
-        android:textColor="@color/autoColor"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/font_size_xl" />
 </layout>
 

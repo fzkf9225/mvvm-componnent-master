@@ -11,12 +11,12 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
-import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.databinding.Observable;
 
 import com.bumptech.glide.Glide;
 
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.utils.common.ThreadExecutor;
 
 /**
@@ -51,7 +51,7 @@ public class FormRichText extends FormTextView {
 
     @Override
     protected void init() {
-        defaultDrawable = ContextCompat.getDrawable(getContext(), io.coderf.arklab.common.R.mipmap.ic_default_image);
+        defaultDrawable = Config.getInstance().getDefaultPlaceholderDrawable(getContext());
         createLabel();
         createRequired();
         createText();

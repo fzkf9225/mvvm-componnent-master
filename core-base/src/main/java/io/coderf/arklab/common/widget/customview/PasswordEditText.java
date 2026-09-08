@@ -27,6 +27,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 密码输入框：圆角背景、明文/密文切换，可选清除按钮（可与切换按钮同时显示）。
@@ -84,15 +85,15 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             enableToggle = ta.getBoolean(R.styleable.PasswordEditText_enablePasswordToggle, true);
             enableClear = ta.getBoolean(R.styleable.PasswordEditText_enableClear, false);
             strokeColor = ta.getColor(R.styleable.PasswordEditText_strokeColor,
-                    ContextCompat.getColor(getContext(), R.color.cardSurface));
+                    ThemeAttrs.surface(getContext()));
             circleBackColor = ta.getColor(R.styleable.PasswordEditText_bgColor,
-                    ContextCompat.getColor(getContext(), R.color.cardSurface));
+                    ThemeAttrs.surface(getContext()));
             strokeWidth = ta.getDimension(R.styleable.PasswordEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.PasswordEditText_radius, 0);
             ta.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
-            circleBackColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+            strokeColor = ThemeAttrs.surface(getContext());
+            circleBackColor = ThemeAttrs.surface(getContext());
         }
 
         if (drawableVisible == null) {

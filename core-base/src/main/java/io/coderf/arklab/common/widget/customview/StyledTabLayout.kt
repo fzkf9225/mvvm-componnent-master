@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.widget.customview
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.content.Context
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -56,11 +57,11 @@ class StyledTabLayout @JvmOverloads constructor(
 
     /** 选中态文字颜色 */
     private var selectedTextColor: Int =
-        ContextCompat.getColor(context, R.color.onPrimary)
+        ThemeAttrs.onPrimary(context)
 
     /** 未选中态文字颜色 */
     private var unselectedTextColor: Int =
-        ContextCompat.getColor(context, R.color.autoColor)
+        ThemeAttrs.onSurface(context)
 
     /** 选中态文字大小（px） */
     private var selectedTextSizePx: Float = spToPx(context, 12f)
@@ -216,7 +217,7 @@ class StyledTabLayout @JvmOverloads constructor(
 
     private fun createDefaultSelectedBackground(): Drawable {
         return DrawableUtil.createRectDrawable(
-            ContextCompat.getColor(context, R.color.themeColor),
+            ThemeAttrs.primary(context),
             selectedBackgroundCornerRadius
         )
     }

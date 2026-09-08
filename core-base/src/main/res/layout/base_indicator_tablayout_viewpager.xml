@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/viewpager"
             app:layout_constraintEnd_toEndOf="parent"
-            app:selectedTextColor="@color/autoColor"
+            app:selectedTextColor="?attr/colorOnSurface"
             app:selectedTextBold="true"
             app:selectedTextSize="14sp"
             app:unselectedTextColor="@color/dark_light"

@@ -132,8 +132,8 @@ public class FileShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             clearImageTopMargin = DensityUtil.dp2px(Config.getInstance().getApplication(), -12f);
             clearImageEndMargin = DensityUtil.dp2px(Config.getInstance().getApplication(), -12f);
             clearImage = ContextCompat.getDrawable(Config.getInstance().getApplication(), io.coderf.arklab.common.R.drawable.ib_clear_image_selector);
-            placeholderDefaultImage = ContextCompat.getDrawable(Config.getInstance().getApplication(), io.coderf.arklab.common.R.mipmap.ic_default_image);
-            errorDefaultImage = ContextCompat.getDrawable(Config.getInstance().getApplication(), io.coderf.arklab.common.R.mipmap.ic_default_image);
+            placeholderDefaultImage = Config.getInstance().getDefaultPlaceholderDrawable(Config.getInstance().getApplication());
+            errorDefaultImage = Config.getInstance().getDefaultErrorImageDrawable(Config.getInstance().getApplication());
         }
     }
 

@@ -67,7 +67,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/tv_search"
                         android:background="@drawable/rounded_white"
                         android:ellipsize="end"
-                        android:textColorHint="@color/nv_bg_color"
+                        android:textColorHint="?attr/colorOnSurfaceVariant"
                         android:imeOptions="actionSearch"
                         android:gravity="center_vertical"
                         android:hint="@{toolbarConfig.titleHint}"

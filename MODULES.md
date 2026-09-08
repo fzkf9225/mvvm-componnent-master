@@ -195,4 +195,4 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 4. `core-*` 禁止依赖 `user` / `app`。
 5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
 6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。
-7. `Config.setDynamicColorEnabled` 默认关；若打开须在 `Config.init()` 之前。
+7. `Config.setDynamicColorEnabled` 默认关；若打开须在 `Config.init()` 之前。屏幕适配、崩溃捕获、夜间模式、Edge-to-Edge、默认占位图同样走 `Config`，且须在 `init()` 前设置。

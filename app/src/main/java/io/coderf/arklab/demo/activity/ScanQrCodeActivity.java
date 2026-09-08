@@ -39,6 +39,7 @@ import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 二维码能力演示：实时扫码、相册识码、Base64/URL/本地路径识别、生成二维码。
@@ -119,7 +120,7 @@ public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, Activi
         binding.buttonScan.setOnClickListener(v -> qrScanHelper.launch());
         binding.buttonCustomScan.setOnClickListener(v -> qrScanHelper.launch(
                 QrScanConfig.defaults()
-                        .setScanColor(ContextCompat.getColor(this, io.coderf.arklab.common.R.color.theme_red))
+                        .setScanColor(ThemeAttrs.error(this))
                         .setShowFlashLight(false)
                         .setShowGallery(false)
         ));

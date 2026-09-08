@@ -25,6 +25,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * updated by fz on 2026/3/12
@@ -94,12 +95,12 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow {
 
         // 设置默认值
         itemHeight = (float) DensityUtil.dp2px(context, 48f);
-        selectTextColor = ContextCompat.getColor(context, R.color.themeColor);
-        unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
+        selectTextColor = ThemeAttrs.primary(context);
+        unSelectTextColor = ThemeAttrs.onSurface(context);
         selectBgDrawable = new android.graphics.drawable.ColorDrawable(
                 ContextCompat.getColor(context, R.color.default_background));
         unSelectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ContextCompat.getColor(context, R.color.cardSurface));
+                ThemeAttrs.surfaceContainerHigh(context));
 
         initView();
     }
@@ -134,7 +135,7 @@ public class PopupView<T extends PopupWindowBean> extends PopupWindow {
         binding.recyclerCategory.setAdapter(popupWindowAdapter);
         binding.recyclerCategory.addItemDecoration(
                 new RecycleViewDivider(context, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(context, 1),
-                        ContextCompat.getColor(context, R.color.h_line_color)));
+                        ThemeAttrs.outlineVariant(context)));
 
         // 延迟测量 RecyclerView 高度
         binding.getRoot().post(() -> {

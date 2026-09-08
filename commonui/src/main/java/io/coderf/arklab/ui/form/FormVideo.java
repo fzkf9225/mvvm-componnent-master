@@ -47,6 +47,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.MultipartBody;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * FormVideo 类。
@@ -135,7 +136,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenShootDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
+            countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             typedArray.recycle();
         } else {
@@ -143,10 +144,10 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             showCountLabel = true;
             maxVideoDuration = 30;
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            countLabelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
+            countLabelTextColor = ThemeAttrs.onSurfaceVariant(getContext());
             compress = true;
             compressVideo = VideoQualityEnum.LOW.value;
-            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            labelTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
         }
     }
 

@@ -34,6 +34,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.utils.permission.PermissionManager;
 import io.coderf.arklab.common.utils.zxing.CustomViewfinderView;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 自定义扫码页面
@@ -109,7 +110,7 @@ public class CaptureActivity extends BaseActivity<EmptyViewModel, ActivityCaptur
 
     @Override
     public void initData(Bundle bundle) {
-        int scanColor = bundle.getInt(SCAN_COLOR, ContextCompat.getColor(this, R.color.themeColor));
+        int scanColor = bundle.getInt(SCAN_COLOR, ThemeAttrs.primary(this));
         CustomViewfinderView customViewfinderView = binding.dbvCustom.findViewById(R.id.zxing_viewfinder_view);
         customViewfinderView.setLineColor(scanColor);
         customViewfinderView.setScanLineColor(scanColor);

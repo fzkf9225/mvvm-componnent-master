@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import io.coderf.arklab.common.R
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import io.coderf.arklab.core.utils.ext.dp2px
 
 /**
@@ -74,7 +75,10 @@ class DividerView : View {
             dashGap = a.getDimension(R.styleable.DividerView_dashGap, 5f)
             dashLength = a.getDimension(R.styleable.DividerView_dashLength, 5f)
             dashThickness = a.getDimension(R.styleable.DividerView_dashThickness, 3f)
-            dividerLineColor = a.getColor(R.styleable.DividerView_dividerLineColor, 0x666666)
+            dividerLineColor = a.getColor(
+                R.styleable.DividerView_dividerLineColor,
+                ThemeAttrs.outlineVariant(context)
+            )
             orientation =
                 a.getInt(R.styleable.DividerView_dividerOrientation, ORIENTATION_HORIZONTAL)
         } finally {
@@ -82,7 +86,7 @@ class DividerView : View {
         }
         mPaint = Paint().apply {
             isAntiAlias = true
-            color = dividerLineColor ?: 0x666666
+            color = dividerLineColor ?: ThemeAttrs.outlineVariant(context)
             style = Paint.Style.STROKE
             strokeWidth = dashThickness ?: 1.dp2px(context).toFloat()
             setPathEffect(

@@ -27,7 +27,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 图标+文字+数字角标的自定义View
@@ -136,12 +138,12 @@ public class IconDotTextView extends ConstraintLayout {
         Context context = getContext();
         if (a == null) {
             labelTextSize = DensityUtil.sp2px(context, 12);
-            labelTextColor = ContextCompat.getColor(context, R.color.autoColor);
+            labelTextColor = ThemeAttrs.onSurface(context);
             mImageWidth = 0;
             mImageHeight = 0;
             mDotTextSize = DEFAULT_DOT_TEXT_SIZE;
             mDotTextColor = ContextCompat.getColor(context, R.color.white);
-            mDotBackgroundColor = ContextCompat.getColor(context, R.color.theme_red);
+            mDotBackgroundColor = ThemeAttrs.error(context);
             mDotWidth = DEFAULT_DOT_SIZE;
             mDotHeight = DEFAULT_DOT_SIZE;
             mShowDot = false;
@@ -159,7 +161,7 @@ public class IconDotTextView extends ConstraintLayout {
             labelTextSize = a.getDimension(R.styleable.IconDotTextView_textSize,
                     DensityUtil.sp2px(context, 12));
             labelTextColor = a.getColor(R.styleable.IconDotTextView_textColor,
-                    ContextCompat.getColor(context, R.color.autoColor));
+                    ThemeAttrs.onSurface(context));
             mImageWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_imageWidth, 0);
             mImageHeight = a.getDimensionPixelSize(R.styleable.IconDotTextView_imageHeight, 0);
             mDrawableImage = a.getDrawable(R.styleable.IconDotTextView_imageSrc);
@@ -172,7 +174,7 @@ public class IconDotTextView extends ConstraintLayout {
                     ContextCompat.getColor(context, R.color.white));
             mDotBackgroundDrawable = a.getDrawable(R.styleable.IconDotTextView_dotBackground);
             mDotBackgroundColor = a.getColor(R.styleable.IconDotTextView_dotBackgroundColor,
-                    ContextCompat.getColor(context, R.color.theme_red));
+                    ThemeAttrs.error(context));
             mDotWidth = a.getDimensionPixelSize(R.styleable.IconDotTextView_dotWidth, DEFAULT_DOT_SIZE);
             mDotHeight = a.getDimensionPixelSize(R.styleable.IconDotTextView_dotHeight, DEFAULT_DOT_SIZE);
             mDotPadding = a.getDimensionPixelSize(R.styleable.IconDotTextView_dotPadding,
@@ -501,8 +503,8 @@ public class IconDotTextView extends ConstraintLayout {
         Glide.with(getContext())
                 .load(src)
                 .apply(new RequestOptions()
-                        .placeholder(R.mipmap.ic_default_image)
-                        .error(R.mipmap.ic_default_image))
+                        .placeholder(Config.getInstance().getDefaultPlaceholderRes())
+                        .error(Config.getInstance().getDefaultErrorImageRes()))
                 .into(mIconView);
     }
 

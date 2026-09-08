@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
@@ -236,6 +237,15 @@ public class InputDialog extends BaseDialog {
         return binding;
     }
 
+    public InputDialog setError(@Nullable CharSequence error) {
+        if (binding != null) {
+            boolean has = !TextUtils.isEmpty(error);
+            binding.dialogInputLayout.setErrorEnabled(has);
+            binding.dialogInputLayout.setError(has ? error : null);
+        }
+        return this;
+    }
+
     private void initView() {
         binding = DialogInputBinding.inflate(layoutInflater, null, false);
         // 初始化控件
@@ -259,6 +269,7 @@ public class InputDialog extends BaseDialog {
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
         binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
+        binding.dialogInputLayout.setCounterMaxLength(maxWords);
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {

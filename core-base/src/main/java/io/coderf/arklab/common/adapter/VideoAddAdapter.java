@@ -31,6 +31,7 @@ import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 添加视频适配器
@@ -209,11 +210,11 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
         } else if (status == UploadStatusEnum.FAILURE) {
             uploadProcess.setVisibility(View.VISIBLE);
             markView.setVisibility(View.GONE);
-            uploadProcess.setTextColor(ContextCompat.getColor(uploadProcess.getContext(), R.color.theme_red));
+            uploadProcess.setTextColor(ThemeAttrs.error(uploadProcess.getContext()));
         } else if (status == UploadStatusEnum.CANCELED) {
             uploadProcess.setVisibility(View.VISIBLE);
             markView.setVisibility(View.GONE);
-            uploadProcess.setTextColor(ContextCompat.getColor(uploadProcess.getContext(), R.color.theme_red));
+            uploadProcess.setTextColor(ThemeAttrs.error(uploadProcess.getContext()));
         } else {
             uploadProcess.setVisibility(View.GONE);
             markView.setVisibility(View.GONE);

@@ -54,6 +54,17 @@ public final class SnackBarHelper {
             return;
         }
         Snackbar snackbar = Snackbar.make(anchor, message, duration);
+        snackbar.setBackgroundTint(
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.color(
+                        anchor.getContext(),
+                        com.google.android.material.R.attr.colorSurfaceInverse,
+                        io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(anchor.getContext())));
+        snackbar.setTextColor(
+                io.coderf.arklab.common.utils.theme.ThemeAttrs.color(
+                        anchor.getContext(),
+                        com.google.android.material.R.attr.colorOnSurfaceInverse,
+                        io.coderf.arklab.common.utils.theme.ThemeAttrs.surface(anchor.getContext())));
+        snackbar.setActionTextColor(io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(anchor.getContext()));
         if (!TextUtils.isEmpty(actionText) && actionListener != null) {
             snackbar.setAction(actionText, actionListener);
         }

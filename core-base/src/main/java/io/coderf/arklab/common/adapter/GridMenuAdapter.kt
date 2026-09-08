@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.adapter
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.text.TextUtils
@@ -53,7 +54,7 @@ class GridMenuAdapter(val gridMenuView: GridMenuView?) :
         holder.binding.tvWorkMenuName.setTextColor(
             item.labelColor
                 ?: gridMenuView?.defaultLabelTextColor
-                ?: ContextCompat.getColor(holder.itemView.context, R.color.autoColor)
+                ?: ThemeAttrs.onSurface(holder.itemView.context)
         )
 
         val textLayoutParams =

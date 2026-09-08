@@ -175,9 +175,6 @@
             android:name=".activity.VerifyActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.VerifyTopActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.ViewPagerSampleActivity"
             android:exported="false" />
         <activity
@@ -197,6 +194,12 @@
             android:exported="false" />
         <activity
             android:name=".activity.EmptyLayoutDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.Material3KitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.MaterialCardViewActivity"
             android:exported="false" />
         <activity
             android:name=".activity.DialogActivity"

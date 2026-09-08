@@ -27,6 +27,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowCheckBoxAdapter;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 单选级联
@@ -101,11 +102,11 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
         this.selectedListener = selectedListener;
         //默认参数
         itemHeight = DensityUtil.dp2px(context, 40f);
-        selectionTextColor = ContextCompat.getColor(context, R.color.autoColor);
-        selectTextColor = ContextCompat.getColor(context, R.color.onPrimary);
-        unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
+        selectionTextColor = ThemeAttrs.onSurface(context);
+        selectTextColor = ThemeAttrs.onPrimary(context);
+        unSelectTextColor = ThemeAttrs.onSurface(context);
         radius = DensityUtil.dp2px(context, 6f);
-        selectBgColor = ContextCompat.getColor(context, R.color.themeColor);
+        selectBgColor = ThemeAttrs.primary(context);
         unSelectBgColor = ContextCompat.getColor(context, R.color.default_background);
         paddingStart = DensityUtil.dp2px(context, 12f);
         paddingTop = DensityUtil.dp2px(context, 6f);
@@ -166,7 +167,7 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
                         context,
                         LinearLayoutManager.VERTICAL,
                         DensityUtil.dp2px(context, 1f),
-                        ContextCompat.getColor(context, R.color.h_line_color)
+                        ThemeAttrs.outlineVariant(context)
                 )
         );
         binding.mRecyclerviewOptions.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));

@@ -24,6 +24,7 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * FormVideoPreview 类。
@@ -73,14 +74,14 @@ public class FormVideoPreview extends FormMedia {
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color));
+            emptyTextColor = typedArray.getColor(R.styleable.FormUI_emptyTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
             emptyTextSize = typedArray.getDimension(R.styleable.FormUI_emptyTextSize, DensityUtil.sp2px(getContext(), 14));
             emptyText = typedArray.getString(R.styleable.FormUI_emptyText);
             if (TextUtils.isEmpty(emptyText)) {
                 emptyText = "暂无附件";
             }
         } else {
-            emptyTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.nv_bg_color);
+            emptyTextColor = ThemeAttrs.onSurfaceVariant(getContext());
             emptyTextSize = DensityUtil.sp2px(getContext(), 14);
             emptyText = "暂无附件";
         }

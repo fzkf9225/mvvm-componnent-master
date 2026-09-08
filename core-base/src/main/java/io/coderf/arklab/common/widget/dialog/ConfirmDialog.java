@@ -423,13 +423,16 @@ public class ConfirmDialog extends BaseDialog {
                 onNegativeClickListener.onDialogClick(this);
             }
         });
+        int divider = lineColor == null
+                ? io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext())
+                : lineColor;
         binding.hLine.setBackground(DrawableUtil.createRectDrawable(
-                lineColor == null ? ContextCompat.getColor(getContext(),R.color.h_line_color) : lineColor,
+                divider,
                 0,
                 DensityUtil.dp2px(getContext(), 1f)
         ));
         binding.sLine.setBackground(DrawableUtil.createRectDrawable(
-                lineColor == null ?  ContextCompat.getColor(getContext(),R.color.h_line_color) : lineColor,
+                divider,
                 DensityUtil.dp2px(getContext(), 1f),
                 0
         ));

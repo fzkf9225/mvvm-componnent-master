@@ -26,6 +26,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowAdapter;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowMultiAdapter;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * updated by fz on 2025/2/13 14:17
@@ -87,9 +88,9 @@ public class MultiPopupView<T extends PopupWindowBean> extends PopupWindow imple
         this.selectedListener = selectedListener;
         this.dataList = dataList;
         this.context = context;
-        selectTextColor = ContextCompat.getColor(context, R.color.onPrimary);
-        unSelectTextColor = ContextCompat.getColor(context, R.color.autoColor);
-        selectBgDrawable = DrawableUtil.createShapeDrawable(ContextCompat.getColor(context, R.color.themeColor),
+        selectTextColor = ThemeAttrs.onPrimary(context);
+        unSelectTextColor = ThemeAttrs.onSurface(context);
+        selectBgDrawable = DrawableUtil.createShapeDrawable(ThemeAttrs.primary(context),
                 DensityUtil.dp2px(context, 5f));
         unSelectBgDrawable = DrawableUtil.createShapeDrawable(ContextCompat.getColor(context, R.color.default_background),
                 DensityUtil.dp2px(context, 5f));

@@ -8,7 +8,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:fillViewport="true"
         tools:context=".activity.MqttDemoActivity">
 
@@ -25,7 +25,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:text="填写 Broker 与账号后连接。本页以 Java 调用 mqttcomponent 核心 API（MqttConnection）为例；在线心跳见 PresenceMqttClient。"
-                android:textColor="@color/hint_text_color"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_s"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -152,7 +152,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_s"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:text="连接成功后关闭 WiFi/移动网络可模拟意外断连；重连过程会弹出 MqttReconnectDialog。"
-                android:textColor="@color/hint_text_color"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_s"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -295,7 +295,7 @@
                 android:background="?attr/colorSurface"
                 android:minHeight="180dp"
                 android:padding="@dimen/padding_m"
-                android:textColor="@color/hint_text_color"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/font_size_s"
                 app:layout_constraintEnd_toEndOf="parent"

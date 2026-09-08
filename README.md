@@ -186,8 +186,15 @@ implementation project(':userapi')   // 需要用户契约时
 在app中的Application中调用初始化方法
 
 ```
-        // 可选：壁纸动态取色（Android 12+），须在 init 之前；默认关闭
-        // Config.getInstance().setDynamicColorEnabled(true);
+        // 以下均须在 init 之前；不写则用默认值
+        // Config.getInstance().setDynamicColorEnabled(true);          // Material You，默认关
+        // Config.getInstance().setAutoSizeEnabled(false);             // 屏幕适配，默认开
+        // Config.getInstance().setCrashHandlerEnabled(false);         // 自带崩溃捕获，默认开
+        // Config.getInstance().setCrashLogRetainDays(7);              // 崩溃日志保留天数，默认 5；<=0 不清理
+        // Config.getInstance().setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        // Config.getInstance().setEdgeToEdgeEnabled(false);           // BaseActivity 全局默认，默认开
+        // Config.getInstance().setDefaultPlaceholderRes(R.drawable.my_placeholder);
+        // Config.getInstance().setDefaultErrorImageRes(R.drawable.my_error);
         Config.getInstance().init(this);
         if (BuildConfig.LOG_DEBUG) {
             Config.getInstance().enableDebug(true);
@@ -196,7 +203,7 @@ implementation project(':userapi')   // 需要用户契约时
 ### 常用Api
 
 #### 系统配置
-1. 继承`BaseApplication`，然后初始化`Config.getInstance().init(this)`;如果需要获取全局的`Application`对象可以调用`Config`的方法
+1. 继承`BaseApplication`，然后初始化`Config.getInstance().init(this)`；屏幕适配、崩溃捕获、夜间模式、Edge-to-Edge、占位图等全局开关须在 `init` 前设置。如果需要获取全局的`Application`对象可以调用`Config`的方法
 2. `ErrorService`：提供全局的api，处理网络请求回调的一些错误和跳转登录拦截等问题，还有统一网络请求头的配置等
 
 #### UI相关
@@ -625,6 +632,7 @@ plugins {
 调用初始化方法
 
 ```
+    // 其他全局开关见上文「系统配置」，须在 init 前设置
     Config.getInstance().init(this);
 ```
 
@@ -1081,7 +1089,7 @@ public class Person extends BaseDaoBean {
 参考示例代码`GoogleGPSActivity`
 
 #### 自定义表单组件
-参考示例代码`VerifyActivity`和`VerifyTopActivity`
+参考示例代码`VerifyActivity`
 
 #### 断点续传下载
 

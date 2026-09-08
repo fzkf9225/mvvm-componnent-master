@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import io.coderf.arklab.common.R
+import io.coderf.arklab.common.api.Config
 import io.coderf.arklab.common.databinding.CameraViewBinding
 import io.coderf.arklab.common.listener.CameraResultListener
 import io.coderf.arklab.common.listener.CaptureListener
@@ -350,8 +351,9 @@ class CameraView @JvmOverloads constructor(
                                 Glide.with(context)
                                     .load(uri)
                                     .apply(
-                                        RequestOptions().placeholder(R.mipmap.ic_default_image)
-                                            .error(R.mipmap.ic_default_image)
+                                        RequestOptions()
+                                            .placeholder(Config.getInstance().defaultPlaceholderRes)
+                                            .error(Config.getInstance().defaultErrorImageRes)
                                     )
                                     .into(imageView)
                                 binding?.videoPlayer?.thumbImageView = imageView

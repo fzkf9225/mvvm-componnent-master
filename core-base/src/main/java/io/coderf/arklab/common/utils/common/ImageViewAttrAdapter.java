@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.api.Config;
 
 /**
  * ShapeableImageView DataBinding 适配器。
@@ -25,7 +26,14 @@ import io.coderf.arklab.common.R;
 public class ImageViewAttrAdapter {
 
     private static final int DEFAULT_HEAD = R.mipmap.icon_head_default;
-    private static final int DEFAULT_IMAGE = R.mipmap.ic_default_image;
+
+    private static int defaultImageRes() {
+        return Config.getInstance().getDefaultPlaceholderRes();
+    }
+
+    private static int defaultErrorRes() {
+        return Config.getInstance().getDefaultErrorImageRes();
+    }
 
     // ---------- headerUrl（圆形头像，默认头像图） ----------
 
@@ -40,19 +48,19 @@ public class ImageViewAttrAdapter {
     @BindingAdapter(value = {"imageUrl", "placeholder", "error"}, requireAll = false)
     public static void loadImage(ShapeableImageView imageView, String url,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
-        load(imageView, url, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
+        load(imageView, url, resolve(placeholder, defaultImageRes()), resolve(error, defaultErrorRes()));
     }
 
     @BindingAdapter(value = {"imageBitmap", "placeholder", "error"}, requireAll = false)
     public static void loadImage(ShapeableImageView imageView, Bitmap bitmap,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
-        load(imageView, bitmap, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
+        load(imageView, bitmap, resolve(placeholder, defaultImageRes()), resolve(error, defaultErrorRes()));
     }
 
     @BindingAdapter(value = {"imageUri", "placeholder", "error"}, requireAll = false)
     public static void loadImage(ShapeableImageView imageView, Uri uri,
                                  @DrawableRes Integer placeholder, @DrawableRes Integer error) {
-        load(imageView, uri, resolve(placeholder, DEFAULT_IMAGE), resolve(error, DEFAULT_IMAGE));
+        load(imageView, uri, resolve(placeholder, defaultImageRes()), resolve(error, defaultErrorRes()));
     }
 
     // ---------- 内部统一加载 ----------

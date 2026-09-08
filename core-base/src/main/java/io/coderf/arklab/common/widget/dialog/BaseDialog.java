@@ -13,13 +13,13 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
-import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * Dialog 公共基类：统一 Window 尺寸、居中、圆角背景与外部点击取消配置，
@@ -165,7 +165,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBottomSheetBackgroundDrawable(float topCornerRadiusDp) {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.cardSurface),
+                ThemeAttrs.surfaceContainerHigh(getContext()),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 DensityUtil.dp2px(getContext(), topCornerRadiusDp),
                 0,
@@ -185,7 +185,7 @@ public abstract class BaseDialog extends Dialog {
     @NonNull
     protected Drawable resolveBackgroundDrawable() {
         return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.cardSurface),
+                ThemeAttrs.surfaceContainerHigh(getContext()),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),
                 DensityUtil.dp2px(getContext(), 8f),

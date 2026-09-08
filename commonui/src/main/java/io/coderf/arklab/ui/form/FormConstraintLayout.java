@@ -8,19 +8,22 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
@@ -200,6 +203,16 @@ public class FormConstraintLayout extends CornerConstraintLayout {
      * 输入框、选择框正文内容，用于双向绑定
      */
     public final ObservableField<String> dataSource = new ObservableField<>("");
+    /** 行内 TextInputLayout，仅输入类表单有值。 */
+    @Nullable
+    protected TextInputLayout textInputLayout;
+    /** 非输入行的校验文案。 */
+    @Nullable
+    protected MaterialTextView tvError;
+    protected String helperText;
+    protected boolean counterEnabled;
+    @Nullable
+    private String errorTextPending;
 
     public FormConstraintLayout(@NonNull Context context) {
         super(context);
@@ -242,10 +255,15 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
 
             formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
-            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
-            formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
-            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color));
-            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
+            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ThemeAttrs.onSurface(getContext()));
+            formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
+            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ThemeAttrs.outlineVariant(getContext()));
+            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ThemeAttrs.onSurface(getContext()));
+            helperText = typedArray.getString(R.styleable.FormUI_formHelperText);
+            counterEnabled = typedArray.getBoolean(R.styleable.FormUI_formCounterEnabled, false);
+            if (typedArray.hasValue(R.styleable.FormUI_formErrorText)) {
+                errorTextPending = typedArray.getString(R.styleable.FormUI_formErrorText);
+            }
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
             line = typedArray.getInteger(R.styleable.FormUI_line, 1);
@@ -263,10 +281,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
             typedArray.recycle();
         } else {
-            formTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
-            formHintTextColor =ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color);
-            labelTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
-            borderBottomColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color);
+            formTextColor = ThemeAttrs.onSurface(getContext());
+            formHintTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+            labelTextColor = ThemeAttrs.onSurface(getContext());
+            borderBottomColor = ThemeAttrs.outlineVariant(getContext());
             formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             formRequiredSize = DensityUtil.sp2px(getContext(), 14);
             borderBottomStartMargin = DensityUtil.dp2px(getContext(), 16f);
@@ -302,25 +320,108 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         layoutLabel();
         layoutRequired();
         layoutText();
+        applyInputChrome();
+        if (!android.text.TextUtils.isEmpty(errorTextPending)) {
+            setError(errorTextPending);
+            errorTextPending = null;
+        }
         dataSource.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 String newValue = dataSource.get();
+                EditText boundEdit = resolveBoundEditText();
+                if (boundEdit != null) {
+                    String incoming = newValue == null ? "" : newValue;
+                    String current = boundEdit.getText() == null ? "" : boundEdit.getText().toString();
+                    if (!current.equals(incoming)) {
+                        if (boundEdit instanceof AutoCompleteTextView autoComplete) {
+                            autoComplete.setText(incoming, false);
+                        } else {
+                            boundEdit.setText(newValue);
+                        }
+                    }
+                    return;
+                }
                 if (tvSelection instanceof MaterialTextView textView) {
                     if (textView.getText() == null) {
                         textView.setText(newValue);
                     } else if (!textView.getText().toString().equals(newValue)) {
                         textView.setText(newValue);
                     }
-                } else if (tvSelection instanceof TextInputEditText editText) {
-                    if (editText.getText() == null) {
-                        editText.setText(newValue);
-                    } else if (!editText.getText().toString().equals(newValue)) {
-                        editText.setText(newValue);
-                    }
                 }
             }
         });
+    }
+
+    @Nullable
+    protected EditText resolveBoundEditText() {
+        if (textInputLayout != null && textInputLayout.getEditText() != null) {
+            return textInputLayout.getEditText();
+        }
+        if (tvSelection instanceof EditText editText) {
+            return editText;
+        }
+        return null;
+    }
+
+    protected void applyInputChrome() {
+        if (textInputLayout == null) {
+            return;
+        }
+        if (!android.text.TextUtils.isEmpty(helperText)) {
+            textInputLayout.setHelperTextEnabled(true);
+            textInputLayout.setHelperText(helperText);
+        }
+        if (counterEnabled) {
+            textInputLayout.setCounterEnabled(true);
+        }
+    }
+
+    /**
+     * 校验失败文案。输入行走 TextInputLayout error；其他行走底部分割线变色。
+     */
+    public void setError(@Nullable CharSequence error) {
+        boolean hasError = !android.text.TextUtils.isEmpty(error);
+        if (textInputLayout != null) {
+            textInputLayout.setErrorEnabled(hasError);
+            textInputLayout.setError(hasError ? error : null);
+        } else if (tvError != null) {
+            tvError.setVisibility(hasError ? View.VISIBLE : View.GONE);
+            tvError.setText(error);
+        }
+        if (vBorderBottom != null) {
+            vBorderBottom.setBackgroundColor(hasError
+                    ? ThemeAttrs.error(getContext())
+                    : borderBottomColor);
+        }
+    }
+
+    public void setHelperText(@Nullable CharSequence helper) {
+        helperText = helper == null ? null : helper.toString();
+        if (textInputLayout != null) {
+            boolean has = !android.text.TextUtils.isEmpty(helper);
+            textInputLayout.setHelperTextEnabled(has);
+            textInputLayout.setHelperText(has ? helper : null);
+        }
+    }
+
+    public void setCounterEnabled(boolean enabled) {
+        counterEnabled = enabled;
+        if (textInputLayout != null) {
+            textInputLayout.setCounterEnabled(enabled);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setAlpha(enabled ? 1f : 0.38f);
+        if (tvSelection != null) {
+            tvSelection.setEnabled(enabled);
+        }
+        if (textInputLayout != null) {
+            textInputLayout.setEnabled(enabled);
+        }
     }
 
     public MaterialTextView getTvLabel() {
@@ -384,7 +485,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         tvRequired.setText("*");
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvRequired.setGravity(android.view.Gravity.CENTER);
-        tvRequired.setTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.theme_red));
+        tvRequired.setTextColor(ThemeAttrs.error(getContext()));
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
@@ -610,6 +711,177 @@ public class FormConstraintLayout extends CornerConstraintLayout {
 
     public void setLabel(String text) {
         tvLabel.setText(text);
+    }
+
+    public int getLabelAlign() {
+        return labelAlign;
+    }
+
+    public int getTextAlign() {
+        return textAlign;
+    }
+
+    /**
+     * 运行时切换 label 左侧/顶部对齐，并重新约束子控件。
+     */
+    public void setLabelAlign(int align) {
+        this.labelAlign = align;
+        applyAlignLayout();
+    }
+
+    /**
+     * 运行时切换正文左右对齐（仅 label 在左侧时生效）。
+     */
+    public void setTextAlign(int align) {
+        this.textAlign = align;
+        applyAlignLayout();
+    }
+
+    /**
+     * 一次切换标签对齐与正文对齐，避免连续 apply 两次。
+     */
+    public void setFormAlign(int labelAlign, int textAlign) {
+        this.labelAlign = labelAlign;
+        this.textAlign = textAlign;
+        applyAlignLayout();
+    }
+
+    protected void applyAlignLayout() {
+        ConstraintSet clearSet = new ConstraintSet();
+        clearSet.clone(this);
+        if (ivLabelIcon != null) {
+            clearAlignConstraints(clearSet, ivLabelIcon.getId());
+        }
+        if (tvLabel != null) {
+            clearAlignConstraints(clearSet, tvLabel.getId());
+        }
+        if (tvRequired != null) {
+            clearAlignConstraints(clearSet, tvRequired.getId());
+        }
+        if (tvSelection != null) {
+            clearAlignConstraints(clearSet, tvSelection.getId());
+            clearSet.setHorizontalBias(tvSelection.getId(), 0.5f);
+        }
+        clearSet.applyTo(this);
+        layoutLabelIcon();
+        layoutLabel();
+        layoutRequired();
+        layoutText();
+        restoreLabelChromeParams();
+        applySelectionAlignParams();
+        requestLayout();
+    }
+
+    private static void clearAlignConstraints(ConstraintSet constraintSet, int viewId) {
+        constraintSet.clear(viewId, ConstraintSet.START);
+        constraintSet.clear(viewId, ConstraintSet.END);
+        constraintSet.clear(viewId, ConstraintSet.TOP);
+        constraintSet.clear(viewId, ConstraintSet.BOTTOM);
+        constraintSet.clear(viewId, ConstraintSet.BASELINE);
+    }
+
+    /**
+     * ConstraintSet.applyTo 在同时约束 START/END 时会把 wrap 拉成 0。
+     * 这里按 createLabel/createRequired 把标签区尺寸和边距还原回去。
+     */
+    protected void restoreLabelChromeParams() {
+        if (tvLabel == null) {
+            return;
+        }
+        ConstraintSet set = new ConstraintSet();
+        set.clone(this);
+        set.constrainWidth(tvLabel.getId(), ConstraintSet.WRAP_CONTENT);
+        set.constrainHeight(tvLabel.getId(), ConstraintSet.WRAP_CONTENT);
+        set.setMargin(tvLabel.getId(), ConstraintSet.START, (int) labelStartMargin);
+        set.setMargin(tvLabel.getId(), ConstraintSet.END, (int) labelEndMargin);
+        if (tvRequired != null) {
+            set.constrainWidth(tvRequired.getId(), ConstraintSet.WRAP_CONTENT);
+            set.constrainHeight(tvRequired.getId(), ConstraintSet.WRAP_CONTENT);
+            set.setMargin(tvRequired.getId(), ConstraintSet.START, (int) requiredStartMargin);
+        }
+        if (ivLabelIcon != null && showLabelIcon && labelIcon != null) {
+            int iconW = labelIconWidth <= 0 ? ConstraintSet.WRAP_CONTENT : (int) labelIconWidth;
+            int iconH = labelIconHeight <= 0 ? ConstraintSet.WRAP_CONTENT : (int) labelIconHeight;
+            set.constrainWidth(ivLabelIcon.getId(), iconW);
+            set.constrainHeight(ivLabelIcon.getId(), iconH);
+        }
+        set.applyTo(this);
+    }
+
+    /**
+     * 正文区是否横向铺满（输入/选择类为 true；开关/评分等为 false）。
+     */
+    protected boolean selectionUsesMatchConstraint() {
+        return true;
+    }
+
+    /**
+     * 按当前 {@link #labelAlign}/{@link #textAlign} 还原 createText 时的宽高、边距与文字方向。
+     */
+    protected void applySelectionAlignParams() {
+        if (tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        boolean top = LabelAlignEnum.TOP.value == labelAlign;
+        boolean match = selectionUsesMatchConstraint();
+        params.width = match ? 0 : LayoutParams.WRAP_CONTENT;
+        params.height = LayoutParams.WRAP_CONTENT;
+        params.horizontalWeight = (!top && match) ? 1 : 0;
+        params.topMargin = (int) defaultTextMargin;
+        params.bottomMargin = (int) defaultTextMargin;
+        if (top) {
+            params.setMarginStart((int) textEndMargin);
+            params.setMarginEnd((int) textEndMargin);
+        } else {
+            params.setMarginStart((int) textStartMargin);
+            params.setMarginEnd((int) textEndMargin);
+        }
+        tvSelection.setLayoutParams(params);
+
+        int gravity = (top || TextAlignEnum.LEFT.value == textAlign)
+                ? Gravity.START | Gravity.CENTER_VERTICAL
+                : Gravity.END | Gravity.CENTER_VERTICAL;
+        EditText bound = resolveBoundEditText();
+        if (bound != null) {
+            bound.setGravity(gravity);
+        } else if (tvSelection instanceof MaterialTextView textView) {
+            textView.setGravity(gravity);
+        }
+        applySelectionSizeConstraints();
+    }
+
+    /**
+     * 把 {@link #tvSelection} 当前 LayoutParams 写回 ConstraintSet，避免 applyTo 把 wrap 拉成 0。
+     */
+    protected void applySelectionSizeConstraints() {
+        if (tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        boolean top = LabelAlignEnum.TOP.value == labelAlign;
+        ConstraintSet set = new ConstraintSet();
+        set.clone(this);
+        int width = params.width == 0 ? ConstraintSet.MATCH_CONSTRAINT
+                : (params.width == LayoutParams.WRAP_CONTENT ? ConstraintSet.WRAP_CONTENT : params.width);
+        int height = params.height == 0 ? ConstraintSet.MATCH_CONSTRAINT
+                : (params.height == LayoutParams.WRAP_CONTENT ? ConstraintSet.WRAP_CONTENT : params.height);
+        set.constrainWidth(tvSelection.getId(), width);
+        set.constrainHeight(tvSelection.getId(), height);
+        set.setMargin(tvSelection.getId(), ConstraintSet.START, params.getMarginStart());
+        set.setMargin(tvSelection.getId(), ConstraintSet.END, params.getMarginEnd());
+        set.setMargin(tvSelection.getId(), ConstraintSet.TOP, params.topMargin);
+        set.setMargin(tvSelection.getId(), ConstraintSet.BOTTOM, params.bottomMargin);
+        if (!selectionUsesMatchConstraint()) {
+            set.setHorizontalBias(tvSelection.getId(), top ? 0f : 1f);
+        }
+        set.applyTo(this);
     }
 
     /**

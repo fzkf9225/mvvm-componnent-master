@@ -3,6 +3,7 @@ package io.coderf.arklab.demo.bean;
 import io.coderf.arklab.annotation.annotation.VerifyEntity;
 import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.enums.VerifyType;
+import io.coderf.arklab.annotation.inter.VerifyGroup;
 
 /**
  * Family 类。
@@ -14,10 +15,10 @@ import io.coderf.arklab.annotation.enums.VerifyType;
  */
 @VerifyEntity(sort = true)
 public class Family {
-    @VerifyParams(type = VerifyType.NOTNULL,  errorMsg = "您填填写您的妻子！")
+    @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class}, errorMsg = "请填写妻子姓名！")
     private String wife;
 
-    @VerifyParams(type = VerifyType.NOTNULL,  errorMsg = "您填填写您的丈夫！")
+    @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class}, errorMsg = "请填写丈夫姓名！")
     private String husband;
     private String son;
     private String daughter;

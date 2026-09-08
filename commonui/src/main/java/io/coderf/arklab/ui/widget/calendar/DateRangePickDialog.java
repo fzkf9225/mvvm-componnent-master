@@ -39,6 +39,7 @@ import io.coderf.arklab.common.utils.common.NumberUtil;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
 import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 
 /**
@@ -204,18 +205,18 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dotWidth = DensityUtil.dp2px(context, 4f);
         dotHeight = DensityUtil.dp2px(context, 4f);
         ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
-        shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.themeColor));
+        shapeDrawableSelected.getPaint().setColor(ThemeAttrs.primary(context));
         selectedBg = shapeDrawableSelected;
 
-        selectedTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.onPrimary);
-        weekTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
-        workingDayTextColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
+        selectedTextColor = ThemeAttrs.onPrimary(context);
+        weekTextColor = ThemeAttrs.onSurface(context);
+        workingDayTextColor = ThemeAttrs.onSurface(context);
 
         ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
         shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.transparent));
         normalBg = shapeDrawableNormal;
         clearTextColor = ColorStateList.valueOf(
-                ContextCompat.getColor(context, io.coderf.arklab.common.R.color.theme_red));
+                ThemeAttrs.error(context));
     }
 
     /**
@@ -623,7 +624,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
             binding.clDate.setBackground(bgDrawable);
         } else {
             binding.clDate.setBackground(DrawableUtil.createRectDrawable(
-                    ContextCompat.getColor(getContext(), R.color.cardSurface),
+                    ThemeAttrs.surfaceContainerHigh(getContext()),
                     DensityUtil.dp2px(getContext(), 16f)));
         }
 
@@ -706,7 +707,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialogWindow.setGravity(gravity);
         dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(getContext(), R.color.cardSurface),
+                ThemeAttrs.surfaceContainerHigh(getContext()),
                 DensityUtil.dp2px(getContext(), 16f),
                 DensityUtil.dp2px(getContext(), 16f),
                 0,

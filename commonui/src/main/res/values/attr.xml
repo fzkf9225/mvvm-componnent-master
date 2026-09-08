@@ -815,6 +815,17 @@
         <attr name="stepperValue" format="integer"/>
         <!--FormRating 当前评分-->
         <attr name="ratingValue" format="float"/>
+        <!-- 输入行 helper，走 TextInputLayout，不改变无错误时的行高排版 -->
+        <attr name="formHelperText" format="string"/>
+        <!-- 初始校验文案 -->
+        <attr name="formErrorText" format="string"/>
+        <!-- 字数统计，需配合 maxLength -->
+        <attr name="formCounterEnabled" format="boolean"/>
+        <!-- 日期/时间弹层：wheel 保持原滚轮；calendar 走 MaterialDatePicker / TimePicker -->
+        <attr name="datePickerUi" format="enum">
+            <enum name="wheel" value="0"/>
+            <enum name="calendar" value="1"/>
+        </attr>
         <attr name="bgColor" />
         <attr name="radius" />
         <attr name="strokeColor" />

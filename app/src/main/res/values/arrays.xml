@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="material3_kit_range">
+        <item>20</item>
+        <item>80</item>
+    </array>
+</resources>

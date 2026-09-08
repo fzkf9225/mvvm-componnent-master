@@ -1,4 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        全局 Material3 主题。
+        colorPrimary / colorOnPrimary：主色填充 vs 铺在主色上的字。
+        colorSurface / colorOnSurface：卡片表面 vs 表面上的正文。
+        colorOnSurfaceVariant：hint、次要字。
+        colorOutline：描边；colorOutlineVariant：分割线。
+        colorError：校验/必填，不要拿 theme_red 硬编码。
+        控件默认样式（Button / TIL / Card）从这里往下继承。
+    -->
     <style name="AppBaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
@@ -27,15 +36,15 @@
         <item name="colorSurfaceContainer">@color/surfaceContainer</item>
         <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighest</item>
-        <item name="android:colorBackground">@color/background</item>
-        <item name="colorOnBackground">@color/autoColor</item>
+        <item name="android:colorBackground">@color/default_background</item>
+        <item name="colorOnBackground">@color/cardOnSurface</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
         <item name="colorSurfaceInverse">@color/surfaceInverse</item>
         <item name="colorOnSurfaceInverse">@color/onSurfaceInverse</item>
         <item name="colorPrimaryInverse">@color/primaryInverse</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/cardSurface</item>
+        <item name="android:navigationBarColor">@color/surfaceContainer</item>
         <item name="android:windowLightStatusBar">@bool/window_light_status_bar</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/window_light_navigation_bar</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
@@ -49,6 +58,57 @@
         <item name="materialButtonOutlinedStyle">@style/Widget.App.Button.OutlinedButton</item>
         <item name="borderlessButtonStyle">@style/Widget.App.Button.TextButton</item>
         <item name="materialIconButtonStyle">@style/Widget.App.Button.IconButton</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.App.MaterialCalendar</item>
+        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.Material3.MaterialCalendar.Fullscreen</item>
+        <item name="materialTimePickerTheme">@style/ThemeOverlay.App.MaterialTimePicker</item>
+    </style>
+
+    <!-- MaterialDatePicker：标题走 onSurface；格子尺寸跟系统 density，避免 AutoSize 把周日列裁掉 -->
+    <style name="ThemeOverlay.App.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorPrimary">@color/themeColor</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorSurface">@color/cardSurface</item>
+        <item name="colorOnSurface">@color/cardOnSurface</item>
+        <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="materialCalendarHeaderTitle">@style/Widget.App.MaterialCalendar.HeaderTitle</item>
+        <item name="materialCalendarHeaderSelection">@style/Widget.App.MaterialCalendar.HeaderSelection</item>
+        <item name="materialCalendarStyle">@style/Widget.App.MaterialCalendar</item>
+    </style>
+    <style name="ThemeOverlay.App.MaterialTimePicker" parent="ThemeOverlay.Material3.MaterialTimePicker">
+        <item name="colorPrimary">@color/themeColor</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorSurface">@color/cardSurface</item>
+        <item name="colorOnSurface">@color/cardOnSurface</item>
+        <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.HeaderTitle" parent="Widget.Material3.MaterialCalendar.HeaderTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.HeaderSelection" parent="Widget.Material3.MaterialCalendar.HeaderSelection">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar" parent="Widget.Material3.MaterialCalendar">
+        <item name="dayStyle">@style/Widget.App.MaterialCalendar.Day</item>
+        <item name="daySelectedStyle">@style/Widget.App.MaterialCalendar.Day.Selected</item>
+        <item name="dayTodayStyle">@style/Widget.App.MaterialCalendar.Day.Today</item>
+        <item name="dayInvalidStyle">@style/Widget.App.MaterialCalendar.Day.Invalid</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.Day" parent="Widget.Material3.MaterialCalendar.Day">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.Day.Selected" parent="Widget.Material3.MaterialCalendar.Day.Selected">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.Day.Today" parent="Widget.Material3.MaterialCalendar.Day.Today">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+    <style name="Widget.App.MaterialCalendar.Day.Invalid" parent="Widget.Material3.MaterialCalendar.Day.Invalid">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
     <!-- 主题默认按钮：去掉 M3 inset，layout_height 就是可视高度 -->
@@ -123,13 +183,14 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
+    <!-- 独立输入框（搜索、弹窗）。Form 行内输入不要用这个，会多出描边和内边距。 -->
     <style name="Widget.App.TextInputLayout.Dense" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputEditText.Dense</item>
         <item name="boxCornerRadiusTopStart">@dimen/radius_l</item>
         <item name="boxCornerRadiusTopEnd">@dimen/radius_l</item>
         <item name="boxCornerRadiusBottomStart">@dimen/radius_l</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/radius_l</item>
-        <item name="boxBackgroundColor">@color/cardSurface</item>
+        <item name="boxBackgroundColor">?attr/colorSurface</item>
         <item name="hintEnabled">false</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">1dp</item>
@@ -145,6 +206,45 @@
         <item name="android:paddingStart">@dimen/padding_l</item>
         <item name="android:paddingEnd">@dimen/padding_l</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Form 行内输入：无描边、无 hint 上浮，避免改变左 Label 右值排版。error/helper/counter 仍可用。 -->
+    <style name="Widget.App.TextInputLayout.FormRow" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">none</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="errorEnabled">false</item>
+        <item name="helperTextEnabled">false</item>
+    </style>
+
+    <!-- Form 行内 ExposedDropdown：无描边，minHeight 与性别 FormSelection 对齐 -->
+    <style name="ThemeOverlay.App.FormDropdown" parent="">
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout.FormDropdown</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.App.AutoComplete.FormDropdown</item>
+    </style>
+    <style name="Widget.App.TextInputLayout.FormDropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="endIconMinSize">20dp</item>
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.AutoComplete.FormDropdown</item>
+    </style>
+    <style name="ThemeOverlay.App.AutoComplete.FormDropdown" parent="">
+        <item name="autoCompleteTextViewStyle">@style/Widget.App.AutoComplete.FormDropdown</item>
+    </style>
+    <style name="Widget.App.AutoComplete.FormDropdown" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.Material3.TitleMedium">
@@ -178,6 +278,8 @@
         <item name="colorSurfaceVariant">@color/cardSurfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
         <item name="colorSurfaceContainer">@color/surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighest</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
@@ -197,10 +299,10 @@
     </style>
 
     <style name="customTabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabIndicatorColor">@color/themeColor</item>
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_xxl</item>
-        <item name="tabSelectedTextColor">@color/themeColor</item>
+        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
         <item name="android:background">?attr/colorSurface</item>
         <item name="android:textSize">@dimen/font_size_xl</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
@@ -215,11 +317,6 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
-    </style>
-
-    <style name="DialogSoftHighlightStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
-        <item name="colorControlHighlight">?attr/colorPrimary</item>
     </style>
 
     <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
@@ -255,7 +352,7 @@
     <style name="OverflowMenuStyle" parent="Widget.Material3.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
         <item name="android:dropDownWidth">wrap_content</item>
-        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:background">?attr/colorSurfaceContainerHigh</item>
         <item name="android:dropDownVerticalOffset">5dp</item>
         <item name="android:dropDownHorizontalOffset">0dp</item>
         <item name="android:textColor">?attr/colorOnSurface</item>

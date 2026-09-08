@@ -1,23 +1,24 @@
 package io.coderf.arklab.ui.form;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.ui.R;
 
 /**
- * FormSpinner 下拉列表项样式。
+ * FormSpinner ExposedDropdown popup 样式。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/8 10:30
  */
 public class FormSpinnerDropdownStyle {
 
@@ -55,15 +56,13 @@ public class FormSpinnerDropdownStyle {
         style.itemHeightPx = DensityUtil.dp2px(context, 44f);
         style.paddingLeftPx = DensityUtil.dp2px(context, 16f);
         style.paddingRightPx = DensityUtil.dp2px(context, 16f);
-        style.textColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor);
-        style.textSelectedColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.themeColor);
+        style.textColor = ThemeAttrs.onSurface(context);
+        style.textSelectedColor = ThemeAttrs.primary(context);
         style.textSizePx = null;
-        style.itemBackground = ContextCompat.getDrawable(context, io.coderf.arklab.common.R.color.cardSurface);
-        style.itemSelectedBackground = ContextCompat.getDrawable(
-                context, io.coderf.arklab.common.R.color.default_background);
-        style.spinnerBackground = ContextCompat.getDrawable(
-                context, R.drawable.form_spinner_dropdown_bg);
-        style.itemBorderColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.h_line_color);
+        style.itemBackground = new ColorDrawable(ThemeAttrs.surfaceContainerHigh(context));
+        style.itemSelectedBackground = new ColorDrawable(ThemeAttrs.surfaceContainer(context));
+        style.spinnerBackground = context.getDrawable(R.drawable.form_spinner_dropdown_bg);
+        style.itemBorderColor = ThemeAttrs.outlineVariant(context);
         return style;
     }
 

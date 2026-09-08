@@ -1,45 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Material3 tonal palette，种子色 #1C50B5。
-        亮色表面数值对齐升级前 AppCompat 工程；角色分层按官方 M3 token。
-        暗色只在 values-night/colors.xml 覆盖。
-        布局请用这些语义色或 ?attr/colorSurface，不要把 white/black 当表面色。
+        Material3 颜色 token（亮色）。
+        业务布局优先写 ?attr/colorXxx，不要写 @color/white、@android:color/black 当表面/文字。
+        暗色只改 values-night/colors.xml 的具体值，角色不变。
+
+        怎么选：
+        - 页面底：?android:attr/colorBackground
+        - 卡片：?attr/colorSurface
+        - Dialog / Popup / Sheet / 底栏：?attr/colorSurfaceContainer*
+        - 正文/标题：?attr/colorOnSurface
+        - 次要字、hint、未选中：?attr/colorOnSurfaceVariant
+        - 描边、输入框未聚焦边框、图标轮廓：?attr/colorOutline
+        - 分割线、弱边框：?attr/colorOutlineVariant（不要当文字色）
+        - 主色填充（按钮、选中、聚焦描边）：?attr/colorPrimary
+        - 铺在主色上的字/图标：?attr/colorOnPrimary（不是页面正文）
+        - 错误/必填：?attr/colorError
+        autoColor / autoBg / h_line_color 是历史别名，新代码不要再用。
     -->
 
     <!-- ========== 品牌 / 状态 ========== -->
+    <!-- 品牌主色，对应 ?attr/colorPrimary。按钮填充、选中、聚焦描边。 -->
     <color name="themeColor">#FF1C50B5</color>
+    <!-- 错误/危险，对应 ?attr/colorError。必填星号、校验失败。不要当普通红装饰。 -->
     <color name="theme_red">#FFEA3F25</color>
+    <!-- 成功态，不是 M3 标准 token，仅业务状态色。 -->
     <color name="theme_green">#FF08A04B</color>
     <color name="theme_orange">#FFF77832</color>
     <color name="theme_yellow">#FFF4D000</color>
     <color name="green">#FF5FB878</color>
     <color name="transparent">#00000000</color>
-    <color name="colorPrimaryDark">#FF272a30</color>
 
     <!-- ========== 页面 / 表面（亮色 = 升级前原值） ========== -->
+    <!-- 页面底，对应 android:colorBackground。 -->
     <color name="default_background">#FFEEF3F2</color>
     <color name="background">#FFE4E3E3</color>
+    <!-- 历史背景别名，新代码用 ?attr/colorSurfaceContainer。 -->
     <color name="autoBg">#FFEEF0F3</color>
     <color name="bg_color">#FFEDEDED</color>
     <color name="h_area">#FFF3F3F3</color>
     <color name="search_view_background">#FF9B9B9B</color>
 
+    <!-- 卡片表面 / 表面上的字。对应 colorSurface / colorOnSurface。 -->
     <color name="surfacePrimary">#FFFFFFFF</color>
     <color name="surfaceSecondary">#FFF3F3F3</color>
     <color name="onSurfacePrimary">#FF333333</color>
     <color name="onSurfaceSecondary">#FF999999</color>
 
+    <!-- 历史正文色别名 → onSurface。新代码用 ?attr/colorOnSurface。 -->
     <color name="autoColor">@color/onSurfacePrimary</color>
     <color name="onSurfaceVariant">@color/onSurfaceSecondary</color>
+    <!-- 历史描边/次要色。新代码用 ?attr/colorOutline。 -->
     <color name="nv_bg_color">#FF999999</color>
+    <!-- hint / 占位字。新代码用 ?attr/colorOnSurfaceVariant。 -->
     <color name="hint_text_color">#FFC4C4C4</color>
+    <!-- 历史分割线。新代码用 ?attr/colorOutlineVariant。 -->
     <color name="h_line_color">#FFdddddd</color>
     <color name="gray">#FF666666</color>
     <color name="dark_light">#FF5D5D5D</color>
 
     <!-- ========== M3 Primary / Container ========== -->
+    <!-- Primary 容器：选中芯片底、导航选中指示。上面的字用 onPrimaryContainer。 -->
     <color name="primaryContainer">#FFD6E3FF</color>
+    <!-- 铺在 colorPrimary 上的字/图标，不要当页面正文。 -->
     <color name="onPrimary">#FFFFFFFF</color>
     <color name="onPrimaryContainer">#FF001B3D</color>
     <color name="primaryInverse">#FFA9C7FF</color>
@@ -57,11 +80,13 @@
     <color name="onTertiaryContainer">#FF251432</color>
 
     <!-- ========== M3 Error ========== -->
+    <!-- 铺在 colorError 上的字/图标。 -->
     <color name="onError">#FFFFFFFF</color>
     <color name="errorContainer">#FFFFDAD6</color>
     <color name="onErrorContainer">#FF410002</color>
 
     <!-- ========== M3 Surface container 分层 ========== -->
+    <!-- 从低到高：更“贴底” → 更“浮起”。弹窗/菜单用更高一层。 -->
     <color name="surfaceDim">#FFE4E3E3</color>
     <color name="surfaceBright">#FFFFFFFF</color>
     <color name="surfaceContainerLowest">#FFFFFFFF</color>
@@ -72,8 +97,11 @@
     <color name="surfaceVariant">@color/surfaceSecondary</color>
     <color name="surfaceInverse">#FF313033</color>
     <color name="onSurfaceInverse">#FFF4EFF4</color>
+    <!-- 描边。 -->
     <color name="outline">@color/nv_bg_color</color>
+    <!-- 分割线。 -->
     <color name="outlineVariant">@color/h_line_color</color>
+    <!-- 遮罩，几乎只用在 Dialog dim。 -->
     <color name="scrim">#FF000000</color>
 
     <color name="buttonPrimaryText">@color/onPrimary</color>
@@ -90,6 +118,4 @@
     <color name="textInputOutlineDefault">@color/nv_bg_color</color>
     <color name="textInputFilledActive">@color/themeColor</color>
     <color name="textInputFilledDefault">@color/autoBg</color>
-
-    <color name="selectable_item_ripple">#29000000</color>
 </resources>

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
 import io.coderf.arklab.ui.R;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 将 FormUI 中与 DatePickDialog 相关的样式属性同步到 Dialog。
@@ -23,8 +24,8 @@ final class FormDatePickDialogHelper {
     }
 
     static DatePickDialog applyFormStyle(Context context, TypedArray typedArray, DatePickDialog dialog) {
-        int themeColor = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.cardOnSurface);
-        int redColor = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.theme_red);
+        int themeColor = ThemeAttrs.onSurface(context);
+        int redColor = ThemeAttrs.error(context);
         int confirmColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, themeColor);
         int todayColor = typedArray.hasValue(R.styleable.FormUI_todayTextColor)
                 ? typedArray.getColor(R.styleable.FormUI_todayTextColor, themeColor)
@@ -130,7 +131,7 @@ final class FormDatePickDialogHelper {
 
     static DatePickDialog applyDefaultStyle(Context context, int confirmColor, boolean showClearButton,
                                             DatePickDialog dialog) {
-        int themeColor = ContextCompat.getColor(context,io.coderf.arklab.common.R.color.cardOnSurface);
+        int themeColor = ThemeAttrs.onSurface(context);
         int resolvedConfirmColor = confirmColor != 0 ? confirmColor : themeColor;
         return dialog.setPositiveTextColor(resolvedConfirmColor)
                 .setTodayTextColor(resolvedConfirmColor)

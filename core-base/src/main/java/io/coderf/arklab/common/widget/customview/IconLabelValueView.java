@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 图标-标签-值-图标布局视图
@@ -177,11 +178,11 @@ public class IconLabelValueView extends ConstraintLayout {
             bottomBorder = typedArray.getBoolean(R.styleable.IconLabelValueView_bottomBorder, true);
 
             valueTextColor = typedArray.getColor(R.styleable.IconLabelValueView_valueTextColor,
-                    ContextCompat.getColor(getContext(), R.color.cardOnSurface));
+                    ThemeAttrs.onSurface(getContext()));
             borderBottomColor = typedArray.getColor(R.styleable.IconLabelValueView_borderBottomColor,
-                    ContextCompat.getColor(getContext(), R.color.h_line_color));
+                    ThemeAttrs.outlineVariant(getContext()));
             labelTextColor = typedArray.getColor(R.styleable.IconLabelValueView_labelTextColor,
-                    ContextCompat.getColor(getContext(), R.color.cardOnSurface));
+                    ThemeAttrs.onSurface(getContext()));
 
             labelTextSize = typedArray.getDimension(R.styleable.IconLabelValueView_labelTextSize,
                     DensityUtil.sp2px(getContext(), 14));
@@ -223,8 +224,8 @@ public class IconLabelValueView extends ConstraintLayout {
         } else {
             // 默认值
             valueTextColor = ContextCompat.getColor(getContext(), R.color.dark_light);
-            borderBottomColor = ContextCompat.getColor(getContext(), R.color.h_line_color);
-            labelTextColor = ContextCompat.getColor(getContext(), R.color.autoColor);
+            borderBottomColor = ThemeAttrs.outlineVariant(getContext());
+            labelTextColor = ThemeAttrs.onSurface(getContext());
 
             labelTextSize = DensityUtil.sp2px(getContext(), 14);
             valueTextSize = DensityUtil.sp2px(getContext(), 14);

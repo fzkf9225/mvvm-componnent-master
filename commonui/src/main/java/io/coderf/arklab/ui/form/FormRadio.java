@@ -89,7 +89,7 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
     @Override
     protected void initAttr(AttributeSet attrs) {
         radioItems = new ArrayList<>();
-        int themeColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.themeColor);
+        int themeColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
         radioButtonTintColor = themeColor;
         radioUncheckedColor = themeColor;
         radioItemPadding = DensityUtil.dp2px(getContext(), 8f);
@@ -160,6 +160,12 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
         } else {
             radioContainer.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         }
+    }
+
+    @Override
+    protected void applySelectionAlignParams() {
+        super.applySelectionAlignParams();
+        applyRadioContainerGravity();
     }
 
     /**
@@ -420,6 +426,7 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
 
             optionSelected = false;
             FormToggleIconAnimator.applyIcon(iconView, parent.resolveUncheckedDrawable());
+            FormCheckableA11y.asRadio(this, resolveBindValue(item), () -> optionSelected);
         }
 
         @NonNull

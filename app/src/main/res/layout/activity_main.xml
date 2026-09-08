@@ -19,7 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         tools:context=".activity.MainActivity">
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
@@ -30,7 +30,7 @@
             app:itemIconTint="@drawable/footstyle"
             app:itemTextColor="@drawable/footstyle"
             app:itemActiveIndicatorStyle="@style/NavIndicatorStyle"
-            android:background="?android:attr/windowBackground"
+            android:background="?attr/colorSurfaceContainer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -25,6 +25,7 @@ import io.coderf.arklab.common.listener.OnOptionBottomMenuClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * Create by fz on 2020/6/23 0023
@@ -391,7 +392,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
             View bottomSheet = this.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
                 bottomSheet.setBackground(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                        ContextCompat.getColor(getContext(), R.color.cardSurface),
+                        ThemeAttrs.surfaceContainerHigh(getContext()),
                         DensityUtil.dp2px(getContext(), 16f),
                         DensityUtil.dp2px(getContext(), 16f),
                         0,
@@ -489,7 +490,7 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
         if (isShowLine) {
             binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL,
                     DensityUtil.dp2px(getContext(), 1),
-                    lineColor == -1 ? ContextCompat.getColor(getContext(), R.color.h_line_color) : lineColor, false));
+                    lineColor == -1 ? ThemeAttrs.outlineVariant(getContext()) : lineColor, false));
         }
     }
 

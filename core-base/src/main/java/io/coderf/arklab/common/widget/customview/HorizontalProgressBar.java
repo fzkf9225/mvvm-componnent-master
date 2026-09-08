@@ -97,9 +97,12 @@ public class HorizontalProgressBar extends View {
     private void init(AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_Progress_Bar);
-            bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
-            progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
-            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor, ContextCompat.getColor(getContext(), R.color.autoColor));
+            bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext()));
+            progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext()));
+            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_textSize, DensityUtil.dp2px(getContext(), 14));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2f));
@@ -108,7 +111,9 @@ public class HorizontalProgressBar extends View {
             progress = typedArray.getFloat(R.styleable.Custom_Progress_Bar_progress, 0);
             typedArray.recycle();
         } else {
-            fontColor = ContextCompat.getColor(getContext(), R.color.autoColor);
+            bgColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
+            progressColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
+            fontColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
             fontSize = DensityUtil.sp2px(getContext(), 14);
             bgRadius = DensityUtil.sp2px(getContext(), DEFAULT_RADIUS);
         }

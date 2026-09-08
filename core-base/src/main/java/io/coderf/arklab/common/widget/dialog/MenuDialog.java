@@ -23,6 +23,7 @@ import io.coderf.arklab.common.databinding.MenuDialogBinding;
 import io.coderf.arklab.common.listener.OnOptionBottomMenuClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 
 /**
@@ -518,7 +519,7 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
         if (isShowLine) {
             binding.mRecyclerViewOption.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL,
                     DensityUtil.dp2px(getContext(), 1),
-                    lineColor == -1 ? ContextCompat.getColor(getContext(), R.color.h_line_color) : lineColor, false));
+                    lineColor == -1 ? ThemeAttrs.outlineVariant(getContext()) : lineColor, false));
         }
     }
 

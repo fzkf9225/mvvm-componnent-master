@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         tools:context=".activity.RecyclerViewSampleActivity">
 
         <io.coderf.arklab.common.widget.popupwindow.TextPopupView
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_city"
             app:layout_constraintStart_toStartOf="parent"
-            app:hiltTextColor="@color/hint_text_color" />
+            app:hiltTextColor="?attr/colorOnSurfaceVariant" />
 
         <io.coderf.arklab.common.widget.popupwindow.TextPopupView
             android:id="@+id/tv_city"
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_sex"
             app:layout_constraintEnd_toStartOf="@+id/tv_quality"
-            app:hiltTextColor="@color/hint_text_color" />
+            app:hiltTextColor="?attr/colorOnSurfaceVariant" />
 
         <io.coderf.arklab.common.widget.popupwindow.TextPopupView
             android:id="@+id/tv_quality"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_city"
             app:layout_constraintEnd_toEndOf="parent"
-            app:hiltTextColor="@color/hint_text_color" />
+            app:hiltTextColor="?attr/colorOnSurfaceVariant" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/recyclerview_sample_fragment_view"
@@ -55,7 +55,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_sex"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/default_background"
+            android:background="?android:attr/colorBackground"
             app:defaultNavHost="true"
             app:layout_constraintVertical_weight="1"
             app:navGraph="@navigation/recyclerview_sample_navigation" />

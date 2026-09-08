@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:fillViewport="true">
 
         <LinearLayout
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="TabLayout 示例配置"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="StyledTabLayout（圆角背景）"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -141,7 +141,7 @@
                 android:layout_marginBottom="12dp"
                 android:checked="true"
                 android:text="选中加粗"
-                android:textColor="@color/autoColor" />
+                android:textColor="?attr/colorOnSurface" />
 
             <!-- IndicatorTabLayout -->
             <com.google.android.material.textview.MaterialTextView
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="IndicatorTabLayout（Canvas 指示条）"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -300,14 +300,14 @@
                 android:layout_marginBottom="16dp"
                 android:checked="true"
                 android:text="选中加粗"
-                android:textColor="@color/autoColor" />
+                android:textColor="?attr/colorOnSurface" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="进入示例"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -320,7 +320,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:text="Material TabLayout（BaseViewPagerFragment）"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 tools:ignore="RtlSymmetry" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -332,7 +332,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:text="圆角背景 Tab（BaseStyledViewPagerFragment）"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 tools:ignore="RtlSymmetry" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -343,7 +343,7 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:text="Canvas 指示条 Tab（BaseIndicatorViewPagerFragment）"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 tools:ignore="RtlSymmetry" />
         </LinearLayout>
     </ScrollView>

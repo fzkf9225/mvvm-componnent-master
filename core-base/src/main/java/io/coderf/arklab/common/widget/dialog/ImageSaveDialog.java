@@ -24,6 +24,7 @@ import io.coderf.arklab.common.databinding.ImageSaveDialogBinding;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewGalleryConfig;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 保存图片到本地 dialog
@@ -123,13 +124,13 @@ public class ImageSaveDialog extends BaseDialog {
         float cornerRadius = cfg.getCornerRadiusPx() != null
                 ? cfg.getCornerRadiusPx() : DensityUtil.dp2px(ctx, 12f);
         int white = cfg.getButtonBackgroundColor() != null
-                ? cfg.getButtonBackgroundColor() : ContextCompat.getColor(ctx, R.color.cardSurface);
+                ? cfg.getButtonBackgroundColor() : ThemeAttrs.surface(ctx);
         int saveTextColor = cfg.getSaveTextColor() != null
-                ? cfg.getSaveTextColor() : ContextCompat.getColor(ctx, R.color.autoColor);
+                ? cfg.getSaveTextColor() : ThemeAttrs.onSurface(ctx);
         int cancelTextColor = cfg.getCancelTextColor() != null
                 ? cfg.getCancelTextColor() : ContextCompat.getColor(ctx, R.color.onSurfaceVariant);
         int rippleMask = cfg.getRippleColor() != null
-                ? cfg.getRippleColor() : ContextCompat.getColor(ctx, R.color.h_line_color);
+                ? cfg.getRippleColor() : ThemeAttrs.outlineVariant(ctx);
         boolean saveBold = cfg.getSaveTextBold() != null ? cfg.getSaveTextBold() : true;
         float saveTextSizePx = cfg.getSaveTextSizePx() != null
                 ? cfg.getSaveTextSizePx()

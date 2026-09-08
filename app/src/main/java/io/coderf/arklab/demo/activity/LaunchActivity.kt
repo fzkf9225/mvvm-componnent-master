@@ -1,5 +1,6 @@
 package io.coderf.arklab.demo.activity
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -189,10 +190,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
         ProtectionGuidelinesDialog(this)
             .setCanOutSide(false)
             .setPositiveBackgroundColor(
-                ContextCompat.getColor(
-                    this,
-                    io.coderf.arklab.common.R.color.themeColor
-                )
+                ThemeAttrs.primary(this)
             )
             .setSpannableContent(getSpannableContent())
             .setOnNegativeClickListener { _: Dialog? ->
@@ -268,10 +266,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.setColor(
-                    ContextCompat.getColor(
-                        this@LaunchActivity,
-                        io.coderf.arklab.common.R.color.themeColor
-                    )
+                    ThemeAttrs.primary(this@LaunchActivity)
                 )
                 ds.isUnderlineText = false // 无下划线
             }
@@ -295,10 +290,7 @@ class LaunchActivity : BaseActivity<EmptyViewModel, ActivityLaunchBinding>() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.setColor(
-                    ContextCompat.getColor(
-                        this@LaunchActivity,
-                        io.coderf.arklab.common.R.color.themeColor
-                    )
+                    ThemeAttrs.primary(this@LaunchActivity)
                 )
                 ds.isUnderlineText = false // 无下划线
             }

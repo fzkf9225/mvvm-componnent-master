@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import com.google.android.material.textview.MaterialTextView
 import io.coderf.arklab.common.R
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import kotlin.math.roundToInt
 
 /**
@@ -55,16 +56,16 @@ class IndicatorTabLayout @JvmOverloads constructor(
     /** 指示条宽度模式：0=text, 1=fixed, 2=tab，对应 XML {@code indicatorWidthMode} */
     private var indicatorWidthMode = 0
     /** 指示条颜色，对应 XML {@code indicatorColor} */
-    private var indicatorColor = Color.WHITE
+    private var indicatorColor = 0
     /** 指示条圆角（px），对应 XML {@code indicatorCornerRadius} */
     private var indicatorCornerRadius = 0f
     /** 指示条距底部间距（px），对应 XML {@code indicatorMarginBottom} */
     private var indicatorMarginBottom = 0f
 
     /** 选中态文字颜色，对应 XML {@code selectedTextColor} */
-    private var selectedTextColor = Color.WHITE
+    private var selectedTextColor = 0
     /** 未选中态文字颜色，对应 XML {@code unselectedTextColor} */
-    private var unselectedTextColor = Color.LTGRAY
+    private var unselectedTextColor = 0
     /** 选中态文字大小（px），对应 XML {@code selectedTextSize} */
     private var selectedTextSizePx = sp2px(14f)
     /** 未选中态文字大小（px），对应 XML {@code unselectedTextSize} */
@@ -81,6 +82,9 @@ class IndicatorTabLayout @JvmOverloads constructor(
     private val rectF = RectF()
 
     init {
+        indicatorColor = ThemeAttrs.primary(context)
+        selectedTextColor = ThemeAttrs.onSurface(context)
+        unselectedTextColor = ThemeAttrs.onSurfaceVariant(context)
         parseAttributes(context, attrs)
 
         setSelectedTabIndicator(null)

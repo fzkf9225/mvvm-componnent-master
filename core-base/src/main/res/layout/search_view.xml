@@ -50,7 +50,7 @@
                 android:paddingTop="0dp"
                 android:paddingEnd="@dimen/padding_m"
                 android:paddingBottom="0dp"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
@@ -67,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cl_search"
             app:layout_constraintBottom_toBottomOf="@+id/cl_search"
-            app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+            app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
             android:gravity="center"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:minWidth="0dp"
@@ -75,7 +75,7 @@
             android:paddingStart="@dimen/padding_xl"
             android:paddingEnd="@dimen/padding_xl"
             android:text="@string/search"
-            android:textColor="@color/onPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="@dimen/font_size_l" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

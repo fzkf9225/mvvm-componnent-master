@@ -201,6 +201,9 @@
             <enum name="skeleton" value="1" />
         </attr>
 
+        <!-- 加载文案尾部的 . / … 是否依次循环播放，默认 true；尾部无点号时不会播放 -->
+        <attr name="loadingDotAnimEnabled" format="boolean" />
+
         <!-- 骨架屏配置（引用下方全局 attr，与 SkeletonLayout 共用） -->
         <attr name="skeletonRowCount" />
         <attr name="skeletonRowHeight" />

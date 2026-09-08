@@ -10,7 +10,7 @@
         android:id="@+id/cl_launcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         tools:context=".activity.LaunchActivity">
 
     </androidx.constraintlayout.widget.ConstraintLayout>

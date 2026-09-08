@@ -20,6 +20,8 @@ import io.coderf.arklab.demo.activity.FormDetailActivity;
 import io.coderf.arklab.demo.activity.FormTopDetailActivity;
 import io.coderf.arklab.demo.activity.GoogleGPSActivity;
 import io.coderf.arklab.demo.activity.HiltActivity;
+import io.coderf.arklab.demo.activity.Material3KitActivity;
+import io.coderf.arklab.demo.activity.MaterialCardViewActivity;
 import io.coderf.arklab.demo.activity.MediaActivity;
 import io.coderf.arklab.demo.activity.MediaCompressActivity;
 import io.coderf.arklab.demo.activity.MqttDemoActivity;
@@ -28,7 +30,6 @@ import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
-import io.coderf.arklab.demo.activity.VerifyTopActivity;
 import io.coderf.arklab.demo.activity.VideoPlayerEmbedDemoActivity;
 import io.coderf.arklab.demo.activity.ViewPagerSampleActivity;
 import io.coderf.arklab.demo.activity.WebViewBasicDemoActivity;
@@ -51,6 +52,8 @@ public enum UseCaseEnum {
      */
     WIGHT(WightActivity.class, "自定义组件", "自定义实现的一些View、ViewGroup", null),
     EMPTY_LAYOUT(EmptyLayoutDemoActivity.class, "EmptyLayout 骨架屏", "EmptyLayout 加载样式、骨架屏与空态/错误态用法演示", null),
+    MATERIAL3_KIT(Material3KitActivity.class, "Material3 能力", "SearchBar / Chip / ToggleGroup / BottomAppBar", null),
+    MATERIAL_CARD(MaterialCardViewActivity.class, "MaterialCardView", "Elevated / Filled / Outlined、可选中、媒体卡、描边与切角", null),
     DIALOG(DialogActivity.class, "自定义dialog", "自定义实现的一些Vdialog", null),
     MEDIA(MediaActivity.class, "媒体访问", "自定义媒体dialog可以实现选择图片、视频等", null),
     DOWNLOAD(DownloadActivity.class, "文件下载", "自定义断点续传下载功能", null),
@@ -66,8 +69,7 @@ public enum UseCaseEnum {
     VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器(Activity)", "横屏 Activity 定制播放器，默认展示全部控制按钮", getVideoBundle()),
     VIDEO_PLAYER_EMBED(VideoPlayerEmbedDemoActivity.class, "视频播放器(嵌入)", "View 嵌入 Activity，非全屏仅全屏按钮", getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class, "CoordinatorLayout沉浸式", "侧滑标签页面", null),
-    ANNOTATION(VerifyActivity.class, "自定义注解测试-Left", "通过自定义注解验证实体类参数问题，表单对齐方式为left，也是默认方式，分组验证方式为默认分组", null),
-    ANNOTATION_TOP(VerifyTopActivity.class, "自定义注解测试-Top", "通过自定义注解验证实体类参数问题，表单对齐方式为top，分组验证方式为Create", null),
+    ANNOTATION(VerifyActivity.class, "自定义注解测试", "表单注解校验：顶部可切换对齐方式、校验分组（Default/Create/Editor）与遇错即停/收集全部", null),
     FORM_UI(FormDetailActivity.class, "表单样式-Left", "封装的表单样式，表单对齐方式为left，也是默认方式", null),
     FORM_UI_TOP(FormTopDetailActivity.class, "表单样式-Top", "封装的表单样式，表单对齐方式为top", null),
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "ZXING 扫码/相册识码/生成二维码；相册识别与 WebView 文件选择共用 CaptureActivity", null),

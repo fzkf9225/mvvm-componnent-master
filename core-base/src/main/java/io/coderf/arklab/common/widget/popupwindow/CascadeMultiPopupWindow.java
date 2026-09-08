@@ -28,6 +28,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowCheckBoxAdapter;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 多选级联
@@ -103,8 +104,8 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         this.selectedListener = selectedListener;
         //默认参数
         itemHeight = DensityUtil.dp2px(context, 40f);
-        selectionTextColor = ContextCompat.getColor(context, R.color.autoColor);
-        selectTextColor = ContextCompat.getColor(context, R.color.autoColor);
+        selectionTextColor = ThemeAttrs.onSurface(context);
+        selectTextColor = ThemeAttrs.onSurface(context);
         radius = DensityUtil.dp2px(context, 6f);
         selectBgColor = ContextCompat.getColor(context, R.color.default_background);
         paddingStart = DensityUtil.dp2px(context, 12f);
@@ -112,9 +113,9 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         paddingEnd = DensityUtil.dp2px(context, 12f);
         paddingBottom = DensityUtil.dp2px(context, 6f);
         // 获取选中状态的Drawable
-        checkedDrawable = DrawableUtil.createCheckedDrawable(context,ContextCompat.getColor(context, R.color.themeColor),DensityUtil.dp2px(context, 16f));
+        checkedDrawable = DrawableUtil.createCheckedDrawable(context,ThemeAttrs.primary(context),DensityUtil.dp2px(context, 16f));
         // 获取未选中状态的Drawable
-        uncheckedDrawable = DrawableUtil.createUncheckedDrawable(DensityUtil.dp2px(context, 1),ContextCompat.getColor(context, R.color.themeColor),DensityUtil.dp2px(context, 16));
+        uncheckedDrawable = DrawableUtil.createUncheckedDrawable(DensityUtil.dp2px(context, 1),ThemeAttrs.primary(context),DensityUtil.dp2px(context, 16));
         initViews(context);
     }
 
@@ -158,7 +159,7 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
                         context,
                         LinearLayoutManager.VERTICAL,
                         DensityUtil.dp2px(context, 1f),
-                        ContextCompat.getColor(context, R.color.h_line_color)
+                        ThemeAttrs.outlineVariant(context)
                 )
         );
         binding.mRecyclerviewOptions.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));

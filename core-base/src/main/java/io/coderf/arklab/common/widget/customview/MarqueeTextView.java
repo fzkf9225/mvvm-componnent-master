@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 单行横向滚动文本控件。文字超出控件宽度时自动左右滚动，可配置速度、方向、圆角背景与描边。
@@ -164,7 +165,7 @@ public class MarqueeTextView extends View {
      */
     private void initAttrs(Context context, @Nullable AttributeSet attrs) {
         textSizePx = DensityUtil.sp2px(context, 14f);
-        textColor = ContextCompat.getColor(context, R.color.autoColor);
+        textColor = ThemeAttrs.onSurface(context);
         scrollSpeedPx = DensityUtil.dp2px(context, DEFAULT_SCROLL_SPEED_DP);
         marqueeGapPx = DensityUtil.dp2px(context, 48f);
         if (attrs == null) {

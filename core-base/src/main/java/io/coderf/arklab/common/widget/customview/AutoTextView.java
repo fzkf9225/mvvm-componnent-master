@@ -32,6 +32,7 @@ import java.util.List;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 带 3D 上下翻页动画的文字切换控件，基于 {@link TextSwitcher}。
@@ -147,7 +148,7 @@ public class AutoTextView extends TextSwitcher implements ViewSwitcher.ViewFacto
      */
     private void initAttrs(Context context, @Nullable AttributeSet attrs) {
         textSizePx = DensityUtil.sp2px(context, 14f);
-        textColor = ContextCompat.getColor(context, R.color.autoColor);
+        textColor = ThemeAttrs.onSurface(context);
         if (attrs == null) {
             return;
         }

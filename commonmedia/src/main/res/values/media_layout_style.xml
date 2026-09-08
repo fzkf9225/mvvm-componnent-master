@@ -64,7 +64,7 @@
         <item name="android:textSize">@dimen/action_sheet_cancel_text_size</item>
         <item name="android:textAllCaps">false</item>
         <!-- 背景使用语义颜色 -->
-        <item name="backgroundTint">?attr/colorSurface</item>
+        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
         <item name="rippleColor">?attr/colorControlHighlight</item>
     </style>
 

@@ -10,7 +10,7 @@
         android:id="@+id/ll_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:orientation="vertical">
 
         <include
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/default_background">
+            android:background="?android:attr/colorBackground">
 
             <com.scwang.smart.refresh.header.ClassicsHeader
                 android:id="@+id/v_header"

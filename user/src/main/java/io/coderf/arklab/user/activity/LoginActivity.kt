@@ -1,5 +1,6 @@
 package io.coderf.arklab.user.activity
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.api.AppManager
+import io.coderf.arklab.common.api.Config
 import io.coderf.arklab.common.api.ConstantsHelper
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.base.BaseResponse
@@ -35,8 +37,6 @@ import io.coderf.arklab.user.view.UserView
 import io.coderf.arklab.user.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import io.coderf.arklab.common.R as CommonR
-
 
 /**
  * 登录，登录方式：账号密码登录
@@ -73,7 +73,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
     override fun initView(savedInstanceState: Bundle?) {
         binding.cbAgreement.isChecked = UserAccountHelper.isAgree()
         binding.cbAgreement.text = LoginAgreementMarkup.build(
-            ContextCompat.getColor(this, CommonR.color.themeColor)
+            ThemeAttrs.primary(this)
         )
         binding.cbAgreement.movementMethod = LinkMovementMethod.getInstance()
         RxView.setOnClickListener(binding.loginSubmit) {
@@ -129,7 +129,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
     }
 
     private fun showAgreementConsentDialog(rawPassword: String?) {
-        val themeColor = ContextCompat.getColor(this, CommonR.color.themeColor)
+        val themeColor = ThemeAttrs.primary(this)
         ConfirmDialog(this)
             .setSpannableContent(LoginAgreementMarkup.build(themeColor))
             .setNegativeText("拒绝")
@@ -159,8 +159,9 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         }
         mViewModel.imageLiveData.observe(this) { data ->
             Glide.with(this).load(data.imageBase64).apply(
-                RequestOptions().error(CommonR.mipmap.ic_default_image)
-                    .placeholder(CommonR.mipmap.ic_default_image)
+                RequestOptions()
+                    .error(Config.getInstance().defaultErrorImageRes)
+                    .placeholder(Config.getInstance().defaultPlaceholderRes)
             ).into(binding.imageVerificationCode)
         }
         mViewModel.refreshCaptchaAndLoadImage()

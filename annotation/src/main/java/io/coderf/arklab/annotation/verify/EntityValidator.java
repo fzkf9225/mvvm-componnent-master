@@ -19,6 +19,7 @@ import io.coderf.arklab.annotation.annotation.VerifyField;
 import io.coderf.arklab.annotation.annotation.VerifyParams;
 import io.coderf.arklab.annotation.annotation.VerifySort;
 import io.coderf.arklab.annotation.annotation.VerifyWhen;
+import io.coderf.arklab.annotation.annotation.VerifyWhenAll;
 import io.coderf.arklab.annotation.bean.FieldVerifyError;
 import io.coderf.arklab.annotation.bean.VerifyResult;
 import io.coderf.arklab.annotation.enums.VerifyType;
@@ -149,7 +150,9 @@ public final class EntityValidator {
         return field.isAnnotationPresent(VerifyParams.class)
                 || field.isAnnotationPresent(VerifyField.class)
                 || field.isAnnotationPresent(Valid.class)
+                || field.isAnnotationPresent(VerifyArray.class)
                 || field.isAnnotationPresent(VerifyWhen.class)
+                || field.isAnnotationPresent(VerifyWhenAll.class)
                 || field.isAnnotationPresent(VerifyCrossField.class)
                 || field.isAnnotationPresent(VerifyCrossFields.class);
     }

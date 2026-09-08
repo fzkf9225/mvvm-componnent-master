@@ -23,6 +23,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.DialogPickerBinding;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * PickerDialog选择框
@@ -478,7 +479,7 @@ public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
         }
         int pickerTextColor = textColor != -1
                 ? textColor
-                : ContextCompat.getColor(context, R.color.autoColor);
+                : ThemeAttrs.onSurface(context);
         applyNumberPickerTextColor(binding.dataPicker, pickerTextColor);
         binding.dataPicker.setSelectionDividerHeight(dividerHeight);
         binding.dataPicker.setVisibility(visibility);

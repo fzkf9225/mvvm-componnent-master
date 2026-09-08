@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/vertical_margin_l"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
             android:layout_marginEnd="@dimen/horizontal_margin_xl"
             android:textStyle="bold"
@@ -38,7 +38,7 @@
             android:paddingEnd="@dimen/horizontal_margin_l"
             app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
             android:gravity="center"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="13sp"
             tools:text="需要先验证实名制身份信息" />
 
@@ -46,7 +46,7 @@
             android:id="@+id/h_line"
             android:layout_height="1dp"
             android:layout_width="0dp"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
@@ -61,7 +61,7 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="15sp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

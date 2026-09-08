@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.widget.speak
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -80,7 +81,7 @@ class SpeakerView : View {
     private val textPaint: Paint by lazy {
         // 文字绘制用的 Paint 对象
         Paint().apply {
-            this.color = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
+            this.color = ThemeAttrs.onSurface(context)
             this.textSize = DensityUtil.sp2px(context, 12f).toFloat()
             this.textAlign = if (type == TYPE_OTHER) Paint.Align.LEFT else Paint.Align.RIGHT
         }
@@ -89,14 +90,14 @@ class SpeakerView : View {
 
     private val paintFill: Paint by lazy {
         Paint().apply {
-            this.color = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
+            this.color = ThemeAttrs.onSurface(context)
             this.style = Paint.Style.FILL // 设置为FILL
             this.isAntiAlias = true
         }
     }
     private val paintStroke: Paint by lazy {
         Paint().apply {
-            this.color = ContextCompat.getColor(context, io.coderf.arklab.common.R.color.autoColor)
+            this.color = ThemeAttrs.onSurface(context)
             this.style = Paint.Style.STROKE
             this.strokeWidth = 5f
             this.isAntiAlias = true

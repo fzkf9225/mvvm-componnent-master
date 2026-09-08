@@ -32,6 +32,7 @@ import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.core.ui.delegate.AlwaysInitData;
+import io.coderf.arklab.core.ui.delegate.EdgeToEdgeDisabled;
 import io.coderf.arklab.core.ui.delegate.EdgeToEdgeEnabled;
 import io.coderf.arklab.core.ui.delegate.EdgeToEdgePolicy;
 import io.coderf.arklab.core.ui.delegate.HideKeyboardOnTouchOutsideDelegate;
@@ -112,9 +113,12 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @Nullable
     private HideKeyboardOnTouchOutsideDelegate hideKeyboardDelegate;
 
-    /** Edge-to-Edge；默认开启。全屏视频等可改为 {@link io.coderf.arklab.core.ui.delegate.EdgeToEdgeDisabled}。 */
-    @NonNull
-    protected EdgeToEdgePolicy edgeToEdgePolicy = EdgeToEdgeEnabled.INSTANCE;
+    /**
+     * Edge-to-Edge；未赋值时跟随 {@link Config#isEdgeToEdgeEnabled()}（默认开启）。
+     * 全屏视频等可改为 {@link io.coderf.arklab.core.ui.delegate.EdgeToEdgeDisabled}。
+     */
+    @Nullable
+    protected EdgeToEdgePolicy edgeToEdgePolicy;
 
     /** 键盘顶起底部；默认关闭。表单页可改为 {@link io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled}。 */
     @NonNull
@@ -160,6 +164,15 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         }
         if (hideKeyboardDelegate == null) {
             hideKeyboardDelegate = new HideKeyboardOnTouchOutsideDelegate(this, hideKeyboardOnTouchOutsidePolicy);
+        }
+        ensureEdgeToEdgePolicy();
+    }
+
+    private void ensureEdgeToEdgePolicy() {
+        if (edgeToEdgePolicy == null) {
+            edgeToEdgePolicy = Config.getInstance().isEdgeToEdgeEnabled()
+                    ? EdgeToEdgeEnabled.INSTANCE
+                    : EdgeToEdgeDisabled.INSTANCE;
         }
     }
 
@@ -254,10 +267,12 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 是否启用 Android 15 Edge-to-Edge。默认读 {@link #edgeToEdgePolicy}。
+     * 是否启用 Android 15 Edge-to-Edge。默认读 {@link #edgeToEdgePolicy}，未赋值时跟随 {@link Config}。
      */
     protected boolean shouldApplyEdgeToEdge() {
-        return edgeToEdgePolicy.shouldApply();
+        ensureEdgeToEdgePolicy();
+        EdgeToEdgePolicy policy = edgeToEdgePolicy;
+        return policy != null && policy.shouldApply();
     }
 
     /**

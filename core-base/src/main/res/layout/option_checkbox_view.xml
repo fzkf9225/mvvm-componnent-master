@@ -40,7 +40,7 @@
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:ellipsize="middle"
             android:text="@{item.popupName +`（`+(item.childList == null ?0 :item.childList.size())+`）`}"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

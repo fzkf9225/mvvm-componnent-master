@@ -8,6 +8,7 @@ import androidx.databinding.BaseObservable;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * ProgressBarSetting 类。
@@ -40,7 +41,7 @@ public class ProgressBarSetting extends BaseObservable {
 
     public ProgressBarSetting(Context context) {
         this.context = context;
-        bgColor = ContextCompat.getColor(getContext(), R.color.themeColor);
+        bgColor = ThemeAttrs.primary(getContext());
         progressColor = ContextCompat.getColor(getContext(), R.color.theme_green);
         bgRadius = (float) DensityUtil.dp2px(getContext(), 5);
         fontSize = DensityUtil.sp2px(getContext(), 12);

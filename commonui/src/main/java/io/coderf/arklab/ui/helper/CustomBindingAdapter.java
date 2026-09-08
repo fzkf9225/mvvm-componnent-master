@@ -48,8 +48,7 @@ public class CustomBindingAdapter {
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditText view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
-            TextInputEditText editText = (TextInputEditText) view.getTvSelection();
-            // 在文本更改时通知数据绑定系统
+            TextInputEditText editText = view.getEditText();
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -136,8 +135,7 @@ public class CustomBindingAdapter {
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditArea view, final InverseBindingListener textAttrChanged) {
         if (textAttrChanged != null) {
-            TextInputEditText editText = (TextInputEditText) view.getTvSelection();
-            // 在文本更改时通知数据绑定系统
+            TextInputEditText editText = view.getEditText();
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

@@ -1,5 +1,6 @@
 package io.coderf.arklab.demo.activity
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -31,7 +32,7 @@ class RoomPagingActivity : BaseSearchActivity<EmptyViewModel>() {
         super.initView(savedInstanceState)
         supportFragmentManager.beginTransaction().add(io.coderf.arklab.common.R.id.search_view_container, mCurrentFragment).commit()
         binding.searchView.search.setBackgroundDrawable(DrawableUtil.createShapeDrawable(
-            ContextCompat.getColor(this, io.coderf.arklab.common.R.color.themeColor), DensityUtil.dp2px(this,6f).toFloat()))
+            ThemeAttrs.primary(this), DensityUtil.dp2px(this,6f).toFloat()))
     }
 
     override fun initData(bundle: Bundle?) {

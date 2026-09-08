@@ -96,11 +96,6 @@ public class ErrorServiceImpl implements ErrorService {
     }
 
     @Override
-    public void uploadErrorInfo(String errorInfo) {
-
-    }
-
-    @Override
     @Deprecated
     public Class<?> getMainActivity() {
         return MainActivity.class;

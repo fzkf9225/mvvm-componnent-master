@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:fillViewport="true"
         tools:context=".activity.EmptyLayoutDemoActivity">
 
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="4dp"
                 android:text="@string/empty_layout_demo_intro"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/font_size_m"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:background="?attr/colorSurface"
                 android:padding="@dimen/padding_s"
-                android:textColor="@color/themeColor"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="@dimen/font_size_m"
                 tools:text="当前状态：HIDE_LAYOUT"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -162,7 +162,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="模拟列表 Item #1"
-                        android:textColor="@color/autoColor"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/font_size_l" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/vertical_margin_m"
                         android:text="模拟列表 Item #2"
-                        android:textColor="@color/autoColor"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/font_size_l" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -178,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/vertical_margin_m"
                         android:text="模拟列表 Item #3"
-                        android:textColor="@color/autoColor"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/font_size_l" />
 
                     <com.google.android.material.textview.MaterialTextView

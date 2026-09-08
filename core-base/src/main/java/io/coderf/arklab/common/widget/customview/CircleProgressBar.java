@@ -109,10 +109,13 @@ public class CircleProgressBar extends View {
     private void init(AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.Custom_Progress_Bar);
-            bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor, DEFAULT_BG_COLOR);
-            progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor, DEFAULT_PROGRESS_COLOR);
+            bgColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_bgColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext()));
+            progressColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_progressColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext()));
             strokeWidth = typedArray.getDimension(R.styleable.Custom_Progress_Bar_strokeWidth, DEFAULT_STROKE_WIDTH);
-            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor, Color.BLACK);
+            fontColor = typedArray.getColor(R.styleable.Custom_Progress_Bar_textColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             fontSize = typedArray.getDimension(R.styleable.Custom_Progress_Bar_textSize, DensityUtil.sp2px(getContext(), 12));
             showText = typedArray.getBoolean(R.styleable.Custom_Progress_Bar_showText, true);
             fontPercent = typedArray.getInt(R.styleable.Custom_Progress_Bar_fontPercent, DensityUtil.dp2px(getContext(), 2));
@@ -121,6 +124,9 @@ public class CircleProgressBar extends View {
             angle = progress / maxProgress * 360;
             typedArray.recycle();
         } else {
+            bgColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
+            progressColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
+            fontColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
             fontSize = DensityUtil.sp2px(getContext(), 14);
             strokeWidth = DensityUtil.dp2px(getContext(), DEFAULT_STROKE_WIDTH);
         }

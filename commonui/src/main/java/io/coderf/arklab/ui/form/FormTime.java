@@ -48,6 +48,7 @@ public class FormTime extends FormSelection {
      * 日期选择器dialog
      */
     protected DatePickDialog datePickDialog;
+    protected int datePickerUi;
 
     public FormTime(Context context) {
         super(context);
@@ -71,11 +72,13 @@ public class FormTime extends FormSelection {
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
+            datePickerUi = typedArray.getInt(R.styleable.FormUI_datePickerUi, FormMaterialPickers.UI_WHEEL);
         } else {
             datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
-            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface);
+            confirmTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
+            datePickerUi = FormMaterialPickers.UI_WHEEL;
             showClearButton = true;
         }
         if (TextUtils.isEmpty(separator)) {
@@ -127,6 +130,27 @@ public class FormTime extends FormSelection {
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtil.logger(TAG, "解析默认日志异常:" + e);
+            }
+            if (datePickerUi == FormMaterialPickers.UI_CALENDAR) {
+                Calendar initial = Calendar.getInstance();
+                try {
+                    if (!TextUtils.isEmpty(textView.getText())) {
+                        Date date = DateUtil.getDateByFormat(textView.getText().toString(), this.format);
+                        initial.setTime(date);
+                    }
+                } catch (Exception ignored) {
+                }
+                FormMaterialPickers.showTime(getContext(), labelString, initial, true, calendar -> {
+                    String text = NumberUtil.formatMonthOrDay(calendar.get(Calendar.HOUR_OF_DAY))
+                            + separator + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MINUTE))
+                            + separator + NumberUtil.formatMonthOrDay(calendar.get(Calendar.SECOND));
+                    if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
+                        textView.setText(text);
+                    } else {
+                        textView.setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                    }
+                });
+                return;
             }
             datePickDialog.show();
         });

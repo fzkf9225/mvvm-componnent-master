@@ -24,4 +24,126 @@
     <style name="NavIndicatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@android:color/transparent</item>
     </style>
+
+    <!-- Chip：8dp 圆角，选中主色填充。Filter 自带勾选图标。 -->
+    <style name="Widget.App.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="chipCornerRadius">8dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="chipBackgroundColor">@color/chip_filter_bg</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_filter_stroke</item>
+        <item name="android:textColor">@color/chip_filter_text</item>
+        <item name="android:textSize">13sp</item>
+        <item name="checkedIconVisible">true</item>
+        <item name="checkedIconTint">?attr/colorOnPrimary</item>
+        <item name="chipStartPadding">10dp</item>
+        <item name="chipEndPadding">10dp</item>
+    </style>
+    <!-- Assist：图标 + 容器色，通常不可选中，用来做快捷操作。 -->
+    <style name="Widget.App.Chip.Assist" parent="Widget.Material3.Chip.Assist">
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="chipBackgroundColor">@color/chip_assist_bg</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textColor">@color/chip_assist_text</item>
+        <item name="android:textSize">13sp</item>
+        <item name="chipIconVisible">true</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="chipIconTint">?attr/colorOnPrimaryContainer</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
+    </style>
+    <!-- Input：标签/已选项，可关闭。 -->
+    <style name="Widget.App.Chip.Input" parent="Widget.Material3.Chip.Input">
+        <item name="chipCornerRadius">6dp</item>
+        <item name="chipMinHeight">32dp</item>
+        <item name="chipBackgroundColor">@color/chip_input_bg</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textColor">@color/chip_input_text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="closeIconVisible">true</item>
+        <item name="closeIconTint">?attr/colorOnSecondaryContainer</item>
+        <item name="closeIconSize">16dp</item>
+    </style>
+
+    <!-- ToggleGroup 内按钮：圆角/描边/选中填充走 ColorStateList。 -->
+    <style name="Widget.App.Button.Toggle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:minWidth">52dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/toggle_button_text</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/toggle_button_stroke</item>
+        <item name="backgroundTint">@color/toggle_button_bg</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
+    </style>
+    <!-- 同一个 ToggleGroup 里单独改「月」选中色。 -->
+    <style name="Widget.App.Button.Toggle.Month" parent="Widget.App.Button.Toggle">
+        <item name="android:textColor">@color/toggle_button_month_text</item>
+        <item name="strokeColor">@color/toggle_button_month_stroke</item>
+        <item name="backgroundTint">@color/toggle_button_month_bg</item>
+        <item name="rippleColor">@color/theme_green</item>
+    </style>
+
+    <!-- 胶囊轨道 ToggleGroup：组 2dp padding + 内外 50% 圆角，无描边分割线。 -->
+    <style name="ShapeAppearance.App.ToggleCapsule" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="Widget.App.ButtonToggleGroup.Capsule" parent="Widget.Material3.MaterialButtonToggleGroup">
+        <item name="android:background">@drawable/bg_toggle_capsule_track</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:spacing">0dp</item>
+        <item name="innerCornerSize">50%</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.ToggleCapsule</item>
+        <item name="selectionRequired">true</item>
+        <item name="singleSelection">true</item>
+    </style>
+    <style name="Widget.App.Button.Toggle.Capsule" parent="Widget.Material3.Button.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:minWidth">72dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/toggle_capsule_text</item>
+        <item name="backgroundTint">@color/toggle_capsule_bg</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="elevation">0dp</item>
+        <item name="rippleColor">@color/theme_green</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.App.Card.Checkable" parent="Widget.Material3.CardView.Outlined">
+        <item name="android:checkable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="cardBackgroundColor">@color/card_checkable_bg</item>
+        <item name="cardElevation">0dp</item>
+        <item name="checkedIconTint">?attr/colorPrimary</item>
+        <item name="checkedIconVisible">true</item>
+        <item name="strokeColor">@color/card_checkable_stroke</item>
+        <item name="strokeWidth">1.5dp</item>
+    </style>
+    <style name="Widget.App.Card.Checkable.BottomEnd" parent="Widget.App.Card.Checkable">
+        <item name="checkedIconGravity">BOTTOM_END</item>
+    </style>
+    <style name="ShapeAppearance.App.Card" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="ShapeAppearance.App.Card.Cut">
+        <item name="cornerFamily">cut</item>
+    </style>
+    <style name="ShapeAppearance.App.Card.LargeRound">
+        <item name="cornerSize">24dp</item>
+    </style>
 </resources>

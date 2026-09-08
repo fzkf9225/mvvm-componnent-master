@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -21,6 +19,7 @@ import java.io.File;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.common.adapter.MediaShowAdapter;
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
@@ -77,8 +76,12 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
         Glide.with(holder.itemView.getContext())
                 .asBitmap()
                 .load(mList.get(pos).getPath())
-                .apply(new RequestOptions().placeholder(previewPhotoDialog.getPlaceholderImage() == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : previewPhotoDialog.getPlaceholderImage())
-                        .error(previewPhotoDialog.getErrorImage() == null ? ContextCompat.getDrawable(holder.itemView.getContext(), R.mipmap.ic_default_image) : previewPhotoDialog.getErrorImage()))
+                .apply(new RequestOptions().placeholder(previewPhotoDialog.getPlaceholderImage() == null
+                                ? Config.getInstance().getDefaultPlaceholderDrawable(holder.itemView.getContext())
+                                : previewPhotoDialog.getPlaceholderImage())
+                        .error(previewPhotoDialog.getErrorImage() == null
+                                ? Config.getInstance().getDefaultErrorImageDrawable(holder.itemView.getContext())
+                                : previewPhotoDialog.getErrorImage()))
                 .into(holder.getBinding().picPv);
     }
 

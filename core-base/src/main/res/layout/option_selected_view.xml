@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:lines="1"
             tools:text="我是选项"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl" />
 
         <com.google.android.material.imageview.ShapeableImageView

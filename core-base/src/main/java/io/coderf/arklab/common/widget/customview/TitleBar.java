@@ -13,13 +13,13 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 通用标题栏：MaterialToolbar + 居中标题 + 可选右侧文字操作。
@@ -89,8 +89,8 @@ public class TitleBar extends MaterialToolbar {
             }
         });
 
-        int defaultOnSurface = ContextCompat.getColor(context, R.color.cardOnSurface);
-        int defaultPrimary = ContextCompat.getColor(context, R.color.themeColor);
+        int defaultOnSurface = ThemeAttrs.onSurface(context);
+        int defaultPrimary = ThemeAttrs.primary(context);
         setTitleTextColor(defaultOnSurface);
         setNavigationIconTint(defaultOnSurface);
         rightButton.setTextColor(defaultPrimary);

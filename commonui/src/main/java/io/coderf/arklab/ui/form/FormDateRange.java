@@ -24,6 +24,7 @@ import io.coderf.arklab.common.utils.common.DateUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * FormDateRange 类。
@@ -101,12 +102,12 @@ public class FormDateRange extends FormSelection {
             startFormat = typedArray.getString(R.styleable.FormUI_startFormat);
             endFormat = typedArray.getString(R.styleable.FormUI_endFormat);
             dialogBgDrawable = typedArray.getDrawable(R.styleable.FormUI_dialogBgDrawable);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface));
-            workingDayTextColor = typedArray.getColor(R.styleable.FormUI_workingDayTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
-            weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
+            workingDayTextColor = typedArray.getColor(R.styleable.FormUI_workingDayTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
+            weekTextColor = typedArray.getColor(R.styleable.FormUI_weekTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             startRangeDate = typedArray.getString(R.styleable.FormUI_selectableStartDate);
             endRangeDate = typedArray.getString(R.styleable.FormUI_selectableEndDate);
-            selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.onPrimary));
+            selectedTextColor = typedArray.getColor(R.styleable.FormUI_selectedTextColor, ThemeAttrs.onPrimary(getContext()));
             selectedBg = typedArray.getDrawable(R.styleable.FormUI_selectedBg);
             normalBg = typedArray.getDrawable(R.styleable.FormUI_normalBg);
             textSize = typedArray.getDimension(R.styleable.FormUI_textSize,
@@ -172,15 +173,15 @@ public class FormDateRange extends FormSelection {
             negativeText = typedArray.getString(R.styleable.FormUI_negativeText);
             typedArray.recycle();
         } else {
-            confirmTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.cardOnSurface);
+            confirmTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
             textSize = (float) DensityUtil.sp2px(getContext(), 14f);
             itemWidth = DensityUtil.dp2px(getContext(), 36f);
             itemHeight = DensityUtil.dp2px(getContext(), 36f);
-            selectedTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.onPrimary);
-            weekTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
-            workingDayTextColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.autoColor);
+            selectedTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onPrimary(getContext());
+            weekTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
+            workingDayTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
             ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
-            shapeDrawableSelected.getPaint().setColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.themeColor));
+            shapeDrawableSelected.getPaint().setColor(io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext()));
             selectedBg = shapeDrawableSelected;
             ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
             shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.transparent));

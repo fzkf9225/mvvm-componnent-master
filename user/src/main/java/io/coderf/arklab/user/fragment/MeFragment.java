@@ -18,6 +18,7 @@ import io.coderf.arklab.user.api.UserAccountHelper;
 import io.coderf.arklab.user.databinding.MeFragmentBinding;
 import io.coderf.arklab.base.gateway.MediaGateway;
 import io.coderf.arklab.userapi.router.UserRouterService;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 我的页面
@@ -44,7 +45,7 @@ public class MeFragment extends BaseFragment<EmptyViewModel, MeFragmentBinding> 
     @Override
     protected void initView(Bundle savedInstanceState) {
         ThemeUtils.setupStatusBarAuto(requireActivity(),
-                ContextCompat.getColor(requireContext(), io.coderf.arklab.common.R.color.themeColor));
+                ThemeAttrs.primary(requireContext()));
         binding.imagePersonalCenter.setOnClickListener(v -> startActivity(PersonalCenterActivity.class));
         binding.tvUserName.setOnClickListener(v -> {
             if (UserAccountHelper.isLogin()) {

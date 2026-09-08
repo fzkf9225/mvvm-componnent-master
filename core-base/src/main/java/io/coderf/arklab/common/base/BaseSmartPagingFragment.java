@@ -28,6 +28,7 @@ import io.coderf.arklab.common.widget.empty.EmptyLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * SmartRefresh + Paging3 列表 Fragment 基类，默认使用 {@link EmptyLayout} 展示加载/空态/错误；
@@ -167,7 +168,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         return new RecycleViewDivider(requireContext(),
                 LinearLayoutManager.VERTICAL,
                 DensityUtil.dp2px(requireActivity(), 1),
-                ContextCompat.getColor(requireActivity(), R.color.h_line_color));
+                ThemeAttrs.outlineVariant(requireActivity()));
     }
 
     protected boolean hideRecycleViewDivider() {

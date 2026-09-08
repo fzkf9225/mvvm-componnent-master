@@ -19,7 +19,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.loadingindicator.LoadingIndicator;
+
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -29,9 +31,11 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * <p>
  * 加载态支持两种样式（{@link LoadingStyle}）：
  * <ul>
- *     <li>{@link LoadingStyle#DEFAULT} — 居中 Loading 动画（默认，与历史行为一致）</li>
+ *     <li>{@link LoadingStyle#DEFAULT} — 居中 {@link LoadingIndicator}（Material 1.13+）</li>
  *     <li>{@link LoadingStyle#SKELETON} — 骨架屏 Shimmer 占位（可通过 XML {@code app:loadingStyle="skeleton"} 或代码开启）</li>
  * </ul>
+ * 默认加载文案若以 {@code .} 或省略号 {@code …} 结尾，会按点号个数循环播放
+ * （{@code app:loadingDotAnimEnabled}，默认开启；尾部无点号时不播放）。
  *
  * @update 2026/7/13 11:00
  *
@@ -156,11 +160,22 @@ public class EmptyLayout extends ConstraintLayout {
     private LoadingStyle loadingStyle = LoadingStyle.DEFAULT;
     private float skeletonPaddingPx;
 
+    // ==================== 加载文案尾部点号动画 ====================
+    /** 水平省略号，等价于三个 {@code .} */
+    private static final char HORIZONTAL_ELLIPSIS = '\u2026';
+    private static final long LOADING_DOT_INTERVAL_MS = 400L;
+    /** 加载文案尾部的 {@code .} / {@code …} 是否循环播放，默认开启 */
+    private boolean loadingDotAnimEnabled = true;
+    private String loadingTextPrefix = "";
+    private int loadingDotMaxCount;
+    private int loadingDotCurrentCount;
+    private final Runnable loadingDotTicker = this::tickLoadingDots;
+
     // ==================== 控件引用 ====================
     private LinearLayout containerView;  // 中间容器层（Loading / 图片 / 文字）
     private SkeletonShimmerPanel skeletonPanel; // 骨架屏层，按需显示
     private ShapeableImageView ivImage;
-    private CircularProgressIndicator loadingView;
+    private LoadingIndicator loadingView;
     private MaterialTextView tvText;
 
     public EmptyLayout(@NonNull Context context) {
@@ -180,10 +195,10 @@ public class EmptyLayout extends ConstraintLayout {
 
     private void initAttr(AttributeSet attrs) {
         // 默认值初始化
-        errorTextColor = 0x4D000000;
-        loadingTextColor = ContextCompat.getColor(getContext(), R.color.dark_light);
-        noDataTextColor = 0x4D000000;
-        clickableNoDataTextColor = 0x4D000000;
+        errorTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+        loadingTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+        noDataTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+        clickableNoDataTextColor = ThemeAttrs.onSurfaceVariant(getContext());
 
         errorTextSize = DensityUtil.sp2px(getContext(), 14);
         loadingTextSize = DensityUtil.sp2px(getContext(), 14);
@@ -271,6 +286,8 @@ public class EmptyLayout extends ConstraintLayout {
             loadingStyle = LoadingStyle.fromValue(
                     a.getInt(R.styleable.EmptyLayout_loadingStyle, LoadingStyle.DEFAULT.value));
             skeletonPaddingPx = a.getDimension(R.styleable.EmptyLayout_skeletonPadding, skeletonPaddingPx);
+            loadingDotAnimEnabled = a.getBoolean(
+                    R.styleable.EmptyLayout_loadingDotAnimEnabled, loadingDotAnimEnabled);
 
             a.recycle();
         }
@@ -292,7 +309,7 @@ public class EmptyLayout extends ConstraintLayout {
         return tvText;
     }
 
-    public CircularProgressIndicator getLoadingView() {
+    public LoadingIndicator getLoadingView() {
         return loadingView;
     }
 
@@ -364,10 +381,9 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void createLoadingView() {
-        loadingView = new CircularProgressIndicator(getContext());
+        loadingView = new LoadingIndicator(getContext());
         loadingView.setId(View.generateViewId());
-        loadingView.setIndeterminate(true);
-        loadingView.setIndicatorColor(ContextCompat.getColor(getContext(), R.color.themeColor));
+        loadingView.setIndicatorColor(ThemeAttrs.primary(getContext()));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 loadingWidth > 0 ? (int) loadingWidth : LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -474,6 +490,21 @@ public class EmptyLayout extends ConstraintLayout {
         constraintSet.applyTo(this);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (isLoading() && loadingStyle == LoadingStyle.DEFAULT
+                && tvText != null && tvText.getVisibility() == VISIBLE) {
+            applyLoadingTextAndMaybeAnimate();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        stopLoadingDotAnim();
+        super.onDetachedFromWindow();
+    }
+
     private void setupClickListener() {
         setOnClickListener(v -> {
             if (clickEnable && onEmptyLayoutClickListener != null) {
@@ -508,7 +539,7 @@ public class EmptyLayout extends ConstraintLayout {
 
     /** 骨架屏加载时铺满不透明背景，避免重试态透出下层列表/文案。 */
     private void applySkeletonLoadingOverlay() {
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.cardSurface));
+        setBackgroundColor(ThemeAttrs.surface(getContext()));
     }
 
     private void clearSkeletonLoadingOverlay() {
@@ -537,6 +568,7 @@ public class EmptyLayout extends ConstraintLayout {
 
     /** 隐藏转圈/图片/提示文字，骨架屏加载态不与经典 Loading 文案叠加。 */
     private void hideClassicLoadingContent() {
+        resetLoadingDotAnim();
         loadingView.setVisibility(GONE);
         ivImage.setVisibility(GONE);
         tvText.setVisibility(GONE);
@@ -571,6 +603,7 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void setupErrorState() {
+        resetLoadingDotAnim();
         clearSkeletonLoadingOverlay();
         hideSkeletonPanel();
         containerView.setVisibility(VISIBLE);
@@ -605,15 +638,16 @@ public class EmptyLayout extends ConstraintLayout {
         loadingView.setVisibility(View.VISIBLE);
 
         tvText.setVisibility(VISIBLE);
-        tvText.setText(loadingText);
         tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, loadingTextSize);
         tvText.setTextColor(loadingTextColor);
         tvText.setTypeface(tvText.getTypeface(), loadingTextStyle == 1 ? Typeface.BOLD : Typeface.NORMAL);
+        applyLoadingTextAndMaybeAnimate();
 
         clickEnable = state == State.NETWORK_LOADING_REFRESH;
     }
 
     private void setupNoDataState(boolean clickable) {
+        resetLoadingDotAnim();
         clearSkeletonLoadingOverlay();
         hideSkeletonPanel();
         containerView.setVisibility(VISIBLE);
@@ -641,6 +675,104 @@ public class EmptyLayout extends ConstraintLayout {
                 (clickable ? clickableNoDataTextStyle : noDataTextStyle) == 1 ? Typeface.BOLD : Typeface.NORMAL);
 
         clickEnable = true;
+    }
+
+    /**
+     * 解析加载文案尾部的 {@code .} / {@code …}，有点号且开关开启时循环播放：
+     * {@code .} → {@code ..} → {@code ...}（按原文点号个数）→ 再从头。
+     * 尾部无点号则静态展示原文。
+     */
+    private void applyLoadingTextAndMaybeAnimate() {
+        stopLoadingDotAnim();
+        loadingDotMaxCount = 0;
+        loadingDotCurrentCount = 0;
+        loadingTextPrefix = "";
+        if (tvText != null) {
+            tvText.setMinWidth(0);
+        }
+
+        String text = getContext().getString(loadingText);
+        if (text == null) {
+            text = "";
+        }
+        if (!loadingDotAnimEnabled) {
+            tvText.setText(text);
+            return;
+        }
+
+        int end = text.length();
+        int maxDots = 0;
+        while (end > 0) {
+            char c = text.charAt(end - 1);
+            if (c == '.') {
+                maxDots++;
+                end--;
+            } else if (c == HORIZONTAL_ELLIPSIS) {
+                maxDots += 3;
+                end--;
+            } else {
+                break;
+            }
+        }
+        if (maxDots <= 0) {
+            tvText.setText(text);
+            return;
+        }
+
+        loadingTextPrefix = text.substring(0, end);
+        loadingDotMaxCount = maxDots;
+        loadingDotCurrentCount = 1;
+        float fullWidth = tvText.getPaint().measureText(loadingTextPrefix + ".".repeat(maxDots));
+        tvText.setMinWidth((int) Math.ceil(fullWidth));
+        tvText.setText(loadingTextPrefix + ".".repeat(loadingDotCurrentCount));
+        scheduleNextLoadingDot();
+    }
+
+    private void tickLoadingDots() {
+        if (!canRunLoadingDotAnim()) {
+            stopLoadingDotAnim();
+            return;
+        }
+        loadingDotCurrentCount++;
+        if (loadingDotCurrentCount > loadingDotMaxCount) {
+            loadingDotCurrentCount = 1;
+        }
+        tvText.setText(loadingTextPrefix + ".".repeat(loadingDotCurrentCount));
+        scheduleNextLoadingDot();
+    }
+
+    private void scheduleNextLoadingDot() {
+        if (!canRunLoadingDotAnim()) {
+            return;
+        }
+        tvText.removeCallbacks(loadingDotTicker);
+        tvText.postDelayed(loadingDotTicker, LOADING_DOT_INTERVAL_MS);
+    }
+
+    private boolean canRunLoadingDotAnim() {
+        return loadingDotAnimEnabled
+                && loadingDotMaxCount > 0
+                && isLoading()
+                && loadingStyle == LoadingStyle.DEFAULT
+                && getVisibility() == VISIBLE
+                && tvText != null
+                && tvText.getVisibility() == VISIBLE;
+    }
+
+    private void stopLoadingDotAnim() {
+        if (tvText != null) {
+            tvText.removeCallbacks(loadingDotTicker);
+        }
+    }
+
+    private void resetLoadingDotAnim() {
+        stopLoadingDotAnim();
+        loadingDotMaxCount = 0;
+        loadingDotCurrentCount = 0;
+        loadingTextPrefix = "";
+        if (tvText != null) {
+            tvText.setMinWidth(0);
+        }
     }
 
     public void dismiss() {
@@ -740,6 +872,9 @@ public class EmptyLayout extends ConstraintLayout {
 
     public void setLoadingTextRes(@StringRes int resId) {
         this.loadingText = resId;
+        if (isLoading() && loadingStyle == LoadingStyle.DEFAULT) {
+            applyLoadingTextAndMaybeAnimate();
+        }
     }
 
     public void setNoDataTextRes(@StringRes int resId) {
@@ -790,6 +925,24 @@ public class EmptyLayout extends ConstraintLayout {
 
     public boolean isSkeletonLoadingEnabled() {
         return loadingStyle == LoadingStyle.SKELETON;
+    }
+
+    /**
+     * 是否循环播放加载文案尾部的 {@code .} / {@code …}。默认 {@code true}；
+     * 文案尾部没有点号时即使开启也不会播放。
+     */
+    public EmptyLayout setLoadingDotAnimEnabled(boolean enabled) {
+        this.loadingDotAnimEnabled = enabled;
+        if (isLoading() && loadingStyle == LoadingStyle.DEFAULT) {
+            applyLoadingTextAndMaybeAnimate();
+        } else if (!enabled) {
+            stopLoadingDotAnim();
+        }
+        return this;
+    }
+
+    public boolean isLoadingDotAnimEnabled() {
+        return loadingDotAnimEnabled;
     }
 
     public EmptyLayout setSkeletonRowCount(int rowCount) {

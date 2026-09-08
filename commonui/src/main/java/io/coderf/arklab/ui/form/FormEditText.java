@@ -16,9 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.FormTextFormatEnum;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
+import io.coderf.arklab.ui.enums.TextAlignEnum;
 import io.coderf.arklab.ui.impl.DecimalDigitsInputFilter;
 import io.coderf.arklab.ui.impl.FormTextFormatter;
 
@@ -164,13 +167,11 @@ public class FormEditText extends FormConstraintLayout {
         editText = new TextInputEditText(getContext());
         editText.setId(View.generateViewId());
         editText.setHint(hintString);
-        editText.setHintTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
-        // 先设置背景为透明，再设置自定义背景
+        editText.setHintTextColor(formHintTextColor != 0 ? formHintTextColor : ThemeAttrs.onSurfaceVariant(getContext()));
         editText.setBackground(null);
         if (inputDrawable != null) {
             editText.setBackground(inputDrawable);
         } else {
-            // 默认透明背景
             editText.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         }
         editText.setEllipsize(android.text.TextUtils.TruncateAt.END);
@@ -216,8 +217,41 @@ public class FormEditText extends FormConstraintLayout {
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         }
         editText.setLines(1);
-        tvSelection = editText;
-        addView(editText, params);
+        TextInputLayout til = FormTextInputLayouts.wrap(getContext(), editText);
+        til.setId(View.generateViewId());
+        if (maxLength > 0) {
+            til.setCounterMaxLength(maxLength);
+        }
+        textInputLayout = til;
+        tvSelection = til;
+        addView(til, params);
+        applyEditPaddingAndGravity();
+    }
+
+    @NonNull
+    public TextInputEditText getEditText() {
+        return editText;
+    }
+
+    private void applyEditPaddingAndGravity() {
+        if (editText == null) {
+            return;
+        }
+        if (inputDrawable != null) {
+            editText.setBackground(inputDrawable);
+        }
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            editText.setPadding(0, 0, 0, 0);
+            editText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            return;
+        }
+        int vertical = (int) defaultTextMargin;
+        editText.setPadding(0, vertical, 0, vertical);
+        if (TextAlignEnum.LEFT.value == textAlign) {
+            editText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        } else {
+            editText.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+        }
     }
 
     @Override
@@ -241,6 +275,38 @@ public class FormEditText extends FormConstraintLayout {
         } else {
 
         }
+    }
+
+    @Override
+    protected void applySelectionAlignParams() {
+        super.applySelectionAlignParams();
+        if (editText == null || tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        boolean top = LabelAlignEnum.TOP.value == labelAlign;
+        params.width = 0;
+        if (top) {
+            params.height = (int) inputHeight;
+            params.topMargin = 0;
+            params.bottomMargin = 0;
+            params.horizontalWeight = 0;
+            params.setMarginStart((int) textEndMargin);
+            params.setMarginEnd((int) textEndMargin);
+        } else {
+            params.height = LayoutParams.WRAP_CONTENT;
+            params.topMargin = 0;
+            params.bottomMargin = 0;
+            params.horizontalWeight = 1;
+            params.setMarginStart((int) textStartMargin);
+            params.setMarginEnd((int) textEndMargin);
+        }
+        applyEditPaddingAndGravity();
+        tvSelection.setLayoutParams(params);
+        applySelectionSizeConstraints();
     }
 
     /**

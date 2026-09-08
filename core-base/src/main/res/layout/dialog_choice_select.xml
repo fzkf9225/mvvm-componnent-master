@@ -33,7 +33,7 @@
             android:id="@+id/v_title_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -56,16 +56,16 @@
             android:layout_marginBottom="@dimen/vertical_margin_l"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl"
-            app:backgroundTint="@color/hint_text_color"
+            app:backgroundTint="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_confirm"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_options"
             app:cornerRadius="20dp"
-            app:strokeColor="@color/hint_text_color"
+            app:strokeColor="?attr/colorOnSurfaceVariant"
             app:strokeWidth="0dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -81,14 +81,14 @@
             android:text="@string/confirm"
             android:textColor="@color/buttonPrimaryText"
             android:textSize="@dimen/font_size_xl"
-            app:backgroundTint="@color/themeColor"
+            app:backgroundTint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btn_cancel"
             app:layout_constraintTop_toBottomOf="@+id/rv_options"
             app:cornerRadius="20dp"
-            app:strokeColor="@color/themeColor"
+            app:strokeColor="?attr/colorPrimary"
             app:strokeWidth="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

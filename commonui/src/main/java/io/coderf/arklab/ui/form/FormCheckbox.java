@@ -64,7 +64,7 @@ public class FormCheckbox extends FormConstraintLayout {
     protected void initAttr(AttributeSet attrs) {
         checkedSource = new ObservableField<>(false);
         super.initAttr(attrs);
-        int themeColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.themeColor);
+        int themeColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
         checkboxIconSize = DensityUtil.dp2px(getContext(), 20f);
         checkboxCheckedColor = themeColor;
         checkboxUncheckedColor = themeColor;
@@ -94,7 +94,12 @@ public class FormCheckbox extends FormConstraintLayout {
         checkIcon.setPadding(0, 0, 0, 0);
         checkIcon.setClickable(true);
         checkIcon.setFocusable(true);
-        checkIcon.setOnClickListener(v -> setChecked(!isChecked()));
+        checkIcon.setOnClickListener(v -> {
+            if (isEnabled()) {
+                setChecked(!isChecked());
+            }
+        });
+        FormCheckableA11y.asCheckbox(checkIcon, labelString, this::isChecked);
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 (int) checkboxIconSize, (int) checkboxIconSize);
         if (LabelAlignEnum.TOP.value == labelAlign) {
@@ -179,6 +184,27 @@ public class FormCheckbox extends FormConstraintLayout {
             constraintSet.setHorizontalBias(tvSelection.getId(), 1f);
         }
         constraintSet.applyTo(this);
+    }
+
+    @Override
+    protected boolean selectionUsesMatchConstraint() {
+        return false;
+    }
+
+    @Override
+    protected void applySelectionAlignParams() {
+        super.applySelectionAlignParams();
+        if (tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        params.width = (int) checkboxIconSize;
+        params.height = (int) checkboxIconSize;
+        tvSelection.setLayoutParams(params);
+        applySelectionSizeConstraints();
     }
 
     /**

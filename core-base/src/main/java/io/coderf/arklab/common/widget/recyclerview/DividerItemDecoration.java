@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 箭头分割线
@@ -54,7 +55,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
      * @param orientation 列表方向
      */
     public DividerItemDecoration(Context context, int orientation) {
-        this(context, orientation, 1, ContextCompat.getColor(context, R.color.h_line_color));
+        this(context, orientation, 1, ThemeAttrs.outlineVariant(context));
     }
 
     public DividerItemDecoration(Context context, int orientation, boolean isShowLastDivider) {

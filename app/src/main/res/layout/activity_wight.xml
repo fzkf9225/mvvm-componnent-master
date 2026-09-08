@@ -13,7 +13,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:paddingStart="@dimen/padding_l"
         android:paddingTop="@dimen/padding_m"
         android:paddingEnd="@dimen/padding_l"
@@ -28,7 +28,7 @@
                 android:id="@+id/cornerConstraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/height_xxl"
-                app:bgColor="@color/themeColor"
+                app:bgColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toStartOf="@+id/cornerTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="CornerConstraintLayout"
-                    android:textColor="@color/onPrimary" />
+                    android:textColor="?attr/colorOnPrimary" />
             </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
             <io.coderf.arklab.common.widget.customview.CornerTextView
@@ -49,8 +49,8 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:gravity="center"
                 android:text="CornerTextView"
-                android:textColor="@color/onPrimary"
-                app:bgColor="@color/themeColor"
+                android:textColor="?attr/colorOnPrimary"
+                app:bgColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cornerConstraintLayout"
                 app:layout_constraintTop_toTopOf="parent"
@@ -66,8 +66,8 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:text="MaterialButton"
                 android:textAllCaps="false"
-                android:textColor="@color/onPrimary"
-                app:backgroundTint="@color/themeColor"
+                android:textColor="?attr/colorOnPrimary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="@dimen/radius_xxl"
                 app:layout_constraintEnd_toStartOf="@+id/cornerLabelView"
                 app:layout_constraintHorizontal_weight="1"
@@ -82,7 +82,7 @@
                 android:layout_height="@dimen/height_xxl"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_m"
-                android:background="@color/themeColor"
+                android:background="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/cornerButton"
@@ -93,7 +93,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="CornerLabelView"
-                    android:textColor="@color/onPrimary" />
+                    android:textColor="?attr/colorOnPrimary" />
 
                 <io.coderf.arklab.common.widget.customview.CornerLabelView
                     android:layout_width="wrap_content"
@@ -104,7 +104,7 @@
                     app:position="rightTop"
                     app:sideLength="28dp"
                     app:text="标签"
-                    app:textColor="@color/onPrimary"
+                    app:textColor="?attr/colorOnPrimary"
                     app:textSize="@dimen/font_size_m" />
             </FrameLayout>
 
@@ -119,16 +119,16 @@
                 android:paddingBottom="@dimen/padding_s"
                 app:animDuration="800"
                 app:autoFlip="true"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:flipInterval="2500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cornerButton"
                 app:radius="@dimen/radius_m"
-                app:strokeColor="@color/themeColor"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp"
                 app:text="这是AutoTextView测试文字"
-                app:textColor="@color/themeColor"
+                app:textColor="?attr/colorPrimary"
                 app:textGravity="center"
                 app:textSize="@dimen/font_size_l" />
 
@@ -142,7 +142,7 @@
                 android:paddingEnd="@dimen/padding_m"
                 android:paddingBottom="@dimen/padding_s"
                 app:autoStart="true"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/autoTextView"
@@ -175,7 +175,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_code"
                 app:text="@string/scaling_str"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 app:scalingTextColor="@color/theme_red" />
 
             <io.coderf.arklab.common.widget.customview.StarBar
@@ -217,7 +217,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/starBar"
                 app:shapeType="rectangle"
                 app:startSolid="@color/theme_yellow"
-                app:strColor="@color/themeColor"
+                app:strColor="?attr/colorPrimary"
                 app:textLeft="左边文字"
                 app:textLeftColor="@color/theme_orange"
                 app:textLeftSize="@dimen/font_size_l"
@@ -338,14 +338,14 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:hint="这是一个自定义输入框CustomSearchEditText"
                 android:inputType="text"
-                android:textColor="@color/onPrimary"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorOnPrimary"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:enableBgStyle="true"
                 app:layout_constraintTop_toBottomOf="@+id/cornersImageView"
                 app:radius="@dimen/radius_m"
-                app:strokeColor="@color/themeColor"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp" />
 
             <io.coderf.arklab.common.widget.customview.ClearableEditText
@@ -355,14 +355,14 @@
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:hint="ClearableEditText 可清除输入框"
                 android:inputType="text"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:enableBgStyle="true"
                 app:layout_constraintTop_toBottomOf="@+id/customEditText"
                 app:radius="@dimen/radius_m"
-                app:strokeColor="@color/themeColor"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp" />
 
             <io.coderf.arklab.common.widget.customview.PasswordEditText
@@ -371,16 +371,16 @@
                 android:layout_height="@dimen/height_xl"
                 android:layout_marginTop="@dimen/vertical_margin_m"
                 android:hint="PasswordEditText 密码输入框"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_l"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:enableBgStyle="true"
                 app:enableClear="true"
                 app:enablePasswordToggle="true"
                 app:layout_constraintTop_toBottomOf="@+id/clearableEditText"
                 app:radius="@dimen/radius_m"
-                app:strokeColor="@color/themeColor"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp" />
 
             <io.coderf.arklab.common.widget.customview.TitleBar
@@ -393,8 +393,8 @@
                 app:titleBarRightText="保存"
                 app:titleBarShowBack="true"
                 app:titleBarTitle="TitleBar 示例"
-                app:titleBarTitleColor="@color/cardOnSurface"
-                app:titleBarRightTextColor="@color/themeColor" />
+                app:titleBarTitleColor="?attr/colorOnSurface"
+                app:titleBarRightTextColor="?attr/colorPrimary" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:background="@drawable/bg_input_outlined"
@@ -407,7 +407,7 @@
                 android:gravity="top"
                 android:hint="请输入..."
                 android:padding="@dimen/padding_m"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_l"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -420,8 +420,8 @@
                 android:hint="请输入数字，自动格式化金额，并保留两位有效数字"
                 android:inputType="numberDecimal"
                 android:lines="1"
-                android:textColor="@color/autoColor"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_l"
                 app:layout_constraintTop_toBottomOf="@+id/edit_area" />
 
@@ -429,8 +429,8 @@
                 android:id="@+id/verificationCodeInputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/themeColor"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorPrimary"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_xl"
                 app:layout_constraintTop_toBottomOf="@+id/numberFormatEditText"
                 app:radius="@dimen/radius_m" />
@@ -439,10 +439,10 @@
                 android:id="@+id/circle_progress_bar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:textColor="@color/themeColor"
-                android:textColorHint="@color/nv_bg_color"
+                android:textColor="?attr/colorPrimary"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_xl"
-                app:bgColor="@color/themeColor"
+                app:bgColor="?attr/colorPrimary"
                 app:fontPercent="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -450,7 +450,7 @@
                 app:progressColor="@color/theme_green"
                 app:showText="true"
                 app:strokeWidth="10dp"
-                app:textColor="@color/themeColor"
+                app:textColor="?attr/colorPrimary"
                 app:textSize="16sp" />
 
             <io.coderf.arklab.common.widget.customview.HorizontalProgressBar
@@ -458,14 +458,14 @@
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textColorHint="@color/nv_bg_color"
-                app:bgColor="@color/themeColor"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
+                app:bgColor="?attr/colorPrimary"
                 app:bgRadius="@dimen/radius_l"
                 app:fontPercent="2"
                 app:layout_constraintTop_toBottomOf="@+id/circle_progress_bar"
                 app:progressColor="@color/theme_green"
                 app:showText="true"
-                app:textColor="@color/onPrimary"
+                app:textColor="?attr/colorOnPrimary"
                 app:textSize="12sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -489,7 +489,7 @@
                 app:imageSrc="@mipmap/ic_launcher"
                 app:label="首页"
                 app:textSize="14sp"
-                app:textColor="@color/autoColor"
+                app:textColor="?attr/colorOnSurface"
                 app:layoutDirection="icon_top_text_bottom"
                 app:iconTextSpacing="8dp"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
@@ -525,11 +525,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_single"
                 app:normalBg="@drawable/calendar_day_bg_normal"
                 app:selectedBg="@drawable/calendar_day_bg_focused"
-                app:selectedTextColor="@color/white"
+                app:selectedTextColor="?attr/colorOnPrimary"
                 app:showDot="true"
                 app:selectableStartDate="2023-01-01"
                 app:weekTextColor="@color/theme_red"
-                app:workingDayTextColor="@color/autoColor" />
+                app:workingDayTextColor="?attr/colorOnSurface" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_calendarView_multi"
@@ -550,14 +550,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_calendarView_multi"
                 app:normalBg="@drawable/calendar_day_bg_normal"
                 app:selectedBg="@drawable/calendar_day_bg_focused"
-                app:selectedTextColor="@color/white"
+                app:selectedTextColor="?attr/colorOnPrimary"
                 app:showDot="false"
                 app:selectableStartDate="2023-01-01"
                 app:rangeStartLabel="起"
                 app:rangeEndLabel="止"
                 app:bottomTagTextColor="@color/theme_green"
                 app:weekTextColor="@color/theme_red"
-                app:workingDayTextColor="@color/autoColor" />
+                app:workingDayTextColor="?attr/colorOnSurface" />
 
             <io.coderf.arklab.common.widget.customview.CircleTextView
                 android:id="@+id/circleTextView"
@@ -566,9 +566,9 @@
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:padding="@dimen/padding_xl"
                 android:text="圆"
-                android:textColor="@color/onPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="@dimen/font_size_xl"
-                app:bgColor="@color/themeColor"
+                app:bgColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/calendarView_multi"
@@ -609,7 +609,7 @@
                 android:layout_marginStart="@dimen/horizontal_margin_xl"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:layout_marginEnd="@dimen/horizontal_margin_xl"
-                app:bgColor="@color/cardSurface"
+                app:bgColor="?attr/colorSurface"
                 app:radius="16dp"
                 app:columnCount="3"
                 app:dotHeight="20dp"
@@ -718,7 +718,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/vertical_margin_xl"
                 android:text="BottomNavBar 底部导航"
-                android:textColor="@color/autoColor"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/font_size_l"
                 app:layout_constraintTop_toBottomOf="@+id/value_label_end" />
 

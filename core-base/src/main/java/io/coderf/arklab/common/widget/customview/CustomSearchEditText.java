@@ -27,6 +27,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * Create by fz on 2019/12/25 0025
@@ -80,14 +81,14 @@ public class CustomSearchEditText extends TextInputEditText implements TextInput
             drawableSearch = ta.getDrawable(R.styleable.CustomEditText_searchIcon);
             drawableClear = ta.getDrawable(R.styleable.CustomEditText_clearIcon);
             enableBgStyle = ta.getBoolean(R.styleable.CustomEditText_enableBgStyle, false);
-            strokeColor = ta.getColor(R.styleable.CustomEditText_strokeColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
-            circleBackColor = ta.getColor(R.styleable.CustomEditText_bgColor, ContextCompat.getColor(getContext(), R.color.cardSurface));
+            strokeColor = ta.getColor(R.styleable.CustomEditText_strokeColor, ThemeAttrs.surface(getContext()));
+            circleBackColor = ta.getColor(R.styleable.CustomEditText_bgColor, ThemeAttrs.surface(getContext()));
             strokeWidth = ta.getDimension(R.styleable.CustomEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.CustomEditText_radius, 0);
             ta.recycle();
         } else {
-            strokeColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
-            circleBackColor = ContextCompat.getColor(getContext(), R.color.cardSurface);
+            strokeColor = ThemeAttrs.surface(getContext());
+            circleBackColor = ThemeAttrs.surface(getContext());
         }
 
         if (drawableSearch == null) {

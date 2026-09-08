@@ -79,6 +79,7 @@ import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
 import io.coderf.arklab.ui.widget.dialog.TickViewMessageDialog;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * DialogViewModel 类。
@@ -159,8 +160,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setMessage("这是确认弹框的示例")
                     .setNegativeText("再想想")
                     .setPositiveText("确认")
-                    .setNegativeTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.nv_bg_color))
-                    .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.themeColor))
+                    .setNegativeTextColor(ThemeAttrs.onSurfaceVariant(view.getContext()))
+                    .setPositiveTextColor(ThemeAttrs.primary(view.getContext()))
                     .setOnPositiveClickListener(dialog -> {
                         dialog.dismiss();
                         baseView.showToast("您点击的是确认按钮！");
@@ -215,17 +216,17 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         } else if (R.id.choiceSelectDialogSingle == view.getId()) {
             List<PopupWindowBean> singleChoiceData = buildChoiceSelectData(false);
             singleChoiceData.get(0).setSelected(true);
-            int themeColor = ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.themeColor);
+            int themeColor = ThemeAttrs.primary(view.getContext());
             new ChoiceSelectDialog<PopupWindowBean>(view.getContext())
                     .setSelectionMode(ChoiceSelectDialog.MODE_SINGLE)
                     .setData(singleChoiceData)
                     .setTitleText("请选择城市（单选）")
-                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
+                    .setTitleTextColor(ThemeAttrs.onSurface(view.getContext()))
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
-                    .setConfirmButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
-                    .setCancelButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
+                    .setConfirmButtonColor(ThemeAttrs.onPrimary(view.getContext()))
+                    .setCancelButtonColor(ThemeAttrs.onSurface(view.getContext()))
                     .setConfirmButtonBgColor(themeColor)
                     .setConfirmButtonTextSize(15f)
                     .setCancelButtonTextSize(15f)
@@ -246,7 +247,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .builder()
                     .show();
         } else if (R.id.choiceSelectDialogMulti == view.getId()) {
-            int themeColor = ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.themeColor);
+            int themeColor = ThemeAttrs.primary(view.getContext());
             new ChoiceSelectDialog<PopupWindowBean>(view.getContext())
                     .setSelectionMode(ChoiceSelectDialog.MODE_MULTI)
                     .setData(buildChoiceSelectData(false))
@@ -255,12 +256,12 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setHeaderTextSizeSp(13f)
                     .setHeaderTextColor(themeColor)
                     .setTitleText("请选择城市（多选）")
-                    .setTitleTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
+                    .setTitleTextColor(ThemeAttrs.onSurface(view.getContext()))
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
-                    .setConfirmButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
-                    .setCancelButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
+                    .setConfirmButtonColor(ThemeAttrs.onPrimary(view.getContext()))
+                    .setCancelButtonColor(ThemeAttrs.onSurface(view.getContext()))
                     .setConfirmButtonBgColor(themeColor)
                     .setConfirmButtonTextSize(15f)
                     .setCancelButtonTextSize(15f)
@@ -308,7 +309,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new UpdateMessageDialog(view.getContext())
                     .setOnUpdateListener(v -> baseView.showToast("点击这个按钮可以开始下载操作了"))
                     .setButtonText("更新")
-                    .setTitleColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.cardOnSurface))
+                    .setTitleColor(ThemeAttrs.onSurface(view.getContext()))
                     .setTitleTextSize(DensityUtil.sp2px(view.getContext(), 18))
                     .setBgColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setUpdateMsgString("修复已知问题，更多更新内容请查看 \nhttps://www.baidu.com")
@@ -343,14 +344,14 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         } else if (R.id.horizontalProgressBarToPosition == view.getId()) {
             ProgressBarSetting progressBarSetting = new ProgressBarSetting(view.getContext());
             progressBarSetting.setMaxProgress(200);
-            progressBarSetting.setProgressColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red));
+            progressBarSetting.setProgressColor(ThemeAttrs.error(view.getContext()));
             ProgressBarDialog progressBarDialog = new ProgressBarDialog(view.getContext())
                     .setProgressBarType(ProgressBarDialog.HORIZONTAL_PROGRESS_BAR)
                     .setProgressBarSetting(progressBarSetting)
                     .setMessageType("提示")
                     .setContent("正在下载中...")
                     .setButtonText("关闭")
-                    .setButtonColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
+                    .setButtonColor(ThemeAttrs.error(view.getContext()))
                     .setOnProgressEndListener(() -> {
                         LogUtil.logger(TAG, "---------------加载完成----------------");
                     })
@@ -422,7 +423,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setTitle("请选择日期")
                     .setShowClearView(true)
                     .setClearText("清空")
-                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
+                    .setClearTextColor(ThemeAttrs.error(view.getContext()))
                     .setClearTextSize(14f)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setDateMode(DateMode.YEAR_MONTH_DAY)
@@ -433,6 +434,21 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setOnClearClickListener(dialog -> Toast.makeText(view.getContext(), "已清空", Toast.LENGTH_SHORT).show())
                     .builder()
                     .show();
+        } else if (R.id.materialDatePick == view.getId()) {
+            io.coderf.arklab.ui.form.FormMaterialPickers.showDate(view.getContext(), "选择日期",
+                    Calendar.getInstance(), calendar -> {
+                        String text = calendar.get(Calendar.YEAR) + "-"
+                                + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MONTH) + 1) + "-"
+                                + NumberUtil.formatMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
+                        ToastHelper.showShort(view.getContext(), text);
+                    });
+        } else if (R.id.materialTimePick == view.getId()) {
+            io.coderf.arklab.ui.form.FormMaterialPickers.showTime(view.getContext(), "选择时间",
+                    Calendar.getInstance(), true, calendar -> {
+                        String text = NumberUtil.formatMonthOrDay(calendar.get(Calendar.HOUR_OF_DAY)) + ":"
+                                + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MINUTE));
+                        ToastHelper.showShort(view.getContext(), text);
+                    });
         } else if (R.id.dateRangePickDialog == view.getId()) {
             if (activity == null) return;
             FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -460,9 +476,9 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             new DateRangePickDialog(view.getContext())
                     .setSelectableStartDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-01")
                     .setSelectableEndDate(DateUtil.getCurrentYear() + "-" + NumberUtil.formatMonthOrDay(DateUtil.getCurrentMonth()) + "-" + daysInMonthCount)
-                    .setSelectedTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white))
-                    .setWeekTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
-                    .setWorkingDayTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.autoColor))
+                    .setSelectedTextColor(ThemeAttrs.onPrimary(view.getContext()))
+                    .setWeekTextColor(ThemeAttrs.error(view.getContext()))
+                    .setWorkingDayTextColor(ThemeAttrs.onSurface(view.getContext()))
                     .setDotWidth(DensityUtil.dp2px(view.getContext(), 6))
                     .setDotHeight(DensityUtil.dp2px(view.getContext(), 6))
                     .setItemWidth(DensityUtil.dp2px(view.getContext(), 42))
@@ -485,7 +501,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setTitle("请选择日期范围")
                     .setShowClearView(true)
                     .setClearText("清空")
-                    .setClearTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_red))
+                    .setClearTextColor(ThemeAttrs.error(view.getContext()))
                     .setClearTextSize(14f)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
                     .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
@@ -507,7 +523,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             );
             cascadeSinglePopupWindow.setSelectedStyle(
                     ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green),
-                    ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white),
+                    ThemeAttrs.onPrimary(view.getContext()),
                     DensityUtil.dp2px(view.getContext(), 6f)
             );
             cascadeSinglePopupWindow.setConfirmTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green));
@@ -540,7 +556,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             );
             cascadeMultiPopupWindow.setSelectedBgStyle(
                     ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green),
-                    ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.white),
+                    ThemeAttrs.onPrimary(view.getContext()),
                     DensityUtil.dp2px(view.getContext(), 6f)
             );
             cascadeMultiPopupWindow.setConfirmTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green));
@@ -584,6 +600,14 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     "SnackbarHelper：操作已提交",
                     "撤销",
                     v -> ToastHelper.showShort(view.getContext(), "已撤销")
+            );
+        } else if (R.id.materialAlertDemo == view.getId()) {
+            io.coderf.arklab.common.widget.dialog.MaterialAlertHelper.confirm(
+                    view.getContext(),
+                    "MaterialAlertDialog",
+                    "标准确认走官方组件；富文本、细粒度样式仍用 ConfirmDialog。",
+                    "确定",
+                    () -> ToastHelper.showShort(view.getContext(), "已确认")
             );
         }
     }
@@ -712,7 +736,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             }
             if (horizontalProgressBarDialog == null) {
                 ProgressBarSetting progressBarSetting = new ProgressBarSetting(context);
-                progressBarSetting.setProgressColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.theme_red));
+                progressBarSetting.setProgressColor(ThemeAttrs.error(context));
                 horizontalProgressBarDialog = new ProgressBarDialog(context)
                         .setProgressBarType(ProgressBarDialog.HORIZONTAL_PROGRESS_BAR)
                         .setProgressBarSetting(progressBarSetting)

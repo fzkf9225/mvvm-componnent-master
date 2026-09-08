@@ -1,7 +1,7 @@
 package io.coderf.arklab.demo.activity
 
+import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.adapter.CheckBoxAdapter
@@ -74,10 +74,7 @@ class CheckBoxActivity : BaseActivity<EmptyViewModel, ActivityCheckBoxBinding>()
 //            setCheckedDrawable(checkedDrawable)
 //            setUncheckedDrawable(uncheckedDrawable)
             setTextColor(
-                ContextCompat.getColor(
-                    this@CheckBoxActivity,
-                    io.coderf.arklab.common.R.color.themeColor
-                )
+                ThemeAttrs.primary(this@CheckBoxActivity)
             )
             setTextSizeSp(13f)  // 设置文字大小为13sp
             setTextMargin(
@@ -98,10 +95,7 @@ class CheckBoxActivity : BaseActivity<EmptyViewModel, ActivityCheckBoxBinding>()
     val multiAdapter by lazy {
         CheckBoxAdapter<PopupWindowBean<*>>(CheckBoxAdapter.MODE_MULTI).apply {
             setTextColor(
-                ContextCompat.getColor(
-                    this@CheckBoxActivity,
-                    io.coderf.arklab.common.R.color.themeColor
-                )
+                ThemeAttrs.primary(this@CheckBoxActivity)
             )
             setTextSizeSp(13f)  // 设置文字大小为13sp
             setTextMargin(
@@ -122,10 +116,7 @@ class CheckBoxActivity : BaseActivity<EmptyViewModel, ActivityCheckBoxBinding>()
     val multiTotalAdapter by lazy {
         CheckBoxAdapter<PopupWindowBean<*>>(CheckBoxAdapter.MODE_MULTI).apply {
             setTextColor(
-                ContextCompat.getColor(
-                    this@CheckBoxActivity,
-                    io.coderf.arklab.common.R.color.themeColor
-                )
+                ThemeAttrs.primary(this@CheckBoxActivity)
             )
             setShowHeader(true)
             setHeaderTextSizeSp(13f);

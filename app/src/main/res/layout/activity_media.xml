@@ -22,7 +22,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:clipChildren="false"
         tools:context=".activity.MediaActivity">
 
@@ -112,11 +112,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择音频文件"
-                android:textColor="@color/onPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_audio_result" />
 
@@ -136,11 +136,11 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择文件"
-                android:textColor="@color/onPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/choose_file_result" />
 
@@ -201,11 +201,11 @@
                 android:layout_marginStart="@dimen/horizontal_margin_l"
                 android:layout_marginTop="@dimen/vertical_margin_l"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
-                app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                 android:paddingStart="@dimen/padding_m"
                 android:paddingEnd="@dimen/padding_m"
                 android:text="选择图片添加水印"
-                android:textColor="@color/onPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_water_mark_image" />
 
@@ -236,11 +236,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                    app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="圆形裁剪"
-                    android:textColor="@color/onPrimary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="12sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -250,11 +250,11 @@
                     android:layout_marginStart="6dp"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                    app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="方形裁剪"
-                    android:textColor="@color/onPrimary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="12sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -263,11 +263,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+                    app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
                     android:paddingStart="@dimen/padding_m"
                     android:paddingEnd="@dimen/padding_m"
                     android:text="长方形裁剪"
-                    android:textColor="@color/onPrimary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="12sp" />
             </LinearLayout>
 

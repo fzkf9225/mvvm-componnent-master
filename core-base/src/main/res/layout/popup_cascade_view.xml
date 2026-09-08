@@ -22,7 +22,7 @@
                 android:id="@+id/parent_category"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/default_background"
+                android:background="?android:attr/colorBackground"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:scrollbars="none"
@@ -36,7 +36,7 @@
                 android:id="@+id/v_line"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/h_line_color"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toStartOf="@+id/children_category"
                 app:layout_constraintStart_toEndOf="@+id/parent_category" />
 
@@ -44,7 +44,7 @@
                 android:id="@+id/children_category"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/default_background"
+                android:background="?android:attr/colorBackground"
                 android:cacheColorHint="@android:color/transparent"
                 android:gravity="center_horizontal"
                 android:scrollbars="none"

@@ -16,6 +16,7 @@ import androidx.databinding.BindingAdapter;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 三角形角标（四角缎带），不是圆角矩形。
@@ -85,8 +86,8 @@ public class CornerLabelView extends View {
     private void initAttrs(TypedArray typedArray) {
         if (typedArray == null) {
             position = Position.RIGHT_TOP;
-            bgColor = ContextCompat.getColor(getContext(), R.color.themeColor);
-            textColor = ContextCompat.getColor(getContext(), R.color.white);
+            bgColor = ThemeAttrs.primary(getContext());
+            textColor = ThemeAttrs.onPrimary(getContext());
             textSize = DensityUtil.sp2px(getContext(), 12f);
             sideLength = DensityUtil.dp2px(getContext(), 40);
             return;
@@ -94,9 +95,9 @@ public class CornerLabelView extends View {
         position = Position.valueOf(typedArray.getInt(R.styleable.CornerLabelView_position, Position.RIGHT_TOP.value));
         sideLength = typedArray.getDimension(R.styleable.CornerLabelView_sideLength, DensityUtil.dp2px(getContext(), 40f));
         textSize = typedArray.getDimensionPixelSize(R.styleable.CornerLabelView_textSize, DensityUtil.sp2px(getContext(), 12f));
-        textColor = typedArray.getColor(R.styleable.CornerLabelView_textColor, ContextCompat.getColor(getContext(), R.color.themeColor));
+        textColor = typedArray.getColor(R.styleable.CornerLabelView_textColor, ThemeAttrs.primary(getContext()));
         text = typedArray.getString(R.styleable.CornerLabelView_text);
-        bgColor = typedArray.getColor(R.styleable.CornerLabelView_bgColor, ContextCompat.getColor(getContext(), R.color.themeColor));
+        bgColor = typedArray.getColor(R.styleable.CornerLabelView_bgColor, ThemeAttrs.primary(getContext()));
         marginLeanSide = typedArray.getDimensionPixelSize(R.styleable.CornerLabelView_marginLeanSide, 0);
         typedArray.recycle();
     }

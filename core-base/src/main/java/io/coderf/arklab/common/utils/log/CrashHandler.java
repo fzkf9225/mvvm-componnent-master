@@ -1,236 +1,195 @@
 package io.coderf.arklab.common.utils.log;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.Field;
-import java.util.Date;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.utils.common.DateUtil;
-import io.coderf.arklab.common.utils.common.FileUtil;
 
 /**
- * <h3>全局捕获异常</h3>
- * <br>
- * 当程序发生Uncaught异常的时候,有该类来接管程序,并记录错误日志
+ * 全局 UncaughtException 处理：把崩溃信息落到本地后，再转交给系统 / 第三方原先的 handler。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/8 14:10
  */
-public class CrashHandler implements UncaughtExceptionHandler {
+public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-    public final static String TAG = CrashHandler.class.getSimpleName();
-    /**
-     * 系统默认的UncaughtException处理类
-     */
+    public static final String TAG = CrashHandler.class.getSimpleName();
+    private static final String CRASH_DIR = "crash";
+    private static final DateTimeFormatter LOG_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static final DateTimeFormatter FILE_NAME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS", Locale.getDefault());
+
+    private static final CrashHandler INSTANCE = new CrashHandler();
+
     private Thread.UncaughtExceptionHandler mDefaultHandler;
-
-    @SuppressLint("StaticFieldLeak")
-    private final static CrashHandler instance = new CrashHandler();
     private Context mContext;
-    // 用来存储设备信息和异常信息
-    private final Map<String, String> infos = new HashMap<>();
 
-    /**
-     * 保证只有一个CrashHandler实例
-     */
     private CrashHandler() {
     }
 
-    /**
-     * 获取CrashHandler实例 ,单例模式
-     */
     public static CrashHandler getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     /**
-     * 初始化
+     * 初始化。重复调用不会把自己设成自己的 fallback handler。
      */
-    public void init(Context context) {
-        mContext = context;
-        // 获取系统默认的UncaughtException处理器
-        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        // 设置该CrashHandler为程序的默认处理器
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        autoClear(5);
+    public synchronized void init(Context context) {
+        if (context == null) {
+            return;
+        }
+        mContext = context.getApplicationContext();
+        Thread.UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+        if (current != this) {
+            mDefaultHandler = current;
+            Thread.setDefaultUncaughtExceptionHandler(this);
+        }
+        int retainDays = Config.getInstance().getCrashLogRetainDays();
+        if (retainDays > 0) {
+            Thread clearThread = new Thread(() -> autoClear(retainDays), "crash-log-clear");
+            clearThread.setDaemon(true);
+            clearThread.start();
+        }
     }
 
-    /**
-     * 当UncaughtException发生时会转入该函数来处理
-     */
     @Override
     public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
-        if (!handleException(ex) && mDefaultHandler != null) {
-            // 如果用户没有处理则让系统默认的异常处理器来处理
-            mDefaultHandler.uncaughtException(thread, ex);
-        } else {
-            SystemClock.sleep(3000);
-            // 退出程序
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
-        }
-    }
-
-    /**
-     * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
-     *
-     * @param ex
-     * @return true:如果处理了该异常信息; 否则返回false.
-     */
-    private boolean handleException(Throwable ex) {
-        if (ex == null) {
-            return false;
-        }
         try {
-            // 收集设备参数信息
-            collectDeviceInfo(mContext);
-            // 保存日志文件
-            saveCrashInfoFile(ex);
+            saveCrashInfoFile(thread, ex);
             LogUtil.e(ex);
-            SystemClock.sleep(3000);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable ignored) {
+            // 崩溃回调里不能再抛
         }
-
-        return true;
+        if (mDefaultHandler != null && mDefaultHandler != this) {
+            mDefaultHandler.uncaughtException(thread, ex);
+            return;
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 
-    /**
-     * 收集设备参数信息
-     *
-     * @param ctx
-     */
-    public void collectDeviceInfo(Context ctx) {
-        try {
-            PackageManager pm = ctx.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(),
-                    PackageManager.GET_ACTIVITIES);
-            if (pi != null) {
-                String versionName = pi.versionName + "";
-                String versionCode;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                    versionCode = pi.getLongVersionCode() + "";
-                } else {
-                    versionCode = pi.versionCode + "";
-                }
-                infos.put("versionName", versionName);
-                infos.put("versionCode", versionCode);
-            }
-        } catch (NameNotFoundException e) {
-            LogUtil.e(e);
-        }
-        Field[] fields = Build.class.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                field.setAccessible(true);
-                infos.put(field.getName(), Objects.requireNonNull(field.get(null)).toString());
-            } catch (Exception e) {
-                LogUtil.e(e);
-            }
-        }
-    }
-
-    /**
-     * 保存错误信息到文件中
-     *
-     * @param ex
-     * @throws Exception
-     */
-    private void saveCrashInfoFile(Throwable ex) throws Exception {
+    private void saveCrashInfoFile(@NonNull Thread thread, @NonNull Throwable ex) {
         StringBuilder sb = new StringBuilder();
-        try {
-            String date = DateUtil.getDateTimeFromMillis(System.currentTimeMillis());
-            sb.append("\r\n").append(date).append("\n");
-            for (Map.Entry<String, String> entry : infos.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                sb.append(key).append("=").append(value).append("\n");
-            }
+        sb.append(LocalDateTime.now().format(LOG_TIME_FORMATTER)).append('\n');
+        sb.append("thread=").append(thread.getName()).append('\n');
+        for (Map.Entry<String, String> entry : collectDeviceInfo(mContext).entrySet()) {
+            sb.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+        }
+        sb.append(stackTraceOf(ex));
+        writeFile(sb.toString());
+    }
 
-            Writer writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            ex.printStackTrace(printWriter);
-            Throwable cause = ex.getCause();
-            while (cause != null) {
-                cause.printStackTrace(printWriter);
-                cause = cause.getCause();
+    @NonNull
+    private static Map<String, String> collectDeviceInfo(@Nullable Context ctx) {
+        Map<String, String> infos = new LinkedHashMap<>();
+        if (ctx != null) {
+            try {
+                PackageInfo pi = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+                if (pi != null) {
+                    infos.put("versionName", String.valueOf(pi.versionName));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        infos.put("versionCode", String.valueOf(pi.getLongVersionCode()));
+                    } else {
+                        infos.put("versionCode", String.valueOf(pi.versionCode));
+                    }
+                }
+            } catch (Exception e) {
+                infos.put("packageInfoError", e.getClass().getSimpleName());
             }
-            printWriter.flush();
-            printWriter.close();
-            String result = writer.toString();
-            sb.append(result);
+        }
+        infos.put("packageName", ctx != null ? ctx.getPackageName() : "");
+        infos.put("brand", Build.BRAND);
+        infos.put("manufacturer", Build.MANUFACTURER);
+        infos.put("model", Build.MODEL);
+        infos.put("device", Build.DEVICE);
+        infos.put("product", Build.PRODUCT);
+        infos.put("sdkInt", String.valueOf(Build.VERSION.SDK_INT));
+        infos.put("release", Build.VERSION.RELEASE);
+        infos.put("fingerprint", Build.FINGERPRINT);
+        return infos;
+    }
 
-            String fileName = writeFile(sb.toString());
-            if (Config.getInstance().getErrorService() == null) {
-                return;
-            }
-            //TODO上传错误日志
-            Config.getInstance().getErrorService().uploadErrorInfo(fileName);
-        } catch (Exception e) {
-            sb.append("an error occured while writing file...\r\n");
-            writeFile(sb.toString());
+    @NonNull
+    private static String stackTraceOf(@NonNull Throwable ex) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        ex.printStackTrace(printWriter);
+        printWriter.flush();
+        return writer.toString();
+    }
+
+    private void writeFile(String content) {
+        File crashDir = getCrashDir();
+        if (crashDir == null) {
+            return;
+        }
+        if (!crashDir.exists() && !crashDir.mkdirs() && !crashDir.exists()) {
+            return;
+        }
+        File logFile = new File(crashDir, "crash-" + LocalDateTime.now().format(FILE_NAME_FORMATTER) + ".log");
+        try (FileOutputStream fos = new FileOutputStream(logFile, true)) {
+            fos.write(content.getBytes(StandardCharsets.UTF_8));
+            fos.flush();
+        } catch (Exception ignored) {
+            // 写盘失败时不能再抛，否则会覆盖原始崩溃
         }
     }
 
-    private String writeFile(String sb) throws Exception {
-        String fileName = "crash-" + DateUtil.getDateTimeFormat(new Date()) + ".log";
-        File logFile = new File(mContext.getApplicationContext().getExternalFilesDir(null), "crash" + File.separator + fileName);
-        if (!logFile.exists() || !logFile.getParentFile().exists()) {
-            boolean isCreated = logFile.getParentFile().mkdirs();
+    @Nullable
+    private File getCrashDir() {
+        if (mContext == null) {
+            return null;
         }
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(logFile.getAbsolutePath(), true);
-            fos.write(sb.getBytes());
-            fos.flush();
-            fos.close();
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        File root = mContext.getExternalFilesDir(null);
+        if (root == null) {
+            root = mContext.getFilesDir();
         }
-        return fileName;
+        if (root == null) {
+            return null;
+        }
+        return new File(root, CRASH_DIR);
     }
 
     /**
-     * 文件删除
-     *
-     * @param
+     * 按文件修改时间删除过期崩溃日志。
      */
-    public void autoClear(final int autoClearDay) {
-        FileUtil.delete(mContext.getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + File.separator + "crash" + File.separator,
-                (file, filename) -> {
-                    String s = FileUtil.getFileNameWithoutExtension(filename);
-                    int day = autoClearDay < 0 ? autoClearDay : -1 * autoClearDay;
-                    String date = "crash-" + DateUtil.getOtherDay(day);
-                    return date.compareTo(s) >= 0;
-                });
-
+    public void autoClear(int retainDays) {
+        if (retainDays <= 0) {
+            return;
+        }
+        File crashDir = getCrashDir();
+        if (crashDir == null || !crashDir.isDirectory()) {
+            return;
+        }
+        File[] files = crashDir.listFiles();
+        if (files == null) {
+            return;
+        }
+        long expireBefore = System.currentTimeMillis() - retainDays * 24L * 60 * 60 * 1000;
+        for (File file : files) {
+            if (file.isFile() && file.lastModified() > 0 && file.lastModified() < expireBefore) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
+            }
+        }
     }
 
 }

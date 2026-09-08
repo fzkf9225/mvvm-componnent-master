@@ -3,9 +3,15 @@ package io.coderf.arklab.ui.form;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -13,32 +19,36 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;
+import io.coderf.arklab.ui.enums.TextAlignEnum;
 
 /**
- * 表单下拉选择：锚点 {@link FormSpinnerDropdownWindow}，区别于弹窗式 {@link FormSelection}。
+ * 表单下拉选择：行内 {@link TextInputLayout} + {@link MaterialAutoCompleteTextView}
+ * （ExposedDropdown），区别于弹窗式 {@link FormSelection}。
  * <p>
  * 数据项使用 {@link PopupWindowBean}，支持泛型扩展。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/8 10:30
  */
 public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
 
     private final List<T> spinnerItems = new ArrayList<>();
-    /** 下拉弹窗实例 */
-    private FormSpinnerDropdownWindow<T> dropdownWindow;
     /** 下拉列表最大高度，对应 XML {@code spinnerDropdownMaxHeight} */
     private int dropdownMaxHeight;
-    /** 下拉项样式配置 */
+    /** 下拉项样式配置，主要作用于 popup 背景/高度 */
     @Nullable
     private FormSpinnerDropdownStyle dropdownStyle;
     /** 当前选中项 */
@@ -47,6 +57,8 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
     /** 选项选中回调 */
     @Nullable
     private OnSpinnerItemSelectedListener<T> onSpinnerItemSelectedListener;
+    private MaterialAutoCompleteTextView autoComplete;
+    private boolean syncingText;
 
     public FormSpinner(@NonNull Context context) {
         super(context);
@@ -74,7 +86,7 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
             dropdownStyle.itemBorderColor = typedArray.getColor(
                     R.styleable.FormUI_spinnerItemBorderColor, defaults.itemBorderColor);
             Drawable spinnerBackground = typedArray.getDrawable(R.styleable.FormUI_spinnerBackground);
-            dropdownStyle.spinnerBackground = spinnerBackground ==null ?defaults.spinnerBackground :spinnerBackground;
+            dropdownStyle.spinnerBackground = spinnerBackground == null ? defaults.spinnerBackground : spinnerBackground;
 
             dropdownStyle.paddingLeftPx = (int) typedArray.getDimension(
                     R.styleable.FormUI_spinnerItemPaddingStart, defaults.paddingLeftPx);
@@ -100,16 +112,109 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
 
     @Override
     public void createText() {
-        super.createText();
-        if (tvSelection != null) {
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) tvSelection.getLayoutParams();
-            if (LabelAlignEnum.LEFT.value == labelAlign) {
-                params.width = 0;
-                params.horizontalWeight = 1;
+        autoComplete = new MaterialAutoCompleteTextView(new androidx.appcompat.view.ContextThemeWrapper(
+                getContext(), io.coderf.arklab.common.R.style.ThemeOverlay_App_FormDropdown));
+        autoComplete.setId(View.generateViewId());
+        autoComplete.setHint(hintString);
+        autoComplete.setHintTextColor(formHintTextColor != 0 ? formHintTextColor : ThemeAttrs.onSurfaceVariant(getContext()));
+        autoComplete.setBackground(null);
+        autoComplete.setEllipsize(TextUtils.TruncateAt.END);
+        autoComplete.setTextColor(formTextColor);
+        autoComplete.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+        autoComplete.setInputType(InputType.TYPE_NULL);
+        autoComplete.setKeyListener(null);
+        autoComplete.setFocusable(true);
+        autoComplete.setFocusableInTouchMode(false);
+        autoComplete.setCursorVisible(false);
+        autoComplete.setMaxLines(1);
+        autoComplete.setThreshold(0);
+        autoComplete.setMinHeight(0);
+        autoComplete.setMinimumHeight(0);
+        autoComplete.setPadding(0, 0, 0, 0);
+        ConstraintLayout.LayoutParams params;
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            autoComplete.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            params = new ConstraintLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
+            params.setMarginStart((int) textEndMargin);
+            params.setMarginEnd((int) textEndMargin);
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            if (TextAlignEnum.LEFT.value == textAlign) {
+                autoComplete.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             } else {
-                params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
+                autoComplete.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
             }
-            tvSelection.setLayoutParams(params);
+            params = new ConstraintLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
+            params.setMarginStart((int) textStartMargin);
+            params.setMarginEnd((int) textEndMargin);
+            params.horizontalWeight = 1;
+        } else {
+            params = new ConstraintLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        }
+        params.topMargin = (int) defaultTextMargin;
+        params.bottomMargin = (int) defaultTextMargin;
+        TextInputLayout til = FormTextInputLayouts.wrapDropdown(getContext(), autoComplete);
+        til.setId(View.generateViewId());
+        textInputLayout = til;
+        tvSelection = til;
+        addView(til, params);
+        applySelectionIcon();
+        autoComplete.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (formTextWatcher != null) {
+                    formTextWatcher.onTextChanged(s, start, before, count);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (syncingText) {
+                    return;
+                }
+                String value = s == null ? null : s.toString();
+                if (!TextUtils.equals(dataSource.get(), value)) {
+                    dataSource.set(value);
+                }
+                if (formTextWatcherAfter != null) {
+                    formTextWatcherAfter.onTextAfterChanged(value);
+                }
+            }
+        });
+        autoComplete.setOnItemClickListener((parent, view, position, id) -> {
+            if (position < 0 || spinnerItems == null || position >= spinnerItems.size()) {
+                return;
+            }
+            T item = spinnerItems.get(position);
+            selectedItem = item;
+            setText(item.getPopupName());
+            if (onSpinnerItemSelectedListener != null) {
+                onSpinnerItemSelectedListener.onItemSelected(item, position);
+            }
+        });
+        applyDropdownChrome();
+    }
+
+    @Override
+    protected void applySelectionIcon() {
+        if (textInputLayout == null) {
+            return;
+        }
+        textInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
+        if (selectionIcon != null) {
+            textInputLayout.setEndIconDrawable(selectionIcon);
+        }
+    }
+
+    @Override
+    public void setSelectionIcon(Drawable drawable, int padding) {
+        this.selectionIcon = drawable;
+        this.selectionIconPadding = padding;
+        if (textInputLayout != null && drawable != null) {
+            textInputLayout.setEndIconDrawable(drawable);
         }
     }
 
@@ -138,12 +243,7 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
         super.init();
         setClickable(true);
         setFocusable(true);
-        View.OnClickListener openListener = v -> showDropdown();
-        setOnClickListener(openListener);
-        if (tvSelection != null) {
-            tvSelection.setClickable(true);
-            tvSelection.setOnClickListener(openListener);
-        }
+        setOnClickListener(v -> showDropdown());
     }
 
     /** 设置下拉数据并尝试同步当前选中项 */
@@ -152,7 +252,9 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
         if (items != null) {
             spinnerItems.addAll(items);
         }
+        rebuildAdapter();
         syncSelectedFromText();
+        applySelectedText();
     }
 
     /** 获取下拉数据副本 */
@@ -172,6 +274,7 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
         if (item != null) {
             setText(item.getPopupName());
         }
+        applySelectedText();
     }
 
     /** 设置选项选中监听 */
@@ -202,6 +305,7 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
     /** 设置下拉项文字颜色，对应 XML {@code spinnerItemTextColor} */
     public void setSpinnerItemTextColor(@ColorInt int textColor) {
         getDropdownStyle().textColor = textColor;
+        rebuildAdapter();
     }
 
     /** 设置下拉项选中文字颜色，对应 XML {@code spinnerItemTextSelectedColor} */
@@ -212,35 +316,74 @@ public class FormSpinner<T extends PopupWindowBean<?>> extends FormSelection {
     /** 设置下拉项文字大小（px） */
     public void setSpinnerItemTextSizePx(float textSizePx) {
         getDropdownStyle().textSizePx = textSizePx;
+        rebuildAdapter();
     }
 
     /** 设置下拉项文字大小（sp） */
     public void setSpinnerItemTextSizeSp(float textSizeSp) {
-        getDropdownStyle().textSizePx = android.util.TypedValue.applyDimension(
-                android.util.TypedValue.COMPLEX_UNIT_SP,
+        getDropdownStyle().textSizePx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
                 textSizeSp,
                 getResources().getDisplayMetrics());
+        rebuildAdapter();
     }
 
     /** 展开下拉列表 */
     public void showDropdown() {
-        if (spinnerItems.isEmpty() || tvSelection == null) {
+        if (autoComplete == null || spinnerItems == null || spinnerItems.isEmpty()) {
             return;
         }
-        if (dropdownWindow == null) {
-            dropdownWindow = new FormSpinnerDropdownWindow<>(getContext());
+        if (textInputLayout != null && textInputLayout.getWidth() > 0) {
+            autoComplete.setDropDownWidth(textInputLayout.getWidth());
         }
-        dropdownWindow.setDropdownStyle(getDropdownStyle());
-        if (selectedItem != null) {
-            dropdownWindow.setSelectedItem(selectedItem);
+        autoComplete.showDropDown();
+    }
+
+    @NonNull
+    public MaterialAutoCompleteTextView getAutoComplete() {
+        return autoComplete;
+    }
+
+    private void rebuildAdapter() {
+        if (autoComplete == null || spinnerItems == null) {
+            return;
         }
-        dropdownWindow.show(tvSelection, spinnerItems, dropdownMaxHeight, (item, position) -> {
-            selectedItem = item;
-            setText(item.getPopupName());
-            if (onSpinnerItemSelectedListener != null) {
-                onSpinnerItemSelectedListener.onItemSelected(item, position);
-            }
-        });
+        List<String> names = new ArrayList<>(spinnerItems.size());
+        for (T item : spinnerItems) {
+            names.add(item.getPopupName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                com.google.android.material.R.layout.mtrl_auto_complete_simple_item, names);
+        autoComplete.setAdapter(adapter);
+        applyDropdownChrome();
+    }
+
+    private void applyDropdownChrome() {
+        if (autoComplete == null) {
+            return;
+        }
+        if (dropdownMaxHeight > 0) {
+            autoComplete.setDropDownHeight(dropdownMaxHeight);
+        }
+        Drawable background = getDropdownStyle().spinnerBackground;
+        if (background != null) {
+            autoComplete.setDropDownBackgroundDrawable(background);
+        }
+    }
+
+    private void applySelectedText() {
+        if (autoComplete == null) {
+            return;
+        }
+        String text = selectedItem != null ? selectedItem.getPopupName() : dataSource.get();
+        String incoming = text == null ? "" : text;
+        CharSequence current = autoComplete.getText();
+        if (TextUtils.equals(current, incoming)) {
+            return;
+        }
+        syncingText = true;
+        autoComplete.setText(incoming, false);
+        syncingText = false;
     }
 
     private void syncSelectedFromText() {

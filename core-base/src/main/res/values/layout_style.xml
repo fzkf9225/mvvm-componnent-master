@@ -4,19 +4,19 @@
     <style name="h_line">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/h_line_color</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
     </style>
     <!-- 竖向区域 -->
     <style name="s_line">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/h_line_color</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
     </style>
     <!-- 横向区域 -->
     <style name="h_area">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/height_s</item>
-        <item name="android:background">@color/h_area</item>
+        <item name="android:background">?attr/colorSurfaceContainerLow</item>
     </style>
 
     <style name="popup_anim_style_alpha">
@@ -69,6 +69,5 @@
     <style name="SelectableItemStyle">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="colorControlHighlight">@color/selectable_item_ripple</item>
     </style>
 </resources>

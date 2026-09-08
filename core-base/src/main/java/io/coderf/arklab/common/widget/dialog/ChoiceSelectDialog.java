@@ -29,6 +29,7 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import com.google.android.material.button.MaterialButton;
 import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 单选/多选列表弹框，复用 {@link CheckBoxAdapter} 的勾选样式与交互。
@@ -469,7 +470,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
             return;
         }
         binding.getRoot().setBackground(DrawableUtil.createRectDrawable(
-                ContextCompat.getColor(context, R.color.cardSurface),
+                ThemeAttrs.surfaceContainerHigh(context),
                 DensityUtil.dp2px(context, 16f)));
     }
 
@@ -561,7 +562,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
                     context,
                     LinearLayoutManager.VERTICAL,
                     DensityUtil.dp2px(context, 1),
-                    dividerColor == -1 ? ContextCompat.getColor(context, R.color.h_line_color) : dividerColor,
+                    dividerColor == -1 ? ThemeAttrs.outlineVariant(context) : dividerColor,
                     false
             ));
         }

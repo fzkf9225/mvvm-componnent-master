@@ -19,6 +19,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.UpdateDialogBinding;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * 应用更新提示弹窗。
@@ -57,12 +58,12 @@ public class UpdateMessageDialog extends BaseDialog {
     private UpdateDialogBinding binding;
 
     public UpdateMessageDialog(@NonNull Context context) {
-        super(context,R.style.DialogSoftHighlightStyle);
-        buttonTextColor = ContextCompat.getColor(context, R.color.onPrimary);
-        titleColor = ContextCompat.getColor(context, R.color.autoColor);
+        super(context, R.style.App_Material3_Dialog);
+        buttonTextColor = ThemeAttrs.onPrimary(context);
+        titleColor = ThemeAttrs.onSurface(context);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
-        bgColor = ContextCompat.getColor(context, R.color.themeColor);
-        strokeColor = ContextCompat.getColor(context, R.color.themeColor);
+        bgColor = ThemeAttrs.primary(context);
+        strokeColor = ThemeAttrs.primary(context);
         strokeWidth = 0;
         radius = context.getResources().getDimension(R.dimen.radius_xxl);
         titleTextSize = context.getResources().getDimension(R.dimen.font_size_xxl);
@@ -72,11 +73,11 @@ public class UpdateMessageDialog extends BaseDialog {
 
     public UpdateMessageDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        buttonTextColor = ContextCompat.getColor(context, R.color.onPrimary);
-        titleColor = ContextCompat.getColor(context, R.color.autoColor);
+        buttonTextColor = ThemeAttrs.onPrimary(context);
+        titleColor = ThemeAttrs.onSurface(context);
         updateMsgTextColor = ContextCompat.getColor(context, R.color.gray);
-        bgColor = ContextCompat.getColor(context, R.color.themeColor);
-        strokeColor = ContextCompat.getColor(context, R.color.themeColor);
+        bgColor = ThemeAttrs.primary(context);
+        strokeColor = ThemeAttrs.primary(context);
         strokeWidth = 0;
         radius = context.getResources().getDimension(R.dimen.radius_xxl);
         titleTextSize = context.getResources().getDimension(R.dimen.font_size_xxl);
@@ -284,7 +285,7 @@ public class UpdateMessageDialog extends BaseDialog {
                 dismiss();
             }
             if (NetworkStateUtil.isMobile(v.getContext())) {
-                new ConfirmDialog(v.getContext(),R.style.DialogSoftHighlightStyle)
+                new ConfirmDialog(v.getContext(), R.style.App_Material3_Dialog)
                         .setMessage("您正在使用数据流量，确定继续下载吗？")
                         .setOnPositiveClickListener(dialog -> {
                             if (onUpdateListener != null) {

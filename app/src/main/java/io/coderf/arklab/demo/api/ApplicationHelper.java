@@ -41,6 +41,7 @@ public class ApplicationHelper extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
+        // 全局开关须在 init 前设置；不写则用默认值（适配开、崩溃捕获开、跟随系统夜间、Edge-to-Edge 开）
         Config.getInstance().init(this);
         GpsSettingConfig.getInstance().init(this);
 

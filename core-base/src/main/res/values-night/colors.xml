@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        Material3 DayNight - 暗色 tonal palette。
-        Primary 使用种子色的浅色角色，保证在深色表面上的对比度。
+        Material3 暗色 token。角色与 values/colors.xml 相同，只换具体值。
+        业务仍写 ?attr/colorOnSurface，不要在代码里判断 day/night 再选 white/black。
+        Primary 用浅色角色，保证深色表面上的对比度。
     -->
 
     <color name="themeColor">#FFA9C7FF</color>
-    <color name="colorPrimaryDark">#FF000000</color>
 
     <color name="default_background">#FF121212</color>
     <color name="background">#FF121212</color>
@@ -72,6 +72,4 @@
 
     <color name="textInputOutlineDefault">#FF938F99</color>
     <color name="textInputFilledDefault">#FF49454F</color>
-
-    <color name="selectable_item_ripple">#29FFFFFF</color>
 </resources>

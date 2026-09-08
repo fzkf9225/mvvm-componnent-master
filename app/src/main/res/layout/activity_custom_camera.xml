@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/horizontal_margin_xl"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:paddingEnd="@dimen/horizontal_margin_xl"
         tools:context=".activity.CustomCameraActivity">
         <com.google.android.material.imageview.ShapeableImageView
@@ -20,7 +20,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="@dimen/vertical_margin_xxxl"
-            android:background="@color/cardSurface"
+            android:background="?attr/colorSurface"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,11 +42,11 @@
             android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginEnd="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_xl"
-            app:backgroundTint="@color/themeColor" app:cornerRadius="8dp"
+            app:backgroundTint="?attr/colorPrimary" app:cornerRadius="8dp"
             android:paddingStart="@dimen/padding_m"
             android:paddingEnd="@dimen/padding_m"
             android:text="调用相机"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_video" />
 

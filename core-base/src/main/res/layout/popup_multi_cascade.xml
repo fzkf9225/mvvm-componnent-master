@@ -35,7 +35,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:text="@string/please_choose"
-            android:textColor="@color/autoColor"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl"
             android:lines="1"
             android:ellipsize="end"
@@ -54,7 +54,7 @@
             android:paddingEnd="@dimen/padding_l"
             android:text="@string/confirm"
             android:layout_marginStart="@dimen/horizontal_margin_xl"
-            android:textColor="@color/themeColor"
+            android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/font_size_l"
             app:layout_constraintBottom_toBottomOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
             android:id="@+id/v_top"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintBottom_toTopOf="@+id/mRecyclerview_selected"
             app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -86,7 +86,7 @@
             android:id="@+id/v_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/h_line_color"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintBottom_toTopOf="@+id/mRecyclerview_options"
             app:layout_constraintTop_toBottomOf="@+id/mRecyclerview_selected" />
 

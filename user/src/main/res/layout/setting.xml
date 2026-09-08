@@ -19,7 +19,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         android:clickable="true">
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 app:leftIconMarginStart="0dp"
                 app:rightIconMarginStart="@dimen/horizontal_margin_xl"
                 app:label="@string/user_setting_clear_cache"
-                app:labelTextColor="@color/autoColor"
+                app:labelTextColor="?attr/colorOnSurface"
                 app:labelTextSize="@dimen/font_size_xl"
                 app:rightIconSrc="@mipmap/ic_arrow_right"
                 app:showRightIcon="true"
@@ -62,7 +62,7 @@
                 app:leftIconMarginStart="0dp"
                 app:rightIconMarginStart="@dimen/horizontal_margin_xl"
                 app:label="@string/setting_update"
-                app:labelTextColor="@color/autoColor"
+                app:labelTextColor="?attr/colorOnSurface"
                 app:labelTextSize="@dimen/font_size_xl"
                 app:rightIconSrc="@mipmap/ic_arrow_right"
                 app:showRightIcon="true"
@@ -84,7 +84,7 @@
                 app:leftIconMarginStart="0dp"
                 app:rightIconMarginStart="@dimen/horizontal_margin_xl"
                 app:label="@string/setting_ITSupport"
-                app:labelTextColor="@color/autoColor"
+                app:labelTextColor="?attr/colorOnSurface"
                 app:labelTextSize="@dimen/font_size_xl"
                 app:rightIconSrc="@mipmap/ic_arrow_right"
                 app:showRightIcon="true"
@@ -107,7 +107,7 @@
                 app:leftIconMarginStart="0dp"
                 app:rightIconMarginStart="@dimen/horizontal_margin_xl"
                 app:label="@string/setting_feedBack"
-                app:labelTextColor="@color/autoColor"
+                app:labelTextColor="?attr/colorOnSurface"
                 app:labelTextSize="@dimen/font_size_xl"
                 app:rightIconSrc="@mipmap/ic_arrow_right"
                 app:showRightIcon="true"

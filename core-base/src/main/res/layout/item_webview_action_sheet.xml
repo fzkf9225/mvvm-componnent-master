@@ -27,6 +27,6 @@
         android:layout_marginTop="@dimen/vertical_margin_m"
         android:gravity="center"
         android:maxLines="2"
-        android:textColor="@color/autoColor"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/font_size_l" />
 </LinearLayout>

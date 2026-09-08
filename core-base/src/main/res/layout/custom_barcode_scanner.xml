@@ -9,8 +9,8 @@
 
     <io.coderf.arklab.common.utils.zxing.CustomViewfinderView
         android:layout_width="match_parent"
-        app:lineColor="@color/themeColor"
-        app:cornerColor="@color/themeColor"
+        app:lineColor="?attr/colorPrimary"
+        app:cornerColor="?attr/colorPrimary"
         app:scanFrameWidth="240dp"
         app:scanFrameHeight="240dp"
         android:layout_height="match_parent"

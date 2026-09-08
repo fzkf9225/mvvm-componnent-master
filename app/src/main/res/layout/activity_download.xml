@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/default_background"
+        android:background="?android:attr/colorBackground"
         tools:context=".activity.DownloadActivity">
         <com.google.android.material.textfield.TextInputEditText
                 android:background="@drawable/bg_input_outlined"
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
-            android:textColorHint="@color/nv_bg_color"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
             android:hint="请输入下载目标地址"
             android:gravity="top"
             android:padding="@dimen/padding_m"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
-            android:textColorHint="@color/nv_bg_color"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
             android:hint="请输入下载目标地址"
             android:gravity="top"
             android:padding="@dimen/padding_m"
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:textSize="@dimen/font_size_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
-            android:textColorHint="@color/nv_bg_color"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
             android:hint="请输入下载目标地址,以分号分隔，英文分号"
             android:gravity="top"
             android:padding="@dimen/padding_m"

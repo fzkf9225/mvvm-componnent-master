@@ -10,15 +10,18 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.ui.R;
@@ -178,13 +181,11 @@ public class FormEditArea extends FormConstraintLayout {
         editText = new TextInputEditText(getContext());
         editText.setId(View.generateViewId());
         editText.setHint(hintString);
-        editText.setHintTextColor(ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.hint_text_color));
-        // 先设置背景为透明，再设置自定义背景
+        editText.setHintTextColor(formHintTextColor != 0 ? formHintTextColor : ThemeAttrs.onSurfaceVariant(getContext()));
         editText.setBackground(null);
         if (inputDrawable != null) {
             editText.setBackground(inputDrawable);
         } else {
-            // 默认透明背景
             editText.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         }
         editText.setEllipsize(android.text.TextUtils.TruncateAt.END);
@@ -201,7 +202,7 @@ public class FormEditArea extends FormConstraintLayout {
             editText.setPadding((int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding);
             editText.setGravity(Gravity.START | Gravity.TOP);
             params = new ConstraintLayout.LayoutParams(
-                    0, (int) inputHeight);
+                    0, LayoutParams.WRAP_CONTENT);
             params.setMarginStart((int) textEndMargin);
             params.setMarginEnd((int) textEndMargin);
             params.topMargin = (int) (defaultTextMargin / 2);
@@ -210,7 +211,7 @@ public class FormEditArea extends FormConstraintLayout {
             editText.setPadding((int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding, (int) editAreaPadding);
             editText.setGravity(Gravity.END | Gravity.TOP);
             params = new ConstraintLayout.LayoutParams(
-                    0, (int) inputHeight);
+                    0, LayoutParams.WRAP_CONTENT);
             params.setMarginStart((int) textStartMargin);
             params.setMarginEnd((int) textEndMargin);
             params.horizontalWeight = 1;
@@ -220,8 +221,55 @@ public class FormEditArea extends FormConstraintLayout {
             params = new ConstraintLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         }
-        tvSelection = editText;
-        addView(editText, params);
+        TextInputLayout til = FormTextInputLayouts.wrap(getContext(), editText);
+        til.setId(View.generateViewId());
+        if (maxLength > 0) {
+            til.setCounterMaxLength(maxLength);
+        }
+        textInputLayout = til;
+        tvSelection = til;
+        addView(til, params);
+        applyEditAreaChrome();
+    }
+
+    @Override
+    protected void applyInputChrome() {
+        super.applyInputChrome();
+        applyEditAreaChrome();
+    }
+
+    @NonNull
+    public TextInputEditText getEditText() {
+        return editText;
+    }
+
+    /**
+     * wrap/compact 会清掉 EditText 背景和高度；多行框要把 {@link #inputDrawable} 和 {@link #inputHeight} 补回去，
+     * helper/counter 留在输入框下方，不挤占背景区域。
+     */
+    private void applyEditAreaChrome() {
+        if (editText == null) {
+            return;
+        }
+        int padding = (int) editAreaPadding;
+        editText.setPadding(padding, padding, padding, padding);
+        if (inputDrawable != null) {
+            editText.setBackground(inputDrawable);
+        }
+        int height = (int) inputHeight;
+        editText.setMinimumHeight(height);
+        editText.setMinHeight(height);
+        ViewGroup.LayoutParams childLp = editText.getLayoutParams();
+        if (childLp != null) {
+            childLp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            childLp.height = height;
+            editText.setLayoutParams(childLp);
+        }
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            editText.setGravity(Gravity.START | Gravity.TOP);
+        } else {
+            editText.setGravity(Gravity.END | Gravity.TOP);
+        }
     }
 
     @Override
@@ -245,6 +293,37 @@ public class FormEditArea extends FormConstraintLayout {
         } else {
 
         }
+    }
+
+    @Override
+    protected void applySelectionAlignParams() {
+        super.applySelectionAlignParams();
+        if (editText == null || tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        boolean top = LabelAlignEnum.TOP.value == labelAlign;
+        params.width = 0;
+        params.height = LayoutParams.WRAP_CONTENT;
+        if (top) {
+            params.horizontalWeight = 0;
+            params.topMargin = (int) (defaultTextMargin / 2);
+            params.bottomMargin = (int) defaultTextMargin;
+            params.setMarginStart((int) textEndMargin);
+            params.setMarginEnd((int) textEndMargin);
+        } else {
+            params.horizontalWeight = 1;
+            params.topMargin = (int) defaultTextMargin;
+            params.bottomMargin = (int) defaultTextMargin;
+            params.setMarginStart((int) textStartMargin);
+            params.setMarginEnd((int) textEndMargin);
+        }
+        applyEditAreaChrome();
+        tvSelection.setLayoutParams(params);
+        applySelectionSizeConstraints();
     }
 
     /**

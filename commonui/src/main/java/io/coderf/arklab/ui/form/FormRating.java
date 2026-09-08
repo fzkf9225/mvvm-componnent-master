@@ -62,8 +62,8 @@ public class FormRating extends FormConstraintLayout {
     @Override
     protected void initAttr(AttributeSet attrs) {
         ratingValue = new ObservableFloat(0f);
-        ratingStarColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.themeColor);
-        ratingEmptyStarColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.h_line_color);
+        ratingStarColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
+        ratingEmptyStarColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
         super.initAttr(attrs);
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
@@ -267,6 +267,11 @@ public class FormRating extends FormConstraintLayout {
             constraintSet.setHorizontalBias(tvSelection.getId(), 1f);
         }
         constraintSet.applyTo(this);
+    }
+
+    @Override
+    protected boolean selectionUsesMatchConstraint() {
+        return false;
     }
 
     /** 设置当前评分 */

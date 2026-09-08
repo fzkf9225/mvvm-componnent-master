@@ -1,7 +1,6 @@
 package io.coderf.arklab.ui.form;
 
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -86,7 +85,12 @@ public class FormSwitch extends FormConstraintLayout {
         switchIcon.setPadding(0, 0, 0, 0);
         switchIcon.setClickable(true);
         switchIcon.setFocusable(true);
-        switchIcon.setOnClickListener(v -> setChecked(!isChecked()));
+        switchIcon.setOnClickListener(v -> {
+            if (isEnabled()) {
+                setChecked(!isChecked());
+            }
+        });
+        FormCheckableA11y.asSwitch(switchIcon, labelString, this::isChecked);
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 (int) switchWidth, (int) switchHeight);
         if (LabelAlignEnum.TOP.value == labelAlign) {
@@ -127,11 +131,11 @@ public class FormSwitch extends FormConstraintLayout {
         int height = (int) switchHeight;
         int thumbInset = DensityUtil.dp2px(getContext(), 2f);
         int thumbSize = Math.max(height - thumbInset * 2, 1);
-        int themeColor = ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.themeColor);
+        int themeColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.primary(getContext());
         int checkedTrack = switchThumbTint != null ? switchThumbTint : themeColor;
         int uncheckedTrack = switchTrackTint != null
                 ? switchTrackTint
-                : ContextCompat.getColor(getContext(), io.coderf.arklab.common.R.color.surfaceVariant);
+                : io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
 
         GradientDrawable track = new GradientDrawable();
         track.setShape(GradientDrawable.RECTANGLE);
@@ -142,7 +146,7 @@ public class FormSwitch extends FormConstraintLayout {
         GradientDrawable thumb = new GradientDrawable();
         thumb.setShape(GradientDrawable.OVAL);
         thumb.setSize(thumbSize, thumbSize);
-        thumb.setColor(Color.WHITE);
+        thumb.setColor(io.coderf.arklab.common.utils.theme.ThemeAttrs.onPrimary(getContext()));
 
         LayerDrawable layers = new LayerDrawable(new Drawable[]{track, thumb});
         layers.setLayerSize(1, thumbSize, thumbSize);
@@ -185,6 +189,27 @@ public class FormSwitch extends FormConstraintLayout {
             constraintSet.setHorizontalBias(tvSelection.getId(), 1f);
         }
         constraintSet.applyTo(this);
+    }
+
+    @Override
+    protected boolean selectionUsesMatchConstraint() {
+        return false;
+    }
+
+    @Override
+    protected void applySelectionAlignParams() {
+        super.applySelectionAlignParams();
+        if (tvSelection == null) {
+            return;
+        }
+        LayoutParams params = (LayoutParams) tvSelection.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        params.width = (int) switchWidth;
+        params.height = (int) switchHeight;
+        tvSelection.setLayoutParams(params);
+        applySelectionSizeConstraints();
     }
 
     /** 获取内部开关图标，便于进一步定制 */
