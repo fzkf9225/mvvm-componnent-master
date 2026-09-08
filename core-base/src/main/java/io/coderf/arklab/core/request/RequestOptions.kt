@@ -11,7 +11,7 @@ package io.coderf.arklab.core.request
 data class RequestOptions(
     val showLoading: Boolean = true,
     val loadingMessage: String = "正在加载，请稍后...",
-    val enableDynamicEllipsis: Boolean = false,
+    val enableDynamicEllipsis: Boolean = true,
     /** null 表示使用全局默认重试策略 */
     val retryPolicy: RetryPolicy? = null,
     /** null 表示不额外设置超时（沿用 OkHttp / 调用方） */
@@ -27,7 +27,7 @@ data class RequestOptions(
     class Builder {
         private var showLoading: Boolean = true
         private var loadingMessage: String = "正在加载，请稍后..."
-        private var enableDynamicEllipsis: Boolean = false
+        private var enableDynamicEllipsis: Boolean = true
         private var retryPolicy: RetryPolicy? = null
         private var timeoutMs: Long? = null
         private var deliverErrorToUi: Boolean = true

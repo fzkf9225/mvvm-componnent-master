@@ -36,7 +36,7 @@ public class ApiRequestOptions {
     /**
      * 是否启用动态省略号效果
      */
-    private boolean enableDynamicEllipsis = false;
+    private boolean enableDynamicEllipsis = true;
 
     private ApiRequestOptions() {
     }
