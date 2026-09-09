@@ -34,10 +34,11 @@ import io.coderf.arklab.common.widget.dialog.MaterialAlertHelper;
 import io.coderf.arklab.common.widget.feedback.BadgeHelper;
 import io.coderf.arklab.common.widget.feedback.ToastHelper;
 import io.coderf.arklab.demo.R;
+import io.coderf.arklab.demo.adapter.HeroCarouselAdapter;
+import io.coderf.arklab.demo.adapter.ShelfCarouselAdapter;
+import io.coderf.arklab.demo.adapter.SuggestionAdapter;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMaterial3KitBinding;
-import io.coderf.arklab.demo.databinding.ItemCarouselBannerBinding;
-import io.coderf.arklab.demo.databinding.ItemCarouselShelfBinding;
 
 /**
  * Material3 产品能力演示。Carousel 只做封面/货架浏览，不替代 {@code BannerView}，也不做微信相册。
@@ -207,119 +208,4 @@ public class Material3KitActivity extends BaseActivity<EmptyViewModel, ActivityM
         });
     }
 
-    private static final class SuggestionAdapter extends RecyclerView.Adapter<SuggestionAdapter.Holder> {
-        interface OnPick {
-            void onPick(@NonNull String text);
-        }
-
-        private final OnPick onPick;
-        private final List<String> items = new ArrayList<>();
-
-        SuggestionAdapter(OnPick onPick) {
-            this.onPick = onPick;
-        }
-
-        void submit(@NonNull List<String> data) {
-            items.clear();
-            items.addAll(data);
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            TextView view = (TextView) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_search_suggestion, parent, false);
-            return new Holder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull Holder holder, int position) {
-            String text = items.get(position);
-            holder.text.setText(text);
-            holder.text.setOnClickListener(v -> onPick.onPick(text));
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        static final class Holder extends RecyclerView.ViewHolder {
-            final TextView text;
-
-            Holder(TextView text) {
-                super(text);
-                this.text = text;
-            }
-        }
-    }
-
-    private static final class HeroCarouselAdapter extends RecyclerView.Adapter<HeroCarouselAdapter.Holder> {
-        private final List<String> urls;
-
-        HeroCarouselAdapter(List<String> urls) {
-            this.urls = urls;
-        }
-
-        @NonNull
-        @Override
-        public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new Holder(ItemCarouselBannerBinding.inflate(
-                    LayoutInflater.from(parent.getContext()), parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull Holder holder, int position) {
-            Glide.with(holder.binding.carouselImage).load(urls.get(position)).into(holder.binding.carouselImage);
-        }
-
-        @Override
-        public int getItemCount() {
-            return urls.size();
-        }
-
-        static final class Holder extends RecyclerView.ViewHolder {
-            final ItemCarouselBannerBinding binding;
-
-            Holder(ItemCarouselBannerBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
-    }
-
-    private static final class ShelfCarouselAdapter extends RecyclerView.Adapter<ShelfCarouselAdapter.Holder> {
-        private final List<String> urls;
-
-        ShelfCarouselAdapter(List<String> urls) {
-            this.urls = urls;
-        }
-
-        @NonNull
-        @Override
-        public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new Holder(ItemCarouselShelfBinding.inflate(
-                    LayoutInflater.from(parent.getContext()), parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull Holder holder, int position) {
-            Glide.with(holder.binding.carouselImage).load(urls.get(position)).into(holder.binding.carouselImage);
-        }
-
-        @Override
-        public int getItemCount() {
-            return urls.size();
-        }
-
-        static final class Holder extends RecyclerView.ViewHolder {
-            final ItemCarouselShelfBinding binding;
-
-            Holder(ItemCarouselShelfBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
-    }
 }
