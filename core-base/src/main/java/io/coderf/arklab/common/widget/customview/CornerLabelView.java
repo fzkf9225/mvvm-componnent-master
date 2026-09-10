@@ -202,6 +202,18 @@ public class CornerLabelView extends View {
         canvas.drawText(text, x, y, mTextPaint);
     }
 
+    /**
+     * DataBinding：{@code app:text="@{item.name}"}。
+     * 仅在使用 {@code @{} } 表达式时生效，不影响 XML 静态 {@code app:text} 和 {@link #setText(String)}。
+     *
+     * @param view 角标控件
+     * @param text 角标文字，null 按空串处理
+     */
+    @BindingAdapter("text")
+    public static void bindAppText(CornerLabelView view, CharSequence text) {
+        view.setText(text == null ? "" : text.toString());
+    }
+
     @BindingAdapter({"bindText"})
     public static void bindText(CornerLabelView cornerLabelView, String text) {
         cornerLabelView.setText(text);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
@@ -13,12 +14,14 @@ import com.google.android.material.color.DynamicColors;
 import com.tencent.mmkv.MMKV;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.autosize.AutoSize;
 import io.coderf.arklab.common.autosize.AutoSizeConfig;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.CrashHandler;
+import io.coderf.arklab.common.widget.empty.EmptyLayoutConfig;
 import io.coderf.arklab.log.ArkLog;
 import io.coderf.arklab.log.FileLogLevel;
 
@@ -91,6 +94,12 @@ public class Config {
     private int defaultErrorImageRes = R.mipmap.ic_default_image;
 
     /**
+     * EmptyLayout 空态外观全局默认（图标 / 文案 / 颜色 / 字号 / 字重）。
+     * 页面 XML / setter 优先于本配置。
+     */
+    private EmptyLayoutConfig emptyLayoutConfig = EmptyLayoutConfig.defaults();
+
+    /**
      * 本地文件夹名称
      */
     private String folderName;
@@ -114,16 +123,20 @@ public class Config {
         return hideKeyboardOnTouchOutside;
     }
 
-    public void setHideKeyboardOnTouchOutside(boolean hideKeyboardOnTouchOutside) {
+    @NonNull
+    public Config setHideKeyboardOnTouchOutside(boolean hideKeyboardOnTouchOutside) {
         this.hideKeyboardOnTouchOutside = hideKeyboardOnTouchOutside;
+        return this;
     }
 
     public String getFolderName() {
         return folderName;
     }
 
-    public void setFolderName(String folderName) {
+    @NonNull
+    public Config setFolderName(String folderName) {
         this.folderName = folderName;
+        return this;
     }
 
     public boolean isDynamicColorEnabled() {
@@ -133,6 +146,7 @@ public class Config {
     /**
      * 是否启用壁纸动态取色。须在 {@link #init(Application)} 之前调用才对首个 Activity 生效。
      */
+    @NonNull
     public Config setDynamicColorEnabled(boolean dynamicColorEnabled) {
         this.dynamicColorEnabled = dynamicColorEnabled;
         if (dynamicColorEnabled && application != null) {
@@ -148,6 +162,7 @@ public class Config {
     /**
      * 是否启用屏幕适配。须在 {@link #init(Application)} 之前调用才对首个 Activity 生效。
      */
+    @NonNull
     public Config setAutoSizeEnabled(boolean autoSizeEnabled) {
         this.autoSizeEnabled = autoSizeEnabled;
         if (application != null) {
@@ -164,6 +179,7 @@ public class Config {
      * 是否挂载框架崩溃捕获。须在 {@link #init(Application)} 之前调用。
      * 开启后会先写本地日志再转交原 handler，一般无需因 Bugly / Firebase 而关闭。
      */
+    @NonNull
     public Config setCrashHandlerEnabled(boolean crashHandlerEnabled) {
         this.crashHandlerEnabled = crashHandlerEnabled;
         return this;
@@ -176,6 +192,7 @@ public class Config {
     /**
      * 崩溃日志保留天数；&lt;= 0 表示不自动清理。须在 {@link #init(Application)} 之前调用。
      */
+    @NonNull
     public Config setCrashLogRetainDays(int crashLogRetainDays) {
         this.crashLogRetainDays = crashLogRetainDays;
         return this;
@@ -189,6 +206,7 @@ public class Config {
      * 设置夜间模式，取值见 {@link AppCompatDelegate#setDefaultNightMode(int)}。
      * 须在 {@link #init(Application)} 之前调用才对首个 Activity 生效。
      */
+    @NonNull
     public Config setNightMode(int nightMode) {
         this.nightMode = nightMode;
         AppCompatDelegate.setDefaultNightMode(nightMode);
@@ -202,6 +220,7 @@ public class Config {
     /**
      * BaseActivity 的 Edge-to-Edge 全局默认。单页仍可通过 {@code edgeToEdgePolicy} 覆盖。
      */
+    @NonNull
     public Config setEdgeToEdgeEnabled(boolean edgeToEdgeEnabled) {
         this.edgeToEdgeEnabled = edgeToEdgeEnabled;
         return this;
@@ -215,6 +234,7 @@ public class Config {
     /**
      * 全局图片占位图。控件 XML / setter 优先于本默认值。
      */
+    @NonNull
     public Config setDefaultPlaceholderRes(@DrawableRes int defaultPlaceholderRes) {
         this.defaultPlaceholderRes = defaultPlaceholderRes != 0
                 ? defaultPlaceholderRes
@@ -230,10 +250,50 @@ public class Config {
     /**
      * 全局图片失败图。控件 XML / setter 优先于本默认值。
      */
+    @NonNull
     public Config setDefaultErrorImageRes(@DrawableRes int defaultErrorImageRes) {
         this.defaultErrorImageRes = defaultErrorImageRes != 0
                 ? defaultErrorImageRes
                 : R.mipmap.ic_default_image;
+        return this;
+    }
+
+    /**
+     * EmptyLayout 空态外观全局默认（未配置时为框架内置图标与文案）。
+     * 可直接改返回对象，或用 {@link #configureEmptyLayout} 保持 Config 链式调用。
+     * 须在首个 EmptyLayout 创建前设置。
+     */
+    @NonNull
+    public EmptyLayoutConfig getEmptyLayoutConfig() {
+        if (emptyLayoutConfig == null) {
+            emptyLayoutConfig = EmptyLayoutConfig.defaults();
+        }
+        return emptyLayoutConfig;
+    }
+
+    /**
+     * 替换 EmptyLayout 空态外观全局默认。{@code null} 回退到框架内置。
+     * 控件 XML / {@link io.coderf.arklab.common.widget.empty.EmptyLayout} setter 优先于本默认值。
+     */
+    @NonNull
+    public Config setEmptyLayoutConfig(@Nullable EmptyLayoutConfig emptyLayoutConfig) {
+        this.emptyLayoutConfig = emptyLayoutConfig != null
+                ? emptyLayoutConfig
+                : EmptyLayoutConfig.defaults();
+        return this;
+    }
+
+    /**
+     * 在已有 EmptyLayout 全局配置上修改，并继续链式调用 Config。
+     * <pre>
+     * Config.getInstance()
+     *     .configureEmptyLayout(cfg -&gt; cfg.setNoDataImageRes(R.drawable.my_empty).setTextSizeSp(16))
+     *     .init(application);
+     * </pre>
+     */
+    @NonNull
+    public Config configureEmptyLayout(@NonNull Consumer<EmptyLayoutConfig> consumer) {
+        consumer.accept(getEmptyLayoutConfig());
         return this;
     }
 
@@ -260,7 +320,8 @@ public class Config {
      */
     public static AtomicBoolean enableDebug = new AtomicBoolean(false);
 
-    public void init(Application application) {
+    @NonNull
+    public Config init(Application application) {
         this.application = application;
         MMKV.initialize(application);
         applyNightMode();
@@ -271,6 +332,7 @@ public class Config {
         if (dynamicColorEnabled) {
             DynamicColors.applyToActivitiesIfAvailable(application);
         }
+        return this;
     }
 
     private void applyNightMode() {
@@ -290,8 +352,10 @@ public class Config {
         }
     }
 
-    public void setErrorService(ErrorService errorService) {
+    @NonNull
+    public Config setErrorService(ErrorService errorService) {
         this.errorService = errorService;
+        return this;
     }
 
     public ErrorService getErrorService() {
@@ -301,27 +365,32 @@ public class Config {
     /**
      * 开启 base 模块控制台 debug，并默认以 DEBUG 层级写本地日志（进程级，由 core-log 统一管理）。
      */
-    public void enableDebug(boolean enable) {
-        enableDebug(enable, FileLogLevel.DEBUG);
+    @NonNull
+    public Config enableDebug(boolean enable) {
+        return enableDebug(enable, FileLogLevel.DEBUG);
     }
 
     /**
      * @param enable       是否开启 base 模块控制台 debug
      * @param fileLogLevel 本地日志读写层级（进程级）：非 NONE 时开启落盘；NONE 表示本次不改动落盘
      */
-    public void enableDebug(boolean enable, FileLogLevel fileLogLevel) {
+    @NonNull
+    public Config enableDebug(boolean enable, FileLogLevel fileLogLevel) {
         enableDebug.set(enable);
         ArkLog.base().setEnableDebug(enable);
         if (application != null && fileLogLevel != null && fileLogLevel != FileLogLevel.NONE) {
             ArkLog.startFileLog(application, fileLogLevel);
         }
+        return this;
     }
 
     public boolean isResponseBodyLogConverterJson() {
         return responseBodyLogConverterJson;
     }
 
-    public void setResponseBodyLogConverterJson(boolean responseBodyLogConverterJson) {
+    @NonNull
+    public Config setResponseBodyLogConverterJson(boolean responseBodyLogConverterJson) {
         this.responseBodyLogConverterJson = responseBodyLogConverterJson;
+        return this;
     }
 }

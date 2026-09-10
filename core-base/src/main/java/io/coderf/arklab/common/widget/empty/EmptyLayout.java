@@ -24,6 +24,7 @@ import com.google.android.material.loadingindicator.LoadingIndicator;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
 /**
@@ -36,6 +37,10 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
  * </ul>
  * 默认加载文案若以 {@code .} 或省略号 {@code …} 结尾，会按点号个数循环播放
  * （{@code app:loadingDotAnimEnabled}，默认开启；尾部无点号时不播放）。
+ * <p>
+ * 空态图标、文案、颜色、字号、字重默认来自 {@link EmptyLayoutConfig}
+ * （经 {@link Config#getEmptyLayoutConfig()}）。
+ * 优先级：页面 XML / setter &gt; 全局配置 &gt; 框架内置。
  *
  * @update 2026/7/13 11:00
  *
@@ -85,18 +90,18 @@ public class EmptyLayout extends ConstraintLayout {
     // 自定义内容
     private String customNoDataContent = "";
 
-    // ==================== 图片资源 ====================
-    @DrawableRes private int errorImage = R.drawable.ic_empty_load_error;
-    @DrawableRes private int loadingImage = R.drawable.ic_empty_loading;
-    @DrawableRes private int noDataImage = R.drawable.ic_empty_no_data;
+    // ==================== 图片资源（默认取全局 EmptyLayoutConfig，未配置则为框架内置） ====================
+    @DrawableRes private int errorImage;
+    @DrawableRes private int loadingImage;
+    @DrawableRes private int noDataImage;
     /** 可点击重试态使用刷新图标；加载中静态图参见 {@link #loadingImage}（沙漏） */
-    @DrawableRes private int clickableNoDataImage = R.drawable.ic_empty_retry;
+    @DrawableRes private int clickableNoDataImage;
 
-    // ==================== 文字资源 ====================
-    @StringRes private int errorText = R.string.state_load_error;
-    @StringRes private int loadingText = R.string.state_loading;
-    @StringRes private int noDataText = R.string.noData;
-    @StringRes private int clickableNoDataText = R.string.state_loading_again;
+    // ==================== 文字资源（默认取全局 EmptyLayoutConfig） ====================
+    @StringRes private int errorText;
+    @StringRes private int loadingText;
+    @StringRes private int noDataText;
+    @StringRes private int clickableNoDataText;
 
     // ==================== 文字颜色 ====================
     private int errorTextColor;
@@ -194,22 +199,8 @@ public class EmptyLayout extends ConstraintLayout {
     }
 
     private void initAttr(AttributeSet attrs) {
-        // 默认值初始化
-        errorTextColor = ThemeAttrs.onSurfaceVariant(getContext());
-        loadingTextColor = ThemeAttrs.onSurfaceVariant(getContext());
-        noDataTextColor = ThemeAttrs.onSurfaceVariant(getContext());
-        clickableNoDataTextColor = ThemeAttrs.onSurfaceVariant(getContext());
-
-        errorTextSize = DensityUtil.sp2px(getContext(), 14);
-        loadingTextSize = DensityUtil.sp2px(getContext(), 14);
-        noDataTextSize = DensityUtil.sp2px(getContext(), 14);
-        clickableNoDataTextSize = DensityUtil.sp2px(getContext(), 14);
-
-        errorTextStyle = 0;
-        loadingTextStyle = 0;
-        noDataTextStyle = 0;
-        clickableNoDataTextStyle = 0;
-
+        applyGlobalDefaults();
+        // 布局类默认值（尚未纳入 EmptyLayoutConfig，避免改变间距/对齐行为）
         contentGravity = 0;
         imageTextArrangement = 0;
 
@@ -291,6 +282,52 @@ public class EmptyLayout extends ConstraintLayout {
 
             a.recycle();
         }
+    }
+
+    /**
+     * 从进程级 {@link EmptyLayoutConfig} 填入图标 / 文案 / 颜色 / 字号 / 字重默认值。
+     * XML / setter 随后可覆盖；未改全局配置时与原先框架内置默认一致。
+     */
+    private void applyGlobalDefaults() {
+        applyConfigValues(Config.getInstance().getEmptyLayoutConfig());
+    }
+
+    /**
+     * 将配置应用到本实例字段。不改变当前已展示状态，除非调用方随后 {@link #setState(State)}。
+     */
+    private void applyConfigValues(@NonNull EmptyLayoutConfig config) {
+        errorImage = config.getErrorImageRes();
+        loadingImage = config.getLoadingImageRes();
+        noDataImage = config.getNoDataImageRes();
+        clickableNoDataImage = config.getClickableNoDataImageRes();
+
+        errorText = config.getErrorTextRes();
+        loadingText = config.getLoadingTextRes();
+        noDataText = config.getNoDataTextRes();
+        clickableNoDataText = config.getClickableNoDataTextRes();
+
+        int themeTextColor = ThemeAttrs.onSurfaceVariant(getContext());
+        errorTextColor = resolveConfiguredColor(config.getErrorTextColor(), themeTextColor);
+        loadingTextColor = resolveConfiguredColor(config.getLoadingTextColor(), themeTextColor);
+        noDataTextColor = resolveConfiguredColor(config.getNoDataTextColor(), themeTextColor);
+        clickableNoDataTextColor = resolveConfiguredColor(
+                config.getClickableNoDataTextColor(), themeTextColor);
+
+        errorTextSize = DensityUtil.sp2px(getContext(), config.getErrorTextSizeSp());
+        loadingTextSize = DensityUtil.sp2px(getContext(), config.getLoadingTextSizeSp());
+        noDataTextSize = DensityUtil.sp2px(getContext(), config.getNoDataTextSizeSp());
+        clickableNoDataTextSize = DensityUtil.sp2px(getContext(), config.getClickableNoDataTextSizeSp());
+
+        errorTextStyle = config.getErrorTextStyle();
+        loadingTextStyle = config.getLoadingTextStyle();
+        noDataTextStyle = config.getNoDataTextStyle();
+        clickableNoDataTextStyle = config.getClickableNoDataTextStyle();
+
+        loadingDotAnimEnabled = config.isLoadingDotAnimEnabled();
+    }
+
+    private static int resolveConfiguredColor(int configuredColor, int themeFallback) {
+        return configuredColor != 0 ? configuredColor : themeFallback;
     }
 
     /**
@@ -831,6 +868,27 @@ public class EmptyLayout extends ConstraintLayout {
 
     public void setClickableNoDataImageRes(@DrawableRes int resId) {
         this.clickableNoDataImage = resId;
+    }
+
+    /**
+     * 一次性覆盖本实例的空态图标，不改进程级 {@link EmptyLayoutConfig}。
+     * 若要连同文案 / 颜色 / 字号一起覆盖，请用 {@link #setConfig(EmptyLayoutConfig)}。
+     */
+    public EmptyLayout setImageConfig(@NonNull EmptyLayoutConfig config) {
+        this.errorImage = config.getErrorImageRes();
+        this.loadingImage = config.getLoadingImageRes();
+        this.noDataImage = config.getNoDataImageRes();
+        this.clickableNoDataImage = config.getClickableNoDataImageRes();
+        return this;
+    }
+
+    /**
+     * 一次性覆盖本实例的图标、文案、颜色、字号、字重，不改进程级 {@link EmptyLayoutConfig}。
+     * 若要基于全局再改某一项，可 {@code Config.getInstance().getEmptyLayoutConfig().copy().setNoDataTextRes(...)}。
+     */
+    public EmptyLayout setConfig(@NonNull EmptyLayoutConfig config) {
+        applyConfigValues(config);
+        return this;
     }
 
     public EmptyLayout setErrorImageSize(int widthPx, int heightPx) {

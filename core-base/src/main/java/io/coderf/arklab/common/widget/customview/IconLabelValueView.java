@@ -16,6 +16,7 @@ import com.google.android.material.textview.MaterialTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.BindingAdapter;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -440,6 +441,18 @@ public class IconLabelValueView extends ConstraintLayout {
 
     public void setValue(String text) {
         tvValue.setText(text);
+    }
+
+    /**
+     * DataBinding：{@code app:text="@{item.name}"}。
+     * 只绑定 value 文字，不影响 XML 静态 {@code app:value} 和 {@link #setValue(String)}。
+     *
+     * @param view 控件
+     * @param text value 文字，null 按空串处理
+     */
+    @BindingAdapter("text")
+    public static void bindAppText(IconLabelValueView view, CharSequence text) {
+        view.setValue(text == null ? "" : text.toString());
     }
 
     public void setLeftIcon(Drawable drawable) {

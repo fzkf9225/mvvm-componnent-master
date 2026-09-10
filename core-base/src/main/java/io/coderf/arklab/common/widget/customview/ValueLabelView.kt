@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
+import androidx.databinding.BindingAdapter
 import com.google.android.material.textview.MaterialTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
@@ -55,6 +56,16 @@ class ValueLabelView @JvmOverloads constructor(
         const val ALIGNMENT_END = 2
         /** 数值和单位：两端对齐（数值左对齐，单位右对齐） */
         const val ALIGNMENT_SPACE_BETWEEN = 3
+
+        /**
+         * DataBinding：`app:text="@{item.name}"`。
+         * 只绑定数值文字，不影响 XML 静态 `app:valueText` 和 [setValue]。
+         */
+        @JvmStatic
+        @BindingAdapter("text")
+        fun bindAppText(view: ValueLabelView, text: CharSequence?) {
+            view.setValue(text ?: "")
+        }
     }
 
     /**

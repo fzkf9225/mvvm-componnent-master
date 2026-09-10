@@ -39,8 +39,6 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
     private int circleBackColor;
     private float radius;
     private float strokeWidth;
-    /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
-    private GradientDrawable gradientDrawable;
     private boolean enableBgStyle = true;
 
     private OnClearListener onClearListener;
@@ -202,7 +200,7 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
         if (enableBgStyle) {
             return;
         }
-        this.gradientDrawable = gradientDrawable;
+        /** 仅兼容旧 {@link #setGradientDrawable} 入参，不再作为实际 background。 */
         if (gradientDrawable == null) {
             return;
         }

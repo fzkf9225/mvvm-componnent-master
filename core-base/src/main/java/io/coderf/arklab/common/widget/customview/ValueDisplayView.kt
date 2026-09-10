@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import androidx.databinding.BindingAdapter
 import com.google.android.material.textview.MaterialTextView
 import androidx.constraintlayout.widget.ConstraintSet
 import io.coderf.arklab.common.R
@@ -30,6 +31,18 @@ class ValueDisplayView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : androidx.constraintlayout.widget.ConstraintLayout(context, attrs, defStyleAttr) {
+
+    companion object {
+        /**
+         * DataBinding：`app:text="@{item.name}"`。
+         * 只绑定数值文字，不影响 XML 静态 `app:valueText` 和 [setValue]。
+         */
+        @JvmStatic
+        @BindingAdapter("text")
+        fun bindAppText(view: ValueDisplayView, text: CharSequence?) {
+            view.setValue(text ?: "")
+        }
+    }
 
     private val labelTextView: MaterialTextView = MaterialTextView(context).apply {
         id = generateViewId()

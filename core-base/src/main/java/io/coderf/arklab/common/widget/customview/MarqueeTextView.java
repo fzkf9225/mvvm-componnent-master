@@ -16,6 +16,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.BindingAdapter;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
@@ -406,6 +407,23 @@ public class MarqueeTextView extends View {
         updateScrollState();
         invalidate();
         return this;
+    }
+
+    /**
+     * DataBinding：{@code app:text="@{item.name}"}。
+     * 仅在使用 {@code @{} } 表达式时生效，不影响 XML 静态 {@code app:text} 和 {@link #setMarqueeText(CharSequence)}。
+     * 相同文案不重复设置，避免滚动偏移被重置。
+     *
+     * @param view 跑马灯控件
+     * @param text 展示文案，null 按空串处理
+     */
+    @BindingAdapter("text")
+    public static void bindAppText(MarqueeTextView view, CharSequence text) {
+        String newText = text == null ? "" : text.toString();
+        if (newText.equals(view.getMarqueeText())) {
+            return;
+        }
+        view.setMarqueeText(newText);
     }
 
     /**

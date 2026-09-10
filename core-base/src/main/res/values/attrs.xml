@@ -689,6 +689,8 @@
         <attr name="label" />
         <!-- value文字内容 -->
         <attr name="value" />
+        <!-- DataBinding 绑定 value 文字：app:text="@{item.name}"，与 value 并存不冲突 -->
+        <attr name="text" />
         <!-- 是否显示左侧图标 -->
         <attr name="showLeftIcon" format="boolean" />
         <!-- 是否显示右侧图标 -->
@@ -827,6 +829,8 @@
 
         <!-- value 相关属性 -->
         <attr name="valueText" />
+        <!-- DataBinding 绑定 value 文字：app:text="@{item.name}"，与 valueText 并存不冲突 -->
+        <attr name="text" />
         <attr name="valueTextColor" />
         <attr name="valueTextSize" />
         <attr name="valueTextStyle"/>
