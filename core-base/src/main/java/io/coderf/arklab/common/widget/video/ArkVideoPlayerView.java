@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -43,13 +45,13 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
     private VideoPlayerConfig config = VideoPlayerConfig.embedDefaults();
 
     @Nullable
-    private ImageView btnRotate;
+    private ShapeableImageView btnRotate;
     @Nullable
-    private TextView btnSpeed;
+    private MaterialTextView btnSpeed;
     @Nullable
-    private TextView btnClarity;
+    private MaterialTextView btnClarity;
     @Nullable
-    private ImageView btnBottomPlay;
+    private ShapeableImageView btnBottomPlay;
 
     /** Dialog 模式下由 {@link VideoPlayerDialog} 控制的全屏展开态（非 GSY Window 全屏） */
     private boolean externalExpanded;
