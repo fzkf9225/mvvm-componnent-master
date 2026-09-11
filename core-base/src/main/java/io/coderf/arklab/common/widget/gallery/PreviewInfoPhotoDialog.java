@@ -37,6 +37,8 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.utils.common.DrawableUtil;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.widget.dialog.ImageSaveDialogConfig;
 import io.coderf.arklab.common.widget.gallery.adapter.PreviewInfoViewPagerAdapter;
 
@@ -281,6 +283,20 @@ public class PreviewInfoPhotoDialog extends Dialog {
         return setLocationIcon(ContextCompat.getDrawable(getContext(), locationIconRes));
     }
 
+    public PreviewInfoPhotoDialog setLocationCanSelected(boolean locationCanSelected) {
+        config.setLocationCanSelected(locationCanSelected);
+        return this;
+    }
+
+    public PreviewInfoPhotoDialog setLocationSelectedIcon(@Nullable Drawable locationSelectedIcon) {
+        config.setLocationSelectedIcon(locationSelectedIcon);
+        return this;
+    }
+
+    public PreviewInfoPhotoDialog setLocationSelectedIcon(@DrawableRes int locationSelectedIconRes) {
+        return setLocationSelectedIcon(ContextCompat.getDrawable(getContext(), locationSelectedIconRes));
+    }
+
     public PreviewInfoPhotoDialog setPrevIcon(@Nullable Drawable prevIcon) {
         config.setPrevIcon(prevIcon);
         return this;
@@ -443,9 +459,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
             pagerLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
         }
         viewPager.setLayoutParams(pagerLp);
-        if (config.getLocationIcon() != null) {
-            ivLocation.setImageDrawable(config.getLocationIcon());
-        }
         if (config.getPrevIcon() != null) {
             ivPrev.setImageDrawable(config.getPrevIcon());
         }
@@ -558,10 +571,19 @@ public class PreviewInfoPhotoDialog extends Dialog {
 
     private void bindClicks() {
         ivLocation.setOnClickListener(v -> {
-            if (onLocationClickListener == null || imageInfos.isEmpty()) {
+            if (imageInfos.isEmpty()) {
                 return;
             }
-            onLocationClickListener.onLocationClick(this, currentItem(), position);
+            PreviewInfoBean item = currentItem();
+            boolean selected = item != null && item.isLocationIconSelected();
+            if (config.isLocationCanSelected() && item != null) {
+                selected = !selected;
+                item.setLocationIconSelected(selected);
+                bindLocationIcon(item);
+            }
+            if (onLocationClickListener != null) {
+                onLocationClickListener.onLocationClick(this, item, position, selected);
+            }
         });
         ivPrev.setOnClickListener(v -> {
             if (position > 0) {
@@ -618,6 +640,7 @@ public class PreviewInfoPhotoDialog extends Dialog {
 
     private void bindCurrentInfo() {
         PreviewInfoBean item = currentItem();
+        bindLocationIcon(item);
         if (item == null) {
             tvTitle.setVisibility(View.GONE);
             tvTime.setVisibility(View.GONE);
@@ -632,6 +655,30 @@ public class PreviewInfoPhotoDialog extends Dialog {
                 || tvTime.getVisibility() == View.VISIBLE
                 || tvLocation.getVisibility() == View.VISIBLE;
         llInfo.setVisibility(hasInfo ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * 按当前条目刷新定位图标；开启可选中时翻页会保持各条目自己的选中态。
+     */
+    private void bindLocationIcon(@Nullable PreviewInfoBean item) {
+        if (!config.isLocationEnabled()) {
+            return;
+        }
+        boolean selected = config.isLocationCanSelected()
+                && item != null
+                && item.isLocationIconSelected();
+        Drawable icon = selected ? getLocationSelectedIcon() : getLocationNormalIcon();
+        if (icon != null) {
+            ivLocation.setImageDrawable(icon);
+        }
+    }
+
+    @Nullable
+    private Drawable getLocationNormalIcon() {
+        if (config.getLocationIcon() != null) {
+            return config.getLocationIcon();
+        }
+        return ContextCompat.getDrawable(getContext(), R.drawable.ic_preview_location);
     }
 
     private void bindLine(MaterialTextView textView, @Nullable String text) {
@@ -688,10 +735,38 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     /**
+     * 选中态定位图标：优先自定义；未配置时用未选中图标（或默认图）染色为主题色。
+     */
+    @Nullable
+    public Drawable getLocationSelectedIcon() {
+        if (config.getLocationSelectedIcon() != null) {
+            return config.getLocationSelectedIcon();
+        }
+        int primary = ThemeAttrs.primary(getContext());
+        Drawable tinted;
+        if (config.getLocationIcon() != null) {
+            Drawable base = config.getLocationIcon();
+            Drawable src = base.getConstantState() != null
+                    ? base.getConstantState().newDrawable()
+                    : base;
+            tinted = DrawableUtil.withTint(src, primary);
+        } else {
+            tinted = DrawableUtil.withTint(getContext(), R.drawable.ic_preview_location, primary);
+        }
+        config.setLocationSelectedIcon(tinted);
+        return tinted;
+    }
+
+    /**
      * 右上角定位图标点击。
+     * <p>{@code selected}：开启 {@link PreviewInfoConfig#isLocationCanSelected()} 时为切换后的选中态；
+     * 未开启时为条目当前选中态（默认 false）。</p>
      */
     public interface OnLocationClickListener {
-        void onLocationClick(@NonNull PreviewInfoPhotoDialog dialog, @Nullable PreviewInfoBean item, int position);
+        void onLocationClick(@NonNull PreviewInfoPhotoDialog dialog,
+                             @Nullable PreviewInfoBean item,
+                             int position,
+                             boolean selected);
     }
 
     /**

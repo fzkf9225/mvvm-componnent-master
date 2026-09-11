@@ -45,6 +45,10 @@ public class PreviewInfoBean {
     @Nullable
     private String timeText;
     /**
+     * 定位图标是否处于选中状态
+     */
+    private boolean locationIconSelected = false;
+    /**
      * 定位文本
      */
     @Nullable
@@ -151,6 +155,15 @@ public class PreviewInfoBean {
 
     public PreviewInfoBean setTimeText(@Nullable String timeText) {
         this.timeText = timeText;
+        return this;
+    }
+
+    public boolean isLocationIconSelected() {
+        return locationIconSelected;
+    }
+
+    public PreviewInfoBean setLocationIconSelected(boolean locationIconSelected) {
+        this.locationIconSelected = locationIconSelected;
         return this;
     }
 

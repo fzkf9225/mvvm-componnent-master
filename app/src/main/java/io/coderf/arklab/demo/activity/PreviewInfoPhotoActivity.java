@@ -47,6 +47,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
         binding.btnDefault.setOnClickListener(v -> showDefault());
         binding.btnLocationOff.setOnClickListener(v -> showLocationOff());
         binding.btnLocationCallback.setOnClickListener(v -> showLocationCallback());
+        binding.btnLocationSelectable.setOnClickListener(v -> showLocationSelectable());
         binding.btnTextStyle.setOnClickListener(v -> showCustomTextStyle());
         binding.btnCustomIcon.setOnClickListener(v -> showCustomIcon());
         binding.btnViewAllCallback.setOnClickListener(v -> showViewAllCallback());
@@ -76,7 +77,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .setInfoImages(buildDemoList())
                 .currentPosition(0)
                 .setLocationEnabled(true)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveLocationText()))
                 .show();
     }
@@ -94,9 +95,22 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .setInfoImages(buildDemoList())
                 .currentPosition(1)
                 .setLocationEnabled(true)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast("定位回调：第 " + (position + 1) + " 张，" +
                                 (item == null ? "" : item.resolveLocationText())))
+                .show();
+    }
+
+    private void showLocationSelectable() {
+        List<PreviewInfoBean> list = buildDemoList();
+        list.get(0).setLocationIconSelected(true);
+        new PreviewInfoPhotoDialog(this)
+                .setInfoImages(list)
+                .currentPosition(0)
+                .setLocationCanSelected(true)
+                .setOnLocationClickListener((dialog, item, position, selected) ->
+                        showToast((selected ? "选中" : "取消选中") + "定位：第 " + (position + 1) + " 张，"
+                                + (item == null ? "" : item.resolveLocationText())))
                 .show();
     }
 
@@ -115,7 +129,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .setTitleTextSizeSp(18f)
                 .setTimeTextSizeSp(12f)
                 .setLocationTextSizeSp(12f)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveTitle()))
                 .show();
     }
@@ -128,7 +142,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .setPrevIcon(io.coderf.arklab.common.R.drawable.ic_flash_off)
                 .setNextIcon(io.coderf.arklab.common.R.drawable.ic_flash_on)
                 .setViewAllIcon(io.coderf.arklab.common.R.drawable.ic_camera)
-                .setOnLocationClickListener((dialog, item, position) -> showToast("自定义定位图标"))
+                .setOnLocationClickListener((dialog, item, position, selected) -> showToast("自定义定位图标"))
                 .show();
     }
 
@@ -136,7 +150,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
         new PreviewInfoPhotoDialog(this)
                 .setInfoImages(buildDemoList())
                 .currentPosition(0)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveLocationText()))
                 .setOnViewAllClickListener((dialog, items, position) ->
                         showToast("自定义查看全部：共 " + items.size() + " 张，当前第 " + (position + 1) + " 张"))
@@ -150,7 +164,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .setTitleEnabled(true)
                 .setTimeEnabled(false)
                 .setLocationTextEnabled(false)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveLocationText()))
                 .show();
     }
@@ -161,7 +175,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
                 .currentPosition(0)
                 .setNavCircleBackgroundEnabled(false)
                 .setViewAllCircleBackgroundEnabled(false)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveLocationText()))
                 .show();
     }
@@ -172,7 +186,7 @@ public class PreviewInfoPhotoActivity extends BaseActivity<EmptyViewModel, Activ
         new PreviewInfoPhotoDialog(this)
                 .setInfoImages(list)
                 .currentPosition(0)
-                .setOnLocationClickListener((dialog, item, position) ->
+                .setOnLocationClickListener((dialog, item, position, selected) ->
                         showToast(item == null ? "定位" : item.resolveLocationText()))
                 .show();
     }

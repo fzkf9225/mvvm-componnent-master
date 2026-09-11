@@ -51,6 +51,14 @@
                 android:textAllCaps="false" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLocationSelectable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="定位图标可选中（翻页保持状态）"
+                android:textAllCaps="false" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
