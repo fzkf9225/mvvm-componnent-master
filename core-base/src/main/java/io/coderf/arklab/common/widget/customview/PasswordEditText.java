@@ -32,9 +32,22 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 /**
  * 密码输入框：圆角背景、明文/密文切换，可选清除按钮（可与切换按钮同时显示）。
  * 样式属性与 {@link ClearableEditText} 保持一致，便于 XML 复用。
+ * <p>
+ * 会保留 XML 中通过 {@code android:drawableStart} / {@code android:drawableLeft}
+ * 设置的左侧图标，不会被右侧按钮逻辑覆盖。
+ * <p>
+ * 可通过自定义属性控制：
+ * <ul>
+ *   <li>{@code app:startIconSize} — 左侧图标宽高（0 表示 intrinsic）</li>
+ *   <li>{@code app:clearIconSize} — 清除图标宽高</li>
+ *   <li>{@code app:toggleIconSize} — 眼睛切换图标宽高</li>
+ *   <li>{@code app:iconPadding} — 图标与文字间距</li>
+ *   <li>{@code app:endIconGap} — 清除与切换按钮之间的间距</li>
+ *   <li>{@code app:enableClear} — 是否同时显示清除按钮</li>
+ * </ul>
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2026/7/13 10:10
  */
@@ -50,6 +63,8 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     private Drawable drawableVisible;
     private Drawable drawableInvisible;
     private Drawable drawableClear;
+    /** 左侧起始图标（来自 XML drawableStart 或代码设置） */
+    private Drawable drawableStart;
     private int strokeColor;
     private int circleBackColor;
     private float radius;
@@ -60,6 +75,16 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     private boolean enableClear = false;
     private boolean showingClear = false;
     private boolean showingToggle = false;
+
+    /** 左侧图标尺寸（px），0 = intrinsic */
+    private int startIconSizePx;
+    /** 清除图标尺寸（px），0 = intrinsic */
+    private int clearIconSizePx;
+    /** 切换图标尺寸（px），0 = intrinsic */
+    private int toggleIconSizePx;
+    /** 图标与文字间距 */
+    private int iconPaddingPx;
+    /** 清除与切换按钮间距 */
     private int endIconGapPx;
 
     public PasswordEditText(Context context) {
@@ -72,12 +97,15 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
 
     public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context.obtainStyledAttributes(attrs, R.styleable.PasswordEditText, defStyleAttr, 0));
+        init(context, attrs, defStyleAttr);
     }
 
-    private void init(TypedArray ta) {
-        endIconGapPx = DensityUtil.dp2px(getContext(), 8);
+    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+        endIconGapPx = DensityUtil.dp2px(context, 8);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PasswordEditText, defStyleAttr, 0);
         if (ta != null) {
+            // app:startIcon 优先
+            drawableStart = ta.getDrawable(R.styleable.PasswordEditText_startIcon);
             drawableVisible = ta.getDrawable(R.styleable.PasswordEditText_passwordVisibleIcon);
             drawableInvisible = ta.getDrawable(R.styleable.PasswordEditText_passwordInvisibleIcon);
             drawableClear = ta.getDrawable(R.styleable.PasswordEditText_clearIcon);
@@ -85,33 +113,65 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             enableToggle = ta.getBoolean(R.styleable.PasswordEditText_enablePasswordToggle, true);
             enableClear = ta.getBoolean(R.styleable.PasswordEditText_enableClear, false);
             strokeColor = ta.getColor(R.styleable.PasswordEditText_strokeColor,
-                    ThemeAttrs.surface(getContext()));
+                    ThemeAttrs.surface(context));
             circleBackColor = ta.getColor(R.styleable.PasswordEditText_bgColor,
-                    ThemeAttrs.surface(getContext()));
+                    ThemeAttrs.surface(context));
             strokeWidth = ta.getDimension(R.styleable.PasswordEditText_strokeWidth, 0);
             radius = ta.getDimension(R.styleable.PasswordEditText_radius, 0);
+            startIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_startIconSize, 0);
+            clearIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_clearIconSize, 0);
+            toggleIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_toggleIconSize, 0);
+            iconPaddingPx = (int) ta.getDimension(R.styleable.PasswordEditText_iconPadding, -1);
+            endIconGapPx = (int) ta.getDimension(R.styleable.PasswordEditText_endIconGap, endIconGapPx);
             ta.recycle();
         } else {
-            strokeColor = ThemeAttrs.surface(getContext());
-            circleBackColor = ThemeAttrs.surface(getContext());
+            strokeColor = ThemeAttrs.surface(context);
+            circleBackColor = ThemeAttrs.surface(context);
+            iconPaddingPx = -1;
+        }
+
+        // 未设置 app:startIcon 时，从 android:drawableStart / drawableLeft 读取
+        if (drawableStart == null && attrs != null) {
+            drawableStart = resolveAndroidStartDrawable(context, attrs);
+        }
+        if (drawableStart == null) {
+            Drawable[] existing = getCompoundDrawablesRelative();
+            if (existing[0] != null) {
+                drawableStart = existing[0];
+            } else {
+                Drawable[] absolute = getCompoundDrawables();
+                if (absolute[0] != null) {
+                    drawableStart = absolute[0];
+                }
+            }
         }
 
         if (drawableVisible == null) {
-            drawableVisible = ContextCompat.getDrawable(getContext(), R.drawable.ic_password_visible);
+            drawableVisible = ContextCompat.getDrawable(context, R.drawable.ic_password_visible);
         }
         if (drawableInvisible == null) {
-            drawableInvisible = ContextCompat.getDrawable(getContext(), R.drawable.ic_password_invisible);
+            drawableInvisible = ContextCompat.getDrawable(context, R.drawable.ic_password_invisible);
         }
         if (drawableClear == null) {
-            drawableClear = ContextCompat.getDrawable(getContext(), R.mipmap.icon_clear);
+            drawableClear = ContextCompat.getDrawable(context, R.mipmap.icon_clear);
         }
         mutateDrawables();
 
         setSingleLine();
         setLines(1);
         setGravity(Gravity.CENTER_VERTICAL);
-        setPadding(DensityUtil.dp2px(getContext(), 8), 0, DensityUtil.dp2px(getContext(), 8), 0);
-        setCompoundDrawablePadding(DensityUtil.dp2px(getContext(), 4));
+
+        if (getPaddingLeft() == 0 && getPaddingRight() == 0
+                && getPaddingStart() == 0 && getPaddingEnd() == 0) {
+            int defaultPad = DensityUtil.dp2px(context, 8);
+            setPadding(defaultPad, getPaddingTop(), defaultPad, getPaddingBottom());
+        }
+
+        if (iconPaddingPx < 0) {
+            iconPaddingPx = DensityUtil.dp2px(context, 4);
+        }
+        setCompoundDrawablePadding(iconPaddingPx);
+
         setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         applyPasswordVisibility(false);
         addTextChangedListener(this);
@@ -119,7 +179,29 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         applyBackgroundIfNeeded();
     }
 
+    /**
+     * 从 AttributeSet 显式读取 android:drawableStart / android:drawableLeft。
+     * Material/AppCompat 有时不会在 super 构造完成后立刻把 compound drawable 设好。
+     */
+    @Nullable
+    private static Drawable resolveAndroidStartDrawable(Context context, AttributeSet attrs) {
+        final int[] attrsIds = new int[]{
+                android.R.attr.drawableStart,
+                android.R.attr.drawableLeft
+        };
+        TypedArray a = context.obtainStyledAttributes(attrs, attrsIds);
+        Drawable d = a.getDrawable(0);
+        if (d == null) {
+            d = a.getDrawable(1);
+        }
+        a.recycle();
+        return d;
+    }
+
     private void mutateDrawables() {
+        if (drawableStart != null) {
+            drawableStart = drawableStart.mutate();
+        }
         if (drawableVisible != null) {
             drawableVisible = drawableVisible.mutate();
         }
@@ -129,6 +211,26 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         if (drawableClear != null) {
             drawableClear = drawableClear.mutate();
         }
+    }
+
+    /**
+     * 仅用于左侧 start 图标：按 sizePx 设置 bounds；sizePx==0 时用 intrinsic。
+     * 右侧清除/切换图标走原来的 WithIntrinsicBounds 逻辑，避免点击区域错乱。
+     */
+    @Nullable
+    private Drawable prepareStartDrawable() {
+        if (drawableStart == null) {
+            return null;
+        }
+        Drawable d = drawableStart.mutate();
+        if (startIconSizePx > 0) {
+            d.setBounds(0, 0, startIconSizePx, startIconSizePx);
+        } else {
+            int w = d.getIntrinsicWidth() > 0 ? d.getIntrinsicWidth() : DensityUtil.dp2px(getContext(), 24);
+            int h = d.getIntrinsicHeight() > 0 ? d.getIntrinsicHeight() : DensityUtil.dp2px(getContext(), 24);
+            d.setBounds(0, 0, w, h);
+        }
+        return d;
     }
 
     private void applyPasswordVisibility(boolean visible) {
@@ -148,6 +250,10 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         updateRightDrawables(getText());
     }
 
+    /**
+     * 右侧清除/眼睛逻辑与修改前保持一致（WithIntrinsicBounds），
+     * 仅额外把左侧 start 图标一起设上。
+     */
     private void updateRightDrawables(@Nullable CharSequence text) {
         Drawable toggle = null;
         Drawable clear = null;
@@ -160,7 +266,19 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             clear = drawableClear;
         }
         Drawable endDrawable = buildEndDrawable(clear, toggle);
-        setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, endDrawable, null);
+        Drawable start = prepareStartDrawable();
+
+        // 右侧与原来一致：按 intrinsic 设 bounds，保证占位和点击区域正确
+        if (endDrawable != null) {
+            int ew = endDrawable.getIntrinsicWidth() > 0
+                    ? endDrawable.getIntrinsicWidth()
+                    : DensityUtil.dp2px(getContext(), 24);
+            int eh = endDrawable.getIntrinsicHeight() > 0
+                    ? endDrawable.getIntrinsicHeight()
+                    : DensityUtil.dp2px(getContext(), 24);
+            endDrawable.setBounds(0, 0, ew, eh);
+        }
+        setCompoundDrawablesRelative(start, null, endDrawable, null);
     }
 
     @Nullable
@@ -186,6 +304,7 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
                 : DensityUtil.dp2px(getContext(), 24);
     }
 
+    /** 与修改前相同的右侧触摸判断 */
     private boolean isTouchOnEndDrawables(MotionEvent event) {
         if (event.getAction() != MotionEvent.ACTION_UP) {
             return false;
@@ -196,13 +315,14 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         }
         int x = (int) event.getX();
         int y = (int) event.getY();
-        int drawableWidth = drawables[INDEX_DRAWABLE_END].getBounds().width();
+        Drawable end = drawables[INDEX_DRAWABLE_END];
+        int drawableWidth = end.getBounds().width();
         if (drawableWidth <= 0) {
-            drawableWidth = drawables[INDEX_DRAWABLE_END].getIntrinsicWidth();
+            drawableWidth = end.getIntrinsicWidth();
         }
-        int drawableHeight = drawables[INDEX_DRAWABLE_END].getBounds().height();
+        int drawableHeight = end.getBounds().height();
         if (drawableHeight <= 0) {
-            drawableHeight = drawables[INDEX_DRAWABLE_END].getIntrinsicHeight();
+            drawableHeight = end.getIntrinsicHeight();
         }
         int drawableTop = (getHeight() - drawableHeight) / 2;
         int drawableBottom = drawableTop + drawableHeight;
@@ -287,6 +407,42 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
         return super.onTouchEvent(event);
     }
 
+    /** 设置左侧起始图标（覆盖 XML drawableStart）。 */
+    public void setStartDrawable(@Nullable Drawable drawable) {
+        this.drawableStart = drawable != null ? drawable.mutate() : null;
+        updateRightDrawables(getText());
+    }
+
+    /** 左侧图标尺寸（px），0 恢复 intrinsic。 */
+    public void setStartIconSize(int sizePx) {
+        this.startIconSizePx = Math.max(0, sizePx);
+        updateRightDrawables(getText());
+    }
+
+    /** 清除图标尺寸（px），0 恢复 intrinsic。 */
+    public void setClearIconSize(int sizePx) {
+        this.clearIconSizePx = Math.max(0, sizePx);
+        updateRightDrawables(getText());
+    }
+
+    /** 眼睛切换图标尺寸（px），0 恢复 intrinsic。 */
+    public void setToggleIconSize(int sizePx) {
+        this.toggleIconSizePx = Math.max(0, sizePx);
+        updateRightDrawables(getText());
+    }
+
+    /** 图标与文字间距（px）。 */
+    public void setIconPadding(int paddingPx) {
+        this.iconPaddingPx = Math.max(0, paddingPx);
+        setCompoundDrawablePadding(this.iconPaddingPx);
+    }
+
+    /** 清除与切换按钮之间的间距（px）。 */
+    public void setEndIconGap(int gapPx) {
+        this.endIconGapPx = Math.max(0, gapPx);
+        updateRightDrawables(getText());
+    }
+
     public void setEnablePasswordToggle(boolean enableToggle) {
         this.enableToggle = enableToggle;
         updateRightDrawables(getText());
@@ -333,7 +489,7 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     }
 
     /**
-     * 将两个 Drawable 横向拼接为一个 end compound drawable。
+     * 将两个 Drawable 横向拼接为一个 end compound drawable（与修改前一致，按 intrinsic 尺寸）。
      */
     private static final class HorizontalCompoundDrawable extends Drawable {
 

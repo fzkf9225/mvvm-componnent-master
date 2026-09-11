@@ -79,17 +79,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         RxView.setOnClickListener(binding.loginSubmit) {
             submitLogin(binding.editPassword.text?.toString(), binding.cbAgreement.isChecked)
         }
-        binding.switchPasswordType.setOnClickListener {
-            if (it.isSelected) {
-                it.isSelected = false
-                binding.editPassword.inputType =
-                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
-            } else {
-                it.isSelected = true
-                binding.editPassword.inputType =
-                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            }
-        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.loginState.collect { state ->

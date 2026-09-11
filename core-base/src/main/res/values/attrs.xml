@@ -39,6 +39,18 @@
     <attr name="iconSrc" format="reference" />
     <attr name="iconLeft" format="reference" />
     <attr name="iconRight" format="reference" />
+    <!-- ClearableEditText / PasswordEditText 共用：左侧起始图标（优先于 android:drawableStart） -->
+    <attr name="startIcon" format="reference" />
+    <!-- ClearableEditText / PasswordEditText 共用：左侧起始图标尺寸（0=intrinsic） -->
+    <attr name="startIconSize" format="dimension" />
+    <!-- ClearableEditText / PasswordEditText 共用：清除图标尺寸（0=intrinsic） -->
+    <attr name="clearIconSize" format="dimension" />
+    <!-- PasswordEditText：明文/密文切换图标尺寸（0=intrinsic） -->
+    <attr name="toggleIconSize" format="dimension" />
+    <!-- ClearableEditText / PasswordEditText 共用：图标与文字间距 -->
+    <attr name="iconPadding" format="dimension" />
+    <!-- PasswordEditText：清除与切换按钮之间的间距 -->
+    <attr name="endIconGap" format="dimension" />
     <attr name="duration_max" format="integer" />
     <attr name="columnCount" format="integer" />
     <attr name="rowCount" format="integer" />
@@ -555,13 +567,28 @@
         <attr name="radius" />
     </declare-styleable>
 
+    <!-- 带清除按钮的圆角输入框。支持 android:drawableStart / app:startIcon，并可通过下列属性控制图标尺寸与间距。 -->
     <declare-styleable name="ClearableEditText">
+        <!-- 右侧清除图标，默认使用 R.mipmap.icon_clear -->
         <attr name="clearIcon" />
+        <!-- 是否启用圆角背景样式（bgColor / radius / stroke），默认 true -->
         <attr name="enableBgStyle" />
+        <!-- 背景描边颜色 -->
         <attr name="strokeColor" />
+        <!-- 背景填充色 -->
         <attr name="bgColor" />
+        <!-- 背景描边宽度 -->
         <attr name="strokeWidth" />
+        <!-- 圆角半径 -->
         <attr name="radius" />
+        <!-- 左侧起始图标，定义见全局 attr startIcon（优先于 android:drawableStart） -->
+        <attr name="startIcon" />
+        <!-- 左侧起始图标尺寸，定义见全局 attr startIconSize -->
+        <attr name="startIconSize" />
+        <!-- 清除图标尺寸，定义见全局 attr clearIconSize -->
+        <attr name="clearIconSize" />
+        <!-- 图标与文字间距，定义见全局 attr iconPadding -->
+        <attr name="iconPadding" />
     </declare-styleable>
 
     <declare-styleable name="MaterialRipple">
@@ -925,17 +952,40 @@
         <attr name="recyclerEmptyBackground" format="reference|color" />
     </declare-styleable>
 
+    <!-- 密码输入框：圆角背景、明文/密文切换，可选清除按钮。支持保留 android:drawableStart。 -->
     <declare-styleable name="PasswordEditText">
+        <!-- 密码可见（明文）时的眼睛图标 -->
         <attr name="passwordVisibleIcon" format="reference" />
+        <!-- 密码不可见（密文）时的眼睛图标 -->
         <attr name="passwordInvisibleIcon" format="reference" />
+        <!-- 是否启用右侧明文/密文切换按钮，默认 true -->
         <attr name="enablePasswordToggle" format="boolean" />
+        <!-- 是否同时显示清除按钮，默认 false -->
         <attr name="enableClear" format="boolean" />
+        <!-- 清除图标，默认 R.mipmap.icon_clear -->
         <attr name="clearIcon" />
+        <!-- 是否启用圆角背景样式，默认 true -->
         <attr name="enableBgStyle" />
+        <!-- 背景描边颜色 -->
         <attr name="strokeColor" />
+        <!-- 背景填充色 -->
         <attr name="bgColor" />
+        <!-- 背景描边宽度 -->
         <attr name="strokeWidth" />
+        <!-- 圆角半径 -->
         <attr name="radius" />
+        <!-- 左侧起始图标，定义见全局 attr startIcon（优先于 android:drawableStart） -->
+        <attr name="startIcon" />
+        <!-- 左侧起始图标尺寸，定义见全局 attr startIconSize -->
+        <attr name="startIconSize" />
+        <!-- 清除图标尺寸，定义见全局 attr clearIconSize -->
+        <attr name="clearIconSize" />
+        <!-- 切换图标尺寸，定义见全局 attr toggleIconSize -->
+        <attr name="toggleIconSize" />
+        <!-- 图标与文字间距，定义见全局 attr iconPadding -->
+        <attr name="iconPadding" />
+        <!-- 清除与切换按钮间距，定义见全局 attr endIconGap -->
+        <attr name="endIconGap" />
     </declare-styleable>
 
     <declare-styleable name="TitleBar">

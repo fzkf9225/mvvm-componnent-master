@@ -41,117 +41,75 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_login_logo" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_login_account"
-            android:layout_width="match_parent"
+        <io.coderf.arklab.common.widget.customview.ClearableEditText
+            android:id="@+id/edit_account"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
             android:layout_marginTop="22dp"
             android:layout_marginEnd="26dp"
-            android:background="@drawable/user_rounded_login_input"
+            app:startIcon="@mipmap/user_icon_account"
+            android:focusable="true"
+            android:hint="@string/login_user_hint"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLength="50"
+            android:paddingHorizontal="14dp"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/textInputFilledDefault"
+            app:clearIconSize="15dp"
+            app:enableBgStyle="true"
+            app:iconPadding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_login_title">
+            app:layout_constraintTop_toBottomOf="@+id/image_login_title"
+            app:radius="10dp"
+            app:startIconSize="15dp" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_account"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="14dp"
-                android:src="@mipmap/user_icon_account"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_account"
-                app:layout_constraintEnd_toStartOf="@+id/edit_account"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_account" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_account"
-                style="@style/login_edit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:focusable="true"
-                android:hint="@string/login_user_hint"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:lines="1"
-                android:maxLength="50"
-                android:paddingStart="@dimen/horizontal_margin_l"
-                android:paddingEnd="@dimen/horizontal_margin_l"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/image_account" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_login_password"
-            android:layout_width="match_parent"
+        <io.coderf.arklab.common.widget.customview.PasswordEditText
+            android:id="@+id/edit_password"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginEnd="26dp"
-            android:background="@drawable/user_rounded_login_input"
+            app:startIcon="@mipmap/user_icon_password"
+            android:focusable="true"
+            android:hint="@string/login_pwd_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLength="18"
+            android:paddingHorizontal="14dp"
+            android:textSize="@dimen/font_size_xl"
+            app:bgColor="@color/textInputFilledDefault"
+            app:clearIconSize="15dp"
+            app:enableBgStyle="true"
+            app:enableClear="true"
+            app:endIconGap="8dp"
+            app:iconPadding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_login_account">
+            app:layout_constraintTop_toBottomOf="@+id/edit_account"
+            app:passwordInvisibleIcon="@drawable/ic_password_invisible"
+            app:passwordVisibleIcon="@drawable/ic_password_visible"
+            app:radius="10dp"
+            app:startIconSize="15dp"
+            app:toggleIconSize="15dp" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_password"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="14dp"
-                android:src="@mipmap/user_icon_password"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_password"
-                app:layout_constraintEnd_toStartOf="@+id/edit_password"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_password" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_password"
-                style="@style/login_edit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:hint="@string/login_pwd_hint"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:lines="1"
-                android:maxLength="18"
-                android:paddingStart="@dimen/horizontal_margin_l"
-                android:paddingEnd="@dimen/horizontal_margin_l"
-                android:textSize="@dimen/font_size_xl"
-                app:layout_constraintEnd_toStartOf="@+id/switch_password_type"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/image_password" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/switch_password_type"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginEnd="14dp"
-                android:focusable="false"
-                android:src="@drawable/selector_me_eyes_toggle"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_password"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/edit_password"
-                app:layout_constraintTop_toTopOf="@+id/edit_password" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
             android:id="@+id/cl_verification_code"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/vertical_margin_l"
             android:layout_marginEnd="26dp"
-            android:background="@drawable/user_rounded_login_input"
+            app:bgColor="@color/textInputFilledDefault"
+            app:radius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_login_password">
+            app:layout_constraintTop_toBottomOf="@+id/edit_password">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_icon_verification_code"
@@ -196,17 +154,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edit_verification_code"
                 app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceXs" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <io.coderf.arklab.common.widget.customview.CornerConstraintLayout
             android:id="@+id/cl_sms_code"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginStart="36dp"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             android:layout_marginEnd="36dp"
-            android:background="@drawable/user_rounded_login_input"
             android:visibility="gone"
+            app:bgColor="@color/textInputFilledDefault"
+            app:radius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cl_verification_code">
@@ -255,11 +214,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edit_sms_code"
                 tools:ignore="PrivateResource" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </io.coderf.arklab.common.widget.customview.CornerConstraintLayout>
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.App.Button.Flush"
             android:id="@+id/login_submit"
+            style="@style/Widget.App.Button.Flush"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_xxxl"
             android:layout_marginStart="26dp"
@@ -267,9 +226,9 @@
             android:layout_marginEnd="26dp"
             android:text="@string/user_login"
             android:textColor="?attr/colorOnPrimary"
+            android:textSize="@dimen/font_size_xxl"
             app:backgroundTint="@color/theme_green"
             app:cornerRadius="48dp"
-            android:textSize="@dimen/font_size_xxl"
             app:layout_constraintTop_toBottomOf="@+id/cl_sms_code" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -317,15 +276,14 @@
             android:button="@drawable/user_checkbox_selector"
             android:buttonTint="@null"
             android:includeFontPadding="false"
-            android:paddingStart="@dimen/padding_m"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_l"
             app:buttonIcon="@null"
             app:buttonTint="@null"
-            app:useMaterialThemeColors="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/login_submit"
+            app:useMaterialThemeColors="false"
             tools:ignore="RtlSymmetry"
             tools:text="@string/forget_password" />
 
