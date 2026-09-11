@@ -25,6 +25,7 @@ import io.coderf.arklab.demo.activity.MaterialCardViewActivity;
 import io.coderf.arklab.demo.activity.MediaActivity;
 import io.coderf.arklab.demo.activity.MediaCompressActivity;
 import io.coderf.arklab.demo.activity.MqttDemoActivity;
+import io.coderf.arklab.demo.activity.PreviewInfoPhotoActivity;
 import io.coderf.arklab.demo.activity.RecyclerViewSampleActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
@@ -55,6 +56,7 @@ public enum UseCaseEnum {
     MATERIAL3_KIT(Material3KitActivity.class, "Material3 能力", "SearchBar / Chip / ToggleGroup / BottomAppBar", null),
     MATERIAL_CARD(MaterialCardViewActivity.class, "MaterialCardView", "Elevated / Filled / Outlined、可选中、媒体卡、描边与切角", null),
     DIALOG(DialogActivity.class, "自定义dialog", "自定义实现的一些Vdialog", null),
+    PREVIEW_INFO(PreviewInfoPhotoActivity.class, "信息大图预览", "带名称/时间/定位与仿微信相册的大图预览，原 PreviewPhotoDialog 不变", null),
     MEDIA(MediaActivity.class, "媒体访问", "自定义媒体dialog可以实现选择图片、视频等", null),
     DOWNLOAD(DownloadActivity.class, "文件下载", "自定义断点续传下载功能", null),
     COMPRESS(MediaCompressActivity.class, "文件压缩", "展示文件压缩能力", null),

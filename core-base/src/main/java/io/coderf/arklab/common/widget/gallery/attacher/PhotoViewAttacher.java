@@ -18,6 +18,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.ImageView.ScaleType;
@@ -40,12 +41,14 @@ import io.coderf.arklab.common.widget.gallery.scrollerproxy.ScrollerProxy;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/11 16:30
  */
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
         ViewTreeObserver.OnGlobalLayoutListener {
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
+    static final Interpolator sBounceInterpolator = new DecelerateInterpolator(1.8f);
+    static final int BOUNCE_ZOOM_DURATION = 250;
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
     static final int EDGE_NONE = -1;
@@ -130,6 +133,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
+    private AnimatedZoomRunnable mCurrentZoomRunnable;
+    private float mLastScaleFocusX;
+    private float mLastScaleFocusY;
+    private boolean mHasScaleFocus;
     private int mScrollEdge = EDGE_BOTH;
 
     private boolean mZoomEnabled;
@@ -212,8 +219,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             // Remove the ShapeableImageView's reference to this
             imageView.setOnTouchListener(null);
 
-            // make sure a pending fling runnable won't be run
+            // make sure a pending fling/zoom runnable won't be run
             cancelFling();
+            cancelZoomAnimation();
         }
 
         if (null != mGestureDetector) {
@@ -346,6 +354,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
+        float currentScale = getScale();
+        if (currentScale < mMinScale || currentScale > mMaxScale) {
+            return;
+        }
         ShapeableImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
@@ -390,10 +402,65 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
-        if (getScale() < mMaxScale || scaleFactor < 1f) {
-            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-            checkAndDisplayMatrix();
+        if (scaleFactor == 0f || Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
+            return;
         }
+        float currentScale = getScale();
+        if (currentScale <= 0f) {
+            return;
+        }
+        mLastScaleFocusX = focusX;
+        mLastScaleFocusY = focusY;
+        mHasScaleFocus = true;
+
+        scaleFactor = applyOverscrollScaleFactor(currentScale, scaleFactor);
+        if (scaleFactor == 1f) {
+            return;
+        }
+        mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+        checkAndDisplayMatrix();
+    }
+
+    /**
+     * 到达缩放上限/下限后继续捏合时加入阻尼，允许短暂越过边界以便松手回弹。
+     */
+    private float applyOverscrollScaleFactor(float currentScale, float scaleFactor) {
+        boolean bounceEnabled = mZoomConfig.isOverscrollBounceEnabled();
+        float overscrollRatio = bounceEnabled ? mZoomConfig.getOverscrollMaxRatio() : 1f;
+        if (overscrollRatio < 1f) {
+            overscrollRatio = 1f;
+        }
+        float maxOverScale = mMaxScale * overscrollRatio;
+        float minOverScale = bounceEnabled ? mMinScale / overscrollRatio : mMinScale;
+        if (minOverScale <= 0f) {
+            minOverScale = mMinScale;
+        }
+
+        if (scaleFactor > 1f) {
+            if (currentScale >= mMaxScale) {
+                if (!bounceEnabled) {
+                    return 1f;
+                }
+                float extra = currentScale / mMaxScale;
+                scaleFactor = 1f + (scaleFactor - 1f) / (extra * extra);
+                if (currentScale * scaleFactor > maxOverScale) {
+                    scaleFactor = maxOverScale / currentScale;
+                }
+            } else if (currentScale * scaleFactor > maxOverScale) {
+                scaleFactor = maxOverScale / currentScale;
+            }
+        } else if (scaleFactor < 1f) {
+            if (currentScale <= mMinScale && bounceEnabled) {
+                float extra = mMinScale / Math.max(currentScale, 0.01f);
+                scaleFactor = 1f - (1f - scaleFactor) / (extra * extra);
+                if (currentScale * scaleFactor < minOverScale) {
+                    scaleFactor = minOverScale / currentScale;
+                }
+            } else if (bounceEnabled && currentScale * scaleFactor < minOverScale) {
+                scaleFactor = minOverScale / currentScale;
+            }
+        }
+        return scaleFactor;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -409,22 +476,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     if (null != parent) {
                         parent.requestDisallowInterceptTouchEvent(true);
                     }
-                    // If we're flinging, and the user presses down, cancel
-                    // fling
+                    // If we're flinging or bouncing, and the user presses down, cancel
                     cancelFling();
+                    cancelZoomAnimation();
                     break;
 
                 case ACTION_CANCEL:
                 case ACTION_UP:
-                    // If the user has zoomed less than min scale, zoom back
-                    // to min scale
-                    if (getScale() < mMinScale) {
-                        RectF rect = getDisplayRect();
-                        if (null != rect) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
-                                    rect.centerX(), rect.centerY()));
-                            handled = true;
-                        }
+                    if (postBounceIfNeeded(v)) {
+                        handled = true;
                     }
                     break;
             }
@@ -526,9 +586,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
 
             if (animate) {
-                imageView.post(new AnimatedZoomRunnable(getScale(), scale,
-                        focalX, focalY));
+                cancelZoomAnimation();
+                mCurrentZoomRunnable = new AnimatedZoomRunnable(getScale(), scale,
+                        focalX, focalY);
+                imageView.post(mCurrentZoomRunnable);
             } else {
+                cancelZoomAnimation();
                 mSuppMatrix.setScale(scale, scale, focalX, focalY);
                 checkAndDisplayMatrix();
             }
@@ -582,6 +645,48 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mCurrentFlingRunnable.cancelFling();
             mCurrentFlingRunnable = null;
         }
+    }
+
+    private void cancelZoomAnimation() {
+        ShapeableImageView imageView = getImageView();
+        if (imageView != null && mCurrentZoomRunnable != null) {
+            imageView.removeCallbacks(mCurrentZoomRunnable);
+        }
+        mCurrentZoomRunnable = null;
+    }
+
+    /**
+     * 缩放越过最小/最大倍数时，松手回弹到边界。
+     *
+     * @return true 已提交回弹动画
+     */
+    private boolean postBounceIfNeeded(View v) {
+        float currentScale = getScale();
+        boolean belowMin = currentScale < mMinScale;
+        boolean aboveMax = currentScale > mMaxScale;
+        if (!belowMin && !aboveMax) {
+            mHasScaleFocus = false;
+            return false;
+        }
+        if (aboveMax && !mZoomConfig.isOverscrollBounceEnabled()) {
+            mHasScaleFocus = false;
+            return false;
+        }
+        RectF rect = getDisplayRect();
+        if (null == rect) {
+            mHasScaleFocus = false;
+            return false;
+        }
+        float focalX = mHasScaleFocus ? mLastScaleFocusX : rect.centerX();
+        float focalY = mHasScaleFocus ? mLastScaleFocusY : rect.centerY();
+        float targetScale = belowMin ? mMinScale : mMaxScale;
+        cancelZoomAnimation();
+        cancelFling();
+        mCurrentZoomRunnable = new AnimatedZoomRunnable(currentScale, targetScale, focalX, focalY,
+                BOUNCE_ZOOM_DURATION, sBounceInterpolator);
+        v.post(mCurrentZoomRunnable);
+        mHasScaleFocus = false;
+        return true;
     }
 
     /**
@@ -913,14 +1018,24 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         private final float mFocalX, mFocalY;
         private final long mStartTime;
         private final float mZoomStart, mZoomEnd;
+        private final int mDuration;
+        private final Interpolator mInterpolator;
 
         public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
                                     final float focalX, final float focalY) {
+            this(currentZoom, targetZoom, focalX, focalY, ZOOM_DURATION, sInterpolator);
+        }
+
+        public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
+                                    final float focalX, final float focalY,
+                                    final int duration, final Interpolator interpolator) {
             mFocalX = focalX;
             mFocalY = focalY;
             mStartTime = System.currentTimeMillis();
             mZoomStart = currentZoom;
             mZoomEnd = targetZoom;
+            mDuration = duration;
+            mInterpolator = interpolator;
         }
 
         @Override
@@ -939,13 +1054,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
                 imageView.postOnAnimation(this);
+            } else if (mCurrentZoomRunnable == this) {
+                mCurrentZoomRunnable = null;
             }
         }
 
         private float interpolate() {
-            float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
+            float t = 1f * (System.currentTimeMillis() - mStartTime) / mDuration;
             t = Math.min(1f, t);
-            t = sInterpolator.getInterpolation(t);
+            t = mInterpolator.getInterpolation(t);
             return t;
         }
     }

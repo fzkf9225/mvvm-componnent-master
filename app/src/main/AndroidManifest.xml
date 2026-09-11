@@ -206,6 +206,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
+            android:name=".activity.PreviewInfoPhotoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.VideoPlayerEmbedDemoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
