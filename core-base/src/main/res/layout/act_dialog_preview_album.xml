@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ll_preview_album"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_preview_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:minHeight="@dimen/toolbar_height"
+            app:navigationIcon="@drawable/icon_fh"
+            app:title="@string/preview_album_title"
+            app:titleCentered="true"
+            app:titleTextColor="@android:color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_preview_album"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never" />
+    </LinearLayout>
+</layout>

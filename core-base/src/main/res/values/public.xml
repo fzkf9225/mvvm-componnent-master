@@ -105,6 +105,12 @@
     <public name="common_bg_rounded_surface_16" type="drawable"/>
     <public name="selector_button" type="drawable"/>
     <public name="ic_camera" type="drawable"/>
+    <public name="ic_preview_location" type="drawable"/>
+    <public name="ic_preview_prev" type="drawable"/>
+    <public name="ic_preview_next" type="drawable"/>
+    <public name="ic_preview_view_all" type="drawable"/>
+    <public name="bg_preview_nav_circle" type="drawable"/>
+    <public name="bg_preview_album_selected" type="drawable"/>
     <public name="ic_flash_auto" type="drawable"/>
     <public name="ic_flash_off" type="drawable"/>
     <public name="ic_flash_on" type="drawable"/>
@@ -156,6 +162,9 @@
     <public name="texture_view_player_activity" type="layout"/>
     <public name="process_bar_dialog" type="layout"/>
     <public name="image_save_dialog" type="layout"/>
+    <public name="act_dialog_preview_info" type="layout"/>
+    <public name="act_dialog_preview_album" type="layout"/>
+    <public name="item_preview_album" type="layout"/>
     <public name="camera_view" type="layout"/>
     <public name="dialog_record" type="layout"/>
     <public name="activity_shoot" type="layout"/>
@@ -383,6 +392,10 @@
     <public name="filter" type="string" />
     <public name="detail" type="string" />
     <public name="view_all" type="string" />
+    <public name="preview_location" type="string" />
+    <public name="preview_previous" type="string" />
+    <public name="preview_next" type="string" />
+    <public name="preview_album_title" type="string" />
     <public name="load_more" type="string" />
     <public name="resend_verification_code" type="string" />
     <public name="agree_privacy_policy" type="string" />

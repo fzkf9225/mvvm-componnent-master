@@ -107,6 +107,10 @@
     <string name="filter">筛选</string>
     <string name="detail">详情</string>
     <string name="view_all">查看全部</string>
+    <string name="preview_location">定位</string>
+    <string name="preview_previous">上一张</string>
+    <string name="preview_next">下一张</string>
+    <string name="preview_album_title">图片和视频</string>
     <string name="load_more">加载更多</string>
 
     <!-- ========== 登录/注册 ========== -->

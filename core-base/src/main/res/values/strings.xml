@@ -108,6 +108,10 @@
     <string name="filter">Filter</string>
     <string name="detail">Detail</string>
     <string name="view_all">View All</string>
+    <string name="preview_location">Location</string>
+    <string name="preview_previous">Previous</string>
+    <string name="preview_next">Next</string>
+    <string name="preview_album_title">Photos and Videos</string>
     <string name="load_more">Load More</string>
 
     <!-- ========== Login/Register ========== -->
