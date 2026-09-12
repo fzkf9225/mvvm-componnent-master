@@ -11,28 +11,19 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 
 /**
- * BaseViewViewModel 类。
+ * ViewModel 工具基类（启动页等），不含页面引用。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2025/6/26 9:38
+ * @updated 2026/9/12
  */
-public class BaseViewViewModel<BV extends BaseView> extends AndroidViewModel {
+public class BaseViewViewModel extends AndroidViewModel {
     protected final String TAG = this.getClass().getSimpleName();
-
-    protected BV baseView;
 
     public BaseViewViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    public void setBaseView(BV baseView) {
-        this.baseView = baseView;
-    }
-
-    public BV getBaseView() {
-        return baseView;
     }
 
     /**

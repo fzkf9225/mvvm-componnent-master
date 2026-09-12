@@ -26,17 +26,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="?attr/colorOnSurface"
-            app:indicatorSize="@dimen/media_padding_xl"
-            app:trackThickness="3dp" />
+            app:indicatorColor="@color/mediaLoadingDialogContentColor"
+            app:indicatorSize="40dp"
+            app:trackThickness="4dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tipTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/media_vertical_margin_l"
-            android:text="@={message}"
-            android:textColor="?attr/colorOnSurface"
+            android:text="@{message}"
+            android:textColor="@color/mediaLoadingDialogContentColor"
             android:textSize="@dimen/media_font_size_xl" />
     </LinearLayout>
 </layout>

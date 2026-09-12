@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
@@ -44,7 +45,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @since 1.0
  * @updated 2026/8/25 13:12
  */
-public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements BaseView, AuthManager.AuthCallback {
+public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements RequestUiCallback, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
     /**
      * viewModel
@@ -140,11 +141,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建并绑定 ViewModel。每次 View 创建都会重绑 {@link BaseView}，避免重建后仍指向旧 Fragment。
-     * <p>
-     * 与 Activity 共用 ViewModel 时，Repository 绑定目标为宿主 {@link BaseActivity}（须为 BaseActivity 子类）。
-     * 请求 UI 的 {@link NetworkRequestUiBinder#bind} 在 {@link #onViewCreated} 中执行（此时
-     * {@link #getViewLifecycleOwner()} 已可用）。
+     * 创建并绑定 ViewModel。请求 UI 的 {@link NetworkRequestUiBinder#bind} 在 {@link #onViewCreated} 中执行。
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void createViewModel() {
@@ -152,7 +149,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
         }
-        mViewModel.createRepository(resolveRepositoryHost());
+        mViewModel.ensureRepository();
     }
 
     @Override
@@ -170,14 +167,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         if (mViewModel == null) {
             return;
         }
-        NetworkRequestUiBinder.bind(getViewLifecycleOwner(), mViewModel.getNetworkRequestUiHost(), resolveRepositoryHost());
+        NetworkRequestUiBinder.bind(getViewLifecycleOwner(), mViewModel.getNetworkRequestUiHost(), resolveRequestUi());
     }
 
     /**
-     * Repository / RequestUi 绑定的页面宿主。
+     * 请求 UI 渲染落点；与 Activity 共用 VM 时可落到宿主 Activity。
      */
     @NonNull
-    protected BaseView resolveRepositoryHost() {
+    protected RequestUiCallback resolveRequestUi() {
         if (!useActivityViewModel()) {
             return this;
         }
@@ -229,10 +226,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         if (uiController != null) {
             uiController.hideLoading();
         }
-        // 与 Activity 共用 VM 时由 Activity.onDestroy 解绑；否则在此解除对已销毁 View 的引用
-        if (mViewModel != null && !useActivityViewModel()) {
-            mViewModel.unbindView();
-        }
         super.onDestroyView();
     }
 
@@ -276,7 +269,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         uiController.showToast(msg);
     }
 
-    @Override
     public void showToast(@StringRes int strRes) {
         if (!isUiSafe() || uiController == null) {
             return;

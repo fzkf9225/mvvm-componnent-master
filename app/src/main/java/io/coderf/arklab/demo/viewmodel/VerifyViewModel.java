@@ -10,7 +10,6 @@ import java.util.List;
 import dagger.hilt.EntryPoints;
 import io.coderf.arklab.base.api.AppPropertiesConfig;
 import io.coderf.arklab.common.api.ApiRetrofit;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.database.AttachmentDatabase;
@@ -29,8 +28,9 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * @version 1.0
  * @since 1.0
  * @created 2024/11/6 10:57
+ * @updated 2026/9/12
  */
-public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, BaseView> {
+public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl> {
 
     public MutableLiveData<Boolean> liveData = new MutableLiveData<>();
 
@@ -51,12 +51,11 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
                 AttachmentDatabase.getInstance(
                         getApplication(),
                         attachmentDatabaseName
-                ).getAttachmentDao(), baseView
+                ).getAttachmentDao()
         );
         return new RoomPagingRepositoryImpl(
                 PersonDatabase.getInstance(getApplication()).getPersonDao(),
-                attachmentRoomRepositoryImpl,
-                baseView);
+                attachmentRoomRepositoryImpl);
     }
 
     public void add(Person person, List<AttachmentBean> imageList) {
@@ -66,7 +65,7 @@ public class VerifyViewModel extends BaseViewModel<RoomPagingRepositoryImpl, Bas
                     liveData.postValue(true);
                 }, throwable -> {
                     LogUtil.logger(ApiRetrofit.TAG, "错误：" + throwable);
-                    baseView.showToast(throwable.getMessage());
+                    getNetworkRequestUiHost().showToast(throwable.getMessage());
                     liveData.postValue(false);
                 });
     }

@@ -31,7 +31,6 @@ import io.coderf.arklab.common.utils.common.QRCodeUtil;
 import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityQrCodeBinding;
-import io.coderf.arklab.demo.view.ScanQrCodeView;
 import io.coderf.arklab.demo.viewmodel.ScanQrCodeViewModel;
 import io.coderf.arklab.media.MediaBuilder;
 import io.coderf.arklab.media.MediaHelper;
@@ -48,11 +47,10 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 @AndroidEntryPoint
-public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding>
-        implements ScanQrCodeView {
+public class ScanQrCodeActivity extends BaseActivity<ScanQrCodeViewModel, ActivityQrCodeBinding> {
 
     private QrScanHelper qrScanHelper;
     private MediaHelper mediaHelper;

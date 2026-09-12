@@ -314,9 +314,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                     // 处理成功响应
-                }, baseView == null ? error -> {
+                }, requestUi == null ? error -> {
                     // 处理错误
-                } : new ErrorConsumer(baseView, new ApiRequestOptions.Builder()
+                } : new ErrorConsumer(requestUi, new ApiRequestOptions.Builder()
                         .setShowDialog(false)
                         .setShowToast(true)
                         .build()));

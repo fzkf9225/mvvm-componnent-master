@@ -3,60 +3,25 @@ package io.coderf.arklab.common.impl;
 import androidx.annotation.Nullable;
 
 import io.coderf.arklab.common.base.BaseResponse;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.NoOpRequestUi;
 import io.coderf.arklab.core.request.RequestUi;
 
 /**
- * 桥接适配器（兼容层）。
+ * 将旧 {@link RequestUiCallback} 桥接为新 {@link RequestUi}。
  * <p>
- * 长期默认路径已改为 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}
- * （同时实现 {@link RequestUiCallback} 与 {@link RequestUi}），本类保留供：
- * 自定义 callback 转新 {@link RequestUi}、或遗留直接从 {@link BaseView} 适配的场景。
+ * 长期默认路径为 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}
+ *（同时实现 {@link RequestUiCallback} 与 {@link RequestUi}），一般无需本类。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 public final class RequestUiAdapters {
 
     private RequestUiAdapters() {
-    }
-
-    @Nullable
-    public static <BV extends BaseView> RequestUiCallback fromBaseView(@Nullable BV baseView) {
-        if (baseView == null) {
-            return null;
-        }
-        return new RequestUiCallback() {
-            @Override
-            public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
-                baseView.showLoading(dialogMessage, enableDynamicEllipsis);
-            }
-
-            @Override
-            public void hideLoading() {
-                baseView.hideLoading();
-            }
-
-            @Override
-            public void refreshLoading(String dialogMessage) {
-                baseView.refreshLoading(dialogMessage);
-            }
-
-            @Override
-            public void showToast(String msg) {
-                baseView.showToast(msg);
-            }
-
-            @Override
-            public void onErrorCode(BaseResponse<?> model) {
-                baseView.onErrorCode(model);
-            }
-        };
     }
 
     /**
@@ -104,12 +69,5 @@ public final class RequestUiAdapters {
                 showError(new AppError.Business(code, message, null));
             }
         };
-    }
-
-    /**
-     * 页面 {@link BaseView} → 新 {@link RequestUi}。
-     */
-    public static <BV extends BaseView> RequestUi fromBaseViewAsRequestUi(@Nullable BV baseView) {
-        return toRequestUi(fromBaseView(baseView));
     }
 }

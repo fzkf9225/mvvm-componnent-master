@@ -12,7 +12,6 @@ import java.util.List;
 
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.api.BaseApiService;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.repository.PagingRepositoryImpl;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.core.bean.PagingQuery;
@@ -25,14 +24,15 @@ import io.reactivex.rxjava3.core.Single;
  * @version 1.0
  * @since 1.0
  * @created 2023/8/7 9:17
+ * @updated 2026/9/12
  */
-public class PagingSource<T, BV extends BaseView, Q extends PagingQuery> extends RxPagingSource<Integer, T> {
+public class PagingSource<T, Q extends PagingQuery> extends RxPagingSource<Integer, T> {
     private Integer startPage = 1;
-    private final PagingRepositoryImpl<?, T, BV, Q> pagingRepository;
+    private final PagingRepositoryImpl<?, T, Q> pagingRepository;
     private final Q query;
 
     public <API extends BaseApiService> PagingSource(
-            PagingRepositoryImpl<API, T, BV, Q> pagingRepository,
+            PagingRepositoryImpl<API, T, Q> pagingRepository,
             Q query
     ) {
         this.pagingRepository = pagingRepository;
@@ -40,7 +40,7 @@ public class PagingSource<T, BV extends BaseView, Q extends PagingQuery> extends
     }
 
     public <API extends BaseApiService> PagingSource(
-            PagingRepositoryImpl<API, T, BV, Q> pagingRepository,
+            PagingRepositoryImpl<API, T, Q> pagingRepository,
             Integer startPage,
             Q query
     ) {

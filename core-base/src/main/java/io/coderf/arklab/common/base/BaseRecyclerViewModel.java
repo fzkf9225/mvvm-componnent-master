@@ -15,8 +15,9 @@ import io.coderf.arklab.common.repository.IRepository;
  * @version 1.0
  * @since 1.0
  * @created 2020/12/17 16:23
+ * @updated 2026/9/12
  */
-public abstract class BaseRecyclerViewModel<IR extends IRepository<BV>,BV extends BaseView,T> extends BaseViewModel<IR,BV> {
+public abstract class BaseRecyclerViewModel<IR extends IRepository, T> extends BaseViewModel<IR> {
 
     public BaseRecyclerViewModel(@NonNull Application application) {
         super(application);

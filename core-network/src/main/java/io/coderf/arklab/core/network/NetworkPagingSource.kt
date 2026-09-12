@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.firstOrNull
  * @updated 2026/9/1 22:51
  */
 class NetworkPagingSource<T : Any, Q : PagingQuery>(
-    private val repository: NetworkPagingRepository<T, *, Q>,
+    private val repository: NetworkPagingRepository<T, Q>,
     private val startPage: Int = 1,
     private val query: Q
 ) : PagingSource<Int, T>() {

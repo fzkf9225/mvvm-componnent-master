@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 
 /**
@@ -20,7 +19,7 @@ import io.coderf.arklab.common.base.BaseViewModel;
  * @created 2024/5/30 17:14
  */
 @HiltViewModel
-public class EmptyViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
+public class EmptyViewModel extends BaseViewModel<BaseRepository> {
 
     @Inject
     public EmptyViewModel(@NonNull Application application) {
@@ -28,7 +27,7 @@ public class EmptyViewModel extends BaseViewModel<BaseRepository<BaseView>, Base
     }
 
     @Override
-    protected BaseRepository<BaseView> createRepository() {
+    protected BaseRepository createRepository() {
         return null;
     }
 }

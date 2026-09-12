@@ -4,12 +4,10 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputType
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
 import android.widget.EditText
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -32,8 +30,8 @@ import io.coderf.arklab.user.R
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.databinding.ActivityLoginBinding
 import io.coderf.arklab.user.domain.model.LoginSubmitResult
+import io.coderf.arklab.user.domain.model.PostLoginRoute
 import io.coderf.arklab.user.ui.LoginAgreementMarkup
-import io.coderf.arklab.user.view.UserView
 import io.coderf.arklab.user.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,9 +43,10 @@ import javax.inject.Inject
  * @version 1.0
  * @since 1.0
  * @created 2024/10/9 15:56
+ * @updated 2026/9/12
  */
 @AndroidEntryPoint
-class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), UserView {
+class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
     private var bundle: Bundle? = null
 
     companion object {
@@ -60,7 +59,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
     override fun setTitleBar(): String {
         return "登录"
     }
-
 
     override fun getLayoutId(): Int {
         return R.layout.activity_login
@@ -82,7 +80,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.loginState.collect { state ->
-                    // 仅在外部状态与输入框不一致时写入，避免每次 StateFlow 回灌都 setText 把光标顶到开头
                     syncEditTextIfChanged(binding.editAccount, state.userName.orEmpty())
                     syncEditTextIfChanged(binding.editVerificationCode, state.code.orEmpty())
                 }
@@ -100,9 +97,6 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         }
     }
 
-    /**
-     * 与 [io.coderf.arklab.user.viewmodel.LoginViewModel.loginState] 同步展示；内容已一致则不再 setText。
-     */
     private fun syncEditTextIfChanged(edit: EditText, newText: String) {
         if (edit.text?.toString() == newText) return
         edit.setText(newText)
@@ -139,12 +133,21 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         binding.tvAppVersion.text =
             "版本 ${AppManager.getAppManager().getVersion(this@LoginActivity)}"
         mViewModel.liveData.observe(this) { userInfo: UserInfo? ->
+            hideKeyboard()
             mViewModel.onLoginSuccess(
                 userInfo,
                 binding.editAccount.text.toString(),
                 AppManager.getAppManager().activityStack.size,
                 hasTarget()
             )
+        }
+        mViewModel.postLoginRoute.observe(this) { route ->
+            when (route) {
+                PostLoginRoute.OPEN_MAIN -> navigateToMain()
+                PostLoginRoute.OPEN_TARGET -> navigateToTarget()
+                PostLoginRoute.FINISH_TO_LAST -> navigateToLast()
+                null -> Unit
+            }
         }
         mViewModel.imageLiveData.observe(this) { data ->
             Glide.with(this).load(data.imageBase64).apply(
@@ -167,7 +170,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun hideKeyboard() {
+    private fun hideKeyboard() {
         try {
             KeyBoardUtil.closeKeyboard(binding.editAccount, this)
             KeyBoardUtil.closeKeyboard(binding.editPassword, this)
@@ -177,14 +180,7 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         }
     }
 
-    @SuppressLint("UnsafeIntentLaunch")
-    override fun toLast() {
-        showToast("登录成功！")
-        setResult(RESULT_OK, intent.putExtras(bundle!!))
-        finish()
-    }
-
-    override fun hasTarget(): Boolean {
+    private fun hasTarget(): Boolean {
         val targetActivity = bundle?.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
             return false
@@ -197,10 +193,17 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
         }
     }
 
-    override fun toTarget() {
+    @SuppressLint("UnsafeIntentLaunch")
+    private fun navigateToLast() {
+        showToast("登录成功！")
+        setResult(RESULT_OK, intent.putExtras(bundle!!))
+        finish()
+    }
+
+    private fun navigateToTarget() {
         val targetActivity = bundle?.getString(ConstantsHelper.TARGET_ACTIVITY)
         if (TextUtils.isEmpty(targetActivity)) {
-            toLast()
+            navigateToLast()
             return
         }
         try {
@@ -209,13 +212,13 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>(), User
             startActivity(intent)
             finish()
         } catch (e: ClassNotFoundException) {
-            toLast()
+            navigateToLast()
         }
     }
 
-    override fun toMain() {
+    private fun navigateToMain() {
         showToast("登录成功！")
-        errorService.toMain(this,null)
+        errorService.toMain(this, null)
     }
 
     override fun onErrorCode(model: BaseResponse<*>?) {

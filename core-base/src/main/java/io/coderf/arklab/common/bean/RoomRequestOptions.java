@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
  *
  * <p>Loading 仅通过 {@link io.coderf.arklab.common.repository.RoomRepositoryImpl} 所在
  * {@link io.coderf.arklab.common.base.BaseRepository#getRequestUi()} 展示，
- * 需由 {@link io.coderf.arklab.common.base.BaseViewModel} 注入，勿直接调 BaseView。</p>
+ * 需由 {@link io.coderf.arklab.common.base.BaseViewModel} 注入，勿绕过 RequestUi 直接弹 Loading。</p>
  *
  * @see io.coderf.arklab.common.repository.RoomRepositoryImpl
  * @see ApiRequestOptions

@@ -2,7 +2,6 @@ package io.coderf.arklab.demo.viewmodel
 
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.core.network.NetworkFlowPagingViewModel
 import io.coderf.arklab.core.request.RequestResult
 import io.coderf.arklab.demo.api.ApiServiceHelper
@@ -18,13 +17,13 @@ import javax.inject.Inject
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 @HiltViewModel
 class DemoFlowPagingViewModel @Inject constructor(
     application: Application,
     private val apiServiceHelper: ApiServiceHelper
-) : NetworkFlowPagingViewModel<DemoFlowPagingRepositoryImpl, NotificationMessageBean, BaseView, RequestNotificationBean>(
+) : NetworkFlowPagingViewModel<DemoFlowPagingRepositoryImpl, NotificationMessageBean, RequestNotificationBean>(
     application
 ) {
 

@@ -11,22 +11,18 @@ import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.core.request.RequestUiHost;
 
 /**
- * Create by fz on 2020/3/19 0019
- * baseViewMode封装
+ * ViewModel 基类（MVVM）。
  * <p>
- * <b>请求 UI（长期方案）</b>：默认持有 {@link NetworkRequestUiHost}，经
- * {@link #attachRepositoryRequestUi()} 注入旧 {@link BaseRepository} 与新 {@link RequestUiHost}。
- * 页面由 {@link BaseActivity}/{@link BaseFragment} 调用 {@link NetworkRequestUiBinder#bind} 订阅 LiveData，
- * 不再把请求 loading/toast/error 直连到 {@link BaseView}。
- * <p>
- * {@link #baseView} 仍可绑定，仅供遗留非请求 UI；新代码请勿在 Repository 内对 baseView 调 showLoading 等。
+ * <b>请求 UI</b>：默认持有 {@link NetworkRequestUiHost}，经 {@link #ensureRepository()} 注入 Repository。
+ * 页面由 {@link BaseActivity}/{@link BaseFragment} 调用 {@link NetworkRequestUiBinder#bind} 订阅 LiveData。
+ * 不持有 Activity/Fragment，业务导航请用 LiveData / SharedFlow 等状态下发。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseView> extends BaseViewViewModel<BV> {
+public abstract class BaseViewModel<IR extends IRepository> extends BaseViewViewModel {
 
     protected IR iRepository;
 
@@ -51,34 +47,13 @@ public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseV
     protected abstract IR createRepository();
 
     /**
-     * 绑定当前页面并装配 Repository。
-     * <p>
-     * 配置变更后 Activity/Fragment 重建、ViewModel 仍存活：须再次调用本方法刷新 {@link #baseView}，
-     * 并由页面侧重新 {@link NetworkRequestUiBinder#bind}。Repository 仅首次创建。
+     * 首次创建 Repository 并注入请求 UI；配置变更后可再次调用（仅重新 attach RequestUi，不重建仓库）。
      */
-    public void createRepository(BV baseView) {
-        this.baseView = baseView;
+    public void ensureRepository() {
         if (iRepository == null) {
             iRepository = createRepository();
         }
-        if (iRepository != null) {
-            iRepository.setBaseView(baseView);
-        }
         attachRepositoryRequestUi();
-    }
-
-    /**
-     * 页面销毁时解除对已销毁页面的引用。
-     * <p>
-     * <b>不</b>清空 Repository 上的 RequestUi：Host 仍存活于 ViewModel，进行中的请求可继续 post 状态；
-     * 新页面 bind 后会继续收到后续事件。Repository 与请求的最终清理在 {@link #onCleared()}。
-     */
-    public void unbindView() {
-        this.baseView = null;
-        if (iRepository != null) {
-            iRepository.setBaseView(null);
-        }
-        // 保持 networkRequestUiHost 注入，避免页面销毁瞬间 in-flight 请求丢失 UI 通道
     }
 
     /**
@@ -88,7 +63,7 @@ public abstract class BaseViewModel<IR extends IRepository<BV>, BV extends BaseV
     protected void attachRepositoryRequestUi() {
         RequestUiCallback callback = provideRequestUiCallback();
         if (iRepository instanceof BaseRepository) {
-            ((BaseRepository<?>) iRepository).setRequestUi(callback);
+            ((BaseRepository) iRepository).setRequestUi(callback);
         }
         if (iRepository instanceof RequestUiHost) {
             RequestUi requestUi = (callback instanceof RequestUi)

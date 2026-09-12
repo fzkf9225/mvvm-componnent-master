@@ -9,7 +9,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel
 import io.coderf.arklab.core.bean.PagingQuery
 import kotlinx.coroutines.Job
@@ -25,29 +24,27 @@ import kotlinx.coroutines.launch
  * 同时提供 [dataFlow]（Kotlin）与 [items]（LiveData，兼容旧 Java Fragment）。
  *
  * 业务筛选条件放在 [pagingQuery]，经 [NetworkPagingSource] 快照传给 Repository 的
- * [NetworkPagingRepository.fetchPage]，**不要**在 Repository 里强转 BaseView 取参。
+ * [NetworkPagingRepository.fetchPage]，**不要**在 Repository 里强转页面取参。
  *
  * 更新 [pagingQuery] 默认**不会**自动请求；需要重新拉数时显式调用 [refreshData]，
  * 或 [updatePagingQuery] 时传入 `refresh = true`。
  *
  * @param IR Repository，须带同一 [Q]
  * @param T  列表元素
- * @param V  BaseView
  * @param Q  查询参数类型
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 abstract class NetworkFlowPagingViewModel<
-        IR : NetworkPagingRepository<T, V, Q>,
+        IR : NetworkPagingRepository<T, Q>,
         T : Any,
-        V : BaseView,
         Q : PagingQuery
         >(
     application: Application
-) : BasePagingViewModel<IR, V>(application) {
+) : BasePagingViewModel<IR>(application) {
 
     companion object {
         const val DEFAULT_START_PAGE = 1
@@ -104,8 +101,8 @@ abstract class NetworkFlowPagingViewModel<
         }
     }
 
-    override fun createRepository(baseView: V?) {
-        super.createRepository(baseView)
+    override fun ensureRepository() {
+        super.ensureRepository()
         refreshData()
     }
 
@@ -131,7 +128,7 @@ abstract class NetworkFlowPagingViewModel<
      */
     protected open fun createPagingSource(): PagingSource<Int, T> {
         val repo = iRepository
-            ?: error("iRepository is null; ensure createRepository has been called")
+            ?: error("iRepository is null; ensure ensureRepository has been called")
         return NetworkPagingSource(repo, startPage, pagingQuery)
     }
 }

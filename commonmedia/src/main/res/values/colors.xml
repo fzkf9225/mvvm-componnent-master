@@ -18,4 +18,6 @@
     <color name="media_crop_btn_text">@android:color/white</color>
     <color name="media_crop_cancel_border">#66FFFFFF</color>
     <color name="media_crop_cancel_fill">#1AFFFFFF</color>
+
+    <color name="mediaLoadingDialogContentColor">#FFFFFFFF</color>
 </resources>

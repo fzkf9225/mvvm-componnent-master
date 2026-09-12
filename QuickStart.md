@@ -369,10 +369,8 @@ class BusinessApiModule {
 新建一个类`EventRepositoryImpl`，继承`RepositoryImpl`，具体实现参考项目实例代码，普通请求集成`RepositoryImpl`,paging分页请求集成`PagingRepositoryImpl`，协程请求继承`FlowRepositoryImpl`和`PagingFlowRepositoryImpl`
 ```kotlin
 class EventRepositoryImpl(
-    baseView: BaseView?,
     eventApiService: EventApiService
-) :
-    RepositoryImpl<EventApiService, BaseView>(baseView, eventApiService) {
+) : RepositoryImpl<EventApiService>(eventApiService) {
     //这里支持flow 和 liveData和Rxjava的Consumer都可
     val eventLiveData by lazy {
         MutableLiveData<List<EventReportingBean>>()
@@ -402,14 +400,12 @@ class EventRepositoryImpl(
 lateinit var businessApiService: BusinessApiService
 
 ```
-然后会提示里实现`createRepository`方法，
+然后实现无参 `createRepository`（**不要**传入 Activity/Fragment）：
 ```kotlin
-//这里可以通过封装的RepositoryFactory工厂类创建或者直接new RepositoryImpl都可以
+// 可通过 RepositoryFactory 或直接 new；页面由 BaseActivity/Fragment 自动 ensureRepository + bind
     override fun createRepository(): PatrolRepositoryImpl {
-
         return RepositoryFactory.create(
             PatrolRepositoryImpl::class.java,
-            baseView,
             patrolApiService
         )
     }
@@ -426,80 +422,44 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
             
         }
 ```
+业务导航（如登录后跳转）用 ViewModel 的 `LiveData` / `SharedFlow`，由页面 observe 后自行跳转，**不要**再写页面契约接口回调 ViewModel。
+
 #### 特别注意
 所有的`Activity`或者`Fragment`都要继承对应的Base类，且一定要添加`@AndroidEntryPoint`注解
 
-## 请求过程 UI 与 BaseView 分工（RequestUiCallback）
+## 请求过程 UI（NetworkRequestUiHost / RequestUiCallback）
 
-网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，在框架里统一走 **`RequestUiCallback`**（实现位于 `core-base`，经 `common` facade 透出），由 **`BaseViewModel`** 在 `createRepository(...)` 之后注入到 **`BaseRepository#setRequestUi`**。旧 `RepositoryImpl`、`FlowRepositoryImpl`、`RoomRepositoryImpl` 等内部**只调用 `getRequestUi()`**，不再直接调用 `baseView.showLoading` 等。
+网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，统一走 **`RequestUiCallback`**（位于 `core-base`）。`BaseViewModel` 默认持有 **`NetworkRequestUiHost`**，在 `ensureRepository()` 时注入到 `BaseRepository#setRequestUi` / 新栈 `RequestUiHost`。Repository 内**只调用 `getRequestUi()`**，禁止持有或回调页面。
 
-**新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）；与旧 `RequestUiCallback` 可用 `RequestUiBridge` 互转。旧 Repository 已 `@Deprecated`，可继续编译但勿新增。
+页面侧：`BaseActivity` / `BaseFragment` 实现 **`NetworkRequestUiView`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框与 Toast。
 
-### `BaseView` 还在吗？和 `RequestUiCallback` 什么关系？
+**新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）。旧 Repository 已 `@Deprecated`，可继续编译但勿新增。
 
-- **`BaseView`**：仍是 Activity / Fragment 实现的页面契约；`IRepository#setBaseView` 会照常设置，表示「当前绑定的页面」，供尚未改造的代码读取。
-- **`RequestUiCallback`**：只描述「请求链路上需要的 UI 反馈」；**业务 Repository 里若还有自定义逻辑，也不要再直连 `baseView` 做加载/错误提示**，应同样通过 `getRequestUi()`（与 Rx/Flow 封装保持一致）。
+### 默认用法（推荐）
 
-二者不是两套并列用法：**运行时只有一条生效链**——始终是 `RequestUiCallback`；默认实现由框架把当前页面的 `BaseView` **适配**成 `RequestUiCallback`（`RequestUiAdapters.fromBaseView`），行为与拆分前一致。
+继承 `BaseActivity` / `BaseFragment`，实现无参 `createRepository()` 即可。默认 `provideRequestUiCallback()` 返回 `NetworkRequestUiHost`，业务侧一般**不需要**手写 `setRequestUi` 或 `bind`。
 
-### 默认用法（推荐，零改动）
-
-继承 `BaseActivity` / `BaseFragment` 并照常 `createRepository(this)` 即可。`BaseViewModel` 会在装配完 `iRepository` 后调用 `attachRepositoryRequestUi()`，默认 `provideRequestUiCallback()` 等价于「页面对话框 + Toast + 错误码」，**与旧版体验一致**，业务侧一般**不需要**写 `setRequestUi`。
-
-### 由 ViewModel 统一承接状态（再交给界面）
-
-若希望加载 / 错误先进入 ViewModel（例如用 `LiveData` 统一驱动 Compose、或做节流），可在 ViewModel 中：
-
-1. 持有 `NetworkRequestUiHost`（实现了 `RequestUiCallback`，内部用 `MutableLiveData` 承载状态）。
-2. 重写 `provideRequestUiCallback()`，返回该 `host`。
-3. 在 Activity / Fragment 的 `initView`（或等价时机）调用 `NetworkRequestUiBinder.bind(lifecycleOwner, host, this)`，把三个 LiveData 派发到当前页面已有的 `BaseView` 实现（对话框、Toast、`onErrorCode`）。
-
-**Kotlin 示例（ViewModel）：**
-
-```kotlin
-@HiltViewModel
-class MyViewModel @Inject constructor(app: Application) :
-    BaseViewModel<MyRepositoryImpl, MyView>(app) {
-
-    /** 供界面 observe 或 bind */
-    val requestUiHost = NetworkRequestUiHost()
-
-    override fun provideRequestUiCallback(): RequestUiCallback = requestUiHost
-
-    override fun createRepository(): MyRepositoryImpl =
-        RepositoryFactory.create(MyRepositoryImpl::class.java, baseView, myApiService)
-}
-```
-
-**Kotlin 示例（Activity，且本页实现了 BaseView）：**
-
-```kotlin
-override fun initView(savedInstanceState: Bundle?) {
-    NetworkRequestUiBinder.bind(this, mViewModel.requestUiHost, this)
-    // 也可自行 observe requestUiHost.loadingState / toast / errorCode
-}
-```
-
-### 双通道（既要 LiveData 又要立刻走页面）
-
-使用 `CompositeRequestUi` 将多个实现组合，例如：`CompositeRequestUi(requestUiHost, RequestUiAdapters.fromBaseView(baseView))`（在 `provideRequestUiCallback()` 中返回）。注意：`baseView` 在 `createRepository` 执行时可能已赋值，需在 `provideRequestUiCallback()` 内能取到 `baseView` 时再组合。
+需要自定义请求 UI 时：重写 `provideRequestUiCallback()`，或重写 `bindNetworkRequestUi()` 为空后自行 observe `getNetworkRequestUiHost()`。
 
 ### 未经过 BaseViewModel 时自行持有 Repository
 
-若通过 `RepositoryFactory` 或 `new` 得到仓库实例、**没有经过** `BaseViewModel.createRepository`，则不会自动注入 `RequestUiCallback`。此时若仍需要加载框与统一错误消费，请在发起请求前手动：
+若通过 `RepositoryFactory` 或 `new` 得到仓库、**没有经过** `BaseViewModel.ensureRepository`，则不会自动注入 UI。发起请求前手动：
 
 ```kotlin
-repository.setRequestUi(RequestUiAdapters.fromBaseView(activityAsBaseView))
+repository.setRequestUi(viewModel.getNetworkRequestUiHost())
+// 新栈：
+(repository as RequestUiHost).setRequestUi(RequestUiAdapters.toRequestUi(callback))
 ```
 
-未调用 `setRequestUi` 时 `getRequestUi()` 为 `null`，请求仍会执行，但**不会出现加载框 / 错误侧 UI**（适合纯后台或单元测试场景）。
+未注入时请求仍会执行，但**不会出现加载框 / 错误侧 UI**（适合纯后台或单测）。
 
-### 迁移 checklist（团队可对照）
+### 迁移 checklist
 
-1. 新写的 `*RepositoryImpl` 内：**禁止**再写 `baseView?.showLoading` / `onErrorCode` 等，统一 `getRequestUi()?.…`（Rx / Flow / Room 封装已按此处理）。
-2. 默认页面：保持继承 Base 与 `createRepository`，无需改 `provideRequestUiCallback`。
-3. 需要 VM 驱动 UI：重写 `provideRequestUiCallback` + `NetworkRequestUiHost` + `NetworkRequestUiBinder`（或自写 observe）。
+1. Repository / ViewModel：**禁止** 持有页面引用，统一 `getRequestUi()?.…` 与 LiveData/Flow 下发业务状态。
+2. 默认页面：继承 Base，实现无参 `createRepository()`，无需改 `provideRequestUiCallback`。
+3. 自定义 UI：重写 `provideRequestUiCallback` 和/或 `bindNetworkRequestUi`。
 4. 仅工厂创建的仓库：记得 `setRequestUi`，否则无请求侧 UI。
+5. 业务导航用 `LiveData` / `SharedFlow`（参考登录页 `PostLoginRoute`），不要再写 MVP 式 View 接口。
 
 ## 各模块之间解耦方案说明
 一般`app`模块只包含基础启动页和`MainActivity`，其他都都要新建模块

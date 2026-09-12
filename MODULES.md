@@ -191,7 +191,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 1. 业务不直接依赖 mqtt / media 实现模块，只依赖 Gateway。
 2. 新网络代码优先 `DefaultNetworkRepository.request`，勿再扩 `sendRequest` 重载。
-3. Repository 内不要直接 `baseView.showLoading` / `showToast`，走 `RequestUi`。
+3. Repository 内不要持有页面；Loading / Toast 只走 `getRequestUi()` / `RequestUi`。
 4. `core-*` 禁止依赖 `user` / `app`。
 5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
 6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。

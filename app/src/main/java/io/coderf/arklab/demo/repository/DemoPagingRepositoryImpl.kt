@@ -18,7 +18,7 @@ import io.coderf.arklab.demo.bean.RequestNotificationBean
 class DemoPagingRepositoryImpl(
     private val api: ApiServiceHelper,
     tokenRefresher: TokenRefresher? = null
-) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView, RequestNotificationBean>(
+) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>(
     tokenRefresher = tokenRefresher
 ) {
 

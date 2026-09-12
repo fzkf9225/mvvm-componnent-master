@@ -166,10 +166,10 @@ Repository 构造时传入 `boundApiService = api`，即可自动用**该 api �
 **旧 · RxJava3**
 
 ```java
-public class UserRepositoryImpl extends RepositoryImpl<UserApiService, BaseView> {
+public class UserRepositoryImpl extends RepositoryImpl<UserApiService> {
 
     public UserRepositoryImpl(UserApiService api) {
-        this.apiService = api;
+        super(api);
     }
 
     public void loadUser(MutableLiveData<UserInfo> liveData) {
@@ -198,7 +198,7 @@ public class UserRepositoryImpl extends RepositoryImpl<UserApiService, BaseView>
 ```kotlin
 class UserRepositoryImpl(
     api: UserApiService
-) : FlowRepositoryImpl<UserApiService, BaseView>(api) {
+) : FlowRepositoryImpl<UserApiService>(api) {
 
     fun loadUser(): Flow<UserInfo> = sendRequest(
         request = { apiService!!.getUserInfoSuspend() },
@@ -220,7 +220,7 @@ class UserRepositoryImpl(
 class UserRepositoryImpl(
     private val api: UserApiService
     // tokenRefresher 可省略 → 使用 api 所属 Builder 上的配置
-) : BaseNetworkRepository<BaseView>(boundApiService = api) {
+) : BaseNetworkRepository<Any>(boundApiService = api) {
 
     fun loadUser(
         options: RequestOptions = RequestOptions.defaults()
@@ -391,13 +391,13 @@ boundApiService → ApiRetrofit.Builder.getTokenRefresher()
 ```kotlin
 // ✅ 推荐：不传局部 TokenRefresher，绑定当前 api 实例
 class UserRepositoryImpl(api: UserApiService) :
-    BaseNetworkRepository<BaseView>(boundApiService = api)
+    BaseNetworkRepository<Any>(boundApiService = api)
 
 // ✅ 局部覆盖（单测 / 特殊策略）
 class UserRepositoryImpl(
     api: UserApiService,
     tokenRefresher: TokenRefresher
-) : BaseNetworkRepository<BaseView>(tokenRefresher = tokenRefresher)
+) : BaseNetworkRepository<Any>(tokenRefresher = tokenRefresher)
 
 // ✅ 登录 / 验证码：关鉴权重试，避免与 refresh 递归
 fun login(bean: RequestLoginBean) = request(
@@ -438,11 +438,11 @@ override fun createRepository() = XxxRepository(api)
 
 ### 8.1 仓库
 
-**旧 · Rx**（同样带 `PagingQuery`，禁止在仓库内强转 BaseView 取参）
+**旧 · Rx**（同样带 `PagingQuery`，禁止在仓库内强转页面 取参）
 
 ```java
 public class NewsPagingRepositoryImpl
-        extends PagingRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView, NewsPagingQuery> {
+        extends PagingRepositoryImpl<ApiServiceHelper, NotificationMessageBean, NewsPagingQuery> {
 
     public NewsPagingRepositoryImpl(ApiServiceHelper api) {
         super(api);
@@ -462,14 +462,14 @@ public class NewsPagingRepositoryImpl
 ```kotlin
 class NewsPagingRepositoryImpl(
     api: ApiServiceHelper
-) : PagingFlowRepositoryImpl<ApiServiceHelper, NotificationMessageBean, BaseView, NewsPagingQuery>(api) {
+) : PagingFlowRepositoryImpl<ApiServiceHelper, NotificationMessageBean, NewsPagingQuery>(api) {
 
     override suspend fun requestPaging(
         currentPage: Int,
         pageSize: Int,
         query: NewsPagingQuery
     ): Flow<List<NotificationMessageBean>>? {
-        // 使用 query，禁止 getBaseView() 强转取参
+        // 使用 query，禁止从页面强转取参
     }
 }
 ```
@@ -477,7 +477,7 @@ class NewsPagingRepositoryImpl(
 **新 · NetworkPagingRepository**
 
 查询参数用 `PagingQuery` 子类（无筛选可用 `EmptyPagingQuery`）。  
-**禁止**在 `fetchPage` 内 `getBaseView()` 强转 Fragment/Activity 取筛选条件。
+**禁止**在 `fetchPage` 内强转 Fragment/Activity 取筛选条件；筛选条件放进 `PagingQuery`。
 
 ```kotlin
 data class NewsPagingQuery(
@@ -487,7 +487,7 @@ data class NewsPagingQuery(
 
 class NewsPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, BaseView, NewsPagingQuery>() {
+) : NetworkPagingRepository<NotificationMessageBean, NewsPagingQuery>() {
 
     // 默认 pagingRequestOptions：showLoading = false
 
@@ -517,7 +517,7 @@ class NewsPagingRepositoryImpl(
 
 ```java
 public class NewsPagingViewModel
-        extends PagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, BaseView, NewsPagingQuery> {
+        extends PagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, NewsPagingQuery> {
     @Override
     protected NewsPagingRepositoryImpl createRepository() {
         return new NewsPagingRepositoryImpl(api);
@@ -536,7 +536,7 @@ public class NewsPagingViewModel
 
 ```kotlin
 class NewsFlowPagingViewModel(...) :
-    FlowPagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, BaseView, NewsPagingQuery>(app) {
+    FlowPagingViewModel<NewsPagingRepositoryImpl, NotificationMessageBean, NewsPagingQuery>(app) {
     override fun createRepository() = NewsPagingRepositoryImpl(api)
     override fun createPagingQuery() = NewsPagingQuery()
     // updatePagingQuery(q) 默认不请求；refreshData() 或 updatePagingQuery(q, refresh = true)
@@ -553,7 +553,6 @@ class NewsPagingViewModel @Inject constructor(
 ) : NetworkFlowPagingViewModel<
     NewsPagingRepositoryImpl,
     NotificationMessageBean,
-    BaseView,
     NewsPagingQuery
 >(application) {
 
@@ -629,7 +628,7 @@ interface UserApiService : BaseApiService {
 class UserViewModel @Inject constructor(
     application: Application,
     private val refreshUserProfile: RefreshUserProfileUseCase
-) : BaseViewModel<UserRepositoryImpl, BaseView>(application) {
+) : BaseViewModel<UserRepositoryImpl>(application) {
 
     @Inject lateinit var userApiService: UserApiService
 
@@ -795,7 +794,7 @@ val silent = DefaultNetworkRepository(requestUi = NoOpRequestUi)
 // Repository
 class DemoRepository(
     private val api: DemoApi
-) : BaseNetworkRepository<BaseView>() {
+) : BaseNetworkRepository<Any>() {
     fun fetch(id: String) = request { api.getByIdSuspend(id) }
 }
 
@@ -804,7 +803,7 @@ class DemoRepository(
 class DemoViewModel @Inject constructor(
     app: Application,
     private val api: DemoApi
-) : BaseViewModel<DemoRepository, BaseView>(app) {
+) : BaseViewModel<DemoRepository>(app) {
     val data = MutableLiveData<DemoBean>()
     override fun createRepository() = DemoRepository(api)
     fun load(id: String) = viewModelScope.launch {

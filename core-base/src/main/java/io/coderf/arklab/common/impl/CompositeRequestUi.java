@@ -4,7 +4,7 @@ import io.coderf.arklab.common.base.BaseResponse;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 
 /**
- * 多个 {@link RequestUiCallback} 串联（例如：同时写入 ViewModel 的 LiveData + 仍走页面 BaseView 弹 Toast）。
+ * 多个 {@link RequestUiCallback} 串联（例如：同时写入 ViewModel 的 LiveData + 页面 Toast）。
  * 各 delegate 中可含 null，会自动跳过。
  *
  * @author fz

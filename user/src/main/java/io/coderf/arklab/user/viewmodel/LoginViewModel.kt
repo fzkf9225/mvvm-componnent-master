@@ -1,11 +1,11 @@
 package io.coderf.arklab.user.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
@@ -16,7 +16,6 @@ import io.coderf.arklab.user.domain.usecase.HashLoginPasswordUseCase
 import io.coderf.arklab.user.domain.usecase.PersistLoginAndDecideNavigationUseCase
 import io.coderf.arklab.user.domain.usecase.ValidateLoginFormUseCase
 import io.coderf.arklab.user.repository.LoginRepositoryImpl
-import io.coderf.arklab.user.view.UserView
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,12 +26,12 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 /**
- * 登录页 ViewModel：新版 [LoginRepositoryImpl] + Flow 收集。
+ * 登录页 ViewModel：Flow 请求 + 导航事件（MVVM，不持有页面）。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -40,7 +39,7 @@ class LoginViewModel @Inject constructor(
     private val validateLoginForm: ValidateLoginFormUseCase,
     private val hashLoginPassword: HashLoginPasswordUseCase,
     private val persistLoginAndDecideNavigation: PersistLoginAndDecideNavigationUseCase
-) : BaseViewModel<LoginRepositoryImpl, UserView>(application) {
+) : BaseViewModel<LoginRepositoryImpl>(application) {
 
     @Inject
     lateinit var userApiService: UserApiService
@@ -51,6 +50,10 @@ class LoginViewModel @Inject constructor(
     val loginState: StateFlow<RequestLoginBean> = _loginState.asStateFlow()
 
     val imageLiveData: MutableLiveData<GraphicVerificationCodeBean> by lazy { MutableLiveData() }
+
+    private val _postLoginRoute = MutableLiveData<PostLoginRoute>()
+    /** 登录成功后的导航，页面 observe 后消费。 */
+    val postLoginRoute: LiveData<PostLoginRoute> = _postLoginRoute
 
     override fun createRepository(): LoginRepositoryImpl {
         return LoginRepositoryImpl(userApiService)
@@ -101,18 +104,12 @@ class LoginViewModel @Inject constructor(
         activityStackSize: Int,
         hasTarget: Boolean
     ) {
-        when (
-            persistLoginAndDecideNavigation.execute(
-                userInfo,
-                userName,
-                activityStackSize,
-                hasTarget
-            )
-        ) {
-            PostLoginRoute.OPEN_MAIN -> baseView?.toMain()
-            PostLoginRoute.OPEN_TARGET -> baseView?.toTarget()
-            PostLoginRoute.FINISH_TO_LAST -> baseView?.toLast()
-        }
+        _postLoginRoute.value = persistLoginAndDecideNavigation.execute(
+            userInfo,
+            userName,
+            activityStackSize,
+            hasTarget
+        )
     }
 
     fun refreshCaptchaAndLoadImage() {

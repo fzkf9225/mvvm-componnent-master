@@ -9,7 +9,6 @@ import java.util.List;
 
 import io.coderf.arklab.common.base.BaseRecyclerViewModel;
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.bean.base.PageBean;
 
@@ -21,27 +20,27 @@ import io.coderf.arklab.common.bean.base.PageBean;
  * @since 1.0
  * @created 2023/8/14 10:56
  */
-public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseRepository<BaseView>,BaseView, PopupWindowBean> {
+public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseRepository, PopupWindowBean> {
 
     public RecyclerViewSampleViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected BaseRepository<BaseView> createRepository() {
+    protected BaseRepository createRepository() {
         return null;
     }
 
     public void loadData(int mCurrentPage) {
-        PageBean<PopupWindowBean> pageBean = new PageBean<>();
+        PageBean<PopupWindowBean> pageaean = new PageBean<>();
 
         List<PopupWindowBean> dataList = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
             dataList.add(new PopupWindowBean(String.valueOf(mCurrentPage * 20 + i), "这是" + (mCurrentPage * 20 + i) + "行的数据哦！！！"));
         }
-        pageBean.setList(dataList);
-        pageBean.setResponseCount(dataList.size());
-        listLiveData.setValue(pageBean);
+        pageaean.setList(dataList);
+        pageaean.setResponseCount(dataList.size());
+        listLiveData.setValue(pageaean);
     }
 }

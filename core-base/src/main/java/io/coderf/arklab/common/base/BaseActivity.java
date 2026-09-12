@@ -24,6 +24,7 @@ import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
+import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
@@ -70,7 +71,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @updated 2026/8/25 13:12
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
-        implements BaseView, AuthManager.AuthCallback {
+        implements RequestUiCallback, AuthManager.AuthCallback {
 
     protected String TAG = this.getClass().getSimpleName();
 
@@ -330,8 +331,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * 创建并绑定 ViewModel。沿继承链解析泛型，兼容 Hilt 生成类与子类只写 {@code extends XxxActivity} 的场景。
      * <p>
      * ViewModel 由 {@link ViewModelProvider} 缓存；每次 {@code onCreate} 都会
-     * {@link BaseViewModel#createRepository(BaseView)} 重绑当前页面，并
-     * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData，避免配置变更后仍指向旧 Activity。
+     * {@link BaseViewModel#ensureRepository()} 装配仓库并注入请求 UI，并
+     * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData。
      */
     @SuppressWarnings("unchecked")
     public void createViewModel() {
@@ -339,12 +340,12 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
         }
-        mViewModel.createRepository(this);
+        mViewModel.ensureRepository();
         bindNetworkRequestUi();
     }
 
     /**
-     * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页 {@link BaseView}。
+     * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页（本类实现 {@link RequestUiCallback}）。
      * 子类若完全自定义请求 UI，可重写为空实现并自行 observe {@link BaseViewModel#getNetworkRequestUiHost()}。
      */
     protected void bindNetworkRequestUi() {
@@ -425,9 +426,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         } else {
             uiController.hideLoading();
         }
-        if (mViewModel != null) {
-            mViewModel.unbindView();
-        }
         super.onDestroy();
         // 仅从栈移除；不可 finish()，否则旋转屏等配置变更后 Activity 无法重建
         AppManager.getAppManager().removeActivity(this);
@@ -468,7 +466,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         uiController.showToast(msg);
     }
 
-    @Override
     public void showToast(@StringRes int strRes) {
         if (!isUiSafe() || uiController == null) {
             return;

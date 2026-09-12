@@ -1,6 +1,5 @@
 package io.coderf.arklab.core.network
 
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.inter.ApiRetrofitService
 import io.coderf.arklab.core.bean.PagingQuery
 import io.coderf.arklab.core.request.AppErrorThrowable
@@ -18,24 +17,23 @@ import kotlinx.coroutines.flow.map
  * 对齐旧 [io.coderf.arklab.common.repository.PagingFlowRepositoryImpl]：分页默认不弹 loading。
  *
  * 业务筛选条件通过 [Q] 从 ViewModel 经 PagingSource 快照传入 [fetchPage]，
- * **禁止**在 [fetchPage] 内通过 [getBaseView] 强转 Fragment/Activity 取参。
+ * **禁止**在 [fetchPage] 内强转 Fragment/Activity 取参。
  *
  * [boundApiService] 用于按当前 ApiService 实例解析 TokenRefresher（见 [DefaultNetworkRepository]）。
  *
  * @param T  列表元素类型
- * @param BV BaseView
  * @param Q  分页查询参数，继承 [PagingQuery]
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-abstract class NetworkPagingRepository<T : Any, BV : BaseView, Q : PagingQuery>(
+abstract class NetworkPagingRepository<T : Any, Q : PagingQuery>(
     requestUi: RequestUi = NoOpRequestUi,
     tokenRefresher: TokenRefresher? = null,
     boundApiService: ApiRetrofitService? = null
-) : BaseNetworkRepository<BV>(requestUi, tokenRefresher, boundApiService) {
+) : BaseNetworkRepository(requestUi, tokenRefresher, boundApiService) {
 
     protected open val pagingRequestOptions: RequestOptions =
         RequestOptions.builder().showLoading(false).build()

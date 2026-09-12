@@ -10,7 +10,6 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.datasource.PagingSource;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.common.repository.PagingRepositoryImpl;
@@ -22,16 +21,16 @@ import io.coderf.arklab.core.bean.PagingQuery;
  *
  * @param IR Repository
  * @param T  列表元素
- * @param V  BaseView
  * @param Q  查询参数
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2023/12/1 14:17
+ * @updated 2026/9/12
  */
-public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends BaseView, Q extends PagingQuery>
-        extends BasePagingViewModel<IR, V> {
+public abstract class PagingViewModel<IR extends IRepository, T, Q extends PagingQuery>
+        extends BasePagingViewModel<IR> {
     protected final static int DEFAULT_START_PAGE = 1;
     protected final static int DEFAULT_PAGE_SIZE = 20;
     protected final static int DEFAULT_PREFETCH_DISTANCE = 3;
@@ -96,15 +95,15 @@ public abstract class PagingViewModel<IR extends IRepository<V>, T, V extends Ba
 
     @SuppressWarnings("unchecked")
     public LiveData<PagingData<T>> createPagingData() {
-        PagingRepositoryImpl<?, T, V, Q> repo = (PagingRepositoryImpl<?, T, V, Q>) iRepository;
+        PagingRepositoryImpl<?, T, Q> repo = (PagingRepositoryImpl<?, T, Q>) iRepository;
         Q query = getPagingQuery();
         return PagingLiveData.getLiveData(new Pager<>(getPagingConfig(),
                 () -> new PagingSource<>(repo, getStartPage(), query)));
     }
 
     @Override
-    public void createRepository(V baseView) {
-        super.createRepository(baseView);
+    public void ensureRepository() {
+        super.ensureRepository();
         refreshData();
     }
 

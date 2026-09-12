@@ -3,21 +3,22 @@ package io.coderf.arklab.common.inter;
 import io.coderf.arklab.common.base.BaseResponse;
 
 /**
- * 数据层（Repository）与界面之间的「请求侧 UI」通道：加载框、Toast、业务错误码回调。
+ * 请求过程 UI 能力：加载框、Toast、业务错误码。
  * <p>
- * 约定：
+ * 两处使用，职责不同：
  * <ul>
- *   <li>Repository 内<strong>禁止</strong>再直接调用 {@code baseView.showLoading} / {@code onErrorCode} 等；只调用本接口。</li>
- *   <li>默认由 {@link io.coderf.arklab.common.base.BaseViewModel} 注入 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}，
- *   页面经 {@link io.coderf.arklab.common.base.NetworkRequestUiBinder} 订阅后落到 {@link io.coderf.arklab.common.base.BaseView}。</li>
- *   <li>{@link io.coderf.arklab.common.base.BaseView} 仍可由 {@link io.coderf.arklab.common.repository.IRepository#setBaseView} 持有，
- *   表示「当前页面」，供非网络 UI 的遗留逻辑使用；请求相关 UI 一律走本接口。</li>
+ *   <li><b>写侧</b>：Repository 只调用本接口；默认注入的是
+ *   {@link io.coderf.arklab.common.base.NetworkRequestUiHost}（写 LiveData，不碰页面）。</li>
+ *   <li><b>渲染侧</b>：{@link io.coderf.arklab.common.base.BaseActivity} /
+ *   {@link io.coderf.arklab.common.base.BaseFragment} 实现本接口，由
+ *   {@link io.coderf.arklab.common.base.NetworkRequestUiBinder} 把 Host 状态落到真正 UI。</li>
  * </ul>
+ * Repository 永远只拿 Host，不要把 Activity/Fragment 当 RequestUiCallback 注入仓库。
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 public interface RequestUiCallback {
 

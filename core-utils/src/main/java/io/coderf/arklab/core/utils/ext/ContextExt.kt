@@ -5,15 +5,8 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 
 /**
- * Context 相关扩展。
- *
- * 仅依赖 Android SDK 基础 API，无业务 R / DataBinding 依赖。
- * 从 core-base 的 [io.coderf.arklab.common.utils.common] 迁移而来。
- */
-
-/**
  * 显示 Toast。
- *
+ * 仅依赖 Android SDK 基础 API，无业务 R / DataBinding 依赖。
  * @param message  消息内容
  * @param duration 显示时长，默认 [Toast.LENGTH_SHORT]
  *

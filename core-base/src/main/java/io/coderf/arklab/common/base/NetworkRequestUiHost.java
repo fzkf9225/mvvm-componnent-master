@@ -9,18 +9,17 @@ import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.RequestUi;
 
 /**
- * ViewModel 侧请求 UI 状态宿主（长期默认方案）。
+ * ViewModel 侧请求 UI 状态宿主（只写状态，不碰页面）。
  * <p>
- * 同时实现旧 {@link RequestUiCallback} 与新 {@link RequestUi}，由 {@link BaseViewModel} 注入 Repository，
- * 页面通过 {@link NetworkRequestUiBinder} 订阅 LiveData 后落到 {@link BaseView}（或自定义 UI）。
+ * 同时实现旧 {@link RequestUiCallback} 与新 {@link RequestUi}，由 {@link BaseViewModel} 注入 Repository。
+ * 页面通过 {@link NetworkRequestUiBinder} 订阅 LiveData，落到页面自身的 {@link RequestUiCallback} 实现。
  * <p>
- * Repository / 网络层<strong>不再</strong>直接持有或调用页面 {@link BaseView} 的 showLoading / showToast 等；
- * 仅向本 Host 写状态，由 Lifecycle 安全地派发到当前可见页面。
+ * Repository / 网络层只向本 Host 写状态，由 Lifecycle 安全地派发到当前可见页面。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
 
@@ -61,10 +60,10 @@ public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
     @Override
     public void refreshLoading(@Nullable String dialogMessage) {
         RequestLoadingState cur = loadingState.getValue();
-        boolean ellip = cur != null && cur.enableDynamicEllipsis;
+        boolean ellipse = cur != null && cur.enableDynamicEllipsis;
         loadingState.postValue(RequestLoadingState.showing(
                 dialogMessage != null ? dialogMessage : "",
-                ellip));
+                ellipse));
     }
 
     @Override
@@ -85,8 +84,7 @@ public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
 
     @Override
     public void showError(@NonNull AppError error) {
-        if (error instanceof AppError.Business) {
-            AppError.Business business = (AppError.Business) error;
+        if (error instanceof AppError.Business business) {
             onErrorCode(new BaseResponse<>(business.getCode(), business.getMessage()));
             if (business.getMessage() != null && !business.getMessage().isEmpty()) {
                 showToast(business.getMessage());

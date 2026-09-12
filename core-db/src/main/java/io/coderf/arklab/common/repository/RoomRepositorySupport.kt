@@ -2,7 +2,6 @@ package io.coderf.arklab.common.repository
 
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseRepository
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.inter.RequestUiCallback
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -13,7 +12,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 /**
- * Room 仓库层 RxJava 链路的统一封装（内部类，不对外直接使用）。
+ * Room 仓库 RxJava 链路的统一封装（内部类，不对外直接使用）。
  *
  * ## 职责
  * - `subscribeOn(IO)` + `observeOn(MainThread)`；
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 internal object RoomRepositorySupport {
 
@@ -41,8 +40,8 @@ internal object RoomRepositorySupport {
      * @param source Room Dao 返回的 Completable
      * @param options UI 与超时配置
      */
-    fun <BV : BaseView?> applyCompletable(
-        repository: BaseRepository<BV>,
+    fun applyCompletable(
+        repository: BaseRepository,
         source: Completable,
         options: RoomRequestOptions
     ): Completable {
@@ -60,8 +59,8 @@ internal object RoomRepositorySupport {
     /**
      * 包装 [Single]：按 id 查询单条等。
      */
-    fun <T : Any, BV : BaseView?> applySingle(
-        repository: BaseRepository<BV>,
+    fun <T : Any> applySingle(
+        repository: BaseRepository,
         source: Single<T>,
         options: RoomRequestOptions
     ): Single<T> {
@@ -81,8 +80,8 @@ internal object RoomRepositorySupport {
      * 若 [RoomRequestOptions.isThrowOnEmptyList] 为 true 且结果为空，抛出 [BaseException.ErrorType.NOT_FOUND]。
      * Room 的 Flowable 有时不触发 doFinally，因此在 onNext 中也会尝试关闭 Loading。
      */
-    fun <T : Any, BV : BaseView?> applyListFlowable(
-        repository: BaseRepository<BV>,
+    fun <T : Any> applyListFlowable(
+        repository: BaseRepository,
         source: Flowable<List<T>>,
         options: RoomRequestOptions
     ): Flowable<List<T>> {
@@ -113,8 +112,8 @@ internal object RoomRepositorySupport {
      * 包装条件删除类 [Flowable]&lt;List&gt;。
      * 结果为空时抛出 [BaseException.ErrorType.DELETE_SUCCESS]（与老逻辑一致）。
      */
-    fun <T : Any, BV : BaseView?> applyDeleteFlowable(
-        repository: BaseRepository<BV>,
+    fun <T : Any> applyDeleteFlowable(
+        repository: BaseRepository,
         source: Flowable<List<T>>,
         options: RoomRequestOptions
     ): Flowable<List<T>> {
@@ -140,8 +139,8 @@ internal object RoomRepositorySupport {
     }
 
     /** 根据 options 显示 Loading（仅当 RequestUi 非空且 showDialog 为 true） */
-    private fun <BV : BaseView?> showLoading(
-        repository: BaseRepository<BV>,
+    private fun showLoading(
+        repository: BaseRepository,
         options: RoomRequestOptions
     ) {
         if (!options.isShowDialog) return
@@ -152,8 +151,8 @@ internal object RoomRepositorySupport {
     }
 
     /** 隐藏 Loading */
-    private fun <BV : BaseView?> hideLoading(
-        repository: BaseRepository<BV>,
+    private fun hideLoading(
+        repository: BaseRepository,
         options: RoomRequestOptions
     ) {
         if (!options.isShowDialog) return

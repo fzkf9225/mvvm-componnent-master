@@ -17,7 +17,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.coderf.arklab.common.api.RepositoryFactory;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.datasource.RxRoomPagingSource;
 import io.coderf.arklab.common.viewmodel.PagingViewModel;
 import io.coderf.arklab.core.bean.EmptyPagingQuery;
@@ -35,7 +34,7 @@ import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl;
  * @created 2023/4/27 14:58
  */
 @HiltViewModel
-public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositoryImpl, Person, BaseView, RoomPagingQuery> {
+public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositoryImpl, Person, RoomPagingQuery> {
 
     public void setKeywords(String keywords) {
         getPagingQuery().setKeywords(keywords);
@@ -52,7 +51,7 @@ public class DemoRoomPagingViewModel extends PagingViewModel<RoomPagingRepositor
 
     @Override
     protected RoomPagingRepositoryImpl createRepository() {
-        return RepositoryFactory.create(RoomPagingRepositoryImpl.class, PersonDatabase.getInstance(getApplication()).getPersonDao(), baseView);
+        return RepositoryFactory.create(RoomPagingRepositoryImpl.class, PersonDatabase.getInstance(getApplication()).getPersonDao());
     }
 
     @Override

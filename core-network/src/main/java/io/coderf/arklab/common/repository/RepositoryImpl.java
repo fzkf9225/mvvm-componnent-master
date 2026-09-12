@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
@@ -36,7 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow;
  * @updated 2026/8/21 8:57
  */
 @Deprecated
-public abstract class RepositoryImpl<API extends BaseApiService, BV extends BaseView> extends BaseRepository<BV> {
+public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRepository {
 
     protected API apiService;
 
@@ -48,30 +47,12 @@ public abstract class RepositoryImpl<API extends BaseApiService, BV extends Base
         super(retryService);
     }
 
-    public RepositoryImpl(BV baseView) {
-        super(baseView);
-    }
-
-    public RepositoryImpl(RetryService retryService, BV baseView) {
-        super(retryService, baseView);
-    }
-
     public RepositoryImpl(API apiService) {
-        this.apiService = apiService;
-    }
-
-    public RepositoryImpl(BV baseView, API apiService) {
-        super(baseView);
         this.apiService = apiService;
     }
 
     public RepositoryImpl(RetryService retryService, API apiService) {
         super(retryService);
-        this.apiService = apiService;
-    }
-
-    public RepositoryImpl(RetryService retryService, BV baseView, API apiService) {
-        super(retryService, baseView);
         this.apiService = apiService;
     }
 

@@ -6,10 +6,8 @@ import androidx.annotation.Nullable;
 
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.common.impl.DefaultExceptionConverter;
-import io.coderf.arklab.common.impl.RequestUiAdapters;
 import io.coderf.arklab.common.inter.ExceptionConverter;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.utils.log.LogUtil;
@@ -22,6 +20,7 @@ import io.reactivex.rxjava3.functions.Consumer;
  * @version 1.0
  * @since 1.0
  * @created 2023/11/30 15:52
+ * @updated 2026/9/12
  */
 public class ErrorConsumer implements Consumer<Throwable> {
     @Nullable
@@ -37,17 +36,6 @@ public class ErrorConsumer implements Consumer<Throwable> {
         this.requestUi = requestUi;
         this.apiRequestOptions = apiRequestOptions != null ? apiRequestOptions : ApiRequestOptions.getDefault();
         this.exceptionConverter = converter != null ? converter : new DefaultExceptionConverter();
-    }
-
-    /**
-     * 兼容旧调用方（如 commonui）：内部转为 {@link RequestUiCallback}。
-     */
-    public ErrorConsumer(@Nullable BaseView baseView, ApiRequestOptions apiRequestOptions) {
-        this(RequestUiAdapters.fromBaseView(baseView), apiRequestOptions);
-    }
-
-    public ErrorConsumer(@Nullable BaseView baseView, ApiRequestOptions apiRequestOptions, ExceptionConverter converter) {
-        this(RequestUiAdapters.fromBaseView(baseView), apiRequestOptions, converter);
     }
 
     @Override

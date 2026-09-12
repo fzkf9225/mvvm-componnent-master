@@ -7,7 +7,6 @@ import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.api.ErrorConsumer
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseRepository
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.ApiRequestOptions
 import io.coderf.arklab.common.inter.FlowRetryService
 import io.coderf.arklab.common.utils.log.LogUtil
@@ -31,17 +30,17 @@ import kotlinx.coroutines.withTimeoutOrNull
 /**
  * Kotlin Flow版本的Repository，简化版，只保留核心方法
  *
- * 与 [RepositoryImpl] 相同：请求过程中的 UI 只走 [io.coderf.arklab.common.base.BaseRepository.getRequestUi]，不在此处直接调用 [baseView]。
+ * 与 [RepositoryImpl] 相同：请求过程中的 UI 只走 [io.coderf.arklab.common.base.BaseRepository.getRequestUi]。
  *
  * 迁移提示：新代码优先使用 [io.coderf.arklab.core.network.DefaultNetworkRepository]。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/8/21 8:58
+ * @updated 2026/9/12
  */
 @Deprecated("Use DefaultNetworkRepository.request { }")
-abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRepository<BV> {
+abstract class FlowRepositoryImpl<API : BaseApiService> : BaseRepository {
 
     var apiService: API? = null
 
@@ -52,13 +51,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
     // region 构造函数（保持原有构造以便兼容）
     constructor() : super()
 
-    constructor(baseView: BV) : super(baseView)
-
     constructor(apiService: API) : super() {
-        this.apiService = apiService
-    }
-
-    constructor(baseView: BV, apiService: API) : super(baseView) {
         this.apiService = apiService
     }
 
@@ -66,22 +59,9 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
         this.flowRetryService = flowRetryService
     }
 
-    constructor(flowRetryService: FlowRetryService, baseView: BV) : super(baseView) {
-        this.flowRetryService = flowRetryService
-    }
-
     constructor(flowRetryService: FlowRetryService, apiService: API) : super() {
         this.flowRetryService = flowRetryService
         this.apiService = apiService
-    }
-
-    constructor(
-        flowRetryService: FlowRetryService,
-        baseView: BV,
-        apiService: API
-    ) : super(baseView) {
-        this.apiService = apiService
-        this.flowRetryService = flowRetryService
     }
 
     /**
@@ -173,7 +153,6 @@ abstract class FlowRepositoryImpl<API : BaseApiService, BV : BaseView> : BaseRep
                 .catch { throwable ->
                     (onError ?: { error ->
                         ErrorConsumer(getRequestUi(), options).accept(throwable)
-//                        FlowErrorHandler(baseView, options).handleError(error)
                     }).invoke(throwable)
                 }
                 .collect { result ->

@@ -7,7 +7,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.datasource.FlowPagingSource
 import io.coderf.arklab.common.repository.PagingFlowRepositoryImpl
 import io.coderf.arklab.core.bean.PagingQuery
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
  * Kotlin 协程版本的 Paging ViewModel 基类。
  *
  * 业务筛选条件放在 [pagingQuery]，经 [FlowPagingSource] 快照传给
- * [PagingFlowRepositoryImpl.requestPaging]，禁止在 Repository 内强转 BaseView 取参。
+ * [PagingFlowRepositoryImpl.requestPaging]，禁止在 Repository 内强转页面取参。
  *
  * 更新 [pagingQuery] 默认不会自动请求；需重新拉数时调用 [refreshData]，
  * 或 [updatePagingQuery] 传入 `refresh = true`。
@@ -30,16 +29,15 @@ import kotlinx.coroutines.launch
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 abstract class FlowPagingViewModel<
-        IR : PagingFlowRepositoryImpl<*, T, V, Q>,
+        IR : PagingFlowRepositoryImpl<*, T, Q>,
         T : Any,
-        V : BaseView,
         Q : PagingQuery
         >(
     application: Application
-) : BasePagingViewModel<IR, V>(application) {
+) : BasePagingViewModel<IR>(application) {
 
     companion object {
         const val DEFAULT_START_PAGE = 1
@@ -86,8 +84,8 @@ abstract class FlowPagingViewModel<
         }
     }
 
-    override fun createRepository(baseView: V?) {
-        super.createRepository(baseView)
+    override fun ensureRepository() {
+        super.ensureRepository()
         refreshData()
     }
 
@@ -109,7 +107,7 @@ abstract class FlowPagingViewModel<
 
     protected open fun createPagingSource(): PagingSource<Int, T> {
         val repo = iRepository
-            ?: error("iRepository is null; ensure createRepository has been called")
+            ?: error("iRepository is null; ensure ensureRepository has been called")
         return FlowPagingSource(repo, startPage, pagingQuery)
     }
 

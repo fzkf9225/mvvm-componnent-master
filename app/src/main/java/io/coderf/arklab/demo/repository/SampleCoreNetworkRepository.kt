@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.Flow
 class SampleCoreNetworkRepository(
     private val api: ApiServiceHelper,
     tokenRefresher: TokenRefresher? = null
-) : BaseNetworkRepository<io.coderf.arklab.common.base.BaseView>(tokenRefresher = tokenRefresher) {
+) : BaseNetworkRepository(tokenRefresher = tokenRefresher) {
 
     fun requestNewsDetail(
         id: String,

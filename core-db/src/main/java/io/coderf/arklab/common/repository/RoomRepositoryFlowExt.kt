@@ -1,6 +1,5 @@
 package io.coderf.arklab.common.repository
 
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.dao.BaseRoomDao
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +9,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 
 /**
- * [RoomRepositoryImpl] 的 Kotlin Flow 扩展。
+ * [RoomRepositoryImpl] �?Kotlin Flow 扩展�?
  *
- * 通过 callbackFlow 桥接既有 RxJava3 API，不替换原有 Completable / Flowable / Single。
- * 多数为「发射一次后结束」的桥接，持续观察表变更请用 LiveData。
+ * 通过 callbackFlow 桥接既有 RxJava3 API，不替换原有 Completable / Flowable / Single�?
+ * 多数为「发射一次后结束」的桥接，持续观察表变更请用 LiveData�?
  *
  * @see RoomRepositoryCoroutineExt
  * @see RoomRepositoryImpl
@@ -25,86 +24,86 @@ import kotlinx.coroutines.flow.flowOn
  */
 object RoomRepositoryFlowExt {
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findAllFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findAllFlow(
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<List<T>> = rxFlowableToFlow { findAll(options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findInfoByIdFlow(
         id: String,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<T> = rxSingleToFlow { findInfoById(id, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findInfoByIdFlow(
         id: Long,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<T> = rxSingleToFlow { findInfoById(id, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findInfoByIdFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findInfoByIdFlow(
         primaryKey: String,
         id: String,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<T> = rxSingleToFlow { findInfoById(primaryKey, id, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findByInFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findByInFlow(
         column: String,
         values: Collection<*>,
         showLoading: Boolean = false
     ): Flow<List<T>> = rxFlowableToFlow { findByInFlowable(column, values, showLoading) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.countAllFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.countAllFlow(
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Long> = rxSingleToFlow { countAll(options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.countFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.countFlow(
         params: Map<String, Any>,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Long> = rxSingleToFlow { count(params, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.insertFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.insertFlow(
         obj: T,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { insert(obj, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.insertFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.insertFlow(
         objs: List<T>,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { insert(objs, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.upsertFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.upsertFlow(
         obj: T,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { upsert(obj, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.upsertFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.upsertFlow(
         objs: List<T>,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { upsert(objs, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.updateFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.updateFlow(
         obj: T,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { update(obj, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.updateFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.updateFlow(
         objs: List<T>,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { update(objs, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.deleteFlow(
         obj: T,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Unit> = rxCompletableToFlow { delete(obj, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteByParamsCountFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.deleteByParamsCountFlow(
         params: Map<String, Any>,
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Int> = rxSingleToFlow { deleteByParamsCount(params, options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.deleteAllCountFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.deleteAllCountFlow(
         options: RoomRequestOptions = RoomRequestOptions.silent()
     ): Flow<Int> = rxSingleToFlow { deleteAllCount(options) }
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findPageListFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findPageListFlow(
         params: Map<String, Any>,
         keywordsKey: Set<String>?,
         keywords: String?,
@@ -117,7 +116,7 @@ object RoomRepositoryFlowExt {
         awaitClose { }
     }.flowOn(Dispatchers.IO)
 
-    fun <T : Any, DB : BaseRoomDao<T>, BV : BaseView?> RoomRepositoryImpl<T, DB, BV>.findPageListFlow(
+    fun <T : Any, DB : BaseRoomDao<T>> RoomRepositoryImpl<T, DB>.findPageListFlow(
         params: Map<String, Any>,
         orderBy: String,
         limit: Int = 10,

@@ -6,7 +6,6 @@ import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
@@ -14,40 +13,28 @@ import io.coderf.arklab.core.bean.PagingQuery;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
- * Rx 分页仓库。查询参数由 ViewModel 经 PagingSource 快照传入，禁止在 requestPaging 内强转 BaseView 取参。
+ * Rx 分页仓库。查询参数由 ViewModel 经 PagingSource 快照传入，禁止在 requestPaging 内强转页面取参。
  *
  * @param API ApiService
  * @param T   列表元素
- * @param BV  BaseView
  * @param Q   分页查询参数
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2023/12/1 11:14
+ * @updated 2026/9/12
  */
-public abstract class PagingRepositoryImpl<API extends BaseApiService, T, BV extends BaseView, Q extends PagingQuery>
-        extends RepositoryImpl<API, BV> {
+public abstract class PagingRepositoryImpl<API extends BaseApiService, T, Q extends PagingQuery>
+        extends RepositoryImpl<API> {
     private ApiRequestOptions apiRequestOptions;
-
-    public PagingRepositoryImpl(RetryService retryService, BV baseView) {
-        super(retryService, baseView);
-    }
 
     public PagingRepositoryImpl(API apiService) {
         super(apiService);
     }
 
-    public PagingRepositoryImpl(BV baseView, API apiService) {
-        super(baseView, apiService);
-    }
-
     public PagingRepositoryImpl(RetryService retryService, API apiService) {
         super(retryService, apiService);
-    }
-
-    public PagingRepositoryImpl(RetryService retryService, BV baseView, API apiService) {
-        super(retryService, baseView, apiService);
     }
 
     public PagingRepositoryImpl() {
@@ -55,10 +42,6 @@ public abstract class PagingRepositoryImpl<API extends BaseApiService, T, BV ext
 
     public PagingRepositoryImpl(RetryService retryService) {
         super(retryService);
-    }
-
-    public PagingRepositoryImpl(BV baseView) {
-        super(baseView);
     }
 
     /**

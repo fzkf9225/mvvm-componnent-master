@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
  * @created 2023/8/7 9:17
  */
 class FlowPagingSource<T : Any, Q : PagingQuery>(
-    private val pagingRepository: PagingFlowRepositoryImpl<*, T, *, Q>,
+    private val pagingRepository: PagingFlowRepositoryImpl<*, T, Q>,
     private val startPage: Int = 1,
     private val query: Q
 ) : PagingSource<Int, T>() {

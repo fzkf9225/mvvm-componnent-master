@@ -1,10 +1,8 @@
 package io.coderf.arklab.demo.repository
 
-import io.coderf.arklab.core.bean.EmptyPagingQuery
 import io.coderf.arklab.core.network.NetworkPagingRepository
 import io.coderf.arklab.core.request.RequestOptions
 import io.coderf.arklab.core.request.RequestResult
-import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
@@ -12,16 +10,16 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * 新闻分页仓库（新版 [NetworkPagingRepository]）。
- * 自动解析 data、错误 UI、Token 刷新均由框架 + [TokenRefresher] 完成。
+ * 自动解析 data、错误 UI、Token 刷新均由框架 + TokenRefresher 完成。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 class DemoFlowPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, io.coderf.arklab.common.base.BaseView, RequestNotificationBean>() {
+) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>() {
 
     override suspend fun fetchPage(
         page: Int,
@@ -38,7 +36,7 @@ class DemoFlowPagingRepositoryImpl(
 
     fun getInfoById(id: String): Flow<RequestResult<NotificationMessageBean>> {
         return requestPage(
-            RequestOptions.builder().showLoading(true).build()
+            RequestOptions.defaults()
         ) {
             api.getNewInfoByIdSuspend(id)
         }

@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.enums.DateMode;
@@ -89,7 +88,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @since 1.0
  * @created 2023/8/14 10:56
  */
-public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
+public class DialogViewModel extends BaseViewModel<BaseRepository> {
     List<PopupWindowBean> dataList = Arrays.asList(
             new PopupWindowBean("1", "北京"),
             new PopupWindowBean("2", "上海"),
@@ -135,7 +134,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setVerticalPadding(DensityUtil.dp2px(view.getContext(), 8f), DensityUtil.dp2px(view.getContext(), 8f)) // 设置上下内边距
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
-                        baseView.showToast(list.get(pos).getPopupName());
+                        getNetworkRequestUiHost().showToast(list.get(pos).getPopupName());
                     })
                     .builder()
                     .show();
@@ -164,11 +163,11 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setPositiveTextColor(ThemeAttrs.primary(view.getContext()))
                     .setOnPositiveClickListener(dialog -> {
                         dialog.dismiss();
-                        baseView.showToast("您点击的是确认按钮！");
+                        getNetworkRequestUiHost().showToast("您点击的是确认按钮！");
                     })
                     .setOnNegativeClickListener(dialog -> {
                         dialog.dismiss();
-                        baseView.showToast("您点击的是取消按钮！");
+                        getNetworkRequestUiHost().showToast("您点击的是取消按钮！");
                     })
                     .builder()
                     .show();
@@ -184,7 +183,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setDefaultStr("北京")
                     .setHintStr("请填写城市名称")
                     .setTipsStr("城市")
-                    .setOnPositiveClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
+                    .setOnPositiveClickListener((dialog, inputString) -> getNetworkRequestUiHost().showToast("您输入的内容是：" + inputString))
                     .builder()
                     .show();
         } else if (R.id.editAreaDialog == view.getId()) {
@@ -192,7 +191,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setDefaultStr("北京")
                     .setHintStr("请填写城市名称")
                     .setTipsStr("城市")
-                    .setOnPositiveClickListener((dialog, inputString) -> baseView.showToast("您输入的内容是：" + inputString))
+                    .setOnPositiveClickListener((dialog, inputString) -> getNetworkRequestUiHost().showToast("您输入的内容是：" + inputString))
                     .builder()
                     .show();
         } else if (R.id.menuDialog == view.getId()) {
@@ -209,7 +208,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setVerticalPadding(DensityUtil.dp2px(view.getContext(), 8f), DensityUtil.dp2px(view.getContext(), 8f)) // 设置上下内边距
                     .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                         dialog.dismiss();
-                        baseView.showToast(list.get(pos).getPopupName());
+                        getNetworkRequestUiHost().showToast(list.get(pos).getPopupName());
                     })
                     .builder()
                     .show();
@@ -243,7 +242,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setMaxListHeightDp(320f)
                     .setShowDivider(true)
                     .setOnChoiceSelectListener((dialog, selected) ->
-                            baseView.showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
+                            getNetworkRequestUiHost().showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
                     .builder()
                     .show();
         } else if (R.id.choiceSelectDialogMulti == view.getId()) {
@@ -278,13 +277,13 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setMaxListHeightDp(360f)
                     .setShowDivider(true)
                     .setOnChoiceSelectListener((dialog, selected) ->
-                            baseView.showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
+                            getNetworkRequestUiHost().showToast("选中：" + ChoiceSelectDialog.formatSelectedNames(selected)))
                     .builder()
                     .show();
         } else if (R.id.messageDialog == view.getId()) {
             new MessageDialog(view.getContext())
                     .setMessage("这是MessageDialog内容")
-                    .setOnPositiveClickListener(dialog -> baseView.showToast("这是MessageDialog"))
+                    .setOnPositiveClickListener(dialog -> getNetworkRequestUiHost().showToast("这是MessageDialog"))
                     .builder()
                     .show();
         } else if (R.id.openImageDialog == view.getId()) {
@@ -307,7 +306,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .show();
         } else if (R.id.updateMessageDialog == view.getId()) {
             new UpdateMessageDialog(view.getContext())
-                    .setOnUpdateListener(v -> baseView.showToast("点击这个按钮可以开始下载操作了"))
+                    .setOnUpdateListener(v -> getNetworkRequestUiHost().showToast("点击这个按钮可以开始下载操作了"))
                     .setButtonText("更新")
                     .setTitleColor(ThemeAttrs.onSurface(view.getContext()))
                     .setTitleTextSize(DensityUtil.sp2px(view.getContext(), 18))
@@ -320,8 +319,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
         } else if (R.id.tickViewMessageDialog == view.getId()) {
             new TickViewMessageDialog(view.getContext())
                     .setMessage("成功")
-                    .setOnTickCheckedChangeListener((tickView, isCheck) -> baseView.showToast("isCheck:" + isCheck))
-                    .setOnTickViewHideListener(() -> baseView.showToast("onTickViewHide"))
+                    .setOnTickCheckedChangeListener((tickView, isCheck) -> getNetworkRequestUiHost().showToast("isCheck:" + isCheck))
+                    .setOnTickViewHideListener(() -> getNetworkRequestUiHost().showToast("onTickViewHide"))
                     .setCountDown(3000)
                     .builder()
                     .show();
@@ -455,7 +454,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             Lifecycle lifecycle = activity.getLifecycle();
             new DateRangePickDialog(view.getContext())
                     .setGravity(Gravity.BOTTOM)
-                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .setOnPositiveClickListener((startDate, endDate) -> getNetworkRequestUiHost().showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.customDateRangePickDialog == view.getId()) {
@@ -490,7 +489,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setGravity(Gravity.CENTER)
                     .setBgDrawable(shapeDrawableBg)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
-                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
+                    .setOnPositiveClickListener((startDate, endDate) -> getNetworkRequestUiHost().showToast(startDate + "~" + endDate))
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.dateRangePickClear == view.getId()) {
@@ -504,8 +503,8 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
                     .setClearTextColor(ThemeAttrs.error(view.getContext()))
                     .setClearTextSize(14f)
                     .setPositiveTextColor(ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green))
-                    .setOnPositiveClickListener((startDate, endDate) -> baseView.showToast(startDate + "~" + endDate))
-                    .setOnClearClickListener(dialog -> baseView.showToast("已清空"))
+                    .setOnPositiveClickListener((startDate, endDate) -> getNetworkRequestUiHost().showToast(startDate + "~" + endDate))
+                    .setOnClearClickListener(dialog -> getNetworkRequestUiHost().showToast("已清空"))
                     .builder(fragmentManager, lifecycle)
                     .show();
         } else if (R.id.popupSingleDialog == view.getId()) {
@@ -519,7 +518,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             CascadeSinglePopupWindow<?> cascadeSinglePopupWindow = new CascadeSinglePopupWindow(
                     activity,
                     dataList,
-                    (CascadeSinglePopupWindow.SelectedListener<PopupWindowBean>) (popupWindow, dataList1) -> baseView.showToast("选中：" + dataList1.get(dataList1.size() - 1).getPopupName())
+                    (CascadeSinglePopupWindow.SelectedListener<PopupWindowBean>) (popupWindow, dataList1) -> getNetworkRequestUiHost().showToast("选中：" + dataList1.get(dataList1.size() - 1).getPopupName())
             );
             cascadeSinglePopupWindow.setSelectedStyle(
                     ContextCompat.getColor(view.getContext(), io.coderf.arklab.common.R.color.theme_green),
@@ -541,7 +540,7 @@ public class DialogViewModel extends BaseViewModel<BaseRepository<BaseView>, Bas
             CascadeMultiPopupWindow<PopupWindowBean<?>> cascadeMultiPopupWindow = new CascadeMultiPopupWindow<>(
                     activity,
                     dataList,
-                    (popupWindow, dataList2) -> baseView.showToast("选中：" + new Gson().toJson(dataList2.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())))
+                    (popupWindow, dataList2) -> getNetworkRequestUiHost().showToast("选中：" + new Gson().toJson(dataList2.stream().map(PopupWindowBean::getPopupName).collect(Collectors.toList())))
             );
             cascadeMultiPopupWindow.setCheckedDrawable(
                     DrawableUtil.createCheckedDrawable(view.getContext(),

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.dao.BaseRoomDao;
 import io.coderf.arklab.common.repository.RoomRepositoryImpl;
 import io.coderf.arklab.core.bean.RoomPagingQuery;
@@ -47,19 +46,18 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * @Override
  * @param <T>  列表项实体
  * @param <DB> 继承 {@link BaseRoomDao} 的 Dao
- * @param <BV> 页面 View 类型
  * @see RoomRepositoryImpl#findPageList
  * @see RoomPagingQuery
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseView>
+public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>>
         extends RxPagingSource<Integer, T> {
 
-    private final RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl;
+    private final RoomRepositoryImpl<T, DB> roomRepositoryImpl;
     /** 创建本 Source 时的查询参数快照 */
     private final RoomPagingQuery query;
 
@@ -68,7 +66,7 @@ public class RxRoomPagingSource<T, DB extends BaseRoomDao<T>, BV extends BaseVie
      * @param query              ViewModel 当前 {@link RoomPagingQuery}（建议传入副本或不可变快照）
      */
     public RxRoomPagingSource(
-            @NonNull RoomRepositoryImpl<T, DB, BV> roomRepositoryImpl,
+            @NonNull RoomRepositoryImpl<T, DB> roomRepositoryImpl,
             @NonNull RoomPagingQuery query
     ) {
         this.roomRepositoryImpl = roomRepositoryImpl;

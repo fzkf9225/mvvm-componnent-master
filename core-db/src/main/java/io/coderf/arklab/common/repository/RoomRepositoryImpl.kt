@@ -2,7 +2,6 @@ package io.coderf.arklab.common.repository
 
 import androidx.lifecycle.LiveData
 import io.coderf.arklab.common.base.BaseRepository
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.dao.BaseRoomDao
 import io.reactivex.rxjava3.core.Completable
@@ -21,8 +20,8 @@ import io.reactivex.rxjava3.core.Single
  *
  * ## 用法示例
  * ```kotlin
- * class PersonRepository(dao: PersonDao, view: BaseView) :
- *     RoomRepositoryImpl<Person, PersonDao, BaseView>(dao, view)
+ * class PersonRepository(dao: PersonDao) :
+ *     RoomRepositoryImpl<Person, PersonDao>(dao)
  *
  * // ViewModel 中
  * repository.insert(person, showLoading = true)
@@ -34,19 +33,17 @@ import io.reactivex.rxjava3.core.Single
  *
  * @param T 实体类型
  * @param DB 继承 [BaseRoomDao] 的 Dao
- * @param BV 页面 View，可为 null（无 UI 的后台仓库）
  * @see RoomRequestOptions
  * @see RxRoomPagingSource
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>, BV : BaseView?>(
-    private val roomDao: DB,
-    baseView: BV
-) : BaseRepository<BV>(baseView) {
+open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
+    private val roomDao: DB
+) : BaseRepository() {
 
     /**
      * 是否启用加载框动态省略号（全局默认）。

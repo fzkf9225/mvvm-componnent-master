@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 
 /**
- * Loading 契约（与 NetworkRequestUiHost / BaseView 对齐的能力子集）。
+ * Loading 契约（与 NetworkRequestUiHost 对齐的能力子集）。
  *
  * @author fz
  * @version 1.0

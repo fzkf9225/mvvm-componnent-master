@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.domain.usecase.RefreshUserProfileUseCase
 import io.coderf.arklab.user.repository.UserRepositoryImpl
@@ -20,13 +18,13 @@ import javax.inject.Inject
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 @HiltViewModel
 class UserViewModel @Inject constructor(
     application: Application,
     private val refreshUserProfile: RefreshUserProfileUseCase
-) : BaseViewModel<UserRepositoryImpl, BaseView>(application) {
+) : BaseViewModel<UserRepositoryImpl>(application) {
 
     @Inject
     lateinit var userApiService: UserApiService

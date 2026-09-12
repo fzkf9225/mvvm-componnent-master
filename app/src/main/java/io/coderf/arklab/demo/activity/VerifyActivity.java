@@ -72,7 +72,7 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
     public void initView(Bundle savedInstanceState) {
         setupDemoFormControls();
         setupConfigPanel();
-        binding.formImage.setBaseView(this);
+        binding.formImage.setRequestUi(mViewModel.getNetworkRequestUiHost());
         binding.formImage.bindLifecycle(this);
         binding.formVideo.bindLifecycle(this);
         binding.formImageVideo.bindLifecycle(this);

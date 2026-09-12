@@ -282,7 +282,7 @@
             app:buttonTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/login_submit"
+            app:layout_constraintStart_toStartOf="parent"
             app:useMaterialThemeColors="false"
             tools:ignore="RtlSymmetry"
             tools:text="@string/forget_password" />

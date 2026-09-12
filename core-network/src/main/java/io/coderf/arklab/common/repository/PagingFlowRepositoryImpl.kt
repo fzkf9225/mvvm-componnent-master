@@ -3,7 +3,6 @@ package io.coderf.arklab.common.repository
 import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseResponse
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.ApiRequestOptions
 import io.coderf.arklab.common.inter.FlowRetryService
 import io.coderf.arklab.core.bean.PagingQuery
@@ -11,43 +10,31 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * 旧 Flow 分页仓库。查询参数由 ViewModel 经 FlowPagingSource 快照传入，
- * 禁止在 requestPaging 内强转 BaseView 取参。
+ * 禁止在 requestPaging 内强转页面取参。
  *
  * @param API ApiService
  * @param T   列表元素
- * @param BV  BaseView
  * @param Q   分页查询参数
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2023/12/1 11:14
+ * @updated 2026/9/12
  */
-abstract class PagingFlowRepositoryImpl<API : BaseApiService, T : Any, BV : BaseView, Q : PagingQuery> :
-    FlowRepositoryImpl<API, BV> {
+abstract class PagingFlowRepositoryImpl<API : BaseApiService, T : Any, Q : PagingQuery> :
+    FlowRepositoryImpl<API> {
     val apiRequestOptions: ApiRequestOptions by lazy {
         ApiRequestOptions.Builder().setShowDialog(false).build()
     }
 
-    constructor(retryService: FlowRetryService, baseView: BV) : super(retryService, baseView)
-
     constructor(apiService: API) : super(apiService)
 
-    constructor(baseView: BV, apiService: API) : super(baseView, apiService)
-
     constructor(retryService: FlowRetryService, apiService: API) : super(retryService, apiService)
-
-    constructor(retryService: FlowRetryService, baseView: BV, apiService: API) : super(
-        retryService,
-        baseView,
-        apiService
-    )
 
     constructor()
 
     constructor(retryService: FlowRetryService) : super(retryService)
-
-    constructor(baseView: BV) : super(baseView)
 
     /**
      * 请求一页数据。

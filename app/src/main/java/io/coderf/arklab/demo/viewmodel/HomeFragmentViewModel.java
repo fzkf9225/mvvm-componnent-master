@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 
@@ -19,7 +18,7 @@ import io.coderf.arklab.common.repository.RepositoryImpl;
  * @since 1.0
  * @created 2023/4/27 14:58
  */
-public class HomeFragmentViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> implements DefaultLifecycleObserver {
+public class HomeFragmentViewModel extends BaseViewModel<BaseRepository> implements DefaultLifecycleObserver {
 
     public HomeFragmentViewModel(@NonNull Application application) {
         super(application);

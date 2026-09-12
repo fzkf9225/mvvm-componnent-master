@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseSmartPagingFragment;
@@ -15,7 +13,6 @@ import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.demo.adapter.PagingRoomAdapter;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.viewmodel.DemoRoomPagingViewModel;
-import io.coderf.arklab.user.view.UserView;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
@@ -25,8 +22,9 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * @version 1.0
  * @since 1.0
  * @created 2024/11/6 10:23
+ * @updated 2026/9/12
  */
-public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPagingViewModel, BaseSmartPagingBinding, Person> implements UserView {
+public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPagingViewModel, BaseSmartPagingBinding, Person> {
 
     @Override
     protected BasePagingAdapter<Person, ?> getRecyclerAdapter() {
@@ -43,16 +41,7 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     @Override
     public void onItemClick(View view, Person item, int position) {
         super.onItemClick(view, item, position);
-
-        LogUtil.logger(ApiRetrofit.TAG, "点击："+position+","+item.getName());
-//        Disposable disposable = mViewModel.getRepository().findInfoById(item.getId() ,true)
-//                .subscribe((data) -> {
-//                    LogUtil.logger(ApiRetrofit.TAG, "查询成功：" + new Gson().toJson(data));
-//                    showToast("查询成功！");
-//                }, throwable -> {
-//                    LogUtil.logger(ApiRetrofit.TAG, "查询失败：" + throwable);
-//                    showToast("查询失败，" + throwable.getMessage());
-//                });
+        LogUtil.logger(ApiRetrofit.TAG, "点击：" + position + "," + item.getName());
     }
 
     public void searcher(String keywords) {
@@ -64,14 +53,13 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     @Override
     public void onItemLongClick(View view, Person item, int position) {
         super.onItemLongClick(view, item, position);
-        //不能这么删除，这样删除会有bug
         new ConfirmDialog(requireContext())
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnPositiveClickListener(dialog -> {
-                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getIRepository().delete(item,true)
+                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getIRepository().delete(item, true)
                             .subscribe(() -> {
-                                LogUtil.logger(ApiRetrofit.TAG, "删除成功" );
+                                LogUtil.logger(ApiRetrofit.TAG, "删除成功");
                                 showToast("删除成功！");
                                 mViewModel.refreshData();
                                 adapter.refresh();
@@ -82,30 +70,4 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .builder()
                 .show();
     }
-
-    @Override
-    public void toLast() {
-
-    }
-
-    @Override
-    public boolean hasTarget() {
-        return false;
-    }
-
-    @Override
-    public void toTarget() {
-
-    }
-
-    @Override
-    public void toMain() {
-
-    }
-
-    @Override
-    public void hideKeyboard() {
-
-    }
 }
-

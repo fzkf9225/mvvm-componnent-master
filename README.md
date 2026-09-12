@@ -120,7 +120,7 @@
 全面使用``ksp``
 
 # 五分钟快读开始
-[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI 与 `BaseView` 分工（`RequestUiCallback`）** 说明与示例。）  
+[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI（`NetworkRequestUiHost` / `RequestUiCallback`）** 说明与示例。）  
 从旧版升级请先读 [UPGRADE.md](UPGRADE.md)。
 
 ## MVVM架构示例代码，重构版本
@@ -214,7 +214,7 @@ implementation project(':userapi')   // 需要用户契约时
 5. 原始的列表自带的下拉刷新，`paging`分页可以继承`BasePagingFragment`
 6. 不带`pinging`分页的列表`Fragment`继承`BaseRecyclerViewFragment`
 7. 最常用的分页列表`Fragment`，支持多样式刷新，加载更多，`paging3`分页继承`BaseSmartPagingFragment`
-8. `Fragment`、`Activity`自带的回调接口`BaseView`，如果需要自定义的话，可以直接继承`BaseView`，然后在`Fragment`、`Activity`实现即可
+8. 请求侧 UI（加载框 / Toast / `onErrorCode`）由 `BaseActivity` / `BaseFragment` 实现 `NetworkRequestUiView`，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
 9. `adapter`如果需要实现自定义的事件控件等，可以自定义`BaseViewHolder`，然后在adapter中重写createViewHold方法
 10. 普通`ViewModel`可以直接继承`BaseViewModel`
 11. 分页列表的`ViewModel`继承`PagingViewModel`

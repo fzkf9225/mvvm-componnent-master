@@ -73,6 +73,7 @@ object LoginAgreementMarkup {
                 override fun updateDrawState(ds: TextPaint) {
                     super.updateDrawState(ds)
                     ds.color = color
+                    ds.isUnderlineText = false   // 去掉下划线
                 }
             },
             start,

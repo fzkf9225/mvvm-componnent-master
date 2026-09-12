@@ -8,7 +8,6 @@ import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
 import io.coderf.arklab.user.bean.RequestLoginBean
-import io.coderf.arklab.user.view.UserView
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -19,11 +18,11 @@ import kotlinx.coroutines.flow.Flow
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 class LoginRepositoryImpl(
     private val api: UserApiService
-) : BaseNetworkRepository<UserView>() {
+) : BaseNetworkRepository() {
 
     fun getImageCode(randomNumber: String): Flow<RequestResult<GraphicVerificationCodeBean>> {
         return request(

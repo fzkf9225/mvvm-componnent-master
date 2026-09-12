@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class UserRepositoryImpl(
     private val apiService: UserApiService,
-) : BaseNetworkRepository<io.coderf.arklab.common.base.BaseView>(
+) : BaseNetworkRepository(
     boundApiService = apiService
 ),
     UserProfileRepository {

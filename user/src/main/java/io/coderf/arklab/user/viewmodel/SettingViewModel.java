@@ -10,9 +10,7 @@ import androidx.annotation.NonNull;
 
 import io.coderf.arklab.common.api.ConstantsHelper;
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
-import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.utils.common.CacheUtil;
 import io.coderf.arklab.common.utils.download.UpdateManager;
 import io.coderf.arklab.common.widget.customview.IconLabelValueView;
@@ -29,16 +27,16 @@ import io.coderf.arklab.user.api.UserAccountHelper;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,BaseView> {
+public class SettingViewModel extends BaseViewModel<BaseRepository> {
 
     public SettingViewModel(@NonNull Application application) {
         super(application);
     }
 
     @Override
-    protected RepositoryImpl createRepository() {
+    protected BaseRepository createRepository() {
         return null;
     }
 
@@ -50,7 +48,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
         } else if (id == R.id.tv_feedback) {
             startActivity(view.getContext(), FeedBackActivity.class);
         } else if (id == R.id.versionName) {
-            baseView.showLoading("正在检测新版本...",true);
+            getNetworkRequestUiHost().showLoading("正在检测新版本...", true);
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
                 UpdateManager.getInstance().checkUpdateInfo((Activity) view.getContext(),
@@ -58,7 +56,7 @@ public class SettingViewModel extends BaseViewModel<BaseRepository<BaseView>,Bas
                         "leakcanary-android-release.apk",
                         "1、修复已知bug",
                         "1.0.1");
-                baseView.hideLoading();
+                getNetworkRequestUiHost().hideLoading();
             }, 2000);
         } else if (id == R.id.cleanUp) {
             IconLabelValueView tvCleanUp = (IconLabelValueView) view;

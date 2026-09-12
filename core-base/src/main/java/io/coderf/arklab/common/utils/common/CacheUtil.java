@@ -14,8 +14,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import io.coderf.arklab.common.base.BaseView;
-import io.coderf.arklab.common.impl.RequestUiAdapters;
 import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
@@ -27,13 +25,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * updated by fz on 202/12/09.
  * 缓存工具类，包含Glide图片缓存和通用应用缓存管理
  * <p>
- * 带加载框的异步 API 推荐使用 {@link RequestUi}（新体系）；
- * 以 {@link BaseView} 为参数的重载已标记 {@link Deprecated}，内部转发至 RequestUi。
+ * 带加载框的异步 API 使用 {@link RequestUi}。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
 public class CacheUtil {
 
@@ -166,35 +163,6 @@ public class CacheUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    // ==================== calculateCacheSize：BaseView（已过时） ====================
-
-    /**
-     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Single<String> calculateCacheSize(Context context, BaseView baseView) {
-        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), null, false);
-    }
-
-    /**
-     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi, String)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message) {
-        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, false);
-    }
-
-    /**
-     * @deprecated 请改用 {@link #calculateCacheSize(Context, RequestUi, String, boolean)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Single<String> calculateCacheSize(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
-        return calculateCacheSize(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, enableDynamicEllipsis);
-    }
-
     /**
      * 获取应用总缓存大小（包括内部缓存和外部缓存），同步方法。
      * @param context 上下文
@@ -291,35 +259,6 @@ public class CacheUtil {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    // ==================== clearCache：BaseView（已过时） ====================
-
-    /**
-     * @deprecated 请改用 {@link #clearCache(Context, RequestUi)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Completable clearCache(Context context, BaseView baseView) {
-        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), null, false);
-    }
-
-    /**
-     * @deprecated 请改用 {@link #clearCache(Context, RequestUi, String)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Completable clearCache(Context context, BaseView baseView, String message) {
-        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, false);
-    }
-
-    /**
-     * @deprecated 请改用 {@link #clearCache(Context, RequestUi, String, boolean)}，
-     * 页面侧可用 {@link RequestUiAdapters#fromBaseViewAsRequestUi(BaseView)} 桥接。
-     */
-    @Deprecated
-    public Completable clearCache(Context context, BaseView baseView, String message, boolean enableDynamicEllipsis) {
-        return clearCache(context, RequestUiAdapters.fromBaseViewAsRequestUi(baseView), message, enableDynamicEllipsis);
     }
 
     /**

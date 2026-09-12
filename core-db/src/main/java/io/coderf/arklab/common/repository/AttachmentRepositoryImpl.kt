@@ -1,7 +1,6 @@
 package io.coderf.arklab.common.repository
 
 import androidx.lifecycle.LiveData
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.bean.AttachmentBean
 import io.coderf.arklab.common.dao.AttachmentDao
 import io.reactivex.rxjava3.core.Completable
@@ -19,8 +18,8 @@ import java.util.UUID
  * @since 1.0
  * @created 2023/12/1 15:25
  */
-class AttachmentRepositoryImpl(attachmentDao: AttachmentDao, baseView: BaseView?) :
-    RoomRepositoryImpl<AttachmentBean, AttachmentDao, BaseView?>(attachmentDao, baseView) {
+class AttachmentRepositoryImpl(attachmentDao: AttachmentDao) :
+    RoomRepositoryImpl<AttachmentBean, AttachmentDao>(attachmentDao) {
 
     fun queryFlowListByMainId(mainId: String): Flowable<List<AttachmentBean>> {
         val queryParams = mapOf<String, Any>("mainId" to mainId)

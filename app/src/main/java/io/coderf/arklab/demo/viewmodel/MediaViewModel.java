@@ -5,7 +5,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 
@@ -17,7 +16,7 @@ import io.coderf.arklab.common.repository.RepositoryImpl;
  * @since 1.0
  * @created 2023/8/14 10:56
  */
-public class MediaViewModel extends BaseViewModel<BaseRepository<BaseView>,BaseView> {
+public class MediaViewModel extends BaseViewModel<BaseRepository> {
 
     public MediaViewModel(@NonNull Application application) {
         super(application);

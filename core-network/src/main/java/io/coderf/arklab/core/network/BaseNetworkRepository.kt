@@ -1,6 +1,5 @@
 package io.coderf.arklab.core.network
 
-import io.coderf.arklab.common.base.BaseView
 import io.coderf.arklab.common.inter.ApiRetrofitService
 import io.coderf.arklab.common.repository.IRepository
 import io.coderf.arklab.core.request.NoOpRequestUi
@@ -13,7 +12,7 @@ import org.reactivestreams.Subscription
 /**
  * 新版网络 Repository 基类：在 [DefaultNetworkRepository] 之上兼容 [IRepository] / [BaseViewModel]。
  *
- * 业务仓库继承本类即可接入 ViewModel 的 `createRepository` 装配与 RequestUi 注入。
+ * 业务仓库继承本类即可接入 ViewModel 的 `ensureRepository` 装配与 RequestUi 注入。
  *
  * 鉴权解析（与旧栈一致，**按 ApiService 实例**，非 App 进程全局）：
  * 1. [tokenRefresher] 构造参数（局部覆盖）
@@ -25,25 +24,16 @@ import org.reactivestreams.Subscription
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-open class BaseNetworkRepository<BV : BaseView>(
+open class BaseNetworkRepository(
     requestUi: RequestUi = NoOpRequestUi,
     tokenRefresher: TokenRefresher? = null,
     boundApiService: ApiRetrofitService? = null
-) : DefaultNetworkRepository(requestUi, tokenRefresher, boundApiService), IRepository<BV> {
+) : DefaultNetworkRepository(requestUi, tokenRefresher, boundApiService), IRepository {
 
     private val compositeDisposable = CompositeDisposable()
     private val subscriptions = mutableListOf<Subscription>()
-
-    @Volatile
-    private var boundView: BV? = null
-
-    override fun setBaseView(baseView: BV?) {
-        boundView = baseView
-    }
-
-    override fun getBaseView(): BV? = boundView
 
     override fun addDisposable(disposable: Disposable?) {
         if (disposable != null) {
@@ -65,7 +55,6 @@ open class BaseNetworkRepository<BV : BaseView>(
 
     override fun clear() {
         remove()
-        boundView = null
         setRequestUi(NoOpRequestUi)
     }
 }

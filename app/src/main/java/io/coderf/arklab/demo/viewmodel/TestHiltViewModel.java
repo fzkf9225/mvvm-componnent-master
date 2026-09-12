@@ -16,7 +16,6 @@ import dagger.Lazy;
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.coderf.arklab.common.base.BaseRepository;
-import io.coderf.arklab.common.base.BaseView;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.RepositoryImpl;
@@ -39,7 +38,7 @@ import io.coderf.arklab.demo.module.HiltUserServiceModule;
  * @created 2024/5/31 11:31
  */
 @HiltViewModel
-public class TestHiltViewModel extends BaseViewModel<BaseRepository<BaseView>, BaseView> {
+public class TestHiltViewModel extends BaseViewModel<BaseRepository> {
     @Inject
     @HiltUserServiceModule.HiltUser
     HiltUserService hiltUserService;
