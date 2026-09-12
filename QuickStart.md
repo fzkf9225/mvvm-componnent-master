@@ -428,39 +428,60 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
 #### 特别注意
 所有的`Activity`或者`Fragment`都要继承对应的Base类，且一定要添加`@AndroidEntryPoint`注解
 
-## 请求过程 UI（NetworkRequestUiHost / RequestUiCallback）
+## 请求过程 UI（NetworkRequestUiHost / RequestUi）
 
-网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，统一走 **`RequestUiCallback`**（位于 `core-base`）。`BaseViewModel` 默认持有 **`NetworkRequestUiHost`**，在 `ensureRepository()` 时注入到 `BaseRepository#setRequestUi` / 新栈 `RequestUiHost`。Repository 内**只调用 `getRequestUi()`**，禁止持有或回调页面。
+网络 / 本地数据请求过程中的**加载框、错误展示、业务码处理**，统一走 **`RequestUi`**（`io.coderf.arklab.core.request.RequestUi`，位于 `core-base`）。`BaseViewModel` 默认持有 **`NetworkRequestUiHost`**（实现 `RequestUi`），在 `ensureRepository()` 时注入到 `BaseRepository#setRequestUi` / 新栈 `RequestUiHost`。Repository 内**只调用 `getRequestUi()`**，禁止持有或回调页面。
 
-页面侧：`BaseActivity` / `BaseFragment` 实现 **`RequestUiCallback`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框与 Toast。
+页面侧：`BaseActivity` / `BaseFragment` 实现 **`RequestUi`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框、Toast 与业务码处理（登录过期 / 无权限等）。
 
-**新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）。旧 Repository 已 `@Deprecated`，可继续编译但勿新增。
+**唯一契约**：`RequestUi`（`showLoading` / `hideLoading` / `refreshLoading` / `showError(AppError)` / `onBusinessCode`）。已删除旧版 `RequestUiCallback` 及桥接类（`RequestUiAdapters`、`RequestUiBridge`），勿再使用。
+
+**新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）。旧 `RepositoryImpl` 等已 `@Deprecated`，可继续编译但勿新增。
 
 ### 默认用法（推荐）
 
-继承 `BaseActivity` / `BaseFragment`，实现无参 `createRepository()` 即可。默认 `provideRequestUiCallback()` 返回 `NetworkRequestUiHost`，业务侧一般**不需要**手写 `setRequestUi` 或 `bind`。
+继承 `BaseActivity` / `BaseFragment`，实现无参 `createRepository()` 即可。默认 `provideRequestUi()` 返回 `NetworkRequestUiHost`，业务侧一般**不需要**手写 `setRequestUi` 或 `bind`。
 
-需要自定义请求 UI 时：重写 `provideRequestUiCallback()`，或重写 `bindNetworkRequestUi()` 为空后自行 observe `getNetworkRequestUiHost()`。
+需要自定义请求 UI 时：重写 `provideRequestUi()`，或重写 `bindNetworkRequestUi()` 为空后自行 observe `getNetworkRequestUiHost()`。
 
 ### 未经过 BaseViewModel 时自行持有 Repository
 
 若通过 `RepositoryFactory` 或 `new` 得到仓库、**没有经过** `BaseViewModel.ensureRepository`，则不会自动注入 UI。发起请求前手动：
 
 ```kotlin
+// BaseRepository 与 RequestUiHost 均接收 RequestUi
 repository.setRequestUi(viewModel.getNetworkRequestUiHost())
-// 新栈：
-(repository as RequestUiHost).setRequestUi(RequestUiAdapters.toRequestUi(callback))
+// 或
+(repository as RequestUiHost).setRequestUi(viewModel.getNetworkRequestUiHost())
 ```
 
-未注入时请求仍会执行，但**不会出现加载框 / 错误侧 UI**（适合纯后台或单测）。
+未注入时请求仍会执行，但**不会出现加载框 / 错误侧 UI**（适合纯后台或单测；也可用 `NoOpRequestUi`）。
+
+### Repository 内如何触发 UI
+
+```kotlin
+// Loading
+getRequestUi()?.showLoading("加载中…", true)
+getRequestUi()?.hideLoading()
+
+// 错误（统一 AppError）
+getRequestUi()?.showError(AppError.Unknown("操作失败"))
+getRequestUi()?.showError(AppError.Business(code, message))
+// 或仅业务码
+getRequestUi()?.onBusinessCode(code, message)
+
+// 主动 Toast（非请求错误）：可用 Host 便捷方法
+viewModel.getNetworkRequestUiHost().showToast("提示文案")
+```
 
 ### 迁移 checklist
 
 1. Repository / ViewModel：**禁止** 持有页面引用，统一 `getRequestUi()?.…` 与 LiveData/Flow 下发业务状态。
-2. 默认页面：继承 Base，实现无参 `createRepository()`，无需改 `provideRequestUiCallback`。
-3. 自定义 UI：重写 `provideRequestUiCallback` 和/或 `bindNetworkRequestUi`。
+2. 默认页面：继承 Base，实现无参 `createRepository()`，无需改 `provideRequestUi`。
+3. 自定义 UI：重写 `provideRequestUi` 和/或 `bindNetworkRequestUi`。
 4. 仅工厂创建的仓库：记得 `setRequestUi`，否则无请求侧 UI。
 5. 业务导航用 `LiveData` / `SharedFlow`（参考登录页 `PostLoginRoute`），不要再写 MVP 式 View 接口。
+6. 全局搜并删除：`RequestUiCallback`、`RequestUiAdapters`、`RequestUiBridge`、`onErrorCode`、`provideRequestUiCallback`；错误改走 `showError(AppError)`。
 
 ## 各模块之间解耦方案说明
 一般`app`模块只包含基础启动页和`MainActivity`，其他都都要新建模块

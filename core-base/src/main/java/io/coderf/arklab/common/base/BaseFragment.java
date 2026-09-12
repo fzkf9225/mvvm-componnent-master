@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.RequestUi;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
@@ -45,7 +46,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @since 1.0
  * @updated 2026/8/25 13:12
  */
-public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements RequestUiCallback, AuthManager.AuthCallback {
+public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements RequestUi, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
     /**
      * viewModel
@@ -174,7 +175,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * 请求 UI 渲染落点；与 Activity 共用 VM 时可落到宿主 Activity。
      */
     @NonNull
-    protected RequestUiCallback resolveRequestUi() {
+    protected RequestUi resolveRequestUi() {
         if (!useActivityViewModel()) {
             return this;
         }
@@ -261,7 +262,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         uiController.refreshLoading(dialogMessage);
     }
 
-    @Override
     public void showToast(String msg) {
         if (!isUiSafe() || uiController == null) {
             return;
@@ -276,18 +276,40 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         uiController.showToast(strRes);
     }
 
+    /**
+     * 请求错误渲染：业务码走登录/权限；其它走 Toast。
+     */
     @Override
-    public void onErrorCode(BaseResponse model) {
-        if (errorService == null || model == null || !isUiSafe()) {
+    public void showError(AppError error) {
+        if (error == null || !isUiSafe()) {
             return;
         }
-        if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(requireContext(), authManager.getLoginLauncher());
+        if (error instanceof AppError.Business) {
+            AppError.Business business = (AppError.Business) error;
+            if (errorService == null) {
+                return;
+            }
+            if (errorService.isLoginPast(business.getCode())) {
+                errorService.toLogin(requireContext(), authManager.getLoginLauncher());
+                return;
+            }
+            if (!errorService.hasPermission(business.getCode())) {
+                errorService.toNoPermission(requireContext(), authManager.getPermissionLauncher());
+            }
             return;
         }
-        if (!errorService.hasPermission(model.getCode())) {
-            errorService.toNoPermission(requireContext(), authManager.getPermissionLauncher());
+        if (error == AppError.Cancelled.INSTANCE) {
+            return;
         }
+        String msg = error.getMessage();
+        if (msg != null && !msg.isEmpty()) {
+            showToast(msg);
+        }
+    }
+
+    @Override
+    public void onBusinessCode(String code, String message) {
+        showError(new AppError.Business(code != null ? code : "", message != null ? message : "", null));
     }
 
     public void startActivity(Class<?> toClx) {

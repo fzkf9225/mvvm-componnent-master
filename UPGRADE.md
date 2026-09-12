@@ -10,7 +10,7 @@
 
 ## 2. 1.2.0：彻底剔除 BaseView / MVP 页面绑定
 
-这是一次 **架构契约** 大版本（相对上一档 core-base **1.1.3** / commonui **3.6.2** / commonmedia **3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / Toast / `onErrorCode` 只走 `RequestUiCallback` + `NetworkRequestUiHost`；业务导航用 LiveData / Flow。
+这是一次 **架构契约** 大版本（相对上一档 core-base **1.1.3** / commonui **3.6.2** / commonmedia **3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / 错误展示只走 **`RequestUi` + `NetworkRequestUiHost`**；业务导航用 LiveData / Flow。后续已进一步删除旧版 `RequestUiCallback`，全链路统一为 `RequestUi`。
 
 ### 2.1 版本号
 
@@ -49,7 +49,7 @@ implementation 'io.coderf.arklab.media:media:3.5.0'
 
 | | 旧（MVP 残存） | 现（1.2.0） |
 |--|----------------|-------------|
-| 页面契约 | `BaseView` / 业务 `XxxView` | **已删除**；页面实现 `RequestUiCallback`（`BaseActivity` / `BaseFragment` 已实现） |
+| 页面契约 | `BaseView` / 业务 `XxxView` | **已删除**；页面实现 `RequestUi`（`BaseActivity` / `BaseFragment` 已实现） |
 | ViewModel | `BaseViewModel<IR, BV>`，`createRepository(view)`，`unbindView()` | `BaseViewModel<IR>`，无参 `createRepository()`，`ensureRepository()` |
 | Repository | `IRepository<BV>` / `BaseRepository<BV>`，`setBaseView` / `getBaseView` | `IRepository` / `BaseRepository`，仅 `setRequestUi` / `getRequestUi` |
 | 工厂 | `RepositoryFactory.create(..., baseView, api)` | **不再传页面**；`create(Class, api)` / `create(Class, dao)` 等 |
@@ -59,7 +59,7 @@ implementation 'io.coderf.arklab.media:media:3.5.0'
 数据流：
 
 ```text
-Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activity/Fragment（RequestUiCallback）
+Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder──▶ Activity/Fragment（RequestUi）
 业务状态 / 导航 ──LiveData / Flow──▶ 页面 observe 后自行处理
 ```
 
@@ -95,8 +95,9 @@ Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activit
 ```diff
 - baseView?.showLoading(...)
 - getBaseView()?.showToast(...)
-+ getRequestUi()?.showLoading(...)
-+ getRequestUi()?.showToast(...)
++ getRequestUi()?.showLoading("加载中…", true)
++ getRequestUi()?.showError(AppError.Unknown("提示文案"))
++ // 或主动 Toast：getNetworkRequestUiHost().showToast("提示文案")
 ```
 
 分页 / Flow / Room 同理：类型参数里的「页面」位全部去掉，例如：
@@ -111,7 +112,7 @@ Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activit
 
 - 继承 `BaseActivity` / `BaseFragment` 即可：框架会 `ensureRepository()` + `bindNetworkRequestUi()`。
 - 不要再 `implements BaseView` / 业务 View 接口。
-- 自定义请求 UI：重写 `provideRequestUiCallback()` 或空实现 `bindNetworkRequestUi()` 后自行 observe `getNetworkRequestUiHost()`。
+- 自定义请求 UI：重写 `provideRequestUi()` 或空实现 `bindNetworkRequestUi()` 后自行 observe `getNetworkRequestUiHost()`。
 
 #### commonui 表单
 
@@ -120,14 +121,14 @@ Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activit
 + formMedia.setRequestUi(mViewModel.getNetworkRequestUiHost())
 ```
 
-应传 **ViewModel 的 Host**（或其它 `RequestUiCallback`），不要把 Activity 当仓库 UI 回调长期挂在控件上。
+应传 **ViewModel 的 Host**（或其它 `RequestUi` 实现），不要把 Activity 当仓库 UI 回调长期挂在控件上。
 
 ### 2.4 业务工程落地步骤（建议顺序）
 
 1. **升依赖**到 §2.1 坐标，Clean + Sync。
 2. **全局搜**（业务工程）：`BaseView`、`setBaseView`、`getBaseView`、`unbindView`、`createRepository(this`、`UserView`、`baseView:`、`BaseViewModel<.+,`。
 3. **改签名**：所有 `BaseViewModel` / Repository / Factory / Room 构造按 §2.3 去掉页面类型与参数。
-4. **改调用**：`baseView?.…` → `getRequestUi()?.…`；表单 `setRequestUi(host)`。
+4. **改调用**：`baseView?.…` → `getRequestUi()?.…`（错误用 `showError(AppError)`）；表单 `setRequestUi(host)`。
 5. **改导航**：删掉页面 View 接口，改为 LiveData/Flow（可参考本仓库 `LoginViewModel` + `PostLoginRoute` + `LoginActivity`）。
 6. **编译**：先 `:app:assembleDebug`，再按模块修报错。
 7. **回归**：冷启动请求 Loading/Toast、旋转屏后 Loading 不丢不漏、登录跳转、带 `FormMedia` 的上传页、分页列表、媒体选图/压缩加载框。
@@ -136,7 +137,7 @@ Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activit
 
 - [ ] 工程内无 `import …BaseView`、无 `setBaseView` / `getBaseView`
 - [ ] 所有 `createRepository()` 无页面参数；页面未再把 `this` 传给 Repository 构造
-- [ ] 网络 / Room 请求仍出现 Loading，失败 Toast / `onErrorCode` 正常
+- [ ] 网络 / Room 请求仍出现 Loading，失败 Toast / 业务码（`showError`）正常
 - [ ] 配置变更（旋转）后请求 UI 仍正常（Host 在 VM，页面只重新 bind）
 - [ ] 登录或其它「跳转」不再通过 View 接口，而是 observe 事件
 - [ ] 使用 commonui `FormMedia` 的页面已改为 `setRequestUi`
@@ -145,10 +146,33 @@ Repository ──写──▶ NetworkRequestUiHost ──Binder──▶ Activit
 ```bash
 ./gradlew :app:assembleDebug
 # 可选：在业务工程搜残留
-# rg "BaseView|setBaseView|getBaseView|unbindView|createRepository\\(this" --glob "*.{java,kt}"
+# rg "BaseView|setBaseView|getBaseView|unbindView|RequestUiCallback|onErrorCode|createRepository\\(this" --glob "*.{java,kt}"
 ```
 
-### 2.6 与 §1 / 网络迁移的关系
+
+### 2.6 请求 UI 统一为 RequestUi（删除 RequestUiCallback）
+
+在 1.2.0「去掉 BaseView」之后，请求 UI 曾短暂并存 **`RequestUiCallback`（旧）** 与 **`RequestUi`（新）**。现已**只保留 `RequestUi`**，避免双契约。
+
+| 已删除 | 替代 |
+|--------|------|
+| `RequestUiCallback` | `io.coderf.arklab.core.request.RequestUi` |
+| `RequestUiAdapters` | 不再需要桥接 |
+| `RequestUiBridge` | 不再需要桥接 |
+| `provideRequestUiCallback()` | `provideRequestUi()` |
+| `onErrorCode(BaseResponse)` | `showError(AppError)` / `onBusinessCode(code, message)` |
+| `getRequestUi()?.showToast(msg)`（契约方法） | `getRequestUi()?.showError(AppError.Unknown(msg))` 或 `getNetworkRequestUiHost().showToast(msg)` |
+
+数据流不变：
+
+```text
+Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶ NetworkRequestUiBinder ──RequestUi──▶ 页面
+```
+
+页面仍实现 `RequestUi`：`BaseActivity` / `BaseFragment` 已实现 `showError`，业务码走登录过期 / 无权限；非业务错误走 Toast。分页基类等若曾 `override onErrorCode`，请改为 `override fun showError(error: AppError)`。
+
+
+### 2.7 与 §1 / 网络迁移的关系
 
 - 若宿主仍在 **AppCompat 主题线**，先完成 §1（升到 Material3 + 控件补丁），再做本节。
 - 旧 `RepositoryImpl.sendRequest` 仍可用但已 `@Deprecated`；新代码优先 `DefaultNetworkRepository`，见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)。**本节不强制迁网络栈**，只强制去掉页面绑定。

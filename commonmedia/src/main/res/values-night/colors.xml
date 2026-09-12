@@ -7,4 +7,8 @@
     <color name="media_action_sheet_divider">#33FFFFFF</color>
     <color name="media_action_sheet_ripple">#29FFFFFF</color>
     <color name="media_panel_bg">#FF1C1B1F</color>
+
+    <!-- MediaProgressDialog：暗色半透明白底 + 深色内容，与 core-base LoadingProgressDialog 对齐。 -->
+    <color name="media_loading_bg">#B0FFFFFF</color>
+    <color name="mediaLoadingDialogContentColor">#FF1C1B1F</color>
 </resources>

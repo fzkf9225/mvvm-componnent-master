@@ -15,7 +15,9 @@ namespace：`io.coderf.arklab.common`
 
 ### 1.2.0（相对 1.1.3）
 
-彻底剔除 MVP 页面绑定：删除 `BaseView`；`BaseViewModel` / `IRepository` / `BaseRepository` 不再带页面泛型；请求 UI 经 `NetworkRequestUiHost` + `NetworkRequestUiBinder` 落到页面的 `RequestUiCallback`。
+彻底剔除 MVP 页面绑定：删除 `BaseView`；`BaseViewModel` / `IRepository` / `BaseRepository` 不再带页面泛型；请求 UI 经 `NetworkRequestUiHost` + `NetworkRequestUiBinder` 落到页面的 **`RequestUi`**。
+
+已删除旧版 `RequestUiCallback` 及 `RequestUiAdapters`；全链路只使用 `io.coderf.arklab.core.request.RequestUi`（`showLoading` / `hideLoading` / `refreshLoading` / `showError(AppError)` / `onBusinessCode`）。
 
 ### 1.1.1（相对 1.1.0）
 

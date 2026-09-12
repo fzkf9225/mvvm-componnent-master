@@ -5,7 +5,7 @@ import org.reactivestreams.Subscription;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
- * Repository 生命周期契约（订阅清理）。请求 UI 走 {@link io.coderf.arklab.common.inter.RequestUiCallback}，
+ * Repository 生命周期契约（订阅清理）。请求 UI 走 {@link io.coderf.arklab.core.request.RequestUi}，
  * 不持有页面引用。
  *
  * @author fz

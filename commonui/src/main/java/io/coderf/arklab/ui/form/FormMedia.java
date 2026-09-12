@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
@@ -223,7 +223,7 @@ public abstract class FormMedia extends CornerConstraintLayout {
      * 请求 UI（上传错误 Toast 等）
      */
     @Nullable
-    protected RequestUiCallback requestUi;
+    protected RequestUi requestUi;
     /**
      * 右上角占位按钮图片
      */
@@ -397,9 +397,9 @@ public abstract class FormMedia extends CornerConstraintLayout {
     /**
      * 设置请求 UI（上传失败 Toast / 错误码）。
      *
-     * @param requestUi 应传 ViewModel 的 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}（或其它 RequestUiCallback 实现），勿直接传 Activity/Fragment
+     * @param requestUi 应传 ViewModel 的 {@link io.coderf.arklab.common.base.NetworkRequestUiHost}（或其它 RequestUi 实现），勿直接传 Activity/Fragment
      */
-    public void setRequestUi(@Nullable RequestUiCallback requestUi) {
+    public void setRequestUi(@Nullable RequestUi requestUi) {
         this.requestUi = requestUi;
     }
 

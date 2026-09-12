@@ -42,7 +42,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 
 | 项 | 说明 |
 |----|------|
-| 职责 | 依赖聚合 + 新旧 API 桥接（`RequestUiBridge`） |
+| 职责 | 依赖聚合（facade，统一入口） |
 | 包名 / namespace | `io.coderf.arklab.common.facade` |
 | 何时用 | 宿主 / 业务模块统一依赖此入口即可 |
 | 注意 | Manifest 不要再声明相对类名组件；权限与 `InitProvider` 等在 `core-base` |
@@ -191,7 +191,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 1. 业务不直接依赖 mqtt / media 实现模块，只依赖 Gateway。
 2. 新网络代码优先 `DefaultNetworkRepository.request`，勿再扩 `sendRequest` 重载。
-3. Repository 内不要持有页面；Loading / Toast 只走 `getRequestUi()` / `RequestUi`。
+3. Repository 内不要持有页面；Loading / 错误只走 `getRequestUi()` / `RequestUi`（`showError(AppError)`）。
 4. `core-*` 禁止依赖 `user` / `app`。
 5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
 6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。

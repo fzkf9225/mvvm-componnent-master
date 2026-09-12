@@ -103,6 +103,8 @@
     <color name="outlineVariant">@color/h_line_color</color>
     <!-- 遮罩，几乎只用在 Dialog dim。 -->
     <color name="scrim">#FF000000</color>
+    <!-- LoadingProgressDialog 面板背景：亮色半透明黑，暗色在 values-night 覆盖为半透明白。 -->
+    <color name="loading_dialog_bg">#B0000000</color>
 
     <color name="buttonPrimaryText">@color/onPrimary</color>
     <color name="buttonSecondaryText">@color/themeColor</color>

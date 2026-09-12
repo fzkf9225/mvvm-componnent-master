@@ -9,7 +9,7 @@ import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.inter.RetryService;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Flowable;
@@ -123,13 +123,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                             apiService.getRetrofit().getBuilder().getRetryService().handleObservableError(throwableObservable))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
@@ -139,13 +139,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return observable.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
@@ -224,13 +224,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                                     apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
@@ -240,13 +240,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return flowable.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
@@ -322,13 +322,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                                     apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
@@ -338,13 +338,13 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return single.subscribeOn(Schedulers.io())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.showLoading(apiRequestOptions.getDialogMessage(), apiRequestOptions.isEnableDynamicEllipsis());
                         }
                     })
                     .doFinally(() -> {
-                        RequestUiCallback ui = getRequestUi();
+                        RequestUi ui = getRequestUi();
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }

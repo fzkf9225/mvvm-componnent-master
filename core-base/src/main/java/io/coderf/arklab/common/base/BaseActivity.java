@@ -24,7 +24,8 @@ import io.coderf.arklab.common.api.AppManager;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
@@ -71,7 +72,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @updated 2026/8/25 13:12
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
-        implements RequestUiCallback, AuthManager.AuthCallback {
+        implements RequestUi, AuthManager.AuthCallback {
 
     protected String TAG = this.getClass().getSimpleName();
 
@@ -345,7 +346,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页（本类实现 {@link RequestUiCallback}）。
+     * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页（本类实现 {@link RequestUi}）。
      * 子类若完全自定义请求 UI，可重写为空实现并自行 observe {@link BaseViewModel#getNetworkRequestUiHost()}。
      */
     protected void bindNetworkRequestUi() {
@@ -458,7 +459,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         uiController.hideLoading();
     }
 
-    @Override
     public void showToast(String msg) {
         if (!isUiSafe() || uiController == null) {
             return;
@@ -473,18 +473,40 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         uiController.showToast(strRes);
     }
 
+    /**
+     * 请求错误渲染：业务码走登录/权限；其它走 Toast。
+     * Binder 对 toast 通道会以 {@link AppError.Unknown} 回调；对 errorCode 通道走 {@link #onBusinessCode}。
+     */
     @Override
-    public void onErrorCode(BaseResponse model) {
-        if (errorService == null || model == null || !isUiSafe()) {
+    public void showError(AppError error) {
+        if (error == null || !isUiSafe()) {
             return;
         }
-        if (errorService.isLoginPast(model.getCode())) {
-            errorService.toLogin(this, authManager.getLoginLauncher());
+        if (error instanceof AppError.Business business) {
+            if (errorService == null) {
+                return;
+            }
+            if (errorService.isLoginPast(business.getCode())) {
+                errorService.toLogin(this, authManager.getLoginLauncher());
+                return;
+            }
+            if (!errorService.hasPermission(business.getCode())) {
+                errorService.toNoPermission(this, authManager.getPermissionLauncher());
+            }
             return;
         }
-        if (!errorService.hasPermission(model.getCode())) {
-            errorService.toNoPermission(this, authManager.getPermissionLauncher());
+        if (error == AppError.Cancelled.INSTANCE) {
+            return;
         }
+        String msg = error.getMessage();
+        if (msg != null && !msg.isEmpty()) {
+            showToast(msg);
+        }
+    }
+
+    @Override
+    public void onBusinessCode(String code, String message) {
+        showError(new AppError.Business(code != null ? code : "", message != null ? message : "", null));
     }
 
     public void startActivity(Class<?> toClx) {

@@ -7,10 +7,10 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * 不持有页面引用。
  *
  * @author fz
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  * @updated 2026/9/12
  */
@@ -34,7 +34,7 @@ public abstract class BaseRepository implements IRepository {
     protected RetryService retryService;
 
     @Nullable
-    private RequestUiCallback requestUi;
+    private RequestUi requestUi;
 
     public BaseRepository() {
     }
@@ -43,12 +43,12 @@ public abstract class BaseRepository implements IRepository {
         this.retryService = retryService;
     }
 
-    public void setRequestUi(@Nullable RequestUiCallback requestUi) {
+    public void setRequestUi(@Nullable RequestUi requestUi) {
         this.requestUi = requestUi;
     }
 
     @Nullable
-    public RequestUiCallback getRequestUi() {
+    public RequestUi getRequestUi() {
         return requestUi;
     }
 

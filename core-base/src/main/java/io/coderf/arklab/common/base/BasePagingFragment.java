@@ -187,18 +187,20 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
     }
 
     @Override
-    public void onErrorCode(BaseResponse model) {
-        try {
-            boolean refreshError = refreshLayout.isRefreshing()
-                    || isInitialLoadingVisible();
-            if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
-                setViewState(EmptyLayout.State.LOADING_ERROR);
+    public void showError(io.coderf.arklab.core.request.AppError error) {
+        if (error instanceof io.coderf.arklab.core.request.AppError.Business) {
+            try {
+                boolean refreshError = refreshLayout.isRefreshing()
+                        || isInitialLoadingVisible();
+                if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
+                    setViewState(EmptyLayout.State.LOADING_ERROR);
+                }
+                refreshLayout.setRefreshing(false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            refreshLayout.setRefreshing(false);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        super.onErrorCode(model);
+        super.showError(error);
     }
 
     public EmptyLayout.State getEmptyType() {

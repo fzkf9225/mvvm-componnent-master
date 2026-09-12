@@ -2,7 +2,6 @@ package io.coderf.arklab.common.repository
 
 import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.base.BaseException
-import io.coderf.arklab.common.base.BaseResponse
 import io.coderf.arklab.common.bean.ApiRequestOptions
 import io.coderf.arklab.common.inter.FlowRetryService
 import io.coderf.arklab.core.bean.PagingQuery
@@ -46,10 +45,11 @@ abstract class PagingFlowRepositoryImpl<API : BaseApiService, T : Any, Q : Pagin
     abstract suspend fun requestPaging(currentPage: Int, pageSize: Int, query: Q): Flow<List<T>>?
 
     fun onError(exception: Throwable) {
-        getRequestUi()?.onErrorCode(
-            BaseResponse<Any?>(
-                BaseException.ErrorType.OTHER.code,
-                exception.message
+        requestUi?.showError(
+            io.coderf.arklab.core.request.AppError.Business(
+                code = BaseException.ErrorType.OTHER.code,
+                message = exception.message ?: "",
+                cause = exception
             )
         )
     }

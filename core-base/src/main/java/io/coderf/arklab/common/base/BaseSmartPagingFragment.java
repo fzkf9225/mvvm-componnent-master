@@ -90,7 +90,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         return mainWithFooter;
     }
 
-   protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
+    protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
         LoadState refresh = loadStates.getRefresh();
         LoadState append = loadStates.getAppend();
         if (refresh instanceof LoadState.Loading) {
@@ -195,19 +195,21 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     }
 
     @Override
-    public void onErrorCode(BaseResponse model) {
-        try {
-            boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing
-                    || isInitialLoadingVisible()
-                    || refreshLayout.getState() == RefreshState.Loading;
-            if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
-                setViewState(EmptyLayout.State.LOADING_ERROR);
+    public void showError(io.coderf.arklab.core.request.AppError error) {
+        if (error instanceof io.coderf.arklab.core.request.AppError.Business) {
+            try {
+                boolean refreshError = refreshLayout.getState() == RefreshState.Refreshing
+                        || isInitialLoadingVisible()
+                        || refreshLayout.getState() == RefreshState.Loading;
+                if (refreshError && shouldShowEmptyLayoutOnRefreshError()) {
+                    setViewState(EmptyLayout.State.LOADING_ERROR);
+                }
+                onRefreshFinish(false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            onRefreshFinish(false);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        super.onErrorCode(model);
+        super.showError(error);
     }
 
     public EmptyLayout.State getEmptyType() {

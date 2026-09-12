@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.core.Single
  * ## 设计说明
  * - **RxJava3** 为主：Completable / Single / Flowable 与老项目一致；
  * - **LiveData** 直接透传 Dao，不加 Loading（由页面 observe 处理）；
- * - **Loading** 仅通过 [getRequestUi]（[io.coderf.arklab.common.inter.RequestUiCallback]），
+ * - **Loading** 仅通过 [getRequestUi]（[io.coderf.arklab.core.request.RequestUi]），
  *   由 [io.coderf.arklab.common.base.BaseViewModel] 注入，对齐 [RepositoryImpl]；
  * - **Flow / 协程**：见 [RoomRepositoryFlowExt]、[RoomRepositoryCoroutineExt]。
  *
@@ -25,7 +25,7 @@ import io.reactivex.rxjava3.core.Single
  *
  * // ViewModel 中
  * repository.insert(person, showLoading = true)
- *     .subscribe({ }, { getRequestUi()?.onErrorCode(it) })
+ *     .subscribe({ }, { getRequestUi()?.showError(io.coderf.arklab.core.request.AppError.from(it)) })
  *
  * // 或使用 Options
  * repository.findAll(RoomRequestOptions.withLoading("加载列表..."))

@@ -71,7 +71,7 @@
 
 当前主干版本：**common `4.6.0`（facade）+ core-base/network/db/ui `1.2.0` + core-utils `1.1.1` + commonui `3.7.0` + commonmedia `3.5.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md §2.1](UPGRADE.md#21-版本号) **显式钉住**本次升版的 core / ui / media。包名多为 `io.coderf.arklab.common.*`。相对 AppCompat 工程与本次 MVVM 契约变更见 [UPGRADE.md](UPGRADE.md)。
 
-**1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + `RequestUiCallback`；业务导航用 LiveData/Flow。
+**1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + **`RequestUi`**（已删除旧版 `RequestUiCallback`）；业务导航用 LiveData/Flow。
 
 **1.1.x / 3.6.x 控件补丁**（历史）：官方已有圆角、描边的包装类已去掉，改用 `MaterialButton` / `ShapeableImageView` / `TextInputLayout`。详情见 [core-base/README.md](core-base/README.md)。
 
@@ -122,7 +122,7 @@
 全面使用``ksp``
 
 # 五分钟快读开始
-[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI（`NetworkRequestUiHost` / `RequestUiCallback`）** 说明与示例。）  
+[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI（`NetworkRequestUiHost` / `RequestUi`）** 说明与示例。）  
 从旧版升级请先读 [UPGRADE.md](UPGRADE.md)。
 
 ## MVVM架构示例代码，重构版本
@@ -216,7 +216,7 @@ implementation project(':userapi')   // 需要用户契约时
 5. 原始的列表自带的下拉刷新，`paging`分页可以继承`BasePagingFragment`
 6. 不带`pinging`分页的列表`Fragment`继承`BaseRecyclerViewFragment`
 7. 最常用的分页列表`Fragment`，支持多样式刷新，加载更多，`paging3`分页继承`BaseSmartPagingFragment`
-8. 请求侧 UI（加载框 / Toast / `onErrorCode`）由 `BaseActivity` / `BaseFragment` 实现 `RequestUiCallback`，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
+8. 请求侧 UI（加载框 / 错误 / 业务码）由 `BaseActivity` / `BaseFragment` 实现 **`RequestUi`**，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；错误统一 `showError(AppError)`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
 9. `adapter`如果需要实现自定义的事件控件等，可以自定义`BaseViewHolder`，然后在adapter中重写createViewHold方法
 10. 普通`ViewModel`可以直接继承`BaseViewModel`
 11. 分页列表的`ViewModel`继承`PagingViewModel`

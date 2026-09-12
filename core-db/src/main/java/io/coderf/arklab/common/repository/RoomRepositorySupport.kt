@@ -3,7 +3,6 @@ package io.coderf.arklab.common.repository
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseRepository
 import io.coderf.arklab.common.bean.RoomRequestOptions
-import io.coderf.arklab.common.inter.RequestUiCallback
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit
  *
  * ## 职责
  * - `subscribeOn(IO)` + `observeOn(MainThread)`；
- * - 按 [RoomRequestOptions] 控制 [RequestUiCallback] 的 show/hide Loading；
+ * - 按 [RoomRequestOptions] 控制 [RequestUi] 的 show/hide Loading；
  * - 注册 Disposable / Subscription 到 [BaseRepository]；
  * - 查询空列表、删除空结果等业务异常与 [RepositoryImpl.sendRequest] 行为对齐。
  *
@@ -144,7 +143,7 @@ internal object RoomRepositorySupport {
         options: RoomRequestOptions
     ) {
         if (!options.isShowDialog) return
-        repository.getRequestUi()?.showLoading(
+        repository.requestUi?.showLoading(
             options.dialogMessage,
             options.isEnableDynamicEllipsis
         )
@@ -156,6 +155,6 @@ internal object RoomRepositorySupport {
         options: RoomRequestOptions
     ) {
         if (!options.isShowDialog) return
-        repository.getRequestUi()?.hideLoading()
+        repository.requestUi?.hideLoading()
     }
 }

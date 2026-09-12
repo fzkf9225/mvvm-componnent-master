@@ -221,11 +221,13 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
         errorService.toMain(this, null)
     }
 
-    override fun onErrorCode(model: BaseResponse<*>?) {
-        super.onErrorCode(model)
-        if (NOT_SUPPORT_LOGIN == model?.code) {
+    override fun showError(error: io.coderf.arklab.core.request.AppError) {
+        super.showError(error)
+        if (error is io.coderf.arklab.core.request.AppError.Business
+            && NOT_SUPPORT_LOGIN == error.code
+        ) {
             MessageDialog(this)
-                .setMessage(model.message)
+                .setMessage(error.message)
                 .setOnPositiveClickListener {
                     it.dismiss()
                 }

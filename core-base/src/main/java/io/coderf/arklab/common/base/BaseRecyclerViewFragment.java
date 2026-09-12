@@ -178,21 +178,23 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
     }
 
     @Override
-    public void onErrorCode(BaseResponse model) {
-        try {
-            if (refreshLayout.getState() == RefreshState.Refreshing
-                    || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING
-                    || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH
-                    || isInitialLoadingVisible()
-                    || refreshLayout.getState() == RefreshState.Loading) {
-                setViewState(EmptyLayout.State.LOADING_ERROR);
+    public void showError(io.coderf.arklab.core.request.AppError error) {
+        if (error instanceof io.coderf.arklab.core.request.AppError.Business) {
+            try {
+                if (refreshLayout.getState() == RefreshState.Refreshing
+                        || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING
+                        || emptyLayout.getCurrentState() == EmptyLayout.State.NETWORK_LOADING_REFRESH
+                        || isInitialLoadingVisible()
+                        || refreshLayout.getState() == RefreshState.Loading) {
+                    setViewState(EmptyLayout.State.LOADING_ERROR);
+                }
+                onRefreshFinish(false);
+                onLoadFinish(false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            onRefreshFinish(false);
-            onLoadFinish(false);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        super.onErrorCode(model);
+        super.showError(error);
     }
 
     protected void setCanRefresh(boolean isCanRefresh) {

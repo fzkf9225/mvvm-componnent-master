@@ -59,6 +59,8 @@
     <color name="onSurfaceInverse">#FF313033</color>
     <color name="outline">#FF938F99</color>
     <color name="outlineVariant">#FF49454F</color>
+    <!-- LoadingProgressDialog：暗色页面上用半透明白底，保证与深色 UI 的对比度。 -->
+    <color name="loading_dialog_bg">#B0FFFFFF</color>
 
     <color name="buttonPrimaryText">@color/onPrimary</color>
     <color name="buttonSecondaryText">@color/themeColor</color>

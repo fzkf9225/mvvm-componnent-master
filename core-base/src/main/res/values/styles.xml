@@ -299,6 +299,7 @@
     </style>
 
     <style name="loading_dialog" parent="loading_dialog_base">
+        <!-- 亮色：黑底面板上的转圈与文字用白色 -->
         <item name="loadingDialogContentColor">#FFFFFFFF</item>
     </style>
 

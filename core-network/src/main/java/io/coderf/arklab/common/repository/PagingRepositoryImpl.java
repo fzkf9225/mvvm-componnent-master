@@ -7,7 +7,7 @@ import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.core.bean.PagingQuery;
 import io.reactivex.rxjava3.core.Observable;
@@ -65,9 +65,12 @@ public abstract class PagingRepositoryImpl<API extends BaseApiService, T, Q exte
     }
 
     public void onError(Exception exception) {
-        RequestUiCallback ui = getRequestUi();
+        RequestUi ui = getRequestUi();
         if (ui != null) {
-            ui.onErrorCode(new BaseResponse(BaseException.ErrorType.OTHER.getCode(), exception.getMessage()));
+            ui.showError(new io.coderf.arklab.core.request.AppError.Business(
+                    BaseException.ErrorType.OTHER.getCode(),
+                    exception.getMessage() != null ? exception.getMessage() : "",
+                    exception));
         }
     }
 

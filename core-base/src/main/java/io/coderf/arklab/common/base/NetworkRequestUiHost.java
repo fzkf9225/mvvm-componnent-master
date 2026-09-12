@@ -4,24 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.RequestUi;
 
 /**
  * ViewModel 侧请求 UI 状态宿主（只写状态，不碰页面）。
  * <p>
- * 同时实现旧 {@link RequestUiCallback} 与新 {@link RequestUi}，由 {@link BaseViewModel} 注入 Repository。
- * 页面通过 {@link NetworkRequestUiBinder} 订阅 LiveData，落到页面自身的 {@link RequestUiCallback} 实现。
+ * 实现 {@link RequestUi}，由 {@link BaseViewModel} 注入 Repository。
+ * 页面通过 {@link NetworkRequestUiBinder} 订阅 LiveData，落到页面自身的 {@link RequestUi} 实现。
  * <p>
  * Repository / 网络层只向本 Host 写状态，由 Lifecycle 安全地派发到当前可见页面。
  *
  * @author fz
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  * @updated 2026/9/12
  */
-public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
+public class NetworkRequestUiHost implements RequestUi {
 
     private final MutableLiveData<RequestLoadingState> loadingState =
             new MutableLiveData<>(RequestLoadingState.hidden());
@@ -43,7 +42,17 @@ public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
         return errorCode;
     }
 
-    // ---------- RequestUiCallback / RequestUi 共同能力 ----------
+    /**
+     * 便捷 Toast（非 RequestUi 契约方法）。业务主动提示可调用；
+     * 请求错误请优先 {@link #showError(AppError)}。
+     */
+    public void showToast(@Nullable String msg) {
+        if (msg != null && !msg.isEmpty()) {
+            toast.postValue(msg);
+        }
+    }
+
+    // ---------- RequestUi ----------
 
     @Override
     public void showLoading(@Nullable String dialogMessage, boolean enableDynamicEllipsis) {
@@ -67,27 +76,11 @@ public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
     }
 
     @Override
-    public void showToast(@Nullable String msg) {
-        if (msg != null) {
-            toast.postValue(msg);
-        }
-    }
-
-    @Override
-    public void onErrorCode(@Nullable BaseResponse<?> model) {
-        if (model != null) {
-            errorCode.postValue(model);
-        }
-    }
-
-    // ---------- RequestUi（新体系） ----------
-
-    @Override
     public void showError(@NonNull AppError error) {
         if (error instanceof AppError.Business business) {
-            onErrorCode(new BaseResponse<>(business.getCode(), business.getMessage()));
+            errorCode.postValue(new BaseResponse<>(business.getCode(), business.getMessage()));
             if (business.getMessage() != null && !business.getMessage().isEmpty()) {
-                showToast(business.getMessage());
+                toast.postValue(business.getMessage());
             }
             return;
         }
@@ -96,7 +89,7 @@ public class NetworkRequestUiHost implements RequestUiCallback, RequestUi {
         }
         String msg = error.getMessage();
         if (msg != null && !msg.isEmpty()) {
-            showToast(msg);
+            toast.postValue(msg);
         }
     }
 

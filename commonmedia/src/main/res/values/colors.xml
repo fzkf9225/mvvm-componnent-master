@@ -13,11 +13,13 @@
     <color name="media_action_sheet_ripple">#29000000</color>
     <color name="media_panel_bg">#FFFFFFFF</color>
 
+    <!-- MediaProgressDialog 面板背景：亮色半透明黑，暗色在 values-night 覆盖为半透明白。 -->
     <color name="media_loading_bg">#B0000000</color>
     <color name="media_crop_bottom_bg">#CC1C1B1F</color>
     <color name="media_crop_btn_text">@android:color/white</color>
     <color name="media_crop_cancel_border">#66FFFFFF</color>
     <color name="media_crop_cancel_fill">#1AFFFFFF</color>
 
+    <!-- 亮色：黑底面板上的转圈与文字用白色；暗色在 values-night 覆盖为深色。 -->
     <color name="mediaLoadingDialogContentColor">#FFFFFFFF</color>
 </resources>

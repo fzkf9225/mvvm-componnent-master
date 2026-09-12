@@ -14,7 +14,7 @@ namespace：`io.coderf.arklab.ui`
 
 ### 3.7.0（相对 3.6.2）
 
-跟随 core-base 1.2.0：`FormMedia` 等去掉 `setBaseView`，改为 `setRequestUi(RequestUiCallback)`（传 ViewModel 的 `NetworkRequestUiHost`）。
+跟随 core-base 1.2.0：`FormMedia` 等去掉 `setBaseView`，改为 `setRequestUi(RequestUi)`（传 ViewModel 的 `NetworkRequestUiHost` 或其它 `RequestUi` 实现）。
 
 ### 3.6.1（相对 3.6.0）
 

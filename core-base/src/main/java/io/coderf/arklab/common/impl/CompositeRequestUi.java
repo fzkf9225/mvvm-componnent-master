@@ -1,37 +1,40 @@
 package io.coderf.arklab.common.impl;
 
-import io.coderf.arklab.common.base.BaseResponse;
-import io.coderf.arklab.common.inter.RequestUiCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.RequestUi;
 
 /**
- * 多个 {@link RequestUiCallback} 串联（例如：同时写入 ViewModel 的 LiveData + 页面 Toast）。
+ * 多个 {@link RequestUi} 串联（例如：同时写入 ViewModel 的 LiveData + 页面 Toast）。
  * 各 delegate 中可含 null，会自动跳过。
  *
  * @author fz
- * @version 1.0
+ * @version 2.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/12
  */
-public final class CompositeRequestUi implements RequestUiCallback {
+public final class CompositeRequestUi implements RequestUi {
 
-    private final RequestUiCallback[] delegates;
+    private final RequestUi[] delegates;
 
-    public CompositeRequestUi(RequestUiCallback... delegates) {
-        this.delegates = delegates != null ? delegates : new RequestUiCallback[0];
+    public CompositeRequestUi(RequestUi... delegates) {
+        this.delegates = delegates != null ? delegates : new RequestUi[0];
     }
 
     @Override
-    public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
-        for (RequestUiCallback d : delegates) {
+    public void showLoading(@Nullable String message, boolean enableDynamicEllipsis) {
+        for (RequestUi d : delegates) {
             if (d != null) {
-                d.showLoading(dialogMessage, enableDynamicEllipsis);
+                d.showLoading(message != null ? message : "", enableDynamicEllipsis);
             }
         }
     }
 
     @Override
     public void hideLoading() {
-        for (RequestUiCallback d : delegates) {
+        for (RequestUi d : delegates) {
             if (d != null) {
                 d.hideLoading();
             }
@@ -39,28 +42,28 @@ public final class CompositeRequestUi implements RequestUiCallback {
     }
 
     @Override
-    public void refreshLoading(String dialogMessage) {
-        for (RequestUiCallback d : delegates) {
+    public void refreshLoading(@Nullable String message) {
+        for (RequestUi d : delegates) {
             if (d != null) {
-                d.refreshLoading(dialogMessage);
+                d.refreshLoading(message != null ? message : "");
             }
         }
     }
 
     @Override
-    public void showToast(String msg) {
-        for (RequestUiCallback d : delegates) {
+    public void showError(@NonNull AppError error) {
+        for (RequestUi d : delegates) {
             if (d != null) {
-                d.showToast(msg);
+                d.showError(error);
             }
         }
     }
 
     @Override
-    public void onErrorCode(BaseResponse<?> model) {
-        for (RequestUiCallback d : delegates) {
+    public void onBusinessCode(@NonNull String code, @Nullable String message) {
+        for (RequestUi d : delegates) {
             if (d != null) {
-                d.onErrorCode(model);
+                d.onBusinessCode(code, message != null ? message : "");
             }
         }
     }

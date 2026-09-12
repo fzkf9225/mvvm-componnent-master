@@ -5,7 +5,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.inter.RequestUiCallback;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.core.request.RequestUiHost;
@@ -18,7 +17,7 @@ import io.coderf.arklab.core.request.RequestUiHost;
  * 不持有 Activity/Fragment，业务导航请用 LiveData / SharedFlow 等状态下发。
  *
  * @author fz
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  * @updated 2026/9/12
  */
@@ -57,28 +56,24 @@ public abstract class BaseViewModel<IR extends IRepository> extends BaseViewView
     }
 
     /**
-     * 向旧 {@link BaseRepository} 注入 {@link RequestUiCallback}；
-     * 向新 {@link RequestUiHost} 直接注入本 Host（其已实现 {@link RequestUi}）。
+     * 向 {@link BaseRepository} / {@link RequestUiHost} 注入本 Host（实现 {@link RequestUi}）。
      */
     protected void attachRepositoryRequestUi() {
-        RequestUiCallback callback = provideRequestUiCallback();
+        RequestUi ui = provideRequestUi();
         if (iRepository instanceof BaseRepository) {
-            ((BaseRepository) iRepository).setRequestUi(callback);
+            ((BaseRepository) iRepository).setRequestUi(ui);
         }
         if (iRepository instanceof RequestUiHost) {
-            RequestUi requestUi = (callback instanceof RequestUi)
-                    ? (RequestUi) callback
-                    : networkRequestUiHost;
-            ((RequestUiHost) iRepository).setRequestUi(requestUi);
+            ((RequestUiHost) iRepository).setRequestUi(ui != null ? ui : networkRequestUiHost);
         }
     }
 
     /**
-     * 提供给 Repository 的 UI 回调。默认返回 {@link #networkRequestUiHost}。
+     * 提供给 Repository 的请求 UI。默认返回 {@link #networkRequestUiHost}。
      * 无 UI 场景可重写为 {@code null} 或自定义实现。
      */
     @Nullable
-    protected RequestUiCallback provideRequestUiCallback() {
+    protected RequestUi provideRequestUi() {
         return networkRequestUiHost;
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 暗色跟当前主题 colorPrimary，不写死 themeColor。 -->
+    <!-- 暗色：半透明白底面板上的转圈与文字用深色，保证对比度。 -->
     <style name="loading_dialog" parent="loading_dialog_base">
-        <item name="loadingDialogContentColor">?attr/colorPrimary</item>
+        <item name="loadingDialogContentColor">#FF1C1B1F</item>
     </style>
 </resources>
