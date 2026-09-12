@@ -2,15 +2,20 @@
 
 框架核心 UI / MVVM 基座：Activity / Fragment / ViewModel、历史 widget、helper，以及 **common 体系的资源与 DataBinding**（R 包名保持 `io.coderf.arklab.common`）。
 
-当前版本：**1.1.1**  
-Maven：`io.coderf.arklab.core:base:1.1.1`  
+当前版本：**1.2.0**  
+Maven：`io.coderf.arklab.core:base:1.2.0`  
 namespace：`io.coderf.arklab.common`
 
-> 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。
+> 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。  
+> 业务工程升级（剔除 `BaseView`）见 [UPGRADE.md §2](../UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。
 
 ---
 
 ## 版本
+
+### 1.2.0（相对 1.1.3）
+
+彻底剔除 MVP 页面绑定：删除 `BaseView`；`BaseViewModel` / `IRepository` / `BaseRepository` 不再带页面泛型；请求 UI 经 `NetworkRequestUiHost` + `NetworkRequestUiBinder` 落到页面的 `RequestUiCallback`。
 
 ### 1.1.1（相对 1.1.0）
 
@@ -67,7 +72,7 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 需要基类 / 通用 UI / DataBinding 资源时（推荐经 `common`）：
 
 ```gradle
-implementation 'io.coderf.arklab.core:base:1.1.1'
+implementation 'io.coderf.arklab.core:base:1.2.0'
 // 或
 implementation project(':core-base')
 ```

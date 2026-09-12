@@ -59,19 +59,21 @@
 
 ---
 
-# 文档索引（4.6.0）
+# 文档索引
 
 | 文档 | 说明 |
 |------|------|
 | [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
-| [UPGRADE.md](UPGRADE.md) | **4.6.0 Material3 主题升级**（相对 AppCompat 线）；附录为 4.4.x → 4.5.1 拆分；**§1.6** 为控件补丁 |
+| [UPGRADE.md](UPGRADE.md) | **§2：core-* 1.2.0 剔除 BaseView / MVP**；§1：4.6.0 Material3；附录：4.4.x → 4.5.1 拆分 |
 | [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、主题、配置、页面脚手架） |
-| [core-base/README.md](core-base/README.md) | 基座模块；**1.1.1** 控件与主题补丁 |
-| [commonui/README.md](commonui/README.md) | 表单 / 日历等；**3.6.1** 随 core-base 对齐 |
+| [core-base/README.md](core-base/README.md) | 基座模块；控件与主题补丁 |
+| [commonui/README.md](commonui/README.md) | 表单 / 日历等 |
 
-当前主干版本：**common `4.6.0`（facade）+ core-base `1.1.1` + 其余 core-\* `1.1.0` + commonui `3.6.1`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可只依赖 `common`；包名多为 `io.coderf.arklab.common.*`（实现位于 `core-base` 等）。相对 AppCompat 工程（common 4.5.1 / core-base 1.0.9）的变更见 [UPGRADE.md](UPGRADE.md)。
+当前主干版本：**common `4.6.0`（facade）+ core-base/network/db/ui `1.2.0` + core-utils `1.1.1` + commonui `3.7.0` + commonmedia `3.5.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md §2.1](UPGRADE.md#21-版本号) **显式钉住**本次升版的 core / ui / media。包名多为 `io.coderf.arklab.common.*`。相对 AppCompat 工程与本次 MVVM 契约变更见 [UPGRADE.md](UPGRADE.md)。
 
-**1.1.1 / 3.6.1 控件补丁**：官方已有圆角、描边的包装类已去掉（`CornerButton`、`CornerImageView`、`RoundImageView`、`CornerEditText`、`CounterEditText`），改用 `MaterialButton` / `ShapeableImageView` / `TextInputLayout`。官方没有 XML 圆角属性的 `CornerTextView`、`CircleTextView`、`CornerConstraintLayout` 保留，背景改为 `MaterialShapeDrawable`。`ShapeableImageView` 填色用 `android:background`，不要用 `app:backgroundTint`（没有 background 时 tint 无效）。详情见 [core-base/README.md](core-base/README.md)。
+**1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + `RequestUiCallback`；业务导航用 LiveData/Flow。
+
+**1.1.x / 3.6.x 控件补丁**（历史）：官方已有圆角、描边的包装类已去掉，改用 `MaterialButton` / `ShapeableImageView` / `TextInputLayout`。详情见 [core-base/README.md](core-base/README.md)。
 
 # 框架简介
 框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，`targetSdk` 对齐 Demo（当前 35）。
@@ -214,7 +216,7 @@ implementation project(':userapi')   // 需要用户契约时
 5. 原始的列表自带的下拉刷新，`paging`分页可以继承`BasePagingFragment`
 6. 不带`pinging`分页的列表`Fragment`继承`BaseRecyclerViewFragment`
 7. 最常用的分页列表`Fragment`，支持多样式刷新，加载更多，`paging3`分页继承`BaseSmartPagingFragment`
-8. 请求侧 UI（加载框 / Toast / `onErrorCode`）由 `BaseActivity` / `BaseFragment` 实现 `NetworkRequestUiView`，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
+8. 请求侧 UI（加载框 / Toast / `onErrorCode`）由 `BaseActivity` / `BaseFragment` 实现 `RequestUiCallback`，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
 9. `adapter`如果需要实现自定义的事件控件等，可以自定义`BaseViewHolder`，然后在adapter中重写createViewHold方法
 10. 普通`ViewModel`可以直接继承`BaseViewModel`
 11. 分页列表的`ViewModel`继承`PagingViewModel`

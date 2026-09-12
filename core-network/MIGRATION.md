@@ -1,7 +1,8 @@
 # core-network 升级迁移说明
 
 > 面向从 **RxJava3 / 旧 Flow 中间层** 迁到 **新版 Kotlin Flow 网络栈** 的完整对照。  
-> 模块版本：`core-network 1.1.0` · 包名：`io.coderf.arklab.core.network` / `io.coderf.arklab.common.*`
+> 模块版本：`core-network 1.2.0` · 包名：`io.coderf.arklab.core.network` / `io.coderf.arklab.common.*`  
+> 剔除 `BaseView` / 页面泛型见仓库根目录 [UPGRADE.md §2](../UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)（与网络栈迁移可分开做）。
 
 ---
 

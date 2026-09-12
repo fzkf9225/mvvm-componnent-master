@@ -1,7 +1,7 @@
 # 五分钟快速入门
 
-> 对应框架 **common 4.6.0**（facade）+ **core-base 1.1.1** + 其余 **core-\* 1.1.0** + **commonui 3.6.1**，主题为 **Material3 DayNight**。  
-> 模块说明见 [MODULES.md](MODULES.md)。从 AppCompat 主题线（4.5.1）或 4.4.x 升级见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
+> 对应框架 **common 4.6.0** + **core-base/network/db/ui `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`**，主题为 **Material3 DayNight**。  
+> 模块说明见 [MODULES.md](MODULES.md)。升级（含剔除 `BaseView`）见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
@@ -37,22 +37,23 @@
 ### 添加基础库依赖
 打开`libs.versions.toml`文件，添加基础库配置
 ```toml
-annotation = "3.3.0"
+annotation = "3.3.1"
 roomProcessor = "1.1.0"
-commonui = "3.6.1"
-commongps = "3.2.0"
-commonmedia = "3.4.0"
+commonui = "3.7.0"
+commongps = "3.2.1"
+commonmedia = "3.5.0"
 commonVersion = "4.6.0"
-coreVersion = "1.1.0"
-coreBase = "1.1.1"
+coreVersion = "1.2.0"
+coreBase = "1.2.0"
+coreUtils = "1.1.1"
 [libraries]
-# 基础：common 为 facade；core-* 一般由 common 传递，也可显式声明
+# 基础：common 为 facade；本轮 common 未升版号，请显式钉 core-*（见 UPGRADE §2.1）
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
 base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreBase" }
 base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreVersion" }
 base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreVersion" }
 base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }
-base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreVersion" }
+base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreUtils" }
 base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
 base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
@@ -431,7 +432,7 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
 
 网络 / 本地数据请求过程中的**加载框、Toast、`onErrorCode` 业务码回调**，统一走 **`RequestUiCallback`**（位于 `core-base`）。`BaseViewModel` 默认持有 **`NetworkRequestUiHost`**，在 `ensureRepository()` 时注入到 `BaseRepository#setRequestUi` / 新栈 `RequestUiHost`。Repository 内**只调用 `getRequestUi()`**，禁止持有或回调页面。
 
-页面侧：`BaseActivity` / `BaseFragment` 实现 **`NetworkRequestUiView`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框与 Toast。
+页面侧：`BaseActivity` / `BaseFragment` 实现 **`RequestUiCallback`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框与 Toast。
 
 **新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）。旧 Repository 已 `@Deprecated`，可继续编译但勿新增。
 
@@ -481,6 +482,6 @@ messageGateway.connect()
 
 - 接口：`:base` → `MediaGateway` / `MessageGateway`（case 契约）
 - 实现绑定：在 **app** 依赖 media / mqtt，并由组装层 Hilt Module 适配（Demo：`MediaGatewayModule`、`GatewayModule`）
-- 详细说明：[MODULES.md](MODULES.md) §4、[UPGRADE.md](UPGRADE.md) §3.1
+- 详细说明：[MODULES.md](MODULES.md) §4、[UPGRADE.md](UPGRADE.md) 附录 A.3
 
 # 好了，你出师了！！！

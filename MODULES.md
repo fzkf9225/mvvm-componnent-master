@@ -1,6 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本：**common 4.6.0 / core-base 1.1.1 / 其余 core-\* 1.1.0 / commonui 3.6.1**（Material3 DayNight，见文末 Maven 坐标）  
+> 对应版本：**common 4.6.0** + **core-base / network / db / ui `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`** + **commonmedia `3.5.0`**（Material3 DayNight；MVVM 剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)）  
 > 本文说明各模块职责、依赖关系与日常用法。从 AppCompat 主题线或 4.4.x 升级请看 [UPGRADE.md](./UPGRADE.md)。
 
 ---
@@ -25,7 +25,7 @@ app（组装：Hilt / Demo）
 **业务侧推荐入口：**
 
 ```gradle
-implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.6.0
+implementation project(':common')   // 或 Maven: io.coderf.arklab.common:common:4.6.0（建议同时显式钉 core-* 1.2.0，见 UPGRADE §2.1）
 implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
 implementation project(':userapi')  // 仅需要用户契约时
 ```
@@ -170,20 +170,20 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.6.0` |
-| core-base | `io.coderf.arklab.core:base:1.1.1` |
-| core-network | `io.coderf.arklab.core:network:1.1.0` |
-| core-db | `io.coderf.arklab.core:db:1.1.0` |
-| core-ui | `io.coderf.arklab.core:ui:1.1.0` |
-| core-utils | `io.coderf.arklab.core:utils:1.1.0` |
+| core-base | `io.coderf.arklab.core:base:1.2.0` |
+| core-network | `io.coderf.arklab.core:network:1.2.0` |
+| core-db | `io.coderf.arklab.core:db:1.2.0` |
+| core-ui | `io.coderf.arklab.core:ui:1.2.0` |
+| core-utils | `io.coderf.arklab.core:utils:1.1.1` |
 | core-log | `io.coderf.arklab.core:log:1.1.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.1.0` |
-| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.0` |
-| commonmedia | `io.coderf.arklab.media:media:3.4.0` |
-| commonui | `io.coderf.arklab.ui:ui:3.6.1`（`api` → core-base / core-network，另依赖 media） |
-| googlegps | `io.coderf.arklab.googlegps:googlegps:3.2.0` |
-| annotation | `io.coderf.arklab.annotation:annotation:3.3.0` |
+| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.1` |
+| commonmedia | `io.coderf.arklab.media:media:3.5.0` |
+| commonui | `io.coderf.arklab.ui:ui:3.7.0`（`api` → core-base / core-network，另依赖 media） |
+| googlegps | `io.coderf.arklab.googlegps:googlegps:3.2.1` |
+| annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
-宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。
+宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。**本轮 common 未升版号**，Maven 工程请按 [UPGRADE.md §2.1](./UPGRADE.md#21-版本号) 显式声明 `core-*:1.2.0` 等，避免解析到旧传递依赖。
 
 ---
 

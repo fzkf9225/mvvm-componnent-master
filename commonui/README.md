@@ -2,15 +2,19 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.6.1**  
-Maven：`io.coderf.arklab.ui:ui:3.6.1`  
+当前版本：**3.7.0**  
+Maven：`io.coderf.arklab.ui:ui:3.7.0`  
 namespace：`io.coderf.arklab.ui`
 
-需要与 **core-base 1.1.1** 一起使用（`api` 传递）。
+需要与 **core-base 1.2.0** 一起使用（`api` 传递）。升级说明见 [UPGRADE.md §2](../UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。
 
 ---
 
 ## 版本
+
+### 3.7.0（相对 3.6.2）
+
+跟随 core-base 1.2.0：`FormMedia` 等去掉 `setBaseView`，改为 `setRequestUi(RequestUiCallback)`（传 ViewModel 的 `NetworkRequestUiHost`）。
 
 ### 3.6.1（相对 3.6.0）
 
@@ -49,7 +53,7 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.6.1'
+implementation 'io.coderf.arklab.ui:ui:3.7.0'
 // 或
 implementation project(':commonui')
 ```
