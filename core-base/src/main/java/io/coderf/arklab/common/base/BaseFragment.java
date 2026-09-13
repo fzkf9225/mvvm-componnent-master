@@ -137,7 +137,8 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     protected void createUIController() {
         if (uiController == null) {
-            uiController = new UIController(requireContext(), getLifecycle());
+            // Dialog 挂 Activity Window；Lifecycle 跟 View，与 onDestroyView 对齐，避免 View 销毁后仍弹窗
+            uiController = new UIController(requireActivity(), getViewLifecycleOwner().getLifecycle());
         }
     }
 

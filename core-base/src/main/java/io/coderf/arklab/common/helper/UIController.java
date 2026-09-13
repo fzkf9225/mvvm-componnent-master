@@ -2,6 +2,7 @@ package io.coderf.arklab.common.helper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -15,14 +16,16 @@ import io.coderf.arklab.common.widget.dialog.LoadingProgressDialog;
 import io.coderf.arklab.common.widget.feedback.ToastHelper;
 
 /**
- * 页面级 UI 辅助：Loading、Toast；绑定 Lifecycle，在 ON_DESTROY 时自动关闭 Loading，避免 Window 泄漏。
+ * 页面级 UI 辅助：Loading、Toast；绑定 Lifecycle，在 ON_DESTROY 时自动关闭 Loading 并清空主线程排队任务，避免 Window 泄漏与销毁后误弹。
  * <p>
  * Loading 同一时刻只保留一个 Dialog：已在展示时原地刷新，避免 dismiss + show 闪烁，也避免多层叠加。
+ * <p>
+ * 主线程策略：已在主线程则直接执行，否则 {@link Handler#post}，减少多余一帧延迟。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/3 20:55
+ * @updated 2026/9/13
  */
 public class UIController implements DefaultLifecycleObserver {
 
@@ -38,7 +41,25 @@ public class UIController implements DefaultLifecycleObserver {
 
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
+        // 先清排队任务，再关 Dialog，避免销毁后 Runnable 再次 show
+        mainHandler.removeCallbacksAndMessages(null);
         hideLoadingImmediate();
+    }
+
+    /**
+     * 取消尚未执行的主线程 UI 任务，并立即关闭 Loading。
+     */
+    public void cancelPendingUi() {
+        mainHandler.removeCallbacksAndMessages(null);
+        hideLoadingImmediate();
+    }
+
+    private void runOnMain(@NonNull Runnable action) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action.run();
+        } else {
+            mainHandler.post(action);
+        }
     }
 
     public void showLoading(String message) {
@@ -49,15 +70,15 @@ public class UIController implements DefaultLifecycleObserver {
         showLoading(context, message, enableDynamicEllipsis, isCancelable);
     }
 
-    public void showLoading(Context context, String message, boolean enableDynamicEllipsis, boolean isCancelable) {
-        if (!canShowUi(context)) {
+    public void showLoading(Context dialogContext, String message, boolean enableDynamicEllipsis, boolean isCancelable) {
+        if (!canShowUi(dialogContext)) {
             return;
         }
-        mainHandler.post(() -> {
-            if (!canShowUi(context)) {
+        runOnMain(() -> {
+            if (!canShowUi(dialogContext)) {
                 return;
             }
-            showLoadingImmediate(context, message, enableDynamicEllipsis, isCancelable);
+            showLoadingImmediate(dialogContext, message, enableDynamicEllipsis, isCancelable);
         });
     }
 
@@ -65,7 +86,7 @@ public class UIController implements DefaultLifecycleObserver {
         if (!canShowUi()) {
             return;
         }
-        mainHandler.post(() -> {
+        runOnMain(() -> {
             if (isLoadingShowing()) {
                 loadingDialog.refreshMessage(message);
             }
@@ -73,7 +94,7 @@ public class UIController implements DefaultLifecycleObserver {
     }
 
     public void hideLoading() {
-        mainHandler.post(this::hideLoadingImmediate);
+        runOnMain(this::hideLoadingImmediate);
     }
 
     /**
@@ -102,33 +123,71 @@ public class UIController implements DefaultLifecycleObserver {
         loadingDialog = null;
     }
 
-    private boolean isLoadingShowing() {
+    /**
+     * 当前 Loading Dialog 是否正在展示。
+     */
+    public boolean isLoadingShowing() {
         return loadingDialog != null && loadingDialog.isShowing();
     }
 
     public void showToast(String message) {
-        if (!canShowUi()) {
+        if (!canShowToast()) {
             return;
         }
-        ToastHelper.showShort(context, message);
+        runOnMain(() -> ToastHelper.showShort(context, message));
     }
 
     public void showToast(@StringRes int strRes) {
-        if (!canShowUi()) {
+        if (!canShowToast()) {
             return;
         }
-        ToastHelper.showShort(strRes);
+        runOnMain(() -> ToastHelper.showShort(strRes));
     }
 
     private boolean canShowUi() {
         return canShowUi(context);
     }
 
+    /**
+     * Loading 必须绑定有效 Activity（含 ContextWrapper 解包）；非 Activity 不允许弹窗。
+     */
     private boolean canShowUi(Context target) {
-        if (target instanceof Activity) {
-            Activity activity = (Activity) target;
+        Activity activity = findActivity(target);
+        if (activity == null) {
+            return false;
+        }
+        return !activity.isFinishing() && !activity.isDestroyed();
+    }
+
+    /**
+     * Toast 允许非 Activity Context（由 {@link ToastHelper} 走 ApplicationContext）；
+     * 若构造时是 Activity，则仍校验未 finish / destroy。
+     */
+    private boolean canShowToast() {
+        if (context == null) {
+            return false;
+        }
+        Activity activity = findActivity(context);
+        if (activity != null) {
             return !activity.isFinishing() && !activity.isDestroyed();
         }
         return true;
+    }
+
+    private static Activity findActivity(Context target) {
+        if (target == null) {
+            return null;
+        }
+        if (target instanceof Activity) {
+            return (Activity) target;
+        }
+        Context base = target;
+        while (base instanceof ContextWrapper) {
+            if (base instanceof Activity) {
+                return (Activity) base;
+            }
+            base = ((ContextWrapper) base).getBaseContext();
+        }
+        return null;
     }
 }

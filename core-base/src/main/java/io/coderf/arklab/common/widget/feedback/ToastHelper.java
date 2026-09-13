@@ -51,11 +51,10 @@ public final class ToastHelper {
         if (appContext == null) {
             return;
         }
-        Runnable task = () -> Toast.makeText(appContext, message, duration).show();
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            task.run();
+            Toast.makeText(appContext, message, duration).show();
         } else {
-            MAIN_HANDLER.post(task);
+            MAIN_HANDLER.post(()-> Toast.makeText(appContext, message, duration).show());
         }
     }
 

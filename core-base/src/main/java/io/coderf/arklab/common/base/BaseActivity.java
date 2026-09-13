@@ -335,7 +335,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * {@link BaseViewModel#ensureRepository()} 装配仓库并注入请求 UI，并
      * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData。
      */
-    @SuppressWarnings("unchecked")
     public void createViewModel() {
         if (mViewModel == null) {
             Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
