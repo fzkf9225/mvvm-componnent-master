@@ -43,34 +43,44 @@ public class ErrorConsumer implements Consumer<Throwable> {
         LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
 
         hideLoadingIfNeeded();
-        BaseException be = (e instanceof BaseException) ? (BaseException) e : exceptionConverter.convert(e);
+        AppError error = toAppError(e);
 
-        LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + be.getErrorMsg());
+        LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + error.getMessage());
 
-        handleException(be);
-    }
-
-    private void handleException(BaseException be) {
         if (requestUi == null) {
             return;
         }
-
-        String code = be.getErrorCode() != null ? be.getErrorCode() : "";
-        // 与旧逻辑一致：始终派发业务码；仅在 isShowToast 时附带可展示文案（Host 对非空 message 会发 Toast）
-        String messageForUi = "";
-        if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
-            String toastMsg = getToastMessage(be);
-            messageForUi = !TextUtils.isEmpty(toastMsg) ? toastMsg : "";
-        }
-        requestUi.showError(new AppError.Business(code, messageForUi, be));
+        requestUi.showError(applyToastPolicy(error));
     }
 
-    private String getToastMessage(BaseException be) {
-        if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
-            return apiRequestOptions.getToastMsg();
-        } else {
-            return be.getErrorMsg();
+    /**
+     * 已是 {@link BaseException}（含 {@link io.coderf.arklab.core.request.AppErrorThrowable}）直接映射；
+     * 其余仍走 {@link ExceptionConverter}，保留 HttpException errorBody 解析。
+     */
+    private AppError toAppError(Throwable e) {
+        if (e instanceof BaseException) {
+            return AppError.from(e);
         }
+        return AppError.from(exceptionConverter.convert(e));
+    }
+
+    /**
+     * 与旧逻辑一致：仅在 isShowToast 时附带可展示文案（Host 对非空 message 会发 Toast）。
+     * 业务码仍保留在 {@link AppError.Business} 上，登录过期 / 无权限不受影响。
+     */
+    private AppError applyToastPolicy(AppError error) {
+        if (error instanceof AppError.Cancelled) {
+            return error;
+        }
+        String messageForUi = "";
+        if (apiRequestOptions != null && apiRequestOptions.isShowToast()) {
+            if (!TextUtils.isEmpty(apiRequestOptions.getToastMsg())) {
+                messageForUi = apiRequestOptions.getToastMsg();
+            } else if (!TextUtils.isEmpty(error.getMessage())) {
+                messageForUi = error.getMessage();
+            }
+        }
+        return error.withMessage(messageForUi);
     }
 
     private void hideLoadingIfNeeded() {

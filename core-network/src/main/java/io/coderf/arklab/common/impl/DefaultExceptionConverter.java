@@ -34,6 +34,9 @@ import retrofit2.Response;
 public class DefaultExceptionConverter implements ExceptionConverter {
     @Override
     public BaseException convert(Throwable e) {
+        if (e instanceof BaseException) {
+            return (BaseException) e;
+        }
         if (e instanceof HttpException) {
             BaseException business = parseHttpBusinessError((HttpException) e);
             if (business != null) {

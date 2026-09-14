@@ -2,7 +2,6 @@ package io.coderf.arklab.core.network
 
 import io.coderf.arklab.common.inter.ApiRetrofitService
 import io.coderf.arklab.core.request.AppError
-import io.coderf.arklab.core.request.AppErrorThrowable
 import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestOptions
 import io.coderf.arklab.core.request.RequestResult
@@ -152,11 +151,7 @@ open class DefaultNetworkRepository(
                 }
             }
             .catch { throwable ->
-                val error = when (throwable) {
-                    is AppErrorThrowable -> throwable.appError
-                    is CancellationException -> AppError.Cancelled
-                    else -> AppError.from(throwable)
-                }
+                val error = AppError.from(throwable)
                 if (options.deliverErrorToUi && error !is AppError.Cancelled) {
                     withContext(Dispatchers.Main.immediate) {
                         activeRequestUi.showError(error)

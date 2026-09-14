@@ -138,10 +138,14 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             EdgeToEdgeHelper.enable(this);
         }
         super.onCreate(savedInstanceState);
+
+        // 尽早入栈，保证后续初始化期间 currentActivity() 可用，也便于异常时栈状态完整
+        AppManager.getAppManager().addActivity(this);
+
         ensureDelegates();
         createAuthManager();
-        AppManager.getAppManager().addActivity(this);
         createUIController();
+
         initToolbar();
         createViewModel();
         initView(savedInstanceState);
