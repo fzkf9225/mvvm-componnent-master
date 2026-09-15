@@ -3,6 +3,7 @@ package io.coderf.arklab.common.widget.empty;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -182,6 +183,10 @@ public class EmptyLayout extends ConstraintLayout {
     private ShapeableImageView ivImage;
     private LoadingIndicator loadingView;
     private MaterialTextView tvText;
+    /** 进入骨架屏加载前备份的背景；退出时还原，避免把 XML / setter 背景清成透明。 */
+    @Nullable
+    private Drawable overlayBackupBackground;
+    private boolean skeletonOverlayApplied;
 
     public EmptyLayout(@NonNull Context context) {
         this(context, null);
@@ -576,11 +581,20 @@ public class EmptyLayout extends ConstraintLayout {
 
     /** 骨架屏加载时铺满不透明背景，避免重试态透出下层列表/文案。 */
     private void applySkeletonLoadingOverlay() {
+        if (!skeletonOverlayApplied) {
+            overlayBackupBackground = getBackground();
+            skeletonOverlayApplied = true;
+        }
         setBackgroundColor(ThemeAttrs.surface(getContext()));
     }
 
     private void clearSkeletonLoadingOverlay() {
-        setBackground(null);
+        if (!skeletonOverlayApplied) {
+            return;
+        }
+        skeletonOverlayApplied = false;
+        setBackground(overlayBackupBackground);
+        overlayBackupBackground = null;
     }
 
     /**
