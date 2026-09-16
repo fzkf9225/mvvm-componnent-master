@@ -14,13 +14,14 @@ import io.coderf.arklab.common.R;
 /**
  * 自动换行
  * 修复：对齐逻辑错误，新增清除子View等API
+ * 修复：换行时复用同一个 WarpLine 导致多行只布局最后一行
  *
  * @update 2026/6/22 23:09
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/16 10:40
  */
 public class AutoNextLineLinearlayout extends ViewGroup {
 
@@ -33,7 +34,6 @@ public class AutoNextLineLinearlayout extends ViewGroup {
 
     private final Type mType;
     private final List<WarpLine> mWarpLineGroup = new ArrayList<>();
-    private final WarpLine warpLine = new WarpLine();
 
     public AutoNextLineLinearlayout(Context context) {
         this(context, null);
@@ -86,11 +86,9 @@ public class AutoNextLineLinearlayout extends ViewGroup {
                 break;
         }
 
-        // 重新计算换行
+        // 每一行使用独立的 WarpLine，避免复用同一对象导致上一行 child 被 clear
         mWarpLineGroup.clear();
-        warpLine.lineView.clear();
-        warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
-        warpLine.height = 0;
+        WarpLine currentLine = new WarpLine();
 
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
@@ -98,35 +96,19 @@ public class AutoNextLineLinearlayout extends ViewGroup {
                 continue;
             }
             int childWidth = child.getMeasuredWidth();
-            int childHeight = child.getMeasuredHeight();
-
-            // 判断是否需要换行：当前行宽度 + 间隔 + 子View宽度 > 总宽度
-            if (warpLine.lineWidth + mType.horizontalSpace + childWidth > with) {
-                // 如果当前行没有子View，强制放入（处理单个View宽度超过容器宽度的情况）
-                if (warpLine.lineView.isEmpty()) {
-                    warpLine.addView(child);
-                    mWarpLineGroup.add(warpLine);
-                    // 重置当前行
-                    warpLine.lineView.clear();
-                    warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
-                    warpLine.height = 0;
-                } else {
-                    // 保存当前行，开启新行
-                    mWarpLineGroup.add(warpLine);
-                    // 重置当前行
-                    warpLine.lineView.clear();
-                    warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
-                    warpLine.height = 0;
-                    warpLine.addView(child);
-                }
-            } else {
-                warpLine.addView(child);
+            // with==0 是 ConstraintLayout match_constraint 的首次测量，此时不换行
+            boolean needNewLine = with > 0
+                    && !currentLine.lineView.isEmpty()
+                    && currentLine.lineWidth + (int) mType.horizontalSpace + childWidth > with;
+            if (needNewLine) {
+                mWarpLineGroup.add(currentLine);
+                currentLine = new WarpLine();
             }
+            currentLine.addView(child);
         }
 
-        // 添加最后一行
-        if (!warpLine.lineView.isEmpty()) {
-            mWarpLineGroup.add(warpLine);
+        if (!currentLine.lineView.isEmpty()) {
+            mWarpLineGroup.add(currentLine);
         }
 
         // 计算高度
@@ -165,8 +147,8 @@ public class AutoNextLineLinearlayout extends ViewGroup {
                 continue;
             }
 
-            // 计算当前行剩余空间
-            int remainWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - warpLine.lineWidth;
+            // lineWidth 已包含左右 padding，剩余空间 = 容器宽 - 当前行已用宽度
+            int remainWidth = getMeasuredWidth() - warpLine.lineWidth;
 
             // 如果是充满模式，每个子View平均分配剩余空间
             if (isFull()) {
@@ -294,9 +276,6 @@ public class AutoNextLineLinearlayout extends ViewGroup {
     public void removeAllChildren() {
         removeAllViews();
         mWarpLineGroup.clear();
-        warpLine.lineView.clear();
-        warpLine.lineWidth = getPaddingLeft() + getPaddingRight();
-        warpLine.height = 0;
         requestLayout();
     }
 
