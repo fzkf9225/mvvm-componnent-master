@@ -1,2 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+      formStyle 由宿主 Theme 设置，例如：
+      <style name="Theme.App" parent="Theme.Material3.DayNight.NoActionBar">
+          <item name="formStyle">@style/Widget.App.Form</item>
+      </style>
+      未设置时，FormConstraintLayout 仍以 Widget.App.Form 为 defStyleRes，视觉与旧版默认一致。
+    -->
 </resources>

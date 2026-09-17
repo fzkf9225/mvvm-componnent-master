@@ -13,16 +13,16 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textview.MaterialTextView;
+import androidx.annotation.StyleRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.ui.R;
@@ -39,7 +39,7 @@ import io.coderf.arklab.ui.inter.FormTextWatcherAfter;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/17 formStyle / FormUiConfig / dimens 默认
  */
 public class FormConstraintLayout extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
@@ -135,6 +135,18 @@ public class FormConstraintLayout extends CornerConstraintLayout {
      * 必填*号文字大小
      */
     protected float formRequiredSize;
+    /**
+     * 必填标记颜色，默认 ThemeAttrs.error
+     */
+    protected int requiredTextColor;
+    /**
+     * 必填标记文案，默认 *
+     */
+    protected String requiredText = "*";
+    /**
+     * 底部边框高度，默认 1dp
+     */
+    protected float bottomBorderHeight;
     /**
      * label对齐方式 是顶部还是左侧，默认为左侧
      */
@@ -232,82 +244,105 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         init();
     }
 
-    protected void initAttr(AttributeSet attrs) {
-        if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            labelString = typedArray.getString(R.styleable.FormUI_label);
-            hintString = typedArray.getString(R.styleable.FormUI_hint);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 14));
+    /**
+     * 统一读取 FormUI 属性：控件 XML > 主题 formStyle > Widget.App.Form > dimens / ThemeAttrs。
+     */
+    protected TypedArray obtainFormUi(@Nullable AttributeSet attrs) {
+        return getContext().obtainStyledAttributes(
+                attrs, R.styleable.FormUI, R.attr.formStyle, R.style.Widget_App_Form);
+    }
 
-            borderBottomStartMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomStartMargin, DensityUtil.dp2px(getContext(), 16f));
-            borderBottomEndMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomEndMargin, 0);
-
-            labelStartMargin = typedArray.getDimension(R.styleable.FormUI_labelStartMargin, DensityUtil.dp2px(getContext(), 16f));
-            labelEndMargin = typedArray.getDimension(R.styleable.FormUI_labelEndMargin, 0);
-
-            labelTopMargin = typedArray.getDimension(R.styleable.FormUI_labelTopMargin, DensityUtil.dp2px(getContext(), 12f));
-            labelBottomMargin = typedArray.getDimension(R.styleable.FormUI_labelBottomMargin, DensityUtil.dp2px(getContext(), 12f));
-
-            textStartMargin = typedArray.getDimension(R.styleable.FormUI_textStartMargin, DensityUtil.dp2px(getContext(), 12f));
-            textEndMargin = typedArray.getDimension(R.styleable.FormUI_textEndMargin, DensityUtil.dp2px(getContext(), 16f));
-
-            defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
-
-            formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
-            formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ThemeAttrs.onSurface(getContext()));
-            formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
-            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ThemeAttrs.outlineVariant(getContext()));
-            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ThemeAttrs.onSurface(getContext()));
-            helperText = typedArray.getString(R.styleable.FormUI_formHelperText);
-            counterEnabled = typedArray.getBoolean(R.styleable.FormUI_formCounterEnabled, false);
-            if (typedArray.hasValue(R.styleable.FormUI_formErrorText)) {
-                errorTextPending = typedArray.getString(R.styleable.FormUI_formErrorText);
-            }
-            required = typedArray.getBoolean(R.styleable.FormUI_required, false);
-            bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
-            line = typedArray.getInteger(R.styleable.FormUI_line, 1);
-            labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
-            labelVerticalAlign = typedArray.getInt(R.styleable.FormUI_labelVerticalAlign, LabelVerticalAlignEnum.TOP_TO_VALUE.value);
-            textAlign = typedArray.getInt(R.styleable.FormUI_textAlign, TextAlignEnum.RIGHT.value);
-            labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
-
-            showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
-            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
-            labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
-            labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
-            labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin, 0);
-            labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin, 0);
-            requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
+    protected void initAttr(@Nullable AttributeSet attrs) {
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
+            applyFormUiTypedArray(typedArray);
+        } finally {
             typedArray.recycle();
-        } else {
-            formTextColor = ThemeAttrs.onSurface(getContext());
-            formHintTextColor = ThemeAttrs.onSurfaceVariant(getContext());
-            labelTextColor = ThemeAttrs.onSurface(getContext());
-            borderBottomColor = ThemeAttrs.outlineVariant(getContext());
-            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
-            borderBottomStartMargin = DensityUtil.dp2px(getContext(), 16f);
-            borderBottomEndMargin = 0;
-            labelStartMargin = DensityUtil.dp2px(getContext(), 16f);
-            labelEndMargin = 0;
-            labelTopMargin= DensityUtil.dp2px(getContext(), 12f);
-            labelBottomMargin = DensityUtil.dp2px(getContext(), 12f);
-            textStartMargin = DensityUtil.dp2px(getContext(), 12f);
-            textEndMargin = DensityUtil.dp2px(getContext(), 16f);
-            defaultTextMargin = DensityUtil.dp2px(getContext(), 12f);
-            formTextSize = DensityUtil.sp2px(getContext(), 14);
-            labelAlign = LabelAlignEnum.LEFT.value;
-            textAlign = TextAlignEnum.RIGHT.value;
-            labelVerticalAlign = LabelVerticalAlignEnum.TOP_TO_VALUE.value;
-            labelTextStyle = LabelTextStyleEnum.NORMAL.value;
-            showLabelIcon = false;
-            labelIconWidth = DensityUtil.dp2px(getContext(), 0);
-            labelIconHeight = DensityUtil.dp2px(getContext(), 0);
-            labelIconStartMargin = 0;
-            labelIconEndMargin = DensityUtil.dp2px(getContext(), 8);
-            requiredStartMargin = DensityUtil.dp2px(getContext(), 4f);
         }
+    }
+
+    /**
+     * 从 TypedArray 灌入字段。供 initAttr / setFormStyleOverlay 复用。
+     */
+    protected void applyFormUiTypedArray(@NonNull TypedArray typedArray) {
+        Context ctx = getContext();
+        float defLabelSize = ctx.getResources().getDimension(R.dimen.form_label_text_size);
+        float defTextSize = ctx.getResources().getDimension(R.dimen.form_text_size);
+        float defRequiredSize = ctx.getResources().getDimension(R.dimen.form_required_size);
+
+        if (typedArray.hasValue(R.styleable.FormUI_label)) {
+            labelString = typedArray.getString(R.styleable.FormUI_label);
+        }
+        if (typedArray.hasValue(R.styleable.FormUI_hint)) {
+            String h = typedArray.getString(R.styleable.FormUI_hint);
+            if (h != null) {
+                hintString = h;
+            }
+        }
+        formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, defLabelSize);
+        formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, defTextSize);
+        formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, defRequiredSize);
+
+        borderBottomStartMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_border_bottom_start_margin));
+        borderBottomEndMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_border_bottom_end_margin));
+        bottomBorderHeight = typedArray.getDimension(R.styleable.FormUI_bottomBorderHeight,
+                ctx.getResources().getDimension(R.dimen.form_bottom_border_height));
+
+        labelStartMargin = typedArray.getDimension(R.styleable.FormUI_labelStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_start_margin));
+        labelEndMargin = typedArray.getDimension(R.styleable.FormUI_labelEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_end_margin));
+        labelTopMargin = typedArray.getDimension(R.styleable.FormUI_labelTopMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_top_margin));
+        labelBottomMargin = typedArray.getDimension(R.styleable.FormUI_labelBottomMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_bottom_margin));
+
+        textStartMargin = typedArray.getDimension(R.styleable.FormUI_textStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_text_start_margin));
+        textEndMargin = typedArray.getDimension(R.styleable.FormUI_textEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_text_end_margin));
+        defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin,
+                ctx.getResources().getDimension(R.dimen.form_default_text_margin));
+        requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_required_start_margin));
+
+        formTextColor = typedArray.getColor(R.styleable.FormUI_formTextColor, ThemeAttrs.onSurface(ctx));
+        formHintTextColor = typedArray.getColor(R.styleable.FormUI_formHintTextColor, ThemeAttrs.onSurfaceVariant(ctx));
+        borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ThemeAttrs.outlineVariant(ctx));
+        labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ThemeAttrs.onSurface(ctx));
+        requiredTextColor = typedArray.getColor(R.styleable.FormUI_requiredTextColor, ThemeAttrs.error(ctx));
+        if (typedArray.hasValue(R.styleable.FormUI_requiredText)) {
+            String rt = typedArray.getString(R.styleable.FormUI_requiredText);
+            if (rt != null) {
+                requiredText = rt;
+            }
+        }
+
+        helperText = typedArray.getString(R.styleable.FormUI_formHelperText);
+        counterEnabled = typedArray.getBoolean(R.styleable.FormUI_formCounterEnabled, false);
+        if (typedArray.hasValue(R.styleable.FormUI_formErrorText)) {
+            errorTextPending = typedArray.getString(R.styleable.FormUI_formErrorText);
+        }
+        required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+        bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
+        line = typedArray.getInteger(R.styleable.FormUI_line, 1);
+        labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
+        labelVerticalAlign = typedArray.getInt(R.styleable.FormUI_labelVerticalAlign, LabelVerticalAlignEnum.TOP_TO_VALUE.value);
+        textAlign = typedArray.getInt(R.styleable.FormUI_textAlign, TextAlignEnum.RIGHT.value);
+        labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
+
+        showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
+        if (typedArray.hasValue(R.styleable.FormUI_labelIcon)) {
+            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
+        }
+        labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
+        labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
+        labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_icon_start_margin));
+        labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_icon_end_margin));
     }
 
     protected void init() {
@@ -482,10 +517,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         tvRequired = new MaterialTextView(getContext());
         tvRequired.setId(View.generateViewId());
         tvRequired.setLines(1);
-        tvRequired.setText("*");
+        tvRequired.setText(requiredText != null ? requiredText : "*");
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
-        tvRequired.setGravity(android.view.Gravity.CENTER);
-        tvRequired.setTextColor(ThemeAttrs.error(getContext()));
+        tvRequired.setGravity(Gravity.CENTER);
+        tvRequired.setTextColor(requiredTextColor);
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
@@ -544,14 +579,12 @@ public class FormConstraintLayout extends CornerConstraintLayout {
 
     public void createBottomLine() {
         if (!bottomBorder) {
-            //不展示底部边框的情况下
             return;
         }
         vBorderBottom = new View(getContext());
         vBorderBottom.setId(View.generateViewId());
-        // 设置布局参数
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                0, DensityUtil.dp2px(getContext(), 1f));
+        int heightPx = Math.max(1, Math.round(bottomBorderHeight));
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(0, heightPx);
         params.setMarginStart((int) borderBottomStartMargin);
         params.setMarginEnd((int) borderBottomEndMargin);
         vBorderBottom.setBackgroundColor(borderBottomColor);
@@ -698,7 +731,209 @@ public class FormConstraintLayout extends CornerConstraintLayout {
 
     public void setRequired(boolean required) {
         this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        if (tvRequired != null) {
+            tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    /**
+     * 运行时套一层 style（仅 FormUI 相关 attr），立即刷新已创建的子控件外观。
+     * 不会重建子 View，适合换肤场景。
+     */
+    public void setFormStyleOverlay(@StyleRes int styleRes) {
+        if (styleRes == 0) {
+            return;
+        }
+        TypedArray typedArray = getContext().obtainStyledAttributes(styleRes, R.styleable.FormUI);
+        try {
+            applyFormUiTypedArray(typedArray);
+        } finally {
+            typedArray.recycle();
+        }
+        applyChromeFromFields();
+    }
+
+    /**
+     * 批量应用配置。styleOverlay 先于字段；字段非 null 时覆盖 style。
+     */
+    public void applyFormConfig(@NonNull FormUiConfig config) {
+        if (config.styleOverlay != 0) {
+            TypedArray typedArray = getContext().obtainStyledAttributes(config.styleOverlay, R.styleable.FormUI);
+            try {
+                applyFormUiTypedArray(typedArray);
+            } finally {
+                typedArray.recycle();
+            }
+        }
+        if (config.formTextColor != null) {
+            formTextColor = config.formTextColor;
+        }
+        if (config.formHintTextColor != null) {
+            formHintTextColor = config.formHintTextColor;
+        }
+        if (config.labelTextColor != null) {
+            labelTextColor = config.labelTextColor;
+        }
+        if (config.borderBottomColor != null) {
+            borderBottomColor = config.borderBottomColor;
+        }
+        if (config.requiredTextColor != null) {
+            requiredTextColor = config.requiredTextColor;
+        }
+        if (config.formLabelTextSize != null) {
+            formLabelTextSize = config.formLabelTextSize;
+        }
+        if (config.formTextSize != null) {
+            formTextSize = config.formTextSize;
+        }
+        if (config.formRequiredSize != null) {
+            formRequiredSize = config.formRequiredSize;
+        }
+        if (config.bottomBorderHeight != null) {
+            bottomBorderHeight = config.bottomBorderHeight;
+        }
+        if (config.borderBottomStartMargin != null) {
+            borderBottomStartMargin = config.borderBottomStartMargin;
+        }
+        if (config.borderBottomEndMargin != null) {
+            borderBottomEndMargin = config.borderBottomEndMargin;
+        }
+        if (config.labelStartMargin != null) {
+            labelStartMargin = config.labelStartMargin;
+        }
+        if (config.labelEndMargin != null) {
+            labelEndMargin = config.labelEndMargin;
+        }
+        if (config.labelTopMargin != null) {
+            labelTopMargin = config.labelTopMargin;
+        }
+        if (config.labelBottomMargin != null) {
+            labelBottomMargin = config.labelBottomMargin;
+        }
+        if (config.textStartMargin != null) {
+            textStartMargin = config.textStartMargin;
+        }
+        if (config.textEndMargin != null) {
+            textEndMargin = config.textEndMargin;
+        }
+        if (config.defaultTextMargin != null) {
+            defaultTextMargin = config.defaultTextMargin;
+        }
+        if (config.requiredStartMargin != null) {
+            requiredStartMargin = config.requiredStartMargin;
+        }
+        if (config.bottomBorder != null) {
+            bottomBorder = config.bottomBorder;
+        }
+        if (config.required != null) {
+            required = config.required;
+        }
+        if (config.requiredText != null) {
+            requiredText = config.requiredText;
+        }
+        if (config.hint != null) {
+            hintString = config.hint;
+        }
+        if (config.label != null) {
+            labelString = config.label;
+        }
+        if (config.labelAlign != null) {
+            labelAlign = config.labelAlign;
+        }
+        if (config.textAlign != null) {
+            textAlign = config.textAlign;
+        }
+        if (config.labelVerticalAlign != null) {
+            labelVerticalAlign = config.labelVerticalAlign;
+        }
+        if (config.labelTextStyle != null) {
+            labelTextStyle = config.labelTextStyle;
+        }
+        if (config.line != null) {
+            line = config.line;
+        }
+        if (config.showLabelIcon != null) {
+            showLabelIcon = config.showLabelIcon;
+        }
+        if (config.labelIcon != null) {
+            labelIcon = config.labelIcon;
+        }
+        if (config.labelIconWidth != null) {
+            labelIconWidth = config.labelIconWidth;
+        }
+        if (config.labelIconHeight != null) {
+            labelIconHeight = config.labelIconHeight;
+        }
+        if (config.labelIconStartMargin != null) {
+            labelIconStartMargin = config.labelIconStartMargin;
+        }
+        if (config.labelIconEndMargin != null) {
+            labelIconEndMargin = config.labelIconEndMargin;
+        }
+        applyChromeFromFields();
+        if (config.labelAlign != null || config.textAlign != null || config.labelVerticalAlign != null) {
+            applyAlignLayout();
+        }
+    }
+
+    /**
+     * 把当前字段刷到已创建的 label / required / 正文 / 底部分割线，不重建子 View。
+     */
+    protected void applyChromeFromFields() {
+        if (tvLabel != null) {
+            tvLabel.setTextColor(labelTextColor);
+            tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+            if (labelString != null) {
+                tvLabel.setText(labelString);
+            }
+            if (LabelTextStyleEnum.BOLD.value == labelTextStyle) {
+                tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            } else {
+                tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.NORMAL);
+            }
+        }
+        if (tvRequired != null) {
+            tvRequired.setText(requiredText != null ? requiredText : "*");
+            tvRequired.setTextColor(requiredTextColor);
+            tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+            tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        }
+        if (tvSelection instanceof MaterialTextView textView) {
+            textView.setTextColor(formTextColor);
+            textView.setHintTextColor(formHintTextColor);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+            if (hintString != null) {
+                textView.setHint(hintString);
+            }
+        } else {
+            EditText bound = resolveBoundEditText();
+            if (bound != null) {
+                bound.setTextColor(formTextColor);
+                bound.setHintTextColor(formHintTextColor);
+                bound.setTextSize(TypedValue.COMPLEX_UNIT_PX, formTextSize);
+                if (hintString != null) {
+                    bound.setHint(hintString);
+                }
+            }
+        }
+        if (ivLabelIcon != null && labelIcon != null) {
+            ivLabelIcon.setImageDrawable(labelIcon);
+        }
+        if (vBorderBottom != null) {
+            vBorderBottom.setBackgroundColor(borderBottomColor);
+            ConstraintLayout.LayoutParams params = (LayoutParams) vBorderBottom.getLayoutParams();
+            if (params != null) {
+                params.height = Math.max(1, Math.round(bottomBorderHeight));
+                params.setMarginStart((int) borderBottomStartMargin);
+                params.setMarginEnd((int) borderBottomEndMargin);
+                vBorderBottom.setLayoutParams(params);
+            }
+            vBorderBottom.setVisibility(bottomBorder ? View.VISIBLE : View.GONE);
+        } else if (bottomBorder) {
+            createBottomLine();
+        }
+        restoreLabelChromeParams();
+        applySelectionAlignParams();
     }
 
     public CharSequence getText() {
@@ -816,6 +1051,67 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     }
 
     /**
+     * 标签在顶部，或标签在左且正文居左时，wrap_content 控件贴起始侧。
+     */
+    protected boolean isSelectionStartAligned() {
+        return LabelAlignEnum.TOP.value == labelAlign || TextAlignEnum.LEFT.value == textAlign;
+    }
+
+    /**
+     * 开关 / 复选 / 步进 / 评分等 wrap_content 正文：只连水平方向的一侧，避免和 label 拉成 chain。
+     * 居右只贴 parent END，居左只贴在 label/required 后面；label 始终留在左侧。
+     */
+    protected void layoutCompactSelection() {
+        if (tvSelection == null) {
+            return;
+        }
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(this);
+        applyCompactSelectionHorizontalConstraints(constraintSet);
+        if (LabelAlignEnum.TOP.value == labelAlign) {
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.BOTTOM);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        }
+        constraintSet.setMargin(tvSelection.getId(), ConstraintSet.TOP, (int) defaultTextMargin);
+        constraintSet.setMargin(tvSelection.getId(), ConstraintSet.BOTTOM, (int) defaultTextMargin);
+        constraintSet.applyTo(this);
+    }
+
+    /**
+     * wrap_content 正文水平约束：左右只连一侧，防止 GONE 的 required 把 label 和正文收成一条 chain。
+     * {@link ConstraintSet#clear(int, int)} 会清掉对应边距，connect 之后必须把 textStart/EndMargin 写回，
+     * 否则首次 layout（不会走 {@link #applySelectionAlignParams()}）会贴边。
+     */
+    protected void applyCompactSelectionHorizontalConstraints(ConstraintSet set) {
+        if (tvSelection == null) {
+            return;
+        }
+        int id = tvSelection.getId();
+        set.clear(id, ConstraintSet.START);
+        set.clear(id, ConstraintSet.END);
+        boolean top = LabelAlignEnum.TOP.value == labelAlign;
+        int startMargin = top ? (int) textEndMargin : (int) textStartMargin;
+        int endMargin = (int) textEndMargin;
+        if (top) {
+            set.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
+            if (TextAlignEnum.LEFT.value == textAlign) {
+                int startAnchorId = (tvRequired != null && tvRequired.getVisibility() != View.GONE)
+                        ? tvRequired.getId()
+                        : tvLabel.getId();
+                set.connect(id, ConstraintSet.START, startAnchorId, ConstraintSet.END);
+            } else {
+                set.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            }
+        }
+        set.setMargin(id, ConstraintSet.START, startMargin);
+        set.setMargin(id, ConstraintSet.END, endMargin);
+    }
+
+    /**
      * 按当前 {@link #labelAlign}/{@link #textAlign} 还原 createText 时的宽高、边距与文字方向。
      */
     protected void applySelectionAlignParams() {
@@ -865,7 +1161,6 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         if (params == null) {
             return;
         }
-        boolean top = LabelAlignEnum.TOP.value == labelAlign;
         ConstraintSet set = new ConstraintSet();
         set.clone(this);
         int width = params.width == 0 ? ConstraintSet.MATCH_CONSTRAINT
@@ -874,13 +1169,13 @@ public class FormConstraintLayout extends CornerConstraintLayout {
                 : (params.height == LayoutParams.WRAP_CONTENT ? ConstraintSet.WRAP_CONTENT : params.height);
         set.constrainWidth(tvSelection.getId(), width);
         set.constrainHeight(tvSelection.getId(), height);
+        if (!selectionUsesMatchConstraint()) {
+            applyCompactSelectionHorizontalConstraints(set);
+        }
         set.setMargin(tvSelection.getId(), ConstraintSet.START, params.getMarginStart());
         set.setMargin(tvSelection.getId(), ConstraintSet.END, params.getMarginEnd());
         set.setMargin(tvSelection.getId(), ConstraintSet.TOP, params.topMargin);
         set.setMargin(tvSelection.getId(), ConstraintSet.BOTTOM, params.bottomMargin);
-        if (!selectionUsesMatchConstraint()) {
-            set.setHorizontalBias(tvSelection.getId(), top ? 0f : 1f);
-        }
         set.applyTo(this);
     }
 

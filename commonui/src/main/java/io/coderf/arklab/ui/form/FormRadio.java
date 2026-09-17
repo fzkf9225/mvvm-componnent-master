@@ -155,7 +155,7 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
             radioContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             return;
         }
-        if (LabelAlignEnum.TOP.value == labelAlign) {
+        if (isSelectionStartAligned()) {
             radioContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         } else {
             radioContainer.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);

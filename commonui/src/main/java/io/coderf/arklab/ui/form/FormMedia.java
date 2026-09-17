@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textview.MaterialTextView;
+import androidx.annotation.StyleRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.core.request.RequestUi;
@@ -39,7 +41,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/17 formStyle / dimens / FormUiConfig 与 FormConstraintLayout 对齐
  */
 public abstract class FormMedia extends CornerConstraintLayout {
     public static final String TAG = "FormUi";
@@ -75,6 +77,18 @@ public abstract class FormMedia extends CornerConstraintLayout {
      * 是否必填文字大小
      */
     protected float formRequiredSize;
+    /**
+     * 必填标记颜色，默认 ThemeAttrs.error
+     */
+    protected int requiredTextColor;
+    /**
+     * 必填标记文案，默认 *
+     */
+    protected String requiredText = "*";
+    /**
+     * 底部边框高度，默认 1dp
+     */
+    protected float bottomBorderHeight;
     /**
      * 文本大小
      */
@@ -263,124 +277,127 @@ public abstract class FormMedia extends CornerConstraintLayout {
         init();
     }
 
-    protected void initAttr(AttributeSet attrs) {
-        if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+    /**
+     * 统一读取 FormUI：控件 XML > 主题 formStyle > Widget.App.Form > dimens / ThemeAttrs。
+     */
+    protected TypedArray obtainFormUi(@Nullable AttributeSet attrs) {
+        return getContext().obtainStyledAttributes(
+                attrs, R.styleable.FormUI, R.attr.formStyle, R.style.Widget_App_Form);
+    }
 
-            itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor, 0xFFF1F3F2);
+    protected void initAttr(@Nullable AttributeSet attrs) {
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
+            applyFormUiTypedArray(typedArray);
+        } finally {
+            typedArray.recycle();
+        }
+    }
+
+    /**
+     * 从 TypedArray 灌入字段。供 initAttr / setFormStyleOverlay 复用。
+     */
+    protected void applyFormUiTypedArray(@NonNull TypedArray typedArray) {
+        Context ctx = getContext();
+        float defLabelSize = ctx.getResources().getDimension(R.dimen.form_label_text_size);
+        float defTextSize = ctx.getResources().getDimension(R.dimen.form_text_size);
+        float defRequiredSize = ctx.getResources().getDimension(R.dimen.form_required_size);
+
+        itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor, 0xFFF1F3F2);
+        if (typedArray.hasValue(R.styleable.FormUI_label)) {
             labelString = typedArray.getString(R.styleable.FormUI_label);
+        }
+        if (typedArray.hasValue(R.styleable.FormUI_saveSubPath)) {
             saveSubPath = typedArray.getString(R.styleable.FormUI_saveSubPath);
-            required = typedArray.getBoolean(R.styleable.FormUI_required, false);
-            writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
-            requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
-            protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
-            labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
-            bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
-            formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, DensityUtil.sp2px(getContext(), 14));
-            formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, DensityUtil.sp2px(getContext(), 14));
+        }
+        required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+        writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
+        requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
+        protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
+        labelTextColor = typedArray.getColor(R.styleable.FormUI_labelTextColor, ThemeAttrs.onSurface(ctx));
+        bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
+        formLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formLabelTextSize, defLabelSize);
+        formRequiredSize = typedArray.getDimension(R.styleable.FormUI_formRequiredSize, defRequiredSize);
+        formTextSize = typedArray.getDimension(R.styleable.FormUI_formTextSize, defTextSize);
+        requiredTextColor = typedArray.getColor(R.styleable.FormUI_requiredTextColor, ThemeAttrs.error(ctx));
+        if (typedArray.hasValue(R.styleable.FormUI_requiredText)) {
+            String rt = typedArray.getString(R.styleable.FormUI_requiredText);
+            if (rt != null) {
+                requiredText = rt;
+            }
+        }
 
-            radius = typedArray.getDimension(R.styleable.FormUI_mediaItemRadius, DensityUtil.dp2px(getContext(), 4));
+        radius = typedArray.getDimension(R.styleable.FormUI_mediaItemRadius, DensityUtil.dp2px(ctx, 4));
+        columnCount = typedArray.getInt(R.styleable.FormUI_columnCount, 4);
+        columnMargin = typedArray.getDimension(R.styleable.FormUI_columnMargin, DensityUtil.dp2px(ctx, 16f));
 
-            columnCount = typedArray.getInt(R.styleable.FormUI_columnCount, 4);
-            borderBottomStartMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomStartMargin, DensityUtil.dp2px(getContext(), 16f));
-            borderBottomEndMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomEndMargin, 0);
+        borderBottomStartMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_border_bottom_start_margin));
+        borderBottomEndMargin = typedArray.getDimension(R.styleable.FormUI_borderBottomEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_border_bottom_end_margin));
+        bottomBorderHeight = typedArray.getDimension(R.styleable.FormUI_bottomBorderHeight,
+                ctx.getResources().getDimension(R.dimen.form_bottom_border_height));
+        borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, ThemeAttrs.outlineVariant(ctx));
 
-            labelStartMargin = typedArray.getDimension(R.styleable.FormUI_labelStartMargin, DensityUtil.dp2px(getContext(), 16f));
-            labelEndMargin = typedArray.getDimension(R.styleable.FormUI_labelEndMargin, 0);
+        labelStartMargin = typedArray.getDimension(R.styleable.FormUI_labelStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_start_margin));
+        labelEndMargin = typedArray.getDimension(R.styleable.FormUI_labelEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_end_margin));
+        textStartMargin = typedArray.getDimension(R.styleable.FormUI_textStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_text_start_margin));
+        textEndMargin = typedArray.getDimension(R.styleable.FormUI_textEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_text_end_margin));
+        defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin,
+                ctx.getResources().getDimension(R.dimen.form_default_text_margin));
+        requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_required_start_margin));
+        labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
 
-            textStartMargin = typedArray.getDimension(R.styleable.FormUI_textStartMargin, DensityUtil.dp2px(getContext(), 12f));
-            textEndMargin = typedArray.getDimension(R.styleable.FormUI_textEndMargin, DensityUtil.dp2px(getContext(), 16f));
-
-            defaultTextMargin = typedArray.getDimension(R.styleable.FormUI_defaultTextMargin, DensityUtil.dp2px(getContext(), 12f));
-
-            columnMargin = typedArray.getDimension(R.styleable.FormUI_columnMargin, DensityUtil.dp2px(getContext(), 16f));
-
-            labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
-
-            borderBottomColor = typedArray.getColor(R.styleable.FormUI_borderBottomColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext()));
-
+        if (typedArray.hasValue(R.styleable.FormUI_placeholderImage)) {
             placeholderImage = typedArray.getDrawable(R.styleable.FormUI_placeholderImage);
-            if (placeholderImage == null) {
-                placeholderImage = Config.getInstance().getDefaultPlaceholderDrawable(getContext());
-            }
+        }
+        if (placeholderImage == null) {
+            placeholderImage = Config.getInstance().getDefaultPlaceholderDrawable(ctx);
+        }
+        if (typedArray.hasValue(R.styleable.FormUI_errorImage)) {
             errorImage = typedArray.getDrawable(R.styleable.FormUI_errorImage);
-            if (errorImage == null) {
-                errorImage = Config.getInstance().getDefaultErrorImageDrawable(getContext());
-            }
-            autoUpload = typedArray.getBoolean(R.styleable.FormUI_autoUpload, false);
+        }
+        if (errorImage == null) {
+            errorImage = Config.getInstance().getDefaultErrorImageDrawable(ctx);
+        }
+        autoUpload = typedArray.getBoolean(R.styleable.FormUI_autoUpload, false);
+        if (typedArray.hasValue(R.styleable.FormUI_fileType)) {
             String fileTypeStr = typedArray.getString(R.styleable.FormUI_fileType);
             if (!TextUtils.isEmpty(fileTypeStr)) {
                 fileType = fileTypeStr.split(",");
-            } else {
-                fileType = defaultFileType();
             }
-            // 右上角占位按钮图片
-            clearImage = typedArray.getDrawable(R.styleable.FormUI_clearImage);
-            if (clearImage == null) {
-                clearImage = ContextCompat.getDrawable(getContext(), io.coderf.arklab.common.R.drawable.ib_clear_image_selector);
-            }
-            // 默认右上角占位按钮图片宽度
-            clearImageWidth = typedArray.getDimension(R.styleable.FormUI_clearImageWidth, DensityUtil.dp2px(getContext(), 24f));
-            // 默认右上角占位按钮图片高度
-            clearImageHeight = typedArray.getDimension(R.styleable.FormUI_clearImageHeight, DensityUtil.dp2px(getContext(), 24f));
-            // 默认右上角占位按钮图片topMargin
-            clearImageTopMargin = typedArray.getDimension(R.styleable.FormUI_clearImageTopMargin, DensityUtil.dp2px(getContext(), -8f));
-            // 默认右上角占位按钮图片endMargin
-            clearImageEndMargin = typedArray.getDimension(R.styleable.FormUI_clearImageEndMargin, DensityUtil.dp2px(getContext(), -8f));
-
-            showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
-            hideTopLabelLayout = typedArray.getBoolean(R.styleable.FormUI_hideTopLabelLayout, false);
-            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
-            labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
-            labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
-            labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin, 0);
-            labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin, 0);
-            requiredStartMargin = typedArray.getDimension(R.styleable.FormUI_requiredStartMargin, DensityUtil.dp2px(getContext(), 4f));
-            typedArray.recycle();
-        } else {
-            itemBgColor = 0xFFF1F3F2;
-            radius = DensityUtil.dp2px(getContext(), 4);
-            fileType = defaultFileType();
-            protocolDialog = true;
-            writeCaptureExifMetadata = true;
-            requireUriPermission = true;
-            labelTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
-            formLabelTextSize = DensityUtil.sp2px(getContext(), 14);
-            formRequiredSize = DensityUtil.sp2px(getContext(), 14);
-            formTextSize = DensityUtil.sp2px(getContext(), 14);
-            borderBottomStartMargin = DensityUtil.dp2px(getContext(), 16f);
-            borderBottomEndMargin = 0;
-            labelStartMargin = DensityUtil.dp2px(getContext(), 16f);
-            labelEndMargin = 0;
-            textStartMargin = DensityUtil.dp2px(getContext(), 12f);
-            textEndMargin = DensityUtil.dp2px(getContext(), 16f);
-            defaultTextMargin = DensityUtil.dp2px(getContext(), 12f);
-            labelTextStyle = LabelTextStyleEnum.NORMAL.value;
-            columnCount = 4;
-            borderBottomColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.outlineVariant(getContext());
-            columnMargin = DensityUtil.dp2px(getContext(), 16f);
-            placeholderImage = Config.getInstance().getDefaultPlaceholderDrawable(getContext());
-            errorImage = Config.getInstance().getDefaultErrorImageDrawable(getContext());
-            autoUpload = false;
-            // 右上角占位按钮图片
-            clearImage = ContextCompat.getDrawable(getContext(), io.coderf.arklab.common.R.drawable.ib_clear_image_selector);
-            // 默认右上角占位按钮图片宽度
-            clearImageWidth = DensityUtil.dp2px(getContext(), 24f);
-            // 默认右上角占位按钮图片高度
-            clearImageHeight = DensityUtil.dp2px(getContext(), 24f);
-            // 默认右上角占位按钮图片topMargin
-            clearImageTopMargin = DensityUtil.dp2px(getContext(), -8f);
-            // 默认右上角占位按钮图片endMargin
-            clearImageEndMargin = DensityUtil.dp2px(getContext(), -8f);
-            hideTopLabelLayout = false;
-            showLabelIcon = false;
-            labelIconWidth = DensityUtil.dp2px(getContext(), 0);
-            labelIconHeight = DensityUtil.dp2px(getContext(), 0);
-            labelIconStartMargin = 0;
-            labelIconEndMargin = DensityUtil.dp2px(getContext(), 8);
-            requiredStartMargin = DensityUtil.dp2px(getContext(), 4f);
         }
+        if (fileType == null) {
+            fileType = defaultFileType();
+        }
+
+        if (typedArray.hasValue(R.styleable.FormUI_clearImage)) {
+            clearImage = typedArray.getDrawable(R.styleable.FormUI_clearImage);
+        }
+        if (clearImage == null) {
+            clearImage = ContextCompat.getDrawable(ctx, io.coderf.arklab.common.R.drawable.ib_clear_image_selector);
+        }
+        clearImageWidth = typedArray.getDimension(R.styleable.FormUI_clearImageWidth, DensityUtil.dp2px(ctx, 24f));
+        clearImageHeight = typedArray.getDimension(R.styleable.FormUI_clearImageHeight, DensityUtil.dp2px(ctx, 24f));
+        clearImageTopMargin = typedArray.getDimension(R.styleable.FormUI_clearImageTopMargin, DensityUtil.dp2px(ctx, -8f));
+        clearImageEndMargin = typedArray.getDimension(R.styleable.FormUI_clearImageEndMargin, DensityUtil.dp2px(ctx, -8f));
+
+        showLabelIcon = typedArray.getBoolean(R.styleable.FormUI_showLabelIcon, false);
+        hideTopLabelLayout = typedArray.getBoolean(R.styleable.FormUI_hideTopLabelLayout, false);
+        if (typedArray.hasValue(R.styleable.FormUI_labelIcon)) {
+            labelIcon = typedArray.getDrawable(R.styleable.FormUI_labelIcon);
+        }
+        labelIconWidth = typedArray.getDimension(R.styleable.FormUI_labelIconWidth, 0);
+        labelIconHeight = typedArray.getDimension(R.styleable.FormUI_labelIconHeight, 0);
+        labelIconStartMargin = typedArray.getDimension(R.styleable.FormUI_labelIconStartMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_icon_start_margin));
+        labelIconEndMargin = typedArray.getDimension(R.styleable.FormUI_labelIconEndMargin,
+                ctx.getResources().getDimension(R.dimen.form_label_icon_end_margin));
     }
 
     public abstract String[] defaultFileType();
@@ -507,10 +524,10 @@ public abstract class FormMedia extends CornerConstraintLayout {
         tvRequired = new MaterialTextView(getContext());
         tvRequired.setId(View.generateViewId());
         tvRequired.setLines(1);
-        tvRequired.setText("*");
+        tvRequired.setText(requiredText != null ? requiredText : "*");
         tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
         tvRequired.setGravity(Gravity.CENTER);
-        tvRequired.setTextColor(ThemeAttrs.error(getContext()));
+        tvRequired.setTextColor(requiredTextColor);
         tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
 
         LayoutParams params = new LayoutParams(
@@ -541,14 +558,12 @@ public abstract class FormMedia extends CornerConstraintLayout {
 
     public void createBottomLine() {
         if (!bottomBorder) {
-            //不展示底部边框的情况下
             return;
         }
         vBorderBottom = new View(getContext());
         vBorderBottom.setId(View.generateViewId());
-        // 设置布局参数
-        LayoutParams params = new LayoutParams(
-                0, DensityUtil.dp2px(getContext(), 1f));
+        int heightPx = Math.max(1, Math.round(bottomBorderHeight));
+        LayoutParams params = new LayoutParams(0, heightPx);
         params.setMarginStart((int) borderBottomStartMargin);
         params.setMarginEnd((int) borderBottomEndMargin);
         vBorderBottom.setBackgroundColor(borderBottomColor);
@@ -621,7 +636,159 @@ public abstract class FormMedia extends CornerConstraintLayout {
 
     public void setRequired(boolean required) {
         this.required = required;
-        tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        if (tvRequired != null) {
+            tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    /**
+     * 运行时套一层 FormUI style，立即刷新 label / required / 底线外观。
+     */
+    public void setFormStyleOverlay(@StyleRes int styleRes) {
+        if (styleRes == 0) {
+            return;
+        }
+        TypedArray typedArray = getContext().obtainStyledAttributes(styleRes, R.styleable.FormUI);
+        try {
+            applyFormUiTypedArray(typedArray);
+        } finally {
+            typedArray.recycle();
+        }
+        applyChromeFromFields();
+    }
+
+    /**
+     * 批量应用与 FormConstraintLayout 共用的 FormUiConfig（媒体专属字段仍用 attr / setter）。
+     */
+    public void applyFormConfig(@NonNull FormUiConfig config) {
+        if (config.styleOverlay != 0) {
+            TypedArray typedArray = getContext().obtainStyledAttributes(config.styleOverlay, R.styleable.FormUI);
+            try {
+                applyFormUiTypedArray(typedArray);
+            } finally {
+                typedArray.recycle();
+            }
+        }
+        if (config.labelTextColor != null) {
+            labelTextColor = config.labelTextColor;
+        }
+        if (config.borderBottomColor != null) {
+            borderBottomColor = config.borderBottomColor;
+        }
+        if (config.requiredTextColor != null) {
+            requiredTextColor = config.requiredTextColor;
+        }
+        if (config.formLabelTextSize != null) {
+            formLabelTextSize = config.formLabelTextSize;
+        }
+        if (config.formTextSize != null) {
+            formTextSize = config.formTextSize;
+        }
+        if (config.formRequiredSize != null) {
+            formRequiredSize = config.formRequiredSize;
+        }
+        if (config.bottomBorderHeight != null) {
+            bottomBorderHeight = config.bottomBorderHeight;
+        }
+        if (config.borderBottomStartMargin != null) {
+            borderBottomStartMargin = config.borderBottomStartMargin;
+        }
+        if (config.borderBottomEndMargin != null) {
+            borderBottomEndMargin = config.borderBottomEndMargin;
+        }
+        if (config.labelStartMargin != null) {
+            labelStartMargin = config.labelStartMargin;
+        }
+        if (config.labelEndMargin != null) {
+            labelEndMargin = config.labelEndMargin;
+        }
+        if (config.textStartMargin != null) {
+            textStartMargin = config.textStartMargin;
+        }
+        if (config.textEndMargin != null) {
+            textEndMargin = config.textEndMargin;
+        }
+        if (config.defaultTextMargin != null) {
+            defaultTextMargin = config.defaultTextMargin;
+        }
+        if (config.requiredStartMargin != null) {
+            requiredStartMargin = config.requiredStartMargin;
+        }
+        if (config.bottomBorder != null) {
+            bottomBorder = config.bottomBorder;
+        }
+        if (config.required != null) {
+            required = config.required;
+        }
+        if (config.requiredText != null) {
+            requiredText = config.requiredText;
+        }
+        if (config.label != null) {
+            labelString = config.label;
+        }
+        if (config.labelTextStyle != null) {
+            labelTextStyle = config.labelTextStyle;
+        }
+        if (config.showLabelIcon != null) {
+            showLabelIcon = config.showLabelIcon;
+        }
+        if (config.labelIcon != null) {
+            labelIcon = config.labelIcon;
+        }
+        if (config.labelIconWidth != null) {
+            labelIconWidth = config.labelIconWidth;
+        }
+        if (config.labelIconHeight != null) {
+            labelIconHeight = config.labelIconHeight;
+        }
+        if (config.labelIconStartMargin != null) {
+            labelIconStartMargin = config.labelIconStartMargin;
+        }
+        if (config.labelIconEndMargin != null) {
+            labelIconEndMargin = config.labelIconEndMargin;
+        }
+        applyChromeFromFields();
+    }
+
+    /**
+     * 把当前字段刷到已创建的 label / required / 底线，不重建列表。
+     */
+    protected void applyChromeFromFields() {
+        if (tvLabel != null) {
+            tvLabel.setTextColor(labelTextColor);
+            tvLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, formLabelTextSize);
+            if (labelString != null) {
+                tvLabel.setText(labelString);
+            }
+            if (LabelTextStyleEnum.BOLD.value == labelTextStyle) {
+                tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            } else {
+                tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.NORMAL);
+            }
+        }
+        if (tvRequired != null) {
+            tvRequired.setText(requiredText != null ? requiredText : "*");
+            tvRequired.setTextColor(requiredTextColor);
+            tvRequired.setTextSize(TypedValue.COMPLEX_UNIT_PX, formRequiredSize);
+            tvRequired.setVisibility(required ? View.VISIBLE : View.GONE);
+        }
+        if (ivLabelIcon != null && labelIcon != null) {
+            ivLabelIcon.setImageDrawable(labelIcon);
+        }
+        if (vBorderBottom != null) {
+            vBorderBottom.setBackgroundColor(borderBottomColor);
+            LayoutParams params = (LayoutParams) vBorderBottom.getLayoutParams();
+            if (params != null) {
+                params.height = Math.max(1, Math.round(bottomBorderHeight));
+                params.setMarginStart((int) borderBottomStartMargin);
+                params.setMarginEnd((int) borderBottomEndMargin);
+                vBorderBottom.setLayoutParams(params);
+            }
+            vBorderBottom.setVisibility(bottomBorder ? View.VISIBLE : View.GONE);
+        } else if (bottomBorder) {
+            createBottomLine();
+        }
+        applyShowTopLayout();
     }
 
 }

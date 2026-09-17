@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Form 默认尺寸：宿主可在自己 values 中同名覆盖，或通过 formStyle / 控件 attr 覆盖 -->
+    <dimen name="form_label_text_size">14sp</dimen>
+    <dimen name="form_text_size">14sp</dimen>
+    <dimen name="form_required_size">14sp</dimen>
+    <dimen name="form_label_start_margin">16dp</dimen>
+    <dimen name="form_label_end_margin">0dp</dimen>
+    <dimen name="form_label_top_margin">12dp</dimen>
+    <dimen name="form_label_bottom_margin">12dp</dimen>
+    <dimen name="form_text_start_margin">12dp</dimen>
+    <dimen name="form_text_end_margin">16dp</dimen>
+    <dimen name="form_default_text_margin">12dp</dimen>
+    <dimen name="form_border_bottom_start_margin">16dp</dimen>
+    <dimen name="form_border_bottom_end_margin">0dp</dimen>
+    <dimen name="form_bottom_border_height">1dp</dimen>
+    <dimen name="form_required_start_margin">4dp</dimen>
+    <dimen name="form_label_icon_start_margin">0dp</dimen>
+    <dimen name="form_label_icon_end_margin">0dp</dimen>
+</resources>

@@ -176,19 +176,7 @@ public class FormSwitch extends FormConstraintLayout {
 
     @Override
     public void layoutText() {
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(this);
-        if (LabelAlignEnum.TOP.value == labelAlign) {
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, tvLabel.getId(), ConstraintSet.BOTTOM);
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        } else if (LabelAlignEnum.LEFT.value == labelAlign) {
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            constraintSet.connect(tvSelection.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-            constraintSet.setHorizontalBias(tvSelection.getId(), 1f);
-        }
-        constraintSet.applyTo(this);
+        layoutCompactSelection();
     }
 
     @Override

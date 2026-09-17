@@ -31,4 +31,11 @@
     <public name="clear_selected" type="string"/>
     <public name="please_select_the_date_range" type="string"/>
 
+    <!-- Form 默认样式 / 尺寸（宿主可覆盖） -->
+    <public name="Widget.App.Form" type="style"/>
+    <public name="form_label_text_size" type="dimen"/>
+    <public name="form_text_size" type="dimen"/>
+    <public name="form_required_size" type="dimen"/>
+    <public name="form_bottom_border_height" type="dimen"/>
+
 </resources>

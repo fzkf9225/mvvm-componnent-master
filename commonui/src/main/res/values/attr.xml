@@ -17,10 +17,16 @@
         </attr>
         <attr name="clickable" format="boolean" />
     </declare-styleable>
+    <!-- 主题级 Form 默认样式，宿主在 Theme 中设置 formStyle 即可全局生效 -->
+    <attr name="formStyle" format="reference" />
     <!--label文字内容-->
     <attr name="label" format="string" />
     <!--是否展示*，提示必填-->
     <attr name="required" format="boolean" />
+    <!-- 必填标记文字，默认 * -->
+    <attr name="requiredText" format="string" />
+    <!-- 必填标记颜色，默认 ThemeAttrs.error -->
+    <attr name="requiredTextColor" format="reference|color" />
     <!--输入框最大文本输入长度-->
     <attr name="maxLength" format="integer" />
     <!--开始年度，例如：2025-->
@@ -31,6 +37,8 @@
     <attr name="bottomBorder" format="boolean" />
     <!--底部边框颜色-->
     <attr name="borderBottomColor" format="reference|color" />
+    <!--底部边框高度，默认 1dp-->
+    <attr name="bottomBorderHeight" format="dimension" />
     <!--底部边框左侧margin-->
     <attr name="borderBottomStartMargin" format="dimension" />
     <!--当主文本超过一行的时候，需要设置margin不然就会导致多个控件上下挤在一起-->
@@ -256,6 +264,9 @@
         <attr name="hideTopLabelLayout" format="boolean"/>
         <!--是否必填，也就是是否显示必填的*号-->
         <attr name="required" />
+        <!--必填标记文字 / 颜色-->
+        <attr name="requiredText" />
+        <attr name="requiredTextColor" />
         <!--系统相机拍照完成后是否写入姿态/GPS 等到 EXIF（失败则跳过，不影响回调）-->
         <attr name="writeCaptureExifMetadata" format="boolean"/>
         <!--是否调用uri的持久化权限takeUriPermission，默认为true-->
@@ -284,6 +295,8 @@
         <attr name="formRequiredSize"/>
         <!--是否展示底部边框-->
         <attr name="bottomBorder" />
+        <!--底部边框高度-->
+        <attr name="bottomBorderHeight" />
         <!--label文字颜色-->
         <attr name="labelTextColor" />
         <!--正文文字颜色-->
