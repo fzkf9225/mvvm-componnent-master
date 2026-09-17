@@ -24,6 +24,10 @@ namespace：`io.coderf.arklab.ui`
 <item name="formStyle">@style/Widget.App.Form</item>
 ```
 
+### 3.7.2（相对 3.7.0）
+
+新增 `formStyle` 方式可全局配置默认样式能力，新增 `applyFormConfig` 配置方法和动态配置类文件 `FormUiConfig`,见 [FormUiConfig.java](../commonui/src/main/java/io/coderf/arklab/ui/api/FormUiConfig.java)
+
 ### 3.7.0（相对 3.6.2）
 
 跟随 core-base 1.2.0：`FormMedia` 等去掉 `setBaseView`，改为 `setRequestUi(RequestUi)`（传 ViewModel 的 `NetworkRequestUiHost` 或其它 `RequestUi` 实现）。
