@@ -67,6 +67,22 @@ public class GpsSettingConfig {
     /** 退出静止状态的最小移动距离（米），默认 20m */
     private float stationaryMinMoveMeters = 20f;
 
+    // ========== 会话与扩展（默认关闭，保持现有行为） ==========
+    /** 内存轨迹点上限，0 表示不限制（默认） */
+    private int maxLocationHistorySize = 0;
+    /**
+     * 启动后是否先向观察者补发 {@link android.location.LocationManager#getLastKnownLocation}。
+     * 仅用于地图首帧等 UI，不写入轨迹文件、不计入里程。默认 false。
+     */
+    private boolean preferLastKnownLocation = false;
+    /** lastKnown 最大允许年龄（毫秒），仅 preferLastKnownLocation=true 时生效，默认 5 分钟 */
+    private long lastKnownMaxAgeMillis = 5 * 60 * 1000L;
+    /**
+     * 是否注册 GNSS 状态与 NMEA 监听，用于填充卫星数 / HDOP / PDOP 等 extras。
+     * 默认 false，避免额外回调开销。
+     */
+    private boolean enableGnssStatusAndNmea = false;
+
     // ========== 重试机制 ==========
     /** 重试周期（秒），在达到精度要求前可重试多久，默认 60 秒 */
     private int retryPeriodSeconds = 60;
@@ -505,6 +521,53 @@ public class GpsSettingConfig {
 
     public GpsSettingConfig setStationaryMinMoveMeters(float stationaryMinMoveMeters) {
         this.stationaryMinMoveMeters = Math.max(0f, stationaryMinMoveMeters);
+        return this;
+    }
+
+    public int getMaxLocationHistorySize() {
+        return maxLocationHistorySize;
+    }
+
+    /**
+     * 限制 Session 内存轨迹点数。0 表示不限制，与旧行为一致。
+     */
+    public GpsSettingConfig setMaxLocationHistorySize(int maxLocationHistorySize) {
+        this.maxLocationHistorySize = Math.max(0, maxLocationHistorySize);
+        return this;
+    }
+
+    public boolean isPreferLastKnownLocation() {
+        return preferLastKnownLocation;
+    }
+
+    /**
+     * 启动定位后向观察者补发新鲜的 lastKnownLocation，便于地图首帧。
+     * 默认 false；不会写入文件或触发 {@code onLocationAccepted}。
+     */
+    public GpsSettingConfig setPreferLastKnownLocation(boolean preferLastKnownLocation) {
+        this.preferLastKnownLocation = preferLastKnownLocation;
+        return this;
+    }
+
+    public long getLastKnownMaxAgeMillis() {
+        return lastKnownMaxAgeMillis;
+    }
+
+    public GpsSettingConfig setLastKnownMaxAgeMillis(long lastKnownMaxAgeMillis) {
+        this.lastKnownMaxAgeMillis = Math.max(0L, lastKnownMaxAgeMillis);
+        return this;
+    }
+
+    public boolean isEnableGnssStatusAndNmea() {
+        return enableGnssStatusAndNmea;
+    }
+
+    /**
+     * 注册 GNSS 状态 / NMEA，使 Location extras 中的卫星数、HDOP 等真正有值。
+     * 默认 false。
+     */
+    public GpsSettingConfig setEnableGnssStatusAndNmea(boolean enableGnssStatusAndNmea) {
+        this.enableGnssStatusAndNmea = enableGnssStatusAndNmea;
         return this;
     }
 

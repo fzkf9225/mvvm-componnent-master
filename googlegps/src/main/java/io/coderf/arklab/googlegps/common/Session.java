@@ -149,8 +149,22 @@ public class Session {
      * @param location 要添加的位置点
      */
     public void addLocationToHistory(Location location) {
-        if (location != null) {
-            locationHistory.add(location);
+        addLocationToHistory(location, 0);
+    }
+
+    /**
+     * 添加轨迹点到历史记录。
+     *
+     * @param location 要添加的位置点
+     * @param maxSize  内存上限，0 表示不限制
+     */
+    public void addLocationToHistory(Location location, int maxSize) {
+        if (location == null) {
+            return;
+        }
+        locationHistory.add(location);
+        if (maxSize > 0 && locationHistory.size() > maxSize) {
+            locationHistory.subList(0, locationHistory.size() - maxSize).clear();
         }
     }
 

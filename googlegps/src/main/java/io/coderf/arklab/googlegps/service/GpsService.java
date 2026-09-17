@@ -148,9 +148,12 @@ public class GpsService extends Service {
     // ========== 新增：定位监听器引用（用于移除） ==========
 
     /**
-     * GNSS 状态回调
+     * GNSS 状态回调（保留字段，实际回调实现在 {@link GnssLocationListener}）
      */
     private android.location.GnssStatus.Callback gnssStatusCallback;
+
+    /** 是否已注册 GNSS 状态 / NMEA，避免重复注册 */
+    private boolean gnssCallbacksRegistered = false;
 
     // ---------------------------------------------------
     // 位置变化监听
@@ -234,6 +237,36 @@ public class GpsService extends Service {
         } catch (Throwable t) {
             LogUtil.loggerE(TAG, "gpsCallback.onLocationAccepted 异常: " + t.getMessage());
         }
+    }
+
+    private void notifyLocationFiltered(Location loc, String reason) {
+        LogUtil.loggerI(TAG, reason);
+        try {
+            gpsCallback.onLocationFiltered(loc, reason);
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "gpsCallback.onLocationFiltered 异常: " + t.getMessage());
+        }
+    }
+
+    /**
+     * 转发定位源状态，补齐 {@link GpsCallback#onStatusChanged(String, int)}。
+     */
+    public void onProviderStatusChanged(String provider, int status) {
+        try {
+            gpsCallback.onStatusChanged(provider, status);
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "gpsCallback.onStatusChanged 异常: " + t.getMessage());
+        }
+    }
+
+    public void setPaused(boolean paused) {
+        if (session != null) {
+            session.setPaused(paused);
+        }
+    }
+
+    public boolean isPaused() {
+        return session != null && session.isPaused();
     }
 
     @Override
@@ -435,6 +468,11 @@ public class GpsService extends Service {
 
         // 标记新会话已启动
         session.setStarted(true);
+        try {
+            gpsCallback.onLoggingStarted();
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "gpsCallback.onLoggingStarted 异常: " + t.getMessage());
+        }
 
         showNotification();
         startPassiveManager();
@@ -448,6 +486,7 @@ public class GpsService extends Service {
      */
     public void stopLogging() {
         LogUtil.loggerI(TAG, "-------------------停止记录位置--------------------");
+        boolean wasStarted = session != null && session.isStarted();
         // ========== 新增：关闭文件记录器 ==========
         FileLoggerFactory.close();
 
@@ -463,6 +502,13 @@ public class GpsService extends Service {
         stopGpsManager();
         stopPassiveManager();
         stopAlarm();
+        if (wasStarted) {
+            try {
+                gpsCallback.onLoggingStopped();
+            } catch (Throwable t) {
+                LogUtil.loggerE(TAG, "gpsCallback.onLoggingStopped 异常: " + t.getMessage());
+            }
+        }
     }
 
     /**
@@ -566,10 +612,82 @@ public class GpsService extends Service {
                 (!gpsCallback.getConfig().isEnableNetwork() || !networkProviderEnabled)) {
             LogUtil.loggerI(TAG, "没有可用的定位源！");
             startAbsoluteTimer();
+            emitLastKnownLocationIfEnabled();
             return;
         }
 
         session.setWaitingForLocation(true);
+        registerGnssExtrasIfEnabled();
+        emitLastKnownLocationIfEnabled();
+    }
+
+    private void registerGnssExtrasIfEnabled() {
+        if (gnssCallbacksRegistered
+                || gnssLocationListener == null
+                || gpsLocationManager == null
+                || !gpsCallback.getConfig().isEnableGnssStatusAndNmea()) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                gpsLocationManager.registerGnssStatusCallback(gnssLocationListener, handler);
+                gpsLocationManager.addNmeaListener(gnssLocationListener, handler);
+                gnssCallbacksRegistered = true;
+                LogUtil.loggerI(TAG, "已注册 GNSS 状态与 NMEA 监听");
+            } catch (Throwable t) {
+                LogUtil.loggerE(TAG, "注册 GNSS/NMEA 失败: " + t.getMessage());
+            }
+        }
+    }
+
+    private void unregisterGnssExtras() {
+        if (!gnssCallbacksRegistered || gpsLocationManager == null || gnssLocationListener == null) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                gpsLocationManager.unregisterGnssStatusCallback(gnssLocationListener);
+                gpsLocationManager.removeNmeaListener(gnssLocationListener);
+            } catch (Throwable t) {
+                LogUtil.loggerE(TAG, "移除 GNSS/NMEA 失败: " + t.getMessage());
+            }
+        }
+        gnssCallbacksRegistered = false;
+    }
+
+    /**
+     * 仅向观察者补发新鲜的 lastKnown，不写文件、不走 onLocationAccepted，避免污染轨迹。
+     */
+    private void emitLastKnownLocationIfEnabled() {
+        if (!gpsCallback.getConfig().isPreferLastKnownLocation()) {
+            return;
+        }
+        Location last = null;
+        try {
+            if (gpsCallback.getConfig().isEnableGps() && gpsLocationManager != null) {
+                last = gpsLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            if (last == null && gpsCallback.getConfig().isEnableNetwork() && towerLocationManager != null) {
+                last = towerLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+            if (last == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && gpsLocationManager != null) {
+                last = gpsLocationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER);
+            }
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "读取 lastKnownLocation 失败: " + t.getMessage());
+            return;
+        }
+        if (last == null) {
+            return;
+        }
+        long maxAge = gpsCallback.getConfig().getLastKnownMaxAgeMillis();
+        if (maxAge > 0 && Math.abs(System.currentTimeMillis() - last.getTime()) > maxAge) {
+            LogUtil.loggerI(TAG, "lastKnownLocation 过期，跳过首帧补发");
+            return;
+        }
+        lastAcceptedLocation = last;
+        notifyLocationObservers(last);
+        LogUtil.loggerI(TAG, "已向观察者补发 lastKnownLocation（不写入轨迹）");
     }
 
     /**
@@ -587,6 +705,7 @@ public class GpsService extends Service {
             LogUtil.loggerI(TAG, "移除 GPS 定位管理器更新");
             gpsLocationManager.removeUpdates(gnssLocationListener);
         }
+        unregisterGnssExtras();
 
         // ========== 新增：更新等待状态 ==========
         session.setWaitingForLocation(false);
@@ -632,7 +751,7 @@ public class GpsService extends Service {
         // ========== 1. 过滤过时点位（时间戳倒退） ==========
         if (gpsCallback.getConfig().isFilterStaleLocation() && session.getPreviousLocationInfo() != null &&
                 loc.getTime() <= session.getPreviousLocationInfo().getTime()) {
-            LogUtil.loggerI(TAG, "接收到过时位置，其时间戳小于或等于前一个点，忽略");
+            notifyLocationFiltered(loc, "接收到过时位置，其时间戳小于或等于前一个点，忽略");
             return;
         }
 
@@ -642,7 +761,7 @@ public class GpsService extends Service {
                 : gpsCallback.getConfig().getMinTimeInterval();
         if (!isPassiveLocation && (locationTimeStamp - session.getLatestTimeStamp()) <
                 effectiveMinInterval) {
-            LogUtil.loggerI(TAG, "接收到位置，但未达到最小记录时间间隔，忽略");
+            notifyLocationFiltered(loc, "接收到位置，但未达到最小记录时间间隔，忽略");
             return;
         }
 
@@ -650,7 +769,7 @@ public class GpsService extends Service {
         if (isPassiveLocation && gpsCallback.getConfig().isEnablePassive() &&
                 session.getPreviousLocationInfo() != null) {
             if ((loc.getTime() - session.getLatestPassiveTimeStamp()) < 1000) { // 被动定位默认1秒间隔
-                LogUtil.loggerI(TAG, "被动定位因过滤间隔被丢弃");
+                notifyLocationFiltered(loc, "被动定位因过滤间隔被丢弃");
                 return;
             }
             session.setLatestPassiveTimeStamp(loc.getTime());
@@ -667,7 +786,8 @@ public class GpsService extends Service {
 
             if (timeDifferenceSeconds > 0 && (distanceTravelled / timeDifferenceSeconds) >
                     gpsCallback.getConfig().getMaxSpeedMps()) {
-                LogUtil.loggerI(TAG, String.format(Locale.getDefault(), "检测到异常跳点 - %.0f 米 / %.3f 秒 - 丢弃该点",
+                notifyLocationFiltered(loc, String.format(Locale.getDefault(),
+                        "检测到异常跳点 - %.0f 米 / %.3f 秒 - 丢弃该点",
                         distanceTravelled, timeDifferenceSeconds));
                 return;
             }
@@ -676,7 +796,7 @@ public class GpsService extends Service {
         // ========== 5. 精度过滤和重试逻辑 ==========
         if (gpsCallback.getConfig().getMinAccuracy() > 0) {
             if (!loc.hasAccuracy() || loc.getAccuracy() == 0) {
-                LogUtil.loggerI(TAG, "接收到位置，但没有精度值，忽略");
+                notifyLocationFiltered(loc, "接收到位置，但没有精度值，忽略");
                 return;
             }
 
@@ -688,13 +808,15 @@ public class GpsService extends Service {
 
                 if (locationTimeStamp - session.getFirstRetryTimeStamp() <=
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
-                    LogUtil.loggerI(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米，点被丢弃，继续尝试", loc.getAccuracy()));
+                    notifyLocationFiltered(loc, String.format(Locale.getDefault(),
+                            "精度仅为 %.1f 米，点被丢弃，继续尝试", loc.getAccuracy()));
                     return;
                 }
 
                 if (locationTimeStamp - session.getFirstRetryTimeStamp() >
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
-                    LogUtil.loggerI(TAG, String.format(Locale.getDefault(), "精度仅为 %.1f 米且超时，放弃", loc.getAccuracy()));
+                    notifyLocationFiltered(loc, String.format(Locale.getDefault(),
+                            "精度仅为 %.1f 米且超时，放弃", loc.getAccuracy()));
                     stopManagerAndResetAlarm();
                     session.setFirstRetryTimeStamp(0);
                     return;
@@ -717,6 +839,7 @@ public class GpsService extends Service {
 
                 if (locationTimeStamp - session.getFirstRetryTimeStamp() <=
                         gpsCallback.getConfig().getRetryPeriodSeconds() * 1000L) {
+                    notifyLocationFiltered(loc, "等待更佳精度中，当前点暂不记录");
                     return;
                 }
 
@@ -739,7 +862,8 @@ public class GpsService extends Service {
                     session.getCurrentLatitude(), session.getCurrentLongitude());
 
             if (gpsCallback.getConfig().getMinDistanceInterval() > distanceTraveled) {
-                LogUtil.loggerI(TAG, String.format(Locale.getDefault(), "移动距离不足: %.1f 米，点被丢弃", distanceTraveled));
+                notifyLocationFiltered(loc, String.format(Locale.getDefault(),
+                        "移动距离不足: %.1f 米，点被丢弃", distanceTraveled));
                 stopManagerAndResetAlarm();
                 return;
             }
@@ -747,6 +871,7 @@ public class GpsService extends Service {
 
         // ========== 7. 静止抖动过滤 ==========
         if (!isPassiveLocation && shouldSuppressStationaryJitter(loc, locationTimeStamp)) {
+            notifyLocationFiltered(loc, "静止抖动点已过滤");
             stopManagerAndResetAlarm();
             return;
         }
@@ -758,7 +883,7 @@ public class GpsService extends Service {
         // ========== 新增：写入文件 ==========
         FileLoggerFactory.write(loc);
 // ========== 新增：记录到历史列表 ==========
-        session.addLocationToHistory(loc);      // 添加到历史记录
+        session.addLocationToHistory(loc, gpsCallback.getConfig().getMaxLocationHistorySize());
         session.incrementNumLegs();              // 增加轨迹点数
         // 更新会话状态
         session.setLatestTimeStamp(locationTimeStamp);
@@ -1088,6 +1213,14 @@ public class GpsService extends Service {
          */
         public Location getLastLocation() {
             return session.getCurrentLocationInfo();
+        }
+
+        public void setPaused(boolean paused) {
+            GpsService.this.setPaused(paused);
+        }
+
+        public boolean isPaused() {
+            return GpsService.this.isPaused();
         }
     }
 }

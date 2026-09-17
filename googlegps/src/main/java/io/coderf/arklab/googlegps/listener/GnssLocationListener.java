@@ -141,6 +141,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      */
     public void onProviderDisabled(@NonNull String provider) {
         LogUtil.loggerI(GpsService.TAG, "定位提供者已禁用: " + provider);
+        loggingService.onProviderStatusChanged(provider, LocationProvider.OUT_OF_SERVICE);
         loggingService.restartGpsManagers();
     }
 
@@ -153,6 +154,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
      */
     public void onProviderEnabled(@NonNull String provider) {
         LogUtil.loggerI(GpsService.TAG, "定位提供者已启用: " + provider);
+        loggingService.onProviderStatusChanged(provider, LocationProvider.AVAILABLE);
         loggingService.restartGpsManagers();
     }
 
@@ -178,6 +180,7 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
             LogUtil.loggerI(GpsService.TAG, provider + " 临时不可用");
         }
+        loggingService.onProviderStatusChanged(provider, status);
     }
 
     /**
@@ -192,6 +195,13 @@ public class GnssLocationListener extends GnssStatus.Callback implements Locatio
         super.onSatelliteStatusChanged(status);
         LogUtil.loggerI(GpsService.TAG, "卫星状态变化:" + status.toString());
         int maxSatellites = status.getSatelliteCount();
+        int usedInFix = 0;
+        for (int i = 0; i < maxSatellites; i++) {
+            if (status.usedInFix(i)) {
+                usedInFix++;
+            }
+        }
+        satellitesUsedInFix = usedInFix;
         loggingService.setSatelliteInfo(maxSatellites);
     }
 

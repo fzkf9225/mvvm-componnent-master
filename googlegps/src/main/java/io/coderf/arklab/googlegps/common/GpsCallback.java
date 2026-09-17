@@ -1,7 +1,6 @@
 package io.coderf.arklab.googlegps.common;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -42,24 +41,16 @@ public class GpsCallback {
         final GpsSettingConfig cfg = getConfig();
         if (nfc == null) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(
-                    cfg.getNotificationChannelId(),
-                    cfg.getNotificationChannelName()
-                    , NotificationManager.IMPORTANCE_HIGH);
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            channel.setSound(null, null);
-            channel.setShowBadge(true);
-            manager.createNotificationChannel(channel);
+            cfg.createNotificationChannel(manager);
             nfc = new NotificationCompat.Builder(context, cfg.getNotificationChannelId())
                     .setSmallIcon(cfg.getNotificationSmallIconResId() != 0 ?
                             cfg.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(context))
                     .setLargeIcon(cfg.getNotificationLargeIconResId() != 0 ?
                             BitmapFactory.decodeResource(context.getResources(), cfg.getNotificationLargeIconResId()) :
                             BitmapFactory.decodeResource(context.getResources(), AppUtil.getAppManager().getAppIcon(context)))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setPriority(mapImportanceToPriority(cfg.getNotificationImportance()))
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setVisibility(cfg.getNotificationLockscreenVisibility())
                     .setContentTitle(cfg.getNotificationTitle())
                     .setContentText(cfg.getNotificationContent())
                     .setOngoing(cfg.isNotificationOngoing())
@@ -79,9 +70,43 @@ public class GpsCallback {
 
     }
 
+    /**
+     * 点位被质量过滤器丢弃时回调。默认空实现。
+     *
+     * @param location 被丢弃的位置，可能为 null（超时等无点场景）
+     * @param reason   过滤原因（与服务日志文案一致，便于排查）
+     */
+    public void onLocationFiltered(Location location, String reason) {
+    }
+
+    /**
+     * 会话真正开始记录后回调（重复 start 不会再次触发）。默认空实现。
+     */
+    public void onLoggingStarted() {
+    }
+
+    /**
+     * 会话停止记录后回调。默认空实现。
+     */
+    public void onLoggingStopped() {
+    }
+
     // 4. 可扩展：比如你想在 GPS 状态变化时做点什么
     public void onStatusChanged(String provider, int status) {
 
+    }
+
+    private static int mapImportanceToPriority(int importance) {
+        if (importance >= NotificationManager.IMPORTANCE_HIGH) {
+            return NotificationCompat.PRIORITY_HIGH;
+        }
+        if (importance == NotificationManager.IMPORTANCE_DEFAULT) {
+            return NotificationCompat.PRIORITY_DEFAULT;
+        }
+        if (importance == NotificationManager.IMPORTANCE_LOW) {
+            return NotificationCompat.PRIORITY_LOW;
+        }
+        return NotificationCompat.PRIORITY_MIN;
     }
 
     /**

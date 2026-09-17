@@ -73,6 +73,10 @@ class GpsStarter(
     private val lifecycleOwner: LifecycleOwner,
     private val context: Context
 ) {
+
+    companion object {
+        private const val TAG = "GpsStarter"
+    }
     /** GPS 生命周期观察者，负责权限和GPS状态检测 */
     private var gpsObserver: GpsLifecycleObserver? = null
 
@@ -107,7 +111,7 @@ class GpsStarter(
     /** 仅用于 removeCallbacks/postDelayed，具体逻辑在 [performServiceReconnectAttempt] */
     private val reconnectRunnable = Runnable { performServiceReconnectAttempt() }
 
-    private lateinit var serviceConnection: ServiceConnection
+    private var serviceConnection: ServiceConnection
 
     private fun scheduleServiceReconnect() {
         if (!isRunning || serviceBound) return
@@ -416,6 +420,25 @@ class GpsStarter(
     fun isRunning(): Boolean = isRunning
 
     /**
+     * 暂停点位分发与记录（定位硬件仍可运行）。会话已具备该状态，此处补齐 Starter 入口。
+     */
+    fun pause() {
+        gpsService?.setPaused(true) ?: Session.getInstance().setPaused(true)
+    }
+
+    /**
+     * 恢复点位分发与记录
+     */
+    fun resume() {
+        gpsService?.setPaused(false) ?: Session.getInstance().setPaused(false)
+    }
+
+    /**
+     * 当前是否处于暂停分发状态
+     */
+    fun isPaused(): Boolean = gpsService?.isPaused ?: Session.getInstance().isPaused
+
+    /**
      * 清理待处理的请求
      */
     private fun clearPendingRequest() {
@@ -439,6 +462,9 @@ class GpsStarter(
         return intent
     }
 
+    /**
+     * 启动service并绑定
+     */
     private fun startServiceAndBind(gpsCallback: GpsCallback? = null, once: Boolean) {
         try {
             gpsCallback?.let { GpsService.setPendingGpsCallback(it) }
@@ -451,10 +477,6 @@ class GpsStarter(
             Log.w(TAG, "startForegroundService failed: ${e.message}")
             scheduleServiceReconnect()
         }
-    }
-
-    companion object {
-        private const val TAG = "GpsStarter"
     }
 
     /**
@@ -541,5 +563,6 @@ class GpsStarter(
             lifecycleOwner.lifecycle.removeObserver(it)
         }
         gpsObserver = null
+        starterScope.cancel()
     }
 }
