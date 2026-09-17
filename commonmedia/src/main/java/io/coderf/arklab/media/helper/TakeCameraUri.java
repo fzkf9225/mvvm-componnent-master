@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 
 import java.io.File;
 
@@ -73,14 +72,14 @@ public class TakeCameraUri extends ActivityResultContract<MediaTypeEnum, Uri> {
                 if(file.getParentFile() != null && !file.getParentFile().exists()){
                     boolean isCreated = file.getParentFile().mkdirs();
                 }
-                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",file);
+                uri = mediaBuilder.fileProviderUri(file);
             }
         } else {
             File file = new File(mediaBuilder.getImageOutPutPath()+File.separator + fileName);
             if(file.getParentFile() != null && !file.getParentFile().exists()){
                 boolean isCreated = file.getParentFile().mkdirs();
             }
-            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider",file);
+            uri = mediaBuilder.fileProviderUri(file);
         }
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri);
     }

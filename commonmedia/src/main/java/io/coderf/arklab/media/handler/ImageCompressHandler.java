@@ -1,13 +1,10 @@
 package io.coderf.arklab.media.handler;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.OpenableColumns;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +18,7 @@ import io.coderf.arklab.media.compressor.image.ImgCompressor;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.utils.ExifUtil;
 import io.coderf.arklab.media.utils.LogUtil;
+import io.coderf.arklab.media.utils.MediaUtil;
 
 /**
  * ImageCompressHandler 类。
@@ -50,6 +48,9 @@ public class ImageCompressHandler extends Handler {
     @Override
     public void handleMessage(@NonNull Message msg) {
         super.handleMessage(msg);
+        if (mediaHelper.isReleased()) {
+            return;
+        }
         try {
             if (msg.what > 0 && msg.obj != null) {
                 Uri outputUri = (Uri) msg.obj;
@@ -68,14 +69,8 @@ public class ImageCompressHandler extends Handler {
                 }
                 mediaHelper.postCompressResult(new MediaBean(imagesCompressList, MediaTypeEnum.IMAGE));
             } else {
-                ContentResolver contentResolver = mediaHelper.getMediaBuilder().getContext().getContentResolver();
-                Cursor cursor = contentResolver.query(srcUriList.get(msg.what), null, null, null, null);
-                double size = -1;
-                if (cursor != null && cursor.moveToFirst()) {
-                    size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-                    cursor.close();
-                }
-                if (size != -1 && size < mediaHelper.getMediaBuilder().getImageQualityCompress() * 1024) {
+                long size = MediaUtil.queryUriSize(mediaHelper.getMediaBuilder().getContext(), srcUriList.get(msg.what));
+                if (size != -1 && size < mediaHelper.getMediaBuilder().getImageQualityCompress() * 1024L) {
                     LogUtil.logger(MediaHelper.TAG, "该图片小于" + mediaHelper.getMediaBuilder().getImageQualityCompress() + "kb不压缩");
                     Message message = new Message();
                     message.obj = srcUriList.get(msg.what);
@@ -84,9 +79,12 @@ public class ImageCompressHandler extends Handler {
                 } else {
                     ImgCompressor.getInstance(mediaHelper.getMediaBuilder().getContext())
                             .withListener(new ImageCompressListener(msg.what, srcUriList.size())).
-                            starCompress(srcUriList.get(msg.what), mediaHelper.getMediaBuilder().getImageOutPutPath(), 720, 1280,
+                            starCompress(srcUriList.get(msg.what), mediaHelper.getMediaBuilder().getImageOutPutPath(),
+                                    mediaHelper.getMediaBuilder().getImageCompressMaxWidth(),
+                                    mediaHelper.getMediaBuilder().getImageCompressMaxHeight(),
                                     mediaHelper.getMediaBuilder().getImageQualityCompress(),
-                                    mediaHelper.getMediaBuilder().getCaptureImageExtension());
+                                    mediaHelper.getMediaBuilder().getCaptureImageExtension(),
+                                    mediaHelper.getMediaBuilder().getFileProviderAuthority());
                 }
             }
         } catch (Exception e) {
@@ -123,6 +121,9 @@ public class ImageCompressHandler extends Handler {
 
         @Override
         public void onCompressStart() {
+            if (mediaHelper.isReleased()) {
+                return;
+            }
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().refreshLoading(
                         mediaHelper.getMediaBuilder().getContext().getString(
@@ -132,6 +133,9 @@ public class ImageCompressHandler extends Handler {
 
         @Override
         public void onCompressEnd(ImgCompressor.CompressResult imageOutPath) {
+            if (mediaHelper.isReleased()) {
+                return;
+            }
             if (imageOutPath.getStatus() == ImgCompressor.CompressResult.RESULT_ERROR || imageOutPath.getOutPath() == null) {
                 if (mediaHelper.getMediaBuilder().isShowLoading()) {
                     mediaHelper.getUIController().hideLoading();
@@ -148,6 +152,9 @@ public class ImageCompressHandler extends Handler {
 
         @Override
         public void onCompressFail(Exception exception) {
+            if (mediaHelper.isReleased()) {
+                return;
+            }
             LogUtil.logger(MediaHelper.TAG, "图片压缩异常：" + exception);
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();

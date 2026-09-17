@@ -2,6 +2,7 @@ package io.coderf.arklab.media.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,9 +10,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
@@ -85,6 +88,32 @@ public class MediaUtil {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 查询 Uri 对应文件大小（字节）。失败返回 -1。
+     */
+    public static long queryUriSize(@Nullable Context context, @Nullable Uri uri) {
+        if (context == null || uri == null) {
+            return -1;
+        }
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(uri, new String[]{OpenableColumns.SIZE}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (index >= 0) {
+                    return cursor.getLong(index);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return -1;
     }
 
     /**

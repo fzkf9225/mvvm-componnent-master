@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 
 import java.io.File;
 
@@ -81,14 +80,14 @@ public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
                 if (file.getParentFile() != null && !file.getParentFile().exists()) {
                     boolean isCreated = file.getParentFile().mkdirs();
                 }
-                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", file);
+                uri = mediaBuilder.fileProviderUri(file);
             }
         } else {
             File file = new File(mediaBuilder.getVideoOutPutPath() + File.separator + fileName);
             if (file.getParentFile() != null && !file.getParentFile().exists()) {
                 boolean isCreated = file.getParentFile().mkdirs();
             }
-            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", file);
+            uri = mediaBuilder.fileProviderUri(file);
         }
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
                 // 视频质量。0 低质量；1 高质量

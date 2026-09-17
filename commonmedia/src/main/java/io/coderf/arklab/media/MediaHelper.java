@@ -85,6 +85,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     private final MediaLifecycleObserver mediaLifecycleObserver = new MediaLifecycleObserver(this);
     private static final String THREAD_NAME = "mediaHelperThread";
     private final HandlerThread handlerThread = new HandlerThread(THREAD_NAME, 10);
+    private volatile boolean released;
     /** 拍照 EXIF 定位权限申请完成后继续打开相机的动作 */
     private Runnable pendingCaptureExifPermissionAction;
 
@@ -381,6 +382,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 开始压缩
      */
     public void startCompressImage(List<Uri> images) {
+        if (released || images == null) {
+            return;
+        }
         Message message = new Message();
         message.what = 0;
         new ImageCompressHandler(this,handlerLooper(), images).sendMessage(message);
@@ -479,6 +483,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 生命周期结束时释放后台线程，避免 HandlerThread 泄漏。
      */
     public void release() {
+        released = true;
         if (uiController != null) {
             uiController.hideLoading();
         }
@@ -488,10 +493,17 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     /**
+     * 是否已随 Lifecycle ON_DESTROY 释放。压缩/水印回调应跳过已释放实例。
+     */
+    public boolean isReleased() {
+        return released;
+    }
+
+    /**
      * 开始添加水印
      */
     public void startWaterMark(Bitmap bitmap) {
-        if (bitmap == null) {
+        if (released || bitmap == null) {
             return;
         }
         Message message = new Message();
@@ -507,7 +519,7 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 开始添加水印
      */
     public void startWaterMark(Bitmap bitmap, int alpha) {
-        if (bitmap == null) {
+        if (released || bitmap == null) {
             return;
         }
         Message message = new Message();
@@ -697,6 +709,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 开始压缩
      */
     public void startCompressVideo(List<Uri> videos) {
+        if (released || videos == null) {
+            return;
+        }
         Message message = new Message();
         message.obj = videos;
         message.what = 0;
@@ -707,6 +722,9 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
      * 开始压缩
      */
     public void startCompressMedia(List<Uri> mediaList) {
+        if (released || mediaList == null) {
+            return;
+        }
         Message message = new Message();
         message.obj = mediaList;
         message.what = 0;

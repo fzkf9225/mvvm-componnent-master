@@ -87,6 +87,11 @@ public class ImageCropActivity extends ComponentActivity {
     private int maxOutputSize;
 
     /**
+     * FileProvider authority
+     */
+    private String fileProviderAuthority;
+
+    /**
      * 是否已回调结果，避免重复回调
      */
     private boolean resultDelivered;
@@ -160,6 +165,7 @@ public class ImageCropActivity extends ComponentActivity {
         outputFileName = getIntent().getStringExtra(ImageCropHelper.EXTRA_OUTPUT_FILE_NAME);
         maxOutputSize = getIntent().getIntExtra(ImageCropHelper.EXTRA_MAX_OUTPUT_SIZE,
                 ImageCropBuilder.DEFAULT_MAX_OUTPUT_SIZE);
+        fileProviderAuthority = getIntent().getStringExtra(ImageCropHelper.EXTRA_FILE_PROVIDER_AUTHORITY);
 
         boolean scalable = getIntent().getBooleanExtra(ImageCropHelper.EXTRA_CROP_FRAME_SCALABLE, true);
         boolean freeCrop = getIntent().getBooleanExtra(ImageCropHelper.EXTRA_FREE_CROP, false);
@@ -330,7 +336,7 @@ public class ImageCropActivity extends ComponentActivity {
             Toast.makeText(this, R.string.media_crop_save_failed, Toast.LENGTH_SHORT).show();
             return;
         }
-        Uri outUri = ImageCropHelper.fileToUri(this, outFile);
+        Uri outUri = ImageCropHelper.fileToUri(this, outFile, fileProviderAuthority);
         deliverSuccess(outFile, outUri);
         finish();
     }

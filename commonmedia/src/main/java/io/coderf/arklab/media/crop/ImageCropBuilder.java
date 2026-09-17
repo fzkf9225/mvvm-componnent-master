@@ -168,6 +168,12 @@ public class ImageCropBuilder {
     private int maxOutputSize = DEFAULT_MAX_OUTPUT_SIZE;
 
     /**
+     * FileProvider authority；为空时使用 {@code packageName.FileProvider}
+     */
+    @Nullable
+    private String fileProviderAuthority;
+
+    /**
      * 是否允许用户缩放/拖动裁剪框，默认 true
      */
     private boolean cropFrameScalable = true;
@@ -526,6 +532,30 @@ public class ImageCropBuilder {
      */
     public int getMaxOutputSize() {
         return maxOutputSize;
+    }
+
+    /**
+     * 自定义 FileProvider authority。空则使用 {@code packageName.FileProvider}
+     *
+     * @param fileProviderAuthority 完整 authority
+     * @return this
+     */
+    public ImageCropBuilder setFileProviderAuthority(@Nullable String fileProviderAuthority) {
+        this.fileProviderAuthority = TextUtils.isEmpty(fileProviderAuthority) ? null : fileProviderAuthority;
+        return this;
+    }
+
+    /**
+     * 解析 FileProvider authority
+     *
+     * @return 完整 authority
+     */
+    @NonNull
+    public String getFileProviderAuthority() {
+        if (TextUtils.isEmpty(fileProviderAuthority)) {
+            return mContext.getPackageName() + ".FileProvider";
+        }
+        return fileProviderAuthority;
     }
 
     /**

@@ -3,6 +3,7 @@ package io.coderf.arklab.media.crop;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +67,11 @@ public class ImageCropHelper {
      * Intent Extra：最大输出边长
      */
     public static final String EXTRA_MAX_OUTPUT_SIZE = "extra_crop_max_output_size";
+
+    /**
+     * Intent Extra：FileProvider authority
+     */
+    public static final String EXTRA_FILE_PROVIDER_AUTHORITY = "extra_crop_file_provider_authority";
 
     /**
      * Intent Extra：是否允许缩放裁剪框
@@ -211,6 +217,7 @@ public class ImageCropHelper {
         intent.putExtra(EXTRA_ASPECT_X, imageCropBuilder.getAspectX());
         intent.putExtra(EXTRA_ASPECT_Y, imageCropBuilder.getAspectY());
         intent.putExtra(EXTRA_MAX_OUTPUT_SIZE, imageCropBuilder.getMaxOutputSize());
+        intent.putExtra(EXTRA_FILE_PROVIDER_AUTHORITY, imageCropBuilder.getFileProviderAuthority());
         intent.putExtra(EXTRA_CROP_FRAME_SCALABLE, imageCropBuilder.isCropFrameScalable());
         intent.putExtra(EXTRA_BORDER_COLOR, imageCropBuilder.getBorderColor());
         intent.putExtra(EXTRA_DIM_COLOR, imageCropBuilder.getDimColor());
@@ -267,9 +274,19 @@ public class ImageCropHelper {
      */
     @NonNull
     public static Uri fileToUri(@NonNull Context context, @NonNull File file) {
+        return fileToUri(context, file, context.getPackageName() + ".FileProvider");
+    }
+
+    /**
+     * 将输出 File 转为可分享 Uri（优先指定 authority 的 FileProvider）
+     */
+    @NonNull
+    public static Uri fileToUri(@NonNull Context context, @NonNull File file, @Nullable String authority) {
+        String resolved = TextUtils.isEmpty(authority)
+                ? context.getPackageName() + ".FileProvider"
+                : authority;
         try {
-            return FileProvider.getUriForFile(context,
-                    context.getPackageName() + ".FileProvider", file);
+            return FileProvider.getUriForFile(context, resolved, file);
         } catch (Exception e) {
             return Uri.fromFile(file);
         }

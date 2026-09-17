@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,6 +37,9 @@ public class WaterMarkHandler extends Handler {
     @Override
     public void handleMessage(@NonNull Message msg) {
         super.handleMessage(msg);
+        if (mediaHelper.isReleased()) {
+            return;
+        }
         if (msg.obj == null) {
             if (mediaHelper.getMediaBuilder().isShowLoading()) {
                 mediaHelper.getUIController().hideLoading();
@@ -61,8 +63,8 @@ public class WaterMarkHandler extends Handler {
             // 从文件中创建uri
             mediaHelper.postWaterMarkResult(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE));
         } else { //兼容android7.0 使用共享文件的形式
-            mediaHelper.postWaterMarkResult(new MediaBean(List.of(FileProvider.getUriForFile(mediaHelper.getMediaBuilder().getContext(),
-                    mediaHelper.getMediaBuilder().getContext().getPackageName() + ".FileProvider", outputFile)), MediaTypeEnum.IMAGE));
+            mediaHelper.postWaterMarkResult(new MediaBean(List.of(
+                    mediaHelper.getMediaBuilder().fileProviderUri(outputFile)), MediaTypeEnum.IMAGE));
         }
         if (bitmapNew.isRecycled()) {
             bitmapNew.recycle();

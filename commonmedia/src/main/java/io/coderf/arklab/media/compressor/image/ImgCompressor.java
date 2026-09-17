@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -45,9 +46,8 @@ public class ImgCompressor {
     private volatile static ImgCompressor instance = null;
     private final Context context;
     private CompressListener compressListener;
-    private static final int DEFAULT_OUTWIDTH = 720;
-    private static final int DEFAULT_OUTHEIGHT = 1080;
     private static final int DEFAULT_MAXFILESIZE = 1024;//KB
+    private static final String DEFAULT_FILE_PROVIDER_SUFFIX = ".FileProvider";
 
     private ImgCompressor(Context context) {
         this.context = context;
@@ -92,6 +92,15 @@ public class ImgCompressor {
      */
     public Uri compressImage(Uri srcImageUri, String outputPath, int outWidth, int outHeight, int maxFileSize,
                              String fileExtension) {
+        return compressImage(srcImageUri, outputPath, outWidth, outHeight, maxFileSize, fileExtension,
+                context.getPackageName() + DEFAULT_FILE_PROVIDER_SUFFIX);
+    }
+
+    /**
+     * @param fileProviderAuthority FileProvider authority，空则使用 {@code packageName.FileProvider}
+     */
+    public Uri compressImage(Uri srcImageUri, String outputPath, int outWidth, int outHeight, int maxFileSize,
+                             String fileExtension, String fileProviderAuthority) {
 
         //进行大小缩放来达到压缩的目的
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -100,12 +109,10 @@ public class ImgCompressor {
         if (contentResolver == null) {
             if (compressListener != null) {
                 compressListener.onCompressFail(new Exception("打开内容解析器失败！"));
-                return null;
             }
+            return null;
         }
-        ParcelFileDescriptor parcelFileDescriptor;
-        try {
-            parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri,"r");
+        try (ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri, "r")) {
             if (parcelFileDescriptor == null) {
                 if (compressListener != null) {
                     compressListener.onCompressFail(new Exception("权限不足！"));
@@ -119,39 +126,22 @@ public class ImgCompressor {
                 compressListener.onCompressFail(new FileNotFoundException("文件不存在或已删除"));
             }
             return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (compressListener != null) {
+                compressListener.onCompressFail(e);
+            }
+            return null;
         }
-        //根据原始图片的宽高比和期望的输出图片的宽高比计算最终输出的图片的宽和高
         float srcWidth = options.outWidth;
         float srcHeight = options.outHeight;
-        float srcRatio = srcWidth / srcHeight;
-        float outRatio = (float) outWidth / (float) outHeight;
-        float actualOutWidth = srcWidth;
-        float actualOutHeight = srcHeight;
-
-        if (srcWidth > (float) outWidth || srcHeight > (float) outHeight) {
-            //如果输入比率小于输出比率,则最终输出的宽度以maxHeight为准()
-            //比如输入比为10:20 输出比是300:10 如果要保证输出图片的宽高比和原始图片的宽高比相同,则最终输出图片的高为10
-            //宽度为10/20 * 10 = 5  最终输出图片的比率为5:10 和原始输入的比率相同
-
-            //同理如果输入比率大于输出比率,则最终输出的高度以maxHeight为准()
-            //比如输入比为20:10 输出比是5:100 如果要保证输出图片的宽高比和原始图片的宽高比相同,则最终输出图片的宽为5
-            //高度需要根据输入图片的比率计算获得 为5 / 20/10= 2.5  最终输出图片的比率为5:2.5 和原始输入的比率相同
-            if (srcRatio < outRatio) {
-                actualOutHeight = (float) outHeight;
-                actualOutWidth = actualOutHeight * srcRatio;
-            } else if (srcRatio > outRatio) {
-                actualOutWidth = (float) outWidth;
-                actualOutHeight = actualOutWidth / srcRatio;
-            } else {
-                actualOutWidth = (float) outWidth;
-                actualOutHeight = (float) outHeight;
-            }
-        }
+        float[] actualOut = resolveOutputSize(srcWidth, srcHeight, outWidth, outHeight);
+        float actualOutWidth = actualOut[0];
+        float actualOutHeight = actualOut[1];
         options.inSampleSize = computSampleSize(options, actualOutWidth, actualOutHeight);
         options.inJustDecodeBounds = false;
         Bitmap scaledBitmap;
-        try {
-            parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri,"r");
+        try (ParcelFileDescriptor parcelFileDescriptor = contentResolver.openFileDescriptor(srcImageUri, "r")) {
             if (parcelFileDescriptor == null) {
                 if (compressListener != null) {
                     compressListener.onCompressFail(new Exception("权限不足！"));
@@ -163,6 +153,12 @@ public class ImgCompressor {
             e.printStackTrace();
             if (compressListener != null) {
                 compressListener.onCompressFail(new FileNotFoundException("文件不存在或已删除"));
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (compressListener != null) {
+                compressListener.onCompressFail(e);
             }
             return null;
         }
@@ -177,8 +173,8 @@ public class ImgCompressor {
 
         //处理图片旋转问题
         ExifInterface exif;
-        try {
-            exif = new ExifInterface(Objects.requireNonNull(contentResolver.openInputStream(srcImageUri)));
+        try (InputStream inputStream = contentResolver.openInputStream(srcImageUri)) {
+            exif = new ExifInterface(Objects.requireNonNull(inputStream));
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
             Matrix matrix = new Matrix();
@@ -249,8 +245,100 @@ public class ImgCompressor {
                 }
             }
         }
-        //兼容android7.0 使用共享文件的形式
-        return FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", outputFile);
+        String authority = TextUtils.isEmpty(fileProviderAuthority)
+                ? context.getPackageName() + DEFAULT_FILE_PROVIDER_SUFFIX
+                : fileProviderAuthority;
+        return FileProvider.getUriForFile(context, authority, outputFile);
+    }
+
+    /**
+     * 计算压缩输出宽高，始终保持原图宽高比。
+     * <ul>
+     *   <li>宽高都未配置（&lt;=0）：按原图像素自动分档等比缩放</li>
+     *   <li>只配一边：该边作为上限，另一边按原比例</li>
+     *   <li>两边都配：落入指定框内，等比缩放</li>
+     * </ul>
+     */
+    private static float[] resolveOutputSize(float srcWidth, float srcHeight, int outWidth, int outHeight) {
+        if (srcWidth <= 0 || srcHeight <= 0) {
+            return new float[]{Math.max(1f, srcWidth), Math.max(1f, srcHeight)};
+        }
+        if (outWidth <= 0 && outHeight <= 0) {
+            int sample = computeAutoSampleSize(srcWidth, srcHeight);
+            return new float[]{
+                    Math.max(1f, srcWidth / sample),
+                    Math.max(1f, srcHeight / sample)
+            };
+        }
+        float srcRatio = srcWidth / srcHeight;
+        if (outWidth <= 0) {
+            if (srcHeight > outHeight) {
+                return new float[]{Math.max(1f, outHeight * srcRatio), outHeight};
+            }
+            return new float[]{srcWidth, srcHeight};
+        }
+        if (outHeight <= 0) {
+            if (srcWidth > outWidth) {
+                return new float[]{outWidth, Math.max(1f, outWidth / srcRatio)};
+            }
+            return new float[]{srcWidth, srcHeight};
+        }
+        float actualOutWidth = srcWidth;
+        float actualOutHeight = srcHeight;
+        if (srcWidth > (float) outWidth || srcHeight > (float) outHeight) {
+            float outRatio = (float) outWidth / (float) outHeight;
+            if (srcRatio < outRatio) {
+                actualOutHeight = (float) outHeight;
+                actualOutWidth = actualOutHeight * srcRatio;
+            } else if (srcRatio > outRatio) {
+                actualOutWidth = (float) outWidth;
+                actualOutHeight = actualOutWidth / srcRatio;
+            } else {
+                actualOutWidth = (float) outWidth;
+                actualOutHeight = (float) outHeight;
+            }
+        }
+        return new float[]{Math.max(1f, actualOutWidth), Math.max(1f, actualOutHeight)};
+    }
+
+    /**
+     * 按原图长短边自动计算下采样倍数，保持宽高比。
+     * 小图不缩小；中大图按长边分档（约 2 / 4 / 长边÷1280）。
+     */
+    private static int computeAutoSampleSize(float srcWidth, float srcHeight) {
+        int width = Math.round(srcWidth);
+        int height = Math.round(srcHeight);
+        if ((width & 1) == 1) {
+            width++;
+        }
+        if ((height & 1) == 1) {
+            height++;
+        }
+        int longSide = Math.max(width, height);
+        int shortSide = Math.min(width, height);
+        if (longSide <= 0 || shortSide <= 0) {
+            return 1;
+        }
+        float scale = (float) shortSide / (float) longSide;
+        if (scale > 0.5625f) {
+            if (longSide < 1664) {
+                return 1;
+            }
+            if (longSide < 4990) {
+                return 2;
+            }
+            if (longSide < 10240) {
+                return 4;
+            }
+            int sample = longSide / 1280;
+            return sample <= 0 ? 1 : sample;
+        }
+        if (scale > 0.5f) {
+            int sample = longSide / 1280;
+            return sample <= 0 ? 1 : sample;
+        }
+        int sample = (int) Math.ceil(longSide / (1280.0 / scale));
+        return sample <= 0 ? 1 : sample;
     }
 
     private static int computSampleSize(BitmapFactory.Options options, float reqWidth, float reqHeight) {
@@ -274,8 +362,16 @@ public class ImgCompressor {
      */
     public void starCompress(Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize,
                              String fileExtension) {
+        starCompress(srcImageUri, outPath, outWidth, outHeight, maxFileSize, fileExtension,
+                context.getPackageName() + DEFAULT_FILE_PROVIDER_SUFFIX);
+    }
+
+    public void starCompress(Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize,
+                             String fileExtension, String fileProviderAuthority) {
+        CompressListener listener = this.compressListener;
         ThreadExecutor.getInstance().execute(
-                new CompressRunnable(srcImageUri, outPath, outWidth, outHeight, maxFileSize, fileExtension));
+                new CompressRunnable(srcImageUri, outPath, outWidth, outHeight, maxFileSize, fileExtension,
+                        fileProviderAuthority, listener));
     }
 
     public static class CompressResult implements Parcelable {
@@ -363,17 +459,21 @@ public class ImgCompressor {
         private final int maxFileSize;
         private final String outPath;
         private final String fileExtension;
+        private final String fileProviderAuthority;
+        private final CompressListener listener;
 
         public CompressRunnable(Uri srcPath, String outPath, int outWidth, int outHeight, int maxFileSize,
-                                String fileExtension) {
+                                String fileExtension, String fileProviderAuthority, CompressListener listener) {
             this.srcPath = srcPath;
             this.outPath = outPath;
             this.outWidth = outWidth;
             this.outHeight = outHeight;
             this.maxFileSize = maxFileSize;
             this.fileExtension = fileExtension;
-            if (compressListener != null) {
-                compressListener.onCompressStart();
+            this.fileProviderAuthority = fileProviderAuthority;
+            this.listener = listener;
+            if (listener != null) {
+                listener.onCompressStart();
             }
         }
 
@@ -382,23 +482,24 @@ public class ImgCompressor {
             CompressResult compressResult = new CompressResult();
             Uri outPutPath = null;
             try {
-                outPutPath = compressImage(srcPath, outPath, outWidth, outHeight, maxFileSize, fileExtension);
+                outPutPath = compressImage(srcPath, outPath, outWidth, outHeight, maxFileSize, fileExtension,
+                        fileProviderAuthority);
             } catch (Exception e) {
                 e.printStackTrace();
-                if (compressListener != null) {
-                    compressListener.onCompressFail(e);
+                if (listener != null) {
+                    listener.onCompressFail(e);
                 }
             }
             if (outPutPath == null) {
-                if (compressListener != null) {
-                    compressListener.onCompressFail(new Exception("图片压缩异常！"));
+                if (listener != null) {
+                    listener.onCompressFail(new Exception("图片压缩异常！"));
                 }
             }
             compressResult.setSrcPath(srcPath);
             compressResult.setOutPath(outPutPath);
             compressResult.setStatus(CompressResult.RESULT_OK);
-            if (compressListener != null) {
-                compressListener.onCompressEnd(compressResult);
+            if (listener != null) {
+                listener.onCompressEnd(compressResult);
             }
         }
     }

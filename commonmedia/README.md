@@ -2,8 +2,8 @@
 
 可选媒体能力库：拍照、相册、压缩等（`MediaHelper` / `MediaBuilder` …）。
 
-当前版本：**3.4.0**
-Maven：`io.coderf.arklab.media:media:3.4.0`
+当前版本：**3.5.1**
+Maven：`io.coderf.arklab.media:media:3.5.1`
 namespace：`io.coderf.arklab.media`
 
 ---
@@ -18,7 +18,7 @@ namespace：`io.coderf.arklab.media`
 
 ## 依赖
 
-- 无工程内 `project` 依赖（纯能力库）
+- 工程内仅 `api project(':core-log')`
 
 ---
 
@@ -28,10 +28,28 @@ namespace：`io.coderf.arklab.media`
 
 ```gradle
 // app
-implementation 'io.coderf.arklab.media:media:3.4.0'
+implementation 'io.coderf.arklab.media:media:3.5.1'
 ```
 
 Demo 参考：`app/.../media/MediaHelperGateway`、`MediaGatewayModule`。
+
+---
+
+## MediaBuilder 可选配置
+
+未设置时：图片压缩按**原图像素自动等比缩放**（不套 720×1280 框），再按 `imageQualityCompress` 做体积压缩。
+
+```java
+new MediaBuilder(context)
+    .bindLifeCycle(this)
+    .setImageQualityCompress(200)           // 小于该大小(kb)的图片跳过压缩，默认 200
+    // .setImageCompressMaxSize(720, 1280)  // 可选：指定最大宽高框；不设则按原图等比缩放
+    .setVideoSkipCompressUnderKb(0)         // 小于该大小(kb)的视频跳过压缩，默认 0=不跳过
+    .setFileProviderAuthority(null)         // 空则 packageName.FileProvider
+    .builder();
+```
+
+裁剪独立入口同样支持 `ImageCropBuilder.setFileProviderAuthority(...)`。
 
 ---
 

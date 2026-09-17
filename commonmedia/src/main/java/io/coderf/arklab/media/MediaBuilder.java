@@ -2,6 +2,7 @@ package io.coderf.arklab.media;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.LifecycleOwner;
 
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +48,18 @@ public class MediaBuilder {
      * 系统相机录像默认文件扩展名（含点号）
      */
     public static final String DEFAULT_CAPTURE_VIDEO_EXTENSION = ".mp4";
+    /**
+     * FileProvider authority 默认后缀，完整值为 {@code packageName + FILE_PROVIDER_SUFFIX}
+     */
+    public static final String FILE_PROVIDER_SUFFIX = ".FileProvider";
+    /**
+     * 图片压缩最大宽度未配置（0）：按原图像素自动等比缩放，不套固定宽高框。
+     */
+    public static final int DEFAULT_IMAGE_COMPRESS_MAX_WIDTH = 0;
+    /**
+     * 图片压缩最大高度未配置（0）：按原图像素自动等比缩放，不套固定宽高框。
+     */
+    public static final int DEFAULT_IMAGE_COMPRESS_MAX_HEIGHT = 0;
 
     /**
      * 设置视频拍摄时长，单位：秒
@@ -83,6 +97,23 @@ public class MediaBuilder {
      * 图片压缩大小限制，默认200，单位kb
      */
     public int imageQualityCompress = 200;
+    /**
+     * 图片压缩最大宽度，单位像素。0 表示未配置，按原图像素自动等比缩放。
+     */
+    private int imageCompressMaxWidth = DEFAULT_IMAGE_COMPRESS_MAX_WIDTH;
+    /**
+     * 图片压缩最大高度，单位像素。0 表示未配置，按原图像素自动等比缩放。
+     */
+    private int imageCompressMaxHeight = DEFAULT_IMAGE_COMPRESS_MAX_HEIGHT;
+    /**
+     * 视频小于该大小则跳过压缩，单位 kb。默认 0 表示不跳过（保持现有「始终压缩」行为）
+     */
+    private int videoSkipCompressUnderKb = 0;
+    /**
+     * FileProvider authority；为空时使用 {@code packageName + .FileProvider}
+     */
+    @Nullable
+    private String fileProviderAuthority;
 
     private Context mContext;
     /**
@@ -830,6 +861,64 @@ public class MediaBuilder {
     }
 
     /**
+     * 图片压缩最大宽度（像素）。0 表示该边不限制；宽高都为 0 时按原图像素自动等比缩放。
+     *
+     * @param imageCompressMaxWidth 最大宽度，默认 0（自动）
+     * @return this
+     */
+    public MediaBuilder setImageCompressMaxWidth(int imageCompressMaxWidth) {
+        this.imageCompressMaxWidth = Math.max(0, imageCompressMaxWidth);
+        return this;
+    }
+
+    /**
+     * 图片压缩最大高度（像素）。0 表示该边不限制；宽高都为 0 时按原图像素自动等比缩放。
+     *
+     * @param imageCompressMaxHeight 最大高度，默认 0（自动）
+     * @return this
+     */
+    public MediaBuilder setImageCompressMaxHeight(int imageCompressMaxHeight) {
+        this.imageCompressMaxHeight = Math.max(0, imageCompressMaxHeight);
+        return this;
+    }
+
+    /**
+     * 同时设置图片压缩最大宽高（像素）。
+     * 传 (0, 0) 或不调用：按原图像素自动等比缩放。
+     * 任一边大于 0：将该边作为上限，另一边按原比例计算。
+     *
+     * @param maxWidth  最大宽度
+     * @param maxHeight 最大高度
+     * @return this
+     */
+    public MediaBuilder setImageCompressMaxSize(int maxWidth, int maxHeight) {
+        return setImageCompressMaxWidth(maxWidth).setImageCompressMaxHeight(maxHeight);
+    }
+
+    /**
+     * 视频小于该大小则跳过压缩（单位 kb）。0 表示不跳过，与历史行为一致。
+     *
+     * @param videoSkipCompressUnderKb 阈值 kb，小于 0 按 0 处理
+     * @return this
+     */
+    public MediaBuilder setVideoSkipCompressUnderKb(int videoSkipCompressUnderKb) {
+        this.videoSkipCompressUnderKb = Math.max(0, videoSkipCompressUnderKb);
+        return this;
+    }
+
+    /**
+     * 自定义 FileProvider authority。空则使用 {@code packageName.FileProvider}。
+     * 宿主 App 的 authority 不是默认值时需要设置，否则拍照/压缩 Uri 会失败。
+     *
+     * @param fileProviderAuthority 完整 authority
+     * @return this
+     */
+    public MediaBuilder setFileProviderAuthority(@Nullable String fileProviderAuthority) {
+        this.fileProviderAuthority = TextUtils.isEmpty(fileProviderAuthority) ? null : fileProviderAuthority;
+        return this;
+    }
+
+    /**
      * 相册最大选择数量
      *
      * @param imageMaxSelectedCount 最大选择的图片数量，最多9张
@@ -927,6 +1016,46 @@ public class MediaBuilder {
      */
     public int getImageQualityCompress() {
         return imageQualityCompress;
+    }
+
+    /**
+     * 图片压缩最大宽度（像素）。0 表示未配置，走原图像素自动等比缩放。
+     */
+    public int getImageCompressMaxWidth() {
+        return imageCompressMaxWidth;
+    }
+
+    /**
+     * 图片压缩最大高度（像素）。0 表示未配置，走原图像素自动等比缩放。
+     */
+    public int getImageCompressMaxHeight() {
+        return imageCompressMaxHeight;
+    }
+
+    /**
+     * 视频跳过压缩的大小阈值（kb）。0 表示始终压缩
+     */
+    public int getVideoSkipCompressUnderKb() {
+        return videoSkipCompressUnderKb;
+    }
+
+    /**
+     * 解析 FileProvider authority：自定义值优先，否则 {@code packageName.FileProvider}
+     */
+    @NonNull
+    public String getFileProviderAuthority() {
+        if (TextUtils.isEmpty(fileProviderAuthority)) {
+            return mContext.getPackageName() + FILE_PROVIDER_SUFFIX;
+        }
+        return fileProviderAuthority;
+    }
+
+    /**
+     * 将本地文件转为 FileProvider Uri（authority 跟随 {@link #getFileProviderAuthority()}）
+     */
+    @NonNull
+    public Uri fileProviderUri(@NonNull File file) {
+        return FileProvider.getUriForFile(mContext, getFileProviderAuthority(), file);
     }
 
 
