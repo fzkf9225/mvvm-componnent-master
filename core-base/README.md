@@ -12,6 +12,16 @@ namespace：`io.coderf.arklab.common`
 ---
 
 ## 版本
+### 1.2.6
+`Config`新增配置
+开启（须在 init 前）：
+```kotlin
+Config.getInstance()
+    .setStableImageCacheKeyEnabled(true)
+    .addStableImageCacheIgnoredQueryParams("X-Amz-Signature")
+    .init(this)
+```
+通过`Glide`特性注册`prepend 包装器`，解决`MinIO`等一些文件服务中服务地址每次都会变化导致`Glide`缓存测试无法选中的问题，但是其实只是签名等一些算法变化其实是同一张图片，通过配置可以重构缓存策略达到签名等变化可以识别缓存的策略算法
 
 ### 1.2.0（相对 1.1.3）
 

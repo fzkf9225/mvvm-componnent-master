@@ -13,12 +13,18 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.color.DynamicColors;
 import com.tencent.mmkv.MMKV;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.autosize.AutoSize;
 import io.coderf.arklab.common.autosize.AutoSizeConfig;
+import io.coderf.arklab.common.glide.StableImageCache;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.CrashHandler;
 import io.coderf.arklab.common.widget.empty.EmptyLayoutConfig;
@@ -92,6 +98,18 @@ public class Config {
      */
     @DrawableRes
     private int defaultErrorImageRes = R.mipmap.ic_default_image;
+
+    /**
+     * 是否启用 Glide 稳定缓存 key。默认关闭。须在 {@link #init(Application)} 前设置。
+     * 仅当本开关为 true 且 {@link #addStableImageCacheIgnoredQueryParams(String...)} 至少配置了一个
+     * query 名时才生效；否则仍按 Glide 默认用完整 URL 作为缓存 key。
+     */
+    private boolean stableImageCacheKeyEnabled = false;
+
+    /**
+     * 生成缓存 key 时要去掉的 query 名（大小写不敏感）。未配置则策略不生效。
+     */
+    private final Set<String> stableImageCacheIgnoredQueryParams = new LinkedHashSet<>();
 
     /**
      * EmptyLayout 空态外观全局默认（图标 / 文案 / 颜色 / 字号 / 字重）。
@@ -258,6 +276,81 @@ public class Config {
         return this;
     }
 
+    public boolean isStableImageCacheKeyEnabled() {
+        return stableImageCacheKeyEnabled;
+    }
+
+    /**
+     * 是否启用 Glide 稳定缓存 key。须在 {@link #init(Application)} 前设置，默认关闭。
+     * <p>
+     * 打开后还须配置 {@link #addStableImageCacheIgnoredQueryParams(String...)}，否则不会改缓存 key。
+     * 请求仍使用完整 URL（含签名）；只把列出的 query 从缓存 key 中去掉。
+     * 单次加载不想走该策略时用 {@code ImageCacheOptions.skipStableKey()} 或 {@code RawImageUrl.of(url)}。
+     * <pre>
+     * Config.getInstance()
+     *     .setStableImageCacheKeyEnabled(true)
+     *     .addStableImageCacheIgnoredQueryParams("X-Amz-Signature")
+     *     .init(application);
+     * </pre>
+     */
+    @NonNull
+    public Config setStableImageCacheKeyEnabled(boolean stableImageCacheKeyEnabled) {
+        this.stableImageCacheKeyEnabled = stableImageCacheKeyEnabled;
+        return this;
+    }
+
+    /**
+     * 追加缓存 key 要忽略的 query 名，大小写不敏感。空串会被丢弃。
+     */
+    @NonNull
+    public Config addStableImageCacheIgnoredQueryParams(@NonNull String... queryKeys) {
+        if (queryKeys.length == 0) {
+            return this;
+        }
+        return addStableImageCacheIgnoredQueryParams(Arrays.asList(queryKeys));
+    }
+
+    /**
+     * 追加缓存 key 要忽略的 query 名，大小写不敏感。空串会被丢弃。
+     */
+    @NonNull
+    public Config addStableImageCacheIgnoredQueryParams(@Nullable Collection<String> queryKeys) {
+        if (queryKeys == null) {
+            return this;
+        }
+        for (String key : queryKeys) {
+            if (key == null) {
+                continue;
+            }
+            String trimmed = key.trim();
+            if (!trimmed.isEmpty()) {
+                stableImageCacheIgnoredQueryParams.add(trimmed);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 替换缓存 key 要忽略的 query 名。{@code null} 或空集合表示未配置，策略即使开启也不改缓存 key。
+     */
+    @NonNull
+    public Config setStableImageCacheIgnoredQueryParams(@Nullable Collection<String> queryKeys) {
+        stableImageCacheIgnoredQueryParams.clear();
+        return addStableImageCacheIgnoredQueryParams(queryKeys);
+    }
+
+    @NonNull
+    public Set<String> getStableImageCacheIgnoredQueryParams() {
+        return Collections.unmodifiableSet(stableImageCacheIgnoredQueryParams);
+    }
+
+    /**
+     * 开关已开且至少配置了一个忽略的 query 名时，稳定缓存 key 才真正生效。
+     */
+    public boolean isStableImageCacheStrategyActive() {
+        return stableImageCacheKeyEnabled && !stableImageCacheIgnoredQueryParams.isEmpty();
+    }
+
     /**
      * EmptyLayout 空态外观全局默认（未配置时为框架内置图标与文案）。
      * 可直接改返回对象，或用 {@link #configureEmptyLayout} 保持 Config 链式调用。
@@ -332,6 +425,7 @@ public class Config {
         if (dynamicColorEnabled) {
             DynamicColors.applyToActivitiesIfAvailable(application);
         }
+        StableImageCache.install(application);
         return this;
     }
 
