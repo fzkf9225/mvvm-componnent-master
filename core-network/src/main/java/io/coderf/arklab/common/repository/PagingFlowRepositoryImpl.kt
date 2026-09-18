@@ -3,7 +3,6 @@ package io.coderf.arklab.common.repository
 import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.bean.ApiRequestOptions
-import io.coderf.arklab.common.inter.FlowRetryService
 import io.coderf.arklab.core.bean.PagingQuery
 import kotlinx.coroutines.flow.Flow
 
@@ -29,11 +28,7 @@ abstract class PagingFlowRepositoryImpl<API : BaseApiService, T : Any, Q : Pagin
 
     constructor(apiService: API) : super(apiService)
 
-    constructor(retryService: FlowRetryService, apiService: API) : super(retryService, apiService)
-
     constructor()
-
-    constructor(retryService: FlowRetryService) : super(retryService)
 
     /**
      * 请求一页数据。

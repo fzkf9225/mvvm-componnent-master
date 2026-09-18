@@ -7,7 +7,6 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.core.request.RequestUi;
@@ -18,29 +17,21 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * Repository 基类。
  * <p>
  * 请求相关 UI 只通过 {@link #getRequestUi()} 触发；由 {@link BaseViewModel} 注入 {@link NetworkRequestUiHost}。
- * 不持有页面引用。
+ * 不持有页面引用。旧栈鉴权重试挂在 {@code ApiRetrofit.Builder#setRetryService}，按 ApiService 实例生效。
  *
  * @author fz
  * @version 2.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/9/18
  */
 public abstract class BaseRepository implements IRepository {
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
     protected final List<Subscription> subscriptionList = new ArrayList<>();
-    /**
-     * 请求错误时重试服务，优先级高于 ApiRetrofit 默认配置。
-     */
-    protected RetryService retryService;
 
     @Nullable
     private RequestUi requestUi;
 
     public BaseRepository() {
-    }
-
-    public BaseRepository(RetryService retryService) {
-        this.retryService = retryService;
     }
 
     public void setRequestUi(@Nullable RequestUi requestUi) {
@@ -50,10 +41,6 @@ public abstract class BaseRepository implements IRepository {
     @Nullable
     public RequestUi getRequestUi() {
         return requestUi;
-    }
-
-    public void setRetryService(RetryService retryService) {
-        this.retryService = retryService;
     }
 
     @Override

@@ -8,7 +8,6 @@ import io.coderf.arklab.common.base.BaseException;
 import io.coderf.arklab.common.base.BaseResponse;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.core.request.RequestUi;
-import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.core.bean.PagingQuery;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -33,15 +32,7 @@ public abstract class PagingRepositoryImpl<API extends BaseApiService, T, Q exte
         super(apiService);
     }
 
-    public PagingRepositoryImpl(RetryService retryService, API apiService) {
-        super(retryService, apiService);
-    }
-
     public PagingRepositoryImpl() {
-    }
-
-    public PagingRepositoryImpl(RetryService retryService) {
-        super(retryService);
     }
 
     /**

@@ -7,7 +7,10 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
- * 接口请求错误重试接口，需要重写这个实现无感刷新token等作用
+ * 接口请求错误重试接口，需要重写这个实现无感刷新token等作用。
+ * <p>
+ * 挂到 {@link io.coderf.arklab.common.api.ApiRetrofit.Builder#setRetryService}，
+ * 按 ApiService 实例生效；不要再往 Repository 上覆盖。
  *
  * @author fz
  * @version 1.0

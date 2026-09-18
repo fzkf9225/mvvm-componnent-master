@@ -46,21 +46,9 @@ abstract class FlowRepositoryImpl<API : BaseApiService> : BaseRepository {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    var flowRetryService: FlowRetryService? = null
-
-    // region 构造函数（保持原有构造以便兼容）
     constructor() : super()
 
     constructor(apiService: API) : super() {
-        this.apiService = apiService
-    }
-
-    constructor(flowRetryService: FlowRetryService) : super() {
-        this.flowRetryService = flowRetryService
-    }
-
-    constructor(flowRetryService: FlowRetryService, apiService: API) : super() {
-        this.flowRetryService = flowRetryService
         this.apiService = apiService
     }
 
@@ -199,7 +187,7 @@ abstract class FlowRepositoryImpl<API : BaseApiService> : BaseRepository {
         attempt: Long
     ): Boolean {
         val retryService: FlowRetryService? =
-            flowRetryService ?: apiService?.retrofit?.builder?.flowRetryService
+            apiService?.retrofit?.builder?.flowRetryService
         // 判断是否应该重试
         val shouldRetry = retryService?.shouldRetry(cause) ?: false
         if (shouldRetry && (attempt + 1) < (retryService?.getMaxRetryCount() ?: 0)) {

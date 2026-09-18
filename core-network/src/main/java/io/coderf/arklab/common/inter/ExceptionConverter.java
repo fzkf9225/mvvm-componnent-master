@@ -13,4 +13,3 @@ import io.coderf.arklab.common.base.BaseException;
 public interface ExceptionConverter {
     BaseException convert(Throwable e);
 }
-

@@ -1,6 +1,7 @@
 package io.coderf.arklab.common.repository;
 
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import org.jetbrains.annotations.NotNull;
@@ -9,8 +10,8 @@ import io.coderf.arklab.common.api.BaseApiService;
 import io.coderf.arklab.common.api.ErrorConsumer;
 import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
-import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.inter.RetryService;
+import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
@@ -43,16 +44,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
         super();
     }
 
-    public RepositoryImpl(RetryService retryService) {
-        super(retryService);
-    }
-
     public RepositoryImpl(API apiService) {
-        this.apiService = apiService;
-    }
-
-    public RepositoryImpl(RetryService retryService, API apiService) {
-        super(retryService);
         this.apiService = apiService;
     }
 
@@ -116,11 +108,10 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
     }
 
     public <T> Observable<T> sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
+        RetryService retryService = resolveRetryService();
+        if (retryService != null) {
             return observable.subscribeOn(Schedulers.io())
-                    .retryWhen(throwableObservable -> retryService != null ?
-                            retryService.handleObservableError(throwableObservable) :
-                            apiService.getRetrofit().getBuilder().getRetryService().handleObservableError(throwableObservable))
+                    .retryWhen(retryService::handleObservableError)
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -216,12 +207,11 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
     }
 
     public <T> Flowable<T> sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
+        RetryService retryService = resolveRetryService();
+        if (retryService != null) {
             return flowable.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
-                            retryService != null ?
-                                    retryService.handleFlowableError(throwableObservable.cast(Throwable.class)) :
-                                    apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
+                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         RequestUi ui = getRequestUi();
@@ -314,12 +304,11 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
 
 
     public <T> Single<T> sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions) {
-        if (retryService != null || apiService.getRetrofit().getBuilder().getRetryService() != null) {
+        RetryService retryService = resolveRetryService();
+        if (retryService != null) {
             return single.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
-                            retryService != null ?
-                                    retryService.handleFlowableError(throwableObservable.cast(Throwable.class)) :
-                                    apiService.getRetrofit().getBuilder().getRetryService().handleFlowableError(throwableObservable.cast(Throwable.class)))
+                            retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -351,6 +340,17 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                     })
                     .observeOn(AndroidSchedulers.mainThread());
         }
+    }
+
+    /**
+     * 旧栈鉴权重试只认当前 ApiService 在 Module 里挂到 Builder 上的配置。
+     */
+    @Nullable
+    private RetryService resolveRetryService() {
+        if (apiService == null || apiService.getRetrofit() == null) {
+            return null;
+        }
+        return apiService.getRetrofit().getBuilder().getRetryService();
     }
 
 }

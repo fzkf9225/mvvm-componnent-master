@@ -1,12 +1,15 @@
 package io.coderf.arklab.common.inter
 
 /**
- * Kotlin协程版本的错误重试接口
+ * Kotlin协程版本的错误重试接口。
+ * <p>
+ * 挂到 [io.coderf.arklab.common.api.ApiRetrofit.Builder.setFlowRetryService]，
+ * 按 ApiService 实例生效；不要再往 Repository 上覆盖。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/18
  */
 interface FlowRetryService {
     /**
