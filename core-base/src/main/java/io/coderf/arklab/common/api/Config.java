@@ -284,7 +284,8 @@ public class Config {
      * 是否启用 Glide 稳定缓存 key。须在 {@link #init(Application)} 前设置，默认关闭。
      * <p>
      * 打开后还须配置 {@link #addStableImageCacheIgnoredQueryParams(String...)}，否则不会改缓存 key。
-     * 请求仍使用完整 URL（含签名）；只把列出的 query 从缓存 key 中去掉。
+     * 请求始终使用当前完整 URL（含最新签名）；只把列出的 query 从缓存身份中去掉。
+     * 签名相关参数都可以列入，不会拿去掉签名后的地址去下载。
      * 单次加载不想走该策略时用 {@code ImageCacheOptions.skipStableKey()} 或 {@code RawImageUrl.of(url)}。
      * <pre>
      * Config.getInstance()

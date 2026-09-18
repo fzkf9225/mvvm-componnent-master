@@ -25,6 +25,11 @@ final class StableGlideUrl extends GlideUrl {
         this.cacheKey = cacheKey;
     }
 
+    @NonNull
+    GlideUrl unwrap() {
+        return source;
+    }
+
     @Override
     public String getCacheKey() {
         return cacheKey;

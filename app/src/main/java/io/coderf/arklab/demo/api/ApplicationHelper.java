@@ -42,7 +42,13 @@ public class ApplicationHelper extends BaseApplication {
         super.onCreate();
         registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(errorService));
         // 全局开关须在 init 前设置；不写则用默认值（适配开、崩溃捕获开、跟随系统夜间、Edge-to-Edge 开）
-        Config.getInstance().init(this);
+        Config.getInstance()
+                .setResponseBodyLogConverterJson(true)
+                .setFolderName("arklab")
+                .setStableImageCacheKeyEnabled(true)
+                .addStableImageCacheIgnoredQueryParams("X-Amz-Signature", "X-Amz-Date","X-Amz-Credential","X-Amz-Expires","X-Amz-Algorithm","X-Amz-SignedHeaders")
+                .init(this)
+                .enableDebug(BuildConfig.LOG_DEBUG, FileLogLevel.NONE);
         GpsSettingConfig.getInstance().init(this);
 
         GpsSettingConfig.getInstance()
@@ -57,9 +63,6 @@ public class ApplicationHelper extends BaseApplication {
                 .setMinAccuracy(100f)
                 .setFilterStaleLocation(false);
 
-        Config.getInstance().setResponseBodyLogConverterJson(true);
-        Config.getInstance().setFolderName("arklab");
-
         ArkLog.init(this, LogConfig.builder()
                 .showThreadInfo(true)
                 .globalTag("ArkLab")
@@ -67,8 +70,6 @@ public class ApplicationHelper extends BaseApplication {
                 .build());
 
         if (BuildConfig.LOG_DEBUG) {
-            // 各模块只开自己的控制台开关（落盘已由 ArkLog.init 统一配置）
-            Config.getInstance().enableDebug(true, FileLogLevel.NONE);
             DebugUtil.enableDebug(this, true);
             io.coderf.arklab.media.utils.DebugUtil.enableDebug(this, true);
             Mqtt.enableDebug(this, true);

@@ -8,13 +8,17 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.InputStream;
 
 import io.coderf.arklab.common.api.Config;
 
 /**
- * 将 http(s) {@link GlideUrl} 包装为稳定缓存 key，实际请求 URL 不变。
+ * 请求始终用当前完整签名 URL，磁盘缓存身份用规范化后的 key。
+ * <p>
+ * 不能把两者塞进同一个 {@link GlideUrl}：HttpGlideUrlLoader 的 ModelCache 按
+ * {@link GlideUrl#equals} 复用对象，会把过期签名拿去发请求。
  *
  * @author fz
  * @version 1.0
@@ -32,7 +36,6 @@ final class StableCacheGlideUrlLoader implements ModelLoader<GlideUrl, InputStre
     @Override
     public boolean handles(@NonNull GlideUrl model) {
         return !(model instanceof RawImageUrl)
-                && !(model instanceof StableGlideUrl)
                 && Config.getInstance().isStableImageCacheStrategyActive();
     }
 
@@ -40,16 +43,23 @@ final class StableCacheGlideUrlLoader implements ModelLoader<GlideUrl, InputStre
     @Override
     public LoadData<InputStream> buildLoadData(@NonNull GlideUrl model, int width, int height,
                                                @NonNull Options options) {
-        GlideUrl toLoad = model;
-        if (!ImageCacheOptions.isSkipStableKey(options)) {
-            String original = model.getCacheKey();
-            String cacheKey = UrlCacheKeyNormalizer.normalize(
-                    original, Config.getInstance().getStableImageCacheIgnoredQueryParams());
-            if (cacheKey != null && !cacheKey.equals(original)) {
-                toLoad = new StableGlideUrl(model, cacheKey);
-            }
+        GlideUrl fetchUrl = unwrap(model);
+        if (ImageCacheOptions.isSkipStableKey(options)) {
+            return delegate.buildLoadData(fetchUrl, width, height, options);
         }
-        return delegate.buildLoadData(toLoad, width, height, options);
+        String original = fetchUrl.getCacheKey();
+        String cacheKey = UrlCacheKeyNormalizer.normalize(
+                original, Config.getInstance().getStableImageCacheIgnoredQueryParams());
+        LoadData<InputStream> inner = delegate.buildLoadData(fetchUrl, width, height, options);
+        if (inner == null || cacheKey == null || cacheKey.equals(original)) {
+            return inner;
+        }
+        return new LoadData<>(new ObjectKey(cacheKey), inner.alternateKeys, inner.fetcher);
+    }
+
+    @NonNull
+    private static GlideUrl unwrap(@NonNull GlideUrl model) {
+        return model instanceof StableGlideUrl ? ((StableGlideUrl) model).unwrap() : model;
     }
 
     static final class Factory implements ModelLoaderFactory<GlideUrl, InputStream> {

@@ -753,21 +753,38 @@ public final class FileUtil {
     }
 
     /**
+     * 去掉 URL 的 query / fragment，避免预签名地址把签名参数带进文件名。
+     */
+    @NonNull
+    private static String stripUrlQueryAndFragment(@NonNull String path) {
+        int query = path.indexOf('?');
+        if (query >= 0) {
+            path = path.substring(0, query);
+        }
+        int fragment = path.indexOf('#');
+        if (fragment >= 0) {
+            path = path.substring(0, fragment);
+        }
+        return path;
+    }
+
+    /**
      * 获得文件的扩展名
      *
-     * @param filePath 文件路径
+     * @param filePath 文件路径或 URL
      * @return 如果没有扩展名，返回""
      */
     public static String getFileExtension(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return filePath;
         }
-        int extenPosi = filePath.lastIndexOf(FILE_EXTENSION_SEPARATOR);
-        int filePosi = filePath.lastIndexOf(File.separator);
+        String path = stripUrlQueryAndFragment(filePath);
+        int extenPosi = path.lastIndexOf(FILE_EXTENSION_SEPARATOR);
+        int filePosi = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
         if (extenPosi == -1) {
             return "";
         }
-        return (filePosi >= extenPosi) ? "" : filePath.substring(extenPosi + 1);
+        return (filePosi >= extenPosi) ? "" : path.substring(extenPosi + 1);
     }
 
     /**
@@ -980,8 +997,9 @@ public final class FileUtil {
         if (TextUtils.isEmpty(filePath)) {
             return filePath;
         }
-        int filePosi = filePath.lastIndexOf(File.separator);
-        return (filePosi == -1) ? filePath : filePath.substring(filePosi + 1);
+        String path = stripUrlQueryAndFragment(filePath);
+        int filePosi = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+        return (filePosi == -1) ? path : path.substring(filePosi + 1);
     }
 
     /**

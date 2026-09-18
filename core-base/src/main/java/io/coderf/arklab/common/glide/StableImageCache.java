@@ -12,7 +12,8 @@ import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 向 Glide Registry 安装稳定缓存 key 包装器。由 {@link io.coderf.arklab.common.api.Config#init} 调用。
+ * 向 Glide Registry 安装稳定磁盘缓存 key。由 {@link io.coderf.arklab.common.api.Config#init} 调用。
+ * 现有 {@code Glide.with().load(url)} 不用改：请求仍用完整签名 URL，只把配置的 query 从磁盘缓存身份中去掉。
  * <p>
  * 宿主若自建 {@code AppGlideModule} 并 {@code replace(GlideUrl, InputStream, ...)}，
  * 请把本方法放在所有 GlideUrl 替换之后，或直接依赖 {@code Config.init()}（它在 {@code Glide.get()} 之后 prepend）。

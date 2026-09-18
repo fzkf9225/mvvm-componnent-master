@@ -108,6 +108,45 @@ public class UrlCacheKeyNormalizerTest {
     }
 
     @Test
+    public void normalize_allSigningParamsLeavesPathOnly() {
+        String result = UrlCacheKeyNormalizer.normalize(SIGNED_URL, Arrays.asList(
+                "X-Amz-Signature", "X-Amz-Date", "X-Amz-Credential",
+                "X-Amz-Expires", "X-Amz-Algorithm", "X-Amz-SignedHeaders"));
+        assertEquals(
+                "http://112.26.18.103:15506/file-api/bladex/upload/20260904/"
+                        + "6ca39dc3ce9dd24f9cce78c94d58d61d.png",
+                result);
+    }
+
+    @Test
+    public void normalize_sameAttachmentDifferentDateAndSignature() {
+        String first =
+                "http://112.26.18.103:15506/file-api/bladex/upload/20260918/"
+                        + "9e46be95ceed0cabbaced366255f6dbf.jpg"
+                        + "?X-Amz-Algorithm=AWS4-HMAC-SHA256"
+                        + "&X-Amz-Credential=minioadmin%2F20260918%2Fus-east-1%2Fs3%2Faws4_request"
+                        + "&X-Amz-Date=20260918T082005Z"
+                        + "&X-Amz-Expires=3600"
+                        + "&X-Amz-SignedHeaders=host"
+                        + "&X-Amz-Signature=d6a1cd2c230f0fb442c23d636ecc0f13c225e74f56fd2758e15f3913fbde333d";
+        String second =
+                "http://112.26.18.103:15506/file-api/bladex/upload/20260918/"
+                        + "9e46be95ceed0cabbaced366255f6dbf.jpg"
+                        + "?X-Amz-Algorithm=AWS4-HMAC-SHA256"
+                        + "&X-Amz-Credential=minioadmin%2F20260918%2Fus-east-1%2Fs3%2Faws4_request"
+                        + "&X-Amz-Date=20260918T082024Z"
+                        + "&X-Amz-Expires=3600"
+                        + "&X-Amz-SignedHeaders=host"
+                        + "&X-Amz-Signature=eba90d86ad93614777ec986b3114f0e8eed30d454eb9b4f7cf95292f59563315";
+        java.util.List<String> ignored = Arrays.asList(
+                "X-Amz-Signature", "X-Amz-Date", "X-Amz-Credential",
+                "X-Amz-Expires", "X-Amz-Algorithm", "X-Amz-SignedHeaders");
+        assertEquals(
+                UrlCacheKeyNormalizer.normalize(first, ignored),
+                UrlCacheKeyNormalizer.normalize(second, ignored));
+    }
+
+    @Test
     public void normalize_nullAndBlankUrl() {
         assertNull(UrlCacheKeyNormalizer.normalize(null, Collections.singleton("X-Amz-Signature")));
         assertEquals("", UrlCacheKeyNormalizer.normalize("", Collections.singleton("X-Amz-Signature")));
