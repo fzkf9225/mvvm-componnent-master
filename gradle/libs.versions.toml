@@ -30,7 +30,6 @@ slf4jApi = "2.0.17"
 squareupPicasso = "2.71828"
 activityVersion = "1.13.0"
 constraintlayoutVersion = "2.2.1"
-geniusVersion = "2.0.0"
 glideVersion = "5.0.7"
 gsonVersion = "2.14.0"
 hiltVersion = "2.58"
@@ -57,7 +56,7 @@ pagingVersion = "3.5.0"
 viewpager2 = "1.1.0"
 zxingAndroidVersion = "4.3.0"
 zxingCoreVersion = "3.5.4"
-gsyVersion = "13.0.0"
+gsyVersion = "13.2.1"
 bcprov = "1.84"
 webkitVersion = "1.16.0"
 autoServiceVersion="1.1.1"
@@ -160,11 +159,6 @@ zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", ve
 
 # Location Services
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
-
-# Genius UI Framework
-net-ui = { module = "net.qiujuer.genius:ui", version.ref = "geniusVersion" }
-net-res = { module = "net.qiujuer.genius:res", version.ref = "geniusVersion" }
-graphics = { module = "net.qiujuer.genius:graphics", version.ref = "geniusVersion" }
 
 # Refresh Layout
 scwang90-refresh-layout-kernel = { module = "io.github.scwang90:refresh-layout-kernel", version.ref = "refreshLayoutKernel" }

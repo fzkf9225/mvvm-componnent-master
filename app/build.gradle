@@ -16,8 +16,11 @@ android {
         versionName = "1.0"
         testInstrumentationRunner =  "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+        // 仅保留 arm64：真实设备主流 ABI；x86_64 的 ijk so 未完整 16KB 对齐，
+        // 打进包会导致 Play / Studio 16KB 检查失败。模拟器请使用 arm64 系统镜像。
         ndk {
-            abiFilters = ['arm64-v8a', 'x86_64']
+            //noinspection ChromeOsAbiSupport
+            abiFilters = ['arm64-v8a']
         }
     }
 
@@ -59,6 +62,15 @@ android {
         //noinspection DataBindingWithoutKapt
         dataBinding = true
         buildConfig = true
+    }
+
+    // Android 15+ 16KB page size 适配：
+    // useLegacyPackaging = false 时，.so 以未压缩形式打入 APK/AAB，
+    // 系统可按 16KB 页对齐直接 mmap，满足 Google 16KB 页要求。
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
     }
 }
 
@@ -120,9 +132,6 @@ dependencies {
     implementation libs.swiperefreshlayout
 
     implementation libs.androidx.recyclerview
-    implementation libs.graphics
-    implementation libs.net.res
-    implementation libs.net.ui
 
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime

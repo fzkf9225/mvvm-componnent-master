@@ -12,6 +12,12 @@
         <domain includeSubdomains="true">192.168.0.10</domain>
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">n.sinaimg.cn</domain>
+        <domain includeSubdomains="true">img1.baidu.com</domain>
+        <domain includeSubdomains="true">bkimg.cdn.bcebos.com</domain>
+        <domain includeSubdomains="true">q8.itc.cn/images01</domain>
+        <domain includeSubdomains="true">ww1.sinaimg.cn</domain>
+        <domain includeSubdomains="true">img2.baidu.com</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

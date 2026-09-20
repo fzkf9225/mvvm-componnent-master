@@ -131,7 +131,7 @@ public class ImageSaveDialog extends BaseDialog {
                 ? cfg.getCancelTextColor() : ContextCompat.getColor(ctx, R.color.onSurfaceVariant);
         int rippleMask = cfg.getRippleColor() != null
                 ? cfg.getRippleColor() : ThemeAttrs.outlineVariant(ctx);
-        boolean saveBold = cfg.getSaveTextBold() != null ? cfg.getSaveTextBold() : true;
+        boolean saveBold = cfg.getSaveTextBold() != null ? cfg.getSaveTextBold() : false;
         float saveTextSizePx = cfg.getSaveTextSizePx() != null
                 ? cfg.getSaveTextSizePx()
                 : DensityUtil.sp2px(getContext(),17f);
