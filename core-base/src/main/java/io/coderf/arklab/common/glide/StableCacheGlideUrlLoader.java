@@ -8,11 +8,13 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
+import com.bumptech.glide.load.model.stream.HttpGlideUrlLoader;
 import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.InputStream;
 
 import io.coderf.arklab.common.api.Config;
+import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
  * 请求始终用当前完整签名 URL，磁盘缓存身份用规范化后的 key。
@@ -54,6 +56,10 @@ final class StableCacheGlideUrlLoader implements ModelLoader<GlideUrl, InputStre
         if (inner == null || cacheKey == null || cacheKey.equals(original)) {
             return inner;
         }
+        if (Config.enableDebug.get()) {
+            LogUtil.logger("StableImageCache", "rewrite cacheKey, fetch still signed\nfetch="
+                    + original + "\ncacheKey=" + cacheKey);
+        }
         return new LoadData<>(new ObjectKey(cacheKey), inner.alternateKeys, inner.fetcher);
     }
 
@@ -63,10 +69,14 @@ final class StableCacheGlideUrlLoader implements ModelLoader<GlideUrl, InputStre
     }
 
     static final class Factory implements ModelLoaderFactory<GlideUrl, InputStream> {
+        private final HttpGlideUrlLoader.Factory httpFactory = new HttpGlideUrlLoader.Factory();
+
         @NonNull
         @Override
         public ModelLoader<GlideUrl, InputStream> build(@NonNull MultiModelLoaderFactory multiFactory) {
-            return new StableCacheGlideUrlLoader(multiFactory.build(GlideUrl.class, InputStream.class));
+            // 必须自己包 HttpGlideUrlLoader，不能 multiFactory.build(GlideUrl)：
+            // replace 之后再 build 会递归；prepend 则会进 MultiModelLoader，sourceKey 被改回完整 GlideUrl。
+            return new StableCacheGlideUrlLoader(httpFactory.build(multiFactory));
         }
 
         @Override

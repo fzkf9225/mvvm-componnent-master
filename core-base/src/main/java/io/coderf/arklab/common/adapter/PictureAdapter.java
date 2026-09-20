@@ -1,18 +1,27 @@
 package io.coderf.arklab.common.adapter;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
+import io.coderf.arklab.common.api.Config;
+import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.customview.inter.IBannerItem;
 
 /**
