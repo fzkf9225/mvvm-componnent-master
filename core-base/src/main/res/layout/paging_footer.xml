@@ -14,27 +14,29 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progressBar"
             style="@style/Widget.Material3.CircularProgressIndicator.ExtraSmall"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:indeterminateDuration="1500"
-            app:indicatorColor="#666666"
-            app:indicatorSize="24dp"
-            app:trackThickness="0dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            app:indicatorColor="?attr/colorPrimary"
+            app:indicatorSize="20dp"
+            app:trackColor="?attr/colorOutlineVariant"
+            app:trackThickness="2dp"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/retryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="8dp"
             android:text="@={message}"
             tools:text="正在加载..."
-            android:textColor="#666666"
-            android:textSize="14sp" />
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="13sp" />
     </LinearLayout>
 </layout>

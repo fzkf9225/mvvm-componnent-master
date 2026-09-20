@@ -14,8 +14,10 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -92,17 +94,25 @@ public class EmptyLayout extends ConstraintLayout {
     private String customNoDataContent = "";
 
     // ==================== 图片资源（默认取全局 EmptyLayoutConfig，未配置则为框架内置） ====================
-    @DrawableRes private int errorImage;
-    @DrawableRes private int loadingImage;
-    @DrawableRes private int noDataImage;
+    @DrawableRes
+    private int errorImage;
+    @DrawableRes
+    private int loadingImage;
+    @DrawableRes
+    private int noDataImage;
     /** 可点击重试态使用刷新图标；加载中静态图参见 {@link #loadingImage}（沙漏） */
-    @DrawableRes private int clickableNoDataImage;
+    @DrawableRes
+    private int clickableNoDataImage;
 
     // ==================== 文字资源（默认取全局 EmptyLayoutConfig） ====================
-    @StringRes private int errorText;
-    @StringRes private int loadingText;
-    @StringRes private int noDataText;
-    @StringRes private int clickableNoDataText;
+    @StringRes
+    private int errorText;
+    @StringRes
+    private int loadingText;
+    @StringRes
+    private int noDataText;
+    @StringRes
+    private int clickableNoDataText;
 
     // ==================== 文字颜色 ====================
     private int errorTextColor;
@@ -297,10 +307,17 @@ public class EmptyLayout extends ConstraintLayout {
         applyConfigValues(Config.getInstance().getEmptyLayoutConfig());
     }
 
+    private EmptyLayoutConfig config;
+
+    public EmptyLayoutConfig getConfig() {
+        return config;
+    }
+
     /**
      * 将配置应用到本实例字段。不改变当前已展示状态，除非调用方随后 {@link #setState(State)}。
      */
     private void applyConfigValues(@NonNull EmptyLayoutConfig config) {
+        this.config = config;
         errorImage = config.getErrorImageRes();
         loadingImage = config.getLoadingImageRes();
         noDataImage = config.getNoDataImageRes();
