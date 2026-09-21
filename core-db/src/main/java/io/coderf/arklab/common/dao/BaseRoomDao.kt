@@ -9,7 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
 import io.coderf.arklab.common.bean.BaseDaoBean
-import io.coderf.arklab.common.utils.log.LogUtil
+import io.coderf.arklab.core.db.RoomLog
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -438,7 +438,7 @@ abstract class BaseRoomDao<T : Any> {
         replaceWith = ReplaceWith("deleteAllRows()")
     )
     fun deleteAllLiveData(): LiveData<List<T>> =
-        doFindListLiveData(RoomSqlHelper.delete(getTableName()))
+        doFindListLiveData(RoomSqlHelper.delete(getTableName()).also { logSql(it) })
 
     @Deprecated(
         message = "Use deleteByParamsRows / deleteByParamsCount",
@@ -448,6 +448,7 @@ abstract class BaseRoomDao<T : Any> {
         RoomSqlHelper.requireIdentifier(params)
         return doFindListLiveData(
             RoomSqlHelper.delete(getTableName(), " WHERE $params = ?", arrayOf(value))
+                .also { logSql(it) }
         )
     }
 
@@ -457,17 +458,17 @@ abstract class BaseRoomDao<T : Any> {
     )
     fun deleteByParamsLiveData(params: Map<String, Any>): LiveData<List<T>> {
         val (where, args) = RoomSqlHelper.buildWhereClause(params)
-        return doFindListLiveData(RoomSqlHelper.delete(getTableName(), where, args))
+        return doFindListLiveData(RoomSqlHelper.delete(getTableName(), where, args).also { logSql(it) })
     }
 
     fun findAllLiveData(): LiveData<List<T>> =
-        doFindListLiveData(RoomSqlHelper.query(getTableName()))
+        doFindListLiveData(RoomSqlHelper.query(getTableName()).also { logSql(it) })
 
     fun findInfoByIdLiveData(id: Long): LiveData<T> =
-        doFindLiveData(RoomSqlHelper.selectByColumn(getTableName(), "id", id))
+        doFindLiveData(RoomSqlHelper.selectByColumn(getTableName(), "id", id).also { logSql(it) })
 
     fun findInfoByIdLiveData(id: String): LiveData<T> =
-        doFindLiveData(RoomSqlHelper.selectByColumn(getTableName(), "id", id))
+        doFindLiveData(RoomSqlHelper.selectByColumn(getTableName(), "id", id).also { logSql(it) })
 
     fun doQueryByLimitLiveData(
         params: Map<String, Any>,
@@ -475,7 +476,9 @@ abstract class BaseRoomDao<T : Any> {
         limit: Int = 10,
         offset: Int = 0
     ): LiveData<List<T>> =
-        doFindListLiveData(buildPagedSelectQueryPlainOrder(params, null, null, orderBy, limit, offset))
+        doFindListLiveData(
+            buildPagedSelectQueryPlainOrder(params, null, null, orderBy, limit, offset).also { logSql(it) }
+        )
 
     fun doQueryByOrderDescLiveData(
         params: Map<String, Any>,
@@ -483,7 +486,10 @@ abstract class BaseRoomDao<T : Any> {
         limit: Int = 10,
         offset: Int = 0
     ): LiveData<List<T>> =
-        doFindListLiveData(buildPagedSelectQuery(params, null, null, orderBy, descending = true, limit, offset))
+        doFindListLiveData(
+            buildPagedSelectQuery(params, null, null, orderBy, descending = true, limit, offset)
+                .also { logSql(it) }
+        )
 
     fun doQueryByOrderDescLiveData(
         params: Map<String, Any>,
@@ -495,6 +501,7 @@ abstract class BaseRoomDao<T : Any> {
     ): LiveData<List<T>> =
         doFindListLiveData(
             buildPagedSelectQuery(params, keywordsKey, keywords, orderBy, descending = true, limit, offset)
+                .also { logSql(it) }
         )
 
     fun doQueryByOrderAscLiveData(
@@ -503,7 +510,10 @@ abstract class BaseRoomDao<T : Any> {
         limit: Int = 10,
         offset: Int = 0
     ): LiveData<List<T>> =
-        doFindListLiveData(buildPagedSelectQuery(params, null, null, orderBy, descending = false, limit, offset))
+        doFindListLiveData(
+            buildPagedSelectQuery(params, null, null, orderBy, descending = false, limit, offset)
+                .also { logSql(it) }
+        )
 
     // ==================== 查询构建（子类可复用） ====================
 
@@ -546,7 +556,7 @@ abstract class BaseRoomDao<T : Any> {
     }
 
     private fun logSql(query: SupportSQLiteQuery) {
-        LogUtil.logger("RoomDao", "sql:${query.sql}")
+        RoomLog.printSql(getTableName(), query)
     }
 
     // ==================== RawQuery 执行入口（子类或 KSP Bridge 实现） ====================

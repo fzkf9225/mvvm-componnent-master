@@ -3,7 +3,7 @@ package io.coderf.arklab.common.bean;
 import androidx.annotation.NonNull;
 
 /**
- * Room 数据仓库请求时的 UI 与行为配置，用法对齐 {@link ApiRequestOptions}。
+ * Room 数据仓库请求时的 UI 与行为配置，属于 {@code core-db}，用法对齐 {@link ApiRequestOptions}。
  *
  * <p><b>典型用法：</b></p>
  * <pre>{@code
@@ -33,7 +33,7 @@ import androidx.annotation.NonNull;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/21 15:18
  */
 public class RoomRequestOptions {
 

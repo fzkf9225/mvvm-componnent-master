@@ -17,6 +17,8 @@ import io.reactivex.rxjava3.core.Single
  * - **Loading** 仅通过 [getRequestUi]（[io.coderf.arklab.core.request.RequestUi]），
  *   由 [io.coderf.arklab.common.base.BaseViewModel] 注入，对齐 [RepositoryImpl]；
  * - **Flow / 协程**：见 [RoomRepositoryFlowExt]、[RoomRepositoryCoroutineExt]。
+ * - **日志**：`Config.enableDebug(true)` 后由 [io.coderf.arklab.core.db.RoomLog] 打印操作/耗时/结果，
+ *   数据库 Builder 再套 [io.coderf.arklab.core.db.RoomLog.attachTo] 可打印全部 SQL。
  *
  * ## 用法示例
  * ```kotlin
@@ -39,7 +41,7 @@ import io.reactivex.rxjava3.core.Single
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/9/21
  */
 open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
     private val roomDao: DB
@@ -67,44 +69,44 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         insert(obj, RoomRequestOptions.insert(showLoading, defaultOptionsEllipsis))
 
     fun insert(obj: T, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.insert(obj), options)
+        applyWrite(roomDao.insert(obj), options, "INSERT", obj)
 
     fun insert(objs: List<T>, showLoading: Boolean = false): Completable =
         insert(objs, RoomRequestOptions.insert(showLoading, defaultOptionsEllipsis))
 
     fun insert(objs: List<T>, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.insert(objs.toList()), options)
+        applyWrite(roomDao.insert(objs.toList()), options, "INSERT_LIST", objs)
 
     /** 插入或替换单条（冲突 REPLACE） */
     fun upsert(obj: T, showLoading: Boolean = false): Completable =
         upsert(obj, RoomRequestOptions.insert(showLoading, defaultOptionsEllipsis))
 
     fun upsert(obj: T, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.upsert(obj), options)
+        applyWrite(roomDao.upsert(obj), options, "UPSERT", obj)
 
     fun upsert(objs: List<T>, showLoading: Boolean = false): Completable =
         upsert(objs, RoomRequestOptions.insert(showLoading, defaultOptionsEllipsis))
 
     fun upsert(objs: List<T>, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.upsert(objs.toList()), options)
+        applyWrite(roomDao.upsert(objs.toList()), options, "UPSERT_LIST", objs)
 
     fun delete(obj: T, showLoading: Boolean = false): Completable =
         delete(obj, RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
 
     fun delete(obj: T, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.delete(obj), options)
+        applyWrite(roomDao.delete(obj), options, "DELETE", obj)
 
     fun update(obj: T, showLoading: Boolean = false): Completable =
         update(obj, RoomRequestOptions.update(showLoading, defaultOptionsEllipsis))
 
     fun update(obj: T, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.update(obj), options)
+        applyWrite(roomDao.update(obj), options, "UPDATE", obj)
 
     fun update(obj: List<T>, showLoading: Boolean = false): Completable =
         update(obj, RoomRequestOptions.update(showLoading, defaultOptionsEllipsis))
 
     fun update(obj: List<T>, options: RoomRequestOptions): Completable =
-        RoomRepositorySupport.applyCompletable(this, roomDao.update(obj), options)
+        applyWrite(roomDao.update(obj), options, "UPDATE_LIST", obj)
 
     // ==================== 条件删除（返回影响行数，推荐） ====================
 
@@ -112,19 +114,19 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         deleteAllCount(RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
 
     fun deleteAllCount(options: RoomRequestOptions): Single<Int> =
-        RoomRepositorySupport.applySingle(this, roomDao.deleteAllCount(), options)
+        applyRead(roomDao.deleteAllCount(), options, "DELETE_ALL")
 
     fun deleteByParamsCount(column: String, value: Any, showLoading: Boolean = false): Single<Int> =
         deleteByParamsCount(column, value, RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
 
     fun deleteByParamsCount(column: String, value: Any, options: RoomRequestOptions): Single<Int> =
-        RoomRepositorySupport.applySingle(this, roomDao.deleteByParamsCount(column, value), options)
+        applyRead(roomDao.deleteByParamsCount(column, value), options, "DELETE_BY_PARAMS", mapOf(column to value))
 
     fun deleteByParamsCount(params: Map<String, Any>, showLoading: Boolean = false): Single<Int> =
         deleteByParamsCount(params, RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
 
     fun deleteByParamsCount(params: Map<String, Any>, options: RoomRequestOptions): Single<Int> =
-        RoomRepositorySupport.applySingle(this, roomDao.deleteByParamsCount(params), options)
+        applyRead(roomDao.deleteByParamsCount(params), options, "DELETE_BY_PARAMS", params)
 
     // ==================== 条件删除（Flowable，兼容老签名，已废弃） ====================
 
@@ -135,7 +137,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
     @Deprecated("Use deleteAllCount(options)")
     fun deleteAll(options: RoomRequestOptions): Flowable<List<T>> =
         @Suppress("DEPRECATION")
-        RoomRepositorySupport.applyDeleteFlowable(this, roomDao.deleteAll(), options)
+        applyDeleteList(roomDao.deleteAll(), options, "DELETE_ALL")
 
     @Deprecated("Use deleteByParamsCount(column, value, showLoading)")
     fun deleteByParams(params: String, value: String, showLoading: Boolean = false): Flowable<List<T>> =
@@ -144,7 +146,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
     @Deprecated("Use deleteByParamsCount(column, value, options)")
     fun deleteByParams(params: String, value: String, options: RoomRequestOptions): Flowable<List<T>> =
         @Suppress("DEPRECATION")
-        RoomRepositorySupport.applyDeleteFlowable(this, roomDao.deleteByParams(params, value), options)
+        applyDeleteList(roomDao.deleteByParams(params, value), options, "DELETE_BY_PARAMS", mapOf(params to value))
 
     @Deprecated("Use deleteByParamsCount(params, showLoading)")
     fun deleteByParams(params: Map<String, Any>, showLoading: Boolean = false): Flowable<List<T>> =
@@ -153,7 +155,7 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
     @Deprecated("Use deleteByParamsCount(params, options)")
     fun deleteByParams(params: Map<String, Any>, options: RoomRequestOptions): Flowable<List<T>> =
         @Suppress("DEPRECATION")
-        RoomRepositorySupport.applyDeleteFlowable(this, roomDao.deleteByParams(params), options)
+        applyDeleteList(roomDao.deleteByParams(params), options, "DELETE_BY_PARAMS", params)
 
     // ==================== count / exists ====================
 
@@ -161,13 +163,13 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         countAll(RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun countAll(options: RoomRequestOptions): Single<Long> =
-        RoomRepositorySupport.applySingle(this, roomDao.countAllSingle(), options)
+        applyRead(roomDao.countAllSingle(), options, "COUNT_ALL")
 
     fun count(params: Map<String, Any>, showLoading: Boolean = false): Single<Long> =
         count(params, RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun count(params: Map<String, Any>, options: RoomRequestOptions): Single<Long> =
-        RoomRepositorySupport.applySingle(this, roomDao.countSingle(params), options)
+        applyRead(roomDao.countSingle(params), options, "COUNT", params)
 
     fun countAllSync(): Long = roomDao.countAll()
 
@@ -185,31 +187,31 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         findAll(RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun findAll(options: RoomRequestOptions): Flowable<List<T>> =
-        RoomRepositorySupport.applyListFlowable(this, roomDao.findAll(), options)
+        applyQueryList(roomDao.findAll(), options, "FIND_ALL")
 
     fun findInfoById(id: Long, showLoading: Boolean = false): Single<T> =
         findInfoById(id, RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun findInfoById(id: Long, options: RoomRequestOptions): Single<T> =
-        RoomRepositorySupport.applySingle(this, roomDao.findInfoById(id), options)
+        applyRead(roomDao.findInfoById(id), options, "FIND_BY_ID", id)
 
     fun findInfoById(id: String, showLoading: Boolean = false): Single<T> =
         findInfoById(id, RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun findInfoById(id: String, options: RoomRequestOptions): Single<T> =
-        RoomRepositorySupport.applySingle(this, roomDao.findInfoById(id), options)
+        applyRead(roomDao.findInfoById(id), options, "FIND_BY_ID", id)
 
     fun findInfoById(primaryKey: String, id: Long, showLoading: Boolean = false): Single<T> =
         findInfoById(primaryKey, id, RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun findInfoById(primaryKey: String, id: Long, options: RoomRequestOptions): Single<T> =
-        RoomRepositorySupport.applySingle(this, roomDao.findInfoById(primaryKey, id), options)
+        applyRead(roomDao.findInfoById(primaryKey, id), options, "FIND_BY_ID", mapOf(primaryKey to id))
 
     fun findInfoById(primaryKey: String, id: String, showLoading: Boolean = false): Single<T> =
         findInfoById(primaryKey, id, RoomRequestOptions.query(showLoading, defaultOptionsEllipsis))
 
     fun findInfoById(primaryKey: String, id: String, options: RoomRequestOptions): Single<T> =
-        RoomRepositorySupport.applySingle(this, roomDao.findInfoById(primaryKey, id), options)
+        applyRead(roomDao.findInfoById(primaryKey, id), options, "FIND_BY_ID", mapOf(primaryKey to id))
 
     fun findByIn(column: String, values: Collection<*>): List<T> =
         roomDao.findByIn(column, values)
@@ -219,10 +221,11 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         values: Collection<*>,
         showLoading: Boolean = false
     ): Flowable<List<T>> =
-        RoomRepositorySupport.applyListFlowable(
-            this,
+        applyQueryList(
             roomDao.findByInFlowable(column, values),
-            RoomRequestOptions.query(showLoading, defaultOptionsEllipsis)
+            RoomRequestOptions.query(showLoading, defaultOptionsEllipsis),
+            "FIND_BY_IN",
+            mapOf(column to values)
         )
 
     fun doQueryByLimit(
@@ -241,10 +244,11 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         limit: Int = 10,
         offset: Int = 0
     ): Flowable<List<T>> =
-        RoomRepositorySupport.applyListFlowable(
-            this,
+        applyQueryList(
             roomDao.doQueryByLimit(params, orderBy, limit, offset),
-            options
+            options,
+            "QUERY_BY_LIMIT",
+            params
         )
 
     fun doQueryByOrderDesc(
@@ -270,10 +274,11 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         limit: Int = 10,
         offset: Int = 0
     ): Flowable<List<T>> =
-        RoomRepositorySupport.applyListFlowable(
-            this,
+        applyQueryList(
             roomDao.doQueryByOrderDesc(params, keywordsKey, keywords, orderBy, limit, offset),
-            options
+            options,
+            "QUERY_ORDER_DESC",
+            params
         )
 
     fun doQueryByOrderDesc(
@@ -304,10 +309,11 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         limit: Int = 10,
         offset: Int = 0
     ): Flowable<List<T>> =
-        RoomRepositorySupport.applyListFlowable(
-            this,
+        applyQueryList(
             roomDao.doQueryByOrderAsc(params, orderBy, limit, offset),
-            options
+            options,
+            "QUERY_ORDER_ASC",
+            params
         )
 
     // ==================== 同步分页 ====================
@@ -397,4 +403,40 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         limit: Int = 10,
         offset: Int = 0
     ): LiveData<List<T>> = roomDao.doQueryByOrderAscLiveData(params, orderBy, limit, offset)
+
+    private fun applyWrite(
+        source: Completable,
+        options: RoomRequestOptions,
+        operation: String,
+        payload: Any? = null
+    ): Completable = RoomRepositorySupport.applyCompletable(
+        this, source, options, roomDao.getTableName(), operation, payload
+    )
+
+    private fun <R : Any> applyRead(
+        source: Single<R>,
+        options: RoomRequestOptions,
+        operation: String,
+        payload: Any? = null
+    ): Single<R> = RoomRepositorySupport.applySingle(
+        this, source, options, roomDao.getTableName(), operation, payload
+    )
+
+    private fun applyQueryList(
+        source: Flowable<List<T>>,
+        options: RoomRequestOptions,
+        operation: String,
+        payload: Any? = null
+    ): Flowable<List<T>> = RoomRepositorySupport.applyListFlowable(
+        this, source, options, roomDao.getTableName(), operation, payload
+    )
+
+    private fun applyDeleteList(
+        source: Flowable<List<T>>,
+        options: RoomRequestOptions,
+        operation: String,
+        payload: Any? = null
+    ): Flowable<List<T>> = RoomRepositorySupport.applyDeleteFlowable(
+        this, source, options, roomDao.getTableName(), operation, payload
+    )
 }

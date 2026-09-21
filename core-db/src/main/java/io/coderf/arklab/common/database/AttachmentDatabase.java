@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.dao.AttachmentDao;
+import io.coderf.arklab.core.db.RoomLog;
 
 /**
  * AttachmentDatabase 类。
@@ -92,13 +93,14 @@ public abstract class AttachmentDatabase extends RoomDatabase {
             }
 
             // 数据库的名字
-            attachmentDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                            AttachmentDatabase.class, attachmentDatabaseName)
-                    // 添加迁移策略
-                    .addMigrations(MIGRATION_1_2)
-                    // 强制开启在主线程中操作数据库
-                    .allowMainThreadQueries()
-                    .build();
+            attachmentDatabase = RoomLog.attachTo(
+                    Room.databaseBuilder(context.getApplicationContext(),
+                                    AttachmentDatabase.class, attachmentDatabaseName)
+                            // 添加迁移策略
+                            .addMigrations(MIGRATION_1_2)
+                            // 强制开启在主线程中操作数据库
+                            .allowMainThreadQueries()
+            ).build();
         }
         return attachmentDatabase;
     }

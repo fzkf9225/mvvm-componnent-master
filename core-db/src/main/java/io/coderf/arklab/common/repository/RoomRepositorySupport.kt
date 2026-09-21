@@ -3,6 +3,7 @@ package io.coderf.arklab.common.repository
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseRepository
 import io.coderf.arklab.common.bean.RoomRequestOptions
+import io.coderf.arklab.core.db.RoomLog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -17,7 +18,8 @@ import java.util.concurrent.TimeUnit
  * - `subscribeOn(IO)` + `observeOn(MainThread)`；
  * - 按 [RoomRequestOptions] 控制 [RequestUi] 的 show/hide Loading；
  * - 注册 Disposable / Subscription 到 [BaseRepository]；
- * - 查询空列表、删除空结果等业务异常与 [RepositoryImpl.sendRequest] 行为对齐。
+ * - 查询空列表、删除空结果等业务异常与 [RepositoryImpl.sendRequest] 行为对齐；
+ * - Debug 下经 [RoomLog] 打印操作、耗时与结果（对齐网络 [io.coderf.arklab.common.api.ApiRetrofit.printLog]）。
  *
  * ## 调用方
  * 仅由 [RoomRepositoryImpl] 委托调用；业务代码请使用 Repository 公开 API。
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/9/21
  */
 internal object RoomRepositorySupport {
 
@@ -38,19 +40,33 @@ internal object RoomRepositorySupport {
      * @param repository 用于注册 Disposable 与获取 RequestUi
      * @param source Room Dao 返回的 Completable
      * @param options UI 与超时配置
+     * @param tableName 表名，仅用于日志
+     * @param operation 操作名，仅用于日志
+     * @param payload 写入实体或参数，仅用于日志
      */
     fun applyCompletable(
         repository: BaseRepository,
         source: Completable,
-        options: RoomRequestOptions
+        options: RoomRequestOptions,
+        tableName: String,
+        operation: String,
+        payload: Any? = null
     ): Completable {
         var chain = source.subscribeOn(Schedulers.io())
         if (options.timeoutSeconds > 0) {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
+        val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addDisposable(it) }
             .doOnSubscribe { showLoading(repository, options) }
+            .doOnSubscribe {
+                session[0] = RoomLog.begin(
+                    repository.javaClass.simpleName, operation, tableName, options, payload
+                )
+            }
+            .doOnComplete { session[0]?.success("complete") }
+            .doOnError { session[0]?.error(it) }
             .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -61,15 +77,26 @@ internal object RoomRepositorySupport {
     fun <T : Any> applySingle(
         repository: BaseRepository,
         source: Single<T>,
-        options: RoomRequestOptions
+        options: RoomRequestOptions,
+        tableName: String,
+        operation: String,
+        payload: Any? = null
     ): Single<T> {
         var chain = source.subscribeOn(Schedulers.io())
         if (options.timeoutSeconds > 0) {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
+        val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addDisposable(it) }
             .doOnSubscribe { showLoading(repository, options) }
+            .doOnSubscribe {
+                session[0] = RoomLog.begin(
+                    repository.javaClass.simpleName, operation, tableName, options, payload
+                )
+            }
+            .doOnSuccess { session[0]?.success(it) }
+            .doOnError { session[0]?.error(it) }
             .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -82,7 +109,10 @@ internal object RoomRepositorySupport {
     fun <T : Any> applyListFlowable(
         repository: BaseRepository,
         source: Flowable<List<T>>,
-        options: RoomRequestOptions
+        options: RoomRequestOptions,
+        tableName: String,
+        operation: String,
+        payload: Any? = null
     ): Flowable<List<T>> {
         var chain = source
             .defaultIfEmpty(emptyList())
@@ -100,9 +130,17 @@ internal object RoomRepositorySupport {
                 }
             }
         }
+        val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addSubscription(it) }
             .doOnSubscribe { showLoading(repository, options) }
+            .doOnSubscribe {
+                session[0] = RoomLog.begin(
+                    repository.javaClass.simpleName, operation, tableName, options, payload
+                )
+            }
+            .doOnNext { session[0]?.success(it) }
+            .doOnError { session[0]?.error(it) }
             .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -114,7 +152,10 @@ internal object RoomRepositorySupport {
     fun <T : Any> applyDeleteFlowable(
         repository: BaseRepository,
         source: Flowable<List<T>>,
-        options: RoomRequestOptions
+        options: RoomRequestOptions,
+        tableName: String,
+        operation: String,
+        payload: Any? = null
     ): Flowable<List<T>> {
         var chain = source
             .defaultIfEmpty(emptyList())
@@ -122,6 +163,7 @@ internal object RoomRepositorySupport {
         if (options.timeoutSeconds > 0) {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
+        val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnNext { list ->
                 if (list.isEmpty()) {
@@ -133,6 +175,13 @@ internal object RoomRepositorySupport {
             }
             .doOnSubscribe { repository.addSubscription(it) }
             .doOnSubscribe { showLoading(repository, options) }
+            .doOnSubscribe {
+                session[0] = RoomLog.begin(
+                    repository.javaClass.simpleName, operation, tableName, options, payload
+                )
+            }
+            .doOnNext { session[0]?.success(it) }
+            .doOnError { session[0]?.error(it) }
             .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
     }
