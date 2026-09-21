@@ -24,13 +24,31 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 
 /**
  * 确认弹框：双按钮（确定 / 取消），支持富文本与细粒度样式配置。
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @created 2024/12/2 0:00
- */
+ * <p>
+ * 标准纯文案确认优先用 {@link MaterialAlertHelper}；需要富文本、隐藏某一侧按钮、自定义字号/间距时用本类。
+ * <pre>
+ * new ConfirmDialog(context)
+ *     .setMessage("确定删除该项？")
+ *     .setPositiveText("删除")
+ *     .setNegativeText("取消")
+ *     .setPositiveTextColor(ThemeAttrs.error(context))
+ *     .setOnPositiveClickListener(dialog -&gt; { \/* 已 dismiss *\/ })
+        *     .setCanOutSide(false)
+ *     .builder()
+ *     .show();
+ * </pre>
+        *
+        * @author fz
+ * @version 1.1
+        * @since 1.0
+        * @created 2024/12/2 0:00
+        * @updated 2026/9/21
+        */
 public class ConfirmDialog extends BaseDialog {
+
+    /** 点击确定/取消后是否自动 dismiss，默认 true */
+    private boolean dismissOnPositive = true;
+    private boolean dismissOnNegative = true;
     /**
      * 弹框提示内容
      */
@@ -267,6 +285,21 @@ public class ConfirmDialog extends BaseDialog {
     }
 
     /**
+     * 点击确定后是否自动 {@link #dismiss()}，默认 true。
+     * 设为 false 时需在回调里自行关闭（例如校验未通过不关窗）。
+     */
+    public ConfirmDialog setDismissOnPositive(boolean dismiss) {
+        this.dismissOnPositive = dismiss;
+        return this;
+    }
+
+    /** 点击取消后是否自动 dismiss，默认 true。 */
+    public ConfirmDialog setDismissOnNegative(boolean dismiss) {
+        this.dismissOnNegative = dismiss;
+        return this;
+    }
+
+    /**
      * 设置提示文案左右外边距（px），任一侧小于 0 则保持 XML 该侧数值。
      */
     public ConfirmDialog setContentHorizontalMarginPx(int marginStartPx, int marginEndPx) {
@@ -411,14 +444,18 @@ public class ConfirmDialog extends BaseDialog {
 
         // 设置点击事件
         binding.dialogConfirm.setOnClickListener(v -> {
-            dismiss();
+            if (dismissOnPositive) {
+                dismiss();
+            }
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);
             }
         });
 
         binding.dialogCancel.setOnClickListener(v -> {
-            dismiss();
+            if (dismissOnNegative) {
+                dismiss();
+            }
             if (onNegativeClickListener != null) {
                 onNegativeClickListener.onDialogClick(this);
             }

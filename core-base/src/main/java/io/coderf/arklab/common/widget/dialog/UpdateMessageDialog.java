@@ -18,7 +18,7 @@ import androidx.core.text.HtmlCompat;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.UpdateDialogBinding;
 import io.coderf.arklab.common.utils.network.NetworkStateUtil;
-import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**

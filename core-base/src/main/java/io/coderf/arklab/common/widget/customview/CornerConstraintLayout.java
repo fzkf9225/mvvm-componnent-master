@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 
 /**
  * 带 XML 圆角 / 填充 / 描边的 {@link ConstraintLayout}。

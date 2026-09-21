@@ -15,11 +15,15 @@ import io.coderf.arklab.core.request.RequestUiHost;
  * <b>请求 UI</b>：默认持有 {@link NetworkRequestUiHost}，经 {@link #ensureRepository()} 注入 Repository。
  * 页面由 {@link BaseActivity}/{@link BaseFragment} 调用 {@link NetworkRequestUiBinder#bind} 订阅 LiveData。
  * 不持有 Activity/Fragment，业务导航请用 LiveData / SharedFlow 等状态下发。
+ * <p>
+ * <b>页面内容状态（可选）</b>：新页面可用 {@code io.coderf.arklab.core.ui.state.UiState} +
+ * {@code UiStateHolder} 以单一 StateFlow 表达 Loading/Success/Empty/Error；
+ * 与 RequestUi（遮罩 Loading / Toast）正交，旧 LiveData 路径不受影响。
  *
  * @author fz
- * @version 2.0
+ * @version 2.1
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/9/21
  */
 public abstract class BaseViewModel<IR extends IRepository> extends BaseViewViewModel {
 

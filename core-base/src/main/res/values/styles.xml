@@ -61,6 +61,8 @@
         <item name="materialCalendarTheme">@style/ThemeOverlay.App.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.Material3.MaterialCalendar.Fullscreen</item>
         <item name="materialTimePickerTheme">@style/ThemeOverlay.App.MaterialTimePicker</item>
+        <!-- 官方 MaterialAlertDialog 与 MaterialAlertHelper -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
     </style>
 
     <!-- MaterialDatePicker：标题走 onSurface；格子尺寸跟系统 density，避免 AutoSize 把周日列裁掉 -->
@@ -266,6 +268,7 @@
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
     </style>
 
+    <!-- 自研 Dialog / MaterialAlertDialog 共用色板与控件默认样式 -->
     <style name="App.Material3.Dialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
@@ -282,11 +285,48 @@
         <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighest</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
+        <item name="colorError">@color/theme_red</item>
+        <item name="colorOnError">@color/onError</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.Material3.Button.OutlinedButton</item>
         <item name="borderlessButtonStyle">@style/Widget.Material3.Button.TextButton</item>
         <item name="materialIconButtonStyle">@style/Widget.Material3.Button.IconButton</item>
+        <!-- 官方 MaterialAlertDialog 圆角与按钮风格 -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.Dialog</item>
+    </style>
+
+    <!-- M3 Dialog 标准大圆角（约 28dp） -->
+    <style name="ShapeAppearance.App.Dialog" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/themeColor</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorSurface">@color/cardSurface</item>
+        <item name="colorOnSurface">@color/cardOnSurface</item>
+        <item name="colorOnSurfaceVariant">@color/cardOnSurfaceVariant</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outlineVariant</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.App.Body.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Dialog.Button.TextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Dialog.Button.TextButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Dialog.Button.TextButton</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.Dialog</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App.Body.Text" parent="MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.App.Dialog.Button.TextButton" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
     <style name="loading_dialog_base" parent="App.Material3.Dialog">

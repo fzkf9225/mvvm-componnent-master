@@ -65,9 +65,14 @@
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
 
-    <!-- 列表项点击高亮样式：兼容暗色模式，暗色下使用浅色 ripple -->
+    <!--
+        列表项点击水波纹。
+        TextView 上用 foreground 经常不显示（未 clickable 或状态不同步），
+        统一用 background + clickable/focusable。
+    -->
     <style name="SelectableItemStyle">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
     </style>
 </resources>

@@ -15,14 +15,13 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.google.android.material.textview.MaterialTextView;
-
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.KeyBoardUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;

@@ -14,27 +14,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
  * Dialog 公共基类：统一 Window 尺寸、居中、圆角背景与外部点击取消配置，
  * 并在 {@link #show()} 前校验 Activity 是否仍可展示，降低 Window 泄漏风险。
+ * <p>
+ * 默认背景为 Material3 {@code surfaceContainerHigh} + 28dp 圆角（与官方 AlertDialog 接近）。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2026/7/13 10:00
+ * @updated 2026/9/21
  */
 public abstract class BaseDialog extends Dialog {
 
     /** 默认宽度占屏幕比例：4/5 */
     protected static final int DEFAULT_WIDTH_NUMERATOR = 4;
     protected static final int DEFAULT_WIDTH_DENOMINATOR = 5;
+
+    /** 居中弹窗默认圆角（dp）。M3 规范为 28dp；本工程用 16dp，避免过圆。 */
+    protected static final float DEFAULT_DIALOG_CORNER_DP = 16f;
+
+    /** 底部 Sheet 顶部圆角（dp），与居中弹窗一致。 */
+    protected static final float DEFAULT_SHEET_TOP_CORNER_DP = 16f;
 
     protected final LayoutInflater layoutInflater;
     protected boolean outSide = true;
@@ -126,7 +133,7 @@ public abstract class BaseDialog extends Dialog {
      * 底部 Sheet 弹窗，可指定 gravity 与顶部圆角半径 (dp)。
      */
     protected void applyBottomSheetWindow(int gravity) {
-        applyBottomSheetWindow(gravity, 16f);
+        applyBottomSheetWindow(gravity, DEFAULT_SHEET_TOP_CORNER_DP);
     }
 
     protected void applyBottomSheetWindow(int gravity, float topCornerRadiusDp) {
@@ -164,13 +171,14 @@ public abstract class BaseDialog extends Dialog {
 
     @NonNull
     protected Drawable resolveBottomSheetBackgroundDrawable(float topCornerRadiusDp) {
-        return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ThemeAttrs.surfaceContainerHigh(getContext()),
-                DensityUtil.dp2px(getContext(), topCornerRadiusDp),
-                DensityUtil.dp2px(getContext(), topCornerRadiusDp),
-                0,
-                0
-        ));
+        if (bgDrawable != null) {
+            return bgDrawable;
+        }
+        float top = DensityUtil.dp2px(getContext(), topCornerRadiusDp);
+        return CornerShapeHelper.createBackground(
+                top, top, 0f, 0f,
+                true, ThemeAttrs.surfaceContainerHigh(getContext()),
+                false, 0f, 0);
     }
 
     /**
@@ -182,15 +190,19 @@ public abstract class BaseDialog extends Dialog {
         setCanceledOnTouchOutside(cancelable);
     }
 
+    /**
+     * 居中弹窗默认背景：surfaceContainerHigh + M3 大圆角。
+     */
     @NonNull
     protected Drawable resolveBackgroundDrawable() {
-        return Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ThemeAttrs.surfaceContainerHigh(getContext()),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f),
-                DensityUtil.dp2px(getContext(), 8f)
-        ));
+        if (bgDrawable != null) {
+            return bgDrawable;
+        }
+        float r = DensityUtil.dp2px(getContext(), DEFAULT_DIALOG_CORNER_DP);
+        return CornerShapeHelper.createBackground(
+                r, r, r, r,
+                true, ThemeAttrs.surfaceContainerHigh(getContext()),
+                false, 0f, 0);
     }
 
     public BaseDialog setBgDrawable(@Nullable Drawable bgDrawable) {

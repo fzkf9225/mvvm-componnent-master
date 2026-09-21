@@ -4,8 +4,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 
+import io.coderf.arklab.common.helper.CornerShapeHelper;
+import io.coderf.arklab.common.utils.common.ShapeUtils;
+
 /**
- * GradientDrawable 构建器，支持圆角、描边、渐变等；保留历史拼写 API 并标记 {@link Deprecated}。
+ * {@link GradientDrawable} 构建器，支持圆角、描边、渐变等；保留历史拼写 API 并标记 {@link Deprecated}。
+ * <p>
+ * <b>推荐用法</b>：
+ * <ul>
+ *   <li>纯色 + 圆角 + 描边 → {@link ShapeUtils}
+ *       或 {@link CornerShapeHelper}（MaterialShapeDrawable）</li>
+ *   <li>渐变背景 → 本类，或 {@link ShapeUtils#gradientBuilder()}</li>
+ * </ul>
+ * 本类不删除，既有调用（如 GradationRectTextView）保持兼容。
  *
  * @author fz
  * @version 1.0

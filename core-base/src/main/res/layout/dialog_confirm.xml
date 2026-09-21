@@ -3,35 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
+    <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_confirm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="29dp"
-            android:paddingBottom="23dp"
             android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:paddingStart="@dimen/horizontal_margin_l"
+            android:paddingTop="24dp"
+            android:paddingEnd="@dimen/horizontal_margin_l"
+            android:paddingBottom="20dp"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xl"
-            android:paddingStart="@dimen/horizontal_margin_l"
-            android:paddingEnd="@dimen/horizontal_margin_l"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="tel:055165555744" />
+            tools:text="确认执行此操作？" />
 
         <View
             android:id="@+id/h_line"
+            android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_width="match_parent"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_textView" />
@@ -40,22 +41,24 @@
             android:id="@+id/dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
-            android:gravity="center"
-            android:text="@string/cancel"
-            android:textColor="@color/gray"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="@dimen/font_size_xl"
-            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintEnd_toStartOf="@id/s_line"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/h_line" />
 
         <View
             android:id="@+id/s_line"
-            android:layout_height="0dp"
             android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintBottom_toBottomOf="@id/dialog_cancel"
             app:layout_constraintEnd_toStartOf="@id/dialog_confirm"
             app:layout_constraintStart_toEndOf="@id/dialog_cancel"
@@ -65,15 +68,17 @@
             android:id="@+id/dialog_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_xl"
-            android:gravity="center"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
             android:text="@string/confirm"
-            app:layout_constraintHorizontal_weight="1"
-            android:textColor="?attr/colorOnSurface"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/font_size_xl"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/s_line"
             app:layout_constraintTop_toBottomOf="@id/h_line" />
     </androidx.constraintlayout.widget.ConstraintLayout>

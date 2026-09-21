@@ -2,6 +2,7 @@ package io.coderf.arklab.common.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.ViewGroup;
+
 import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
@@ -11,36 +12,28 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionTextViewBinding;
 
 /**
- * Updated by fz on 2026/3/18.
- * 底部选择菜单
- * 支持自定义样式属性：
- * - 列表项高度
- * - 字体大小
- * - 字体颜色
- * - 单行/多行显示
- * - 左右margin
- * - 上下padding
+ * 底部选择菜单列表 Adapter。
+ * <p>
+ * 可配置：项高度、字号、字色、行数、四边 padding。
+ * 水波纹来自 item 布局 {@code SelectableItemStyle}（background = selectableItemBackground）。
+ * 若对 item 再 {@code setBackground(...)} 实心色，会盖掉水波纹；改字色不影响。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/21
  */
-public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T,OptionTextViewBinding> {
+public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerViewAdapter<T, OptionTextViewBinding> {
 
-
-    // 样式属性
-    private int itemHeight = -1; // 列表项高度，-1表示使用wrap_content
-    private float textSize = -1; // 字体大小，-1表示使用默认值
-    private int textColor = -1; // 字体颜色，-1表示使用默认值
-    private int maxLines = 1; // 最大行数，默认单行
-    private int leftMargin = -1; // 左边距
-    private int rightMargin = -1; // 右边距
-    private int topPadding = -1; // 上内边距
-    private int bottomPadding = -1; // 下内边距
-    private int leftPadding = -1; // 左内边距
-    private int rightPadding = -1; // 右内边距
-    private boolean isSingleLine = true; // 是否单行显示
+    private int itemHeight = -1;
+    private float textSize = -1;
+    private int textColor = -1;
+    private int maxLines = 1;
+    private int topPadding = -1;
+    private int bottomPadding = -1;
+    private int leftPadding = -1;
+    private int rightPadding = -1;
+    private boolean isSingleLine = true;
 
     public MenuListAdapter() {
         super();
@@ -50,55 +43,31 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     public void onBindHolder(BaseViewHolder<OptionTextViewBinding> holder, int pos) {
         OptionTextViewBinding binding = holder.getBinding();
         binding.setItem(mList.get(pos));
-
-        // 应用自定义样式
         applyCustomStyles(binding);
     }
 
-    /**
-     * 应用自定义样式到视图
-     */
     private void applyCustomStyles(OptionTextViewBinding binding) {
         MaterialTextView textView = binding.tvOption;
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
+        ViewGroup.LayoutParams params = textView.getLayoutParams();
 
-        // 设置列表项高度
         if (itemHeight > 0) {
             params.height = itemHeight;
+            textView.setLayoutParams(params);
         }
 
-        // 设置左右margin
-        if (leftMargin >= 0) {
-            params.leftMargin = leftMargin;
-        }
-        if (rightMargin >= 0) {
-            params.rightMargin = rightMargin;
-        }
+        int newTop = topPadding >= 0 ? topPadding : textView.getPaddingTop();
+        int newBottom = bottomPadding >= 0 ? bottomPadding : textView.getPaddingBottom();
+        int newLeft = leftPadding >= 0 ? leftPadding : textView.getPaddingLeft();
+        int newRight = rightPadding >= 0 ? rightPadding : textView.getPaddingRight();
+        textView.setPadding(newLeft, newTop, newRight, newBottom);
 
-        // 设置上下padding
-        int currentTopPadding = textView.getPaddingTop();
-        int currentBottomPadding = textView.getPaddingBottom();
-        int currentLeftPadding = textView.getPaddingLeft();
-        int currentRightPadding = textView.getPaddingRight();
-
-        int newTopPadding = topPadding >= 0 ? topPadding : currentTopPadding;
-        int newBottomPadding = bottomPadding >= 0 ? bottomPadding : currentBottomPadding;
-        int newLeftPadding = leftPadding >= 0 ? leftPadding : currentLeftPadding;
-        int newRightPadding = rightPadding >= 0 ? rightPadding : currentRightPadding;
-
-        textView.setPadding(newLeftPadding, newTopPadding, newRightPadding, newBottomPadding);
-
-        // 设置字体大小
         if (textSize > 0) {
             textView.setTextSize(textSize);
         }
-
-        // 设置字体颜色
         if (textColor != -1) {
             textView.setTextColor(textColor);
         }
 
-        // 设置单行/多行显示
         if (isSingleLine) {
             textView.setSingleLine(true);
             textView.setMaxLines(1);
@@ -109,8 +78,6 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
                 textView.setMaxLines(maxLines);
             }
         }
-
-        textView.setLayoutParams(params);
     }
 
     @Override
@@ -118,50 +85,34 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
         return R.layout.option_text_view;
     }
 
-    // ==================== 样式设置方法 ====================
+    // ==================== 样式设置 ====================
 
-    /**
-     * 设置列表项高度
-     * @param height 高度值（像素）
-     */
     @SuppressLint("NotifyDataSetChanged")
     public void setItemHeight(int height) {
         this.itemHeight = height;
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置字体大小
-     * @param size 字体大小（sp）
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void setTextSize(float size) {
         this.textSize = size;
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置字体颜色
-     * @param color 颜色资源ID或颜色值
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void setTextColor(int color) {
         this.textColor = color;
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置最大行数
-     * @param maxLines 最大行数
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void setMaxLines(int maxLines) {
         this.maxLines = maxLines;
         this.isSingleLine = (maxLines == 1);
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置是否单行显示
-     * @param isSingleLine true为单行，false为多行
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void setSingleLine(boolean isSingleLine) {
         this.isSingleLine = isSingleLine;
         if (!isSingleLine) {
@@ -173,32 +124,12 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     }
 
     /**
-     * 设置左右边距
-     * @param left 左边距（像素）
-     * @param right 右边距（像素）
+     * 设置左右内边距（原 setMargins，已改为 padding，避免与列表/父布局 margin 混淆）。
+     *
+     * @param left  左 padding（px）
+     * @param right 右 padding（px）
      */
-    public void setMargins(int left, int right) {
-        this.leftMargin = left;
-        this.rightMargin = right;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 设置上下内边距
-     * @param top 上内边距（像素）
-     * @param bottom 下内边距（像素）
-     */
-    public void setVerticalPadding(int top, int bottom) {
-        this.topPadding = top;
-        this.bottomPadding = bottom;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 设置左右内边距
-     * @param left 左内边距（像素）
-     * @param right 右内边距（像素）
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void setHorizontalPadding(int left, int right) {
         this.leftPadding = left;
         this.rightPadding = right;
@@ -206,12 +137,22 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     }
 
     /**
-     * 设置所有内边距
-     * @param left 左内边距
-     * @param top 上内边距
-     * @param right 右内边距
-     * @param bottom 下内边距
+     * @deprecated 请使用 {@link #setHorizontalPadding(int, int)}，语义为内边距而非外边距。
      */
+    @Deprecated
+    @SuppressLint("NotifyDataSetChanged")
+    public void setMargins(int left, int right) {
+        setHorizontalPadding(left, right);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setVerticalPadding(int top, int bottom) {
+        this.topPadding = top;
+        this.bottomPadding = bottom;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     public void setPadding(int left, int top, int right, int bottom) {
         this.leftPadding = left;
         this.topPadding = top;
@@ -220,17 +161,12 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
         notifyDataSetChanged();
     }
 
-    /**
-     * 批量设置样式
-     * @param builder 样式构建器
-     */
+    @SuppressLint("NotifyDataSetChanged")
     public void applyStyles(StyleBuilder builder) {
         this.itemHeight = builder.itemHeight;
         this.textSize = builder.textSize;
         this.textColor = builder.textColor;
         this.maxLines = builder.maxLines;
-        this.leftMargin = builder.leftMargin;
-        this.rightMargin = builder.rightMargin;
         this.topPadding = builder.topPadding;
         this.bottomPadding = builder.bottomPadding;
         this.leftPadding = builder.leftPadding;
@@ -240,15 +176,13 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
     }
 
     /**
-     * 样式构建器（建造者模式）
+     * 样式构建器。
      */
     public static class StyleBuilder {
         private int itemHeight = -1;
         private float textSize = -1;
         private int textColor = -1;
         private int maxLines = 1;
-        private int leftMargin = -1;
-        private int rightMargin = -1;
         private int topPadding = -1;
         private int bottomPadding = -1;
         private int leftPadding = -1;
@@ -282,21 +216,24 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
             return this;
         }
 
-        public StyleBuilder setMargins(int left, int right) {
-            this.leftMargin = left;
-            this.rightMargin = right;
+        /** 左右内边距（px）。 */
+        public StyleBuilder setHorizontalPadding(int left, int right) {
+            this.leftPadding = left;
+            this.rightPadding = right;
             return this;
+        }
+
+        /**
+         * @deprecated 请使用 {@link #setHorizontalPadding(int, int)}
+         */
+        @Deprecated
+        public StyleBuilder setMargins(int left, int right) {
+            return setHorizontalPadding(left, right);
         }
 
         public StyleBuilder setVerticalPadding(int top, int bottom) {
             this.topPadding = top;
             this.bottomPadding = bottom;
-            return this;
-        }
-
-        public StyleBuilder setHorizontalPadding(int left, int right) {
-            this.leftPadding = left;
-            this.rightPadding = right;
             return this;
         }
 
@@ -313,4 +250,3 @@ public class MenuListAdapter<T extends PopupWindowBean> extends BaseRecyclerView
         }
     }
 }
-

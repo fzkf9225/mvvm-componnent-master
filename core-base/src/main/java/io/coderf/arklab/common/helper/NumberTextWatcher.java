@@ -1,13 +1,11 @@
-package io.coderf.arklab.common.widget.customview.utils;
+package io.coderf.arklab.common.helper;
 
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -26,11 +24,11 @@ import java.util.Locale;
 public class NumberTextWatcher implements TextWatcher, InputFilter {
     private static final String TAG = NumberTextWatcher.class.getSimpleName();
 
-    private DecimalFormat df;
-    private DecimalFormat dfnd;
+    private final DecimalFormat df;
+    private final DecimalFormat fend;
     private boolean hasFractionalPart;
 
-    private TextInputEditText et;
+    private final TextInputEditText et;
 
     public NumberTextWatcher(TextInputEditText et) {
         this(et, true);
@@ -41,7 +39,7 @@ public class NumberTextWatcher implements TextWatcher, InputFilter {
         symbols.setGroupingSeparator(useUnderLine ? '_' : ',');
         df = new DecimalFormat("#,###.##", symbols);
         df.setDecimalSeparatorAlwaysShown(true);
-        dfnd = new DecimalFormat("#,###", symbols);
+        fend = new DecimalFormat("#,###", symbols);
         this.et = et;
         hasFractionalPart = false;
         this.et.setFilters(new InputFilter[]{this});
@@ -51,8 +49,8 @@ public class NumberTextWatcher implements TextWatcher, InputFilter {
         et.removeTextChangedListener(this);
 
         try {
-            int inilen, endlen;
-            inilen = et.getText().length();
+            int inlined, endless;
+            inlined = et.getText() == null ? 0 : et.getText().length();
 
             String v = s.toString().replace(String.valueOf(df.getDecimalFormatSymbols().getGroupingSeparator()), "");
             Number n = df.parse(v);
@@ -60,10 +58,10 @@ public class NumberTextWatcher implements TextWatcher, InputFilter {
             if (hasFractionalPart) {
                 et.setText(df.format(n));
             } else {
-                et.setText(dfnd.format(n));
+                et.setText(fend.format(n));
             }
-            endlen = et.getText().length();
-            int sel = (cp + (endlen - inilen));
+            endless = et.getText().length();
+            int sel = (cp + (endless - inlined));
             if (sel > 0 && sel <= et.getText().length()) {
                 et.setSelection(sel);
             } else {

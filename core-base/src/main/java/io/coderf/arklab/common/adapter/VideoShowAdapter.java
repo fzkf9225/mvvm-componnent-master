@@ -19,7 +19,7 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterVideoShowItemBinding;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 
 /**
  * 视频列表

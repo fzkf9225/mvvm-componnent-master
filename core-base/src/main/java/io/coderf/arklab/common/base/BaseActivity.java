@@ -26,7 +26,9 @@ import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.RequestUi;
+import io.coderf.arklab.common.helper.AuthDelegate;
 import io.coderf.arklab.common.helper.AuthManager;
+import io.coderf.arklab.common.helper.LoadingDelegate;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
@@ -46,6 +48,7 @@ import io.coderf.arklab.core.ui.delegate.ImmersiveBarsVisible;
 import io.coderf.arklab.core.ui.delegate.InitDataPolicy;
 import io.coderf.arklab.core.ui.delegate.PageArguments;
 import io.coderf.arklab.core.ui.delegate.PageArgumentsResolver;
+import io.coderf.arklab.core.ui.delegate.ToolbarDelegate;
 import io.coderf.arklab.core.ui.delegate.UiSafety;
 import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 
@@ -53,7 +56,9 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * Activity MVVM 基类：统一 MaterialToolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
  * UI 行为策略来自 {@code core-ui} 委托（{@link InitDataPolicy}、{@link EdgeToEdgePolicy}、
- * {@link HideKeyboardOnTouchOutsideDelegate} 等）；子类可通过改 policy 字段或重写钩子方法定制。
+ * {@link HideKeyboardOnTouchOutsideDelegate} 等）；Loading / Auth / Toolbar 分别由
+ * {@link LoadingDelegate}、{@link AuthDelegate}、{@link ToolbarDelegate} 承担，子类可通过改
+ * policy 字段或重写钩子方法定制。对外字段 {@link #authManager} / {@link #uiController} 保持兼容。
  * <p>
  * <b>生命周期约定（与历史行为兼容）</b>
  * <ul>
@@ -67,9 +72,9 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @see BaseStatefulActivity
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/8/25 13:12
+ * @updated 2026/9/21
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
         implements RequestUi, AuthManager.AuthCallback {
@@ -89,9 +94,27 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @Inject
     public ErrorService errorService;
 
+    /**
+     * 登录 / 权限管理（兼容字段）。由 {@link #authDelegate} 持有同一实例。
+     */
     protected AuthManager authManager;
 
+    /**
+     * Loading / Toast 控制器（兼容字段）。由 {@link #loadingDelegate} 持有同一实例。
+     */
     protected UIController uiController;
+
+    /** Loading / Toast 委托（1.2+ 推荐经此访问）。 */
+    @Nullable
+    protected LoadingDelegate loadingDelegate;
+
+    /** 登录 / 权限委托（1.2+ 推荐经此访问）。 */
+    @Nullable
+    protected AuthDelegate authDelegate;
+
+    /** MaterialToolbar 轻量委托（自带 Toolbar 或菜单操作时可复用）。 */
+    @Nullable
+    protected ToolbarDelegate toolbarDelegate;
 
     /**
      * initData 是否在配置变更后再次执行；默认每次都执行（历史行为）。
@@ -212,17 +235,38 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         return uiSafetyChecker.isUiSafe();
     }
 
+    /**
+     * 创建 Auth 委托；同步填充兼容字段 {@link #authManager}。
+     */
     protected void createAuthManager() {
-        if (authManager == null) {
-            authManager = new AuthManager(this, errorService == null || errorService.unifyHandling());
+        if (authDelegate == null) {
+            boolean unify = errorService == null || errorService.unifyHandling();
+            authDelegate = AuthDelegate.forActivity(this, unify);
         }
-        authManager.setLoginCallback(this);
+        authManager = authDelegate.getAuthManager();
+        authDelegate.setLoginCallback(this);
     }
 
+    /**
+     * 创建 Loading 委托；同步填充兼容字段 {@link #uiController}。
+     */
     protected void createUIController() {
-        if (uiController == null) {
-            uiController = new UIController(this, getLifecycle());
+        if (loadingDelegate == null) {
+            ensureDelegates();
+            loadingDelegate = new LoadingDelegate(this, getLifecycle(), uiSafetyChecker);
         }
+        uiController = loadingDelegate.getUiController();
+    }
+
+    /**
+     * MaterialToolbar 轻量委托（惰性）。DataBinding 外壳仍由 {@link #initToolbar()} 处理。
+     */
+    @NonNull
+    protected ToolbarDelegate getToolbarDelegate() {
+        if (toolbarDelegate == null) {
+            toolbarDelegate = new ToolbarDelegate(this);
+        }
+        return toolbarDelegate;
     }
 
     /**
@@ -425,21 +469,27 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     protected void onDestroy() {
-        if (uiController == null) {
-            // no-op
-        } else {
+        if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+        } else if (uiController != null) {
             uiController.hideLoading();
         }
         super.onDestroy();
         // 仅从栈移除；不可 finish()，否则旋转屏等配置变更后 Activity 无法重建
         AppManager.getAppManager().removeActivity(this);
-        if (authManager != null) {
+        if (authDelegate != null) {
+            authDelegate.unregister();
+        } else if (authManager != null) {
             authManager.unregister();
         }
     }
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -448,6 +498,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void refreshLoading(String dialogMessage) {
+        if (loadingDelegate != null) {
+            loadingDelegate.refreshLoading(dialogMessage);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -456,6 +510,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
+        if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+            return;
+        }
         if (uiController == null) {
             return;
         }
@@ -463,6 +521,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public void showToast(String msg) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showToast(msg);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -470,6 +532,10 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public void showToast(@StringRes int strRes) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showToast(strRes);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -489,12 +555,16 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             if (errorService == null) {
                 return;
             }
+            ActivityResultLauncher<Intent> loginLauncher =
+                    authDelegate != null ? authDelegate.getLoginLauncher() : authManager.getLoginLauncher();
+            ActivityResultLauncher<Intent> permissionLauncher =
+                    authDelegate != null ? authDelegate.getPermissionLauncher() : authManager.getPermissionLauncher();
             if (errorService.isLoginPast(business.getCode())) {
-                errorService.toLogin(this, authManager.getLoginLauncher());
+                errorService.toLogin(this, loginLauncher);
                 return;
             }
             if (!errorService.hasPermission(business.getCode())) {
-                errorService.toNoPermission(this, authManager.getPermissionLauncher());
+                errorService.toNoPermission(this, permissionLauncher);
             }
             return;
         }

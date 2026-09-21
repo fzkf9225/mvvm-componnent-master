@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.helper.CameraHelper
+import io.coderf.arklab.common.helper.CornerShapeHelper
 import io.coderf.arklab.common.utils.common.DensityUtil
 import io.coderf.arklab.common.utils.permission.PermissionManager
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
@@ -46,7 +47,7 @@ class CustomCameraActivity : BaseActivity<EmptyViewModel, ActivityCustomCameraBi
             override fun onCancel() {
             }
         })
-        io.coderf.arklab.common.widget.customview.CornerShapeHelper.apply(
+        CornerShapeHelper.apply(
             binding.layoutVideo.imageVideo,
             DensityUtil.dp2px(this, 12f).toFloat(),
             Color.WHITE

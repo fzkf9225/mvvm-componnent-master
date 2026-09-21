@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 
 /**
  * 带内边距的圆形 ImageView：圆形只作为背景，src 仍按 {@code android:padding} 内缩。

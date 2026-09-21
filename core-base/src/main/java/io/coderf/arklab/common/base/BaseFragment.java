@@ -21,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import io.coderf.arklab.common.helper.AuthDelegate;
 import io.coderf.arklab.common.helper.AuthManager;
+import io.coderf.arklab.common.helper.LoadingDelegate;
 import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
@@ -35,16 +37,18 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 /**
  * Fragment MVVM 基类，生命周期约定与 {@link BaseActivity} 对齐。
  * <p>
- * UI 策略委托与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}。
+ * UI 策略委托与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}；
+ * Loading / Auth 由 {@link LoadingDelegate} / {@link AuthDelegate} 承担，兼容字段
+ * {@link #authManager} / {@link #uiController} 仍可用。
  * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}，或设置
  * {@link io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData}。
  *
  * @see BaseStatefulFragment
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/8/25 13:12
+ * @updated 2026/9/21
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements RequestUi, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
@@ -60,13 +64,21 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Inject
     public ErrorService errorService;
     /**
-     * 认证管理，管理登录相关
+     * 认证管理（兼容字段），由 {@link #authDelegate} 持有同一实例。
      */
     protected AuthManager authManager;
     /**
-     * UI控制器。管理弹框、toast之类
+     * UI 控制器（兼容字段），由 {@link #loadingDelegate} 持有同一实例。
      */
     protected UIController uiController;
+
+    /** Loading / Toast 委托。 */
+    @Nullable
+    protected LoadingDelegate loadingDelegate;
+
+    /** 登录 / 权限委托。 */
+    @Nullable
+    protected AuthDelegate authDelegate;
 
     /**
      * initData 是否在配置变更后再次执行；默认每次都执行（历史行为）。
@@ -128,18 +140,27 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         return uiSafetyChecker.isUiSafe();
     }
 
+    /**
+     * 创建 Auth 委托；同步填充兼容字段 {@link #authManager}。
+     */
     protected void createAuthManager() {
-        if (authManager == null) {
-            authManager = new AuthManager(this, errorService == null || errorService.unifyHandling());
+        if (authDelegate == null) {
+            boolean unify = errorService == null || errorService.unifyHandling();
+            authDelegate = AuthDelegate.forFragment(this, unify);
         }
-        authManager.setLoginCallback(this);
+        authManager = authDelegate.getAuthManager();
+        authDelegate.setLoginCallback(this);
     }
 
+    /**
+     * 创建 Loading 委托；Dialog 挂 Activity，Lifecycle 跟 View；同步填充 {@link #uiController}。
+     */
     protected void createUIController() {
-        if (uiController == null) {
-            // Dialog 挂 Activity Window；Lifecycle 跟 View，与 onDestroyView 对齐，避免 View 销毁后仍弹窗
-            uiController = new UIController(requireActivity(), getViewLifecycleOwner().getLifecycle());
+        if (loadingDelegate == null) {
+            // Dialog 挂 Activity Window；Lifecycle 跟 View，与 onDestroyView 对齐
+            loadingDelegate = LoadingDelegate.forFragment(this, getViewLifecycleOwner());
         }
+        uiController = loadingDelegate.getUiController();
     }
 
     /**
@@ -225,7 +246,9 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void onDestroyView() {
-        if (uiController != null) {
+        if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+        } else if (uiController != null) {
             uiController.hideLoading();
         }
         super.onDestroyView();
@@ -234,13 +257,19 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (authManager != null) {
+        if (authDelegate != null) {
+            authDelegate.unregister();
+        } else if (authManager != null) {
             authManager.unregister();
         }
     }
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -249,6 +278,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void hideLoading() {
+        if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+            return;
+        }
         if (uiController == null) {
             return;
         }
@@ -257,6 +290,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void refreshLoading(String dialogMessage) {
+        if (loadingDelegate != null) {
+            loadingDelegate.refreshLoading(dialogMessage);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -264,6 +301,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public void showToast(String msg) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showToast(msg);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -271,6 +312,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     public void showToast(@StringRes int strRes) {
+        if (loadingDelegate != null) {
+            loadingDelegate.showToast(strRes);
+            return;
+        }
         if (!isUiSafe() || uiController == null) {
             return;
         }
@@ -290,12 +335,16 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             if (errorService == null) {
                 return;
             }
+            ActivityResultLauncher<Intent> loginLauncher =
+                    authDelegate != null ? authDelegate.getLoginLauncher() : authManager.getLoginLauncher();
+            ActivityResultLauncher<Intent> permissionLauncher =
+                    authDelegate != null ? authDelegate.getPermissionLauncher() : authManager.getPermissionLauncher();
             if (errorService.isLoginPast(business.getCode())) {
-                errorService.toLogin(requireContext(), authManager.getLoginLauncher());
+                errorService.toLogin(requireContext(), loginLauncher);
                 return;
             }
             if (!errorService.hasPermission(business.getCode())) {
-                errorService.toNoPermission(requireContext(), authManager.getPermissionLauncher());
+                errorService.toNoPermission(requireContext(), permissionLauncher);
             }
             return;
         }

@@ -25,7 +25,7 @@
             style="@style/Widget.App.Button.TextButton"
             android:layout_marginTop="@dimen/vertical_margin_xl"
             app:backgroundTint="?attr/colorSurfaceContainerHigh"
-            app:cornerRadius="8dp"
+            app:cornerRadius="16dp"
             android:gravity="center"
             android:text="@string/cancel"
             android:insetTop="0dp"

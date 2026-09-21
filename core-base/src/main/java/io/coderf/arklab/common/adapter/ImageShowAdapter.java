@@ -14,7 +14,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
-import io.coderf.arklab.common.widget.customview.CornerShapeHelper;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**

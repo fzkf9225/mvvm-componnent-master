@@ -6,8 +6,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -43,7 +41,7 @@ import io.coderf.arklab.common.widget.customview.BannerView;
 import io.coderf.arklab.common.widget.customview.BottomNavBar;
 import io.coderf.arklab.common.widget.customview.Code;
 import io.coderf.arklab.common.widget.customview.MarqueeTextView;
-import io.coderf.arklab.common.widget.customview.utils.NumberTextWatcher;
+import io.coderf.arklab.common.helper.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;

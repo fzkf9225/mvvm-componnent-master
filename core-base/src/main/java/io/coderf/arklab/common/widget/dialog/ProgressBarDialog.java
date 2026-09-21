@@ -2,104 +2,78 @@ package io.coderf.arklab.common.widget.dialog;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.graphics.Color;
 import androidx.annotation.ColorInt;
+import androidx.annotation.DimenRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.ProcessBarDialogBinding;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.listener.OnProgressEndListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
+import io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting;
 
 /**
- * 自定义进度条弹窗。
+ * 自定义进度条弹窗（圆环 / 横条）。
+ * <p>
+ * 除进度相关 {@link ProgressBarSetting} 外，支持标题/正文/按钮字号、按钮高度、各区间距等链式配置；
+ * 未设置时沿用布局默认值。
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
- * @created 2017/11/2
+ * @updated 2026/9/21
  */
-
 public class ProgressBarDialog extends BaseDialog {
-    /**
-     * 进度条布局
-     */
     private ProcessBarDialogBinding processBarDialogBinding;
-    /**
-     * 是否可以取消
-     */
     private boolean isCanCancel = false;
-    /**
-     * 取消监听
-     */
     private OnCancelListener onCancelListener;
-    /**
-     * 进度
-     */
     private float process;
-    /**
-     * 进度条设置参数
-     */
     private ProgressBarSetting progressBarSetting;
-    /**
-     * 圆形进度条
-     */
     public final static int CIRCLE_PROGRESS_BAR = 0;
-    /**
-     * 水平进度条
-     */
     public final static int HORIZONTAL_PROGRESS_BAR = 1;
-    /**
-     * 默认为水平进度条
-     */
     private int progressBarType = HORIZONTAL_PROGRESS_BAR;
-    /**
-     * 消息类型颜色
-     */
     private @ColorInt Integer messageTypeColor;
-    /**
-     * 消息类型
-     */
     private String messageType;
-    /**
-     * 内容颜色
-     */
     private @ColorInt Integer contentColor;
-    /**
-     * 内容
-     */
     private String content;
-    /**
-     * 按钮文字
-     */
     private String buttonText = null;
-    /**
-     * 是否显示按钮
-     */
     private boolean isShowButton = true;
-    /**
-     * 按钮点击监听
-     */
     private View.OnClickListener onButtonClickListener;
-    /**
-     * 按钮颜色
-     */
     private @ColorInt Integer buttonColor;
-    /**
-     * 按钮背景颜色
-     */
     private @ColorInt Integer buttonBgColor;
-    /**
-     * 进度结束监听
-     */
     private OnProgressEndListener onProgressEndListener;
+
+    // ---------- 扩展样式（-1 / 0 表示沿用布局默认） ----------
+    /** 标题字号 sp，0 表示不改 */
+    private float messageTypeTextSizeSp = 0f;
+    /** 正文字号 sp */
+    private float contentTextSizeSp = 0f;
+    /** 按钮字号 sp */
+    private float buttonTextSizeSp = 0f;
+    /** 按钮高度 px，-1 不改 */
+    private int buttonHeightPx = -1;
+    /** 内容区左右内边距 px，-1 不改 */
+    private int contentPaddingHorizontalPx = -1;
+    /** 横条进度左右外边距 px，-1 用布局 / dimen */
+    private int progressHorizontalMarginPx = -1;
+    /** 标题顶边距 px */
+    private int titleMarginTopPx = -1;
+    /** 正文相对标题的顶边距 px */
+    private int contentMarginTopPx = -1;
+    /** 进度区相对正文的顶边距 px */
+    private int progressMarginTopPx = -1;
+    /** 分割线相对进度区的顶边距 px */
+    private int dividerMarginTopPx = -1;
+    /** 是否显示底部分割线（有按钮时默认显示） */
+    private Boolean showDivider = null;
 
     public ProgressBarDialog(Context context) {
         super(context, R.style.loading_dialog);
@@ -174,8 +148,117 @@ public class ProgressBarDialog extends BaseDialog {
         return this;
     }
 
+    // ---------- 扩展 API ----------
+
+    /** 标题字号（sp）。 */
+    public ProgressBarDialog setMessageTypeTextSizeSp(float sp) {
+        this.messageTypeTextSizeSp = sp;
+        return this;
+    }
+
+    /** 正文字号（sp）。 */
+    public ProgressBarDialog setContentTextSizeSp(float sp) {
+        this.contentTextSizeSp = sp;
+        return this;
+    }
+
+    /** 底部按钮字号（sp）。 */
+    public ProgressBarDialog setButtonTextSizeSp(float sp) {
+        this.buttonTextSizeSp = sp;
+        return this;
+    }
+
+    /** 底部按钮高度（px）。 */
+    public ProgressBarDialog setButtonHeight(int px) {
+        this.buttonHeightPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setButtonHeightDp(float dp) {
+        this.buttonHeightPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ProgressBarDialog setButtonHeightResource(@DimenRes int resId) {
+        this.buttonHeightPx = getContext().getResources().getDimensionPixelSize(resId);
+        return this;
+    }
+
+    /** 标题、正文左右内边距（px）。 */
+    public ProgressBarDialog setContentPaddingHorizontal(int px) {
+        this.contentPaddingHorizontalPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setContentPaddingHorizontalDp(float dp) {
+        this.contentPaddingHorizontalPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    /** 横条进度左右外边距（px）。 */
+    public ProgressBarDialog setProgressHorizontalMargin(int px) {
+        this.progressHorizontalMarginPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setProgressHorizontalMarginDp(float dp) {
+        this.progressHorizontalMarginPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ProgressBarDialog setTitleMarginTop(int px) {
+        this.titleMarginTopPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setTitleMarginTopDp(float dp) {
+        this.titleMarginTopPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ProgressBarDialog setContentMarginTop(int px) {
+        this.contentMarginTopPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setContentMarginTopDp(float dp) {
+        this.contentMarginTopPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ProgressBarDialog setProgressMarginTop(int px) {
+        this.progressMarginTopPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setProgressMarginTopDp(float dp) {
+        this.progressMarginTopPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public ProgressBarDialog setDividerMarginTop(int px) {
+        this.dividerMarginTopPx = px;
+        return this;
+    }
+
+    public ProgressBarDialog setDividerMarginTopDp(float dp) {
+        this.dividerMarginTopPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    /**
+     * 是否显示按钮上方分割线；null 表示跟随「是否显示按钮」。
+     */
+    public ProgressBarDialog setShowDivider(@Nullable Boolean show) {
+        this.showDivider = show;
+        return this;
+    }
+
     public void setProcess(float process) {
         this.process = process;
+        if (processBarDialogBinding == null) {
+            return;
+        }
         if (progressBarType == CIRCLE_PROGRESS_BAR) {
             processBarDialogBinding.circleProgressBar.setProgress(process);
         } else if (progressBarType == HORIZONTAL_PROGRESS_BAR) {
@@ -185,6 +268,9 @@ public class ProgressBarDialog extends BaseDialog {
 
     public void postProcess(int process) {
         this.process = process;
+        if (processBarDialogBinding == null) {
+            return;
+        }
         if (progressBarType == CIRCLE_PROGRESS_BAR) {
             processBarDialogBinding.circleProgressBar.postProgress(process);
         } else if (progressBarType == HORIZONTAL_PROGRESS_BAR) {
@@ -207,9 +293,9 @@ public class ProgressBarDialog extends BaseDialog {
         if (progressBarSetting == null) {
             progressBarSetting = new ProgressBarSetting(getContext());
         }
-        // 进度条背景固定为品牌色（蓝色），文字始终使用白色以保证对比度
+        // 未显式设进度文字色时，用 onSurface（轨道已非主色底，不宜再强制白字）
         if (progressBarSetting.getFontColor() == -1) {
-            progressBarSetting.setFontColor(Color.WHITE);
+            progressBarSetting.setFontColor(ThemeAttrs.onSurface(getContext()));
         }
     }
 
@@ -220,7 +306,8 @@ public class ProgressBarDialog extends BaseDialog {
             processBarDialogBinding.circleProgressBar.setVisibility(View.VISIBLE);
             processBarDialogBinding.horizontalProgressBar.setVisibility(View.GONE);
             processBarDialogBinding.circleProgressBar.setOnProgressEndListener(onProgressEndListener);
-            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(progressBarSetting.getCircleSize(), progressBarSetting.getCircleSize());
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                    progressBarSetting.getCircleSize(), progressBarSetting.getCircleSize());
             layoutParams.startToStart = processBarDialogBinding.clProgress.getId();
             layoutParams.endToEnd = processBarDialogBinding.clProgress.getId();
             processBarDialogBinding.circleProgressBar.setLayoutParams(layoutParams);
@@ -237,11 +324,15 @@ public class ProgressBarDialog extends BaseDialog {
             processBarDialogBinding.circleProgressBar.setVisibility(View.GONE);
             processBarDialogBinding.horizontalProgressBar.setVisibility(View.VISIBLE);
             processBarDialogBinding.horizontalProgressBar.setOnProgressEndListener(onProgressEndListener);
-            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, progressBarSetting.getHorizontalProgressBarHeight());
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, progressBarSetting.getHorizontalProgressBarHeight());
             layoutParams.startToStart = processBarDialogBinding.clProgress.getId();
             layoutParams.endToEnd = processBarDialogBinding.clProgress.getId();
-            layoutParams.leftMargin = (int) getContext().getResources().getDimension(R.dimen.horizontal_margin_xxl);
-            layoutParams.rightMargin = (int) getContext().getResources().getDimension(R.dimen.horizontal_margin_xxl);
+            int hMargin = progressHorizontalMarginPx >= 0
+                    ? progressHorizontalMarginPx
+                    : (int) getContext().getResources().getDimension(R.dimen.horizontal_margin_xxl);
+            layoutParams.leftMargin = hMargin;
+            layoutParams.rightMargin = hMargin;
             processBarDialogBinding.horizontalProgressBar.setLayoutParams(layoutParams);
             processBarDialogBinding.horizontalProgressBar.setMaxProgress(progressBarSetting.getMaxProgress());
             processBarDialogBinding.horizontalProgressBar.setFontPercent(progressBarSetting.getFontPercent());
@@ -265,12 +356,19 @@ public class ProgressBarDialog extends BaseDialog {
             processBarDialogBinding.dialogTextView.setText(content);
             processBarDialogBinding.dialogTextView.setVisibility(View.VISIBLE);
         }
-        if (TextUtils.isEmpty(buttonText) || !isShowButton) {
+
+        boolean showBtn = isShowButton && !TextUtils.isEmpty(buttonText);
+        // 历史：buttonText 为空但 isShowButton=true 时仍显示「关闭」
+        if (isShowButton && TextUtils.isEmpty(buttonText)) {
+            showBtn = true;
+        }
+        boolean dividerVisible = showDivider != null ? showDivider : showBtn;
+        if (!showBtn) {
             processBarDialogBinding.dialogOption.setVisibility(View.GONE);
             processBarDialogBinding.line.setVisibility(View.INVISIBLE);
         } else {
             processBarDialogBinding.dialogOption.setVisibility(View.VISIBLE);
-            processBarDialogBinding.line.setVisibility(View.VISIBLE);
+            processBarDialogBinding.line.setVisibility(dividerVisible ? View.VISIBLE : View.INVISIBLE);
         }
         if (!TextUtils.isEmpty(buttonText)) {
             processBarDialogBinding.dialogOption.setText(buttonText);
@@ -296,6 +394,8 @@ public class ProgressBarDialog extends BaseDialog {
             }
             onButtonClickListener.onClick(v);
         });
+
+        applyExtendedStyle();
         applySurfaceBackground();
         setCanceledOnTouchOutside(false);
         setCancelable(isCanCancel);
@@ -304,14 +404,65 @@ public class ProgressBarDialog extends BaseDialog {
         applyCenterWindow();
     }
 
+    private void applyExtendedStyle() {
+        if (messageTypeTextSizeSp > 0) {
+            processBarDialogBinding.dialogMessageType.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP, messageTypeTextSizeSp);
+        }
+        if (contentTextSizeSp > 0) {
+            processBarDialogBinding.dialogTextView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP, contentTextSizeSp);
+        }
+        if (buttonTextSizeSp > 0) {
+            processBarDialogBinding.dialogOption.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP, buttonTextSizeSp);
+        }
+        if (buttonHeightPx > 0) {
+            ViewGroup.LayoutParams lp = processBarDialogBinding.dialogOption.getLayoutParams();
+            lp.height = buttonHeightPx;
+            processBarDialogBinding.dialogOption.setLayoutParams(lp);
+        }
+        if (contentPaddingHorizontalPx >= 0) {
+            int pad = contentPaddingHorizontalPx;
+            processBarDialogBinding.dialogMessageType.setPadding(
+                    pad,
+                    processBarDialogBinding.dialogMessageType.getPaddingTop(),
+                    pad,
+                    processBarDialogBinding.dialogMessageType.getPaddingBottom());
+            processBarDialogBinding.dialogTextView.setPadding(
+                    pad,
+                    processBarDialogBinding.dialogTextView.getPaddingTop(),
+                    pad,
+                    processBarDialogBinding.dialogTextView.getPaddingBottom());
+        }
+        applyMarginTop(processBarDialogBinding.dialogMessageType, titleMarginTopPx);
+        applyMarginTop(processBarDialogBinding.dialogTextView, contentMarginTopPx);
+        applyMarginTop(processBarDialogBinding.clProgress, progressMarginTopPx);
+        applyMarginTop(processBarDialogBinding.line, dividerMarginTopPx);
+    }
+
+    private static void applyMarginTop(@NonNull View view, int marginTopPx) {
+        if (marginTopPx < 0) {
+            return;
+        }
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        if (lp instanceof ViewGroup.MarginLayoutParams mlp) {
+            mlp.topMargin = marginTopPx;
+            view.setLayoutParams(mlp);
+        }
+    }
+
     private void applySurfaceBackground() {
         if (bgDrawable != null) {
             processBarDialogBinding.getRoot().setBackground(bgDrawable);
             return;
         }
-        processBarDialogBinding.getRoot().setBackground(DrawableUtil.createRectDrawable(
-                ThemeAttrs.surfaceContainerHigh(getContext()),
-                DensityUtil.dp2px(getContext(), 16f)));
+        float r = DensityUtil.dp2px(getContext(), DEFAULT_DIALOG_CORNER_DP);
+        processBarDialogBinding.getRoot().setBackground(
+                CornerShapeHelper.createBackground(
+                        r, r, r, r,
+                        true, ThemeAttrs.surfaceContainerHigh(getContext()),
+                        false, 0f, 0));
     }
 
     @Override

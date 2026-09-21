@@ -15,6 +15,7 @@ import io.coderf.arklab.demo.activity.DemoSmartPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingHeaderActivity;
 import io.coderf.arklab.demo.activity.DialogActivity;
 import io.coderf.arklab.demo.activity.EmptyLayoutDemoActivity;
+import io.coderf.arklab.demo.activity.UiStateDemoActivity;
 import io.coderf.arklab.demo.activity.DownloadActivity;
 import io.coderf.arklab.demo.activity.FormDetailActivity;
 import io.coderf.arklab.demo.activity.FormTopDetailActivity;
@@ -53,6 +54,7 @@ public enum UseCaseEnum {
      */
     WIGHT(WightActivity.class, "自定义组件", "自定义实现的一些View、ViewGroup", null),
     EMPTY_LAYOUT(EmptyLayoutDemoActivity.class, "EmptyLayout 骨架屏", "EmptyLayout 加载样式、骨架屏与空态/错误态用法演示", null),
+    UI_STATE(UiStateDemoActivity.class, "UiState 页面状态", "UiState + StateFlow 驱动内容区；与 RequestUi 遮罩正交演示", null),
     MATERIAL3_KIT(Material3KitActivity.class, "Material3 能力", "SearchBar / Chip / ToggleGroup / BottomAppBar", null),
     MATERIAL_CARD(MaterialCardViewActivity.class, "MaterialCardView", "Elevated / Filled / Outlined、可选中、媒体卡、描边与切角", null),
     DIALOG(DialogActivity.class, "自定义dialog", "自定义实现的一些Vdialog", null),

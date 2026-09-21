@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.helper.CornerShapeHelper;
 
 
 /**

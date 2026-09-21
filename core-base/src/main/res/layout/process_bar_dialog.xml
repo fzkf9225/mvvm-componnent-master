@@ -14,43 +14,56 @@
             type="io.coderf.arklab.common.widget.dialog.bean.ProgressBarSetting" />
     </data>
 
+    <!-- 结构不变：标题 → 说明 → 进度区 → 分割线 → 底部按钮；仅间距/字色/进度条语义色微调 -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/common_bg_rounded_surface_16">
+        android:background="@drawable/common_bg_rounded_surface_16"
+        android:paddingTop="8dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_message_type"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_xxl"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:text="提示" />
+            tools:text="下载中" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_textView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_margin_l"
-            android:layout_marginBottom="@dimen/horizontal_margin_xl"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
             android:gravity="center"
-            android:textColor="@color/onSurfaceSecondary"
+            android:lineSpacingExtra="2dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="@dimen/font_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dialog_message_type"
-            tools:ignore="MissingConstraints"
-            tools:text="需要先验证实名制身份信息" />
+            tools:text="正在下载，请稍候…" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_progress"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_l"
             android:layout_marginTop="@dimen/vertical_margin_l"
+            android:layout_marginEnd="@dimen/horizontal_margin_l"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dialog_textView">
 
             <io.coderf.arklab.common.widget.customview.CircleProgressBar
@@ -58,57 +71,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:bgColor="?attr/colorPrimary"
-                app:textColor="?attr/colorOnSurface"
+                app:bgColor="?attr/colorSurfaceContainerHighest"
                 app:fontPercent="2"
-                app:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxProgress="100"
                 app:progress="0"
-                app:progressColor="@color/theme_green"
+                app:progressColor="?attr/colorPrimary"
                 app:showText="true"
-                app:strokeWidth="10dp"
+                app:strokeWidth="8dp"
+                app:textColor="?attr/colorOnSurface"
+                app:textSize="12sp"
                 tools:visibility="gone" />
 
             <io.coderf.arklab.common.widget.customview.HorizontalProgressBar
                 android:id="@+id/horizontal_progress_bar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/horizontal_margin_xxl"
-                android:layout_marginEnd="@dimen/horizontal_margin_xxl"
+                android:layout_marginStart="@dimen/horizontal_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_m"
                 android:visibility="gone"
-                app:bgColor="?attr/colorPrimary"
-                app:bgRadius="10dp"
-                app:textColor="?attr/colorOnSurface"
+                app:bgColor="?attr/colorSurfaceContainerHighest"
+                app:bgRadius="8dp"
                 app:fontPercent="2"
-                app:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxProgress="100"
                 app:progress="0"
-                app:progressColor="@color/theme_green"
+                app:progressColor="?attr/colorPrimary"
                 app:showText="true"
+                app:textColor="?attr/colorOnSurface"
+                app:textSize="12sp"
                 tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/line"
-            style="@style/h_line"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:layout_marginTop="@dimen/vertical_margin_l"
+            android:background="?attr/colorOutlineVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cl_progress" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/dialog_option"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/height_xxl"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="@string/cancel"
+            android:textAllCaps="false"
             android:textColor="?attr/colorPrimary"
-            android:textSize="@dimen/font_size_xxl"
-            app:layout_constraintTop_toBottomOf="@+id/line"
-            tools:ignore="MissingConstraints" />
+            android:textSize="@dimen/font_size_xl"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

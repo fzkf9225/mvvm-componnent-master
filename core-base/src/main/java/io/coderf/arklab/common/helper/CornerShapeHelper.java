@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.widget.customview;
+package io.coderf.arklab.common.helper;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -20,9 +20,17 @@ import com.google.android.material.shape.RelativeCornerSize;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
 import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.utils.common.ShapeUtils;
+import io.coderf.arklab.common.widget.customview.CircleTextView;
+import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
+import io.coderf.arklab.common.widget.customview.CornerTextView;
 
 /**
  * 把圆角 / 填充 / 描边映射到 Material3 {@link ShapeAppearanceModel}。
+ * <p>
+ * <b>统一入口推荐</b>：{@link ShapeUtils}（纯色走本类，渐变走 {@link io.coderf.arklab.common.widget.customview.round.ShapeBuilder}）。
+ * 本类 API 保持不变，既有调用无需修改。
+ * <p>
  * XML 需要这些属性时用 {@link CornerTextView}、{@link CircleTextView}、{@link CornerConstraintLayout}；
  * {@link MaterialButton} / {@link ShapeableImageView} 直接走官方控件或 {@link #apply}。
  *
@@ -43,7 +51,7 @@ public final class CornerShapeHelper {
 
     @NonNull
     public static ShapeAppearanceModel shapeModel(float leftTop, float rightTop,
-                                                   float rightBottom, float leftBottom) {
+                                                  float rightBottom, float leftBottom) {
         return ShapeAppearanceModel.builder()
                 .setTopLeftCorner(CornerFamily.ROUNDED, leftTop)
                 .setTopRightCorner(CornerFamily.ROUNDED, rightTop)

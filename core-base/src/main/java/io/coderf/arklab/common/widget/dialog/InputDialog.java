@@ -8,6 +8,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -20,62 +21,45 @@ import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 
-
 /**
- * 单行文本输入框弹窗。
+ * 单行文本输入弹窗（内部已是 {@link com.google.android.material.textfield.TextInputLayout}）。
+ * <pre>
+ * new InputDialog(context)
+ *     .setTipsStr("修改昵称")
+ *     .setHintStr("请输入昵称")
+ *     .setMaxWords(20)
+ *     .setCounterEnabled(true)
+ *     .setOnPositiveClickListener((dialog, text) -&gt; {
+ *         if (TextUtils.isEmpty(text)) {
+ *             dialog.setError("请输入内容");
+ *             return;
+ *         }
+ *         dialog.dismiss();
+ *         // 提交 text
+ *     })
+ *     .setDismissOnPositive(false)
+ *     .builder()
+ *     .show();
+ * </pre>
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
- * @created 2017/1/14
+ * @updated 2026/9/21
  */
 public class InputDialog extends BaseDialog {
-    /**
-     * 绑定布局
-     */
     private DialogInputBinding binding;
 
-    /**
-     * 监听器
-     */
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 右侧确认按钮提示文字
-     */
     private String positiveText = null;
-    /**
-     * 左侧取消按钮提示文字
-     */
     private String negativeText = null;
-    /**
-     * 提示标题、输入框提示文字、默认文本
-     */
     private String tipsStr, hintStr, defaultStr;
-    /**
-     * 输入框类型
-     */
     private int inputType = InputType.TYPE_CLASS_TEXT;
-    /**
-     * 最大输入字数
-     */
     private int maxWords = 30;
-    /**
-     * 右侧确认按钮文字颜色
-     */
     private ColorStateList positiveTextColor = null;
-    /**
-     * 左侧取消按钮文字颜色
-     */
     private ColorStateList negativeTextColor = null;
-    /**
-     * 文本颜色
-     */
     private ColorStateList textColor = null;
-    /**
-     * 提示标题颜色
-     */
     private ColorStateList tipColor = null;
-    /** 输入框文字颜色（与 XML 默认独立配置） */
     private ColorStateList inputTextColor = null;
 
     private float tipsTextSizeSp = 0f;
@@ -90,6 +74,15 @@ public class InputDialog extends BaseDialog {
     private int inputPaddingEndPx = -1;
     private float positiveTextSizeSp = 0f;
     private float negativeTextSizeSp = 0f;
+
+    private boolean dismissOnPositive = true;
+    private boolean dismissOnNegative = true;
+    private boolean counterEnabled = true;
+    private boolean selectAllOnFocus = false;
+    private int imeOptions = EditorInfo.IME_ACTION_DONE;
+    private int buttonHeightPx = -1;
+    @Nullable
+    private InputFilter[] extraFilters;
 
     public InputDialog(@NonNull Context context) {
         super(context);
@@ -136,14 +129,16 @@ public class InputDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 历史 API：同时会作用到确定按钮文字色（兼容旧调用）。
+     * 仅改输入框请用 {@link #setInputTextColor(int)}。
+     */
     public InputDialog setTextColor(@ColorInt int color) {
         this.textColor = ColorStateList.valueOf(color);
         return this;
     }
 
-    /**
-     * 设置输入框内文字颜色（不影响确定按钮；若需改确定按钮请用 {@link #setPositiveTextColor}）。
-     */
+    /** 设置输入框内文字颜色。 */
     public InputDialog setInputTextColor(@ColorInt int color) {
         this.inputTextColor = ColorStateList.valueOf(color);
         return this;
@@ -228,15 +223,53 @@ public class InputDialog extends BaseDialog {
         return this;
     }
 
-    public InputDialog builder() {
-        initView();
+    /** 点击确定后是否自动 dismiss，默认 true。 */
+    public InputDialog setDismissOnPositive(boolean dismiss) {
+        this.dismissOnPositive = dismiss;
         return this;
     }
 
-    public DialogInputBinding getBinding() {
-        return binding;
+    public InputDialog setDismissOnNegative(boolean dismiss) {
+        this.dismissOnNegative = dismiss;
+        return this;
     }
 
+    /** 是否显示字数统计，默认 true。 */
+    public InputDialog setCounterEnabled(boolean enabled) {
+        this.counterEnabled = enabled;
+        return this;
+    }
+
+    public InputDialog setSelectAllOnFocus(boolean selectAll) {
+        this.selectAllOnFocus = selectAll;
+        return this;
+    }
+
+    /** 如 {@link EditorInfo#IME_ACTION_DONE}。 */
+    public InputDialog setImeOptions(int imeOptions) {
+        this.imeOptions = imeOptions;
+        return this;
+    }
+
+    /** 追加过滤器（会与字数限制一并生效）。 */
+    public InputDialog setExtraFilters(@Nullable InputFilter... filters) {
+        this.extraFilters = filters;
+        return this;
+    }
+
+    public InputDialog setButtonHeight(int px) {
+        this.buttonHeightPx = px;
+        return this;
+    }
+
+    public InputDialog setButtonHeightDp(float dp) {
+        this.buttonHeightPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    /**
+     * 显示 / 清除 error（需在 {@link #builder()} 之后）。
+     */
     public InputDialog setError(@Nullable CharSequence error) {
         if (binding != null) {
             boolean has = !TextUtils.isEmpty(error);
@@ -246,13 +279,30 @@ public class InputDialog extends BaseDialog {
         return this;
     }
 
+    @Nullable
+    public String getInputText() {
+        if (binding == null || binding.dialogInput.getText() == null) {
+            return null;
+        }
+        return binding.dialogInput.getText().toString();
+    }
+
+    public InputDialog builder() {
+        initView();
+        return this;
+    }
+
+    public DialogInputBinding getBinding() {
+        return binding;
+    }
+
     private void initView() {
         binding = DialogInputBinding.inflate(layoutInflater, null, false);
-        // 初始化控件
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }
         if (textColor != null) {
+            // 历史行为：setTextColor 会改确定按钮色
             binding.dialogConfirm.setTextColor(textColor);
         }
         if (negativeTextColor != null) {
@@ -268,7 +318,10 @@ public class InputDialog extends BaseDialog {
         binding.dialogInput.setHint(hintStr);
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
-        binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
+        binding.dialogInput.setImeOptions(imeOptions);
+        binding.dialogInput.setSelectAllOnFocus(selectAllOnFocus);
+        applyInputFilters();
+        binding.dialogInputLayout.setCounterEnabled(counterEnabled);
         binding.dialogInputLayout.setCounterMaxLength(maxWords);
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
@@ -288,13 +341,19 @@ public class InputDialog extends BaseDialog {
         applyAppearanceOverrides();
 
         binding.dialogConfirm.setOnClickListener(v -> {
+            if (dismissOnPositive) {
+                dismiss();
+            }
             if (onPositiveClickListener != null) {
-                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
+                onPositiveClickListener.onDialogClick(this, getInputText());
             }
         });
         binding.dialogCancel.setOnClickListener(v -> {
             if (onNegativeClickListener != null) {
-                onNegativeClickListener.onDialogClick(this,  binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
+                if (dismissOnNegative) {
+                    dismiss();
+                }
+                onNegativeClickListener.onDialogClick(this, getInputText());
             } else {
                 dismiss();
             }
@@ -302,6 +361,17 @@ public class InputDialog extends BaseDialog {
         setContentView(binding.getRoot());
         applyCancelableOutside(outSide);
         applyCenterWindow();
+    }
+
+    private void applyInputFilters() {
+        if (extraFilters == null || extraFilters.length == 0) {
+            binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
+            return;
+        }
+        InputFilter[] all = new InputFilter[extraFilters.length + 1];
+        System.arraycopy(extraFilters, 0, all, 0, extraFilters.length);
+        all[extraFilters.length] = new InputFilter.LengthFilter(maxWords);
+        binding.dialogInput.setFilters(all);
     }
 
     private void applyAppearanceOverrides() {
@@ -327,7 +397,7 @@ public class InputDialog extends BaseDialog {
         }
         if (inputMarginTopPx >= 0 || inputMarginStartPx >= 0 || inputMarginEndPx >= 0) {
             ViewGroup.MarginLayoutParams lp =
-                    (ViewGroup.MarginLayoutParams) binding.dialogInput.getLayoutParams();
+                    (ViewGroup.MarginLayoutParams) binding.dialogInputLayout.getLayoutParams();
             if (inputMarginTopPx >= 0) {
                 lp.topMargin = inputMarginTopPx;
             }
@@ -337,12 +407,13 @@ public class InputDialog extends BaseDialog {
             if (inputMarginEndPx >= 0) {
                 lp.setMarginEnd(inputMarginEndPx);
             }
-            binding.dialogInput.setLayoutParams(lp);
+            binding.dialogInputLayout.setLayoutParams(lp);
         }
         if (inputPaddingStartPx >= 0 || inputPaddingEndPx >= 0) {
             int start = inputPaddingStartPx >= 0 ? inputPaddingStartPx : binding.dialogInput.getPaddingStart();
             int end = inputPaddingEndPx >= 0 ? inputPaddingEndPx : binding.dialogInput.getPaddingEnd();
-            binding.dialogInput.setPaddingRelative(start, binding.dialogInput.getPaddingTop(), end, binding.dialogInput.getPaddingBottom());
+            binding.dialogInput.setPaddingRelative(
+                    start, binding.dialogInput.getPaddingTop(), end, binding.dialogInput.getPaddingBottom());
         }
         if (positiveTextSizeSp > 0f) {
             binding.dialogConfirm.setTextSize(positiveTextSizeSp);
@@ -350,6 +421,13 @@ public class InputDialog extends BaseDialog {
         if (negativeTextSizeSp > 0f) {
             binding.dialogCancel.setTextSize(negativeTextSizeSp);
         }
+        if (buttonHeightPx > 0) {
+            ViewGroup.LayoutParams cancelLp = binding.dialogCancel.getLayoutParams();
+            cancelLp.height = buttonHeightPx;
+            binding.dialogCancel.setLayoutParams(cancelLp);
+            ViewGroup.LayoutParams confirmLp = binding.dialogConfirm.getLayoutParams();
+            confirmLp.height = buttonHeightPx;
+            binding.dialogConfirm.setLayoutParams(confirmLp);
+        }
     }
-
 }

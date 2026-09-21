@@ -224,6 +224,13 @@ public class DialogViewModel extends BaseViewModel<BaseRepository> {
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
+                    .setShowDivider(true)
+                    .setDividerColor(ThemeAttrs.outlineVariant(view.getContext()))
+                    // 左右各空 16dp，两侧铺与弹窗底同色，避免透出背景
+                    .setDividerHorizontalMarginDp(16, 16)
+                    .setDividerInsetColor(ThemeAttrs.surfaceContainerHigh(view.getContext()))
+                    // 或一步：
+                    // .setDividerStyle(lineColor, leftPx, rightPx, insetColor)
                     .setConfirmButtonColor(ThemeAttrs.onPrimary(view.getContext()))
                     .setCancelButtonColor(ThemeAttrs.onSurface(view.getContext()))
                     .setConfirmButtonBgColor(themeColor)
@@ -259,6 +266,13 @@ public class DialogViewModel extends BaseViewModel<BaseRepository> {
                     .setTitleTextSize(17f)
                     .setConfirmButtonText("确定")
                     .setCancelButtonText("取消")
+                    .setShowDivider(true)
+                    .setDividerColor(ThemeAttrs.outlineVariant(view.getContext()))
+                    // 左右各空 16dp，两侧铺与弹窗底同色，避免透出背景
+                    .setDividerHorizontalMarginDp(16, 16)
+                    .setDividerInsetColor(ThemeAttrs.surfaceContainerHigh(view.getContext()))
+                    // 或一步：
+                    // .setDividerStyle(lineColor, leftPx, rightPx, insetColor)
                     .setConfirmButtonColor(ThemeAttrs.onPrimary(view.getContext()))
                     .setCancelButtonColor(ThemeAttrs.onSurface(view.getContext()))
                     .setConfirmButtonBgColor(themeColor)

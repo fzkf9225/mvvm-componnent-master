@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
+        android:padding="@dimen/padding_m"
+        tools:context=".activity.UiStateDemoActivity">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvIntro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="4dp"
+            android:text="UiState 驱动整页内容区：Loading / Success / Empty / Error。\nRequestUi 只负责遮罩 Loading 与 Toast，两者正交。"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/font_size_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:background="?attr/colorSurface"
+            android:padding="@dimen/padding_s"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/font_size_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvIntro"
+            tools:text="当前 UiState：Loading" />
+
+        <!-- 内容区：由 UiState 切换可见性 -->
+        <FrameLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/vertical_margin_m"
+            android:layout_marginBottom="@dimen/vertical_margin_m"
+            app:layout_constraintBottom_toTopOf="@id/btnRow1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvState">
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:listitem="@android:layout/simple_list_item_1"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/emptyPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/font_size_m"
+                    tools:text="暂无数据" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/errorPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorError"
+                    android:textSize="@dimen/font_size_m"
+                    tools:text="加载失败" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRetry"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vertical_margin_s"
+                    android:text="重试"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccess"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="成功有数据"
+            app:layout_constraintBottom_toTopOf="@id/btnError"
+            app:layout_constraintEnd_toStartOf="@id/btnEmpty"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnRow1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEmpty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_s"
+            android:text="成功空数据"
+            app:layout_constraintBottom_toBottomOf="@id/btnSuccess"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnSuccess"
+            app:layout_constraintTop_toTopOf="@id/btnSuccess" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/btnRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="btnSuccess,btnEmpty" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_margin_s"
+            android:text="模拟失败"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnRequestUi"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSuccess" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRequestUi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/horizontal_margin_s"
+            android:text="仅 RequestUi 遮罩"
+            app:layout_constraintBottom_toBottomOf="@id/btnError"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnError"
+            app:layout_constraintTop_toTopOf="@id/btnError" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
@@ -18,59 +19,46 @@ import io.coderf.arklab.common.databinding.DialogEditAreaBinding;
 import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 
-
 /**
- * 多行文本输入框弹窗。
+ * 多行文本输入弹窗。
+ * <p>
+ * 输入区外层为 {@link com.google.android.material.textfield.TextInputLayout}（Outlined + 字数统计），
+ * 整体仍是「标题 → 输入 → 分割线 → 取消 | 确定」，观感与原先接近。
+ * <pre>
+ * new EditAreaDialog(context)
+ *     .setTipsStr("备注")
+ *     .setHintStr("请输入备注内容")
+ *     .setMaxWords(200)
+ *     .setCounterEnabled(true)
+ *     .setMinLines(5)
+ *     .setOnPositiveClickListener((dialog, text) -&gt; {
+ *         if (TextUtils.isEmpty(text)) {
+ *             dialog.setError("不能为空");
+ *             return; // 配合 setDismissOnPositive(false)
+ *         }
+ *         dialog.dismiss();
+ *     })
+ *     .setDismissOnPositive(false)
+ *     .builder()
+ *     .show();
+ * </pre>
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
- * @created 2024/2/26
+ * @updated 2026/9/21
  */
 public class EditAreaDialog extends BaseDialog {
-    /**
-     * 绑定布局
-     */
     private DialogEditAreaBinding binding;
-    /**
-     * 监听
-     */
     private OnInputDialogInterfaceListener onPositiveClickListener, onNegativeClickListener;
-    /**
-     * 右侧确定按钮文字
-     */
     private String positiveText = null;
-    /**
-     * 左侧取消按钮文字
-     */
     private String negativeText = null;
-    /**
-     * 提示标题、输入框提示文字、默认文本
-     */
     private String tipsStr, hintStr, defaultStr;
-    /**
-     * 输入框输入类型
-     */
-    private int inputType = InputType.TYPE_CLASS_TEXT;
-    /**
-     * 最大输入字数
-     */
-    private int maxWords = 30;
-    /**
-     * 右侧确认按钮文字颜色
-     */
+    private int inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+    private int maxWords = 200;
     private ColorStateList positiveTextColor = null;
-    /**
-     * 左侧取消按钮文字颜色
-     */
     private ColorStateList negativeTextColor = null;
-    /**
-     * 输入框文字颜色
-     */
     private ColorStateList textColor = null;
-    /**
-     * 提示标题颜色
-     */
     private ColorStateList tipColor = null;
 
     private float tipsTextSizeSp = 0f;
@@ -81,10 +69,16 @@ public class EditAreaDialog extends BaseDialog {
     private int inputMarginTopPx = -1;
     private int inputMarginStartPx = -1;
     private int inputMarginEndPx = -1;
-    /** 输入框四边统一 padding (px)，小于 0 不改 */
     private int inputPaddingAllPx = -1;
     private float positiveTextSizeSp = 0f;
     private float negativeTextSizeSp = 0f;
+
+    private boolean dismissOnPositive = true;
+    private boolean dismissOnNegative = true;
+    private boolean counterEnabled = true;
+    private int minLines = 5;
+    private int inputMinHeightPx = -1;
+    private int buttonHeightPx = -1;
 
     public EditAreaDialog(@NonNull Context context) {
         super(context);
@@ -159,6 +153,11 @@ public class EditAreaDialog extends BaseDialog {
     public EditAreaDialog setMaxWords(int maxWords) {
         this.maxWords = maxWords;
         return this;
+    }
+
+    /** 与 {@link #setPositive(String)} 相同，命名与其它 Dialog 对齐。 */
+    public EditAreaDialog setPositiveText(String positiveText) {
+        return setPositive(positiveText);
     }
 
     public EditAreaDialog setPositive(String positiveText) {
@@ -237,6 +236,71 @@ public class EditAreaDialog extends BaseDialog {
         return this;
     }
 
+    /** 点击确定后是否自动 dismiss，默认 true。校验失败时可设 false 并 {@link #setError}。 */
+    public EditAreaDialog setDismissOnPositive(boolean dismiss) {
+        this.dismissOnPositive = dismiss;
+        return this;
+    }
+
+    public EditAreaDialog setDismissOnNegative(boolean dismiss) {
+        this.dismissOnNegative = dismiss;
+        return this;
+    }
+
+    /** 是否显示字数统计（TextInputLayout counter），默认 true。 */
+    public EditAreaDialog setCounterEnabled(boolean enabled) {
+        this.counterEnabled = enabled;
+        return this;
+    }
+
+    /** 输入框最少行数。 */
+    public EditAreaDialog setMinLines(int minLines) {
+        this.minLines = Math.max(1, minLines);
+        return this;
+    }
+
+    /** 输入框最小高度（px）。 */
+    public EditAreaDialog setInputMinHeight(int px) {
+        this.inputMinHeightPx = px;
+        return this;
+    }
+
+    public EditAreaDialog setInputMinHeightDp(float dp) {
+        this.inputMinHeightPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    public EditAreaDialog setButtonHeight(int px) {
+        this.buttonHeightPx = px;
+        return this;
+    }
+
+    public EditAreaDialog setButtonHeightDp(float dp) {
+        this.buttonHeightPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    /**
+     * 显示 / 清除 TextInputLayout error（需在 {@link #builder()} 之后调用）。
+     */
+    public EditAreaDialog setError(@Nullable CharSequence error) {
+        if (binding != null) {
+            boolean has = !TextUtils.isEmpty(error);
+            binding.dialogInputLayout.setErrorEnabled(has);
+            binding.dialogInputLayout.setError(has ? error : null);
+        }
+        return this;
+    }
+
+    /** 当前输入内容；未 builder 时返回 null。 */
+    @Nullable
+    public String getInputText() {
+        if (binding == null || binding.dialogInput.getText() == null) {
+            return null;
+        }
+        return binding.dialogInput.getText().toString();
+    }
+
     public EditAreaDialog builder() {
         initView();
         return this;
@@ -248,7 +312,6 @@ public class EditAreaDialog extends BaseDialog {
 
     private void initView() {
         binding = DialogEditAreaBinding.inflate(layoutInflater, null, false);
-        // 初始化控件
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }
@@ -265,6 +328,12 @@ public class EditAreaDialog extends BaseDialog {
         binding.dialogInput.setText(defaultStr);
         binding.dialogInput.setInputType(inputType);
         binding.dialogInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxWords)});
+        binding.dialogInput.setMinLines(minLines);
+        if (inputMinHeightPx > 0) {
+            binding.dialogInput.setMinHeight(inputMinHeightPx);
+        }
+        binding.dialogInputLayout.setCounterEnabled(counterEnabled);
+        binding.dialogInputLayout.setCounterMaxLength(maxWords);
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -283,13 +352,19 @@ public class EditAreaDialog extends BaseDialog {
         applyAppearanceOverrides();
 
         binding.dialogConfirm.setOnClickListener(v -> {
+            if (dismissOnPositive) {
+                dismiss();
+            }
             if (onPositiveClickListener != null) {
-                onPositiveClickListener.onDialogClick(this, binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
+                onPositiveClickListener.onDialogClick(this, getInputText());
             }
         });
         binding.dialogCancel.setOnClickListener(v -> {
             if (onNegativeClickListener != null) {
-                onNegativeClickListener.onDialogClick(this, binding.dialogInput.getText() == null ? null : binding.dialogInput.getText().toString());
+                if (dismissOnNegative) {
+                    dismiss();
+                }
+                onNegativeClickListener.onDialogClick(this, getInputText());
             } else {
                 dismiss();
             }
@@ -320,9 +395,10 @@ public class EditAreaDialog extends BaseDialog {
         if (inputTextSizeSp > 0f) {
             binding.dialogInput.setTextSize(inputTextSizeSp);
         }
+        // 外边距作用在 TextInputLayout 上，保持与原先「输入区整体」一致
         if (inputMarginTopPx >= 0 || inputMarginStartPx >= 0 || inputMarginEndPx >= 0) {
             ViewGroup.MarginLayoutParams lp =
-                    (ViewGroup.MarginLayoutParams) binding.dialogInput.getLayoutParams();
+                    (ViewGroup.MarginLayoutParams) binding.dialogInputLayout.getLayoutParams();
             if (inputMarginTopPx >= 0) {
                 lp.topMargin = inputMarginTopPx;
             }
@@ -332,10 +408,11 @@ public class EditAreaDialog extends BaseDialog {
             if (inputMarginEndPx >= 0) {
                 lp.setMarginEnd(inputMarginEndPx);
             }
-            binding.dialogInput.setLayoutParams(lp);
+            binding.dialogInputLayout.setLayoutParams(lp);
         }
         if (inputPaddingAllPx >= 0) {
-            binding.dialogInput.setPadding(inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx);
+            binding.dialogInput.setPadding(
+                    inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx, inputPaddingAllPx);
         }
         if (positiveTextSizeSp > 0f) {
             binding.dialogConfirm.setTextSize(positiveTextSizeSp);
@@ -343,6 +420,13 @@ public class EditAreaDialog extends BaseDialog {
         if (negativeTextSizeSp > 0f) {
             binding.dialogCancel.setTextSize(negativeTextSizeSp);
         }
+        if (buttonHeightPx > 0) {
+            ViewGroup.LayoutParams cancelLp = binding.dialogCancel.getLayoutParams();
+            cancelLp.height = buttonHeightPx;
+            binding.dialogCancel.setLayoutParams(cancelLp);
+            ViewGroup.LayoutParams confirmLp = binding.dialogConfirm.getLayoutParams();
+            confirmLp.height = buttonHeightPx;
+            binding.dialogConfirm.setLayoutParams(confirmLp);
+        }
     }
-
 }

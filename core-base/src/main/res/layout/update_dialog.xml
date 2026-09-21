@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="4dp"
-                android:textColor="@color/gray"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="@dimen/font_size_xl"
                 tools:text="1、优化性能体验\n2、修复已知问题\n详情请访问 https://example.com" />
         </ScrollView>

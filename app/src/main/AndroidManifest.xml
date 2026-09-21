@@ -196,6 +196,9 @@
             android:name=".activity.EmptyLayoutDemoActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.UiStateDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.Material3KitActivity"
             android:exported="false" />
         <activity

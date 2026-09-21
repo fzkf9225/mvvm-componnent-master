@@ -3,20 +3,21 @@ package io.coderf.arklab.common.widget.dialog.bean;
 import android.content.Context;
 
 import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 
-import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
- * ProgressBarSetting 类。
+ * 进度条外观参数（圆环 / 横条共用部分字段）。
+ * <p>
+ * 默认色与布局一致：轨道 {@link ThemeAttrs#surfaceContainerHighest}、进度 {@link ThemeAttrs#primary}、
+ * 文字 {@link ThemeAttrs#onSurface}。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @created 2023/11/2 16:30
+ * @updated 2026/9/21
  */
 public class ProgressBarSetting extends BaseObservable {
     private Context context;
@@ -27,7 +28,7 @@ public class ProgressBarSetting extends BaseObservable {
     private float strokeWidth;
     private @ColorInt int fontColor = -1;
     /**
-     * 数字显示的小数点位置，为0时则保留整数
+     * 数字显示的小数点位置，为 0 时则保留整数
      */
     private int fontPercent = 2;
     private float bgRadius;
@@ -41,13 +42,14 @@ public class ProgressBarSetting extends BaseObservable {
 
     public ProgressBarSetting(Context context) {
         this.context = context;
-        bgColor = ThemeAttrs.primary(getContext());
-        progressColor = ContextCompat.getColor(getContext(), R.color.theme_green);
-        bgRadius = (float) DensityUtil.dp2px(getContext(), 5);
+        bgColor = ThemeAttrs.surfaceContainerHighest(getContext());
+        progressColor = ThemeAttrs.primary(getContext());
+        bgRadius = (float) DensityUtil.dp2px(getContext(), 8);
         fontSize = DensityUtil.sp2px(getContext(), 12);
-        strokeWidth = (float) DensityUtil.sp2px(getContext(), 10);
+        strokeWidth = (float) DensityUtil.dp2px(getContext(), 8);
         circleSize = DensityUtil.dp2px(getContext(), 120);
         horizontalProgressBarHeight = DensityUtil.dp2px(getContext(), 20);
+        fontColor = ThemeAttrs.onSurface(getContext());
     }
 
     public Context getContext() {
@@ -86,8 +88,9 @@ public class ProgressBarSetting extends BaseObservable {
         return fontSize;
     }
 
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
+    /** 进度条上数字字号，单位 px（可用 {@link DensityUtil#sp2px} 转换）。 */
+    public void setFontSize(int fontSizePx) {
+        this.fontSize = fontSizePx;
     }
 
     public float getStrokeWidth() {

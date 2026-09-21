@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
@@ -19,39 +20,32 @@ import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.StringUtil;
 
-
 /**
  * 单按钮提示弹框，支持标题类型区与富文本内容。
+ * <p>
+ * 仅文案提示可用 {@link MaterialAlertHelper#message}；需要标题区、富文本、自定义按钮样式时用本类。
+ * <pre>
+ * new MessageDialog(context)
+ *     .setMessageType("提示")
+ *     .setMessage("操作已完成")
+ *     .setPositiveText("知道了")
+ *     .setOnPositiveClickListener(dialog -&gt; { })
+ *     .builder()
+ *     .show();
+ * </pre>
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2019/10/11 0:00
+ * @updated 2026/9/21
  */
 public class MessageDialog extends BaseDialog {
-    /**
-     * 弹框内容
-     */
     private String content;
-    /**
-     * 富文本样式内容，可以添加超链接和颜色，优先级高于 content
-     */
     private SpannableString spannableContent;
-    /**
-     * 弹框按钮点击监听
-     */
     private OnDialogInterfaceClickListener onPositiveClickListener;
-    /**
-     * 弹框按钮文字
-     */
     private String positiveText = null;
-    /**
-     * 弹框类型
-     */
     private String messageType = null;
-    /**
-     * 弹框文字颜色
-     */
     private ColorStateList textColor = null;
     private ColorStateList messageTypeTextColor = null;
     private float messageTypeTextSizeSp = 0f;
@@ -65,10 +59,10 @@ public class MessageDialog extends BaseDialog {
     private int contentPaddingEndPx = -1;
     private ColorStateList optionTextColor = null;
     private float optionTextSizeSp = 0f;
+    private boolean dismissOnPositive = true;
+    private int buttonHeightPx = -1;
+    private Boolean showMessageType;
 
-    /**
-     * 弹框布局
-     */
     private DialogMessageBinding binding;
 
     public MessageDialog(@NonNull Context context) {
@@ -153,9 +147,6 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
 
-    /**
-     * 设置正文左右内边距（px），任一侧小于 0 则保持 XML 该侧数值。
-     */
     public MessageDialog setContentHorizontalPaddingPx(int paddingStartPx, int paddingEndPx) {
         this.contentPaddingStartPx = paddingStartPx;
         this.contentPaddingEndPx = paddingEndPx;
@@ -169,7 +160,7 @@ public class MessageDialog extends BaseDialog {
     }
 
     /**
-     * @deprecated 请使用 {@link #setContentHorizontalPaddingDp(int, int)}，内容与 padding 语义统一。
+     * @deprecated 请使用 {@link #setContentHorizontalPaddingDp(int, int)}
      */
     @Deprecated
     public MessageDialog setContentHorizontalMarginDp(int marginStartDp, int marginEndDp) {
@@ -183,6 +174,31 @@ public class MessageDialog extends BaseDialog {
 
     public MessageDialog setOptionTextSize(float spSize) {
         this.optionTextSizeSp = spSize;
+        return this;
+    }
+
+    /** 点击底部按钮后是否自动 dismiss，默认 true。 */
+    public MessageDialog setDismissOnPositive(boolean dismiss) {
+        this.dismissOnPositive = dismiss;
+        return this;
+    }
+
+    public MessageDialog setButtonHeight(int px) {
+        this.buttonHeightPx = px;
+        return this;
+    }
+
+    public MessageDialog setButtonHeightDp(float dp) {
+        this.buttonHeightPx = DensityUtil.dp2px(getContext(), dp);
+        return this;
+    }
+
+    /**
+     * 是否强制显示/隐藏标题类型区。
+     * {@code null}：文案为空则隐藏（历史行为）。
+     */
+    public MessageDialog setShowMessageType(@Nullable Boolean show) {
+        this.showMessageType = show;
         return this;
     }
 
@@ -209,12 +225,20 @@ public class MessageDialog extends BaseDialog {
             binding.dialogMessageType.setText(messageType);
         }
 
-        binding.dialogMessageType.setVisibility(StringUtil.isEmpty(binding.dialogMessageType.getText().toString()) ? View.GONE : View.VISIBLE);
+        if (showMessageType != null) {
+            binding.dialogMessageType.setVisibility(showMessageType ? View.VISIBLE : View.GONE);
+        } else {
+            binding.dialogMessageType.setVisibility(
+                    StringUtil.isEmpty(binding.dialogMessageType.getText().toString())
+                            ? View.GONE : View.VISIBLE);
+        }
         if (textColor != null) {
             binding.dialogTextView.setTextColor(textColor);
         }
         binding.dialogOption.setOnClickListener(v -> {
-            dismiss();
+            if (dismissOnPositive) {
+                dismiss();
+            }
             if (onPositiveClickListener != null) {
                 onPositiveClickListener.onDialogClick(this);
             }
@@ -275,6 +299,10 @@ public class MessageDialog extends BaseDialog {
         if (optionTextSizeSp > 0f) {
             binding.dialogOption.setTextSize(optionTextSizeSp);
         }
+        if (buttonHeightPx > 0) {
+            ViewGroup.LayoutParams lp = binding.dialogOption.getLayoutParams();
+            lp.height = buttonHeightPx;
+            binding.dialogOption.setLayoutParams(lp);
+        }
     }
-
 }

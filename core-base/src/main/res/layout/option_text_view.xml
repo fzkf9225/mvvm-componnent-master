@@ -7,18 +7,24 @@
             type="io.coderf.arklab.common.bean.PopupWindowBean" />
     </data>
 
+    <!--
+        水波纹说明：
+        MaterialTextView 上 android:foreground 常不生效，需 background + clickable/focusable。
+        点击由 BaseViewHolder 设在 itemView（即本 TextView）上，与 ripple 同源。
+    -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_option"
         style="@style/SelectableItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:focusable="true"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:ellipsize="end"
         android:paddingTop="@dimen/padding_l"
         android:paddingBottom="@dimen/padding_l"
         android:text="@{item.popupName}"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/font_size_xl" />
 </layout>
-
