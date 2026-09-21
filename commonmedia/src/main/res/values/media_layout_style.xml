@@ -48,6 +48,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
         <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <!-- 使用语义颜色，自动适配暗色模式 -->
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/action_sheet_item_text_size</item>
@@ -59,13 +63,17 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_sheet_item_height</item>
         <item name="android:gravity">center</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <!-- 使用语义颜色，自动适配暗色模式 -->
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textSize">@dimen/action_sheet_cancel_text_size</item>
         <item name="android:textAllCaps">false</item>
         <!-- 背景使用语义颜色 -->
-        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
-        <item name="rippleColor">?attr/colorControlHighlight</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
     <style name="media_action_sheet_divider">
