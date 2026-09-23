@@ -1,8 +1,9 @@
 package io.coderf.arklab.media.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
 
 import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.databinding.MediaLoadingDialogBinding;
@@ -11,11 +12,12 @@ import io.coderf.arklab.media.databinding.MediaLoadingDialogBinding;
  * 自定义加载dialog
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2024/12/20
+ * @updated 2026/9/23
  */
-public class MediaProgressDialog extends Dialog {
+public class MediaProgressDialog extends MediaBaseDialog {
     private MediaLoadingDialogBinding loadingDialogBinding;
     private boolean isCanCancel = false;
     private OnCancelListener onCancelListener;
@@ -24,7 +26,7 @@ public class MediaProgressDialog extends Dialog {
      */
     private String message;
 
-    public MediaProgressDialog(Context context) {
+    public MediaProgressDialog(@NonNull Context context) {
         super(context, R.style.media_loading_dialog);
         message = context.getString(R.string.media_loading_please_wait);
     }
@@ -41,7 +43,7 @@ public class MediaProgressDialog extends Dialog {
         loadingDialogBinding.setMessage(message);
     }
 
-    public MediaProgressDialog(Context context, int theme) {
+    public MediaProgressDialog(@NonNull Context context, int theme) {
         super(context, theme);
     }
 
@@ -66,7 +68,8 @@ public class MediaProgressDialog extends Dialog {
     }
 
     private void createLoadingDialog() {
-        loadingDialogBinding = MediaLoadingDialogBinding.inflate(getLayoutInflater(),null, false);
+        loadingDialogBinding = inflateWithHostAdapt(
+                () -> MediaLoadingDialogBinding.inflate(layoutInflater, null, false));
         loadingDialogBinding.setMessage(message);
         setCanceledOnTouchOutside(false);
         setCancelable(isCanCancel);

@@ -1,11 +1,7 @@
 package io.coderf.arklab.media.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,11 +13,12 @@ import io.coderf.arklab.media.databinding.ChooseMediaDialogBinding;
  * 选择照片和拍照弹框
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2024/10/31
+ * @updated 2026/9/23
  */
-public class OpenMediaDialog extends Dialog implements View.OnClickListener {
+public class OpenMediaDialog extends MediaBaseDialog implements View.OnClickListener {
     private OnOpenMediaClickListener onOpenMediaClickListener;
     /**
      * 只显示拍照
@@ -71,7 +68,8 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
-        binding = ChooseMediaDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = inflateWithHostAdapt(
+                () -> ChooseMediaDialogBinding.inflate(layoutInflater, null, false));
         if (mediaType == CAMERA) {
             binding.takePhoto.setVisibility(View.VISIBLE);
             binding.choosePhoto.setVisibility(View.GONE);
@@ -108,13 +106,7 @@ public class OpenMediaDialog extends Dialog implements View.OnClickListener {
         binding.takePhoto.setOnClickListener(this);
         binding.shoot.setOnClickListener(this);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(Gravity.BOTTOM);
+        applyBottomWindowLayout();
     }
 
     @Override

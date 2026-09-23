@@ -1,11 +1,7 @@
 package io.coderf.arklab.media.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.NonNull;
 
@@ -17,11 +13,12 @@ import io.coderf.arklab.media.databinding.ChooseFileDialogBinding;
  * 选择照片和拍照弹框
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2018/3/29
+ * @updated 2026/9/23
  */
-public class OpenFileDialog extends Dialog {
+public class OpenFileDialog extends MediaBaseDialog {
     private OnOpenFileClickListener openFileClickListener;
     private String buttonMessage;
     /**
@@ -57,6 +54,7 @@ public class OpenFileDialog extends Dialog {
         initView();
         return this;
     }
+
     private ChooseFileDialogBinding binding;
 
     public ChooseFileDialogBinding getBinding() {
@@ -64,7 +62,8 @@ public class OpenFileDialog extends Dialog {
     }
 
     private void initView() {
-        binding = ChooseFileDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = inflateWithHostAdapt(
+                () -> ChooseFileDialogBinding.inflate(layoutInflater, null, false));
         if (chooseType == AUDIO) {
             if (!TextUtils.isEmpty(buttonMessage)) {
                 binding.chooseFile.setText(buttonMessage);
@@ -87,13 +86,7 @@ public class OpenFileDialog extends Dialog {
         });
         binding.chooseFileCancel.setOnClickListener(v -> dismiss());
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(Gravity.BOTTOM);
+        applyBottomWindowLayout();
     }
 
 

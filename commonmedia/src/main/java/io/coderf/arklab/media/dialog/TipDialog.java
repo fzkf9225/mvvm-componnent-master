@@ -1,18 +1,12 @@
 package io.coderf.arklab.media.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -28,15 +22,14 @@ import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
  * 确认弹框
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/23
  */
-public class TipDialog extends Dialog {
+public class TipDialog extends MediaBaseDialog {
     private String content;
     private SpannableString spannableContent;
     private OnDialogInterfaceClickListener onPositiveClickListener, onNegativeClickListener;
-    private boolean outSide = true;
     private String positiveText = null, negativeText = null;
     private boolean isShowPositiveView = true, isShowNegativeView = true, isShowLineView = true;
 
@@ -45,13 +38,11 @@ public class TipDialog extends Dialog {
     private ColorStateList textColor = null;
 
     private Drawable bgDrawable;
-    private final LayoutInflater layoutInflater;
 
     private MediaTipDialogBinding binding;
 
     public TipDialog(@NonNull Context context) {
         super(context, R.style.media_action_sheet_dialog_style);
-        layoutInflater = LayoutInflater.from(context);
     }
 
     public TipDialog setOnPositiveClickListener(OnDialogInterfaceClickListener onPositiveClickListener) {
@@ -59,8 +50,9 @@ public class TipDialog extends Dialog {
         return this;
     }
 
+    @Override
     public TipDialog setCanOutSide(boolean outSide) {
-        this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
@@ -121,6 +113,15 @@ public class TipDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public TipDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public TipDialog builder() {
         initView();
         return this;
@@ -131,7 +132,8 @@ public class TipDialog extends Dialog {
     }
 
     private void initView() {
-        binding = MediaTipDialogBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> MediaTipDialogBinding.inflate(layoutInflater, null, false));
 
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.media_confirm));
@@ -184,23 +186,9 @@ public class TipDialog extends Dialog {
             binding.dialogTextView.setText(spannableContent);
             binding.dialogTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
-            return;
-        }
-        DisplayMetrics appDisplayMetrics = getContext().getApplicationContext().getResources().getDisplayMetrics();
-        if (appDisplayMetrics != null) {
-            dialogWindow.setLayout(appDisplayMetrics.widthPixels * 4 / 5,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
-            dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        // 设置Dialog从窗体中间弹出
-        dialogWindow.setGravity(Gravity.CENTER);
+        applyCancelableOutside(outSide);
+        applyCenterWindow();
     }
 
 }
