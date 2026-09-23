@@ -832,7 +832,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
 
     /**
      * 展示弹窗，并按 {@link #setDialogGravity(int)} 设置 Window 位置。
-     * 横屏不强制全宽，避免覆盖 {@link #applyBottomSheetWindow} 的收窄结果。
+     * 横屏只收窄宽度，不改变垂直弹出位置；水平居中需补偿 DisplayCutout。
      */
     @Override
     public void show() {
@@ -847,6 +847,7 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
                 lp.gravity = gravity;
             }
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            applyHorizontalCutoutOffset(lp);
             window.setAttributes(lp);
         }
         super.show();
