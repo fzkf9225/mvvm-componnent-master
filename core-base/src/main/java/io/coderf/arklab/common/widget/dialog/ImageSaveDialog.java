@@ -67,7 +67,8 @@ public class ImageSaveDialog extends BaseDialog {
     }
 
     public ImageSaveDialog build() {
-        binding = ImageSaveDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = inflateWithHostAdapt(
+                () -> ImageSaveDialogBinding.inflate(getLayoutInflater(), null, false));
         binding.buttonCancel.setOnClickListener(v -> dismiss());
         binding.saveLocal.setOnClickListener(v -> {
             if (onImageSaveListener != null) {

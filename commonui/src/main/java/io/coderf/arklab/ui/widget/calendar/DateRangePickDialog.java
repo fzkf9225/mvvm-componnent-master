@@ -2,20 +2,16 @@ package io.coderf.arklab.ui.widget.calendar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -29,13 +25,12 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
-import java.util.Objects;
-
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.NumberUtil;
+import io.coderf.arklab.common.widget.dialog.BaseDialog;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
 import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter;
@@ -43,14 +38,17 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 
 /**
- * 年月日范围选择dialog
+ * 年月日范围选择 dialog。
+ * <p>
+ * 横屏跟随 {@link BaseDialog}：收窄宽度、居中展示，并压缩日历单元格高度，避免底部按钮被裁切。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2024/12/2
+ * @updated 2026/9/23
  */
-public class DateRangePickDialog extends Dialog implements DefaultLifecycleObserver {
+public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleObserver {
     private final Context context;
     private String title = null;
     private CalendarView.OnSelectedChangedListener onPositiveClickListener;
@@ -197,7 +195,7 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     }
 
     public DateRangePickDialog(@NonNull Context context) {
-        super(requireActivityContext(context), R.style.ActionSheetDialogStyle);
+        super(requireActivityContext(context));
         this.context = requireActivityContext(context);
         textSize = (float) DensityUtil.sp2px(context, 14f);
         itemWidth = DensityUtil.dp2px(context, 36f);
@@ -236,11 +234,14 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
 
     public DateRangePickDialog setCanOutSide(boolean outSide) {
         this.outSide = outSide;
+        super.setCanOutSide(outSide);
         return this;
     }
 
+    @Override
     public DateRangePickDialog setBgDrawable(Drawable bgDrawable) {
         this.bgDrawable = bgDrawable;
+        super.setBgDrawable(bgDrawable);
         return this;
     }
 
@@ -592,7 +593,8 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
     }
 
     private void initView() {
-        binding = DialogDateRangePickBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogDateRangePickBinding.inflate(layoutInflater, null, false));
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -692,27 +694,45 @@ public class DateRangePickDialog extends Dialog implements DefaultLifecycleObser
         binding.calendarViewRange.setWeekTextColor(weekTextColor);
         applyCalendarSpacingConfig();
         applyCalendarTagConfig();
+        applyLandscapeCalendarMetrics();
         binding.calendarViewRange.refreshTitle();
         binding.calendarViewRange.initData(lifecycle, fragmentManager);
         applyTitleConfig();
         applyDynamicAppearance();
         refreshMonthLabel();
-        setCanceledOnTouchOutside(outSide);
-        setCancelable(outSide);
         setContentView(binding.getRoot());
-        Window dialogWindow = getWindow();
-        if (dialogWindow == null) {
+        applyCancelableOutside(outSide);
+        applyBottomSheetWindow(gravity);
+    }
+
+    /**
+     * 横屏压缩日历单元格并限制日历区域高度，保证底部按钮可见。
+     */
+    private void applyLandscapeCalendarMetrics() {
+        if (!isLandscape()) {
             return;
         }
-        dialogWindow.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialogWindow.setGravity(gravity);
-        dialogWindow.setBackgroundDrawable(Objects.requireNonNullElseGet(bgDrawable, () -> DrawableUtil.createRectDrawable(
-                ThemeAttrs.surfaceContainerHigh(getContext()),
-                DensityUtil.dp2px(getContext(), 16f),
-                DensityUtil.dp2px(getContext(), 16f),
-                0,
-                0
-        )));
+        int landscapeCell = DensityUtil.dp2px(context, 28f);
+        float landscapeTextPx = DensityUtil.sp2px(context, 12f);
+        if (itemHeight != null && itemHeight > landscapeCell) {
+            itemHeight = landscapeCell;
+            binding.calendarViewRange.setItemHeight(itemHeight);
+        }
+        if (itemWidth != null && itemWidth > landscapeCell) {
+            itemWidth = landscapeCell;
+            binding.calendarViewRange.setItemWidth(itemWidth);
+        }
+        if (textSize != null && textSize > landscapeTextPx) {
+            textSize = landscapeTextPx;
+            binding.calendarViewRange.setTextSize(textSize);
+        }
+        // 标题 + 月份 + 按钮预留约 160dp
+        int maxH = resolveLandscapeMaxContentHeightPx(160f);
+        if (maxH > 0) {
+            ViewGroup.LayoutParams lp = binding.calendarViewRange.getLayoutParams();
+            lp.height = maxH;
+            binding.calendarViewRange.setLayoutParams(lp);
+        }
     }
 
     private void applyTitleConfig() {

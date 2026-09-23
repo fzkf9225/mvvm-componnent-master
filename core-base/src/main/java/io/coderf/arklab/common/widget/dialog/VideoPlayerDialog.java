@@ -181,7 +181,8 @@ public class VideoPlayerDialog extends Dialog {
             return this;
         }
 
-        View content = android.view.LayoutInflater.from(context).inflate(R.layout.dialog_video_player, null);
+        View content = DialogHostAdaptHelper.inflateWithHostAdapt(context,
+                () -> android.view.LayoutInflater.from(context).inflate(R.layout.dialog_video_player, null));
         setContentView(content);
         dialogRoot = content.findViewById(R.id.dialog_video_root);
         playerView = content.findViewById(R.id.dialog_video_player);

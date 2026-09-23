@@ -832,15 +832,21 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
 
     /**
      * 展示弹窗，并按 {@link #setDialogGravity(int)} 设置 Window 位置。
+     * 横屏不强制全宽，避免覆盖 {@link #applyBottomSheetWindow} 的收窄结果。
      */
     @Override
     public void show() {
         Window window = getWindow();
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            if (isLandscape()) {
+                lp.width = resolveLandscapeSheetWidthPx();
+                lp.gravity = resolveLandscapeSheetGravity(gravity);
+            } else {
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.gravity = gravity;
+            }
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.gravity = gravity;
             window.setAttributes(lp);
         }
         super.show();
@@ -870,7 +876,8 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogChoiceSelectBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogChoiceSelectBinding.inflate(layoutInflater, null, false));
 
         setupTitle();
         setupButtons();
@@ -1033,7 +1040,12 @@ public class ChoiceSelectDialog<T extends PopupWindowBean> extends BaseDialog {
         int dividerHeight = showDivider ? DensityUtil.dp2px(context, 1) * (itemCount - 1) : 0;
         int totalHeight = singleItemHeight * itemCount + dividerHeight;
         if (maxListHeightPx > 0) {
-            return Math.min(totalHeight, maxListHeightPx);
+            totalHeight = Math.min(totalHeight, maxListHeightPx);
+        }
+        // 横屏按可用高度再裁切，保证底部取消/确定按钮可见
+        int landscapeCap = resolveLandscapeMaxContentHeightPx(LANDSCAPE_CONTENT_RESERVED_DP);
+        if (landscapeCap > 0) {
+            totalHeight = Math.min(totalHeight, landscapeCap);
         }
         return totalHeight;
     }

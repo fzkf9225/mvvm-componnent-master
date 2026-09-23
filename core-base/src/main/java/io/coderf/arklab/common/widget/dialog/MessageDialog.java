@@ -38,7 +38,7 @@ import io.coderf.arklab.common.utils.common.StringUtil;
  * @version 1.1
  * @since 1.0
  * @created 2019/10/11 0:00
- * @updated 2026/9/21
+ * @updated 2026/9/23
  */
 public class MessageDialog extends BaseDialog {
     private String content;
@@ -202,6 +202,15 @@ public class MessageDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public MessageDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public MessageDialog builder() {
         initView();
         return this;
@@ -212,7 +221,8 @@ public class MessageDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogMessageBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogMessageBinding.inflate(layoutInflater, null, false));
 
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogOption.setText(ContextCompat.getString(getContext(), R.string.confirm));

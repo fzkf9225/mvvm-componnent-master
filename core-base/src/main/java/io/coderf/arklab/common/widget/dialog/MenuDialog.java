@@ -382,7 +382,8 @@ public class MenuDialog<T extends PopupWindowBean> extends BaseDialog {
     }
 
     private void initView() {
-        binding = MenuDialogBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> MenuDialogBinding.inflate(layoutInflater, null, false));
 
         // 设置取消按钮
         setupCancelButton();

@@ -393,7 +393,8 @@ public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogPickerBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogPickerBinding.inflate(layoutInflater, null, false));
 
         // 设置标题
         if (titleText != null && !titleText.isEmpty()) {
@@ -414,6 +415,7 @@ public class PickerDialog<T extends PopupWindowBean> extends BaseDialog {
         }
 
         applyLayoutAppearance();
+        applyLandscapeNumberPickerHeight(binding.dataPicker);
 
         setContentView(binding.getRoot());
         applyCancelableOutside(outSide);

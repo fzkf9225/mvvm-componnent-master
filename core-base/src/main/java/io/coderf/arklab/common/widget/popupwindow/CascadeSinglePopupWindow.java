@@ -2,15 +2,18 @@ package io.coderf.arklab.common.widget.popupwindow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import com.google.android.material.imageview.ShapeableImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +27,7 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.PopupMultiCascadeBinding;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.widget.dialog.DialogHostAdaptHelper;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowCheckBoxAdapter;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
@@ -96,8 +100,11 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
      */
     private float itemHeight = 0;
 
+    private final Activity hostActivity;
+
     public CascadeSinglePopupWindow(Activity context, List<T> dataList, SelectedListener<T> selectedListener) {
         super(context);
+        this.hostActivity = context;
         this.dataList = dataList;
         this.selectedListener = selectedListener;
         //默认参数
@@ -117,7 +124,8 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
 
     @SuppressLint("NotifyDataSetChanged")
     private void initViews(Activity context) {
-        binding = PopupMultiCascadeBinding.inflate(LayoutInflater.from(context), null, false);
+        binding = DialogHostAdaptHelper.inflateWithHostAdapt(context,
+                () -> PopupMultiCascadeBinding.inflate(LayoutInflater.from(context), null, false));
         //初始化popupWindowAdapter
         popupWindowSelectedAdapter = new PopupWindowSelectedAdapter<>();
         popupWindowSelectedAdapter.setOnItemSelectedClearListener(this);
@@ -203,8 +211,16 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
         setBackgroundDrawable(ContextCompat.getDrawable(context, R.color.transparent));
 
         DisplayMetrics appDisplayMetrics = context.getResources().getDisplayMetrics();
-        setWidth(appDisplayMetrics.widthPixels);
-        setHeight(appDisplayMetrics.heightPixels * 2 / 3);
+        boolean landscape = context.getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+        if (landscape) {
+            // 横屏收窄宽度，高度不超过约 4/5 屏，避免贴满左右
+            setWidth(appDisplayMetrics.widthPixels / 2);
+            setHeight(appDisplayMetrics.heightPixels * 4 / 5);
+        } else {
+            setWidth(appDisplayMetrics.widthPixels);
+            setHeight(appDisplayMetrics.heightPixels * 2 / 3);
+        }
 
         android.view.WindowManager.LayoutParams lp = context.getWindow().getAttributes();
         lp.alpha = 0.5f; // Set shadow transparency
@@ -215,6 +231,48 @@ public class CascadeSinglePopupWindow<T extends PopupWindowBean<T>> extends Popu
             windowLayoutParams.alpha = 1f;
             context.getWindow().setAttributes(windowLayoutParams);
         });
+    }
+
+    private boolean isLandscape() {
+        return hostActivity.getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    /**
+     * 展示：竖屏仍相对锚点下拉；横屏屏幕居中（宽约 1/2）。
+     */
+    public void show(@NonNull View anchor) {
+        showAsDropDown(anchor, 0, 0);
+    }
+
+    @Override
+    public void showAsDropDown(View anchor) {
+        showAsDropDown(anchor, 0, 0);
+    }
+
+    @Override
+    public void showAsDropDown(View anchor, int xoff, int yoff) {
+        if (isLandscape()) {
+            showCentered(anchor);
+            return;
+        }
+        super.showAsDropDown(anchor, xoff, yoff);
+    }
+
+    @Override
+    public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
+        if (isLandscape()) {
+            showCentered(anchor);
+            return;
+        }
+        super.showAsDropDown(anchor, xoff, yoff, gravity);
+    }
+
+    private void showCentered(@NonNull View anchor) {
+        View token = hostActivity.getWindow() != null
+                ? hostActivity.getWindow().getDecorView()
+                : anchor.getRootView();
+        showAtLocation(token, Gravity.CENTER, 0, 0);
     }
 
     /**

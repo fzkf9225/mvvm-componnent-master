@@ -42,8 +42,8 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
  * @version 1.1
         * @since 1.0
         * @created 2024/12/2 0:00
-        * @updated 2026/9/21
-        */
+ * @updated 2026/9/23
+ */
 public class ConfirmDialog extends BaseDialog {
 
     /** 点击确定/取消后是否自动 dismiss，默认 true */
@@ -329,6 +329,15 @@ public class ConfirmDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public ConfirmDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public ConfirmDialog builder() {
         initView();
         return this;
@@ -339,7 +348,8 @@ public class ConfirmDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogConfirmBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogConfirmBinding.inflate(layoutInflater, null, false));
 
         // 设置文字
         if (TextUtils.isEmpty(positiveText)) {

@@ -39,11 +39,11 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * - 上下padding
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/23
  */
-public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.android.material.bottomsheet.BottomSheetDialog {
+public class BottomSheetDialog<T extends PopupWindowBean> extends BaseBottomSheetDialog {
     /**
      * 菜单点击监听
      */
@@ -356,7 +356,9 @@ public class BottomSheetDialog<T extends PopupWindowBean> extends com.google.and
     }
 
     private void initView() {
-        binding = OptionBottomMenuDialogBinding.inflate(LayoutInflater.from(getContext()), null, false);
+        binding = inflateWithHostAdapt(
+                () -> OptionBottomMenuDialogBinding.inflate(
+                        LayoutInflater.from(getContext()), null, false));
 
         // 设置取消按钮
         setupCancelButton();

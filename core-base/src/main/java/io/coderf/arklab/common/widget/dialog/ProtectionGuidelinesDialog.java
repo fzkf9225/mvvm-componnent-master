@@ -137,7 +137,8 @@ public class ProtectionGuidelinesDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogProtectionGuidelinesBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogProtectionGuidelinesBinding.inflate(layoutInflater, null, false));
         binding.dialogAgree.setText(agreeText);
         binding.dialogRefuse.setText(refuseText);
 

@@ -21,11 +21,11 @@ import io.coderf.arklab.common.webview.WebViewMenuAction;
  * WebView 底部操作面板（微信风格：来源提示 + 横向图标菜单 + 取消）。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/9/23
  */
-public class WebViewActionSheetDialog extends com.google.android.material.bottomsheet.BottomSheetDialog {
+public class WebViewActionSheetDialog extends BaseBottomSheetDialog {
 
     public interface OnActionClickListener {
         void onActionClick(@NonNull WebViewMenuAction action);
@@ -46,8 +46,8 @@ public class WebViewActionSheetDialog extends com.google.android.material.bottom
             @NonNull List<WebViewMenuAction> actions,
             @NonNull OnActionClickListener listener
     ) {
-        View content = LayoutInflater.from(getContext())
-                .inflate(R.layout.dialog_webview_action_sheet, null, false);
+        View content = inflateWithHostAdapt(() -> LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_webview_action_sheet, null, false));
         View tvProviderHint = content.findViewById(R.id.tvProviderHint);
         RecyclerView recyclerView = content.findViewById(R.id.rvWebViewActions);
         View btnCancel = content.findViewById(R.id.btnCancel);
@@ -131,4 +131,3 @@ public class WebViewActionSheetDialog extends com.google.android.material.bottom
         }
     }
 }
-

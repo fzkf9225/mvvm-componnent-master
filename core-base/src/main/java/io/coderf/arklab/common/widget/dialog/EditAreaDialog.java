@@ -301,6 +301,15 @@ public class EditAreaDialog extends BaseDialog {
         return binding.dialogInput.getText().toString();
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public EditAreaDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public EditAreaDialog builder() {
         initView();
         return this;
@@ -311,7 +320,8 @@ public class EditAreaDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogEditAreaBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogEditAreaBinding.inflate(layoutInflater, null, false));
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }

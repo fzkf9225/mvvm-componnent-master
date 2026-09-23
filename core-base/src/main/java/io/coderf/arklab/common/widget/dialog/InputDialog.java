@@ -287,6 +287,15 @@ public class InputDialog extends BaseDialog {
         return binding.dialogInput.getText().toString();
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public InputDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public InputDialog builder() {
         initView();
         return this;
@@ -297,7 +306,8 @@ public class InputDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogInputBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogInputBinding.inflate(layoutInflater, null, false));
         if (positiveTextColor != null) {
             binding.dialogConfirm.setTextColor(positiveTextColor);
         }

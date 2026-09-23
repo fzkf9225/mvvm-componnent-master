@@ -393,7 +393,8 @@ public class DatePickDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = DialogDatePickBinding.inflate(layoutInflater, null, false);
+        binding = inflateWithHostAdapt(
+                () -> DialogDatePickBinding.inflate(layoutInflater, null, false));
         if (TextUtils.isEmpty(positiveText)) {
             binding.dialogConfirm.setText(ContextCompat.getString(getContext(), R.string.confirm));
         } else {
@@ -490,6 +491,13 @@ public class DatePickDialog extends BaseDialog {
             binding.tvClear.setLayoutParams(clearLp);
         }
         applyDynamicAppearance();
+        applyLandscapeNumberPickerHeight(
+                binding.yearPicker,
+                binding.monthPicker,
+                binding.dayPicker,
+                binding.hourPicker,
+                binding.minutePicker,
+                binding.secondPicker);
         setContentView(binding.getRoot());
         applyCancelableOutside(outSide);
         applyBottomSheetWindow(gravity);

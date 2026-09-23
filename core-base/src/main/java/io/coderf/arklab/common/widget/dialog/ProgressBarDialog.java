@@ -283,6 +283,15 @@ public class ProgressBarDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public ProgressBarDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public ProgressBarDialog builder() {
         initArgs();
         createProgressDialog();
@@ -300,7 +309,8 @@ public class ProgressBarDialog extends BaseDialog {
     }
 
     private void createProgressDialog() {
-        processBarDialogBinding = ProcessBarDialogBinding.inflate(getLayoutInflater(), null, false);
+        processBarDialogBinding = inflateWithHostAdapt(
+                () -> ProcessBarDialogBinding.inflate(getLayoutInflater(), null, false));
         processBarDialogBinding.setProgress(process);
         if (progressBarType == CIRCLE_PROGRESS_BAR) {
             processBarDialogBinding.circleProgressBar.setVisibility(View.VISIBLE);

@@ -184,7 +184,8 @@ import io.coderf.arklab.common.utils.common.ScreenUtil;
     }
 
     private void createLoadingDialog() {
-        loadingDialogBinding = LoadingDialogBinding.inflate(getLayoutInflater(), null, false);
+        loadingDialogBinding = inflateWithHostAdapt(
+                () -> LoadingDialogBinding.inflate(getLayoutInflater(), null, false));
 
         // 计算最大宽度并设置固定宽度
         calculateAndSetFixedWidth();

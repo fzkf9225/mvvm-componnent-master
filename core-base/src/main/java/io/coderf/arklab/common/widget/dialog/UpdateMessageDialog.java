@@ -165,6 +165,15 @@ public class UpdateMessageDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 自定义居中弹窗宽度占屏比（默认 4/5；横屏驾驶舱建议 2/5）。
+     */
+    @Override
+    public UpdateMessageDialog setWidthRatio(int widthNumerator, int widthDenominator) {
+        super.setWidthRatio(widthNumerator, widthDenominator);
+        return this;
+    }
+
     public UpdateMessageDialog builder() {
         initView();
         return this;
@@ -175,7 +184,8 @@ public class UpdateMessageDialog extends BaseDialog {
     }
 
     private void initView() {
-        binding = UpdateDialogBinding.inflate(getLayoutInflater(), null, false);
+        binding = inflateWithHostAdapt(
+                () -> UpdateDialogBinding.inflate(getLayoutInflater(), null, false));
 
         bindTitle();
         bindVersionChip();
