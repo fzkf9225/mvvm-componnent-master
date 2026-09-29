@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.widget.gallery;
+package io.coderf.arklab.common.widget.gallery.bean;
 
 import android.text.TextUtils;
 
@@ -62,12 +62,23 @@ public class PreviewInfoBean {
     public PreviewInfoBean() {
     }
 
+    /**
+     * 用附件创建条目，标题和时间稍后从附件解析
+     *
+     * @param attachment 图片或视频附件
+     */
     public static PreviewInfoBean of(@NonNull AttachmentBean attachment) {
         PreviewInfoBean bean = new PreviewInfoBean();
         bean.attachment = attachment;
         return bean;
     }
 
+    /**
+     * @param attachment   图片或视频附件
+     * @param title        自定义标题，为空时用文件名
+     * @param timeText     自定义时间，为空时用附件创建时间
+     * @param locationText 自定义定位，为空时用经纬度
+     */
     public static PreviewInfoBean of(@NonNull AttachmentBean attachment,
                                      @Nullable String title,
                                      @Nullable String timeText,
@@ -79,6 +90,12 @@ public class PreviewInfoBean {
         return bean;
     }
 
+    /**
+     * @param path         图片或视频地址
+     * @param title        标题
+     * @param timeText     时间文案
+     * @param locationText 定位文案
+     */
     public static PreviewInfoBean of(@Nullable String path,
                                      @Nullable String title,
                                      @Nullable String timeText,
@@ -91,6 +108,9 @@ public class PreviewInfoBean {
         return bean;
     }
 
+    /**
+     * @param attachments 附件列表，null 返回空列表
+     */
     public static List<PreviewInfoBean> fromAttachments(@Nullable List<AttachmentBean> attachments) {
         List<PreviewInfoBean> list = new ArrayList<>();
         if (attachments == null) {
@@ -104,6 +124,11 @@ public class PreviewInfoBean {
         return list;
     }
 
+    /**
+     * 用路径列表创建条目，标题取文件名
+     *
+     * @param paths 图片或视频地址，null 返回空列表
+     */
     public static List<PreviewInfoBean> fromPaths(@Nullable List<String> paths) {
         List<PreviewInfoBean> list = new ArrayList<>();
         if (paths == null) {
@@ -188,6 +213,9 @@ public class PreviewInfoBean {
         return path == null ? "" : path;
     }
 
+    /**
+     * 媒体类型。没有附件类型时按图片处理
+     */
     @NonNull
     public String getFileType() {
         if (attachment != null && !TextUtils.isEmpty(attachment.getFileType())) {
@@ -196,6 +224,9 @@ public class PreviewInfoBean {
         return AttachmentTypeEnum.IMAGE.typeValue;
     }
 
+    /**
+     * 文件名。优先附件文件名，否则从路径截取
+     */
     @NonNull
     public String getFileName() {
         if (attachment != null && !TextUtils.isEmpty(attachment.getFileName())) {

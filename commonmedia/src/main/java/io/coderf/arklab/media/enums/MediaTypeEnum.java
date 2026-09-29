@@ -68,6 +68,8 @@ public enum MediaTypeEnum {
             return MediaTypeEnum.IMAGE;
         } else if (MediaUtil.isVideoType(type)) {
             return MediaTypeEnum.VIDEO;
+        } else if (MediaUtil.isAudioType(type)) {
+            return MediaTypeEnum.AUDIO;
         } else {
             return MediaTypeEnum.FILE;
         }

@@ -253,6 +253,14 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             });
             binding.ivVideoShow.setOnClickListener(v -> {
                 try {
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(v.getContext(), "视频打开失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+            binding.ivPlayer.setOnClickListener(v -> {
+                try {
                     Bundle bundleVideo = new Bundle();
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath()));
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());

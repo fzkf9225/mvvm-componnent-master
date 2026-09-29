@@ -41,6 +41,10 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.widget.dialog.ImageSaveDialogConfig;
 import io.coderf.arklab.common.widget.gallery.adapter.PreviewInfoViewPagerAdapter;
+import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewInfoConfig;
 
 /**
  * created by fz 2026/9/11
@@ -56,31 +60,91 @@ public class PreviewInfoPhotoDialog extends Dialog {
 
     public final static String TAG = PreviewInfoPhotoDialog.class.getSimpleName();
 
+    /**
+     * 预览条目
+     */
     private List<PreviewInfoBean> imageInfos = new ArrayList<>();
+    /**
+     * 大图翻页
+     */
     private ViewPager2 viewPager;
+    /**
+     * 右上角定位图标
+     */
     private ShapeableImageView ivLocation;
+    /**
+     * 上一张
+     */
     private ShapeableImageView ivPrev;
+    /**
+     * 下一张
+     */
     private ShapeableImageView ivNext;
+    /**
+     * 右下角「查看全部」
+     */
     private ShapeableImageView ivViewAll;
+    /**
+     * 底部名称、时间、定位信息区
+     */
     private LinearLayout llInfo;
+    /**
+     * 底部第一行：名称
+     */
     private MaterialTextView tvTitle;
+    /**
+     * 底部第二行：时间
+     */
     private MaterialTextView tvTime;
+    /**
+     * 底部第三行：定位
+     */
     private MaterialTextView tvLocation;
+    /**
+     * 大图适配器
+     */
     private PreviewInfoViewPagerAdapter pageAdapter;
+    /**
+     * 当前下标
+     */
     private int position = 0;
+    /**
+     * 是否允许长按保存
+     */
     private boolean canSaveImage = true;
+    /**
+     * 加载占位图
+     */
     @Nullable
     protected Drawable placeholderImage;
+    /**
+     * 加载失败图
+     */
     @Nullable
     protected Drawable errorImage;
+    /**
+     * 单次缩放配置，为空时使用全局配置
+     */
     @Nullable
     private PreviewGalleryZoomConfig zoomConfig;
+    /**
+     * 单次保存弹窗配置，为空时使用全局或内置默认
+     */
     @Nullable
     private ImageSaveDialogConfig imageSaveDialogConfig;
+    /**
+     * 图标、文字和间距样式
+     */
     @NonNull
     private PreviewInfoConfig config = PreviewInfoConfig.defaults();
+    /**
+     * 定位图标点击回调
+     */
     @Nullable
     private OnLocationClickListener onLocationClickListener;
+    /**
+     * 「查看全部」点击回调，为空时打开内置相册
+     */
     @Nullable
     private OnViewAllClickListener onViewAllClickListener;
 
@@ -109,16 +173,27 @@ public class PreviewInfoPhotoDialog extends Dialog {
         this.canSaveImage = canSaveImage;
     }
 
+    /**
+     * @param position 打开时显示的下标
+     */
     public PreviewInfoPhotoDialog currentPosition(int position) {
         this.position = position;
         return this;
     }
 
+    /**
+     * @param imageInfoList 带标题、时间和定位的预览条目
+     */
     public PreviewInfoPhotoDialog setInfoImages(@Nullable List<PreviewInfoBean> imageInfoList) {
         this.imageInfos = imageInfoList == null ? new ArrayList<>() : imageInfoList;
         return this;
     }
 
+    /**
+     * 用附件列表创建预览条目，标题和时间会从附件里解析
+     *
+     * @param imageInfoList 附件列表
+     */
     public PreviewInfoPhotoDialog setImages(@Nullable List<AttachmentBean> imageInfoList) {
         return setInfoImages(PreviewInfoBean.fromAttachments(imageInfoList));
     }
@@ -214,6 +289,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
         return global != null ? global : ImageSaveDialogConfig.empty();
     }
 
+    /**
+     * @param config 样式配置，null 时恢复默认
+     */
     public PreviewInfoPhotoDialog setConfig(@Nullable PreviewInfoConfig config) {
         this.config = config == null ? PreviewInfoConfig.defaults() : config;
         return this;
@@ -389,11 +467,17 @@ public class PreviewInfoPhotoDialog extends Dialog {
         return this;
     }
 
+    /**
+     * @param listener 定位图标点击回调
+     */
     public PreviewInfoPhotoDialog setOnLocationClickListener(@Nullable OnLocationClickListener listener) {
         this.onLocationClickListener = listener;
         return this;
     }
 
+    /**
+     * @param listener 「查看全部」回调，不设置时打开内置相册
+     */
     public PreviewInfoPhotoDialog setOnViewAllClickListener(@Nullable OnViewAllClickListener listener) {
         this.onViewAllClickListener = listener;
         return this;
@@ -441,6 +525,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
         applyWindowInsets(root);
     }
 
+    /**
+     * 按 {@link PreviewInfoConfig} 应用背景、图标、字号和底部间距
+     *
+     * @param root 预览根布局
+     */
     private void applyStyle(@Nullable View root) {
         int bgColor = config.getBackgroundColor() != null
                 ? config.getBackgroundColor()
@@ -544,11 +633,20 @@ public class PreviewInfoPhotoDialog extends Dialog {
         view.setClipToOutline(true);
     }
 
+    /**
+     * @param textView   要设置的文字
+     * @param textSizePx 字号，单位 px
+     * @param textColor  文字颜色
+     */
     private void applyTextStyle(MaterialTextView textView, float textSizePx, @ColorInt int textColor) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
         textView.setTextColor(textColor);
     }
 
+    /**
+     * @param view   图标
+     * @param sizePx 宽高，单位 px；为空或小于等于 0 时不改
+     */
     private void applyIconSize(View view, @Nullable Integer sizePx) {
         if (sizePx == null || sizePx <= 0) {
             return;
@@ -561,6 +659,10 @@ public class PreviewInfoPhotoDialog extends Dialog {
         }
     }
 
+    /**
+     * @param view        需要拉开行距的文字
+     * @param topMarginPx 上边距，单位 px
+     */
     private void applyTopMargin(View view, int topMarginPx) {
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         if (lp != null) {
@@ -569,6 +671,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
         }
     }
 
+    /**
+     * 绑定定位、翻页和「查看全部」点击
+     */
     private void bindClicks() {
         ivLocation.setOnClickListener(v -> {
             if (imageInfos.isEmpty()) {
@@ -607,6 +712,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
         });
     }
 
+    /**
+     * 未自定义「查看全部」时，打开内置宫格相册
+     */
     private void openDefaultAlbum() {
         new PreviewAlbumDialog(getContext())
                 .setImages(imageInfos)
@@ -624,6 +732,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    /**
+     * 创建或刷新大图适配器
+     */
     private void initPageAdapter() {
         if (pageAdapter == null) {
             pageAdapter = new PreviewInfoViewPagerAdapter(this);
@@ -638,6 +749,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
         }
     }
 
+    /**
+     * 按当前条目刷新定位图标和底部三行文字
+     */
     private void bindCurrentInfo() {
         PreviewInfoBean item = currentItem();
         bindLocationIcon(item);
@@ -681,6 +795,12 @@ public class PreviewInfoPhotoDialog extends Dialog {
         return ContextCompat.getDrawable(getContext(), R.drawable.ic_preview_location);
     }
 
+    /**
+     * 文案为空时隐藏该行
+     *
+     * @param textView 信息行
+     * @param text     要显示的文案
+     */
     private void bindLine(MaterialTextView textView, @Nullable String text) {
         if (TextUtils.isEmpty(text)) {
             textView.setVisibility(View.GONE);
@@ -691,6 +811,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
         textView.setText(text);
     }
 
+    /**
+     * 第一张隐藏上一张，最后一张隐藏下一张，只有一张时两个都隐藏
+     */
     private void updateNavVisibility() {
         boolean showNav = config.isNavEnabled() && imageInfos.size() > 1;
         ivPrev.setVisibility(showNav && position > 0 ? View.VISIBLE : View.GONE);
@@ -705,6 +828,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
         return imageInfos.get(position);
     }
 
+    /**
+     * 给定位图标、翻页区域和底部信息补上系统栏间距
+     *
+     * @param root 预览根布局
+     */
     private void applyWindowInsets(@NonNull View root) {
         final int locationTop = ((ViewGroup.MarginLayoutParams) ivLocation.getLayoutParams()).topMargin;
         final int locationEnd = ((ViewGroup.MarginLayoutParams) ivLocation.getLayoutParams()).getMarginEnd();
@@ -763,6 +891,12 @@ public class PreviewInfoPhotoDialog extends Dialog {
      * 未开启时为条目当前选中态（默认 false）。</p>
      */
     public interface OnLocationClickListener {
+        /**
+         * @param dialog   当前预览弹窗
+         * @param item     当前条目
+         * @param position 当前下标
+         * @param selected 点击后的选中态
+         */
         void onLocationClick(@NonNull PreviewInfoPhotoDialog dialog,
                              @Nullable PreviewInfoBean item,
                              int position,
@@ -773,6 +907,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
      * 右下角「查看全部」点击。未设置时打开内置仿微信相册。
      */
     public interface OnViewAllClickListener {
+        /**
+         * @param dialog   当前预览弹窗
+         * @param items    全部预览条目
+         * @param position 当前下标
+         */
         void onViewAllClick(@NonNull PreviewInfoPhotoDialog dialog,
                             @NonNull List<PreviewInfoBean> items,
                             int position);

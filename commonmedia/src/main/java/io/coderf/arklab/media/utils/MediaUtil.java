@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -121,7 +122,7 @@ public class MediaUtil {
      * @return yyyyMMddHHmmssSSS
      */
     public static String getCurrentTime() {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.US);
         return sdf.format(new Date());
     }
 
@@ -136,7 +137,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            return formatLongitude(readLatLong(exif));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +155,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            return formatLongitude(readLatLong(exif));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,7 +173,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            return formatLatitude(readLatLong(exif));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,7 +191,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            return formatLatitude(readLatLong(exif));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,8 +249,12 @@ public class MediaUtil {
         try {
             String[] strings = new String[2];
             ExifInterface exif = new ExifInterface(filePath);
-            strings[0] = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            strings[1] = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            double[] latLong = readLatLong(exif);
+            if (latLong == null) {
+                return null;
+            }
+            strings[0] = Double.toString(latLong[1]);
+            strings[1] = Double.toString(latLong[0]);
             return strings;
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,8 +274,12 @@ public class MediaUtil {
         try {
             String[] strings = new String[2];
             ExifInterface exif = new ExifInterface(inputStream);
-            strings[0] = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            strings[1] = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            double[] latLong = readLatLong(exif);
+            if (latLong == null) {
+                return null;
+            }
+            strings[0] = Double.toString(latLong[1]);
+            strings[1] = Double.toString(latLong[0]);
             return strings;
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,7 +298,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttributeDouble(ExifInterface.TAG_GPS_ALTITUDE, 0.0d);
+            return readAltitude(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -307,7 +316,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttributeDouble(ExifInterface.TAG_GPS_ALTITUDE, 0.0d);
+            return readAltitude(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -468,12 +477,15 @@ public class MediaUtil {
             return -1;
         }
         try {
-            ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, -1);
+            int width = new ExifInterface(filePath).getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, -1);
+            if (width > 0) {
+                return width;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        int[] bounds = decodePictureBounds(filePath);
+        return bounds[0] > 0 ? bounds[0] : -1;
     }
 
 
@@ -505,12 +517,15 @@ public class MediaUtil {
             return -1;
         }
         try {
-            ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, -1);
+            int height = new ExifInterface(filePath).getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, -1);
+            if (height > 0) {
+                return height;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        int[] bounds = decodePictureBounds(filePath);
+        return bounds[1] > 0 ? bounds[1] : -1;
     }
 
     /**
@@ -542,7 +557,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttribute(ExifInterface.TAG_RW2_ISO);
+            return readIso(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -560,7 +575,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttribute(ExifInterface.TAG_RW2_ISO);
+            return readIso(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -578,10 +593,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            String fNumber = exif.getAttribute(ExifInterface.TAG_F_NUMBER);
-            if (fNumber != null) {
-                return "f/" + fNumber;
-            }
+            return readAperture(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -599,10 +611,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            String fNumber = exif.getAttribute(ExifInterface.TAG_F_NUMBER);
-            if (fNumber != null) {
-                return "f/" + fNumber;
-            }
+            return readAperture(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -620,7 +629,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+            return readFocalLength(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -638,7 +647,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+            return readFocalLength(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -656,7 +665,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            return exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+            return readExposureTime(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -674,7 +683,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            return exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+            return readExposureTime(exif);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -692,9 +701,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            String lon = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            return lat != null && lon != null && !lat.isEmpty() && !lon.isEmpty();
+            return readLatLong(exif) != null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -712,9 +719,7 @@ public class MediaUtil {
         }
         try {
             ExifInterface exif = new ExifInterface(inputStream);
-            String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            String lon = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            return lat != null && lon != null && !lat.isEmpty() && !lon.isEmpty();
+            return readLatLong(exif) != null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -722,20 +727,21 @@ public class MediaUtil {
     }
 
     /**
-     * 将EXIF格式的GPS坐标转换为十进制格式
-     * @param coordinate EXIF格式的坐标字符串（如"29/1,56/1,4530/100"）
-     * @param ref 参考方向（"N","S","E","W"）
-     * @return 十进制坐标
+     * 将 EXIF 格式的 GPS 坐标转换为十进制格式。解析失败时返回 {@link Double#NaN}，避免和合法的 0 度混淆。
+     *
+     * @param coordinate EXIF 格式的坐标字符串（如 "29/1,56/1,4530/100"）
+     * @param ref        参考方向（"N","S","E","W"）
+     * @return 十进制坐标，失败时为 NaN
      */
     public static double convertToDecimalCoordinate(String coordinate, String ref) {
         if (TextUtils.isEmpty(coordinate) || TextUtils.isEmpty(ref)) {
-            return 0.0;
+            return Double.NaN;
         }
 
         try {
             String[] parts = coordinate.split(",");
             if (parts.length != 3) {
-                return 0.0;
+                return Double.NaN;
             }
 
             double degrees = parseRational(parts[0]);
@@ -744,7 +750,7 @@ public class MediaUtil {
 
             double decimal = degrees + (minutes / 60.0) + (seconds / 3600.0);
 
-            if (ref.equals("S") || ref.equals("W")) {
+            if ("S".equalsIgnoreCase(ref) || "W".equalsIgnoreCase(ref)) {
                 decimal = -decimal;
             }
 
@@ -752,7 +758,7 @@ public class MediaUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0.0;
+        return Double.NaN;
     }
 
     /**
@@ -772,6 +778,133 @@ public class MediaUtil {
         return 0;
     }
 
+    private static double[] readLatLong(ExifInterface exif) {
+        if (exif == null) {
+            return null;
+        }
+        double[] latLong = exif.getLatLong();
+        if (latLong == null || latLong.length < 2) {
+            return null;
+        }
+        return latLong;
+    }
+
+    private static String formatLongitude(double[] latLong) {
+        if (latLong == null || latLong.length < 2) {
+            return null;
+        }
+        return Double.toString(latLong[1]);
+    }
+
+    private static String formatLatitude(double[] latLong) {
+        if (latLong == null || latLong.length < 2) {
+            return null;
+        }
+        return Double.toString(latLong[0]);
+    }
+
+    private static Double readAltitude(ExifInterface exif) {
+        if (exif == null || TextUtils.isEmpty(exif.getAttribute(ExifInterface.TAG_GPS_ALTITUDE))) {
+            return null;
+        }
+        double altitude = exif.getAttributeDouble(ExifInterface.TAG_GPS_ALTITUDE, Double.NaN);
+        if (Double.isNaN(altitude)) {
+            return null;
+        }
+        if (exif.getAttributeInt(ExifInterface.TAG_GPS_ALTITUDE_REF, 0) == 1) {
+            altitude = -altitude;
+        }
+        return altitude;
+    }
+
+    private static String readIso(ExifInterface exif) {
+        if (exif == null) {
+            return null;
+        }
+        String iso = exif.getAttribute(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY);
+        if (TextUtils.isEmpty(iso)) {
+            iso = exif.getAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS);
+        }
+        if (TextUtils.isEmpty(iso)) {
+            iso = exif.getAttribute(ExifInterface.TAG_RW2_ISO);
+        }
+        return iso;
+    }
+
+    private static String readAperture(ExifInterface exif) {
+        if (exif == null) {
+            return null;
+        }
+        double fNumber = exif.getAttributeDouble(ExifInterface.TAG_F_NUMBER, Double.NaN);
+        if (Double.isNaN(fNumber) || fNumber <= 0d) {
+            return null;
+        }
+        return "f/" + formatDecimal(fNumber);
+    }
+
+    private static String readFocalLength(ExifInterface exif) {
+        if (exif == null) {
+            return null;
+        }
+        double focalLength = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, Double.NaN);
+        if (Double.isNaN(focalLength) || focalLength <= 0d) {
+            return null;
+        }
+        return formatDecimal(focalLength);
+    }
+
+    private static String readExposureTime(ExifInterface exif) {
+        if (exif == null) {
+            return null;
+        }
+        double seconds = exif.getAttributeDouble(ExifInterface.TAG_EXPOSURE_TIME, Double.NaN);
+        if (Double.isNaN(seconds) || seconds <= 0d) {
+            return exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+        }
+        if (seconds >= 1d) {
+            return formatDecimal(seconds);
+        }
+        int denominator = (int) Math.round(1d / seconds);
+        if (denominator <= 0) {
+            return exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+        }
+        return "1/" + denominator;
+    }
+
+    private static String formatDecimal(double value) {
+        String formatted = String.format(Locale.US, "%.2f", value);
+        formatted = formatted.replaceAll("0+$", "").replaceAll("\\.$", "");
+        return formatted;
+    }
+
+    private static int[] decodePictureBounds(String filePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        return new int[]{options.outWidth, options.outHeight};
+    }
+
+    private static void fillExifMap(ExifInterface exif, Map<String, String> exifMap) {
+        double[] latLong = readLatLong(exif);
+        exifMap.put("GPS Latitude", latLong == null ? null : Double.toString(latLong[0]));
+        exifMap.put("GPS Longitude", latLong == null ? null : Double.toString(latLong[1]));
+        Double altitude = readAltitude(exif);
+        exifMap.put("GPS Altitude", altitude == null ? null : String.valueOf(altitude));
+        exifMap.put("DateTime", exif.getAttribute(ExifInterface.TAG_DATETIME));
+        exifMap.put("DateTime Original", exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL));
+        exifMap.put("Make", exif.getAttribute(ExifInterface.TAG_MAKE));
+        exifMap.put("Model", exif.getAttribute(ExifInterface.TAG_MODEL));
+        exifMap.put("Software", exif.getAttribute(ExifInterface.TAG_SOFTWARE));
+        exifMap.put("Width", String.valueOf(exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, -1)));
+        exifMap.put("Height", String.valueOf(exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, -1)));
+        exifMap.put("ISO", readIso(exif));
+        exifMap.put("Aperture", readAperture(exif));
+        exifMap.put("Focal Length", readFocalLength(exif));
+        exifMap.put("Exposure Time", readExposureTime(exif));
+        exifMap.put("Flash", exif.getAttribute(ExifInterface.TAG_FLASH));
+        exifMap.put("White Balance", exif.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
+    }
+
     /**
      * 获取所有EXIF信息并以Map形式返回
      * @param filePath 图片路径
@@ -782,44 +915,24 @@ public class MediaUtil {
         if (TextUtils.isEmpty(filePath)) {
             return exifMap;
         }
-
         try {
-            ExifInterface exif = new ExifInterface(filePath);
-
-            // GPS信息
-            exifMap.put("GPS Latitude", exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
-            exifMap.put("GPS Longitude", exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
-            exifMap.put("GPS Altitude", String.valueOf(getPictureAltitude(filePath)));
-
-            // 时间信息
-            exifMap.put("DateTime", exif.getAttribute(ExifInterface.TAG_DATETIME));
-            exifMap.put("DateTime Original", exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL));
-
-            // 设备信息
-            exifMap.put("Make", exif.getAttribute(ExifInterface.TAG_MAKE));
-            exifMap.put("Model", exif.getAttribute(ExifInterface.TAG_MODEL));
-            exifMap.put("Software", exif.getAttribute(ExifInterface.TAG_SOFTWARE));
-
-            // 拍摄参数
-            exifMap.put("Width", String.valueOf(getPictureWidth(filePath)));
-            exifMap.put("Height", String.valueOf(getPictureHeight(filePath)));
-            exifMap.put("ISO", getPictureISO(filePath));
-            exifMap.put("Aperture", getPictureAperture(filePath));
-            exifMap.put("Focal Length", getPictureFocalLength(filePath));
-            exifMap.put("Exposure Time", getPictureExposureTime(filePath));
-            exifMap.put("Flash", exif.getAttribute(ExifInterface.TAG_FLASH));
-            exifMap.put("White Balance", exif.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
-
+            fillExifMap(new ExifInterface(filePath), exifMap);
+            int[] bounds = decodePictureBounds(filePath);
+            if (bounds[0] > 0) {
+                exifMap.put("Width", String.valueOf(bounds[0]));
+            }
+            if (bounds[1] > 0) {
+                exifMap.put("Height", String.valueOf(bounds[1]));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return exifMap;
     }
 
     /**
      * 获取所有EXIF信息并以Map形式返回
-     * @param inputStream 图片流
+     * @param inputStream 图片流。流会被读完，调用方不要再重复读取
      * @return 包含所有EXIF信息的Map
      */
     public static Map<String, String> getAllExifInfo(InputStream inputStream) {
@@ -827,38 +940,11 @@ public class MediaUtil {
         if (inputStream == null) {
             return exifMap;
         }
-
         try {
-            ExifInterface exif = new ExifInterface(inputStream);
-
-            // GPS信息
-            exifMap.put("GPS Latitude", exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
-            exifMap.put("GPS Longitude", exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
-            exifMap.put("GPS Altitude", String.valueOf(getPictureAltitude(inputStream)));
-
-            // 时间信息
-            exifMap.put("DateTime", exif.getAttribute(ExifInterface.TAG_DATETIME));
-            exifMap.put("DateTime Original", exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL));
-
-            // 设备信息
-            exifMap.put("Make", exif.getAttribute(ExifInterface.TAG_MAKE));
-            exifMap.put("Model", exif.getAttribute(ExifInterface.TAG_MODEL));
-            exifMap.put("Software", exif.getAttribute(ExifInterface.TAG_SOFTWARE));
-
-            // 拍摄参数
-            exifMap.put("Width", String.valueOf(getPictureWidth(inputStream)));
-            exifMap.put("Height", String.valueOf(getPictureHeight(inputStream)));
-            exifMap.put("ISO", getPictureISO(inputStream));
-            exifMap.put("Aperture", getPictureAperture(inputStream));
-            exifMap.put("Focal Length", getPictureFocalLength(inputStream));
-            exifMap.put("Exposure Time", getPictureExposureTime(inputStream));
-            exifMap.put("Flash", exif.getAttribute(ExifInterface.TAG_FLASH));
-            exifMap.put("White Balance", exif.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
-
+            fillExifMap(new ExifInterface(inputStream), exifMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return exifMap;
     }
 
@@ -894,6 +980,8 @@ public class MediaUtil {
 
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_EXPOSURE_TIME);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_F_NUMBER);
+            copyExifTag(sourceExif, destExif, ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY);
+            copyExifTag(sourceExif, destExif, ExifInterface.TAG_ISO_SPEED_RATINGS);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_RW2_ISO);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_FOCAL_LENGTH);
 
@@ -938,6 +1026,8 @@ public class MediaUtil {
 
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_EXPOSURE_TIME);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_F_NUMBER);
+            copyExifTag(sourceExif, destExif, ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY);
+            copyExifTag(sourceExif, destExif, ExifInterface.TAG_ISO_SPEED_RATINGS);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_RW2_ISO);
             copyExifTag(sourceExif, destExif, ExifInterface.TAG_FOCAL_LENGTH);
 
@@ -985,21 +1075,23 @@ public class MediaUtil {
      * @param filePath 文件路径
      * @return 格式化后的文件大小字符串（如"2.5 MB"）
      */
-    @SuppressLint("DefaultLocale")
     public static String getFormattedFileSize(String filePath) {
-        long sizeInBytes = getFileSizeInKB(filePath) * 1024;
-        if (sizeInBytes < 0) {
+        if (TextUtils.isEmpty(filePath)) {
             return "Unknown";
         }
-
+        File file = new File(filePath);
+        if (!file.isFile()) {
+            return "Unknown";
+        }
+        long sizeInBytes = file.length();
         if (sizeInBytes < 1024) {
             return sizeInBytes + " B";
         } else if (sizeInBytes < 1024 * 1024) {
-            return String.format("%.1f KB", sizeInBytes / 1024.0);
-        } else if (sizeInBytes < 1024 * 1024 * 1024) {
-            return String.format("%.1f MB", sizeInBytes / (1024.0 * 1024.0));
+            return String.format(Locale.US, "%.1f KB", sizeInBytes / 1024.0);
+        } else if (sizeInBytes < 1024L * 1024 * 1024) {
+            return String.format(Locale.US, "%.1f MB", sizeInBytes / (1024.0 * 1024.0));
         } else {
-            return String.format("%.1f GB", sizeInBytes / (1024.0 * 1024.0 * 1024.0));
+            return String.format(Locale.US, "%.1f GB", sizeInBytes / (1024.0 * 1024.0 * 1024.0));
         }
     }
 
@@ -1011,7 +1103,7 @@ public class MediaUtil {
      * 添加图片水印
      *
      * @param originalBitmap 图片
-     * @param watermarkText  水印文字，默认添加时间水印，在mark内容的上一行
+     * @param watermarkText  水印文字
      * @param alpha          水印透明度，0-255
      * @return 添加水印后的图片
      */
@@ -1030,7 +1122,7 @@ public class MediaUtil {
      * @return 添加水印后的图片
      */
     public static Bitmap createWatermark(Bitmap originalBitmap, String watermarkText, int alpha, float textSize, @ColorInt int textColor) {
-        if (watermarkText == null) {
+        if (originalBitmap == null || TextUtils.isEmpty(watermarkText)) {
             return originalBitmap;
         }
         if (alpha < 0) {
@@ -1043,29 +1135,31 @@ public class MediaUtil {
         }
         int width = originalBitmap.getWidth();
         int height = originalBitmap.getHeight();
+        if (width <= 0 || height <= 0) {
+            return originalBitmap;
+        }
         Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(resultBitmap);
-        Paint p = new Paint();
-        p.setColor(textColor);
-        p.setTextSize(textSize);
-        // 抗锯齿
-        p.setAntiAlias(true);
-        // 绘制图像
-        canvas.drawBitmap(originalBitmap, 0, 0, p);
+        Paint paint = new Paint();
+        paint.setColor(textColor);
+        paint.setTextSize(textSize);
+        paint.setAntiAlias(true);
+        canvas.drawBitmap(originalBitmap, 0, 0, paint);
 
-        // 绘制文字
+        float textWidth = paint.measureText(watermarkText);
+        if (textWidth <= 0f) {
+            return resultBitmap;
+        }
         canvas.save();
-        canvas.rotate(-30);
-        float textWidth = p.measureText(watermarkText);
+        canvas.rotate(-30, width / 2f, height / 2f);
+        float range = (float) Math.hypot(width, height);
+        int stepY = Math.max(height / 10 + 80, 1);
         int index = 0;
-        for (int positionY = height / 10; positionY <= height; positionY += height / 10 + 80) {
-            float fromX = -width + (index++ % 2) * textWidth;
-            for (float positionX = fromX; positionX < width; positionX += textWidth * 2) {
-                int spacing = 0;
-                // 保存文字透明度// 间距
-                p.setAlpha(alpha);
-                canvas.drawText(watermarkText, positionX, positionY + spacing, p);
-                // 恢复文字透明度
+        for (float positionY = -range; positionY <= range; positionY += stepY) {
+            float fromX = -range + (index++ % 2) * textWidth;
+            for (float positionX = fromX; positionX < range; positionX += textWidth * 2) {
+                paint.setAlpha(alpha);
+                canvas.drawText(watermarkText, positionX, positionY, paint);
             }
         }
         canvas.restore();
@@ -1073,55 +1167,122 @@ public class MediaUtil {
     }
 
     /**
-     * @param absolutePath 照片的绝对路劲
-     * @return 重新调整方向之后的bitmap图片
-     * @author yukaida
+     * 按 EXIF 方向纠正图片。不限制解码尺寸。
+     *
+     * @param absolutePath 照片绝对路径
+     * @return 纠正方向后的图片；解码失败返回 null
      */
     public static Bitmap orientation(String absolutePath) {
-        Bitmap bitmapOr = BitmapFactory.decodeFile(absolutePath);
-        try {
-            ExifInterface exif = new ExifInterface(absolutePath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-            Matrix matrix = new Matrix();
-            if (orientation == 6) {
-                matrix.postRotate(90);
-            } else if (orientation == 3) {
-                matrix.postRotate(180);
-            } else if (orientation == 8) {
-                matrix.postRotate(270);
-            }
-            bitmapOr = Bitmap.createBitmap(bitmapOr, 0, 0, bitmapOr.getWidth(), bitmapOr.getHeight(), matrix, true);
-            // rotating bitmap
-            return bitmapOr;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return orientation(absolutePath, 0);
     }
 
     /**
-     * 保存bitmap
+     * 按 EXIF 方向纠正图片，并按最长边采样，避免大图整图解码。
+     *
+     * @param absolutePath 照片绝对路径
+     * @param maxSide      最长边像素上限，小于等于 0 时不缩放
+     * @return 纠正方向后的图片；解码失败返回 null。方向读取失败时返回未旋转的原图
+     */
+    public static Bitmap orientation(String absolutePath, int maxSide) {
+        if (TextUtils.isEmpty(absolutePath)) {
+            return null;
+        }
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(absolutePath, bounds);
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+            return null;
+        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = calculateInSampleSize(bounds.outWidth, bounds.outHeight, maxSide);
+        Bitmap bitmapOr = BitmapFactory.decodeFile(absolutePath, options);
+        if (bitmapOr == null) {
+            return null;
+        }
+        try {
+            ExifInterface exif = new ExifInterface(absolutePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.postRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.postScale(1, -1);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    matrix.postRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.postRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    matrix.postRotate(270);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.postRotate(270);
+                    break;
+                default:
+                    return bitmapOr;
+            }
+            Bitmap rotated = Bitmap.createBitmap(bitmapOr, 0, 0, bitmapOr.getWidth(), bitmapOr.getHeight(), matrix, true);
+            if (rotated != bitmapOr) {
+                bitmapOr.recycle();
+            }
+            return rotated;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return bitmapOr;
+        }
+    }
+
+    private static int calculateInSampleSize(int width, int height, int maxSide) {
+        if (maxSide <= 0 || width <= 0 || height <= 0) {
+            return 1;
+        }
+        int inSampleSize = 1;
+        int max = Math.max(width, height);
+        while (max / inSampleSize > maxSide) {
+            inSampleSize *= 2;
+        }
+        return Math.max(1, inSampleSize);
+    }
+
+    /**
+     * 保存 bitmap。路径没有父目录时不会因为空指针中断。
      *
      * @param bmp      源图片
-     * @param filePath 源文件路径，保存的话直接替换源文件
+     * @param filePath 保存路径，已存在则覆盖
+     * @return 是否写入成功
      */
-    public static void saveBitmap(Bitmap bmp, String filePath) {
-        try {
-            File dirFile = new File(filePath);
-            if (!dirFile.getParentFile().exists()) {
-                dirFile.getParentFile().mkdirs();
+    public static boolean saveBitmap(Bitmap bmp, String filePath) {
+        if (bmp == null || TextUtils.isEmpty(filePath)) {
+            return false;
+        }
+        File dest = new File(filePath);
+        File parent = dest.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            return false;
+        }
+        String extension = "";
+        int dotIndex = filePath.lastIndexOf('.');
+        if (dotIndex >= 0) {
+            extension = filePath.substring(dotIndex);
+        }
+        try (FileOutputStream out = new FileOutputStream(dest)) {
+            if (!bmp.compress(compressFormatFromExtension(extension), 100, out)) {
+                return false;
             }
-            FileOutputStream out = new FileOutputStream(dirFile);
-            String extension = "";
-            int dotIndex = filePath.lastIndexOf('.');
-            if (dotIndex >= 0) {
-                extension = filePath.substring(dotIndex);
-            }
-            bmp.compress(compressFormatFromExtension(extension), 100, out);
             out.flush();
-            out.close();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -1200,7 +1361,7 @@ public class MediaUtil {
             index += 1;
             file = new File(baseFile, fileName + "_" + index + extension);
         }
-        return fileName;
+        return index == 0 ? fileName : fileName + "_" + index;
     }
 
     /**
@@ -1249,7 +1410,7 @@ public class MediaUtil {
      * @return 格式化后的日期显示
      */
     public static String dateFormat(Date date, String format) {
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.US);
         return dateSimpleFormat(date, formatter);
     }
 
@@ -1279,7 +1440,7 @@ public class MediaUtil {
 
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
+            return new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT, Locale.US);
         }
     };
 

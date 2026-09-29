@@ -15,7 +15,6 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
-import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
  * 展示图片适配器
@@ -58,7 +57,7 @@ public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
                     Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.cornerImage.setOnClickListener(v -> {
                 try {
-                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

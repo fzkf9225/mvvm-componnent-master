@@ -23,7 +23,6 @@ import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
-import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
  * 添加视频
@@ -74,7 +73,7 @@ public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
                     Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
             binding.imageVideo.setOnClickListener(v -> {
                 try {
-                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

@@ -23,10 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
+import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 import io.coderf.arklab.ui.R;
@@ -198,6 +200,10 @@ public abstract class FormMedia extends CornerConstraintLayout {
      * 加载错误时的占位图
      */
     protected Drawable errorImage;
+    /**
+     * 大图预览弹出前的配置
+     */
+    protected PreviewPhotoDialog.OnConfigureListener previewConfigureListener;
     /**
      * 主要是适配器item的圆角
      */
@@ -790,6 +796,31 @@ public abstract class FormMedia extends CornerConstraintLayout {
             createBottomLine();
         }
         applyShowTopLayout();
+    }
+
+    /**
+     * 设置大图预览弹出前的配置。图片、视频封面点击预览时生效。
+     */
+    public void setOnPreviewPhotoConfigure(@Nullable PreviewPhotoDialog.OnConfigureListener listener) {
+        this.previewConfigureListener = listener;
+        bindPreviewPhotoConfigure();
+    }
+
+    @Nullable
+    public PreviewPhotoDialog.OnConfigureListener getOnPreviewPhotoConfigure() {
+        return previewConfigureListener;
+    }
+
+    /**
+     * 子类把配置写到自己的媒体适配器上。
+     */
+    protected void bindPreviewPhotoConfigure() {
+    }
+
+    protected void applyPreviewPhotoConfigure(@Nullable BaseMediaRecyclerViewAdapter<?, ?> adapter) {
+        if (adapter != null) {
+            adapter.setOnPreviewPhotoConfigure(previewConfigureListener);
+        }
     }
 
 }

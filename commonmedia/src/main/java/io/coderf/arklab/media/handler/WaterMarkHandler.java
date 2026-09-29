@@ -55,21 +55,24 @@ public class WaterMarkHandler extends Handler {
                 mediaHelper.getMediaBuilder().getWaterMarkTextSize(),
                 mediaHelper.getMediaBuilder().getWaterMarkTextColor());
         File outputFile = mediaHelper.getMediaBuilder().buildImageOutputFile("IMAGE_WM_");
-        MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
+        boolean saved = MediaUtil.saveBitmap(bitmapNew, outputFile.getAbsolutePath());
         if (mediaHelper.getMediaBuilder().isShowLoading()) {
             mediaHelper.getUIController().hideLoading();
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            // 从文件中创建uri
-            mediaHelper.postWaterMarkResult(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE));
-        } else { //兼容android7.0 使用共享文件的形式
-            mediaHelper.postWaterMarkResult(new MediaBean(List.of(
-                    mediaHelper.getMediaBuilder().fileProviderUri(outputFile)), MediaTypeEnum.IMAGE));
+        if (saved && outputFile.isFile()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                mediaHelper.postWaterMarkResult(new MediaBean(List.of(Uri.fromFile(outputFile)), MediaTypeEnum.IMAGE));
+            } else {
+                mediaHelper.postWaterMarkResult(new MediaBean(List.of(
+                        mediaHelper.getMediaBuilder().fileProviderUri(outputFile)), MediaTypeEnum.IMAGE));
+            }
+        } else {
+            mediaHelper.postWaterMarkResult(new MediaBean(new ArrayList<>(), MediaTypeEnum.IMAGE));
         }
-        if (bitmapNew.isRecycled()) {
+        if (bitmapNew != null && bitmapNew != bitmapOld && !bitmapNew.isRecycled()) {
             bitmapNew.recycle();
         }
-        if (bitmapOld.isRecycled()) {
+        if (bitmapOld != null && !bitmapOld.isRecycled()) {
             bitmapOld.recycle();
         }
     }

@@ -1,12 +1,11 @@
-package io.coderf.arklab.common.widget.gallery;
+package io.coderf.arklab.common.widget.gallery.config;
 
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.utils.theme.ThemeAttrs;
+import io.coderf.arklab.common.widget.gallery.PreviewInfoPhotoDialog;
 
 /**
  * 信息大图预览样式配置：图标、三行文字字号/颜色/间距等。
@@ -19,8 +18,17 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  */
 public class PreviewInfoConfig {
 
+    /**
+     * 默认预览背景色
+     */
     public static final int DEFAULT_BACKGROUND_COLOR = 0xFF000000;
+    /**
+     * 默认标题颜色
+     */
     public static final int DEFAULT_TITLE_TEXT_COLOR = 0xFFFFFFFF;
+    /**
+     * 默认时间和定位文字颜色
+     */
     public static final int DEFAULT_SUB_TEXT_COLOR = 0xB3FFFFFF;
 
     /**
@@ -180,6 +188,9 @@ public class PreviewInfoConfig {
     @Nullable
     private String albumTitle;
 
+    /**
+     * 全部开关打开、图标和字号走内置默认的配置
+     */
     public static PreviewInfoConfig defaults() {
         return new PreviewInfoConfig();
     }

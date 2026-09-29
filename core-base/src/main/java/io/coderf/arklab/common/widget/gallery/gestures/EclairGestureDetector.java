@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import androidx.annotation.NonNull;
+
 /**
- * EclairGestureDetector 类。
+ * 在单指拖动之上增加双指缩放，并在多指切换时保持当前拖动触点。
  *
  * @author fz
  * @version 1.0
@@ -14,12 +16,29 @@ import android.view.ScaleGestureDetector;
  */
 public class EclairGestureDetector extends CupcakeGestureDetector {
 
+    /**
+     * 无效触点编号
+     */
     private static final int INVALID_POINTER_ID = -1;
+    /**
+     * 当前用于拖动的触点编号
+     */
     private int mActivePointerId = INVALID_POINTER_ID;
+    /**
+     * 当前拖动触点在事件中的下标
+     */
     private int mActivePointerIndex = 0;
 
+    /**
+     * 系统缩放手势检测器
+     */
     protected final ScaleGestureDetector mDetector;
 
+    /**
+     * 创建缩放检测器，并把缩放中心转交给 {@link OnGestureListener#onScale}
+     *
+     * @param context 用于创建 ScaleGestureDetector
+     */
     public EclairGestureDetector(Context context) {
         super(context);
         ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
@@ -36,18 +55,23 @@ public class EclairGestureDetector extends CupcakeGestureDetector {
             }
 
             @Override
-            public boolean onScaleBegin(ScaleGestureDetector detector) {
+            public boolean onScaleBegin(@NonNull ScaleGestureDetector detector) {
                 return true;
             }
 
             @Override
-            public void onScaleEnd(ScaleGestureDetector detector) {
+            public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
                 // NO-OP
             }
         };
         mDetector = new ScaleGestureDetector(context, mScaleListener);
     }
 
+    /**
+     * 取当前拖动触点的 X 坐标。触点已失效时退回第一个触点
+     *
+     * @param ev 触摸事件
+     */
     @Override
     float getActiveX(MotionEvent ev) {
         try {
@@ -57,6 +81,11 @@ public class EclairGestureDetector extends CupcakeGestureDetector {
         }
     }
 
+    /**
+     * 取当前拖动触点的 Y 坐标。触点已失效时退回第一个触点
+     *
+     * @param ev 触摸事件
+     */
     @Override
     float getActiveY(MotionEvent ev) {
         try {
@@ -66,11 +95,20 @@ public class EclairGestureDetector extends CupcakeGestureDetector {
         }
     }
 
+    /**
+     * 双指缩放是否仍在进行
+     */
     @Override
     public boolean isScaling() {
         return mDetector.isInProgress();
     }
 
+    /**
+     * 先交给缩放检测器，再维护当前拖动触点，最后交给父类处理拖动
+     *
+     * @param ev 触摸事件
+     * @return 事件已被消费时返回 true
+     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         mDetector.onTouchEvent(ev);

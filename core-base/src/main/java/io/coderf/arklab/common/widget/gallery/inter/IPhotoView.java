@@ -7,7 +7,7 @@ import android.view.GestureDetector;
 import android.view.View;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 
 
@@ -21,10 +21,21 @@ import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
  */
 public interface IPhotoView {
 
-    /** 与 {@link io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig#DEFAULT_MAX_SCALE} 保持一致 */
+    /**
+     * 默认最大缩放倍数，与 {@link PreviewGalleryZoomConfig#DEFAULT_MAX_SCALE} 保持一致
+     */
     public static final float DEFAULT_MAX_SCALE = PreviewGalleryZoomConfig.DEFAULT_MAX_SCALE;
+    /**
+     * 双击切换使用的默认中等缩放倍数
+     */
     public static final float DEFAULT_MID_SCALE = 1.75f;
+    /**
+     * 默认最小缩放倍数，即适配屏幕后的原始大小
+     */
     public static final float DEFAULT_MIN_SCALE = 1.0f;
+    /**
+     * 默认缩放动画时长，单位毫秒
+     */
     public static final int DEFAULT_ZOOM_DURATION = 200;
 
     /**
@@ -99,8 +110,8 @@ public interface IPhotoView {
      */
     void setMinimumScale(float minimumScale);
 
-    /*
-     * 设置中等缩放级别。该值的含义取决于当前 {@link com.google.android.material.imageview.ShapeableImageView.ScaleType}。
+    /**
+     * 设置中等缩放级别。该值的含义取决于当前 {@link ShapeableImageView.ScaleType}。
      *
      * @param mediumScale 中等缩放预设值
      */

@@ -35,7 +35,7 @@ import io.coderf.arklab.common.widget.dialog.ImageSaveDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
- * PreviewViewPagerAdapter 类。
+ * 普通大图预览的翻页适配器。单击关闭，长按保存，视频显示播放按钮。
  *
  * @author fz
  * @version 1.0
@@ -43,9 +43,18 @@ import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
  * @created 2024/12/20 14:09
  */
 public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentBean, ItemPicShowBinding> {
+    /**
+     * 所属预览弹窗，用来读取缩放、占位图和是否允许保存
+     */
     private final PreviewPhotoDialog previewPhotoDialog;
+    /**
+     * 保存结果回到主线程提示
+     */
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    /**
+     * @param previewPhotoDialog 所属预览弹窗
+     */
     public PreviewViewPagerAdapter(PreviewPhotoDialog previewPhotoDialog) {
         this.previewPhotoDialog = previewPhotoDialog;
     }
@@ -127,6 +136,13 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
         }
     }
 
+    /**
+     * 把当前图片保存到本地，并在主线程提示结果
+     *
+     * @param context  上下文
+     * @param path     图片地址
+     * @param fileType 文件类型，为空时按图片处理
+     */
     private void downloadImage(Context context, String path, String fileType) {
         ThreadExecutorBounded.getInstance().execute(new DownLoadImageService(context, path,
                 TextUtils.isEmpty(fileType) ? "image" : fileType, new ImageDownLoadCallBack() {

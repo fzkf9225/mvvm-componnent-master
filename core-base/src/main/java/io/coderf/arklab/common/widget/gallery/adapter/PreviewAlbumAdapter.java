@@ -15,7 +15,7 @@ import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.databinding.ItemPreviewAlbumBinding;
 import io.coderf.arklab.common.widget.gallery.PreviewAlbumDialog;
-import io.coderf.arklab.common.widget.gallery.PreviewInfoBean;
+import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
 
 /**
  * 仿微信相册宫格适配器。
@@ -27,13 +27,25 @@ import io.coderf.arklab.common.widget.gallery.PreviewInfoBean;
  */
 public class PreviewAlbumAdapter extends BaseRecyclerViewAdapter<PreviewInfoBean, ItemPreviewAlbumBinding> {
 
+    /**
+     * 所属相册弹窗，用来读取占位图和点击回调
+     */
     private final PreviewAlbumDialog previewAlbumDialog;
+    /**
+     * 当前大图对应的格子下标
+     */
     private int selectedPosition;
 
+    /**
+     * @param previewAlbumDialog 所属相册弹窗
+     */
     public PreviewAlbumAdapter(PreviewAlbumDialog previewAlbumDialog) {
         this.previewAlbumDialog = previewAlbumDialog;
     }
 
+    /**
+     * @param selectedPosition 需要描边高亮的下标
+     */
     public void setSelectedPosition(int selectedPosition) {
         this.selectedPosition = selectedPosition;
     }

@@ -32,7 +32,6 @@ import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
-import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
@@ -267,7 +266,7 @@ public class MediaAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             });
             binding.ivMediaShow.setOnClickListener(v -> {
                 try {
-                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

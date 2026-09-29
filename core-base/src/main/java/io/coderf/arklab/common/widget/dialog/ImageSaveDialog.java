@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textview.MaterialTextView;
 
 import androidx.core.content.ContextCompat;
 
@@ -23,7 +21,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.ImageSaveDialogBinding;
 import io.coderf.arklab.common.utils.common.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.widget.gallery.PreviewGalleryConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**

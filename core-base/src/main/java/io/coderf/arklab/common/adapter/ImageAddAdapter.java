@@ -27,7 +27,6 @@ import io.coderf.arklab.common.listener.OnUploadRetryClickListener;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.CollectionUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
-import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**
@@ -252,7 +251,7 @@ public class ImageAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             });
             binding.ivImageShow.setOnClickListener(v -> {
                 try {
-                    new PreviewPhotoDialog(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition()).show();
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(v.getContext(), "图片打开失败", Toast.LENGTH_SHORT).show();

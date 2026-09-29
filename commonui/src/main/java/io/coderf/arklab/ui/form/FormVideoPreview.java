@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
+import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
 import io.coderf.arklab.common.adapter.VideoShowAdapter;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.bean.AttachmentBean;
@@ -99,6 +100,7 @@ public class FormVideoPreview extends FormMedia {
             ((VideoShowAdapter) adapter).setBgColor(itemBgColor);
             ((VideoShowAdapter) adapter).setErrorImage(errorImage);
             ((VideoShowAdapter) adapter).setPlaceholderImage(placeholderImage);
+            applyPreviewPhotoConfigure((BaseMediaRecyclerViewAdapter<?, ?>) adapter);
         }
         mediaRecyclerView.setAdapter(adapter);
     }
@@ -139,7 +141,17 @@ public class FormVideoPreview extends FormMedia {
 
     public <AD extends BaseRecyclerViewAdapter<?, ?>> void setAdapter(AD adapter) {
         this.adapter = adapter;
+        if (adapter instanceof BaseMediaRecyclerViewAdapter<?, ?> mediaAdapter) {
+            applyPreviewPhotoConfigure(mediaAdapter);
+        }
         mediaRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void bindPreviewPhotoConfigure() {
+        if (adapter instanceof BaseMediaRecyclerViewAdapter<?, ?> mediaAdapter) {
+            applyPreviewPhotoConfigure(mediaAdapter);
+        }
     }
 
     public BaseRecyclerViewAdapter<?, ?> getAdapter() {

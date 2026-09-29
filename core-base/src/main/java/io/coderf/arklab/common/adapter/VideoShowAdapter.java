@@ -60,6 +60,14 @@ public class VideoShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
             super(binding, adapter);
             CornerShapeHelper.apply(binding.imageVideo, adapter.radius,
                     Objects.requireNonNullElse(adapter.bgColor, Color.TRANSPARENT));
+            binding.imageVideo.setOnClickListener(v -> {
+                try {
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(v.getContext(), "视频打开失败", Toast.LENGTH_SHORT).show();
+                }
+            });
             binding.videoPlay.setOnClickListener(v -> {
                 try {
                     Bundle bundleVideo = new Bundle();

@@ -20,6 +20,7 @@
 -keep class io.coderf.arklab.common.viewmodel.** { *; }
 -keep class io.coderf.arklab.common.helper.bean.** { *; }
 -keep class io.coderf.arklab.common.widget.dialog.bean.** { *; }
+-keep class io.coderf.arklab.common.widget.gallery.bean.** { *; }
 
 # Hilt / ViewModel
 -keep class androidx.hilt.** { *; }

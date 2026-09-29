@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
@@ -36,7 +36,6 @@ import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
-import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * AttachmentUtil 类。
@@ -119,12 +118,23 @@ public class AttachmentUtil {
         if (stringList == null) {
             return null;
         }
+        Context appContext = Config.getInstance().getApplication();
         return stringList.stream().map(str -> {
             AttachmentBean attachment = new AttachmentBean();
             attachment.setMainId(mainId);
             attachment.setPath(str);
             attachment.setFieldName(field);
             attachment.setFileName(FileUtil.getFileName(str));
+            if (!TextUtils.isEmpty(str)) {
+                File file = new File(str);
+                if (file.isFile()) {
+                    attachment.setFileSize(String.valueOf(file.length()));
+                }
+                AttachmentTypeEnum mediaType = getMediaType(appContext, null, str);
+                if (mediaType != null) {
+                    attachment.setFileType(mediaType.typeValue);
+                }
+            }
             return attachment;
         }).collect(Collectors.toList());
     }
@@ -185,14 +195,23 @@ public class AttachmentUtil {
             attachment.setMainId(mainId);
             attachment.setPath(uri.toString());
             attachment.setFieldName(field);
-            //也有可能当前手机不需要Uri权限，因为我们尝试强行获取一下，但是要记得捕获异常
             try {
                 attachment.setFileType(getAttachmentTypeByUri(context, uri).typeValue);
-                Cursor cursor = contentResolver.query(uri, null, null, null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try (Cursor cursor = contentResolver.query(uri,
+                    new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE},
+                    null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
-                    attachment.setFileName(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
-                    attachment.setFileSize(cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) + "");
-                    cursor.close();
+                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex >= 0 && !cursor.isNull(nameIndex)) {
+                        attachment.setFileName(cursor.getString(nameIndex));
+                    }
+                    int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                    if (sizeIndex >= 0 && !cursor.isNull(sizeIndex)) {
+                        attachment.setFileSize(String.valueOf(cursor.getLong(sizeIndex)));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -266,49 +285,54 @@ public class AttachmentUtil {
     }
 
     /**
-     * 获取Uri持久化权限
+     * 获取 Uri 持久化读权限。
+     *
+     * @return 是否授予成功。未携带 FLAG_GRANT_PERSISTABLE_URI_PERMISSION 的选择结果会失败
      */
-    public static void takeUriPermission(Context context, Uri uri) {
-        if (uri == null) {
-            return;
-        }
-        if (context == null) {
-            return;
+    public static boolean takeUriPermission(Context context, Uri uri) {
+        if (uri == null || context == null) {
+            return false;
         }
         ContentResolver contentResolver = context.getContentResolver();
         if (contentResolver == null) {
-            return;
+            return false;
         }
         try {
-            //授权Uri持久化权限
             contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
     /**
-     * 获取Uri持久化权限
+     * 获取 Uri 持久化读权限。
+     *
+     * @return 列表中的 Uri 是否全部授予成功
      */
-    public static void takeUriPermission(Context context, List<Uri> uriList) {
-        if (uriList == null || uriList.isEmpty()) {
-            return;
-        }
-        if (context == null) {
-            return;
+    public static boolean takeUriPermission(Context context, List<Uri> uriList) {
+        if (uriList == null || uriList.isEmpty() || context == null) {
+            return false;
         }
         ContentResolver contentResolver = context.getContentResolver();
         if (contentResolver == null) {
-            return;
+            return false;
         }
+        boolean allGranted = true;
         for (Uri uri : uriList) {
+            if (uri == null) {
+                allGranted = false;
+                continue;
+            }
             try {
-                //授权Uri持久化权限
                 contentResolver.takePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION);
             } catch (Exception e) {
                 e.printStackTrace();
+                allGranted = false;
             }
         }
+        return allGranted;
     }
 
     public static void releaseUriPermission(Context context, List<Uri> uriList) {
@@ -330,7 +354,7 @@ public class AttachmentUtil {
             }
             for (Uri uri : uriList) {
                 for (UriPermission uriPermission : uriPermissionList) {
-                    if (uriPermission.getUri() == uri) {
+                    if (uri != null && uri.equals(uriPermission.getUri())) {
                         contentResolver.releasePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION);
                     }
                 }
@@ -358,7 +382,7 @@ public class AttachmentUtil {
                 return;
             }
             for (UriPermission uriPermission : uriPermissionList) {
-                if (uriPermission.getUri() == uri) {
+                if (uri.equals(uriPermission.getUri())) {
                     contentResolver.releasePersistableUriPermission(uri, FLAG_GRANT_READ_URI_PERMISSION);
                 }
             }
@@ -410,45 +434,49 @@ public class AttachmentUtil {
         }
 
         if (isHttp(path)) {
-            String type = getMimeType(path);
-            if (isImageType(type)) {
-                return AttachmentTypeEnum.IMAGE;
-            } else if (isVideoType(type)) {
-                return AttachmentTypeEnum.VIDEO;
-            } else {
-                return AttachmentTypeEnum.FILE;
-            }
+            return classifyByMimeOrExtension(getMimeType(path), path);
         } else if (isContentUri(path)) {
             if (context == null || context.getContentResolver() == null) {
                 return null;
             }
-            Uri uri = null;
+            Uri uri;
             try {
                 uri = Uri.parse(path);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            if (uri == null) {
                 return null;
             }
             String type = context.getContentResolver().getType(uri);
-            if (isImageType(type)) {
-                return AttachmentTypeEnum.IMAGE;
-            } else if (isVideoType(type)) {
-                return AttachmentTypeEnum.VIDEO;
-            } else {
-                return AttachmentTypeEnum.FILE;
-            }
+            return classifyByMimeOrExtension(type, path);
         } else {
-            String extension = FileUtil.getUrlFileExtensionName(path);
-            if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
-                return AttachmentTypeEnum.IMAGE;
-            } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
-                return AttachmentTypeEnum.VIDEO;
-            } else {
-                return AttachmentTypeEnum.FILE;
-            }
+            return classifyByExtension(path);
         }
+    }
+
+    private static AttachmentTypeEnum classifyByMimeOrExtension(String mimeType, String path) {
+        if (isImageType(mimeType)) {
+            return AttachmentTypeEnum.IMAGE;
+        } else if (isVideoType(mimeType)) {
+            return AttachmentTypeEnum.VIDEO;
+        } else if (isAudioType(mimeType)) {
+            return AttachmentTypeEnum.AUDIO;
+        }
+        return classifyByExtension(path);
+    }
+
+    private static AttachmentTypeEnum classifyByExtension(String path) {
+        String extension = FileUtil.getUrlFileExtensionName(path);
+        if (TextUtils.isEmpty(extension)) {
+            return AttachmentTypeEnum.FILE;
+        }
+        if (ConstantsHelper.IMAGE_TYPE.contains(extension)) {
+            return AttachmentTypeEnum.IMAGE;
+        } else if (ConstantsHelper.VIDEO_TYPE.contains(extension)) {
+            return AttachmentTypeEnum.VIDEO;
+        } else if (ConstantsHelper.AUDIO_TYPE.contains(extension)) {
+            return AttachmentTypeEnum.AUDIO;
+        }
+        return AttachmentTypeEnum.FILE;
     }
 
     public static void viewFile(Context mContext, String path) {
@@ -478,14 +506,12 @@ public class AttachmentUtil {
     }
 
     public static boolean isContentUri(String uriString) {
-        String regex = "^content://.*$";
-        if (uriString.matches(regex)) {
-            return true;
+        if (TextUtils.isEmpty(uriString)) {
+            return false;
         }
         try {
-            // 进一步使用 Uri 类验证
             Uri uri = Uri.parse(uriString);
-            return uri != null && Objects.equals(uri.getScheme(), "content");
+            return uri != null && "content".equalsIgnoreCase(uri.getScheme());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -494,34 +520,43 @@ public class AttachmentUtil {
 
     private static void viewUrlFile(Context mContext, String url) {
         try {
-            String type = getMimeType(url);
-            if (isImageType(type)) {
+            AttachmentTypeEnum mediaType = getMediaType(mContext, null, url);
+            if (mediaType == AttachmentTypeEnum.IMAGE) {
                 new PreviewPhotoDialog(mContext)
                         .createImageInfo(url)
                         .currentPosition(0)
                         .show();
-            } else if (isVideoType(type)) {
+            } else if (mediaType == AttachmentTypeEnum.VIDEO) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, url);
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, url);
                 VideoPlayerActivity.show(mContext, bundleVideo);
+            } else if (mediaType == AttachmentTypeEnum.AUDIO) {
+                openWithViewIntent(mContext, Uri.parse(url), getMimeType(url));
             } else {
                 new MenuDialog<>(mContext)
                         .setData("下载", "下载并预览")
                         .setOnOptionBottomMenuClickListener((dialog, list, pos) -> {
                             dialog.dismiss();
                             Activity host = AppManager.getAppManager().currentActivity();
-                            if (host == null || host.isFinishing()) {
+                            if (host == null || host.isFinishing() || host.isDestroyed()) {
                                 return;
                             }
-                            Disposable disposable = DownloadManager.getInstance().download(host, url)
+                            DownloadManager.getInstance().download(host, url)
                                     .subscribe(file -> {
+                                        if (!isContextAlive(mContext)) {
+                                            return;
+                                        }
                                         if (pos == 1) {
                                             viewAbsoluteFile(mContext, file.getAbsolutePath());
+                                        } else {
+                                            Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
                                         }
                                     }, throwable -> {
                                         LogUtil.logger(TAG, "下载出现错误：" + throwable);
-                                        Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show();
+                                        if (isContextAlive(mContext)) {
+                                            Toast.makeText(mContext, "文件预览出现错误！", Toast.LENGTH_SHORT).show();
+                                        }
                                     });
                         })
                         .builder()
@@ -534,14 +569,14 @@ public class AttachmentUtil {
     }
 
     private static void viewAbsoluteFile(Context mContext, String absolutePath) {
-        String extension = FileUtil.getUrlFileExtensionName(absolutePath);
         String fileName = FileUtil.getFileNameByUrl(absolutePath);
-        if (!TextUtils.isEmpty(extension) && ConstantsHelper.IMAGE_TYPE.contains(extension)) {
+        AttachmentTypeEnum mediaType = getMediaType(mContext, null, absolutePath);
+        if (mediaType == AttachmentTypeEnum.IMAGE) {
             new PreviewPhotoDialog(mContext)
                     .createImageInfo(absolutePath)
                     .currentPosition(0)
                     .show();
-        } else if ((!TextUtils.isEmpty(extension)) && ConstantsHelper.VIDEO_TYPE.contains(extension)) {
+        } else if (mediaType == AttachmentTypeEnum.VIDEO) {
             Bundle bundleVideo = new Bundle();
             bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, fileName);
             bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, absolutePath);
@@ -553,12 +588,8 @@ public class AttachmentUtil {
                     Toast.makeText(mContext, "文件不存在或已被删除！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
                 Uri apkFileUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".FileProvider", file);
-                i.setDataAndType(apkFileUri, getMimeType(absolutePath));
-                mContext.startActivity(i);
+                openWithViewIntent(mContext, apkFileUri, getMimeType(absolutePath));
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(mContext, "未找到可以打开此类文件的应用", Toast.LENGTH_SHORT).show();
@@ -569,23 +600,20 @@ public class AttachmentUtil {
     private static void viewUriFile(Context mContext, String uriPath) {
         try {
             Uri uri = Uri.parse(uriPath);
-            String type = mContext.getContentResolver().getType(uri);
-            if (isImageType(type)) {
+            AttachmentTypeEnum mediaType = getMediaType(mContext, null, uriPath);
+            if (mediaType == AttachmentTypeEnum.IMAGE) {
                 new PreviewPhotoDialog(mContext)
                         .createUriImageInfo(uri)
                         .currentPosition(0)
                         .show();
-            } else if (isVideoType(type)) {
+            } else if (mediaType == AttachmentTypeEnum.VIDEO) {
                 Bundle bundleVideo = new Bundle();
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, uriPath);
                 bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, uriPath);
                 VideoPlayerActivity.show(mContext, bundleVideo);
             } else {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                i.setDataAndType(uri, TextUtils.isEmpty(type) ? "*/*" : type);
-                mContext.startActivity(i);
+                String type = mContext.getContentResolver().getType(uri);
+                openWithViewIntent(mContext, uri, TextUtils.isEmpty(type) ? getMimeType(uriPath) : type);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -593,12 +621,30 @@ public class AttachmentUtil {
         }
     }
 
-    private static String getMimeType(String url) {
-        String mimeType = "*/*";
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    private static void openWithViewIntent(Context context, Uri uri, String mimeType) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(uri, TextUtils.isEmpty(mimeType) ? "*/*" : mimeType);
+        context.startActivity(intent);
+    }
+
+    private static boolean isContextAlive(Context context) {
+        if (!(context instanceof Activity)) {
+            return context != null;
         }
-        return mimeType;
+        Activity activity = (Activity) context;
+        return !activity.isFinishing() && !activity.isDestroyed();
+    }
+
+    private static String getMimeType(String url) {
+        String extension = FileUtil.getUrlFileExtensionName(url);
+        if (!TextUtils.isEmpty(extension)) {
+            String mimeType = MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(extension.toLowerCase(Locale.US));
+            if (!TextUtils.isEmpty(mimeType)) {
+                return mimeType;
+            }
+        }
+        return "*/*";
     }
 }

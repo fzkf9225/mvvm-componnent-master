@@ -291,6 +291,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         mediaAddAdapter.setMediaAddListener(this);
         mediaAddAdapter.setMediaClearListener(this);
         mediaAddAdapter.setOnUploadRetryClickListener(this);
+        applyPreviewPhotoConfigure(mediaAddAdapter);
         mediaRecyclerView.setAdapter(mediaAddAdapter);
         mediaRecyclerView.setClipChildren(false);
         setClipChildren(false);
@@ -325,6 +326,11 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
 
     public void setOnMediaAddListener(MediaAddAdapter.MediaAddListener onMediaAddListener) {
         this.onMediaAddListener = onMediaAddListener;
+    }
+
+    @Override
+    protected void bindPreviewPhotoConfigure() {
+        applyPreviewPhotoConfigure(mediaAddAdapter);
     }
 
     public int getMaxCount() {

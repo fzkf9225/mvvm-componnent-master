@@ -1,5 +1,6 @@
 package io.coderf.arklab.common.adapter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
@@ -14,7 +15,9 @@ import java.util.List;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
+import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**
  * 图片、视频、媒体adapter适配器基类
@@ -78,6 +81,10 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
      * 默认右上角占位按钮图片endMargin，这个理论上是个-值
      */
     protected int clearImageEndMargin;
+    /**
+     * 大图预览弹出前的配置，未设置时仍使用对话框默认值
+     */
+    protected PreviewPhotoDialog.OnConfigureListener previewConfigureListener;
 
     public BaseMediaRecyclerViewAdapter() {
         initArguments();
@@ -208,6 +215,37 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
 
     public void setClearImageEndMargin(int clearImageEndMargin) {
         this.clearImageEndMargin = clearImageEndMargin;
+    }
+
+    public PreviewPhotoDialog.OnConfigureListener getOnPreviewPhotoConfigure() {
+        return previewConfigureListener;
+    }
+
+    /**
+     * 设置大图预览弹出前的配置。可调整是否允许保存、缩放、保存弹窗和指示点。
+     */
+    public void setOnPreviewPhotoConfigure(PreviewPhotoDialog.OnConfigureListener previewConfigureListener) {
+        this.previewConfigureListener = previewConfigureListener;
+    }
+
+    /**
+     * 打开大图预览，并带上当前适配器的占位图、错误图和 {@link #previewConfigureListener}。
+     */
+    protected void showPreviewPhoto(Context context, List<AttachmentBean> images, int position) {
+        if (context == null || images == null || position < 0 || position >= images.size()) {
+            return;
+        }
+        PreviewPhotoDialog dialog = new PreviewPhotoDialog(context, images, position);
+        if (placeholderImage != null) {
+            dialog.setPlaceholderImage(placeholderImage);
+        }
+        if (errorImage != null) {
+            dialog.setErrorImage(errorImage);
+        }
+        if (previewConfigureListener != null) {
+            previewConfigureListener.onConfigure(dialog);
+        }
+        dialog.show();
     }
 
     public ViewGroup.LayoutParams getClearLayoutParams(ShapeableImageView clearImage) {

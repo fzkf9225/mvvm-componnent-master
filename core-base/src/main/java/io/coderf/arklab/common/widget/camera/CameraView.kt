@@ -66,26 +66,59 @@ class CameraView @JvmOverloads constructor(
 ) :
     androidx.constraintlayout.widget.ConstraintLayout(context, attrs, defStyleAttr),
     DefaultLifecycleObserver {
+    /**
+     * 拍照、录像结果回调
+     */
     private var cameraResultListener: CameraResultListener? = null
 
     /**
      * 返回按钮点击事件
      */
     private var leftClickListener: OnClickListener? = null
+
+    /**
+     * CameraX 相机提供者，负责绑定和解绑预览、拍照、录像用例
+     */
     private var cameraProvider: ProcessCameraProvider? = null
+
+    /**
+     * 拍照用例
+     */
     private var imageCapture: ImageCapture? = null
+
+    /**
+     * 录像用例
+     */
     private var videoCapture: VideoCapture<Recorder>? = null
 
+    /**
+     * 当前进行中的录像会话，停止或结束后置空
+     */
     private var recording: Recording? = null
 
+    /**
+     * 当前使用的摄像头，默认后置
+     */
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
+    /**
+     * 拍照保存回调的执行线程
+     */
     private var cameraExecutor = Executors.newSingleThreadExecutor()
 
+    /**
+     * 视图绑定
+     */
     private var binding: CameraViewBinding? = null
 
+    /**
+     * 主线程 Handler，用于切回界面线程更新预览和提示
+     */
     private val handler = Handler(Looper.getMainLooper())
 
+    /**
+     * 绑定相机生命周期的页面宿主
+     */
     private var owner: LifecycleOwner? = null
 
     /**
@@ -427,6 +460,9 @@ class CameraView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * 获取视图绑定，供外部访问内部控件
+     */
     fun getBinding(): CameraViewBinding? {
         return binding
     }
@@ -501,12 +537,18 @@ class CameraView @JvmOverloads constructor(
         updateFlashUi()
     }
 
+    /**
+     * 按闪光灯模式开关手电筒。常开时打开，自动和关闭时关闭
+     */
     private fun applyTorchState() {
         val enableTorch = flashMode == ImageCapture.FLASH_MODE_ON
                 && camera?.cameraInfo?.hasFlashUnit() == true
         camera?.cameraControl?.enableTorch(enableTorch)
     }
 
+    /**
+     * 按闪光灯模式刷新图标。设备没有闪光灯时隐藏入口
+     */
     private fun updateFlashUi() {
         val hasFlash = camera?.cameraInfo?.hasFlashUnit() == true
         binding?.imageFlash?.visibility = if (hasFlash) VISIBLE else GONE
@@ -519,6 +561,11 @@ class CameraView @JvmOverloads constructor(
         )
     }
 
+    /**
+     * 停止当前录像并回到可拍摄状态
+     *
+     * @param tip 提示文案
+     */
     private fun stopRecordingAndReset(tip: String) {
         isRecordingCanceled = true
         recording?.stop()
@@ -597,6 +644,11 @@ class CameraView @JvmOverloads constructor(
         binding?.focusView?.visibility = GONE
     }
 
+    /**
+     * 删除已保存的图片或视频，支持 content 和 file 两种 Uri
+     *
+     * @param imageUri 媒体地址
+     */
     private fun deleteImage(imageUri: Uri?) {
         try {
             if (imageUri?.scheme == "content") {
@@ -666,6 +718,9 @@ class CameraView @JvmOverloads constructor(
     }
 
 
+    /**
+     * 页面销毁时关闭手电筒，并释放录像、播放器和相机资源
+     */
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         // 释放资源
@@ -679,16 +734,25 @@ class CameraView @JvmOverloads constructor(
         this.owner = null
     }
 
+    /**
+     * 页面暂停时暂停视频预览
+     */
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
         binding?.videoPlayer?.onVideoPause()
     }
 
+    /**
+     * 页面恢复时继续视频预览
+     */
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         binding?.videoPlayer?.onVideoResume()
     }
 
+    /**
+     * 页面创建时记录生命周期宿主并启动相机预览
+     */
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         this.owner = owner;
@@ -740,13 +804,19 @@ class CameraView @JvmOverloads constructor(
         }
 
         object Mode {
-            //只能拍照
+            /**
+             * 仅拍照
+             */
             const val BUTTON_STATE_ONLY_CAPTURE: Int = 0x101
 
-            //只能录像
+            /**
+             * 仅录像
+             */
             const val BUTTON_STATE_ONLY_RECORDER: Int = 0x102
 
-            // 选择拍照 拍视频 或者都有
+            /**
+             * 拍照和录像都可用
+             */
             const val BUTTON_STATE_BOTH: Int = 0x103
         }
 

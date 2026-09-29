@@ -13,6 +13,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,7 +32,8 @@ import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.widget.dialog.ImageSaveDialogConfig;
 import io.coderf.arklab.common.widget.gallery.adapter.PreviewViewPagerAdapter;
-import io.coderf.arklab.common.utils.theme.ThemeAttrs;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 
 /**
  * created by fz 2024/12/20
@@ -101,10 +103,19 @@ public class PreviewPhotoDialog extends Dialog {
      */
     private ImageSaveDialogConfig imageSaveDialogConfig;
 
+    /**
+     * 使用默认预览主题创建
+     *
+     * @param context 上下文
+     */
     public PreviewPhotoDialog(Context context) {
         this(context, R.style.PreviewPhotoDialog);
     }
 
+    /**
+     * @param context    上下文
+     * @param themeResId 对话框主题
+     */
     public PreviewPhotoDialog(Context context, int themeResId) {
         super(context, themeResId);
         drawableResCurrent = DrawableUtil.createCircleDrawable(ContextCompat.getColor(context, R.color.white),
@@ -113,11 +124,20 @@ public class PreviewPhotoDialog extends Dialog {
                 DensityUtil.dp2px(context, 6));
     }
 
+    /**
+     * @param context      上下文
+     * @param canSaveImage 是否允许长按保存
+     */
     public PreviewPhotoDialog(Context context, boolean canSaveImage) {
         this(context, R.style.PreviewPhotoDialog);
         this.canSaveImage = canSaveImage;
     }
 
+    /**
+     * @param context    上下文
+     * @param imageInfos 预览列表，视频需要提前指定附件类型
+     * @param position   初始下标
+     */
     public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, int position) {
         this(context, R.style.PreviewPhotoDialog);
         this.imageInfos = imageInfos;
@@ -127,6 +147,12 @@ public class PreviewPhotoDialog extends Dialog {
         this.position = position;
     }
 
+    /**
+     * @param context      上下文
+     * @param imageInfos   预览列表
+     * @param canSaveImage 是否允许长按保存
+     * @param position     初始下标
+     */
     public PreviewPhotoDialog(Context context, List<AttachmentBean> imageInfos, boolean canSaveImage, int position) {
         this(context, R.style.PreviewPhotoDialog);
         this.imageInfos = imageInfos;
@@ -137,11 +163,21 @@ public class PreviewPhotoDialog extends Dialog {
         this.position = position;
     }
 
+    /**
+     * 设置打开时显示的下标
+     *
+     * @param position 从 0 开始
+     */
     public PreviewPhotoDialog currentPosition(int position) {
         this.position = position;
         return this;
     }
 
+    /**
+     * 设置预览列表
+     *
+     * @param imageInfoList 附件列表，null 会当成空列表
+     */
     public PreviewPhotoDialog setImages(List<AttachmentBean> imageInfoList) {
         this.imageInfos = imageInfoList;
         if (this.imageInfos == null) {
@@ -154,6 +190,24 @@ public class PreviewPhotoDialog extends Dialog {
         return canSaveImage;
     }
 
+    /**
+     * @param canSaveImage 是否允许长按保存
+     */
+    public PreviewPhotoDialog setCanSaveImage(boolean canSaveImage) {
+        this.canSaveImage = canSaveImage;
+        return this;
+    }
+
+    /**
+     * 在 {@link #show()} 之前调整本次预览。占位图、错误图、缩放、保存弹窗、指示点都在这里设置。
+     */
+    public interface OnConfigureListener {
+        /**
+         * @param dialog 即将显示的预览弹窗
+         */
+        void onConfigure(@NonNull PreviewPhotoDialog dialog);
+    }
+
     public Drawable getErrorImage() {
         return errorImage;
     }
@@ -162,6 +216,11 @@ public class PreviewPhotoDialog extends Dialog {
         return placeholderImage;
     }
 
+    /**
+     * 用单个图片路径创建预览列表
+     *
+     * @param image 图片路径或地址
+     */
     public PreviewPhotoDialog createImageInfo(String image) {
         AttachmentBean attachmentBean = new AttachmentBean();
         attachmentBean.setFileType(AttachmentTypeEnum.IMAGE.typeValue);
@@ -172,15 +231,24 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
+    /**
+     * @param imageRes 单张本地图片资源
+     */
     public PreviewPhotoDialog createImageResInfo(@DrawableRes int imageRes) {
         return createImageResInfo(List.of(imageRes));
     }
 
+    /**
+     * @param imageResList 本地图片资源列表
+     */
     public PreviewPhotoDialog createImageResInfo(@DrawableRes List<Integer> imageResList) {
         imageInfos = AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList,null,null);
         return this;
     }
 
+    /**
+     * @param image 多张图片路径
+     */
     public PreviewPhotoDialog createImageInfo(String... image) {
         if (image == null) {
             return null;
@@ -188,6 +256,9 @@ public class PreviewPhotoDialog extends Dialog {
         return createImageInfo(Arrays.asList(image));
     }
 
+    /**
+     * @param uri 多个图片 Uri
+     */
     public PreviewPhotoDialog createUriImageInfo(Uri... uri) {
         if (uri == null) {
             return null;
@@ -195,6 +266,9 @@ public class PreviewPhotoDialog extends Dialog {
         return createUriImageInfo(Arrays.asList(uri));
     }
 
+    /**
+     * @param images 图片路径列表
+     */
     public PreviewPhotoDialog createImageInfo(List<String> images) {
         if (images == null) {
             return null;
@@ -210,6 +284,9 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
+    /**
+     * @param images 图片 Uri 列表
+     */
     public PreviewPhotoDialog createUriImageInfo(List<Uri> images) {
         if (images == null) {
             return null;
@@ -218,21 +295,33 @@ public class PreviewPhotoDialog extends Dialog {
         return this;
     }
 
+    /**
+     * @param drawableResCurrent 当前页指示点样式
+     */
     public PreviewPhotoDialog setDrawableResCurrent(Drawable drawableResCurrent) {
         this.drawableResCurrent = drawableResCurrent;
         return this;
     }
 
+    /**
+     * @param drawableResNormal 非当前页指示点样式
+     */
     public PreviewPhotoDialog setDrawableResNormal(Drawable drawableResNormal) {
         this.drawableResNormal = drawableResNormal;
         return this;
     }
 
+    /**
+     * @param placeholderImage 加载中的占位图
+     */
     public PreviewPhotoDialog setPlaceholderImage(Drawable placeholderImage) {
         this.placeholderImage = placeholderImage;
         return this;
     }
 
+    /**
+     * @param errorImage 加载失败图
+     */
     public PreviewPhotoDialog setErrorImage(Drawable errorImage) {
         this.errorImage = errorImage;
         return this;
@@ -362,6 +451,9 @@ public class PreviewPhotoDialog extends Dialog {
         viewPager.setOffscreenPageLimit(imageInfos.size());
     }
 
+    /**
+     * 按图片数量创建底部指示点，只有一张时隐藏
+     */
     private void initPoint() {
         llPoint.removeAllViews();
         if (imageInfos.size() > 1) {

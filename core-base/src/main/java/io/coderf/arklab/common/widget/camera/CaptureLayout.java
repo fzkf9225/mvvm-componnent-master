@@ -65,10 +65,25 @@ public class CaptureLayout extends FrameLayout {
      */
     private ShapeableImageView ivCustomRight;
 
+    /**
+     * 底部操作区宽度，竖屏取屏幕宽，横屏取屏幕宽的一半
+     */
     private final int layoutWidth;
+    /**
+     * 底部操作区高度
+     */
     private final int layoutHeight;
+    /**
+     * 拍照按钮尺寸
+     */
     private final int buttonSize;
+    /**
+     * 左侧自定义按钮图标资源，0 表示不显示
+     */
     private int iconLeft = 0;
+    /**
+     * 右侧自定义按钮图标资源，0 表示不显示
+     */
     private int iconRight = 0;
 
     public CaptureLayout(Context context) {
@@ -79,6 +94,9 @@ public class CaptureLayout extends FrameLayout {
         this(context, attrs, 0);
     }
 
+    /**
+     * 按屏幕方向计算按钮尺寸，并初始化底部操作区
+     */
     public CaptureLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -96,20 +114,36 @@ public class CaptureLayout extends FrameLayout {
         initEvent();
     }
 
+    /**
+     * 设置确认、取消结果回调
+     *
+     * @param typeListener 结果按钮监听
+     */
     public void setTypeListener(TypeListener typeListener) {
         this.typeListener = typeListener;
     }
 
+    /**
+     * 设置拍照、录像过程回调
+     *
+     * @param captureListener 拍照按钮监听
+     */
     public void setCaptureListener(CaptureListener captureListener) {
         this.captureListener = captureListener;
     }
 
+    /**
+     * 使用构造时按屏幕方向算出的宽高，不跟随父布局测量结果
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(layoutWidth, layoutHeight);
     }
 
+    /**
+     * 初始化按钮可见性。拍摄前隐藏确认、取消和右侧自定义按钮
+     */
     public void initEvent() {
         //默认TypeButton为隐藏
         ivCustomRight.setVisibility(GONE);
@@ -117,6 +151,9 @@ public class CaptureLayout extends FrameLayout {
         btnConfirm.setVisibility(GONE);
     }
 
+    /**
+     * 拍摄完成后隐藏拍照按钮，并播放确认、取消按钮入场动画
+     */
     public void startTypeBtnAnimator() {
         //拍照录制结果后的动画
         if (this.iconLeft != 0) {
@@ -147,34 +184,58 @@ public class CaptureLayout extends FrameLayout {
         set.start();
     }
 
+    /**
+     * 获取拍照按钮
+     */
     public CaptureButton getBtnCapture() {
         return btnCapture;
     }
 
+    /**
+     * 获取左侧自定义按钮
+     */
     public ShapeableImageView getIvCustomLeft() {
         return ivCustomLeft;
     }
 
+    /**
+     * 获取右侧自定义按钮
+     */
     public ShapeableImageView getIvCustomRight() {
         return ivCustomRight;
     }
 
+    /**
+     * 获取左侧自定义按钮图标资源
+     */
     public int getIconLeft() {
         return iconLeft;
     }
 
+    /**
+     * 获取右侧自定义按钮图标资源
+     */
     public int getIconRight() {
         return iconRight;
     }
 
+    /**
+     * 获取取消按钮
+     */
     public TypeButton getBtnCancel() {
         return btnCancel;
     }
 
+    /**
+     * 获取确认按钮
+     */
     public TypeButton getBtnConfirm() {
         return btnConfirm;
     }
 
+    /**
+     * 创建拍照、确认、取消和左右自定义按钮，并完成布局与点击转发
+     */
     private void initView() {
         setWillNotDraw(false);
         //拍照按钮
@@ -287,6 +348,9 @@ public class CaptureLayout extends FrameLayout {
 
     }
 
+    /**
+     * 回到拍摄前状态：显示拍照按钮，隐藏确认和取消按钮
+     */
     public void resetCaptureLayout() {
         btnCapture.resetState();
         btnCancel.setVisibility(GONE);
@@ -301,10 +365,21 @@ public class CaptureLayout extends FrameLayout {
     }
 
 
+    /**
+     * 设置拍照按钮支持的模式
+     *
+     * @param state 仅拍照、仅录像或两者都支持
+     */
     public void setButtonFeatures(int state) {
         btnCapture.setButtonFeatures(state);
     }
 
+    /**
+     * 设置左右自定义按钮图标。资源为 0 时隐藏对应按钮
+     *
+     * @param iconLeft  左侧图标资源
+     * @param iconRight 右侧图标资源
+     */
     public void setIconSrc(int iconLeft, int iconRight) {
         this.iconLeft = iconLeft;
         this.iconRight = iconRight;
@@ -322,10 +397,20 @@ public class CaptureLayout extends FrameLayout {
         }
     }
 
+    /**
+     * 设置左侧自定义按钮点击事件
+     *
+     * @param leftClickListener 点击监听
+     */
     public void setLeftClickListener(OnClickListener leftClickListener) {
         this.leftClickListener = leftClickListener;
     }
 
+    /**
+     * 设置右侧自定义按钮点击事件
+     *
+     * @param rightClickListener 点击监听
+     */
     public void setRightClickListener(OnClickListener rightClickListener) {
         this.rightClickListener = rightClickListener;
     }

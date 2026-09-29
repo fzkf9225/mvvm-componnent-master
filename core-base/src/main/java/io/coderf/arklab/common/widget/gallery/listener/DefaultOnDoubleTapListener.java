@@ -21,6 +21,9 @@ import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
  */
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
 
+    /**
+     * 当前绑定的图片缩放控制器
+     */
     private PhotoViewAttacher photoViewAttacher;
 
     /**
@@ -41,6 +44,12 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         this.photoViewAttacher = newPhotoViewAttacher;
     }
 
+    /**
+     * 确认单击。点在图片上回调图片点击，否则回调整块视图点击
+     *
+     * @param event 单击事件
+     * @return 点击被图片或视图监听消费时返回 true
+     */
     @Override
     public boolean onSingleTapConfirmed(@NonNull MotionEvent event) {
         if (this.photoViewAttacher == null) {
@@ -72,6 +81,12 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return false;
     }
 
+    /**
+     * 双击在最小和中等缩放之间切换，并以点击位置为缩放中心
+     *
+     * @param event 双击事件
+     * @return 已处理时返回 true
+     */
     @Override
     public boolean onDoubleTap(@NonNull MotionEvent event) {
         if (photoViewAttacher == null) {
@@ -90,6 +105,11 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return true;
     }
 
+    /**
+     * 双击过程中的中间事件不处理，等确认后的 {@link #onDoubleTap}
+     *
+     * @param event 双击过程事件
+     */
     @Override
     public boolean onDoubleTapEvent(@NonNull MotionEvent event) {
         // Wait for the confirmed onDoubleTap() instead

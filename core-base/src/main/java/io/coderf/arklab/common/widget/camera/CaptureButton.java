@@ -33,47 +33,129 @@ import io.coderf.arklab.common.listener.CaptureListener;
  */
 public class CaptureButton extends View {
 
-    private int state;              //当前按钮状态
-    private int button_state;       //按钮可执行的功能状态（拍照,录制,两者）
+    /**
+     * 当前按钮状态，见 {@link #STATE_IDLE} 等
+     */
+    private int state;
+    /**
+     * 按钮支持的功能：仅拍照、仅录像或两者都支持
+     */
+    private int button_state;
 
-    public static final int STATE_IDLE = 0x001;        //空闲状态
-    public static final int STATE_PRESS = 0x002;       //按下状态
-    public static final int STATE_LONG_PRESS = 0x003;  //长按状态
-    public static final int STATE_RECORDING = 0x004; //录制状态
-    public static final int STATE_BAN = 0x005;         //禁止状态
+    /**
+     * 空闲，可响应下一次点击或长按
+     */
+    public static final int STATE_IDLE = 0x001;
+    /**
+     * 已按下，尚未判定为长按
+     */
+    public static final int STATE_PRESS = 0x002;
+    /**
+     * 已判定为长按，准备进入录像
+     */
+    public static final int STATE_LONG_PRESS = 0x003;
+    /**
+     * 正在录像
+     */
+    public static final int STATE_RECORDING = 0x004;
+    /**
+     * 禁止操作，拍摄流程尚未结束
+     */
+    public static final int STATE_BAN = 0x005;
 
-    private float eventY;  //Touch_Event_Down时候记录的Y值
+    /**
+     * 按下时记录的 Y 坐标，用于计算上滑缩放
+     */
+    private float eventY;
 
+    /**
+     * 按钮绘制画笔
+     */
     private Paint mPaint;
 
-    private float strokeWidth;          //进度条宽度
-    private int outsideAddSize;       //长按外圆半径变大的Size
-    private int insideReduceSize;     //长安内圆缩小的Size
+    /**
+     * 录像进度条线宽
+     */
+    private float strokeWidth;
+    /**
+     * 长按时外圆半径增大的尺寸
+     */
+    private int outsideAddSize;
+    /**
+     * 长按时内圆半径缩小的尺寸
+     */
+    private int insideReduceSize;
 
-    //中心坐标
+    /**
+     * 按钮中心 X 坐标
+     */
     private float centerX;
+    /**
+     * 按钮中心 Y 坐标
+     */
     private float centerY;
 
-    private float buttonRadius;            //按钮半径
-    private float buttonOutsideRadius;    //外圆半径
-    private float buttonInsideRadius;     //内圆半径
-    private int buttonSize;                //按钮大小
+    /**
+     * 按钮半径
+     */
+    private float buttonRadius;
+    /**
+     * 外圆当前半径
+     */
+    private float buttonOutsideRadius;
+    /**
+     * 内圆当前半径
+     */
+    private float buttonInsideRadius;
+    /**
+     * 按钮尺寸
+     */
+    private int buttonSize;
 
-    private float progress;         //录制视频的进度
-    private int duration;           //录制视频最大时间长度
-    private int minDuration;       //最短录制时间限制
-    private int recordedTime;      //记录当前录制的时间
+    /**
+     * 录像进度，单位为角度
+     */
+    private float progress;
+    /**
+     * 最长录像时长，单位毫秒
+     */
+    private int duration;
+    /**
+     * 最短有效录像时长，单位毫秒
+     */
+    private int minDuration;
+    /**
+     * 当前已录制时长，单位毫秒
+     */
+    private int recordedTime;
 
+    /**
+     * 录像进度条绘制区域
+     */
     private RectF rectF;
 
-    private LongPressRunnable longPressRunnable;    //长按后处理的逻辑Runnable
-    private CaptureListener captureListener;        //按钮回调接口
-    private RecordCountDownTimer timer;             //计时器
+    /**
+     * 长按判定任务
+     */
+    private LongPressRunnable longPressRunnable;
+    /**
+     * 拍照、录像过程回调
+     */
+    private CaptureListener captureListener;
+    /**
+     * 录像倒计时
+     */
+    private RecordCountDownTimer timer;
 
     public CaptureButton(Context context) {
         super(context);
     }
 
+    /**
+     * 按给定尺寸初始化拍照按钮的绘制参数和默认状态
+     *
+     * @param size 按钮尺寸
+     */
     public CaptureButton(Context context, int size) {
         super(context);
         this.buttonSize = size;
@@ -108,12 +190,18 @@ public class CaptureButton extends View {
         timer = new RecordCountDownTimer(duration, duration / 360);    //录制定时器
     }
 
+    /**
+     * 测量尺寸包含长按时外圆放大的余量
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(buttonSize + outsideAddSize * 2, buttonSize + outsideAddSize * 2);
     }
 
+    /**
+     * 绘制内外圆。录像时额外绘制环形进度
+     */
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
@@ -141,6 +229,9 @@ public class CaptureButton extends View {
     }
 
 
+    /**
+     * 处理按下、移动和抬起。短按拍照，长按录像，录像中上滑回调缩放
+     */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {

@@ -61,7 +61,7 @@ public final class CropUtil {
                 return decodeUri(context, sourceUri);
             }
             if (!TextUtils.isEmpty(sourcePath)) {
-                Bitmap oriented = MediaUtil.orientation(sourcePath);
+                Bitmap oriented = MediaUtil.orientation(sourcePath, MAX_DECODE_SIZE);
                 if (oriented != null) {
                     return oriented;
                 }
@@ -170,6 +170,14 @@ public final class CropUtil {
                 break;
             case ExifInterface.ORIENTATION_FLIP_VERTICAL:
                 matrix.postScale(1, -1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.postRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.postRotate(270);
+                matrix.postScale(-1, 1);
                 break;
             default:
                 return bitmap;

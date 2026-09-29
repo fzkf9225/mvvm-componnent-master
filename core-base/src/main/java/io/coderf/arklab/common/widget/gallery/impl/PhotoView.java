@@ -12,13 +12,13 @@ import android.view.GestureDetector;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
-import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.attacher.PhotoViewAttacher;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 
 
 /**
- * PhotoView 类。
+ * 支持双指缩放、拖动和双击切换倍数的图片视图。手势逻辑在 {@link PhotoViewAttacher}。
  *
  * @author fz
  * @version 1.0
@@ -27,6 +27,9 @@ import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
  */
 public class PhotoView extends ShapeableImageView implements IPhotoView {
 
+    /**
+     * 缩放和拖动控制器
+     */
     private final PhotoViewAttacher mAttacher;
 
     public PhotoView(Context context) {
@@ -37,6 +40,9 @@ public class PhotoView extends ShapeableImageView implements IPhotoView {
         this(context, attr, 0);
     }
 
+    /**
+     * 固定使用 MATRIX 缩放类型，以便手势矩阵能直接作用到图片
+     */
     @SuppressLint("ClickableViewAccessibility")
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
@@ -233,6 +239,9 @@ public class PhotoView extends ShapeableImageView implements IPhotoView {
         mAttacher.setOnDoubleTapListener(newOnDoubleTapListener);
     }
 
+    /**
+     * 离开窗口时释放手势监听和未完成动画
+     */
     @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();

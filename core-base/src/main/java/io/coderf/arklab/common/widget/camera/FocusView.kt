@@ -25,11 +25,34 @@ class FocusView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : android.view.View(context, attrs, defStyleAttr) {
 
+    /**
+     * 对焦框画笔
+     */
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    /**
+     * 当前对焦区域，为空时不绘制
+     */
     private var currentRect: Rect? = null
+
+    /**
+     * 对焦框透明度，用于停留后淡出
+     */
     private var alpha = 255
+
+    /**
+     * 四角线段长度
+     */
     private var cornerLength = 40f
+
+    /**
+     * 对焦框颜色
+     */
     private var lineColor = Color.WHITE
+
+    /**
+     * 对焦框线宽
+     */
     private var lineWidth = 4f
 
     init {
@@ -56,6 +79,11 @@ class FocusView @JvmOverloads constructor(
         paint.strokeWidth = lineWidth
     }
 
+    /**
+     * 显示对焦框，短暂停留后开始淡出
+     *
+     * @param rect 对焦区域
+     */
     fun setFocusRect(rect: Rect) {
         currentRect = rect
         alpha = 255
@@ -64,6 +92,9 @@ class FocusView @JvmOverloads constructor(
         postDelayed({ startFadeOut() }, 800)
     }
 
+    /**
+     * 将对焦框透明度从完全不透明渐变到消失
+     */
     private fun startFadeOut() {
         val animator = ValueAnimator.ofInt(255, 0).apply {
             duration = 500
@@ -75,6 +106,9 @@ class FocusView @JvmOverloads constructor(
         animator.start()
     }
 
+    /**
+     * 在对焦区域的四个角绘制线段
+     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         currentRect?.let { rect ->

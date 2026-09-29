@@ -19,27 +19,69 @@ import androidx.annotation.NonNull;
  * @since 1.0
  * @updated 2026/9/1 22:51
  */
-public class TypeButton extends View{
+public class TypeButton extends View {
+    /**
+     * 取消按钮，绘制返回箭头
+     */
     public static final int TYPE_CANCEL = 0x001;
+    /**
+     * 确认按钮，绘制绿色勾
+     */
     public static final int TYPE_CONFIRM = 0x002;
+    /**
+     * 按钮类型，见 {@link #TYPE_CANCEL}、{@link #TYPE_CONFIRM}
+     */
     private int button_type;
+    /**
+     * 按钮边长
+     */
     private int button_size;
 
+    /**
+     * 圆心 X 坐标
+     */
     private float center_X;
+    /**
+     * 圆心 Y 坐标
+     */
     private float center_Y;
+    /**
+     * 圆形背景半径
+     */
     private float button_radius;
 
+    /**
+     * 按钮绘制画笔
+     */
     private Paint mPaint;
+    /**
+     * 箭头或对勾路径
+     */
     private Path path;
+    /**
+     * 图标线宽
+     */
     private float strokeWidth;
 
+    /**
+     * 图标相对按钮尺寸的基准偏移
+     */
     private float index;
+    /**
+     * 取消箭头圆弧区域
+     */
     private RectF rectF;
 
     public TypeButton(Context context) {
         super(context);
     }
 
+    /**
+     * 按类型和尺寸初始化确认或取消按钮
+     *
+     * @param type 按钮类型
+     * @param size 按钮边长
+     */
     public TypeButton(Context context, int type, int size) {
         super(context);
         this.button_type = type;
@@ -55,12 +97,18 @@ public class TypeButton extends View{
         rectF = new RectF(center_X, center_Y - index, center_X + index * 2, center_Y + index);
     }
 
+    /**
+     * 按给定边长测量为正方形
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(button_size, button_size);
     }
 
+    /**
+     * 取消类型绘制返回箭头，确认类型绘制绿色对勾
+     */
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);

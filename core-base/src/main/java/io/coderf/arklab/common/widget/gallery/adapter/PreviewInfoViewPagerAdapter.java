@@ -31,7 +31,7 @@ import io.coderf.arklab.common.utils.download.DownLoadImageService;
 import io.coderf.arklab.common.utils.download.ImageDownLoadCallBack;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.ImageSaveDialog;
-import io.coderf.arklab.common.widget.gallery.PreviewInfoBean;
+import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
 import io.coderf.arklab.common.widget.gallery.PreviewInfoPhotoDialog;
 
 /**
@@ -44,9 +44,18 @@ import io.coderf.arklab.common.widget.gallery.PreviewInfoPhotoDialog;
  */
 public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<PreviewInfoBean, ItemPicShowBinding> {
 
+    /**
+     * 所属信息预览弹窗
+     */
     private final PreviewInfoPhotoDialog previewInfoPhotoDialog;
+    /**
+     * 保存结果回到主线程提示
+     */
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    /**
+     * @param previewInfoPhotoDialog 所属信息预览弹窗
+     */
     public PreviewInfoViewPagerAdapter(PreviewInfoPhotoDialog previewInfoPhotoDialog) {
         this.previewInfoPhotoDialog = previewInfoPhotoDialog;
     }
@@ -129,6 +138,13 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
         }
     }
 
+    /**
+     * 把当前图片保存到本地，并在主线程提示结果
+     *
+     * @param context  上下文
+     * @param path     图片地址
+     * @param fileType 文件类型，为空时按图片处理
+     */
     private void downloadImage(Context context, String path, String fileType) {
         ThreadExecutorBounded.getInstance().execute(new DownLoadImageService(context, path,
                 TextUtils.isEmpty(fileType) ? "image" : fileType, new ImageDownLoadCallBack() {

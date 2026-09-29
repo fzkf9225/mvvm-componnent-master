@@ -27,8 +27,8 @@ import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
-import io.coderf.arklab.common.widget.gallery.PreviewGalleryConfig;
-import io.coderf.arklab.common.widget.gallery.PreviewGalleryZoomConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
+import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.gestures.EclairGestureDetector;
 import io.coderf.arklab.common.widget.gallery.gestures.OnGestureListener;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
@@ -36,7 +36,7 @@ import io.coderf.arklab.common.widget.gallery.listener.DefaultOnDoubleTapListene
 import io.coderf.arklab.common.widget.gallery.scrollerproxy.ScrollerProxy;
 
 /**
- * PhotoViewAttacher 类。
+ * 图片缩放、拖动和惯性滑动的实际控制器，挂在 {@link com.google.android.material.imageview.ShapeableImageView} 上。
  *
  * @author fz
  * @version 1.0
@@ -46,22 +46,61 @@ import io.coderf.arklab.common.widget.gallery.scrollerproxy.ScrollerProxy;
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
         ViewTreeObserver.OnGlobalLayoutListener {
+    /**
+     * 双击缩放动画插值器
+     */
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
+    /**
+     * 越过缩放边界后回弹的插值器
+     */
     static final Interpolator sBounceInterpolator = new DecelerateInterpolator(1.8f);
+    /**
+     * 回弹动画时长，单位毫秒
+     */
     static final int BOUNCE_ZOOM_DURATION = 250;
+    /**
+     * 普通缩放动画时长，单位毫秒
+     */
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
+    /**
+     * 图片左右都未贴边，父布局不应拦截
+     */
     static final int EDGE_NONE = -1;
+    /**
+     * 图片已贴左边缘
+     */
     static final int EDGE_LEFT = 0;
+    /**
+     * 图片已贴右边缘
+     */
     static final int EDGE_RIGHT = 1;
+    /**
+     * 图片宽度不超过视图，左右都算贴边
+     */
     static final int EDGE_BOTH = 2;
 
+    /**
+     * 当前生效的缩放配置
+     */
     private PreviewGalleryZoomConfig mZoomConfig = PreviewGalleryConfig.getGlobalZoomConfig();
 
+    /**
+     * 最小缩放倍数
+     */
     private float mMinScale = DEFAULT_MIN_SCALE;
+    /**
+     * 双击切换到的中等缩放倍数
+     */
     private float mMidScale = DEFAULT_MID_SCALE;
+    /**
+     * 最大缩放倍数，会按图片分辨率再调整
+     */
     private float mMaxScale = DEFAULT_MAX_SCALE;
 
+    /**
+     * 图片贴边后是否允许父布局接管横向滑动
+     */
     private boolean mAllowParentInterceptOnEdge = true;
 
     private static void checkZoomLevels(float minZoom, float midZoom,
@@ -112,36 +151,101 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 被控制的图片视图
+     */
     private WeakReference<ShapeableImageView> mImageView;
 
-    // Gesture Detectors
+    /**
+     * 单击、双击和长按检测
+     */
     private GestureDetector mGestureDetector;
+    /**
+     * 拖动和双指缩放检测
+     */
     private EclairGestureDetector mScaleDragDetector;
 
-    // These are set so we don't keep allocating them on the heap
+    /**
+     * 按 ScaleType 计算出的初始适配矩阵
+     */
     private final Matrix mBaseMatrix = new Matrix();
+    /**
+     * 实际绘制矩阵，由基础矩阵和用户变换矩阵相乘得到
+     */
     private final Matrix mDrawMatrix = new Matrix();
+    /**
+     * 用户拖动、缩放、旋转产生的附加矩阵
+     */
     private final Matrix mSuppMatrix = new Matrix();
+    /**
+     * 当前图片在视图中的显示区域，避免每次分配
+     */
     private final RectF mDisplayRect = new RectF();
+    /**
+     * 读取矩阵分量时的临时数组
+     */
     private final float[] mMatrixValues = new float[9];
 
-    // Listeners
+    /**
+     * 矩阵变化回调
+     */
     private OnMatrixChangedListener mMatrixChangeListener;
+    /**
+     * 点在图片内容上的单击回调
+     */
     private OnPhotoTapListener mPhotoTapListener;
+    /**
+     * 点在整块视图上的单击回调
+     */
     private OnViewTapListener mViewTapListener;
+    /**
+     * 长按回调
+     */
     private OnLongClickListener mLongClickListener;
 
+    /**
+     * 上次布局时图片视图的四边，用于判断尺寸是否变化
+     */
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
+    /**
+     * 正在执行的惯性滑动
+     */
     private FlingRunnable mCurrentFlingRunnable;
+    /**
+     * 正在执行的缩放动画
+     */
     private AnimatedZoomRunnable mCurrentZoomRunnable;
+    /**
+     * 最近一次缩放中心 X
+     */
     private float mLastScaleFocusX;
+    /**
+     * 最近一次缩放中心 Y
+     */
     private float mLastScaleFocusY;
+    /**
+     * 是否记录过缩放中心，回弹时用来保持焦点
+     */
     private boolean mHasScaleFocus;
+    /**
+     * 图片当前贴边状态，见 {@link #EDGE_NONE} 等
+     */
     private int mScrollEdge = EDGE_BOTH;
 
+    /**
+     * 是否允许手势缩放
+     */
     private boolean mZoomEnabled;
+    /**
+     * 图片适配方式，缩放和拖动都在此范围内进行
+     */
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
+    /**
+     * 绑定图片视图，并安装触摸、缩放和布局监听
+     *
+     * @param imageView 要支持缩放的图片
+     */
     @SuppressLint("ClickableViewAccessibility")
     public PhotoViewAttacher(ShapeableImageView imageView) {
         mImageView = new WeakReference<>(imageView);
@@ -201,6 +305,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return mZoomEnabled;
     }
 
+    /**
+     * 解除监听并取消未完成的滑动和缩放动画
+     */
     @SuppressWarnings("deprecation")
     public void cleanup() {
         if (null == mImageView) {
@@ -280,6 +387,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkAndDisplayMatrix();
     }
 
+    /**
+     * 获取仍存活的图片视图。视图已回收时会顺带 {@link #cleanup()}
+     */
     public ShapeableImageView getImageView() {
         ShapeableImageView imageView = null;
 
@@ -318,6 +428,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return mScaleType;
     }
 
+    /**
+     * 平移图片。贴边且允许父布局拦截时，把横向滑动交还给 ViewPager
+     *
+     * @param dx 水平位移
+     * @param dy 垂直位移
+     */
     @Override
     public void onDrag(float dx, float dy) {
         if (mScaleDragDetector.isScaling()) {
@@ -351,6 +467,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 在合法缩放范围内启动惯性滑动。越过最小或最大倍数时不滑动
+     *
+     * @param startX    松手点 X
+     * @param startY    松手点 Y
+     * @param velocityX 水平速度
+     * @param velocityY 垂直速度
+     */
     @Override
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
@@ -365,6 +489,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         imageView.post(mCurrentFlingRunnable);
     }
 
+    /**
+     * 视图尺寸变化后重新计算适配矩阵
+     */
     @Override
     public void onGlobalLayout() {
         ShapeableImageView imageView = getImageView();
@@ -400,6 +527,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 以双指中心缩放图片，并在接近上下限时加入阻尼
+     *
+     * @param scaleFactor 相对当前倍数的增量
+     * @param focusX      缩放中心 X
+     * @param focusY      缩放中心 Y
+     */
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
         if (scaleFactor == 0f || Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
@@ -612,6 +746,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         update();
     }
 
+    /**
+     * 图片或缩放开关变化后，重新计算基础矩阵
+     */
     public void update() {
         ShapeableImageView imageView = getImageView();
 
@@ -634,12 +771,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return new Matrix(getDrawMatrix());
     }
 
+    /**
+     * 基础适配矩阵叠加上用户变换后的绘制矩阵
+     */
     public Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
     }
 
+    /**
+     * 取消正在进行的惯性滑动
+     */
     private void cancelFling() {
         if (null != mCurrentFlingRunnable) {
             mCurrentFlingRunnable.cancelFling();
@@ -647,6 +790,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 取消正在进行的缩放或回弹动画
+     */
     private void cancelZoomAnimation() {
         ShapeableImageView imageView = getImageView();
         if (imageView != null && mCurrentZoomRunnable != null) {
@@ -658,6 +804,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     /**
      * 缩放越过最小/最大倍数时，松手回弹到边界。
      *
+     * @param v 用于投递回弹动画的视图
      * @return true 已提交回弹动画
      */
     private boolean postBounceIfNeeded(View v) {
@@ -690,7 +837,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Helper method that simply checks the Matrix, and then displays the result
+     * 校正图片边界后把矩阵应用到视图
      */
     private void checkAndDisplayMatrix() {
         if (checkMatrixBounds()) {
@@ -713,6 +860,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 把图片拉回视图内，并更新左右贴边状态
+     *
+     * @return 矩阵可用时返回 true
+     */
     private boolean checkMatrixBounds() {
         final ShapeableImageView imageView = getImageView();
         if (null == imageView) {
@@ -828,6 +980,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkMatrixBounds();
     }
 
+    /**
+     * 把矩阵写到图片视图，并通知矩阵变化监听
+     *
+     * @param matrix 绘制矩阵
+     */
     private void setImageViewMatrix(Matrix matrix) {
         ShapeableImageView imageView = getImageView();
         if (null != imageView) {
@@ -916,6 +1073,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     /**
      * 根据图片与视图尺寸动态计算最大缩放倍数。
      * 低像素图使用配置中的 defaultMaxScale；高像素图至少可放大到 1:1，再乘以 extraMaxZoomRatio。
+     *
+     * @param drawableWidth  图片宽度
+     * @param drawableHeight 图片高度
+     * @param viewWidth      可用视图宽度
+     * @param viewHeight     可用视图高度
      */
     private void updateMaxScaleForDrawable(int drawableWidth, int drawableHeight,
                                            float viewWidth, float viewHeight) {
@@ -1013,12 +1175,30 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         void onViewTap(View view, float x, float y);
     }
 
+    /**
+     * 按时间把缩放从当前倍数过渡到目标倍数
+     */
     private class AnimatedZoomRunnable implements Runnable {
 
+        /**
+         * 缩放中心
+         */
         private final float mFocalX, mFocalY;
+        /**
+         * 动画开始时间
+         */
         private final long mStartTime;
+        /**
+         * 起始倍数和目标倍数
+         */
         private final float mZoomStart, mZoomEnd;
+        /**
+         * 动画时长，单位毫秒
+         */
         private final int mDuration;
+        /**
+         * 动画插值器
+         */
         private final Interpolator mInterpolator;
 
         public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
@@ -1067,9 +1247,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * 按惯性把图片平移到边界内
+     */
     private class FlingRunnable implements Runnable {
 
+        /**
+         * 惯性滑动计算器
+         */
         private final ScrollerProxy mScroller;
+        /**
+         * 上一帧的滚动坐标
+         */
         private int mCurrentX, mCurrentY;
 
         public FlingRunnable(Context context) {
@@ -1080,6 +1269,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mScroller.forceFinished(true);
         }
 
+        /**
+         * 按视图和图片显示区域计算可滑动范围后开始惯性滚动
+         *
+         * @param viewWidth  视图可用宽度
+         * @param viewHeight 视图可用高度
+         * @param velocityX  水平速度
+         * @param velocityY  垂直速度
+         */
         public void fling(int viewWidth, int viewHeight, int velocityX,
                           int velocityY) {
             final RectF rect = getDisplayRect();

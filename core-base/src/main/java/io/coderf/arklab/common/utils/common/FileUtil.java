@@ -86,23 +86,31 @@ public final class FileUtil {
     }
 
     /**
-     * 从 URL 中提取文件扩展名（取文件名中第一个 {@code .} 后的部分，忽略 query 参数）。
+     * 从 URL 或路径中提取扩展名（取文件名最后一个 {@code .} 后的部分，忽略 query 和 fragment）。
      *
-     * @param url 文件 URL
+     * @param url 文件 URL 或路径
      * @return 扩展名，无扩展名时返回空字符串
      */
     public static String getUrlFileExtensionName(String url) {
         if (url == null || url.isEmpty()) {
             return "";
         }
-        String[] segments = url.split("/");
-        String filePart = segments[segments.length - 1];
-        String[] nameParts = filePart.split("\\?");
-        if (nameParts.length == 0) {
+        String clean = url;
+        int hash = clean.indexOf('#');
+        if (hash >= 0) {
+            clean = clean.substring(0, hash);
+        }
+        int query = clean.indexOf('?');
+        if (query >= 0) {
+            clean = clean.substring(0, query);
+        }
+        int slash = Math.max(clean.lastIndexOf('/'), clean.lastIndexOf('\\'));
+        String name = slash >= 0 ? clean.substring(slash + 1) : clean;
+        int dot = name.lastIndexOf('.');
+        if (dot < 0 || dot >= name.length() - 1) {
             return "";
         }
-        String[] dotParts = nameParts[0].split("\\.");
-        return dotParts.length >= 2 ? dotParts[1] : "";
+        return name.substring(dot + 1);
     }
 
     /**
@@ -353,7 +361,7 @@ public final class FileUtil {
             index += 1;
             file = new File(baseFile, fileName + "_" + index + extension);
         }
-        return fileName;
+        return index == 0 ? fileName : fileName + "_" + index;
     }
 
     /**
@@ -414,7 +422,7 @@ public final class FileUtil {
             index += 1;
             file = new File(basePath, fileName + "_" + index + extension);
         }
-        return fileName;
+        return index == 0 ? fileName : fileName + "_" + index;
     }
 
     /**
