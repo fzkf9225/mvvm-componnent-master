@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  今日头条密度适配：通过 InitProvider 在 Application 创建前自动完成 AutoSizeConfig.init。
+  宿主可在 application 节点配置 meta-data：design_width_in_dp / design_height_in_dp。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <provider
+            android:name="io.coderf.arklab.core.autosize.InitProvider"
+            android:authorities="${applicationId}.autosize-init-provider"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>
