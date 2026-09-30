@@ -10,7 +10,7 @@ namespace：`io.coderf.arklab.common.facade`
 
 ## 职责
 
-- 聚合依赖：`api` → `core-network` / `core-db` / `core-ui`（进而带上 `core-base` / `core-utils`）
+- 聚合依赖：`api` → `core-network` / `core-db` / `core-ui`（进而带上 `core-base` / `core-utils` / `core-log` / `core-autosize`）
 - 作为业务侧单一依赖入口（不再提供 RequestUi 桥接；统一使用 `RequestUi`）
 - 让旧工程继续只依赖一个坐标即可用完整核心栈
 

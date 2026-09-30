@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   common 仅为 facade（namespace=io.coderf.arklab.common.facade）。
-  权限 / Activity / InitProvider 均在 core-base（namespace=io.coderf.arklab.common），
+  权限 / Activity 在 core-base（namespace=io.coderf.arklab.common），
+  AutoSize InitProvider 在 core-autosize；
   此处勿再声明相对类名组件，否则会解析成 facade.* 导致 ClassNotFoundException。
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" />

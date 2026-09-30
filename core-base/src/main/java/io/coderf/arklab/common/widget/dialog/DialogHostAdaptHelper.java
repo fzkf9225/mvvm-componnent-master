@@ -10,8 +10,8 @@ import android.util.DisplayMetrics;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.coderf.arklab.common.autosize.AutoSizeCompat;
-import io.coderf.arklab.common.autosize.internal.CustomAdapt;
+import io.coderf.arklab.core.autosize.AutoSizeCompat;
+import io.coderf.arklab.core.autosize.CustomAdapt;
 
 /**
  * Dialog 横屏 inflate 密度对齐：跟随宿主 {@link CustomAdapt}，避免今日头条适配下字号/高度异常。
@@ -68,8 +68,8 @@ public final class DialogHostAdaptHelper {
             if (savedMetrics != null) {
                 resources.getDisplayMetrics().setTo(savedMetrics);
                 if (savedConfiguration != null) {
-                    //noinspection deprecation
-                    resources.updateConfiguration(savedConfiguration, resources.getDisplayMetrics());
+                    // 直接还原 Configuration 字段，避免 deprecated updateConfiguration
+                    resources.getConfiguration().setTo(savedConfiguration);
                 }
             }
         }

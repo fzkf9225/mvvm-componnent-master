@@ -17,8 +17,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.autosize.AutoSize;
-import io.coderf.arklab.common.autosize.AutoSizeCompat;
+import io.coderf.arklab.core.autosize.AutoSize;
+import io.coderf.arklab.core.autosize.AutoSizeCompat;
 
 /**
  * Form 日期/时间的 Material3 日历、时钟模式。

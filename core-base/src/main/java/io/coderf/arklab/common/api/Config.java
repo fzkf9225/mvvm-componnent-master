@@ -22,8 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.autosize.AutoSize;
-import io.coderf.arklab.common.autosize.AutoSizeConfig;
+import io.coderf.arklab.core.autosize.AutoSize;
+import io.coderf.arklab.core.autosize.AutoSizeConfig;
 import io.coderf.arklab.common.glide.StableImageCache;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.CrashHandler;

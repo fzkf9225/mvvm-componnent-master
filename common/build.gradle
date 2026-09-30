@@ -43,7 +43,7 @@ dependencies {
     api project(':core-network')
     api project(':core-db')
     api project(':core-ui')
-    // core-base / core-utils �?core-network、core-ui 传�?
+    // core-base / core-utils / core-log / core-autosize 由 core-network、core-ui 传递
 
     implementation platform(libs.kotlin.bom)
     implementation libs.androidx.core.ktx

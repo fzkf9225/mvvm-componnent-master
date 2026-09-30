@@ -73,9 +73,10 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 
 ## 依赖
 
-- `api` → `:core-utils`、`:core-ui`、`:core-log`
+- `api` → `:core-utils`、`:core-ui`、`:core-log`、`:core-autosize`
 
 业务侧通常通过 `:common` facade 间接依赖，无需单独拆 R。
+屏幕适配实现已下沉到 [`core-autosize`](../core-autosize/README.md)（包名 `io.coderf.arklab.core.autosize`）。
 
 ---
 

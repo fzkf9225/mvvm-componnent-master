@@ -27,7 +27,7 @@
 
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
-2. 自动集成`今日头条UI适配方案`
+2. 自动集成`今日头条UI适配方案`（独立模块 `:core-autosize`，经 `core-base` 传递）
 3. 网络请求封装：`OkHttp`+`RxJava`+`Retrofit`，以及 `Flow`；**推荐**新 API `DefaultNetworkRepository`（旧 `RepositoryImpl` / `FlowRepositoryImpl` 已 `@Deprecated`）
 4. 本地数据库封装，使用`Room`+`RxJava` / `Flow`（`core-db`）
 5. 轻量化存储框架，使用`MMKV`，替换自带的`SharedPreferences`

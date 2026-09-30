@@ -111,12 +111,7 @@
             android:exported="true"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
-        <provider
-            android:name="io.coderf.arklab.common.autosize.InitProvider"
-            android:authorities="${applicationId}.autosize-init-provider"
-            android:enabled="true"
-            android:exported="false" />
+        <!-- InitProvider 已迁至 :core-autosize -->
     </application>
 
 </manifest>

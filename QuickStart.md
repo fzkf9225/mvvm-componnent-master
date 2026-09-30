@@ -46,6 +46,7 @@ commonVersion = "4.6.0"
 coreVersion = "1.2.0"
 coreBase = "1.2.0"
 coreUtils = "1.1.1"
+coreAutosize = "1.0.1"
 [libraries]
 # 基础：common 为 facade；本轮 common 未升版号，请显式钉 core-*（见 UPGRADE §2.1）
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
@@ -54,6 +55,7 @@ base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "c
 base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreVersion" }
 base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }
 base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreUtils" }
+base-core-autosize = { module = "io.coderf.arklab.core:autosize", version.ref = "coreAutosize" }
 base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
 base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }

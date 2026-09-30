@@ -13,10 +13,10 @@ import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 
 /**
- * Dialog 横屏 inflate 密度对齐：运行时若 classpath 存在 core-base 的 AutoSize / CustomAdapt，
+ * Dialog 横屏 inflate 密度对齐：运行时若 classpath 存在 core-autosize 的 AutoSize / CustomAdapt，
  * 则跟随宿主密度，避免今日头条适配下字号/高度异常；否则直接 inflate。
  * <p>
- * 本模块不编译依赖 core-base，通过反射可选接入。竖屏不改密度。
+ * 本模块不编译依赖 core-autosize，通过反射可选接入。竖屏不改密度。
  *
  * @author fz
  * @version 1.0
@@ -29,9 +29,9 @@ public final class MediaDialogHostAdaptHelper {
     public static final float DEFAULT_DIALOG_ADAPT_SIZE_DP = 360f;
 
     private static final String CUSTOM_ADAPT =
-            "io.coderf.arklab.common.autosize.internal.CustomAdapt";
+            "io.coderf.arklab.core.autosize.CustomAdapt";
     private static final String AUTO_SIZE_COMPAT =
-            "io.coderf.arklab.common.autosize.AutoSizeCompat";
+            "io.coderf.arklab.core.autosize.AutoSizeCompat";
 
     private MediaDialogHostAdaptHelper() {
     }
@@ -65,8 +65,7 @@ public final class MediaDialogHostAdaptHelper {
             if (savedMetrics != null) {
                 resources.getDisplayMetrics().setTo(savedMetrics);
                 if (savedConfiguration != null) {
-                    //noinspection deprecation
-                    resources.updateConfiguration(savedConfiguration, resources.getDisplayMetrics());
+                    resources.getConfiguration().setTo(savedConfiguration);
                 }
             }
         }

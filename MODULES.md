@@ -19,7 +19,7 @@ app（组装：Hilt / Demo）
   └─ common（facade）── api ──► core-network / core-db / core-ui
                                       │
                                       ▼
-                               core-base ← core-utils
+                               core-base ← core-utils / core-log / core-autosize
 ```
 
 **业务侧推荐入口：**
@@ -45,7 +45,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 | 职责 | 依赖聚合（facade，统一入口） |
 | 包名 / namespace | `io.coderf.arklab.common.facade` |
 | 何时用 | 宿主 / 业务模块统一依赖此入口即可 |
-| 注意 | Manifest 不要再声明相对类名组件；权限与 `InitProvider` 等在 `core-base` |
+| 注意 | Manifest 不要再声明相对类名组件；权限与 Activity 在 `core-base`，`InitProvider` 在 `core-autosize` |
 
 ### `core-base`
 
@@ -104,6 +104,17 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 | 现状 | 已从 `core-base` 下沉原 `Extensions.kt`；`DrawableUtil` 等带 R / 重 UI 的仍留在 `core-base` |
 | 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
 | 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
+
+### `core-autosize`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | 今日头条密度适配（AndroidAutoSize）：`AutoSize` / `AutoSizeConfig` / `InitProvider` |
+| Maven | `io.coderf.arklab.core:autosize:1.0.1` |
+| namespace | `io.coderf.arklab.core.autosize` |
+| Java 包 | `io.coderf.arklab.core.autosize`（与 namespace / Maven 对齐；子包 `strategy` / `lifecycle` / `external` / `unit` / `util`） |
+| 何时用 | 一般经 `core-base` / `common` 间接依赖；仅需适配时可显式依赖本模块 |
+| 开关 | `Config.setAutoSizeEnabled`（须在 `Config.init` 前）；宿主 meta：`design_width_in_dp` / `design_height_in_dp` |
 
 ---
 
@@ -164,7 +175,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 ```bash
 ./gradlew :common:publish
-./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish :core-log:publish
+./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish :core-log:publish :core-autosize:publish
 ```
 
 | 模块 | 坐标 |
@@ -176,6 +187,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | core-ui | `io.coderf.arklab.core:ui:1.2.0` |
 | core-utils | `io.coderf.arklab.core:utils:1.1.1` |
 | core-log | `io.coderf.arklab.core:log:1.1.0` |
+| core-autosize | `io.coderf.arklab.core:autosize:1.0.1` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.1.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.1` |
 | commonmedia | `io.coderf.arklab.media:media:3.5.0` |
