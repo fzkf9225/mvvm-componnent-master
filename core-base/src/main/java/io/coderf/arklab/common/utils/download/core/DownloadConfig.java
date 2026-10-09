@@ -110,8 +110,7 @@ public class DownloadConfig {
          * 非 Activity 场景：自动解析当前栈顶 Activity 用于权限申请。
          */
         public Builder(@NonNull Context context, @NonNull String fileUrl) {
-            Activity activity = resolveActivity(context);
-            this.mContext = activity;
+            this.mContext = resolveActivity(context);
             this.appContext = context.getApplicationContext();
             this.fileUrl = fileUrl;
         }

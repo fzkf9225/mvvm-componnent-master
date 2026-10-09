@@ -19,7 +19,7 @@ import io.coderf.arklab.common.utils.common.FileUtil;
  * <p>
  * 配合 {@link io.coderf.arklab.common.utils.download.DownloadManager#downloadBatch(BatchDownloadConfig)} 使用。
  *
- * @see DownloadManager#downloadBatch(BatchDownloadConfig)
+ * @see io.coderf.arklab.common.utils.download.DownloadManager#downloadBatch(BatchDownloadConfig)
  *
  * @author fz
  * @version 1.0
