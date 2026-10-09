@@ -30,13 +30,22 @@ public class BatchDownloadConfig {
     /** 默认串行下载，与历史行为一致 */
     public static final int DEFAULT_MAX_CONCURRENCY = 1;
 
+    /** 权限申请、对话框等需要 Activity 的场景 */
     private final Activity context;
+    /** 文件路径、通知等长生命周期操作，避免 Activity 泄漏 */
     private final Context appContext;
+    /** 待下载的 URL 列表（构造时已拷贝，防外部修改） */
     private final List<String> urlList;
+    /** 本地保存目录，未指定时由 {@link Builder#build()} 填充默认下载目录 */
     private final String saveBasePath;
+    /** 是否拦截同一 URL 的并发/重复下载 */
     private final boolean verifyRepeatDownload;
+    /** 附加 HTTP 请求头（如 Authorization），可为 null */
     private final Map<String, String> headers;
+    /** 并发下载数，默认 1（串行） */
     private final int maxConcurrency;
+    /** 下载完成后是否展示默认 Toast 提示 */
+    private final boolean showToast;
 
     private BatchDownloadConfig(Builder builder) {
         this.context = builder.context;
@@ -46,6 +55,7 @@ public class BatchDownloadConfig {
         this.verifyRepeatDownload = builder.verifyRepeatDownload;
         this.headers = builder.headers;
         this.maxConcurrency = builder.maxConcurrency;
+        this.showToast = builder.showToast;
     }
 
     public Activity getContext() {
@@ -76,6 +86,10 @@ public class BatchDownloadConfig {
         return maxConcurrency;
     }
 
+    public boolean isShowToast() {
+        return showToast;
+    }
+
     /**
      * {@link BatchDownloadConfig} 构建器。
      */
@@ -87,6 +101,7 @@ public class BatchDownloadConfig {
         private boolean verifyRepeatDownload = DownloadConfig.DEFAULT_VERIFY_REPEAT_DOWNLOAD;
         private Map<String, String> headers;
         private int maxConcurrency = DEFAULT_MAX_CONCURRENCY;
+        private boolean showToast = DownloadConfig.DEFAULT_SHOW_TOAST;
 
         public Builder(@NonNull Activity context, @NonNull List<String> urlList) {
             this.context = context;
@@ -129,6 +144,15 @@ public class BatchDownloadConfig {
          */
         public Builder setMaxConcurrency(int maxConcurrency) {
             this.maxConcurrency = Math.max(1, maxConcurrency);
+            return this;
+        }
+
+        /**
+         * 每个文件下载完成后是否展示默认的"文件已保存至..." Toast，
+         * 默认 {@link DownloadConfig#DEFAULT_SHOW_TOAST}。
+         */
+        public Builder setShowToast(boolean showToast) {
+            this.showToast = showToast;
             return this;
         }
 

@@ -18,6 +18,7 @@
         <domain includeSubdomains="true">q8.itc.cn/images01</domain>
         <domain includeSubdomains="true">ww1.sinaimg.cn</domain>
         <domain includeSubdomains="true">img2.baidu.com</domain>
+        <domain includeSubdomains="true">softfile.3g.qq.com</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

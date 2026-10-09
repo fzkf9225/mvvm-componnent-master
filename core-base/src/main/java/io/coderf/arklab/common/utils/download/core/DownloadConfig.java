@@ -32,17 +32,27 @@ public class DownloadConfig {
     /** 普通文件下载默认不拦截重复 URL；更新场景请使用 {@link UpdateConfig}（默认开启） */
     public static final boolean DEFAULT_VERIFY_REPEAT_DOWNLOAD = false;
 
+    /** 下载完成后默认展示"文件已保存至..." Toast */
+    public static final boolean DEFAULT_SHOW_TOAST = true;
+
     /** 权限申请、对话框等需要 Activity 的场景 */
     private final Activity mContext;
     /** 文件路径、通知等长生命周期操作，避免 Activity 泄漏 */
     private final Context appContext;
+    /** 下载文件的完整 URL */
     private final String fileUrl;
+    /** 本地保存目录，未指定时由 {@link Builder#build()} 填充默认下载目录 */
     private final String saveBasePath;
     /** 可为 null，null 时由 {@link DownloadObservable} 从 URL 或响应头推断文件名 */
     private final String saveFileName;
+    /** 是否拦截同一 URL 的并发/重复下载 */
     private final boolean verifyRepeatDownload;
+    /** 附加 HTTP 请求头（如 Authorization），可为 null */
     private final Map<String, String> headers;
+    /** 下载进度/结果回调，可为 null */
     private final DownloadListener downloadListener;
+    /** 下载完成后是否展示默认 Toast 提示 */
+    private final boolean showToast;
 
     public DownloadConfig(Builder builder) {
         this.mContext = builder.mContext;
@@ -53,6 +63,7 @@ public class DownloadConfig {
         this.verifyRepeatDownload = builder.verifyRepeatDownload;
         this.headers = builder.headers;
         this.downloadListener = builder.downloadListener;
+        this.showToast = builder.showToast;
     }
 
     /** 用于权限申请、对话框等需要 Activity 的场景 */
@@ -89,6 +100,10 @@ public class DownloadConfig {
         return downloadListener;
     }
 
+    public boolean isShowToast() {
+        return showToast;
+    }
+
     public static class Builder {
         private final Activity mContext;
         private final Context appContext;
@@ -98,6 +113,7 @@ public class DownloadConfig {
         private boolean verifyRepeatDownload = DEFAULT_VERIFY_REPEAT_DOWNLOAD;
         private Map<String, String> headers;
         private DownloadListener downloadListener;
+        private boolean showToast = DEFAULT_SHOW_TOAST;
 
         /** @param context 用于权限申请的 Activity */
         public Builder(@NonNull Activity context, @NonNull String fileUrl) {
@@ -154,6 +170,14 @@ public class DownloadConfig {
 
         public Builder setDownloadListener(@Nullable DownloadListener downloadListener) {
             this.downloadListener = downloadListener;
+            return this;
+        }
+
+        /**
+         * 下载完成后是否展示默认的"文件已保存至..." Toast，默认 {@link #DEFAULT_SHOW_TOAST}。
+         */
+        public Builder setShowToast(boolean showToast) {
+            this.showToast = showToast;
             return this;
         }
 

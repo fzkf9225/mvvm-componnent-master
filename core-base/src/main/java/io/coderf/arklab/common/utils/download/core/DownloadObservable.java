@@ -52,18 +52,17 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private final DownloadListener downloadListener;
+    /** 下载完成后是否展示默认的"文件已保存至..." Toast */
+    private final boolean showToast;
 
-    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, String saveFileName) {
-        this(interceptor, fileUrl, tempFile, saveBasePath, saveFileName, null);
-    }
-
-    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, String saveFileName, DownloadListener downloadListener) {
+    public DownloadObservable(DownloadInterceptor interceptor, String fileUrl, File tempFile, String saveBasePath, String saveFileName, DownloadListener downloadListener, boolean showToast) {
         this.tempFile = tempFile;
         this.interceptor = interceptor;
         this.saveBasePath = saveBasePath;
         this.saveFileName = saveFileName;
         this.fileUrl = fileUrl;
         this.downloadListener = downloadListener;
+        this.showToast = showToast;
         downloadNotificationUtil = new DownloadNotificationUtil(BaseApplication.getInstance());
         mainHandler.post(() -> {
             downloadNotificationUtil.showNotification(fileUrl.hashCode());
@@ -129,25 +128,18 @@ public class DownloadObservable implements ObservableOnSubscribe<File> {
                 fileName = saveFileName;
             }
             File newFile = new File(saveBasePath, fileName);
-            boolean renameSuccess = tempFile.renameTo(newFile);
+            // 重命名失败（如目标文件被占用）时仍以临时文件作为下载结果
+            File resultFile = tempFile.renameTo(newFile) ? newFile : tempFile;
             mainHandler.post(() -> downloadNotificationUtil.cancelNotification(fileUrl.hashCode()));
-            if (renameSuccess) {
-                mainHandler.post(() -> {
-                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + newFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    if (downloadListener != null) {
-                        downloadListener.onFinish(newFile);
-                    }
-                });
-                emitter.onNext(newFile);
-            } else {
-                mainHandler.post(() -> {
-                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + tempFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    if (downloadListener != null) {
-                        downloadListener.onFinish(tempFile);
-                    }
-                });
-                emitter.onNext(tempFile);
-            }
+            mainHandler.post(() -> {
+                if (showToast) {
+                    Toast.makeText(BaseApplication.getInstance(), "文件已保存至" + resultFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                }
+                if (downloadListener != null) {
+                    downloadListener.onFinish(resultFile);
+                }
+            });
+            emitter.onNext(resultFile);
             emitter.onComplete();
         } catch (IOException e) {
             mainHandler.post(() -> {

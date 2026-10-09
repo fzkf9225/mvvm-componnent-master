@@ -43,21 +43,24 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     private final boolean verifyRepeatDownload;
     private final DownloadListener downloadListener;
     private final Map<String, String> headers;
+    /** 下载完成后是否展示默认的"文件已保存至..." Toast */
+    private final boolean showToast;
 
     public ApkUpdateListener(Activity mContext, String apkUrl, String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload) {
-        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, null, null);
+        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, null, null, true);
     }
 
     public ApkUpdateListener(Activity mContext, String apkUrl, String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload, Map<String, String> headers) {
-        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, headers, null);
+        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, headers, null, true);
     }
 
     public ApkUpdateListener(Activity mContext, String apkUrl, String saveFileName, List<String> downloadMap, boolean verifyRepeatDownload, DownloadListener downloadListener) {
-        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, null, downloadListener);
+        this(mContext, apkUrl, saveFileName, downloadMap, verifyRepeatDownload, null, downloadListener, true);
     }
 
     public ApkUpdateListener(Activity mContext, String apkUrl, String saveFileName, List<String> downloadMap,
-                             boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener) {
+                             boolean verifyRepeatDownload, Map<String, String> headers, DownloadListener downloadListener,
+                             boolean showToast) {
         this.mContext = mContext;
         this.apkUrl = apkUrl;
         this.saveFileName = saveFileName;
@@ -65,6 +68,7 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
         this.verifyRepeatDownload = verifyRepeatDownload;
         this.headers = headers;
         this.downloadListener = downloadListener;
+        this.showToast = showToast;
     }
 
     @Override
@@ -114,7 +118,8 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                         FileUtil.getDefaultDownloadDir(mContext.getApplicationContext()),
                         saveFileName,
                         headers,
-                        downloadListener
+                        downloadListener,
+                        showToast
                 )
                 .doFinally(() -> downloadMap.remove(apkUrl))
                 .subscribe(file -> DownloadUtil.installApk(mContext.getApplicationContext(), file), throwable -> {

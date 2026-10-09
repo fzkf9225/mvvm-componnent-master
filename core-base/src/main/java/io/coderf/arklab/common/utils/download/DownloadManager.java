@@ -113,6 +113,7 @@ public class DownloadManager {
                                 .setSaveBasePath(config.getSaveBasePath())
                                 .setVerifyRepeatDownload(config.isVerifyRepeatDownload())
                                 .setHeaders(config.getHeaders())
+                                .setShowToast(config.isShowToast())
                                 .build()), maxConcurrency)
                 .toList()
                 .subscribeOn(Schedulers.io());
@@ -219,7 +220,8 @@ public class DownloadManager {
                         config.getSaveBasePath(),
                         config.getSaveFileName(),
                         config.getHeaders(),
-                        config.getDownloadListener())
+                        config.getDownloadListener(),
+                        config.isShowToast())
                 .doFinally(() -> mDownloadingUrls.remove(fileUrl));
     }
 }

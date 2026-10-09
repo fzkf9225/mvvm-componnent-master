@@ -94,7 +94,8 @@ public class UpdateManager {
                 config.getSaveBasePath(),
                 config.isVerifyRepeatDownload(),
                 config.getHeaders(),
-                config.getDownloadListener());
+                config.getDownloadListener(),
+                config.isShowToast());
     }
 
     /**
@@ -112,7 +113,8 @@ public class UpdateManager {
                 config.isCancelEnable(),
                 config.isVerifyRepeatDownload(),
                 config.getHeaders(),
-                config.getDownloadListener());
+                config.getDownloadListener(),
+                config.isShowToast());
     }
 
     // ========== 便捷方法（向后兼容） ==========
@@ -145,7 +147,7 @@ public class UpdateManager {
     public Disposable update(Activity context, String apkUrl, String saveFileName,
                              boolean verifyRepeatDownload, Map<String, String> headers,
                              DownloadListener downloadListener) {
-        return executeUpdate(context, apkUrl, saveFileName, null, verifyRepeatDownload, headers, downloadListener);
+        return executeUpdate(context, apkUrl, saveFileName, null, verifyRepeatDownload, headers, downloadListener, true);
     }
 
     public void checkUpdateInfo(DownloadConfig config, String updateMsg,
@@ -230,7 +232,7 @@ public class UpdateManager {
                                 boolean cancelEnable, boolean verifyRepeatDownload,
                                 Map<String, String> headers, DownloadListener downloadListener) {
         showUpdateDialog(context, apkUrl, saveFileName, updateMsg, currentVersionName,
-                cancelEnable, verifyRepeatDownload, headers, downloadListener);
+                cancelEnable, verifyRepeatDownload, headers, downloadListener, true);
     }
 
     // ========== 内部实现 ==========
@@ -238,7 +240,7 @@ public class UpdateManager {
     /** 静默更新核心逻辑：校验 → 权限 defer → 下载 → 安装 */
     private Disposable executeUpdate(Activity context, String apkUrl, String saveFileName, String saveBasePath,
                                      boolean verifyRepeatDownload, Map<String, String> headers,
-                                     DownloadListener downloadListener) {
+                                     DownloadListener downloadListener, boolean showToast) {
         try {
             DownloadSupport.validateUrl(apkUrl);
             DownloadSupport.checkRepeatDownload(mDownloadingUrls, apkUrl, verifyRepeatDownload);
@@ -254,7 +256,7 @@ public class UpdateManager {
         return DownloadPermissionHelper.deferWithStoragePermission(
                 context,
                 DownloadPermissionHelper.REQUEST_CODE_UPDATE,
-                () -> enqueueUpdate(context, apkUrl, fileName, basePath, headers, downloadListener))
+                () -> enqueueUpdate(context, apkUrl, fileName, basePath, headers, downloadListener, showToast))
                 .subscribe(
                         file -> DownloadUtil.installApk(context.getApplicationContext(), file),
                         throwable -> handleUpdateFailure(context, throwable));
@@ -262,19 +264,20 @@ public class UpdateManager {
 
     private Observable<File> enqueueUpdate(Activity context, String apkUrl, String saveFileName,
                                            String saveBasePath, Map<String, String> headers,
-                                           DownloadListener downloadListener) {
+                                           DownloadListener downloadListener, boolean showToast) {
         mDownloadingUrls.add(apkUrl);
-        return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener)
+        return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener, showToast)
                 .doFinally(() -> mDownloadingUrls.remove(apkUrl));
     }
 
     private void showUpdateDialog(Activity context, String apkUrl, String saveFileName,
                                   String updateMsg, String currentVersionName,
                                   boolean cancelEnable, boolean verifyRepeatDownload,
-                                  Map<String, String> headers, DownloadListener downloadListener) {
+                                  Map<String, String> headers, DownloadListener downloadListener,
+                                  boolean showToast) {
         new UpdateMessageDialog(context)
                 .setOnUpdateListener(new ApkUpdateListener(context, apkUrl, saveFileName,
-                        mDownloadingUrls, verifyRepeatDownload, headers, downloadListener))
+                        mDownloadingUrls, verifyRepeatDownload, headers, downloadListener, showToast))
                 .setCanCancel(cancelEnable)
                 .setUpdateMsgString(updateMsg)
                 .setVersionName(currentVersionName)

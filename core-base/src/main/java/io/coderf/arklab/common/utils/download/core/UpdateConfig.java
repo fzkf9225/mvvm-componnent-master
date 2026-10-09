@@ -131,6 +131,12 @@ public class UpdateConfig extends DownloadConfig {
         }
 
         @Override
+        public Builder setShowToast(boolean showToast) {
+            super.setShowToast(showToast);
+            return this;
+        }
+
+        @Override
         public UpdateConfig build() {
             applySaveFileNameDefault(DEFAULT_APK_FILE_NAME);
             applyDefaults();
