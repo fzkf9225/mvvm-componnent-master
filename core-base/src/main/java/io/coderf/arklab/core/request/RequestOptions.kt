@@ -9,8 +9,11 @@ package io.coderf.arklab.core.request
  * @created 2026/8/27 15:07
  */
 data class RequestOptions(
+    /** 是否展示加载dialog */
     val showLoading: Boolean = true,
+    /** 加载框文字内容 */
     val loadingMessage: String = "正在加载，请稍后...",
+    /** 是否显示加载框文中尾部追加动态...的效果 */
     val enableDynamicEllipsis: Boolean = true,
     /** null 表示使用全局默认重试策略 */
     val retryPolicy: RetryPolicy? = null,

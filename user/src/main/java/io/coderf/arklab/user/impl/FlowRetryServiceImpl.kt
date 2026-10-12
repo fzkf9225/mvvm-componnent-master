@@ -29,9 +29,11 @@ import javax.inject.Singleton
 class FlowRetryServiceImpl @Inject constructor(
     private val userApiService: UserApiService
 ) : FlowRetryService, TokenRefresher {
-
+    /** 最大重试次数 */
     private var maxRetries = ConstantsHelper.RETRY_WHEN_MAX_COUNT
+    /** 当前重试次数 */
     private val retryCount = AtomicInteger(0)
+    /** 刷新Token锁 */
     private val refreshFlightLock = Any()
 
     @Volatile
