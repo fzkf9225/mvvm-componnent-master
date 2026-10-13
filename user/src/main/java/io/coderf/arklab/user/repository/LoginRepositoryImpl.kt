@@ -1,9 +1,8 @@
 package io.coderf.arklab.user.repository
 
 import io.coderf.arklab.core.network.BaseNetworkRepository
-import io.coderf.arklab.core.request.RequestOptions
-import io.coderf.arklab.core.request.RequestResult
-import io.coderf.arklab.core.request.TokenRefresher
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean

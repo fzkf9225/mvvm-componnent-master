@@ -15,7 +15,9 @@ import io.coderf.arklab.demo.bean.RequestNotificationBean
  */
 class KtDemoPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>() {
+) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>(
+    boundApiService = api
+) {
 
     override suspend fun fetchPage(
         page: Int,

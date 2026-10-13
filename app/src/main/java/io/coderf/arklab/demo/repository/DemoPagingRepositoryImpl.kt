@@ -1,7 +1,7 @@
 package io.coderf.arklab.demo.repository
 
 import io.coderf.arklab.core.network.NetworkPagingRepository
-import io.coderf.arklab.core.request.TokenRefresher
+import io.coderf.arklab.core.network.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
@@ -19,7 +19,8 @@ class DemoPagingRepositoryImpl(
     private val api: ApiServiceHelper,
     tokenRefresher: TokenRefresher? = null
 ) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>(
-    tokenRefresher = tokenRefresher
+    tokenRefresher = tokenRefresher,
+    boundApiService = api
 ) {
 
     override suspend fun fetchPage(page: Int, pageSize: Int, query: RequestNotificationBean): List<NotificationMessageBean> {

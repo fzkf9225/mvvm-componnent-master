@@ -3,9 +3,8 @@ package io.coderf.arklab.user.impl
 import io.coderf.arklab.common.api.ApiRetrofit
 import io.coderf.arklab.common.api.ConstantsHelper
 import io.coderf.arklab.common.base.BaseException
-import io.coderf.arklab.common.inter.FlowRetryService
 import io.coderf.arklab.common.utils.log.LogUtil
-import io.coderf.arklab.core.request.TokenRefresher
+import io.coderf.arklab.core.network.TokenRefresher
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import kotlinx.coroutines.CompletableDeferred
@@ -15,7 +14,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * 协程 Token 刷新：同时实现旧 [FlowRetryService] 与新 [TokenRefresher]。
+ * 协程 Token 刷新：仅实现新版 [TokenRefresher]。
+ *
+ * 旧 [io.coderf.arklab.common.inter.FlowRetryService] 的兼容方法由 [TokenRefresher]
+ * 默认实现委托（shouldRetry → shouldRefresh、refreshToken → refresh），框架在
+ * `ApiRetrofit.Builder.setTokenRefresher` 时自动适配旧 Flow 栈，业务侧无需双接口实现。
  *
  * Single-Flight：[CompletableDeferred] 多路 await，等价 RxJava `share()`，
  * 避免并发 401 时重复消费 refresh_token。
@@ -23,12 +26,12 @@ import javax.inject.Singleton
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/13
  */
 @Singleton
 class FlowRetryServiceImpl @Inject constructor(
     private val userApiService: UserApiService
-) : FlowRetryService, TokenRefresher {
+) : TokenRefresher {
     /** 最大重试次数 */
     private var maxRetries = ConstantsHelper.RETRY_WHEN_MAX_COUNT
     /** 当前重试次数 */
@@ -38,8 +41,6 @@ class FlowRetryServiceImpl @Inject constructor(
 
     @Volatile
     private var refreshFlight: CompletableDeferred<Unit>? = null
-
-    override suspend fun shouldRetry(throwable: Throwable): Boolean = shouldRefresh(throwable)
 
     override suspend fun shouldRefresh(throwable: Throwable): Boolean {
         return when {
@@ -70,8 +71,6 @@ class FlowRetryServiceImpl @Inject constructor(
             }
         }
     }
-
-    override suspend fun refreshToken() = refresh()
 
     override suspend fun refresh() {
         val existing: CompletableDeferred<Unit>?
@@ -133,9 +132,11 @@ class FlowRetryServiceImpl @Inject constructor(
         retryCount.set(0)
     }
 
+    /** 兼容旧 Flow 栈外部次数判定：与内部 [shouldRefresh] 计数共用同一上限 */
     override fun setMaxRetryCount(maxRetryCount: Int) {
         this.maxRetries = maxRetryCount
     }
 
+    /** 兼容旧 Flow 栈外部次数判定：返回与内部 [shouldRefresh] 计数一致的重试上限 */
     override fun getMaxRetryCount(): Int = maxRetries
 }

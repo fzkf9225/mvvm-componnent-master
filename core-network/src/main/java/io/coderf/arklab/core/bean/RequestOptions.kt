@@ -1,4 +1,4 @@
-package io.coderf.arklab.core.request
+package io.coderf.arklab.core.bean
 
 /**
  * 统一请求选项，替代旧版 [io.coderf.arklab.common.bean.ApiRequestOptions] 的多构造与散落参数。
@@ -22,7 +22,7 @@ data class RequestOptions(
     /** 是否把业务错误交给 RequestUi 展示（Toast / onErrorCode 等） */
     val deliverErrorToUi: Boolean = true,
     /**
-     * 是否启用 [TokenRefresher] 鉴权刷新重试。
+     * 是否启用 [io.coderf.arklab.core.network.TokenRefresher] 鉴权刷新重试。
      * 登录 / 验证码 / 刷新 token 自身等请求应设为 false，避免递归。
      */
     val enableAuthRetry: Boolean = true

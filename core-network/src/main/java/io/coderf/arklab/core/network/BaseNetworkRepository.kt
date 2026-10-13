@@ -4,7 +4,6 @@ import io.coderf.arklab.common.inter.ApiRetrofitService
 import io.coderf.arklab.common.repository.IRepository
 import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestUi
-import io.coderf.arklab.core.request.TokenRefresher
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import org.reactivestreams.Subscription

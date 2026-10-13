@@ -3,7 +3,7 @@ package io.coderf.arklab.demo.viewmodel
 import android.app.Application
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.core.network.NetworkFlowPagingViewModel
-import io.coderf.arklab.core.request.RequestResult
+import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean

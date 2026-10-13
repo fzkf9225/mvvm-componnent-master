@@ -1,14 +1,13 @@
 package io.coderf.arklab.core.network
 
 import io.coderf.arklab.common.inter.ApiRetrofitService
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.bean.RetryPolicy
 import io.coderf.arklab.core.request.AppError
 import io.coderf.arklab.core.request.NoOpRequestUi
-import io.coderf.arklab.core.request.RequestOptions
-import io.coderf.arklab.core.request.RequestResult
 import io.coderf.arklab.core.request.RequestUi
 import io.coderf.arklab.core.request.RequestUiHost
-import io.coderf.arklab.core.request.RetryPolicy
-import io.coderf.arklab.core.request.TokenRefresher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

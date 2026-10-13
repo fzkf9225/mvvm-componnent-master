@@ -1,9 +1,9 @@
 package io.coderf.arklab.demo.repository
 
 import io.coderf.arklab.core.network.BaseNetworkRepository
-import io.coderf.arklab.core.request.RequestOptions
-import io.coderf.arklab.core.request.RequestResult
-import io.coderf.arklab.core.request.TokenRefresher
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.network.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
@@ -30,7 +30,10 @@ import kotlinx.coroutines.flow.Flow
 class SampleCoreNetworkRepository(
     private val api: ApiServiceHelper,
     tokenRefresher: TokenRefresher? = null
-) : BaseNetworkRepository(tokenRefresher = tokenRefresher) {
+) : BaseNetworkRepository(
+    tokenRefresher = tokenRefresher,
+    boundApiService = api
+) {
 
     fun requestNewsDetail(
         id: String,

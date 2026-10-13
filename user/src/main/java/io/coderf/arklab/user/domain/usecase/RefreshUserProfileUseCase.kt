@@ -1,8 +1,7 @@
 package io.coderf.arklab.user.domain.usecase
 
-import io.coderf.arklab.core.request.RequestResult
+import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.request.RequestUi
-import io.coderf.arklab.core.request.TokenRefresher
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.domain.repository.UserProfileRepository
 import io.coderf.arklab.user.repository.UserRepositoryImpl

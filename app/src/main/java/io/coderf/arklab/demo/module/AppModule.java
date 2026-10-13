@@ -9,8 +9,8 @@ import dagger.hilt.components.SingletonComponent;
 import io.coderf.arklab.base.api.AppPropertiesConfig;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.inter.ErrorService;
-import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
+import io.coderf.arklab.core.network.TokenRefresher;
 import io.coderf.arklab.demo.api.ApiServiceHelper;
 import io.coderf.arklab.ui.api.FileApiService;
 
@@ -32,14 +32,14 @@ public class AppModule {
             AppPropertiesConfig config,
             ErrorService errorService,
             RetryService retryService,
-            FlowRetryService flowRetryService
+            TokenRefresher tokenRefresher
     ) {
         return new ApiRetrofit
                 .Builder(application)
                 .setSingleInstance(false)
                 .setBaseUrl(config.getBaseUrl())
                 .setRetryService(retryService)
-                .setFlowRetryService(flowRetryService)
+                .setTokenRefresher(tokenRefresher)
                 .setErrorService(errorService)
                 .builder()
                 .getApiService(ApiServiceHelper.class);
@@ -50,7 +50,7 @@ public class AppModule {
             Application application,
             AppPropertiesConfig config,
             RetryService retryService,
-            FlowRetryService flowRetryService,
+            TokenRefresher tokenRefresher,
             ErrorService errorService
     ) {
         String fileBaseUrl = config.getFileBaseUrl();
@@ -64,7 +64,7 @@ public class AppModule {
                 .setTimeOut(30)
                 .setRetryService(retryService)
                 .setErrorService(errorService)
-                .setFlowRetryService(flowRetryService)
+                .setTokenRefresher(tokenRefresher)
                 .builder()
                 .getApiService(FileApiService.class);
     }

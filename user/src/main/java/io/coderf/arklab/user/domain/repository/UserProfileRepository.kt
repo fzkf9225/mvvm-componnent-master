@@ -1,6 +1,6 @@
 package io.coderf.arklab.user.domain.repository
 
-import io.coderf.arklab.core.request.RequestResult
+import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.Flow
 

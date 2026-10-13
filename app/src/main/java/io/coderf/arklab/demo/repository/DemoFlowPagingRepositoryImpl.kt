@@ -1,8 +1,8 @@
 package io.coderf.arklab.demo.repository
 
 import io.coderf.arklab.core.network.NetworkPagingRepository
-import io.coderf.arklab.core.request.RequestOptions
-import io.coderf.arklab.core.request.RequestResult
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
@@ -19,7 +19,9 @@ import kotlinx.coroutines.flow.Flow
  */
 class DemoFlowPagingRepositoryImpl(
     private val api: ApiServiceHelper
-) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>() {
+) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>(
+    boundApiService = api
+) {
 
     override suspend fun fetchPage(
         page: Int,

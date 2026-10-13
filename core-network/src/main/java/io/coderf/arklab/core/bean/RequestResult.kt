@@ -1,4 +1,6 @@
-package io.coderf.arklab.core.request
+package io.coderf.arklab.core.bean
+
+import io.coderf.arklab.core.request.AppError
 
 /**
  * 统一请求结果。ViewModel 只消费 Success / Error 两路。

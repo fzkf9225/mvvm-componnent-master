@@ -10,6 +10,7 @@ import io.coderf.arklab.base.api.AppPropertiesConfig;
 import io.coderf.arklab.common.api.ApiRetrofit;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.core.network.TokenRefresher;
 import io.coderf.arklab.user.api.UserApiService;
 
 /**
@@ -17,7 +18,7 @@ import io.coderf.arklab.user.api.UserApiService;
  * <p>
  * 注意：{@link UserApiService} 客户端<strong>不</strong>挂载 RetryService / FlowRetryService，
  * 避免 refresh-token 请求再触发鉴权刷新形成递归；业务仓库通过构造注入
- * {@link io.coderf.arklab.core.request.TokenRefresher} 完成无感刷新。
+ * {@link TokenRefresher} 完成无感刷新。
  *
  * @author fz
  * @version 1.0

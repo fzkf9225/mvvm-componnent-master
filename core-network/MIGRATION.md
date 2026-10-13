@@ -68,8 +68,8 @@
 | `ApiRequestOptions` | `RequestOptions` | 请求选项 |
 | `ErrorConsumer` | `RequestResult.Error` + `RequestUi.showError` | 错误不再强制 Consumer |
 | `RetryService` | `TokenRefresher` | 鉴权刷新契约 |
-| `FlowRetryService` | `TokenRefresher` | 同一实现可同时实现两者 |
-| Builder 上 `setRetryService` / `setFlowRetryService` | 同 Builder `setTokenRefresher` / `setFlowRetryService` | **按 ApiService 实例** |
+| `FlowRetryService` | `TokenRefresher` | 只需实现 TokenRefresher，框架自动适配旧 Flow 栈 |
+| Builder 上 `setRetryService` / `setFlowRetryService` | 同 Builder `setTokenRefresher` | **按 ApiService 实例**，自动适配旧 Flow 栈 |
 | `MutableLiveData` 直写成功数据 | `RequestResult` + `onSuccess` | 成功/失败显式分支 |
 | Rx `PagingSource` | `NetworkPagingSource` | 对接 `NetworkPagingRepository` |
 
@@ -111,13 +111,13 @@ public ApiServiceHelper provideApiServiceHelper(
         AppPropertiesConfig config,
         ErrorService errorService,
         RetryService retryService,           // 旧 Rx 全局
-        FlowRetryService flowRetryService    // 旧 Flow 全局
+        TokenRefresher tokenRefresher        // 统一鉴权刷新（新栈 + 自动适配旧 Flow 栈）
 ) {
     return new ApiRetrofit.Builder(application)
             .setSingleInstance(false)
             .setBaseUrl(config.getBaseUrl())
             .setRetryService(retryService)
-            .setFlowRetryService(flowRetryService)
+            .setTokenRefresher(tokenRefresher)
             .setErrorService(errorService)
             .builder()
             .getApiService(ApiServiceHelper.class);
@@ -130,17 +130,15 @@ public ApiServiceHelper provideApiServiceHelper(
 
 ```java
 // user: RetryModule — 只提供实现；是否生效由各 ApiRetrofit.Builder 决定
-@Binds @Singleton abstract FlowRetryService bindFlowRetryService(FlowRetryServiceImpl impl);
 @Binds @Singleton abstract TokenRefresher bindTokenRefresher(FlowRetryServiceImpl impl);
 
 // app: 需要鉴权的主站 API
 @Provides
-public ApiServiceHelper provideApiServiceHelper(..., FlowRetryService flowRetryService) {
+public ApiServiceHelper provideApiServiceHelper(..., TokenRefresher tokenRefresher) {
     return new ApiRetrofit.Builder(application)
         .setBaseUrl(config.getBaseUrl())
         .setRetryService(retryService)
-        .setFlowRetryService(flowRetryService)  // 实现类若同时是 TokenRefresher，会自动挂到本 Builder
-        // .setTokenRefresher(tokenRefresher)   // 也可显式设置
+        .setTokenRefresher(tokenRefresher)  // 自动适配旧 Flow 栈，无需再实现/绑定 FlowRetryService
         .builder()
         .getApiService(ApiServiceHelper.class);
 }
