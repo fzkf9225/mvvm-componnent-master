@@ -7,10 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import io.coderf.arklab.common.bean.AttachmentBean;
+import io.coderf.arklab.common.converter.RoomEnumConverters;
+import io.coderf.arklab.common.converter.RoomJavaTimeConverters;
+import io.coderf.arklab.common.converter.RoomJsonConverters;
+import io.coderf.arklab.common.converter.RoomScalarConverters;
 import io.coderf.arklab.common.dao.AttachmentDao;
 import io.coderf.arklab.core.db.RoomLog;
 
@@ -23,6 +28,8 @@ import io.coderf.arklab.core.db.RoomLog;
  * @created 2024/11/6 10:44
  */
 @Database(entities = {AttachmentBean.class}, version = 2, exportSchema = false)
+@TypeConverters({RoomJsonConverters.class, RoomEnumConverters.class,
+        RoomJavaTimeConverters.class, RoomScalarConverters.class})
 public abstract class AttachmentDatabase extends RoomDatabase {
     // 规定格式的写法，(写成别的，根据room的版本的不同，可能有运行异常)
     // Java编码规范中的约定

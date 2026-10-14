@@ -52,6 +52,8 @@ dependencies {
     implementation libs.rxjava3.rxjava
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
     implementation libs.kotlinx.coroutines.core
+    // RoomJsonConverters 使用
+    implementation libs.gson
     testImplementation libs.junit
 }
 
@@ -65,7 +67,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'db'
-                version = '1.3.0'
+                version = '1.4.0'
             }
         }
         repositories {

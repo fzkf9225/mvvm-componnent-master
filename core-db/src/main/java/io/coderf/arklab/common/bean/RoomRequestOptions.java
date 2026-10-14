@@ -42,9 +42,9 @@ public class RoomRequestOptions {
     /** 加载框提示文案 */
     private String dialogMessage = "正在加载，请稍后...";
     /** 是否启用加载文案动态省略号 */
-    private boolean enableDynamicEllipsis = false;
+    private boolean enableDynamicEllipsis = true;
     /** Rx 超时时间（秒），≤0 表示不超时 */
-    private long timeoutSeconds = 30L;
+    private long timeoutSeconds = 15L;
     /**
      * 查询类 Flowable 在结果为空时是否抛出 {@link io.coderf.arklab.common.base.BaseException}
      * （NOT_FOUND）；删除类使用 DELETE_SUCCESS，见仓库内部逻辑。
