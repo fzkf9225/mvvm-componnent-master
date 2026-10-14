@@ -34,10 +34,14 @@ class MqttSession @JvmOverloads constructor(
     private val subscribePolicy: MqttSubscribePolicy = MqttSubscribePolicy.FOCUS_REPLACE,
 ) {
 
+    /** 同步锁，保护会话表与焦点栈 */
     private val lock = Any()
+
+    /** Owner → 会话状态表（弱引用，随 Owner 回收） */
     private val sessions = WeakHashMap<LifecycleOwner, OwnerSession>()
     /** 焦点栈：末尾为最近 resumed 的 Owner */
     private val focusStack = ArrayDeque<LifecycleOwner>()
+    /** 叠加主题簿 */
     private val overlayBook = OverlayTopicBook()
     /**
      * pause 且 [OwnerSession.unsubscribeOnPause]=false、焦点栈空时，
@@ -261,6 +265,7 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** 仅当 owner 当前贡献主题时刷新有效订阅 */
     private fun applyIfOwnerContributesLocked(owner: LifecycleOwner) {
         if (!ownerContributesLocked(owner)) {
             return
@@ -268,6 +273,7 @@ class MqttSession @JvmOverloads constructor(
         applyEffectiveLocked()
     }
 
+    /** 判断 owner 是否为主题贡献方（resumed 且满足焦点策略） */
     private fun ownerContributesLocked(owner: LifecycleOwner): Boolean {
         val session = sessions[owner] ?: return false
         if (!session.resumed) {
@@ -279,6 +285,7 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** 将页面侧 ∪ Overlay 对齐到 Broker；未连接时仅缓存 */
     private fun applyEffectiveLocked() {
         val desired = OverlayTopicBook.union(resolveFocusTopicsLocked(), overlayBook.all())
         if (client.isConnected()) {
@@ -324,6 +331,7 @@ class MqttSession @JvmOverloads constructor(
         return emptySet()
     }
 
+    /** Owner resume：入焦点栈并刷新订阅 */
     private fun onOwnerResumed(owner: LifecycleOwner) {
         synchronized(lock) {
             val session = sessions[owner] ?: return
@@ -335,6 +343,7 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** Owner pause：出焦点栈，必要时记录保留 Owner */
     private fun onOwnerPaused(owner: LifecycleOwner) {
         synchronized(lock) {
             val session = sessions[owner] ?: return
@@ -349,10 +358,12 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** Owner 销毁：释放会话 */
     private fun onOwnerDestroyed(owner: LifecycleOwner) {
         release(owner)
     }
 
+    /** 清理焦点栈中已失效（未注册或未 resumed）的 Owner */
     private fun pruneFocusStackLocked() {
         while (focusStack.isNotEmpty()) {
             val top = focusStack.peekLast() ?: break
@@ -374,6 +385,7 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** 从焦点栈移除指定 Owner */
     private fun removeFromFocusStackLocked(owner: LifecycleOwner) {
         val it = focusStack.iterator()
         while (it.hasNext()) {
@@ -383,6 +395,7 @@ class MqttSession @JvmOverloads constructor(
         }
     }
 
+    /** token 日志标签：类名@哈希 */
     private fun tokenLabel(token: Any): String {
         return token.javaClass.simpleName + "@" + Integer.toHexString(System.identityHashCode(token))
     }
@@ -391,7 +404,10 @@ class MqttSession @JvmOverloads constructor(
         var topicsProvider: MqttTopicsProvider,
         var unsubscribeOnPause: Boolean,
     ) {
+        /** 是否处于 resumed 状态 */
         var resumed: Boolean = false
+
+        /** 最近一次解析出的目标主题缓存 */
         var cachedTopics: Set<String> = emptySet()
         /**
          * true：已通过 [updateTopics] / [addTopics] / [removeTopics] 指定目标集合，
@@ -399,6 +415,7 @@ class MqttSession @JvmOverloads constructor(
          */
         var manualTopics: Boolean = false
 
+        /** 首次手动修改前，以 provider 结果作为基底 */
         fun ensureManualBaseLocked() {
             if (!manualTopics) {
                 cachedTopics = readProviderTopics()
@@ -406,6 +423,7 @@ class MqttSession @JvmOverloads constructor(
             }
         }
 
+        /** 解析当前目标主题：手动集优先，否则读 provider（并缓存） */
         fun resolveTopics(): Set<String> {
             if (manualTopics) {
                 return cachedTopics
@@ -417,6 +435,7 @@ class MqttSession @JvmOverloads constructor(
             return cachedTopics.ifEmpty { fromProvider }
         }
 
+        /** 安全读取 provider 主题（异常返回空） */
         fun readProviderTopics(): Set<String> {
             return runCatching { topicsProvider.topics() }
                 .getOrElse {
@@ -426,6 +445,7 @@ class MqttSession @JvmOverloads constructor(
                 .let { OverlayTopicBook.normalizeTopics(it) }
         }
 
+        /** 生命周期观察者，桥接到会话编排 */
         val observer = object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
                 onOwnerResumed(owner)

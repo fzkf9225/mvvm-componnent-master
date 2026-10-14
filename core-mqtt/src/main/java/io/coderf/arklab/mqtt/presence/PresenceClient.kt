@@ -45,11 +45,13 @@ import java.nio.charset.StandardCharsets
  */
 class PresenceClient {
 
+    /** 底层同步连接封装 */
     private val connection = MqttConnection(TAG)
 
     /** 最近一次成功用于建连的配置，供心跳发布时读取 topic 等 */
     private var currentInfo: PresenceConfig? = null
 
+    /** 是否已连接 Broker */
     fun isConnected(): Boolean = connection.isConnected()
 
     /**
@@ -175,6 +177,11 @@ class PresenceClient {
      * 主动发布离线消息（与 CONNECT 注册的 LWT 同 topic/payload，由客户端主动发出）。
      *
      * QoS 默认为 1，降低弱网下登出/进程退出补发丢包概率。
+     *
+     * @param topic 离线消息主题；为空时不发送
+     * @param payload 消息体
+     * @param qos QoS，默认 1
+     * @return 是否发送成功
      */
     @JvmOverloads
     fun publishOffline(topic: String?, payload: String, qos: Int = DEFAULT_MESSAGE_QOS): Boolean {
@@ -183,6 +190,11 @@ class PresenceClient {
 
     /**
      * 向心跳主题发布一条应用层心跳消息。
+     *
+     * @param topic 心跳主题；为空时不发送
+     * @param payload 心跳消息体
+     * @param qos QoS，默认 1
+     * @return 是否发送成功
      */
     @JvmOverloads
     fun publishHeartbeat(topic: String?, payload: String, qos: Int = DEFAULT_MESSAGE_QOS): Boolean {
@@ -193,11 +205,15 @@ class PresenceClient {
      * 构造默认应用层心跳消息体（JSON）：`userId` + `heartbeatAt`。
      *
      * 若服务端约定不同格式，宿主 App 可自行组装 payload 后调用 [publishHeartbeat]。
+     *
+     * @param userId 用户 ID，可为 null
+     * @return JSON 格式心跳消息体
      */
     fun buildHeartbeatPayload(userId: Long?): String {
         return """{"userId":${userId ?: "null"},"heartbeatAt":${System.currentTimeMillis()}}"""
     }
 
+    /** 组装并发布 UTF-8 文本消息（心跳/离线共用） */
     private fun publishMessage(topic: String?, payload: String, qos: Int): Boolean {
         if (topic.isNullOrBlank()) {
             return false
@@ -211,6 +227,8 @@ class PresenceClient {
 
     companion object {
         private const val TAG = "PresenceClient"
+
+        /** 心跳/离线消息默认 QoS */
         private const val DEFAULT_MESSAGE_QOS = 1
     }
 }

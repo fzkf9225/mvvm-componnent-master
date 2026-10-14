@@ -15,7 +15,10 @@ package io.coderf.arklab.mqtt.session
  */
 class OverlayTopicBook {
 
+    /** 同步锁 */
     private val lock = Any()
+
+    /** token → 叠加主题集合（保持绑定顺序） */
     private val overlayMap = linkedMapOf<Any, Set<String>>()
 
     /**
@@ -76,12 +79,14 @@ class OverlayTopicBook {
         }
     }
 
+    /** 是否无任何绑定 */
     fun isEmpty(): Boolean {
         synchronized(lock) {
             return overlayMap.isEmpty()
         }
     }
 
+    /** 全部 token 主题并集（需持锁调用） */
     private fun allLocked(): Set<String> {
         if (overlayMap.isEmpty()) {
             return emptySet()
@@ -90,6 +95,7 @@ class OverlayTopicBook {
     }
 
     companion object {
+        /** 主题规范化：去空白、去空串、去重 */
         @JvmStatic
         fun normalizeTopics(topics: Collection<String>): Set<String> {
             return topics.asSequence().map { it.trim() }.filter { it.isNotEmpty() }.toSet()

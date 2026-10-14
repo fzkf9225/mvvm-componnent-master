@@ -25,6 +25,7 @@ class MqttLwt @JvmOverloads constructor(
 ) {
 
     companion object {
+        /** 遗嘱默认 QoS */
         const val DEFAULT_QOS = 1
     }
 }

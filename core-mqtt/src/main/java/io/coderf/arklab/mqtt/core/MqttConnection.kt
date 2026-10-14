@@ -41,15 +41,31 @@ class MqttConnection @JvmOverloads constructor(
     private val tag: String = TAG,
 ) : MqttCallback {
 
+    /** 同步锁，保护客户端状态与动态订阅集合 */
     private val lock = Any()
+
+    /** Paho 客户端实例 */
     private var mqttClient: PahoMqttClient? = null
+
+    /** 最近一次连接使用的配置（断连后用于重连参数与回调线程分发） */
     private var currentConfig: MqttConfig? = null
+
+    /** 事件监听 */
     private var listener: MqttListener? = null
+
+    /** 主线程 Handler，用于连接/消息回调切主线程 */
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    /** 是否主动断开（主动断开后不再自动重连） */
     private var manualDisconnect = false
+
+    /** 是否成功连上过（用于断连后决定是否走自定义重连） */
     private var hasConnectedOnce = false
+
+    /** 自定义重连已尝试次数 */
     private var reconnectAttempt = 0
+
+    /** 已安排的自定义重连任务 */
     private var reconnectRunnable: Runnable? = null
 
     /**
@@ -305,6 +321,7 @@ class MqttConnection @JvmOverloads constructor(
         return diff
     }
 
+    /** 由配置构建 Paho 连接参数（鉴权 / keepAlive / 自动重连 / LWT） */
     private fun buildOptions(config: MqttConfig): MqttConnectionOptions {
         val usePahoAutoReconnect = config.automaticReconnect && !config.usesCustomReconnect()
         return MqttConnectionOptions().apply {
@@ -335,6 +352,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 将配置中的初始订阅主题并入动态集合（不覆盖已有 QoS） */
     private fun seedDynamicTopicsFromConfigLocked(config: MqttConfig) {
         val topics = config.subscribeTopics?.filter { it.isNotBlank() } ?: return
         if (topics.isEmpty()) {
@@ -349,6 +367,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 连接/重连成功后恢复订阅：优先动态集合，否则用配置初始主题 */
     private fun subscribeIfNeeded(config: MqttConfig) {
         val entries = synchronized(lock) {
             if (dynamicSubscribeTopics.isNotEmpty()) {
@@ -376,6 +395,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 计算主动断开前需要退订的主题（动态集合优先，其次配置初始主题） */
     private fun buildUnsubscribeTopicsLocked(): Array<String> {
         if (dynamicSubscribeTopics.isNotEmpty()) {
             return dynamicSubscribeTopics.keys.toTypedArray()
@@ -387,6 +407,7 @@ class MqttConnection @JvmOverloads constructor(
             ?: emptyArray()
     }
 
+    /** 安排下一次自定义重连；超过最大次数时回调重连耗尽 */
     private fun scheduleCustomReconnectLocked(config: MqttConfig) {
         if (manualDisconnect || !config.usesCustomReconnect()) {
             return
@@ -414,6 +435,7 @@ class MqttConnection @JvmOverloads constructor(
         mainHandler.postDelayed(runnable, delaySeconds * 1000L)
     }
 
+    /** 执行一次自定义重连；失败则继续安排下一次 */
     private fun attemptCustomReconnectLocked(config: MqttConfig) {
         reconnectRunnable = null
         if (manualDisconnect) {
@@ -436,26 +458,31 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 取消已安排的重连任务 */
     private fun cancelReconnectLocked() {
         reconnectRunnable?.let { mainHandler.removeCallbacks(it) }
         reconnectRunnable = null
     }
 
+    /** 取消重连任务并清零尝试次数 */
     private fun resetReconnectStateLocked() {
         cancelReconnectLocked()
         reconnectAttempt = 0
     }
 
+    /** 分发连接成功回调（线程策略见配置） */
     private fun dispatchConnected(config: MqttConfig, reconnect: Boolean) {
         val target = listener ?: return
         dispatchConnectCallback(config) { target.onConnected(reconnect) }
     }
 
+    /** 分发断连回调 */
     private fun dispatchDisconnected(config: MqttConfig) {
         val target = listener ?: return
         dispatchConnectCallback(config) { target.onDisconnected() }
     }
 
+    /** 分发「正在重连」回调 */
     private fun dispatchReconnecting(
         config: MqttConfig,
         attempt: Int,
@@ -468,16 +495,19 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 分发「重连耗尽」回调 */
     private fun dispatchReconnectExhausted(config: MqttConfig) {
         val target = listener ?: return
         dispatchConnectCallback(config) { target.onReconnectExhausted() }
     }
 
+    /** 分发协议错误回调 */
     private fun dispatchError(config: MqttConfig, exception: MqttException) {
         val target = listener ?: return
         dispatchConnectCallback(config) { target.onError(exception) }
     }
 
+    /** 按配置决定连接类回调线程后执行 */
     private fun dispatchConnectCallback(config: MqttConfig, action: () -> Unit) {
         if (config.dispatchConnectOnMainThread) {
             mainHandler.post(action)
@@ -486,6 +516,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 按配置决定消息类回调线程后执行 */
     private fun dispatchMessageCallback(config: MqttConfig?, action: () -> Unit) {
         if (config?.dispatchMessageOnMainThread == true) {
             mainHandler.post(action)
@@ -508,6 +539,7 @@ class MqttConnection @JvmOverloads constructor(
         return "tcp://$trimmed"
     }
 
+    /** 关闭并置空 Paho 客户端 */
     private fun closeClientLocked() {
         try {
             mqttClient?.close()
@@ -516,6 +548,7 @@ class MqttConnection @JvmOverloads constructor(
         mqttClient = null
     }
 
+    /** Paho 断连回调：非主动断开时通知并触发自定义重连 */
     override fun disconnected(disconnectResponse: MqttDisconnectResponse?) {
         MqttLog.logger(tag, "MQTT 已断开: $disconnectResponse")
         val config = synchronized(lock) { currentConfig } ?: return
@@ -533,6 +566,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** Paho 协议错误回调 */
     override fun mqttErrorOccurred(exception: MqttException?) {
         MqttLog.logger(tag, "MQTT 错误: ${exception?.message}")
         val config = synchronized(lock) { currentConfig } ?: return
@@ -541,6 +575,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 下行消息回调：封装原始消息并按配置线程分发 */
     override fun messageArrived(topic: String?, message: MqttMessage?) {
         if (topic.isNullOrBlank() || message == null) {
             return
@@ -561,6 +596,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** QoS > 0 消息投递完成回调 */
     override fun deliveryComplete(token: IMqttToken?) {
         val config = synchronized(lock) { currentConfig }
         val target = synchronized(lock) { listener } ?: return
@@ -569,6 +605,7 @@ class MqttConnection @JvmOverloads constructor(
         }
     }
 
+    /** 连接完成回调：恢复订阅并通知连接成功 */
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
         MqttLog.logger(tag, "MQTT 连接完成 reconnect=$reconnect uri=$serverURI")
         synchronized(lock) {

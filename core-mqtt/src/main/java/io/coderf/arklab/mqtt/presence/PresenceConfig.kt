@@ -36,6 +36,7 @@ class PresenceConfig @JvmOverloads constructor(
 ) {
 
     companion object {
+        /** 协议层 keepAlive 默认值（秒） */
         const val DEFAULT_KEEP_ALIVE_SECONDS = 60
     }
 }

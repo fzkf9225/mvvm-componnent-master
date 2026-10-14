@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 class MqttHandlerRegistry {
 
+    /** 已注册的业务处理器集合 */
     private val handlers = CopyOnWriteArrayList<MqttMessageHandler>()
 
     /** 注册处理器；重复注册同一实例会被忽略 */

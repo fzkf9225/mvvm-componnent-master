@@ -48,18 +48,30 @@ class MqttClient @JvmOverloads constructor(
     private val tag: String = TAG,
 ) {
 
+    /** 底层同步连接实现 */
     private val connection = MqttConnection(tag)
+
+    /** 主线程 Handler，用于连接/消息回调切主线程 */
     private val mainHandler = Handler(Looper.getMainLooper())
+
+    /** 单线程 Worker，承载阻塞的 Paho 调用 */
     private val worker: ExecutorService = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "$tag-Worker").apply { isDaemon = true }
     }
 
+    /** 一次性连接结果回调集合（连接结束时通知并清空） */
     private val connectListeners = CopyOnWriteArrayList<(Boolean) -> Unit>()
+
+    /** 文本消息监听集合 */
     private val messageListeners = CopyOnWriteArrayList<(String, String) -> Unit>()
+
+    /** 原始消息监听集合 */
     private val rawMessageListeners = CopyOnWriteArrayList<(MqttRawMessage) -> Unit>()
 
+    /** 是否有连接请求进行中 */
     private val connectInFlight = AtomicBoolean(false)
 
+    /** 用户业务监听（connect 传入，disconnect 时清空） */
     @Volatile
     private var userListener: MqttListener? = null
 
@@ -77,14 +89,7 @@ class MqttClient @JvmOverloads constructor(
      *
      * @param config 连接配置（内部会覆盖 dispatch 开关为 true）
      * @param listener 事件监听；可为 null，仅依赖 addXxxListener
-     * @param onConnected 额外的一次性/多次连接结果回调（主线程，成功或失败都会通知）
-     */
-    /**
-     * 异步建立连接。
-     *
-     * @param config 连接配置（内部会覆盖 dispatch 开关为 true）
-     * @param listener 事件监听；可为 null，仅依赖 addXxxListener
-     * @param onConnected 额外的连接结果回调（主线程，成功或失败都会通知）
+     * @param onConnected 一次性连接结果回调（主线程，成功或失败都会通知）
      */
     @JvmOverloads
     fun connect(
@@ -144,6 +149,7 @@ class MqttClient @JvmOverloads constructor(
         rawMessageListeners.add(listener)
     }
 
+    /** 移除原始消息监听 */
     fun removeRawMessageListener(listener: (MqttRawMessage) -> Unit) {
         rawMessageListeners.remove(listener)
     }
@@ -219,6 +225,7 @@ class MqttClient @JvmOverloads constructor(
         worker.shutdownNow()
     }
 
+    /** 复制配置并强制打开连接/消息主线程分发，便于 UI 层直接更新 */
     private fun ensureMainThreadDispatch(config: MqttConfig): MqttConfig {
         return MqttConfig.builder()
             .brokerAddress(config.brokerAddress)
@@ -245,6 +252,7 @@ class MqttClient @JvmOverloads constructor(
             .build()
     }
 
+    /** 结束一次连接请求：通知并清空一次性连接回调（主线程） */
     private fun finishConnect(success: Boolean) {
         connectInFlight.set(false)
         val listeners = connectListeners.toList()
@@ -254,6 +262,7 @@ class MqttClient @JvmOverloads constructor(
         }
     }
 
+    /** 内部监听：把底层回调转投给 userListener 与各 listener 集合 */
     private val internalListener = object : AbstractMqttListener() {
         override fun onConnected(reconnect: Boolean) {
             finishConnect(success = true)

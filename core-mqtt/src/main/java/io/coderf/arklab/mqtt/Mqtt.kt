@@ -42,7 +42,11 @@ import io.coderf.arklab.mqtt.utils.MqttLog
  */
 object Mqtt {
 
-    /** 创建异步客户端 */
+    /**
+     * 创建异步客户端。
+     *
+     * @param tag 日志 Tag，便于多通道区分
+     */
     @JvmStatic
     @JvmOverloads
     fun createClient(tag: String = "Mqtt"): MqttClient = MqttClient(tag)
@@ -50,6 +54,7 @@ object Mqtt {
     /**
      * 创建 Lifecycle 订阅会话。
      *
+     * @param client 异步 MQTT 客户端
      * @param subscribePolicy 焦点栈策略；Overlay 始终与页面主题取并集，见 [MqttSubscribePolicy]
      */
     @JvmStatic
@@ -61,6 +66,12 @@ object Mqtt {
 
     /**
      * 一站式：创建 session 并绑定 Owner（仍需自行 [MqttClient.connect] + [MqttSession.flushPendingSubscriptions]）。
+     *
+     * @param client 异步 MQTT 客户端
+     * @param owner 订阅随其生命周期的宿主（Activity / Fragment / Dialog 等）
+     * @param topicsProvider 返回当前期望订阅的主题集合
+     * @param unsubscribeOnPause 是否在 onPause 时退订
+     * @param subscribePolicy 焦点栈策略
      */
     @JvmStatic
     @JvmOverloads
@@ -79,6 +90,12 @@ object Mqtt {
     /**
      * 最简连接配置：Broker + 鉴权 + 可选初始订阅主题。
      * 默认：keepAlive 60s、自动重连（Paho 无限）、主线程回调由 [MqttClient.connect] 强制打开。
+     *
+     * @param brokerAddress Broker 地址
+     * @param clientId 客户端 ID
+     * @param username 用户名
+     * @param password 密码
+     * @param subscribeTopics 初始订阅主题
      */
     @JvmStatic
     @JvmOverloads
@@ -102,6 +119,14 @@ object Mqtt {
 
     /**
      * 带有限次固定间隔重连的配置（适合展示重连 UI）。
+     *
+     * @param brokerAddress Broker 地址
+     * @param clientId 客户端 ID
+     * @param username 用户名
+     * @param password 密码
+     * @param maxReconnectAttempts 最大重连次数
+     * @param reconnectIntervalSeconds 重连固定间隔（秒）
+     * @param subscribeTopics 初始订阅主题
      */
     @JvmStatic
     @JvmOverloads
@@ -130,6 +155,10 @@ object Mqtt {
     /**
      * 打开 MQTT 模块控制台 debug。
      * 本地落盘请用 [ArkLog.startFileLog]（进程级统一配置）；若传入非 [FileLogLevel.NONE] 也会触发落盘。
+     *
+     * @param application 宿主 Application
+     * @param enable 是否开启控制台 debug
+     * @param fileLogLevel 文件日志级别；NONE 时不落盘
      */
     @JvmStatic
     @JvmOverloads

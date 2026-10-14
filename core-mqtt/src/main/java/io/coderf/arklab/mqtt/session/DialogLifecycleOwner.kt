@@ -21,6 +21,8 @@ import androidx.lifecycle.LifecycleRegistry
  * **注意**：本类会设置 Dialog 的 OnShow / OnDismiss；若业务也需要监听，
  * 请先调用 [MqttSession.observeDialog]，再自行包装，或改用 DialogFragment / ComponentDialog。
  *
+ * @param dialog 需要桥接生命周期的经典 Dialog
+ *
  * @author fz
  * @version 1.0
  * @since 1.0
@@ -30,6 +32,7 @@ class DialogLifecycleOwner(
     dialog: Dialog,
 ) : LifecycleOwner {
 
+    /** 生命周期注册器，按 show/dismiss 驱动状态机 */
     private val registry = LifecycleRegistry(this)
 
     init {
@@ -59,6 +62,7 @@ class DialogLifecycleOwner(
         }
     }
 
+    /** show 时驱动到 RESUMED */
     private fun moveToResumed() {
         if (registry.currentState == Lifecycle.State.DESTROYED) {
             return
@@ -74,6 +78,7 @@ class DialogLifecycleOwner(
         }
     }
 
+    /** dismiss 时回退到 CREATED（保留可再次 show） */
     private fun moveToCreated() {
         if (!registry.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             return

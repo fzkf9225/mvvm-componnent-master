@@ -27,6 +27,8 @@ import android.os.Looper
  * scheduler.stop();
  * ```
  *
+ * @param intervalMs 心跳间隔（毫秒），默认 30 秒
+ *
  * @author fz
  * @version 1.0
  * @since 1.0
@@ -36,8 +38,13 @@ class HeartbeatScheduler @JvmOverloads constructor(
     private val intervalMs: Long = DEFAULT_INTERVAL_MS,
 ) {
 
+    /** 主线程 Handler，驱动周期心跳 */
     private val handler = Handler(Looper.getMainLooper())
+
+    /** 当前周期调度任务 */
     private var tickRunnable: Runnable? = null
+
+    /** 单次心跳执行体 */
     private var publishAction: (() -> Unit)? = null
 
     /**
@@ -85,6 +92,7 @@ class HeartbeatScheduler @JvmOverloads constructor(
     /** 是否正在调度中 */
     fun isRunning(): Boolean = tickRunnable != null
 
+    /** 移除已安排的周期任务（保留 publishAction，便于 [publishOnce] 仍可用） */
     private fun stopTicks() {
         tickRunnable?.let { handler.removeCallbacks(it) }
         tickRunnable = null

@@ -18,7 +18,11 @@ import org.eclipse.paho.mqttv5.common.MqttException
  */
 interface MqttListener {
 
-    /** 连接建立完成（含 Paho / 自定义自动重连成功） */
+    /**
+     * 连接建立完成（含 Paho / 自定义自动重连成功）。
+     *
+     * @param reconnect 是否为断线后的重连成功
+     */
     fun onConnected(reconnect: Boolean) {}
 
     /**

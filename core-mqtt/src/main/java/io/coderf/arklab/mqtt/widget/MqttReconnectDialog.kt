@@ -25,6 +25,9 @@ import io.coderf.arklab.mqtt.databinding.DialogMqttReconnectBinding
  * dialog.updateReconnectState(1, 20, 5);
  * ```
  *
+ * @param context 上下文
+ * @param dialogWidthDp 弹窗宽度（dp），默认 300
+ *
  * @author fz
  * @version 1.0
  * @since 1.0
@@ -35,11 +38,19 @@ class MqttReconnectDialog @JvmOverloads constructor(
     private val dialogWidthDp: Int = DEFAULT_DIALOG_WIDTH_DP,
 ) : Dialog(context, R.style.MqttReconnectDialogTheme) {
 
+    /** ViewBinding */
     private val binding = DialogMqttReconnectBinding.inflate(layoutInflater)
+
+    /** 退出按钮点击回调 */
     private var onExitClickListener: (() -> Unit)? = null
+
+    /** 重试倒计时 */
     private var countdownTimer: CountDownTimer? = null
 
+    /** 当前第几次重连 */
     private var attempt = 0
+
+    /** 最大重连次数 */
     private var maxAttempts = 0
 
     init {
@@ -51,16 +62,19 @@ class MqttReconnectDialog @JvmOverloads constructor(
         }
     }
 
+    /** Java：设置退出按钮回调 */
     fun setOnExitClickListener(listener: Runnable): MqttReconnectDialog {
         onExitClickListener = { listener.run() }
         return this
     }
 
+    /** Kotlin：设置退出按钮回调 */
     fun setOnExitClickListener(listener: () -> Unit): MqttReconnectDialog {
         onExitClickListener = listener
         return this
     }
 
+    /** 配置弹窗尺寸/位置/透明背景并开启进度环，供链式 show */
     fun builder(): MqttReconnectDialog {
         window?.apply {
             setLayout(
@@ -92,17 +106,20 @@ class MqttReconnectDialog @JvmOverloads constructor(
         startCountdown(nextRetryDelaySeconds)
     }
 
+    /** 展示时开启进度环 */
     override fun show() {
         super.show()
         binding.progressReconnect.show()
     }
 
+    /** 关闭时停止进度环并取消倒计时 */
     override fun dismiss() {
         binding.progressReconnect.hide()
         cancelCountdown()
         super.dismiss()
     }
 
+    /** 启动秒级倒计时刷新文案；秒数 ≤0 时直接展示「重试中」 */
     private fun startCountdown(totalSeconds: Int) {
         cancelCountdown()
         if (totalSeconds <= 0) {
@@ -121,11 +138,13 @@ class MqttReconnectDialog @JvmOverloads constructor(
         }.start()
     }
 
+    /** 取消倒计时 */
     private fun cancelCountdown() {
         countdownTimer?.cancel()
         countdownTimer = null
     }
 
+    /** 拼装倒计时/重试中文案 */
     private fun buildDetailText(
         attempt: Int,
         maxAttempts: Int,
@@ -147,6 +166,7 @@ class MqttReconnectDialog @JvmOverloads constructor(
         }
     }
 
+    /** dp 转 px */
     private fun dpToPx(context: Context, dp: Float): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -156,6 +176,7 @@ class MqttReconnectDialog @JvmOverloads constructor(
     }
 
     companion object {
+        /** 默认弹窗宽度（dp） */
         private const val DEFAULT_DIALOG_WIDTH_DP = 300
     }
 }

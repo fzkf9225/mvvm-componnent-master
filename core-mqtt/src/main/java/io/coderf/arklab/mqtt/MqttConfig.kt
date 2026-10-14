@@ -18,17 +18,40 @@ package io.coderf.arklab.mqtt
  * @created 2026/7/27 10:10
  */
 class MqttConfig private constructor(
+    /** Broker 地址，可带或不带 tcp:// 前缀 */
     @JvmField val brokerAddress: String,
+
+    /** MQTT 客户端 ID */
     @JvmField val clientId: String,
+
+    /** 用户名 */
     @JvmField val username: String,
+
+    /** 密码（可为 JWT） */
     @JvmField val password: String,
+
+    /** 协议层 keepAlive（秒） */
     @JvmField val keepAliveSeconds: Int,
+
+    /** 连接超时（秒） */
     @JvmField val connectionTimeoutSeconds: Int,
+
+    /** 是否全新会话（忽略 Broker 端残留会话） */
     @JvmField val cleanStart: Boolean,
+
+    /** 是否允许自动重连（与 [maxReconnectAttempts] 组合决定重连方式） */
     @JvmField val automaticReconnect: Boolean,
+
+    /** 遗嘱配置，可为 null */
     @JvmField val lwt: MqttLwt?,
+
+    /** 初始订阅主题，可为 null */
     @JvmField val subscribeTopics: Array<String>?,
+
+    /** 与 [subscribeTopics] 等长的初始订阅 QoS */
     @JvmField val subscribeQos: IntArray?,
+
+    /** 重连成功后是否恢复订阅 */
     @JvmField val resubscribeOnReconnect: Boolean,
     /** 连接相关回调（connected / disconnected / reconnecting / exhausted / error）是否切到主线程 */
     @JvmField val dispatchConnectOnMainThread: Boolean,
@@ -39,11 +62,22 @@ class MqttConfig private constructor(
      * 设为 false 时允许匿名 Broker（仅校验 brokerAddress + clientId）。
      */
     @JvmField val requireAuth: Boolean,
+    /** 发布默认 QoS */
     @JvmField val defaultPublishQos: Int,
+
+    /** 发布默认是否保留 */
     @JvmField val defaultPublishRetained: Boolean,
+
+    /** 最大重连次数；null 表示 Paho 无限自动重连 */
     @JvmField val maxReconnectAttempts: Int?,
+
+    /** 自定义重连固定间隔（秒）；仅当 [maxReconnectAttempts] 非 null 时生效 */
     @JvmField val reconnectIntervalSeconds: Int?,
+
+    /** Paho 自动重连最小间隔（秒） */
     @JvmField val reconnectMinDelaySeconds: Int?,
+
+    /** Paho 自动重连最大间隔（秒） */
     @JvmField val reconnectMaxDelaySeconds: Int?,
 ) {
 
@@ -148,11 +182,22 @@ class MqttConfig private constructor(
         /** 协议层 keepAlive 默认值（秒） */
         const val DEFAULT_KEEP_ALIVE_SECONDS = 60
 
+        /** 连接超时默认值（秒） */
         const val DEFAULT_CONNECTION_TIMEOUT_SECONDS = 30
+
+        /** 发布默认 QoS */
         const val DEFAULT_PUBLISH_QOS = 0
+
+        /** 订阅默认 QoS */
         const val DEFAULT_SUBSCRIBE_QOS = 1
+
+        /** 自定义重连默认间隔（秒） */
         const val DEFAULT_CUSTOM_RECONNECT_INTERVAL_SECONDS = 5
+
+        /** Paho 自动重连默认最小间隔（秒） */
         const val PAHO_DEFAULT_RECONNECT_MIN_DELAY_SECONDS = 1
+
+        /** Paho 自动重连默认最大间隔（秒） */
         const val PAHO_DEFAULT_RECONNECT_MAX_DELAY_SECONDS = 120
 
         @JvmStatic

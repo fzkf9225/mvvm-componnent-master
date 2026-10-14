@@ -18,18 +18,22 @@ public final class MqttLog {
     private MqttLog() {
     }
 
+    /** 占位初始化：PrettyLogger 由宿主 ArkLog.init 统一初始化 */
     public static void init() {
         // PrettyLogger 由宿主 ArkLog.init 统一初始化
     }
 
+    /** 透传日志格式配置给 ArkLog（线程信息 / 方法栈 / 全局 Tag） */
     public static void init(boolean showThreadInfo, int methodCount, int methodOffset, String globalTag) {
         ArkLog.initFormat(showThreadInfo, methodCount, methodOffset, globalTag);
     }
 
+    /** 开关 MQTT 通道控制台 debug 输出 */
     public static void setEnableDebug(boolean enable) {
         LOG.setEnableDebug(enable);
     }
 
+    /** 是否开启控制台 debug */
     public static boolean isEnableDebug() {
         return LOG.isEnableDebug();
     }
