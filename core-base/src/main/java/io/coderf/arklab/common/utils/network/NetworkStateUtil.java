@@ -3,6 +3,8 @@ package io.coderf.arklab.common.utils.network;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.LinkAddress;
+import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.wifi.WifiInfo;
@@ -336,20 +338,19 @@ public class NetworkStateUtil {
     /**
      * 获取本机 IPv4 地址。
      * <p>
-     * Wi‑Fi 下优先读 {@link WifiInfo}；否则遍历网卡取第一个非回环 IPv4。
+     * Wi‑Fi 下优先从 {@link LinkProperties} 读取；否则遍历网卡取第一个非回环 IPv4。
      * 失败返回空字符串。
      */
     public static String getIpAddress(Context context) {
         if (isWifi(context)) {
-            WifiInfo info = getWifiInfo(context);
-            if (info != null) {
-                // noinspection deprecation — getIpAddress 仍广泛可用
-                int ip = info.getIpAddress();
-                if (ip != 0) {
-                    return (ip & 0xFF) + "."
-                            + ((ip >> 8) & 0xFF) + "."
-                            + ((ip >> 16) & 0xFF) + "."
-                            + ((ip >> 24) & 0xFF);
+            // WifiInfo#getIpAddress() 自 API 33 起废弃，改从 LinkProperties 读取
+            LinkProperties linkProperties = getLinkProperties(context);
+            if (linkProperties != null) {
+                for (LinkAddress linkAddress : linkProperties.getLinkAddresses()) {
+                    InetAddress address = linkAddress.getAddress();
+                    if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
+                        return address.getHostAddress();
+                    }
                 }
             }
         }
@@ -390,6 +391,25 @@ public class NetworkStateUtil {
      */
     public static NetworkCapabilities getNetworkCapabilities(Context context) {
         return getActiveNetworkCapabilities(context);
+    }
+
+    /**
+     * 当前活跃网络的 {@link LinkProperties}，无连接时返回 {@code null}。
+     */
+    public static LinkProperties getLinkProperties(Context context) {
+        if (context == null) {
+            return null;
+        }
+        ConnectivityManager cm = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+            return null;
+        }
+        Network network = cm.getActiveNetwork();
+        if (network == null) {
+            return null;
+        }
+        return cm.getLinkProperties(network);
     }
 
     // -------------------------------------------------------------------------

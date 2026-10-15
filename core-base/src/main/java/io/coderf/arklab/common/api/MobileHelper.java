@@ -2,17 +2,11 @@ package io.coderf.arklab.common.api;
 
 import static android.content.Context.TELEPHONY_SERVICE;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-
-import androidx.core.app.ActivityCompat;
 
 import com.google.gson.Gson;
 
@@ -26,10 +20,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.coderf.arklab.common.utils.encode.Base64Util;
@@ -57,15 +49,13 @@ public class MobileHelper {
         String ip = null;
         // 如果3G网络和wifi网络都未连接，且不是处于正在连接状态 则进入Network Setting界面 由用户配置网络连接
         if (NetworkStateUtil.isWifi(context)) {
-            //获取wifi服务
-            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            //判断wifi是否开启
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            int ipAddress = wifiInfo.getIpAddress();
-            ip = (ipAddress & 0xFF) + "." +
-                    ((ipAddress >> 8) & 0xFF) + "." +
-                    ((ipAddress >> 16) & 0xFF) + "." +
-                    (ipAddress >> 24 & 0xFF);
+            // Android 12(API 31)起 WifiManager#getConnectionInfo() 已废弃，
+            // Android 13(API 33)起 WifiInfo#getIpAddress() 已废弃，
+            // 统一经 NetworkStateUtil 兼容获取（高版本走 ConnectivityManager#getLinkProperties）
+            String wifiIp = NetworkStateUtil.getIpAddress(context);
+            if (wifiIp != null && !wifiIp.isEmpty()) {
+                ip = wifiIp;
+            }
         } else if (NetworkStateUtil.isMobile(context) || NetworkStateUtil.isConnected(context)) {
             ip = getLocalIpAddress();
         }
@@ -120,7 +110,7 @@ public class MobileHelper {
             hashMap.put("imsi",imsi);
             hashMap.put("phoneType",mtype);
             hashMap.put("phoneNumber",numer);
-            hashMap.put("mac",getMacAddress(context));
+            hashMap.put("mac",getMacAddress());
             hashMap.put("versionCode",AppManager.getAppManager().getVersionCode(context));
             hashMap.put("versionName",AppManager.getAppManager().getVersion(context));
             hashMap.put("ip", MobileHelper.getIp(context));
@@ -134,19 +124,16 @@ public class MobileHelper {
         }
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "HardwareIds"})
     public static String getDeviceId(Context mContext) {
         try {
             TelephonyManager mTm = (TelephonyManager) mContext.getSystemService(TELEPHONY_SERVICE);
             if (mTm != null) {
                 String imei = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    imei = Settings.Secure.getString(
-                            mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    imei = mTm.getImei();
+                    imei = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
                 } else {
-                    imei = mTm.getDeviceId();
+                    imei = mTm.getImei();
                 }
                 return imei == null ? "" : imei;
             }
@@ -157,32 +144,11 @@ public class MobileHelper {
     }
 
     /**
-     * 获取手机MAC地址：
-     *
-     * @return 手机MAC地址
-     */
-    @SuppressLint("HardwareIds")
-    public static String getMacAddress(Context context) {
-        String result = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 如果当前设备系统大于等于6.0 使用下面的方法
-            result = getMac();
-        } else {
-            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return null;
-            }
-            result = wifiInfo.getMacAddress();
-        }
-        return result;
-    }
-
-    /**
      * 获取手机的MAC地址
      *
      * @return
      */
-    private static String getMac() {
+    private static String getMacAddress() {
         String str = "";
         String macSerial = "";
         try {
@@ -202,18 +168,18 @@ public class MobileHelper {
         }
         if (macSerial.isEmpty()) {
             try {
-                return loadFileAsString("/sys/class/net/eth0/address")
+                return loadFileAsString()
                         .toUpperCase().substring(0, 17);
             } catch (Exception e) {
                 e.printStackTrace();
-                macSerial = getAndroid7MAC();
+                macSerial = "02:00:00:00:00:00";
             }
         }
         return macSerial;
     }
 
-    private static String loadFileAsString(String fileName) throws Exception {
-        FileReader reader = new FileReader(fileName);
+    private static String loadFileAsString() throws Exception {
+        FileReader reader = new FileReader("/sys/class/net/eth0/address");
         String text = loadReaderAsString(reader);
         reader.close();
         return text;
@@ -258,34 +224,4 @@ public class MobileHelper {
         return cpuInfo;
     }
 
-    /**
-     * 兼容7.0获取不到的问题
-     *
-     * @return
-     */
-    private static String getAndroid7MAC() {
-        try {
-            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface nif : all) {
-                if (!nif.getName().equalsIgnoreCase("wlan0")) {
-                    continue;
-                }
-                byte[] macBytes = nif.getHardwareAddress();
-                if (macBytes == null) {
-                    return "";
-                }
-                StringBuilder res1 = new StringBuilder();
-                for (byte b : macBytes) {
-                    res1.append(String.format("%02X:", b));
-                }
-                if (res1.length() > 0) {
-                    res1.deleteCharAt(res1.length() - 1);
-                }
-                return res1.toString();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "02:00:00:00:00:00";
-    }
 }

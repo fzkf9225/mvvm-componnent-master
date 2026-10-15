@@ -415,7 +415,7 @@ public class ApiRetrofit {
                 //app的唯一标识，可能为null或找不到
                 headerMap.put("o-appDeviceId", MobileHelper.getDeviceId(mContext));
                 //app的mac地址
-                headerMap.put("o-appMac", MobileHelper.getMacAddress(mContext));
+                headerMap.put("o-appMac", MobileHelper.getMacAddress());
                 // 设备的硬件型号（例如："Pixel 6"、"SM-G988B" 等）
                 headerMap.put("o-appModel", Build.MODEL);
                 // 设备的品牌/制造商（例如："Google"、"samsung"、"HUAWEI" 等）
