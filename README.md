@@ -471,36 +471,29 @@ TAG值为类名：`ApiRetrofit`
 
 ```
 # ==================== Google GPS Library ====================
-# 保留 GPS 框架核心类
--keep class io.coderf.arklab.googlegps.** { *; }
+# 以下规则已内置在 googlegps 的 consumer-rules.pro 中，随 AAR 自动生效，宿主无需重复声明。
+# 包结构：api(对外 API) / service(服务+Session) / permission(权限引导) / track(轨迹文件)
+#          / socket(上传通道) / utils(工具)  —— 均保留；location / ui 为内部实现，允许混淆
 -dontwarn io.coderf.arklab.googlegps.**
 
-# 保留定位服务
+# 对外 API：GpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
+-keep class io.coderf.arklab.googlegps.api.** { *; }
+-keepnames class * implements io.coderf.arklab.googlegps.api.LocationFilter
+
+# 定位服务 GpsService / GpsBinder / Session
 -keep class io.coderf.arklab.googlegps.service.** { *; }
--keepclassmembers class io.coderf.arklab.googlegps.service.** {
-    public * onStartCommand(...);
-    public * onBind(...);
-}
 
-# 保留 Socket 通信
+# 权限引导 GpsLifecycleObserver / PermissionsChecker
+-keep class io.coderf.arklab.googlegps.permission.** { *; }
+
+# 轨迹文件 IFileLogger / Files / GpsFileParser
+-keep class io.coderf.arklab.googlegps.track.** { *; }
+
+# Socket 通道及回调接口
 -keep class io.coderf.arklab.googlegps.socket.** { *; }
--keepclassmembers class io.coderf.arklab.googlegps.socket.** {
-    public * connect*(...);
-    public * send*(...);
-}
 
-# 保留工具类
+# 工具类 DebugUtil / LogUtil / EsriUtil
 -keep class io.coderf.arklab.googlegps.utils.** { *; }
-
-# 保留监听器接口
--keep interface io.coderf.arklab.googlegps.listener.** { *; }
-
-# 保留位置数据处理方法
--keepclassmembers class * {
-    public * getLocation*(...);
-    public * onLocation*(...);
-    public * format*Gps*(...);
-}
 ```
 ### hilt框架依赖
 

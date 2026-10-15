@@ -11,7 +11,7 @@ import io.coderf.arklab.common.api.DefaultActivityLifecycleCallback;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.demo.BuildConfig;
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
 import io.coderf.arklab.googlegps.utils.DebugUtil;
 import io.coderf.arklab.log.ArkLog;
 import io.coderf.arklab.log.FileLogLevel;

@@ -1,10 +1,9 @@
-package io.coderf.arklab.googlegps.logger;
-
+package io.coderf.arklab.googlegps.track;
 import android.location.Location;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
 import io.coderf.arklab.googlegps.service.GpsService;
-import io.coderf.arklab.googlegps.utils.GpsLoggerThreadExecutor;
+import io.coderf.arklab.googlegps.track.GpsLoggerThreadExecutor;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**

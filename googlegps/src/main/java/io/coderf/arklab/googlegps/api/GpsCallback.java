@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.common;
-
+package io.coderf.arklab.googlegps.api;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -44,10 +43,10 @@ public class GpsCallback {
             cfg.createNotificationChannel(manager);
             nfc = new NotificationCompat.Builder(context, cfg.getNotificationChannelId())
                     .setSmallIcon(cfg.getNotificationSmallIconResId() != 0 ?
-                            cfg.getNotificationSmallIconResId() : AppUtil.getAppManager().getAppIcon(context))
+                            cfg.getNotificationSmallIconResId() : AppUtil.getAppIcon(context))
                     .setLargeIcon(cfg.getNotificationLargeIconResId() != 0 ?
                             BitmapFactory.decodeResource(context.getResources(), cfg.getNotificationLargeIconResId()) :
-                            BitmapFactory.decodeResource(context.getResources(), AppUtil.getAppManager().getAppIcon(context)))
+                            BitmapFactory.decodeResource(context.getResources(), AppUtil.getAppIcon(context)))
                     .setPriority(mapImportanceToPriority(cfg.getNotificationImportance()))
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setVisibility(cfg.getNotificationLockscreenVisibility())

@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.logger;
-
+package io.coderf.arklab.googlegps.track;
 import android.location.Location;
 
 import java.io.File;
@@ -11,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 
 /**

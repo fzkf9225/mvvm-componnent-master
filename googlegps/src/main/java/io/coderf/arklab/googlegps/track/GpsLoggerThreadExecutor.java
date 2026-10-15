@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.utils;
-
+package io.coderf.arklab.googlegps.track;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;

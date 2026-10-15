@@ -12,7 +12,7 @@ import io.coderf.arklab.demo.bean.UseCase
 import io.coderf.arklab.demo.databinding.ActivityGoogleGpsBinding
 import io.coderf.arklab.demo.impl.GpsCallbackImpl
 import io.coderf.arklab.demo.viewmodel.GoogleGpsViewModel
-import io.coderf.arklab.googlegps.common.GpsStarter
+import io.coderf.arklab.googlegps.api.GpsStarter
 import kotlinx.coroutines.Job
 
 /**

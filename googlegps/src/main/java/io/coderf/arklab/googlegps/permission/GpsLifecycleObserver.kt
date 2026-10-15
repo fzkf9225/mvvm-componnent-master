@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.common
-
+package io.coderf.arklab.googlegps.permission
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -16,8 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import io.coderf.arklab.googlegps.R
-import io.coderf.arklab.googlegps.dialog.GPSConfirmDialog
-import io.coderf.arklab.googlegps.permission.PermissionsChecker
+import io.coderf.arklab.googlegps.api.GpsSettingConfig
+import io.coderf.arklab.googlegps.ui.GPSConfirmDialog
 
 /**
  * gps权限、隐私流程一键检测的lifecycle

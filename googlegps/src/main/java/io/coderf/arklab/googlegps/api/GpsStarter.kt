@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.common
-
+package io.coderf.arklab.googlegps.api
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import io.coderf.arklab.googlegps.permission.GpsLifecycleObserver
 import io.coderf.arklab.googlegps.service.GpsService
+import io.coderf.arklab.googlegps.service.Session
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -257,28 +258,6 @@ class GpsStarter(
                 clearPendingRequest()
             }
         }
-    }
-
-    /**
-     * 单次定位
-     *
-     * <p>获取一次定位结果后自动停止服务和清理资源。
-     * 内部会自动处理权限和GPS检测。</p>
-     *
-     * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
-     * @param onResult 定位结果回调，定位失败时返回null
-     */
-    @Deprecated("Use startSingleLocation instead.")
-    fun getSingleLocation(gpsCallback: GpsCallback? = null, onResult: (Location?) -> Unit) {
-        if (isRunning) {
-            onResult(null)
-            return
-        }
-        this.gpsCallback = gpsCallback
-        // 存储待执行的请求
-        pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
-        // 触发权限和GPS检测
-        gpsObserver?.startCheck(permissionGpsCallback)
     }
 
     /**
@@ -549,8 +528,6 @@ class GpsStarter(
         // 停止Service
         context.stopService(Intent(context, GpsService::class.java))
     }
-
-
 
     /**
      * 释放资源（在 onDestroy 中调用）

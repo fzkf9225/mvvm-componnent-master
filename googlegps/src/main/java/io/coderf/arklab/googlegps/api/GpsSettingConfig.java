@@ -1,10 +1,11 @@
-package io.coderf.arklab.googlegps.common;
-
+package io.coderf.arklab.googlegps.api;
 import android.Manifest;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.location.Location;
 import android.os.Build;
+
+import androidx.core.app.NotificationCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,11 +15,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import io.coderf.arklab.googlegps.logger.Files;
+import io.coderf.arklab.googlegps.track.Files;
 
 /**
  * GPS 配置类
@@ -66,6 +69,8 @@ public class GpsSettingConfig {
     private int stationaryMinDurationSeconds = 60;
     /** 退出静止状态的最小移动距离（米），默认 20m */
     private float stationaryMinMoveMeters = 20f;
+    /** 自定义点位过滤器，在内置过滤链之后按添加顺序执行，默认为空（不影响现有行为） */
+    private final List<LocationFilter> locationFilters = new CopyOnWriteArrayList<>();
 
     // ========== 会话与扩展（默认关闭，保持现有行为） ==========
     /** 内存轨迹点上限，0 表示不限制（默认） */
@@ -169,7 +174,7 @@ public class GpsSettingConfig {
     /** 通知通道是否开启振动，默认 false */
     private boolean notificationEnableVibration = false;
     /** 通知通道是否在锁屏显示，默认 VISIBILITY_PUBLIC */
-    private int notificationLockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC;
+    private int notificationLockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC;
     /** 通知通道是否显示角标，默认 true */
     private boolean notificationShowBadge = true;
     /** 通知通道描述（用于系统设置页显示） */
@@ -180,15 +185,32 @@ public class GpsSettingConfig {
     /** Intent 额外参数：获取下一个点 */
     public static final String GET_NEXT_POINT = "GET_NEXT_POINT";
 
-    // Bundle 键名
+    // ========== Location.getExtras() Bundle 键名 ==========
+    // 由 GnssLocationListener 在回调前写入 Location 的 extras，供 GpsService / 文件记录器 / 外部观察者读取。
+    // 前六项来自 NMEA 语句解析，仅在 enableGnssStatusAndNmea=true 时有值，否则为 null。
+
+    /** 水平精度因子（String），来自 NMEA GSA/GGA，值越小平面定位越可信，写入 GPX 的 &lt;hdop&gt; */
     public static final String HDOP = "HDOP";
+    /** 位置精度因子（String），来自 NMEA GSA，三维综合精度，写入 GPX 的 &lt;pdop&gt; */
     public static final String PDOP = "PDOP";
+    /** 垂直精度因子（String），来自 NMEA GSA，高程精度参考，写入 GPX 的 &lt;vdop&gt; */
     public static final String VDOP = "VDOP";
+    /** 大地水准面高度（String，米），来自 NMEA GGA，用于将 WGS84 椰球高换算为海拔，写入 GPX 的 &lt;geoidheight&gt; */
     public static final String GEOIDHEIGHT = "GEOIDHEIGHT";
+    /** 差分数据龄（String，秒），来自 NMEA GGA，距上次收到 DGPS 修正的时间，写入 GPX 的 &lt;ageofdgpsdata&gt; */
     public static final String AGEOFDGPSDATA = "AGEOFDGPSDATA";
+    /** 差分基准站 ID（String），来自 NMEA GGA，写入 GPX 的 &lt;dgpsid&gt; */
     public static final String DGPSID = "DGPSID";
+
+    /**
+     * 是否来自被动定位监听器（Boolean）。
+     * 同时也作为被动监听器的名称传给 {@code new GnssLocationListener(service, PASSIVE)}，
+     * GpsService 据此对被动点跑独立的间隔过滤且不重置定位闹钟。
+     */
     public static final String PASSIVE = "PASSIVE";
+    /** 产生该点的监听器名称（String）："GPS" / "CELL" / "PASSIVE"，用于区分定位来源 */
     public static final String LISTENER = "LISTENER";
+    /** 参与本次定位解的卫星数（Int），来自 GnssStatus 回调，写入 CSV 的 satellites 列 */
     public static final String SATELLITES_FIX = "SATELLITES_FIX";
 
     /** 日志类型：CSV */
@@ -521,6 +543,46 @@ public class GpsSettingConfig {
 
     public GpsSettingConfig setStationaryMinMoveMeters(float stationaryMinMoveMeters) {
         this.stationaryMinMoveMeters = Math.max(0f, stationaryMinMoveMeters);
+        return this;
+    }
+
+    /**
+     * 当前已配置的自定义过滤器，按执行顺序返回（只读视图）
+     */
+    public List<LocationFilter> getLocationFilters() {
+        return Collections.unmodifiableList(locationFilters);
+    }
+
+    /**
+     * 追加一个自定义过滤器，按添加顺序执行；重复添加同一实例会被忽略
+     */
+    public GpsSettingConfig addLocationFilter(LocationFilter filter) {
+        if (filter != null && !locationFilters.contains(filter)) {
+            locationFilters.add(filter);
+        }
+        return this;
+    }
+
+    /**
+     * 整体替换自定义过滤器列表，传 null 或空列表等于清空
+     */
+    public GpsSettingConfig setLocationFilters(List<LocationFilter> filters) {
+        locationFilters.clear();
+        if (filters != null) {
+            for (LocationFilter filter : filters) {
+                addLocationFilter(filter);
+            }
+        }
+        return this;
+    }
+
+    public GpsSettingConfig removeLocationFilter(LocationFilter filter) {
+        locationFilters.remove(filter);
+        return this;
+    }
+
+    public GpsSettingConfig clearLocationFilters() {
+        locationFilters.clear();
         return this;
     }
 

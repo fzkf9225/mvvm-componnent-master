@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.utils;
-
+package io.coderf.arklab.googlegps.track;
 import android.location.Location;
 
 import java.io.BufferedReader;
@@ -12,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
-import io.coderf.arklab.googlegps.logger.Files;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
+import io.coderf.arklab.googlegps.track.Files;
 
 /**
  * 日志文件解析工具类

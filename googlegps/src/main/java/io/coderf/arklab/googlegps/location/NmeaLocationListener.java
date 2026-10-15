@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.listener;
-
+package io.coderf.arklab.googlegps.location;
 import android.location.OnNmeaMessageListener;
 
 /**

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 import java.util.zip.CRC32;
 
-import io.coderf.arklab.googlegps.utils.GpsSockerUtils;
+import io.coderf.arklab.googlegps.utils.DeviceIdUtil;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -265,7 +265,7 @@ public class GPSSocketServer {
 
         String data = StringUtils.leftPad(Integer.toHexString(1), 2, '0')
                 + StringUtils.leftPad(Integer.toHexString(new Random().nextInt(65535)), 4, '0')
-                + StringUtils.leftPad(GpsSockerUtils.getUniqueCode(context), 16, '0')
+                + StringUtils.leftPad(DeviceIdUtil.getUniqueCode(context), 16, '0')
                 + StringUtils.leftPad(Long.toHexString(System.currentTimeMillis()), 16, '0')
                 + StringUtils.leftPad(Long.toHexString(Double.doubleToLongBits(longitude)), 16, '0')
                 + StringUtils.leftPad(Long.toHexString(Double.doubleToLongBits(latitude)), 16, '0')

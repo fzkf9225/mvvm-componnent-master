@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.common;
-
+package io.coderf.arklab.googlegps.service;
 import android.location.Location;
 
 import java.util.ArrayList;

@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.dialog;
-
+package io.coderf.arklab.googlegps.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -24,9 +23,9 @@ import androidx.core.content.ContextCompat;
 import java.util.Objects;
 
 import io.coderf.arklab.googlegps.R;
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
 import io.coderf.arklab.googlegps.databinding.DialogGpsConfirmBinding;
-import io.coderf.arklab.googlegps.utils.AppUtil;
+import io.coderf.arklab.googlegps.ui.UiUtil;
 
 
 /**
@@ -292,7 +291,7 @@ public class GPSConfirmDialog extends Dialog {
     }
 
     public GPSConfirmDialog setTextPaddingTopDp(int dp) {
-        this.textPaddingTop = AppUtil.dp2px(getContext(), dp);
+        this.textPaddingTop = UiUtil.dp2px(getContext(), dp);
         return this;
     }
 
@@ -302,7 +301,7 @@ public class GPSConfirmDialog extends Dialog {
     }
 
     public GPSConfirmDialog setTextPaddingBottomDp(int dp) {
-        this.textPaddingBottom = AppUtil.dp2px(getContext(), dp);
+        this.textPaddingBottom = UiUtil.dp2px(getContext(), dp);
         return this;
     }
 
@@ -312,7 +311,7 @@ public class GPSConfirmDialog extends Dialog {
     }
 
     public GPSConfirmDialog setButtonHeightDp(int dp) {
-        this.buttonHeight = AppUtil.dp2px(getContext(), dp);
+        this.buttonHeight = UiUtil.dp2px(getContext(), dp);
         return this;
     }
 
@@ -410,10 +409,10 @@ public class GPSConfirmDialog extends Dialog {
             binding.hLine.setVisibility(View.GONE);
         }
 
-        binding.hLine.setBackground(AppUtil.createRectDrawable(
+        binding.hLine.setBackground(UiUtil.createRectDrawable(
                 lineColorValue,
                 0,
-                AppUtil.dp2px(getContext(), 1f)
+                UiUtil.dp2px(getContext(), 1f)
         ));
 
         if (spannableContent == null) {
@@ -448,8 +447,8 @@ public class GPSConfirmDialog extends Dialog {
     }
 
     private Drawable createDefaultSurfaceDrawable() {
-        int radius = AppUtil.dp2px(getContext(), 8f);
-        return AppUtil.createRectDrawable(
+        int radius = UiUtil.dp2px(getContext(), 8f);
+        return UiUtil.createRectDrawable(
                 resolveDialogSurfaceColor(),
                 radius,
                 radius,
@@ -530,9 +529,9 @@ public class GPSConfirmDialog extends Dialog {
             }
         });
 
-        binding.sLine.setBackground(AppUtil.createRectDrawable(
+        binding.sLine.setBackground(UiUtil.createRectDrawable(
                 lineColorValue,
-                AppUtil.dp2px(getContext(), 1f),
+                UiUtil.dp2px(getContext(), 1f),
                 0
         ));
     }

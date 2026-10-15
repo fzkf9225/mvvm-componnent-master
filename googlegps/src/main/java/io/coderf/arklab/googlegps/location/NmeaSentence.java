@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.common;
-
+package io.coderf.arklab.googlegps.location;
 /**
  * NMEA 句子解析器
  *

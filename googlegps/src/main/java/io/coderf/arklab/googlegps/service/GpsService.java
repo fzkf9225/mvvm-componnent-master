@@ -26,12 +26,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import io.coderf.arklab.googlegps.common.GpsCallback;
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
-import io.coderf.arklab.googlegps.common.Session;
-import io.coderf.arklab.googlegps.listener.GnssLocationListener;
-import io.coderf.arklab.googlegps.listener.NmeaLocationListener;
-import io.coderf.arklab.googlegps.logger.FileLoggerFactory;
+import io.coderf.arklab.googlegps.api.GpsCallback;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
+import io.coderf.arklab.googlegps.api.LocationFilter;
+import io.coderf.arklab.googlegps.service.Session;
+import io.coderf.arklab.googlegps.location.GnssLocationListener;
+import io.coderf.arklab.googlegps.location.NmeaLocationListener;
+import io.coderf.arklab.googlegps.track.FileLoggerFactory;
 import io.coderf.arklab.googlegps.utils.EsriUtil;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 
@@ -339,19 +340,18 @@ public class GpsService extends Service {
             LogUtil.loggerE(TAG, "resolve bootstrap channel from config failed: " + t.getMessage());
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            channel.setSound(null, null);
-            channel.setShowBadge(useBusinessChannel);
-            manager.createNotificationChannel(channel);
-            // 已改用业务渠道时，清理历史遗留的 bootstrap 渠道，去掉设置页重复入口
-            if (useBusinessChannel && !BOOTSTRAP_CHANNEL_ID.equals(channelId)) {
-                try {
-                    manager.deleteNotificationChannel(BOOTSTRAP_CHANNEL_ID);
-                } catch (Throwable ignored) {
-                }
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        channel.enableLights(false);
+        channel.enableVibration(false);
+        channel.setSound(null, null);
+        channel.setShowBadge(useBusinessChannel);
+        manager.createNotificationChannel(channel);
+        // 已改用业务渠道时，清理历史遗留的 bootstrap 渠道，去掉设置页重复入口
+        if (useBusinessChannel && !BOOTSTRAP_CHANNEL_ID.equals(channelId)) {
+            try {
+                manager.deleteNotificationChannel(BOOTSTRAP_CHANNEL_ID);
+            } catch (Throwable ignored) {
+                LogUtil.loggerE(TAG, "delete notification channel failed: " + ignored.getMessage());
             }
         }
         return new NotificationCompat.Builder(this, channelId)
@@ -628,15 +628,13 @@ public class GpsService extends Service {
                 || !gpsCallback.getConfig().isEnableGnssStatusAndNmea()) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                gpsLocationManager.registerGnssStatusCallback(gnssLocationListener, handler);
-                gpsLocationManager.addNmeaListener(gnssLocationListener, handler);
-                gnssCallbacksRegistered = true;
-                LogUtil.loggerI(TAG, "已注册 GNSS 状态与 NMEA 监听");
-            } catch (Throwable t) {
-                LogUtil.loggerE(TAG, "注册 GNSS/NMEA 失败: " + t.getMessage());
-            }
+        try {
+            gpsLocationManager.registerGnssStatusCallback(gnssLocationListener, handler);
+            gpsLocationManager.addNmeaListener(gnssLocationListener, handler);
+            gnssCallbacksRegistered = true;
+            LogUtil.loggerI(TAG, "已注册 GNSS 状态与 NMEA 监听");
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "注册 GNSS/NMEA 失败: " + t.getMessage());
         }
     }
 
@@ -644,13 +642,11 @@ public class GpsService extends Service {
         if (!gnssCallbacksRegistered || gpsLocationManager == null || gnssLocationListener == null) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                gpsLocationManager.unregisterGnssStatusCallback(gnssLocationListener);
-                gpsLocationManager.removeNmeaListener(gnssLocationListener);
-            } catch (Throwable t) {
-                LogUtil.loggerE(TAG, "移除 GNSS/NMEA 失败: " + t.getMessage());
-            }
+        try {
+            gpsLocationManager.unregisterGnssStatusCallback(gnssLocationListener);
+            gpsLocationManager.removeNmeaListener(gnssLocationListener);
+        } catch (Throwable t) {
+            LogUtil.loggerE(TAG, "移除 GNSS/NMEA 失败: " + t.getMessage());
         }
         gnssCallbacksRegistered = false;
     }
@@ -695,7 +691,6 @@ public class GpsService extends Service {
      *
      * <p>移除所有位置更新请求。</p>
      */
-    @SuppressWarnings("ResourceType")
     private void stopGpsManager() {
         if (towerLocationListener != null) {
             LogUtil.loggerI(TAG, "移除基站定位管理器更新");
@@ -876,6 +871,16 @@ public class GpsService extends Service {
             return;
         }
 
+        // ========== 8. 自定义过滤器（外部配置，默认为空） ==========
+        LocationFilter rejectedBy = findRejectingFilter(loc);
+        if (rejectedBy != null) {
+            notifyLocationFiltered(loc, "自定义过滤器 [" + rejectedBy.getName() + "] 丢弃该点");
+            if (!isPassiveLocation) {
+                stopManagerAndResetAlarm();
+            }
+            return;
+        }
+
         // ========== 所有过滤通过，记录点位 ==========
         LogUtil.loggerI(TAG, String.format(Locale.getDefault(),"位置已接受: %.6f, %.6f, 精度: %.1f米",
                 loc.getLatitude(), loc.getLongitude(), loc.hasAccuracy() ? loc.getAccuracy() : -1));
@@ -913,6 +918,32 @@ public class GpsService extends Service {
 
 
     // ========== 新增：更新总行程距离 ==========
+
+    /**
+     * 依次执行外部配置的自定义过滤器
+     *
+     * <p>按添加顺序调用，遇到第一个返回 false 的即短路返回；
+     * 过滤器内部抛出的异常按放行处理，避免外部实现问题中断定位。</p>
+     *
+     * @param loc 当前点
+     * @return 丢弃该点的过滤器，全部通过返回 null
+     */
+    private LocationFilter findRejectingFilter(Location loc) {
+        List<LocationFilter> filters = gpsCallback.getConfig().getLocationFilters();
+        if (filters.isEmpty()) {
+            return null;
+        }
+        for (LocationFilter filter : filters) {
+            try {
+                if (!filter.accept(loc, session, gpsCallback.getConfig())) {
+                    return filter;
+                }
+            } catch (Throwable t) {
+                LogUtil.loggerE(TAG, "自定义过滤器 [" + filter.getName() + "] 执行异常，按放行处理: " + t.getMessage());
+            }
+        }
+        return null;
+    }
 
     /**
      * 更新总行程距离

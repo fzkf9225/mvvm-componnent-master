@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.listener;
-
+package io.coderf.arklab.googlegps.location;
 import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,8 +8,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.googlegps.common.GpsSettingConfig;
-import io.coderf.arklab.googlegps.common.NmeaSentence;
+import io.coderf.arklab.googlegps.api.GpsSettingConfig;
+import io.coderf.arklab.googlegps.location.NmeaSentence;
 import io.coderf.arklab.googlegps.service.GpsService;
 import io.coderf.arklab.googlegps.utils.LogUtil;
 

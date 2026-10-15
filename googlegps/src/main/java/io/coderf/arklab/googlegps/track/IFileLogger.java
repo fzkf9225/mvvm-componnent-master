@@ -1,5 +1,4 @@
-package io.coderf.arklab.googlegps.logger;
-
+package io.coderf.arklab.googlegps.track;
 import android.location.Location;
 
 /**

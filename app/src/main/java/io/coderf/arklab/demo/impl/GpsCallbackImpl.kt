@@ -17,9 +17,9 @@ import io.coderf.arklab.common.utils.common.MathUtil
 import io.coderf.arklab.demo.activity.GoogleGPSActivity
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION_REQUEST_CODE
-import io.coderf.arklab.googlegps.common.GpsCallback
-import io.coderf.arklab.googlegps.common.GpsSettingConfig
-import io.coderf.arklab.googlegps.common.Session
+import io.coderf.arklab.googlegps.api.GpsCallback
+import io.coderf.arklab.googlegps.api.GpsSettingConfig
+import io.coderf.arklab.googlegps.service.Session
 import io.coderf.arklab.googlegps.service.GpsService
 import java.text.SimpleDateFormat
 import java.util.Date
