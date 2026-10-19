@@ -416,6 +416,8 @@ public class ApiRetrofit {
                 headerMap.put("o-appDeviceId", MobileHelper.getDeviceId(mContext));
                 //app的mac地址
                 headerMap.put("o-appMac", MobileHelper.getMacAddress());
+                //app的获取 MediaDrm（Widevine）设备唯一 ID
+                headerMap.put("o-mediaDrmId", MobileHelper.getMediaDrmId());
                 // 设备的硬件型号（例如："Pixel 6"、"SM-G988B" 等）
                 headerMap.put("o-appModel", Build.MODEL);
                 // 设备的品牌/制造商（例如："Google"、"samsung"、"HUAWEI" 等）
