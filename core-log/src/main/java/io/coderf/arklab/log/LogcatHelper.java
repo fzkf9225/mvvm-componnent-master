@@ -25,12 +25,22 @@ import java.util.regex.Pattern;
  * @created 2026/8/21 8:53
  */
 final class LogcatHelper {
+    /** 单例实例 */
     private static LogcatHelper INSTANCE;
 
+    /** Logcat 文件目录绝对路径 */
     private String pathLogcat;
+
+    /** 落盘文件名前缀 */
     private String fileNamePrefix = "log";
+
+    /** 当前落盘线程（未启动为 null） */
     private LogDumper logDumper;
+
+    /** 当前进程 PID（仅落盘本进程日志） */
     private final int pid;
+
+    /** 当前落盘层级 */
     private FileLogLevel fileLogLevel = FileLogLevel.DEBUG;
 
     /**
@@ -44,6 +54,7 @@ final class LogcatHelper {
         return INSTANCE;
     }
 
+    /** 仅由 {@link #getInstance} 创建；记录 PID 并初始化默认目录。 */
     private LogcatHelper(Context context) {
         initPath(context, "log");
         pid = android.os.Process.myPid();
@@ -108,16 +119,30 @@ final class LogcatHelper {
     }
 
     private static final class LogDumper extends Thread {
+        /** threadtime 行解析：捕获 PID（组 1）与级别（组 2） */
         private static final Pattern THREADTIME_PATTERN = Pattern.compile(
                 "^\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+(\\d+)\\s+\\d+\\s+([VDIWEAF])\\s+.*$"
         );
 
+        /** logcat 子进程 */
         private Process logcatProc;
+
+        /** logcat 输出读取器 */
         private BufferedReader reader;
+
+        /** 读取循环开关 */
         private boolean running = true;
+
+        /** logcat 启动命令 */
         private final String[] cmds;
+
+        /** 本进程 PID 字符串（仅落盘本进程日志） */
         private final String mPid;
+
+        /** 落盘过滤层级 */
         private final FileLogLevel fileLogLevel;
+
+        /** 日志文件输出流（目录创建失败时为 null） */
         private FileOutputStream out;
 
         /**
@@ -144,10 +169,12 @@ final class LogcatHelper {
             cmds = new String[]{"logcat", "-v", "threadtime"};
         }
 
+        /** 置位停止标记，让读取循环退出。 */
         void stopLogs() {
             running = false;
         }
 
+        /** 读取循环：逐行读取本进程 logcat 输出，按层级过滤后写入当日文件。 */
         @Override
         public void run() {
             try {

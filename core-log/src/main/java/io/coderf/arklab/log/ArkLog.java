@@ -45,14 +45,25 @@ public final class ArkLog {
     /** commonmedia 通道 id */
     public static final String MODULE_MEDIA = "media";
 
+    /** 模块日志通道缓存（key 为 moduleId），同一模块全局单例 */
     private static final ConcurrentHashMap<String, LogChannel> CHANNELS = new ConcurrentHashMap<>();
+
+    /** PrettyLogger 初始化锁（重建 adapter 时同步） */
     private static final Object LOGGER_LOCK = new Object();
 
+    /** PrettyLogger 是否已初始化 */
     private static volatile boolean loggerReady;
+
+    /** 当前全局日志配置 */
     private static volatile LogConfig config = LogConfig.builder().build();
+
+    /** 应用 Context（Application） */
     private static volatile Context appContext;
+
+    /** 当前进程级落盘层级 */
     private static volatile FileLogLevel currentFileLogLevel = FileLogLevel.NONE;
 
+    /** 工具类禁止实例化。 */
     private ArkLog() {
     }
 
@@ -210,6 +221,7 @@ public final class ArkLog {
         }
     }
 
+    /** 按配置重建 PrettyLogger 适配器（加锁保证幂等安全）。 */
     private static void setupLogger(LogConfig logConfig) {
         synchronized (LOGGER_LOCK) {
             Logger.clearLogAdapters();

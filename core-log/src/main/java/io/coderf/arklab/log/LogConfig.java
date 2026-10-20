@@ -14,14 +14,28 @@ import androidx.annotation.Nullable;
  * @created 2026/8/21 8:52
  */
 public final class LogConfig {
+    /** 是否显示线程信息 */
     private final boolean showThreadInfo;
+
+    /** 堆栈方法层数 */
     private final int methodCount;
+
+    /** 跳过封装层数 */
     private final int methodOffset;
+
+    /** 全局默认 tag */
     private final String globalTag;
+
+    /** 初始化时的落盘层级 */
     private final FileLogLevel fileLogLevel;
+
+    /** 落盘文件名前缀 */
     private final String fileNamePrefix;
+
+    /** 落盘子目录名 */
     private final String fileDirName;
 
+    /** 仅由 Builder 构造。 */
     private LogConfig(Builder builder) {
         this.showThreadInfo = builder.showThreadInfo;
         this.methodCount = builder.methodCount;
@@ -73,12 +87,25 @@ public final class LogConfig {
     }
 
     public static final class Builder {
+        /** 是否显示线程信息，默认 {@code true} */
         private boolean showThreadInfo = true;
+
+        /** 堆栈方法层数，默认 {@code 0} */
         private int methodCount = 0;
+
+        /** 跳过封装层数，默认 {@code 0} */
         private int methodOffset = 0;
+
+        /** 全局默认 tag，默认 {@code "ArkLab"} */
         private String globalTag = "ArkLab";
+
+        /** 初始化时的落盘层级，默认 {@link FileLogLevel#NONE} */
         private FileLogLevel fileLogLevel = FileLogLevel.NONE;
+
+        /** 落盘文件名前缀，默认 {@code "log"} */
         private String fileNamePrefix = "log";
+
+        /** 落盘子目录名，默认 {@code "log"} */
         private String fileDirName = "log";
 
         /**

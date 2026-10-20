@@ -18,8 +18,13 @@ import com.orhanobut.logger.Logger;
  * @created 2026/8/21 8:53
  */
 public final class LogChannel {
+    /** 模块唯一 id */
     private final String moduleId;
+
+    /** 缺省 tag（业务 tag 为空时使用） */
     private final String defaultTag;
+
+    /** 控制台 V/D/I 开关（W/E 不受影响） */
     private volatile boolean enableDebug;
 
     /**
@@ -54,6 +59,8 @@ public final class LogChannel {
     // ==================== Verbose ====================
 
     /**
+     * PrettyLogger Verbose；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag，空则用缺省 tag
      * @param str 内容
      */
@@ -64,6 +71,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.v；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param str 内容
      */
@@ -75,6 +84,8 @@ public final class LogChannel {
     // ==================== Debug ====================
 
     /**
+     * PrettyLogger Debug；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param str 内容
      */
@@ -85,6 +96,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.d；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param str 内容
      */
@@ -119,6 +132,8 @@ public final class LogChannel {
     // ==================== Info ====================
 
     /**
+     * PrettyLogger Info；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param str 内容
      */
@@ -129,6 +144,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.i；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param str 内容
      */
@@ -140,6 +157,8 @@ public final class LogChannel {
     // ==================== Warn（始终记录） ====================
 
     /**
+     * PrettyLogger Warn；始终记录，不受 debug 开关影响。
+     *
      * @param tag 业务 tag
      * @param msg 内容
      */
@@ -149,6 +168,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.w；始终记录。
+     *
      * @param tag 业务 tag
      * @param msg 内容
      */
@@ -157,6 +178,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger Warn（带异常）；始终记录。
+     *
      * @param tag       业务 tag
      * @param msg       内容
      * @param throwable 异常
@@ -167,6 +190,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.w（带异常）；始终记录。
+     *
      * @param tag       业务 tag
      * @param msg       内容
      * @param throwable 异常
@@ -178,6 +203,8 @@ public final class LogChannel {
     // ==================== Error（始终记录） ====================
 
     /**
+     * 系统 Log.e；始终记录。
+     *
      * @param tag   业务 tag
      * @param error 内容
      */
@@ -186,6 +213,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger Error；始终记录。
+     *
      * @param tag   业务 tag
      * @param error 内容
      */
@@ -195,6 +224,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger Error（仅异常）；始终记录。
+     *
      * @param exception 异常，为 null 则忽略
      */
     public void e(Throwable exception) {
@@ -204,6 +235,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger Error（带异常）；始终记录。
+     *
      * @param tag       业务 tag
      * @param msg       内容
      * @param throwable 异常
@@ -214,6 +247,8 @@ public final class LogChannel {
     }
 
     /**
+     * 系统 Log.e（带异常）；始终记录。
+     *
      * @param tag       业务 tag
      * @param msg       内容
      * @param throwable 异常
@@ -225,6 +260,8 @@ public final class LogChannel {
     // ==================== JSON / XML ====================
 
     /**
+     * PrettyLogger JSON 格式化；debug 开关关闭时忽略。
+     *
      * @param json JSON 字符串
      */
     public void json(String json) {
@@ -234,6 +271,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger JSON 格式化（带 tag）；debug 开关关闭时忽略。
+     *
      * @param tag  业务 tag
      * @param json JSON 字符串
      */
@@ -244,6 +283,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger XML 格式化；debug 开关关闭时忽略。
+     *
      * @param xml XML 字符串
      */
     public void xml(String xml) {
@@ -253,6 +294,8 @@ public final class LogChannel {
     }
 
     /**
+     * PrettyLogger XML 格式化（带 tag）；debug 开关关闭时忽略。
+     *
      * @param tag 业务 tag
      * @param xml XML 字符串
      */
