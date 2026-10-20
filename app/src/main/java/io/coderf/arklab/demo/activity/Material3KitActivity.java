@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.HeroCarouselStrategy;
@@ -29,8 +28,11 @@ import java.util.List;
 import java.util.Locale;
 
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.dialog.MaterialAlertHelper;
+import io.coderf.arklab.common.widget.feedback.BadgeConfig;
+import io.coderf.arklab.common.widget.feedback.BadgeHandle;
 import io.coderf.arklab.common.widget.feedback.BadgeHelper;
 import io.coderf.arklab.common.widget.feedback.ToastHelper;
 import io.coderf.arklab.demo.R;
@@ -61,7 +63,8 @@ public class Material3KitActivity extends BaseActivity<EmptyViewModel, ActivityM
             "https://q8.itc.cn/images01/20240208/45d5ee19361f4f8fa824e93ebfc42a8a.jpeg"
     );
 
-    private BadgeDrawable badge;
+    private BadgeHandle badge;
+    private BadgeHandle badgeText;
     private int badgeCount = 3;
     private SuggestionAdapter suggestionAdapter;
 
@@ -86,11 +89,23 @@ public class Material3KitActivity extends BaseActivity<EmptyViewModel, ActivityM
         binding.toggleGroup.check(R.id.toggle_day);
         binding.slider.addOnChangeListener((slider, value, fromUser) ->
                 binding.tvSlider.setText("Slider / RangeSlider  " + Math.round(value)));
-        badge = BadgeHelper.attach(binding.btnBadge, badgeCount);
+        // 数字角标：BadgeConfig 配置字号/上限，handle 负责更新与移除
+        badge = BadgeHelper.attach(binding.btnBadge, badgeCount,
+                BadgeConfig.builder().textSizeSp(14).maxNumber(99).build());
         binding.btnBadge.setOnClickListener(v -> {
             badgeCount++;
-            BadgeHelper.update(badge, badgeCount);
+            badge.update(badgeCount);
         });
+        // 文字角标：与数字角标同屏共存（overlay 机制下多角标互不干扰），点击切换显隐
+        badgeText = BadgeHelper.attachText(binding.btnBadgeText, "NEW",
+                BadgeConfig.builder()
+                        .backgroundColor(ThemeAttrs.surfaceContainerHigh(this))
+                        .textColor(ThemeAttrs.primary(this))
+                        .horizontalOffsetDp(8)
+                        .verticalOffsetDp(8)
+                        .build());
+        binding.btnBadgeText.setOnClickListener(v ->
+                badgeText.updateText(badgeText.badge().hasText() ? null : "NEW"));
         binding.btnSideSheet.setOnClickListener(v -> {
             SideSheetDialog sheet = new SideSheetDialog(this);
             sheet.setContentView(R.layout.activity_material3_kit_side);
@@ -114,6 +129,18 @@ public class Material3KitActivity extends BaseActivity<EmptyViewModel, ActivityM
         binding.chipAssistVideo.setOnClickListener(v -> ToastHelper.showShort(this, "Assist：选视频"));
         binding.chipAssistSearch.setOnClickListener(v -> binding.searchView.show());
         setupBottomBar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // 角标挂在锚点 overlay 上，页面销毁时移除句柄，避免监听残留
+        if (badge != null) {
+            badge.detach();
+        }
+        if (badgeText != null) {
+            badgeText.detach();
+        }
+        super.onDestroy();
     }
 
     @Override

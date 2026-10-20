@@ -321,6 +321,14 @@
                     android:text="Badge 角标 +1" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_badge_text"
+                    style="@style/Widget.App.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Badge 文字角标" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_side_sheet"
                     style="@style/Widget.App.Button.OutlinedButton"
                     android:layout_width="wrap_content"

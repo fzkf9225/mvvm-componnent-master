@@ -2,6 +2,7 @@ package io.coderf.arklab.common.widget.customview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +11,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -50,34 +54,98 @@ public class VerificationCodeInputView extends TextInputEditText implements View
     private static final int[] STATE_FOCUSED = new int[]{android.R.attr.state_focused};
     private static final int[] STATE_UNFOCUSED = new int[]{-android.R.attr.state_focused};
 
-    /** 仅允许输入数字 */
+    /**
+     * ASCII 字符判断器，用于字符过滤。
+     */
+    private interface AsciiPredicate {
+
+        /**
+         * 判断字符是否允许输入。
+         *
+         * @param c 待判断字符
+         * @return true 表示允许
+         */
+        boolean accept(char c);
+    }
+
+    /**
+     * 判断是否为 ASCII 数字（{@code 0-9}）。
+     * <p>
+     * 不用 {@link Character#isDigit(char)}，避免中文输入法等场景带入全角/其它 Unicode 数字。
+     * </p>
+     */
+    private static boolean isAsciiDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    /**
+     * 判断是否为 ASCII 字母（{@code a-z / A-Z}）。
+     * <p>
+     * 不用 {@link Character#isLetter(char)}，避免中文等非 ASCII 字符混入验证码。
+     * </p>
+     */
+    private static boolean isAsciiLetter(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    }
+
+    /**
+     * 判断是否为 ASCII 字母或数字。
+     */
+    private static boolean isAsciiLetterOrDigit(char c) {
+        return isAsciiDigit(c) || isAsciiLetter(c);
+    }
+
+    /**
+     * 判断 source 的 [start, end) 区间字符是否全部满足 predicate。
+     */
+    private static boolean isAllMatch(CharSequence source, int start, int end, AsciiPredicate predicate) {
+        for (int i = start; i < end; i++) {
+            if (!predicate.accept(source.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 仅保留 source 的 [start, end) 区间内满足 predicate 的字符。
+     * <p>
+     * 相比直接返回空串，保留合法字符可以支持 IME 一次性提交"abc123"这类混合内容。
+     * </p>
+     */
+    private static CharSequence retainIf(CharSequence source, int start, int end, AsciiPredicate predicate) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        for (int i = start; i < end; i++) {
+            char c = source.charAt(i);
+            if (predicate.accept(c)) {
+                builder.append(c);
+            }
+        }
+        return builder;
+    }
+
+    /** 仅允许输入 ASCII 数字 */
     private static final InputFilter FILTER_NUMBER = (source, start, end, dest, dstart, dend) -> {
-        for (int i = start; i < end; i++) {
-            if (!Character.isDigit(source.charAt(i))) {
-                return "";
-            }
+        if (isAllMatch(source, start, end, VerificationCodeInputView::isAsciiDigit)) {
+            return null;
         }
-        return null;
+        return retainIf(source, start, end, VerificationCodeInputView::isAsciiDigit);
     };
 
-    /** 仅允许输入字母 */
+    /** 仅允许输入 ASCII 字母 */
     private static final InputFilter FILTER_CHARACTER = (source, start, end, dest, dstart, dend) -> {
-        for (int i = start; i < end; i++) {
-            if (!Character.isLetter(source.charAt(i))) {
-                return "";
-            }
+        if (isAllMatch(source, start, end, VerificationCodeInputView::isAsciiLetter)) {
+            return null;
         }
-        return null;
+        return retainIf(source, start, end, VerificationCodeInputView::isAsciiLetter);
     };
 
-    /** 仅允许输入数字和字母 */
+    /** 仅允许输入 ASCII 数字和字母 */
     private static final InputFilter FILTER_NUMBER_AND_CHARACTER = (source, start, end, dest, dstart, dend) -> {
-        for (int i = start; i < end; i++) {
-            if (!Character.isLetterOrDigit(source.charAt(i))) {
-                return "";
-            }
+        if (isAllMatch(source, start, end, VerificationCodeInputView::isAsciiLetterOrDigit)) {
+            return null;
         }
-        return null;
+        return retainIf(source, start, end, VerificationCodeInputView::isAsciiLetterOrDigit);
     };
 
     /**
@@ -94,8 +162,10 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         void onTextFinish(CharSequence text, int length);
     }
 
-    /** 文本绘制颜色（onDraw 时临时设为透明，绘制完方格后再恢复） */
+    /** 手动绘制方格文字使用的颜色（原生 TextView 文字已隐藏） */
     private int mTextColor;
+    /** 标记文字颜色是否已被显式设置，用于构造时的默认色兜底 */
+    private boolean mTextColorSet;
     /** 允许输入的最大字符数 */
     private int mMaxLength;
     /** 单个验证码方格的宽度（px） */
@@ -179,12 +249,19 @@ public class VerificationCodeInputView extends TextInputEditText implements View
 
         rebuildDrawables();
         applyInputFilters();
+        applyInputType();
         setLongClickable(false);
         setBackgroundColor(Color.TRANSPARENT);
         setCursorVisible(false);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setOnFocusChangeListener(this);
+        // 隐藏原生 TextView 文字渲染：一次性设置透明色，避免在 onDraw 里反复切换引发重绘循环，
+        // 文字由 drawText 手动绘制到每个方格中心
+        if (!mTextColorSet) {
+            mTextColor = getCurrentTextColor();
+        }
+        applyNativeTransparent();
         mMainHandler = new Handler(Looper.getMainLooper());
         mInitialized = true;
     }
@@ -268,15 +345,19 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         mStrokeDrawable.addState(STATE_FOCUSED, bgFocusedDrawable);
 
         mCursorDrawable = new StateListDrawable();
+        // 光标做成胶囊圆角，视觉更柔和
+        float cursorCorner = Math.min(mCursorWidth, mCursorHeight) / 2f;
 
         GradientDrawable defaultDrawable = new GradientDrawable();
         defaultDrawable.setColor(mCursorDefaultBgColor);
         defaultDrawable.setSize(mCursorWidth, mCursorHeight);
+        defaultDrawable.setCornerRadius(cursorCorner);
         mCursorDrawable.addState(STATE_UNFOCUSED, defaultDrawable);
 
         GradientDrawable focusedDrawable = new GradientDrawable();
         focusedDrawable.setColor(mCursorFocusedBgColor);
         focusedDrawable.setSize(mCursorWidth, mCursorHeight);
+        focusedDrawable.setCornerRadius(cursorCorner);
         mCursorDrawable.addState(STATE_FOCUSED, focusedDrawable);
     }
 
@@ -294,6 +375,33 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         } else {
             setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
         }
+    }
+
+    /**
+     * 根据 {@link #mCodeType} 同步输入法类型，让键盘与允许输入的字符保持一致。
+     * <p>
+     * 数字类型直接弹出数字键盘；字母类型禁用自动补全与首字母大写。
+     * </p>
+     */
+    private void applyInputType() {
+        int inputType;
+        switch (mCodeType) {
+            case CODE_TYPE_NUMBER:
+                inputType = InputType.TYPE_CLASS_NUMBER;
+                break;
+            case CODE_TYPE_CHARACTER:
+                inputType = InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                        | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+                break;
+            case CODE_TYPE_ALL:
+            default:
+                inputType = InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                        | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+                break;
+        }
+        setInputType(inputType);
     }
 
     /**
@@ -352,6 +460,18 @@ public class VerificationCodeInputView extends TextInputEditText implements View
      */
     private int getCellLeft(int index) {
         return index * (mStrokeWidth + mStrokePadding);
+    }
+
+    /**
+     * 全部方格（含间距）占用的总宽度（px）。
+     *
+     * @return 总宽度，最大长度无效时为 0
+     */
+    private int getTotalWidth() {
+        if (mMaxLength <= 0) {
+            return 0;
+        }
+        return mStrokeWidth * mMaxLength + mStrokePadding * (mMaxLength - 1);
     }
 
     /**
@@ -460,6 +580,7 @@ public class VerificationCodeInputView extends TextInputEditText implements View
      */
     public void setCodeType(int codeType) {
         this.mCodeType = codeType;
+        applyInputType();
         applyInputFilters();
     }
 
@@ -560,6 +681,46 @@ public class VerificationCodeInputView extends TextInputEditText implements View
     }
 
     /**
+     * 设置方格内文字颜色。
+     * <p>
+     * 原生 TextView 文字保持透明，真实颜色存入 {@link #mTextColor} 由 {@link #drawText} 手动绘制。
+     * </p>
+     *
+     * @param color 颜色值
+     */
+    @Override
+    public void setTextColor(int color) {
+        mTextColor = color;
+        mTextColorSet = true;
+        applyNativeTransparent();
+        invalidate();
+    }
+
+    /**
+     * 设置方格内文字颜色。
+     *
+     * @param colors 颜色状态列表，按当前 View 状态解析一次
+     */
+    @Override
+    public void setTextColor(ColorStateList colors) {
+        mTextColor = colors.getColorForState(getDrawableState(), colors.getDefaultColor());
+        mTextColorSet = true;
+        applyNativeTransparent();
+        invalidate();
+    }
+
+    /**
+     * 将原生 TextView 文字颜色设为透明。
+     * <p>
+     * 必须直接调用父类的 ColorStateList 版本：{@code TextView.setTextColor(int)} 内部会
+     * 虚分发回本类重写的 {@link #setTextColor(ColorStateList)}，造成颜色被透明色覆盖。
+     * </p>
+     */
+    private void applyNativeTransparent() {
+        super.setTextColor(ColorStateList.valueOf(Color.TRANSPARENT));
+    }
+
+    /**
      * 设置自定义输入过滤器（仍会保留长度限制）。
      * <p>
      * 适用于需要比 {@link #setCodeType(int)} 更细粒度过滤规则的场景。
@@ -594,7 +755,9 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         }
         if (hasFocus) {
             setSelection(getText().length());
-            startCursorBlink();
+            if (shouldBlinkCursor()) {
+                startCursorBlink();
+            }
         } else {
             stopCursorBlink();
         }
@@ -618,7 +781,7 @@ public class VerificationCodeInputView extends TextInputEditText implements View
             height = mStrokeHeight;
         }
 
-        int recommendWidth = mStrokeWidth * mMaxLength + mStrokePadding * Math.max(0, mMaxLength - 1);
+        int recommendWidth = getTotalWidth();
         if (width < recommendWidth) {
             width = recommendWidth;
         }
@@ -628,10 +791,9 @@ public class VerificationCodeInputView extends TextInputEditText implements View
 
     @Override
     protected void onDraw(Canvas canvas) {
-        mTextColor = getCurrentTextColor();
-        setTextColor(Color.TRANSPARENT);
+        // 原生文字已在构造时通过 setTextColor(TRANSPARENT) 隐藏，这里无需切换颜色：
+        // onDraw 里改 Paint 颜色会被 TextView 按 mCurTextColor 重置，改 setTextColor 又会引发重绘循环
         super.onDraw(canvas);
-        setTextColor(mTextColor);
         drawStrokeBackground(canvas);
         drawCursorBackground(canvas);
         drawText(canvas);
@@ -647,9 +809,12 @@ public class VerificationCodeInputView extends TextInputEditText implements View
             return;
         }
         int activeIndex = getActiveCellIndex();
+        // 方格整体在 View 内水平、垂直居中
+        int offsetX = (getWidth() - getTotalWidth()) / 2;
+        int offsetY = (getHeight() - mStrokeHeight) / 2;
         for (int i = 0; i < mMaxLength; i++) {
-            int left = getCellLeft(i);
-            mDrawRect.set(left, 0, left + mStrokeWidth, mStrokeHeight);
+            int left = offsetX + getCellLeft(i);
+            mDrawRect.set(left, offsetY, left + mStrokeWidth, offsetY + mStrokeHeight);
             mStrokeDrawable.setBounds(mDrawRect);
             mStrokeDrawable.setState(i == activeIndex ? STATE_FOCUSED : STATE_UNFOCUSED);
             mStrokeDrawable.draw(canvas);
@@ -669,8 +834,10 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         if (activeIndex < 0 || !mCursorVisible) {
             return;
         }
-        int left = getCellLeft(activeIndex) + (mStrokeWidth - mCursorWidth) / 2;
-        int top = (mStrokeHeight - mCursorHeight) / 2;
+        int offsetX = (getWidth() - getTotalWidth()) / 2;
+        int offsetY = (getHeight() - mStrokeHeight) / 2;
+        int left = offsetX + getCellLeft(activeIndex) + (mStrokeWidth - mCursorWidth) / 2;
+        int top = offsetY + (mStrokeHeight - mCursorHeight) / 2;
         mDrawRect.set(left, top, left + mCursorWidth, top + mCursorHeight);
         mCursorDrawable.setBounds(mDrawRect);
         mCursorDrawable.setState(STATE_FOCUSED);
@@ -683,17 +850,23 @@ public class VerificationCodeInputView extends TextInputEditText implements View
      * @param canvas 画布
      */
     private void drawText(Canvas canvas) {
-        int length = getEditableText().length();
+        Editable editable = getEditableText();
+        if (editable == null) {
+            return;
+        }
+        int length = editable.length();
         if (length <= 0) {
             return;
         }
         TextPaint textPaint = getPaint();
         textPaint.setColor(mTextColor);
+        int offsetX = (getWidth() - getTotalWidth()) / 2;
+        int offsetY = (getHeight() - mStrokeHeight) / 2;
         for (int i = 0; i < length; i++) {
-            String text = String.valueOf(getEditableText().charAt(i));
+            String text = String.valueOf(editable.charAt(i));
             textPaint.getTextBounds(text, 0, 1, mDrawRect);
-            int x = getCellLeft(i) + mStrokeWidth / 2 - mDrawRect.centerX();
-            int y = mStrokeHeight / 2 - mDrawRect.centerY();
+            int x = offsetX + getCellLeft(i) + mStrokeWidth / 2 - mDrawRect.centerX();
+            int y = offsetY + mStrokeHeight / 2 - mDrawRect.centerY();
             canvas.drawText(text, x, y, textPaint);
         }
     }
@@ -730,6 +903,15 @@ public class VerificationCodeInputView extends TextInputEditText implements View
         }
         // 强制光标始终在末尾，保证逐格输入体验
         mMainHandler.post(() -> setSelection(end));
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        // detach 时闪烁任务被清空，重新挂载后若仍聚焦则恢复光标闪烁
+        if (mInitialized && shouldBlinkCursor()) {
+            startCursorBlink();
+        }
     }
 
     @Override

@@ -26,7 +26,7 @@ import io.coderf.arklab.common.utils.common.DensityUtil;
 /**
  * 骨架屏占位面板（Shimmer 扫光 + 多行圆角块）。
  * <p>
- * 通常由 {@link EmptyLayout} 内部持有；独立使用时见 {@link io.coderf.arklab.common.widget.feedback.SkeletonLayout}。
+ * 通常由 {@link EmptyLayout} 内部持有；独立使用时见 {@link io.coderf.arklab.common.widget.empty.SkeletonShimmerPanel}。
  *
  * @author fz
  * @version 1.0
