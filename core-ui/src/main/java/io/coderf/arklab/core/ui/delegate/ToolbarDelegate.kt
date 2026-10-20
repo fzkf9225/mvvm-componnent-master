@@ -33,9 +33,14 @@ data class ToolbarSetup(
     val displayShowTitle: Boolean = false
 )
 
+/**
+ * MaterialToolbar 宿主：负责安装标题、返回键与高度。
+ */
 interface ToolbarHost {
+    /** 按 [ToolbarSetup] 完整配置 toolbar。 */
     fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup = ToolbarSetup())
 
+    /** 便捷重载：仅配置标题与返回键。 */
     fun setupToolbar(
         toolbar: MaterialToolbar,
         title: CharSequence?,
@@ -51,6 +56,7 @@ class ToolbarDelegate(
     private val activity: AppCompatActivity
 ) : ToolbarHost {
 
+    /** 将 [ToolbarSetup] 应用到 MaterialToolbar（标题、返回键、高度）。 */
     override fun setupToolbar(toolbar: MaterialToolbar, setup: ToolbarSetup) {
         toolbar.title = setup.title
         toolbar.isTitleCentered = setup.titleCentered
@@ -96,6 +102,7 @@ class ToolbarDelegate(
         }
     }
 
+    /** 解析主题 homeAsUpIndicator；未定义时回退 AppCompat 自带返回图标。 */
     private fun resolveUpIndicator(): Int {
         val typedValue = TypedValue()
         return if (activity.theme.resolveAttribute(AppcompatR.attr.homeAsUpIndicator, typedValue, true)

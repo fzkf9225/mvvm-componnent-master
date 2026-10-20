@@ -37,23 +37,32 @@ sealed class UiState<out T> {
         val retryable: Boolean = true
     ) : UiState<Nothing>()
 
+    /** 便捷判断：是否 Loading。 */
     val isLoading: Boolean get() = this is Loading
+    /** 便捷判断：是否 Success。 */
     val isSuccess: Boolean get() = this is Success
+    /** 便捷判断：是否 Empty。 */
     val isEmpty: Boolean get() = this is Empty
+    /** 便捷判断：是否 Error。 */
     val isError: Boolean get() = this is Error
 
+    /** Success 时取数据，否则 null。 */
     fun dataOrNull(): T? = (this as? Success)?.data
 
     companion object {
+        /** 构造 Success 状态。 */
         @JvmStatic
         fun <T> success(data: T): UiState<T> = Success(data)
 
+        /** 构造 Loading 状态。 */
         @JvmStatic
         fun loading(message: String? = null): UiState<Nothing> = Loading(message)
 
+        /** 构造 Empty 状态。 */
         @JvmStatic
         fun empty(message: String? = null): UiState<Nothing> = Empty(message)
 
+        /** 构造 Error 状态。 */
         @JvmStatic
         @JvmOverloads
         fun error(

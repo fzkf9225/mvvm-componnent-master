@@ -31,12 +31,14 @@ object UiSafety {
         !activity.isFinishing && !activity.isDestroyed
     }
 
+    /** 便捷静态判断：Activity 未 finish 且未 destroy；null 视为不安全。 */
     @JvmStatic
     fun isActivitySafe(activity: Activity?): Boolean {
         if (activity == null) return false
         return !activity.isFinishing && !activity.isDestroyed
     }
 
+    /** 便捷静态判断：Fragment 已 add 且宿主 Activity 安全；null 视为不安全。 */
     @JvmStatic
     fun isFragmentSafe(fragment: Fragment?): Boolean {
         if (fragment == null || !fragment.isAdded) return false

@@ -17,8 +17,11 @@ import androidx.lifecycle.LifecycleOwner
  * @updated 2026/9/1 22:51
  */
 interface LoadingHost {
+    /** 展示 Loading，默认文案 [DEFAULT_LOADING_MESSAGE]。 */
     fun showLoading(message: String = DEFAULT_LOADING_MESSAGE, enableDynamicEllipsis: Boolean = false)
+    /** 更新 Loading 文案。 */
     fun refreshLoading(message: String)
+    /** 隐藏 Loading。 */
     fun hideLoading()
     /** 当前是否正在展示 Loading；默认实现可返回 false。 */
     fun isLoading(): Boolean = false
@@ -35,7 +38,9 @@ interface LoadingHost {
  * 不继承 BaseActivity 的页面也可实现本接口并挂到 RequestUi 观察链。
  */
 interface UiMessageHost : LoadingHost {
+    /** 文本 Toast。 */
     fun showToast(message: String)
+    /** 资源 ID Toast。 */
     fun showToast(@StringRes resId: Int)
 }
 
@@ -56,14 +61,21 @@ object NoOpUiMessageHost : UiMessageHost {
  */
 open class SimpleUiMessageDelegate(
     private val context: Context,
+    /** UI 安全校验，默认恒安全（不拦截）。 */
     private val safety: UiSafetyChecker = UiSafetyChecker { true },
+    /** Toast 实际动作。 */
     private val toast: (String) -> Unit = {},
+    /** 展示 Loading 动作：(message, 动态省略号)。 */
     private val showLoadingAction: (String, Boolean) -> Unit = { _, _ -> },
+    /** 更新 Loading 文案动作。 */
     private val refreshLoadingAction: (String) -> Unit = {},
+    /** 隐藏 Loading 动作。 */
     private val hideLoadingAction: () -> Unit = {},
+    /** 查询 Loading 状态动作，默认恒 false。 */
     private val isLoadingAction: () -> Boolean = { false }
 ) : UiMessageHost {
 
+    /** Activity 便捷构造：自动装配 [UiSafety.forActivity] 安全校验。 */
     constructor(
         activity: Activity,
         toast: (String) -> Unit = {},
@@ -107,7 +119,9 @@ open class SimpleUiMessageDelegate(
  * 将 [UiMessageHost] 绑定到 Lifecycle：ON_DESTROY 时自动 hideLoading。
  */
 class LifecycleUiMessageHost(
+    /** 被包装的宿主实现。 */
     private val delegate: UiMessageHost,
+    /** 用于注册销毁回调的生命周期。 */
     lifecycle: Lifecycle
 ) : UiMessageHost by delegate, DefaultLifecycleObserver {
 

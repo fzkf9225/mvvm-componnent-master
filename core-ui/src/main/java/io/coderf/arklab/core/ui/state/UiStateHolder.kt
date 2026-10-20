@@ -26,30 +26,38 @@ import kotlinx.coroutines.flow.asStateFlow
  * @since 1.2.0
  */
 class UiStateHolder<T>(
+    /** 初始状态，默认 [UiState.Loading]。 */
     initial: UiState<T> = UiState.Loading()
 ) {
     private val _state = MutableStateFlow(initial)
+    /** 只读状态流，供 UI collect。 */
     val state: StateFlow<UiState<T>> = _state.asStateFlow()
 
+    /** 当前状态快照。 */
     val value: UiState<T>
         get() = _state.value
 
+    /** 直接设置任意状态。 */
     fun set(state: UiState<T>) {
         _state.value = state
     }
 
+    /** 进入 Loading。 */
     fun loading(message: String? = null) {
         _state.value = UiState.Loading(message)
     }
 
+    /** 进入 Success。 */
     fun success(data: T) {
         _state.value = UiState.Success(data)
     }
 
+    /** 进入 Empty。 */
     fun empty(message: String? = null) {
         _state.value = UiState.Empty(message)
     }
 
+    /** 进入 Error。 */
     fun error(
         message: String? = null,
         throwable: Throwable? = null,

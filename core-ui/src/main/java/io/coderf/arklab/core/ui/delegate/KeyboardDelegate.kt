@@ -19,10 +19,12 @@ fun interface HideKeyboardOnTouchOutsidePolicy {
     fun isEnabled(): Boolean
 }
 
+/** 默认启用：点击输入框外自动收起软键盘并清除焦点。 */
 object EnabledHideKeyboardOnTouchOutside : HideKeyboardOnTouchOutsidePolicy {
     override fun isEnabled(): Boolean = true
 }
 
+/** 关闭策略：点击输入框外不处理键盘。 */
 object DisabledHideKeyboardOnTouchOutside : HideKeyboardOnTouchOutsidePolicy {
     override fun isEnabled(): Boolean = false
 }
@@ -72,12 +74,14 @@ class HideKeyboardOnTouchOutsideDelegate(
             return false
         }
 
+        /** 收起 Activity 当前焦点 View 的软键盘；无焦点则忽略。 */
         @JvmStatic
         fun hideSoftInput(activity: Activity) {
             val view = activity.currentFocus ?: return
             hideSoftInput(activity, view)
         }
 
+        /** 收起指定 View 所在窗口的软键盘。 */
         @JvmStatic
         fun hideSoftInput(context: Context, view: View) {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
