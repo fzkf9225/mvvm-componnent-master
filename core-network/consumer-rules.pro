@@ -12,7 +12,7 @@
 }
 
 # ApiServiceWrapper 以方法名字符串分发 getRetrofit/setRetrofit，方法名不可混淆
--keep interface io.coderf.arklab.common.inter.ApiRetrofitService {
+-keep interface io.coderf.arklab.common.api.BaseApiService {
     <methods>;
 }
 

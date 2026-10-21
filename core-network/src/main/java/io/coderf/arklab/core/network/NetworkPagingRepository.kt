@@ -1,6 +1,6 @@
 package io.coderf.arklab.core.network
 
-import io.coderf.arklab.common.inter.ApiRetrofitService
+import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.core.bean.PagingQuery
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.map
 abstract class NetworkPagingRepository<T : Any, Q : PagingQuery>(
     requestUi: RequestUi = NoOpRequestUi,
     tokenRefresher: TokenRefresher? = null,
-    boundApiService: ApiRetrofitService? = null
+    boundApiService: BaseApiService? = null
 ) : BaseNetworkRepository(requestUi, tokenRefresher, boundApiService) {
 
     protected open val pagingRequestOptions: RequestOptions =

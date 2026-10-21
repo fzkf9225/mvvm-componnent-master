@@ -1,6 +1,6 @@
 package io.coderf.arklab.core.network
 
-import io.coderf.arklab.common.inter.ApiRetrofitService
+import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.bean.RetryPolicy
@@ -71,7 +71,7 @@ interface NetworkRepository {
 open class DefaultNetworkRepository(
     requestUi: RequestUi = NoOpRequestUi,
     private val tokenRefresher: TokenRefresher? = null,
-    private val boundApiService: ApiRetrofitService? = null
+    private val boundApiService: BaseApiService? = null
 ) : NetworkRepository, RequestUiHost {
 
     @Volatile

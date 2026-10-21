@@ -16,7 +16,6 @@ import java.util.stream.IntStream;
 
 import io.coderf.arklab.common.base.BaseConverterFactory;
 import io.coderf.arklab.common.impl.ApiServiceWrapper;
-import io.coderf.arklab.common.inter.ApiRetrofitService;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
@@ -603,8 +602,8 @@ public class ApiRetrofit {
 
     public <T> T getApiService(final Class<T> service) {
         T apiService = getBuilder().retrofit.create(service);
-        // 如果接口继承自 ApiRetrofitService，则返回装饰后的对象
-        if (ApiRetrofitService.class.isAssignableFrom(service)) {
+        // 如果接口继承自 BaseApiService，则返回装饰后的对象
+        if (BaseApiService.class.isAssignableFrom(service)) {
             return ApiServiceWrapper.wrap(apiService, this, service);
         }
         return apiService;

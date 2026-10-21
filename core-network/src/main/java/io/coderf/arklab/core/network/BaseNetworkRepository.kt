@@ -1,6 +1,6 @@
 package io.coderf.arklab.core.network
 
-import io.coderf.arklab.common.inter.ApiRetrofitService
+import io.coderf.arklab.common.api.BaseApiService
 import io.coderf.arklab.common.repository.IRepository
 import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestUi
@@ -28,7 +28,7 @@ import org.reactivestreams.Subscription
 open class BaseNetworkRepository(
     requestUi: RequestUi = NoOpRequestUi,
     tokenRefresher: TokenRefresher? = null,
-    boundApiService: ApiRetrofitService? = null
+    boundApiService: BaseApiService? = null
 ) : DefaultNetworkRepository(requestUi, tokenRefresher, boundApiService), IRepository {
 
     private val compositeDisposable = CompositeDisposable()
