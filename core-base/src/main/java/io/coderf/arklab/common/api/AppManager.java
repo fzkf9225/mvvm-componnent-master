@@ -16,8 +16,14 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -26,24 +32,28 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**
- * 应用程序Activity管理类：用于Activity管理和应用程序退出
- * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
+ * 应用程序 Activity 管理类：页面栈管理与应用退出等。
  * <p>
- * 添加Activity到堆栈
- * AppManager.getAppManager().addActivity(this);
- * onDestroy 中仅从堆栈移除（勿再次 finish，否则配置变更后无法重建）：
- * AppManager.getAppManager().removeActivity(this);
- * 主动结束页面：AppManager.getAppManager().finishActivity(activity);
+ * 推荐所有页面继承 {@link io.coderf.arklab.common.base.BaseActivity}，在 onCreate 中
+ * {@link #addActivity}，在 onDestroy 中 {@link #removeActivity}（勿在 onDestroy 再 finish）。
+ * <p>
+ * 内部以 {@link WeakReference} 持有 Activity，降低漏调 remove 时的泄漏风险；
+ * {@link #getActivityStack()} 仅返回存活页面的快照，请勿长期缓存或当作可变内部栈使用。
+ * <p>
+ * 栈顶 / 前后台判断优先使用本框架栈与 {@link ProcessLifecycleOwner}，不再依赖高版本
+ * 已不可靠的 {@code getRunningTasks} / 进程 importance 猜测。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/4/13 14:07
+ * @updated 2026/10/21
  */
 public class AppManager {
     public final static String TAG = AppManager.class.getSimpleName();
 
-    private static Stack<Activity> activityStack;
+    /** 弱引用栈：同步列表，读写前会清理已回收 / 已销毁实例 */
+    private final List<WeakReference<Activity>> activityStack =
+            Collections.synchronizedList(new ArrayList<>());
 
     private AppManager() {
     }
@@ -59,19 +69,67 @@ public class AppManager {
         return InstanceHolder.INSTANCE;
     }
 
+    /**
+     * 清理已被 GC 或已销毁的引用。
+     */
+    private void purgeStale() {
+        synchronized (activityStack) {
+            Iterator<WeakReference<Activity>> it = activityStack.iterator();
+            while (it.hasNext()) {
+                WeakReference<Activity> ref = it.next();
+                Activity activity = ref != null ? ref.get() : null;
+                if (activity == null || isActivityDead(activity)) {
+                    it.remove();
+                }
+            }
+        }
+    }
 
-    public Stack<Activity> getActivityStack() {
-        return activityStack;
+    private static boolean isActivityDead(@NonNull Activity activity) {
+        if (activity.isFinishing()) {
+            return true;
+        }
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed();
     }
 
     /**
-     * 添加Activity到堆栈
+     * 存活 Activity 快照（新 Stack，非内部结构）。
+     * <p>
+     * 兼容旧 API；请勿长期持有返回值，也勿假设与内部栈为同一实例。
+     *
+     * @return 当前仍存活的 Activity，从底到顶；无则空 Stack（不会为 null）
+     */
+    @NonNull
+    public Stack<Activity> getActivityStack() {
+        purgeStale();
+        Stack<Activity> snapshot = new Stack<>();
+        synchronized (activityStack) {
+            for (WeakReference<Activity> ref : activityStack) {
+                Activity activity = ref != null ? ref.get() : null;
+                if (activity != null && !isActivityDead(activity)) {
+                    snapshot.add(activity);
+                }
+            }
+        }
+        return snapshot;
+    }
+
+    /**
+     * 添加 Activity 到堆栈
      */
     public void addActivity(Activity activity) {
-        if (activityStack == null) {
-            activityStack = new Stack<>();
+        if (activity == null) {
+            return;
         }
-        activityStack.add(activity);
+        purgeStale();
+        synchronized (activityStack) {
+            for (WeakReference<Activity> ref : activityStack) {
+                if (ref != null && ref.get() == activity) {
+                    return;
+                }
+            }
+            activityStack.add(new WeakReference<>(activity));
+        }
     }
 
     /**
@@ -79,10 +137,17 @@ public class AppManager {
      */
     @Nullable
     public Activity currentActivity() {
-        if (activityStack == null || activityStack.isEmpty()) {
-            return null;
+        purgeStale();
+        synchronized (activityStack) {
+            for (int i = activityStack.size() - 1; i >= 0; i--) {
+                WeakReference<Activity> ref = activityStack.get(i);
+                Activity activity = ref != null ? ref.get() : null;
+                if (activity != null && !isActivityDead(activity)) {
+                    return activity;
+                }
+            }
         }
-        return activityStack.lastElement();
+        return null;
     }
 
     /**
@@ -102,8 +167,18 @@ public class AppManager {
      * 若再 finish 会导致配置变更（旋转屏）后无法重建，露出栈内上一个 Activity。
      */
     public void removeActivity(Activity activity) {
-        if (activity != null && activityStack != null) {
-            activityStack.remove(activity);
+        if (activity == null) {
+            return;
+        }
+        synchronized (activityStack) {
+            Iterator<WeakReference<Activity>> it = activityStack.iterator();
+            while (it.hasNext()) {
+                WeakReference<Activity> ref = it.next();
+                Activity held = ref != null ? ref.get() : null;
+                if (held == null || held == activity) {
+                    it.remove();
+                }
+            }
         }
     }
 
@@ -114,7 +189,9 @@ public class AppManager {
     public void finishActivity(Activity activity) {
         if (activity != null) {
             removeActivity(activity);
-            activity.finish();
+            if (!activity.isFinishing()) {
+                activity.finish();
+            }
         }
     }
 
@@ -122,13 +199,17 @@ public class AppManager {
      * 结束指定类名的 Activity（先收集再结束，避免遍历中 remove 触发 ConcurrentModificationException）。
      */
     public void finishActivity(Class<?> cls) {
-        if (activityStack == null || activityStack.isEmpty() || cls == null) {
+        if (cls == null) {
             return;
         }
-        java.util.ArrayList<Activity> toFinish = new java.util.ArrayList<>();
-        for (Activity activity : activityStack) {
-            if (activity != null && activity.getClass().equals(cls)) {
-                toFinish.add(activity);
+        purgeStale();
+        ArrayList<Activity> toFinish = new ArrayList<>();
+        synchronized (activityStack) {
+            for (WeakReference<Activity> ref : activityStack) {
+                Activity activity = ref != null ? ref.get() : null;
+                if (activity != null && activity.getClass().equals(cls)) {
+                    toFinish.add(activity);
+                }
             }
         }
         for (Activity activity : toFinish) {
@@ -137,19 +218,25 @@ public class AppManager {
     }
 
     /**
-     * 结束所有Activity
+     * 结束所有 Activity
      */
     public void finishAllActivity() {
-        if (activityStack == null || activityStack.isEmpty()) {
-            return;
+        purgeStale();
+        ArrayList<Activity> snapshot = new ArrayList<>();
+        synchronized (activityStack) {
+            for (WeakReference<Activity> ref : activityStack) {
+                Activity activity = ref != null ? ref.get() : null;
+                if (activity != null) {
+                    snapshot.add(activity);
+                }
+            }
+            activityStack.clear();
         }
-        java.util.ArrayList<Activity> snapshot = new java.util.ArrayList<>(activityStack);
         for (Activity activity : snapshot) {
-            if (activity != null && !activity.isFinishing()) {
+            if (!activity.isFinishing()) {
                 activity.finish();
             }
         }
-        activityStack.clear();
     }
 
     /**
@@ -158,9 +245,11 @@ public class AppManager {
     public void appExit(Context context) {
         try {
             finishAllActivity();
-            ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            if (activityMgr != null) {
-                activityMgr.killBackgroundProcesses(context.getPackageName());
+            if (context != null) {
+                ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                if (activityMgr != null) {
+                    activityMgr.killBackgroundProcesses(context.getPackageName());
+                }
             }
             System.exit(0);
         } catch (Exception e) {
@@ -169,98 +258,92 @@ public class AppManager {
     }
 
     /**
-     * 判断某Activity是否处于栈顶
+     * 判断某 Activity 是否处于本框架管理的栈顶（非系统任务栈）。
+     * <p>
+     * 高版本 Android 上 {@code getRunningTasks} 对第三方不可靠，故仅依据 {@link #addActivity} /
+     * {@link #removeActivity} 维护的弱引用栈。
      *
-     * @return true在栈顶false不在栈顶
+     * @return true 在栈顶；activity 为 null 或栈空为 false
      */
     public boolean isActivityOnTop(Activity activity) {
-        ActivityManager.RunningTaskInfo runningTaskInfo = getRunningTaskInfo(activity);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return runningTaskInfo != null && runningTaskInfo.topActivity != null && runningTaskInfo.topActivity.equals(activity.getComponentName());
-        } else {
-            return runningTaskInfo != null && runningTaskInfo.topActivity != null && runningTaskInfo.topActivity.getClassName().equals(activity.getComponentName().getClassName());
-        }
-    }
-
-    private ActivityManager.RunningTaskInfo getRunningTaskInfo(Activity activity) {
-        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        if (activityManager != null) {
-            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
-            if (runningTasks != null && !runningTasks.isEmpty()) {
-                return runningTasks.get(0);
-            }
-        }
-        return null;
-    }
-
-    public static boolean isServiceRunning(Context mContext, Class<?> clx) {
-        if (clx == null) {
+        if (activity == null) {
             return false;
         }
-        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(Integer.MAX_VALUE);
+        Activity top = currentActivity();
+        return top == activity;
+    }
 
-        for (ActivityManager.RunningServiceInfo serviceInfo : runningServices) {
-            ComponentName componentName = serviceInfo.service;
-            if (componentName.getClassName().equals(clx.getName()) && componentName.getPackageName().equals(mContext.getPackageName())) {
-                // Service已经注册和启动
-                return true;
-            }
+    /**
+     * 尽全力判断本应用内某 Service 是否在跑。
+     * <p>
+     * {@link ActivityManager#getRunningServices(int)} 在 Android O 起已废弃，高版本仅能看到
+     * 有限信息，结果不可作为强依赖；业务侧更推荐在 Service 内维护明确的运行状态。
+     *
+     * @return 探测到同包名同类名则 true；否则 false（含不支持/无权限/未运行）
+     */
+    @SuppressLint("deprecation")
+    public static boolean isServiceRunning(Context mContext, Class<?> clx) {
+        if (clx == null || mContext == null) {
+            return false;
         }
-        // 执行相应的操作
+        try {
+            ActivityManager activityManager =
+                    (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+            if (activityManager == null) {
+                return false;
+            }
+            //noinspection deprecation
+            List<ActivityManager.RunningServiceInfo> runningServices =
+                    activityManager.getRunningServices(Integer.MAX_VALUE);
+            if (runningServices == null || runningServices.isEmpty()) {
+                return false;
+            }
+            String pkg = mContext.getPackageName();
+            for (ActivityManager.RunningServiceInfo serviceInfo : runningServices) {
+                ComponentName componentName = serviceInfo.service;
+                if (componentName != null
+                        && clx.getName().equals(componentName.getClassName())
+                        && pkg.equals(componentName.getPackageName())) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {
+            // 高版本限制或厂商裁剪时直接视为未探测到
+        }
         return false;
     }
 
     /**
-     * 判断应用是否处于后台运行
+     * 判断应用是否处于后台（进程级，非单个 Activity）。
+     * <p>
+     * 基于 {@link ProcessLifecycleOwner}：STARTED 以下视为后台。{@code context} 参数保留以兼容旧签名。
      *
-     * @param context 当前视图
-     * @return true or false
+     * @param context 兼容参数，可为 null
+     * @return true 表示应用在后台
      */
     public boolean isAppIsInBackground(Context context) {
-        boolean isInBackground = true;
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
-            //前台程序
-            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                for (String activeProcess : processInfo.pkgList) {
-                    if (activeProcess.equals(context.getPackageName())) {
-                        isInBackground = false;
-                    }
-                }
-            }
-        }
-        return isInBackground;
+        return !isAppInForeground(context);
     }
 
     /**
-     * 当前应用是否处于前台
+     * 当前应用是否处于前台（至少一个 Activity 处于 started 以上）。
+     * <p>
+     * 基于 {@link ProcessLifecycleOwner}，不依赖 {@code getRunningTasks} /
+     * {@code getRunningAppProcesses}。{@code context} 参数保留以兼容旧签名。
      *
-     * @param context context
-     * @return true：应用显示在前台
+     * @param context 兼容参数，可为 null
+     * @return true：应用在前台
      */
     public boolean isAppInForeground(Context context) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        if (activityManager != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-                if (appProcesses != null) {
-                    for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-                        if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(context.getPackageName())) {
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
-                if (tasks != null && !tasks.isEmpty()) {
-                    ComponentName topActivity = tasks.get(0).topActivity;
-                    return topActivity != null && topActivity.getPackageName().equals(context.getPackageName());
-                }
-            }
+        try {
+            return ProcessLifecycleOwner.get()
+                    .getLifecycle()
+                    .getCurrentState()
+                    .isAtLeast(Lifecycle.State.STARTED);
+        } catch (Exception e) {
+            // ProcessLifecycleOwner 未就绪等极端情况：回退到框架栈是否仍有存活页
+            return currentActivity() != null;
         }
-        return false;
     }
 
     /**

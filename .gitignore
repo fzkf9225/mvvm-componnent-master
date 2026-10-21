@@ -1,38 +1,57 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/aircraftapi/build
-/aircraftcomponent/build
-/app/build
-/common/build
-/commonmedia/build
-/commonui/build
-/mqttcomponent/build
-/user/build
-/userapi/build
-/usercomponent/build
-/wscomponent/build
-/googlegps/build
-/annotation/build
-/room-processor/build/
-/core-base/build
-/core-db/build
-/core-network/build
-/core-ui/build
-/core-utils/build
-/captures
-.externalNativeBuild
-.cxx
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+release/
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration (SDK path etc.) — do not commit
 local.properties
-/.idea
-*.hprof
-/.kotlin/
-/room-processor/bin/
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# NDK
+obj/
+
+# Log / OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Kotlin
+.kotlin/
+
+# Signing (keep keystore dir policy as needed; never commit secrets)
+*.jks
+*.keystore
+!keystore/.gitkeep
+
+# Misc
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/

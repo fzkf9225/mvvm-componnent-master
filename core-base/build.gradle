@@ -128,9 +128,9 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'base'
-                version = '1.5.4'
+                version = '1.5.5'
             }
-        }
+        };
         repositories {
             maven {
                 url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
