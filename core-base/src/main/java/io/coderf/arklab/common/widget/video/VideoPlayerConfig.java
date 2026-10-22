@@ -24,64 +24,83 @@ public class VideoPlayerConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** 宿主场景：嵌入 View / 独立 Activity / Dialog 小窗，影响工具栏默认显隐策略 */
     private VideoPlayerHostMode hostMode = VideoPlayerHostMode.EMBED;
+    /** 各功能按钮的图标资源（返回、播放/暂停、全屏、旋转、锁屏等） */
     private VideoPlayerIconConfig iconConfig = VideoPlayerIconConfig.defaults();
+    /** 嵌入模式非展开态的圆角半径（dp），0 表示直角；全屏/展开后不裁剪圆角 */
     private float cornerRadiusDp = 0f;
+    /** 是否启用边播边缓存；网络地址可开，本地 content/file 建议关闭 */
     private boolean cacheEnable = true;
+    /** 是否显示顶部返回按钮 */
     private boolean showBack = true;
+    /** 是否显示顶部标题（依赖返回区域可见时才展示） */
     private boolean showTitle = true;
+    /** 是否显示画面中央的大播放按钮 */
     private boolean showCenterPlay = true;
+    /** 是否显示底部控制条上的播放/暂停按钮 */
     private boolean showBottomPlay = true;
+    /** 是否显示全屏/退出全屏按钮（Activity 宿主下通常为 false） */
     private boolean showFullscreen = true;
+    /** 是否显示手动旋转按钮（竖屏 ↔ 横屏） */
     private boolean showRotate = true;
+    /** 是否显示锁屏按钮（锁定后隐藏手势与大部分控件） */
     private boolean showLock = true;
+    /** 是否显示倍速切换 Chip */
     private boolean showSpeed = true;
+    /** 是否显示清晰度切换 Chip */
     private boolean showClarity = true;
+    /** 全屏/展开态是否跟随重力感应自动横竖屏 */
     private boolean gravityRotationEnabled = true;
+    /** Activity 启动时是否默认请求横屏方向 */
     private boolean defaultLandscape = false;
+    /** 初始播放倍速，进入播放后可再通过倍速按钮切换 */
     private float defaultSpeed = 1f;
+    /** 可选倍速档位列表，空则使用 {@link #defaultSpeedOptions()} */
     private final List<Float> speedOptions = new ArrayList<>();
+    /** 清晰度选项列表；空表示不展示清晰度入口或仅使用单一播放地址 */
     private final List<VideoPlayerClarityOption> clarityOptions = new ArrayList<>();
+    /** 当前选中的清晰度在 {@link #clarityOptions} 中的下标 */
     private int selectedClarityIndex = 0;
 
     /** 嵌入 View：非全屏仅全屏按钮，全屏后展示完整工具栏 */
     @NonNull
     public static VideoPlayerConfig embedDefaults() {
         return new VideoPlayerConfig()
-            .setHostMode(VideoPlayerHostMode.EMBED)
-            .setShowBack(false)
-            .setSpeedOptions(defaultSpeedOptions());
+                .setHostMode(VideoPlayerHostMode.EMBED)
+                .setShowBack(false)
+                .setSpeedOptions(defaultSpeedOptions());
     }
 
     /** 独立 Activity：默认横屏、完整工具栏、无全屏按钮 */
     @NonNull
     public static VideoPlayerConfig activityDefaults() {
         return new VideoPlayerConfig()
-            .setHostMode(VideoPlayerHostMode.ACTIVITY)
-            .setDefaultLandscape(true)
-            .setShowBack(true)
-            .setShowFullscreen(false)
-            .setShowRotate(true)
-            .setShowLock(true)
-            .setShowSpeed(true)
-            .setShowClarity(true)
-            .setGravityRotationEnabled(true)
-            .setSpeedOptions(defaultSpeedOptions());
+                .setHostMode(VideoPlayerHostMode.ACTIVITY)
+                .setDefaultLandscape(true)
+                .setShowBack(true)
+                .setShowFullscreen(false)
+                .setShowRotate(true)
+                .setShowLock(true)
+                .setShowSpeed(true)
+                .setShowClarity(true)
+                .setGravityRotationEnabled(true)
+                .setSpeedOptions(defaultSpeedOptions());
     }
 
     /** Dialog 小窗：默认仅全屏按钮，展开后展示完整工具栏 */
     @NonNull
     public static VideoPlayerConfig dialogDefaults() {
         return new VideoPlayerConfig()
-            .setHostMode(VideoPlayerHostMode.DIALOG)
-            .setCornerRadiusDp(12f)
-            .setShowBack(false)
-            .setShowFullscreen(true)
-            .setShowRotate(true)
-            .setShowLock(true)
-            .setShowSpeed(true)
-            .setShowClarity(true)
-            .setSpeedOptions(defaultSpeedOptions());
+                .setHostMode(VideoPlayerHostMode.DIALOG)
+                .setCornerRadiusDp(12f)
+                .setShowBack(false)
+                .setShowFullscreen(true)
+                .setShowRotate(true)
+                .setShowLock(true)
+                .setShowSpeed(true)
+                .setShowClarity(true)
+                .setSpeedOptions(defaultSpeedOptions());
     }
 
     @NonNull
@@ -100,42 +119,62 @@ public class VideoPlayerConfig implements Serializable {
         return speeds;
     }
 
+    /** @return 当前宿主模式 */
     @NonNull
     public VideoPlayerHostMode getHostMode() {
         return hostMode;
     }
 
+    /**
+     * @param hostMode 嵌入 / Activity / Dialog
+     * @return this，支持链式调用
+     */
     @NonNull
     public VideoPlayerConfig setHostMode(@NonNull VideoPlayerHostMode hostMode) {
         this.hostMode = hostMode;
         return this;
     }
 
+    /** @return 图标资源配置 */
     @NonNull
     public VideoPlayerIconConfig getIconConfig() {
         return iconConfig;
     }
 
+    /**
+     * @param iconConfig 图标配置
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setIconConfig(@NonNull VideoPlayerIconConfig iconConfig) {
         this.iconConfig = iconConfig;
         return this;
     }
 
+    /** @return 嵌入模式下圆角（dp），0 表示直角 */
     public float getCornerRadiusDp() {
         return cornerRadiusDp;
     }
 
+    /**
+     * @param cornerRadiusDp 圆角 dp，仅非展开态生效
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setCornerRadiusDp(float cornerRadiusDp) {
         this.cornerRadiusDp = cornerRadiusDp;
         return this;
     }
 
+    /** @return 是否启用边播边缓存 */
     public boolean isCacheEnable() {
         return cacheEnable;
     }
 
+    /**
+     * @param cacheEnable 网络地址可开；本地 content/file 建议 false
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setCacheEnable(boolean cacheEnable) {
         this.cacheEnable = cacheEnable;
@@ -262,6 +301,12 @@ public class VideoPlayerConfig implements Serializable {
         return this;
     }
 
+    /**
+     * 设置可选倍速列表；null 或空则回退到 {@link #defaultSpeedOptions()}。
+     *
+     * @param options 倍速档位，如 0.5 / 1 / 1.5 / 2
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setSpeedOptions(@Nullable List<Float> options) {
         speedOptions.clear();
@@ -273,6 +318,9 @@ public class VideoPlayerConfig implements Serializable {
         return this;
     }
 
+    /**
+     * @return 不可变倍速列表；若内部为空会先填充默认档
+     */
     @NonNull
     public List<Float> getSpeedOptions() {
         if (speedOptions.isEmpty()) {
@@ -281,6 +329,12 @@ public class VideoPlayerConfig implements Serializable {
         return Collections.unmodifiableList(speedOptions);
     }
 
+    /**
+     * 查找最接近的倍速档下标。
+     *
+     * @param speed 当前倍速
+     * @return 下标，找不到时返回 0
+     */
     public int indexOfSpeed(float speed) {
         List<Float> options = getSpeedOptions();
         for (int i = 0; i < options.size(); i++) {
@@ -291,7 +345,12 @@ public class VideoPlayerConfig implements Serializable {
         return 0;
     }
 
-    /** 倍速按钮循环切换时的下一档倍速 */
+    /**
+     * 倍速按钮循环切换时的下一档倍速。
+     *
+     * @param currentSpeed 当前倍速
+     * @return 下一档数值
+     */
     public float nextSpeed(float currentSpeed) {
         List<Float> options = getSpeedOptions();
         int index = indexOfSpeed(currentSpeed);
@@ -299,6 +358,12 @@ public class VideoPlayerConfig implements Serializable {
         return options.get(next);
     }
 
+    /**
+     * 设置清晰度列表。
+     *
+     * @param options 清晰度选项，null 表示清空
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setClarityOptions(@Nullable List<VideoPlayerClarityOption> options) {
         clarityOptions.clear();
@@ -308,15 +373,20 @@ public class VideoPlayerConfig implements Serializable {
         return this;
     }
 
+    /** @return 不可变清晰度列表 */
     @NonNull
     public List<VideoPlayerClarityOption> getClarityOptions() {
         return Collections.unmodifiableList(clarityOptions);
     }
 
+    /** @return 是否已配置至少一个清晰度 */
     public boolean hasClarityOptions() {
         return !clarityOptions.isEmpty();
     }
 
+    /**
+     * @return 当前选中清晰度的展示名称；无配置时返回空串
+     */
     @NonNull
     public String getCurrentClarityLabel() {
         if (clarityOptions.isEmpty()) {
@@ -326,10 +396,15 @@ public class VideoPlayerConfig implements Serializable {
         return clarityOptions.get(index).name();
     }
 
+    /** @return 当前选中清晰度下标 */
     public int getSelectedClarityIndex() {
         return selectedClarityIndex;
     }
 
+    /**
+     * @param selectedClarityIndex 选中下标，应落在 clarityOptions 范围内
+     * @return this
+     */
     @NonNull
     public VideoPlayerConfig setSelectedClarityIndex(int selectedClarityIndex) {
         this.selectedClarityIndex = selectedClarityIndex;

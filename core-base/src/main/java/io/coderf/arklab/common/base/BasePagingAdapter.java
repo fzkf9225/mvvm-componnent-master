@@ -17,13 +17,16 @@ import io.coderf.arklab.common.listener.PagingAdapterListener;
 import io.coderf.arklab.common.widget.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
- * updated by fz on 2024/10/31
- * Paging 列表；可选在 ConcatAdapter 中前置自定义头（见 {@link #setPagingHeaderAdapter}）。
+ * Paging 列表；可选 Concat 前置 Header / Live（见
+ * {@link #setPagingHeaderAdapter} / {@link #setPagingLiveAdapter}）。
+ *
+ * <p>历史由 {@link #submitData} 驱动；会话内动态数据用
+ * {@link io.coderf.arklab.common.adapter.PagingLiveAdapter}，勿在本 Adapter 内伪造 itemCount。</p>
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/22 Live 命名与 Concat 前置
  */
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
@@ -33,15 +36,13 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     @Nullable
     private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingHeaderAdapter;
 
+    @Nullable
+    private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingLiveAdapter;
+
     public BasePagingAdapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
         super(diffCallback);
     }
 
-    /**
-     * 在列表数据之前插入的 RecyclerView.Adapter（如横幅、筛选条等），默认 null 表示无头布局。
-     * 需在 Fragment 将本 Adapter 与 Footer 组装为 {@link androidx.recyclerview.widget.ConcatAdapter} 之前设置
-     * （见 {@link io.coderf.arklab.common.base.BaseSmartPagingFragment#initView} / {@link io.coderf.arklab.common.base.BasePagingFragment#initView}）。
-     */
     public void setPagingHeaderAdapter(@Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingHeaderAdapter) {
         this.pagingHeaderAdapter = pagingHeaderAdapter;
     }
@@ -52,10 +53,45 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     }
 
     /**
-     * ConcatAdapter 中位于本 PagingAdapter 之前的条目数，用于点击回调里将绝对 position 换算为分页项下标。
+     * 会话内实时最新段，默认 null。
+     * 组装顺序：Header? → <b>Live</b> → Paging → LoadState；
+     * 新数据插在 Live 的 index 0（见 {@link io.coderf.arklab.common.adapter.PagingLiveAdapter#append}）。
+     */
+    public void setPagingLiveAdapter(@Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingLiveAdapter) {
+        this.pagingLiveAdapter = pagingLiveAdapter;
+    }
+
+    @Nullable
+    public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> getPagingLiveAdapter() {
+        return pagingLiveAdapter;
+    }
+
+    /**
+     * Concat 中位于本 PagingAdapter 之前的条目数（业务 Header + Live）。
      */
     public int getPagingLeadingExtraItemCount() {
-        return pagingHeaderAdapter != null ? pagingHeaderAdapter.getItemCount() : 0;
+        int count = 0;
+        if (pagingHeaderAdapter != null) {
+            count += pagingHeaderAdapter.getItemCount();
+        }
+        if (pagingLiveAdapter != null) {
+            count += pagingLiveAdapter.getItemCount();
+        }
+        return count;
+    }
+
+    /**
+     * 实时 Live 段条目数。
+     */
+    public int getPagingLiveItemCount() {
+        return pagingLiveAdapter != null ? pagingLiveAdapter.getItemCount() : 0;
+    }
+
+    /**
+     * 分页 + Live 总条数（不含业务 Header / LoadState），用于空态。
+     */
+    public int getContentItemCount() {
+        return getItemCount() + getPagingLiveItemCount();
     }
 
     @Override
@@ -63,12 +99,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         onBindHolder(baseViewHolder, getItem(pos), pos);
     }
 
-    /**
-     * 设置数据
-     *
-     * @param holder
-     * @param pos
-     */
     public abstract void onBindHolder(BaseViewHolder<VDB> holder, T item, int pos);
 
     @NotNull
@@ -77,21 +107,10 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
         return createViewHold(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), getLayoutId(), parent, false));
     }
 
-    /**
-     * 获取自定义viewHolder对象，如果不自定义借直接返回baseViewHolder
-     *
-     * @param binding item布局
-     * @return BaseViewHolder
-     */
     protected BaseViewHolder<VDB> createViewHold(VDB binding) {
-        return new BaseViewHolder<>(binding,this);
+        return new BaseViewHolder<>(binding, this);
     }
 
-    /**
-     * itemView的资源布局
-     *
-     * @return 布局资源Id
-     */
     protected abstract int getLayoutId();
 
     public T getAdapterItem(int pos) {
@@ -111,5 +130,4 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     public void setOnAdapterListener(PagingAdapterListener<T> l) {
         onPagingAdapterListener = l;
     }
-
 }

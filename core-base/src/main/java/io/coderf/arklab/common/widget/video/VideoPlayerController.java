@@ -40,24 +40,38 @@ import io.coderf.arklab.common.utils.theme.ThemeUtils;
  */
 public class VideoPlayerController {
 
+    /** 宿主 Activity，用于方向控制、Toast、返回键等 */
     @NonNull
     private final Activity activity;
+    /** 绑定的播放器 View（布局中的实例；全屏时可能切换到 GSY 克隆实例） */
     @NonNull
     private final ArkVideoPlayerView player;
+    /** 当前生效的播放器配置，可通过 {@link #updateConfig} 热更新 */
     @NonNull
     private VideoPlayerConfig config;
 
+    /** 屏幕旋转辅助（进入/退出全屏、手动旋转、重力感应） */
     @NonNull
     private final VideoPlayerOrientationHelper orientationHelper = new VideoPlayerOrientationHelper();
+    /** GSY 提供的方向工具，在 {@link #attach} 中创建并交给 orientationHelper */
     @Nullable
     private OrientationUtils orientationUtils;
+    /** 返回键或返回按钮最终回调（如 finish / dismiss） */
     @Nullable
     private Runnable onBackAction;
+    /** 嵌入模式退出全屏后恢复宿主状态栏 / Toolbar 的可选回调 */
     @Nullable
     private Runnable onSystemUiRestore;
+    /** 当前实际播放倍速，与 player 的 speedLabel 保持同步 */
     private float currentSpeed = 1f;
+    /** 是否已执行 {@link #release}，防止重复释放 */
     private boolean released;
 
+    /**
+     * @param activity 宿主 Activity，用于 OrientationUtils 与返回键
+     * @param player   已布局的播放器 View
+     * @param config   行为配置（宿主模式、工具栏显隐、倍速档等）
+     */
     public VideoPlayerController(@NonNull Activity activity,
                                  @NonNull ArkVideoPlayerView player,
                                  @NonNull VideoPlayerConfig config) {
@@ -66,6 +80,11 @@ public class VideoPlayerController {
         this.config = config;
     }
 
+    /**
+     * 初始化交互，仅设置返回回调。
+     *
+     * @param onBackAction 返回键或返回按钮回调（如 {@code finish} / {@code dismiss}），可为 null
+     */
     public void attach(@Nullable Runnable onBackAction) {
         attach(onBackAction, null);
     }
@@ -101,6 +120,8 @@ public class VideoPlayerController {
 
     /**
      * 绑定宿主 Lifecycle，自动处理 pause / resume / destroy 与屏幕旋转。
+     *
+     * @param owner 一般为当前 Activity 或 Fragment
      */
     public void bindLifecycle(@NonNull LifecycleOwner owner) {
         Activity host = VideoPlayerLifecycleObserver.resolveActivity(owner, activity);
@@ -109,6 +130,9 @@ public class VideoPlayerController {
 
     /**
      * 绑定返回键，优先处理播放器全屏退出。
+     *
+     * @param dispatcher Activity 的 OnBackPressedDispatcher
+     * @param owner      生命周期拥有者，用于自动移除 Callback
      */
     public void bindBackPressed(@NonNull OnBackPressedDispatcher dispatcher,
                                 @NonNull LifecycleOwner owner) {
@@ -124,6 +148,11 @@ public class VideoPlayerController {
         });
     }
 
+    /**
+     * 运行时更新配置（如切换宿主策略后刷新工具栏）。
+     *
+     * @param config 新配置
+     */
     public void updateConfig(@NonNull VideoPlayerConfig config) {
         this.config = config;
         player.applyConfig(config);
@@ -131,22 +160,31 @@ public class VideoPlayerController {
         refreshToolbar();
     }
 
+    /** 宿主 onPause：暂停播放并暂停重力感应监听 */
     public void onHostPause() {
         player.getCurrentPlayer().onVideoPause();
         orientationHelper.onHostPause();
     }
 
+    /** 宿主 onResume：恢复播放与重力感应 */
     public void onHostResume() {
         player.getCurrentPlayer().onVideoResume();
         orientationHelper.onHostResume();
     }
 
+    /**
+     * 宿主配置变更（屏幕旋转）时同步方向辅助与工具栏。
+     *
+     * @param newConfig 新的 Configuration
+     */
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         orientationHelper.onConfigurationChanged(activity, newConfig);
         refreshToolbar();
     }
 
-    /** Dialog 进入全屏展开时调用 */
+    /**
+     * Dialog 进入全屏展开时调用：开启重力旋转并刷新工具栏。
+     */
     public void onEnterExpanded() {
         orientationHelper.setExpanded(true);
         orientationHelper.onEnterExpanded(activity);
@@ -154,7 +192,9 @@ public class VideoPlayerController {
         refreshToolbar();
     }
 
-    /** Dialog 退出全屏展开时调用 */
+    /**
+     * Dialog 退出全屏展开时调用：恢复进入前的屏幕方向。
+     */
     public void onExitExpanded() {
         orientationHelper.onExitExpanded(activity);
         orientationHelper.setExpanded(false);
@@ -228,7 +268,7 @@ public class VideoPlayerController {
 
         if (target.getRotateButton() != null) {
             target.getRotateButton().setOnClickListener(v ->
-                orientationHelper.toggleManualRotation(activity));
+                    orientationHelper.toggleManualRotation(activity));
         }
 
         TextView speedButton = target.getSpeedButton();
@@ -268,7 +308,7 @@ public class VideoPlayerController {
         if (activity instanceof ComponentActivity fa) {
             // 使用 MaterialToolbar 直接操作
             View toolbar = fa.findViewById(
-                io.coderf.arklab.common.R.id.main_bar);
+                    io.coderf.arklab.common.R.id.main_bar);
             if (toolbar instanceof MaterialToolbar) {
                 toolbar.setVisibility(View.VISIBLE);
             } else if (toolbar != null) {
@@ -293,7 +333,7 @@ public class VideoPlayerController {
             return;
         }
         new VideoPlayerClarityDialog(activity, options, config.getSelectedClarityIndex(),
-            this::switchClarity).show();
+                this::switchClarity).show();
     }
 
     private void switchClarity(int index, @NonNull VideoPlayerClarityOption option) {
@@ -302,11 +342,11 @@ public class VideoPlayerController {
         }
         long position = player.getCurrentPlayer().getCurrentPositionWhenPlaying();
         boolean wasPlaying = player.getCurrentPlayer().getCurrentState()
-            == GSYVideoView.CURRENT_STATE_PLAYING;
+                == GSYVideoView.CURRENT_STATE_PLAYING;
         config.setSelectedClarityIndex(index);
 
         String title = player.getTitleTextView() != null
-            ? player.getTitleTextView().getText().toString() : "";
+                ? player.getTitleTextView().getText().toString() : "";
         player.setUp(option.url(), config.isCacheEnable(), title);
         Map<String, String> headers = option.headers();
         if (!headers.isEmpty()) {

@@ -56,11 +56,25 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
     }
 
+    /**
+     * 在 binding 根布局中按 id 查找；兼容布局在 app 模块、与 core {@code R.id} 数值不一致的情况。
+     */
+    @SuppressWarnings("unchecked")
+    protected <V extends View> V findBindView(int coreId, String name) {
+        View root = binding.getRoot();
+        V v = root.findViewById(coreId);
+        if (v != null) {
+            return v;
+        }
+        int alt = root.getResources().getIdentifier(name, "id", requireContext().getPackageName());
+        return alt != 0 ? root.findViewById(alt) : null;
+    }
+
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
-        emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
-        refreshLayout = binding.getRoot().findViewById(R.id.smartFreshLayout);
+        mRecyclerView = findBindView(R.id.mRecyclerview, "mRecyclerview");
+        emptyLayout = findBindView(R.id.mEmptyLayout, "mEmptyLayout");
+        refreshLayout = findBindView(R.id.smartFreshLayout, "smartFreshLayout");
         applyEmptyLayoutLoadingConfig();
         adapter = getRecyclerAdapter();
         getRecyclerView().setLayoutManager(createLayoutManager());
@@ -77,17 +91,40 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
 
+    /**
+     * 组装 Header? + Live(最新)? + Paging(历史) + LoadState Footer。
+     * <p>无 Live 时保持原 {@code withLoadStateFooter}；有 Live 时挂在 Paging <b>之前</b>，
+     * 新消息插在列表最前（index 0），避免顶到 Paging append 边界误触发加载更多。</p>
+     */
     protected ConcatAdapter createdHeaderFootAdapter() {
-        ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(
-                new PagingFooterAdapter(() -> adapter.retry(), adapter,emptyLayout.getConfig()));
+        PagingFooterAdapter footer = new PagingFooterAdapter(
+                () -> adapter.retry(), adapter, emptyLayout.getConfig());
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
-        if (header != null) {
-            ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
-                    .setIsolateViewTypes(true)
-                    .build();
-            return new ConcatAdapter(config, header, mainWithFooter);
+        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> live = adapter.getPagingLiveAdapter();
+
+        if (live == null) {
+            ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
+            if (header != null) {
+                ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                        .setIsolateViewTypes(true)
+                        .build();
+                return new ConcatAdapter(config, header, mainWithFooter);
+            }
+            return mainWithFooter;
         }
-        return mainWithFooter;
+
+        // 有实时段：Header? → Live(最新) → Paging(历史) → Footer
+        adapter.addLoadStateListener(states -> {
+            footer.setLoadState(states.getAppend());
+            return Unit.INSTANCE;
+        });
+        ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                .setIsolateViewTypes(true)
+                .build();
+        if (header != null) {
+            return new ConcatAdapter(config, header, live, adapter, footer);
+        }
+        return new ConcatAdapter(config, live, adapter, footer);
     }
 
     protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
@@ -97,7 +134,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
         } else if (refresh instanceof LoadState.NotLoading) {
             refreshLayout.finishRefresh();
-            if (adapter.getItemCount() == 0) {
+            if (adapter.getContentItemCount() == 0) {
                 setViewState(EmptyLayout.State.NO_DATA);
             } else {
                 setViewState(EmptyLayout.State.HIDE_LAYOUT);
@@ -128,7 +165,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
      */
     protected boolean shouldShowEmptyLayoutOnRefreshError() {
         return adapter != null
-                && adapter.getItemCount() == 0
+                && adapter.getContentItemCount() == 0
                 && isInitialLoadingVisible();
     }
 

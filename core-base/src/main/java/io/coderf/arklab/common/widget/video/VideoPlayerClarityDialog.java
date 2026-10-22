@@ -30,6 +30,12 @@ import io.coderf.arklab.common.R;
  */
 public class VideoPlayerClarityDialog extends Dialog {
 
+    /**
+     * @param context       上下文
+     * @param options       清晰度列表
+     * @param selectedIndex 当前选中下标，与 options 对齐
+     * @param listener      选中回调
+     */
     public VideoPlayerClarityDialog(@NonNull Context context,
                                     @NonNull List<VideoPlayerClarityOption> options,
                                     int selectedIndex,
@@ -41,8 +47,8 @@ public class VideoPlayerClarityDialog extends Dialog {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setGravity(Gravity.CENTER);
             window.setLayout(
-                (int) (context.getResources().getDisplayMetrics().widthPixels * 0.82f),
-                WindowManager.LayoutParams.WRAP_CONTENT);
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.82f),
+                    WindowManager.LayoutParams.WRAP_CONTENT);
         }
         buildOptions(options, selectedIndex, listener);
     }
@@ -71,10 +77,10 @@ public class VideoPlayerClarityDialog extends Dialog {
             }
             boolean selected = i == selectedIndex;
             item.setBackgroundResource(selected
-                ? R.drawable.bg_video_clarity_item_selected
-                : R.drawable.bg_video_clarity_item);
+                    ? R.drawable.bg_video_clarity_item_selected
+                    : R.drawable.bg_video_clarity_item);
             nameView.setTextColor(ContextCompat.getColor(getContext(),
-                selected ? android.R.color.white : android.R.color.white));
+                    selected ? android.R.color.white : android.R.color.white));
             if (indicator != null) {
                 indicator.setVisibility(selected ? View.VISIBLE : View.GONE);
             }
@@ -84,7 +90,7 @@ public class VideoPlayerClarityDialog extends Dialog {
                 dismiss();
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i > 0) {
                 lp.topMargin = dp(8);
             }

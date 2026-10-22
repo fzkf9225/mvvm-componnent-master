@@ -30,6 +30,13 @@ public final class VideoPlayerViewHelper {
 
     /**
      * 完整初始化：应用 config、setUp、封面与标题。
+     *
+     * @param player      播放器 View
+     * @param videoUrl    播放地址（http/https、file 路径或 content Uri 字符串）
+     * @param cacheEnable 是否边播边缓存；本地地址建议 false
+     * @param title       顶部标题，可为空
+     * @param thumbUrl    封面图地址，为空时复用 videoUrl
+     * @param config      播放器配置
      */
     public static void setupPlayer(@NonNull ArkVideoPlayerView player,
                                    @NonNull String videoUrl,
@@ -41,16 +48,23 @@ public final class VideoPlayerViewHelper {
         player.applyConfig(config);
         player.setUp(videoUrl, cacheEnable, TextUtils.isEmpty(title) ? "" : title);
         player.setThumbImageView(createThumbImageView(player.getContext(),
-            TextUtils.isEmpty(thumbUrl) ? videoUrl : thumbUrl));
+                TextUtils.isEmpty(thumbUrl) ? videoUrl : thumbUrl));
         if (player.getTitleTextView() != null) {
             player.getTitleTextView().setVisibility(
-                TextUtils.isEmpty(title) || !config.isShowTitle() ? View.GONE : View.VISIBLE);
+                    TextUtils.isEmpty(title) || !config.isShowTitle() ? View.GONE : View.VISIBLE);
         }
         player.setIsTouchWiget(true);
     }
 
     /**
-     * 兼容 {@link io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig} 的初始化重载。
+     * 兼容 {@link VideoPlayerDialogIconConfig} 的初始化重载，将旧图标配置合并进当前 player 的 config。
+     *
+     * @param player      播放器 View
+     * @param videoUrl    播放地址
+     * @param cacheEnable 是否缓存
+     * @param title       标题
+     * @param iconConfig  旧版 Dialog 图标配置，可为 null
+     * @param thumbUrl    封面地址
      */
     public static void setupPlayer(@NonNull ArkVideoPlayerView player,
                                    @NonNull String videoUrl,
@@ -65,6 +79,13 @@ public final class VideoPlayerViewHelper {
         setupPlayer(player, videoUrl, cacheEnable, title, thumbUrl, config);
     }
 
+    /**
+     * 创建封面 ImageView，使用 Glide 加载。
+     *
+     * @param context  上下文
+     * @param imageUrl 封面图 URL 或本地路径
+     * @return 已发起加载的 ImageView（需由调用方交给播放器 setThumbImageView）
+     */
     @NonNull
     public static ImageView createThumbImageView(@NonNull Context context, @NonNull String imageUrl) {
         ImageView imageView = new ImageView(context);
@@ -73,7 +94,11 @@ public final class VideoPlayerViewHelper {
         return imageView;
     }
 
-    /** 开始播放（调用 GSY startPlayLogic） */
+    /**
+     * 开始播放（调用 GSY {@code startPlayLogic}）。
+     *
+     * @param player 已完成 {@link #setupPlayer} 的播放器
+     */
     public static void startPlay(@NonNull ArkVideoPlayerView player) {
         player.startPlayLogic();
     }

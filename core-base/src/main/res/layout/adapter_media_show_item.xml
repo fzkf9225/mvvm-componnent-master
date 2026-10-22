@@ -12,56 +12,26 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageVideo"
-            android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS" />
 
-        <!-- 左侧百分比引导线 -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.33" />
-
-        <!-- 右侧百分比引导线 -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.67" />
-        <!-- 顶部百分比引导线 -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.33" />
-
-        <!-- 底部百分比引导线 -->
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_bottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.67" />
-
-        <com.google.android.material.imageview.ShapeableImageView
+        <io.coderf.arklab.common.widget.customview.CenteredIconContainer
             android:id="@+id/media_play"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@mipmap/icon_play"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-            app:layout_constraintEnd_toEndOf="@id/guideline_right"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+            app:iconSizePercent="0.34"
+            app:iconSrc="@mipmap/icon_play"
+            app:layout_constraintBottom_toBottomOf="@+id/imageVideo"
+            app:layout_constraintEnd_toEndOf="@+id/imageVideo"
+            app:layout_constraintStart_toStartOf="@+id/imageVideo"
+            app:layout_constraintTop_toTopOf="@+id/imageVideo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

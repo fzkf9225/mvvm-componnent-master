@@ -23,17 +23,31 @@ import androidx.lifecycle.LifecycleOwner;
  */
 final class VideoPlayerLifecycleObserver implements DefaultLifecycleObserver, ComponentCallbacks {
 
+    /** 绑定的播放控制器，生命周期事件会转发到其上 */
     @NonNull
     private final VideoPlayerController controller;
+    /** 用于注册/注销 {@link ComponentCallbacks} 的宿主 Activity */
     @NonNull
     private final Activity activity;
+    /** 是否已向 Activity 注册 configuration 回调，避免重复 register */
     private boolean configurationRegistered;
 
+    /**
+     * @param controller 播放控制器
+     * @param activity   用于注册 {@link ComponentCallbacks} 的 Activity
+     */
     VideoPlayerLifecycleObserver(@NonNull VideoPlayerController controller, @NonNull Activity activity) {
         this.controller = controller;
         this.activity = activity;
     }
 
+    /**
+     * 向 LifecycleOwner 注册本观察者。
+     *
+     * @param controller 播放控制器
+     * @param owner      生命周期拥有者
+     * @param activity   屏幕旋转回调所绑定的 Activity
+     */
     static void bind(@NonNull VideoPlayerController controller,
                      @NonNull LifecycleOwner owner,
                      @NonNull Activity activity) {
@@ -83,6 +97,13 @@ final class VideoPlayerLifecycleObserver implements DefaultLifecycleObserver, Co
         configurationRegistered = false;
     }
 
+    /**
+     * 从 LifecycleOwner 解析 Activity；Fragment 未 attach 时回退到 fallback。
+     *
+     * @param owner    LifecycleOwner（Activity 或 Fragment）
+     * @param fallback 无法解析时的兜底 Activity
+     * @return 非空 Activity
+     */
     @Nullable
     static Activity resolveActivity(@NonNull LifecycleOwner owner, @NonNull Activity fallback) {
         if (owner instanceof Activity) {

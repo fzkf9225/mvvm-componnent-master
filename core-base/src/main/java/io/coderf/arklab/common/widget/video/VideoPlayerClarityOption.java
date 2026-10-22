@@ -26,16 +26,31 @@ public record VideoPlayerClarityOption(String name, String url, @NonNull String 
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * @param name 展示名称
+     * @param url  播放地址
+     */
     public VideoPlayerClarityOption(@NonNull String name, @NonNull String url) {
         this(name, url, "", Collections.emptyMap());
     }
 
+    /**
+     * @param name        展示名称
+     * @param url         播放地址
+     * @param description 说明文案，可为空串
+     */
     public VideoPlayerClarityOption(@NonNull String name,
                                     @NonNull String url,
                                     @NonNull String description) {
         this(name, url, description, Collections.emptyMap());
     }
 
+    /**
+     * @param name        展示名称
+     * @param url         播放地址
+     * @param description 说明文案
+     * @param headers     HTTP 请求头，null 视为空 Map
+     */
     public VideoPlayerClarityOption(@NonNull String name,
                                     @NonNull String url,
                                     @NonNull String description,

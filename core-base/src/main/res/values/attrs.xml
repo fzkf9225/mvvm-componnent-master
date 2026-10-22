@@ -1019,4 +1019,16 @@
         <attr name="skeletonShimmerEnabled" />
         <attr name="skeletonShimmerDuration" />
     </declare-styleable>
+
+    <!-- 居中图标容器：外层圆角/背景走 CornerConstraintLayout，中间图标尺寸可百分比或固定宽高 -->
+    <attr name="iconSizePercent" format="float" />
+    <declare-styleable name="CenteredIconContainer">
+        <!-- 中间图标资源 -->
+        <attr name="iconSrc" />
+        <!-- 相对容器较小边的百分比，默认 0.34（对齐原 Guideline 0.33~0.67） -->
+        <attr name="iconSizePercent" />
+        <!-- 固定宽高（px）；任一大于 0 时优先于百分比 -->
+        <attr name="iconWidth" />
+        <attr name="iconHeight" />
+    </declare-styleable>
 </resources>

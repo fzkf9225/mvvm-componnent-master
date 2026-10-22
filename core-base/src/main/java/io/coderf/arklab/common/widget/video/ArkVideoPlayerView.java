@@ -40,44 +40,67 @@ import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
  */
 public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
 
-    /** 播放器行为与 UI 配置 */
+    /** 播放器行为与 UI 配置（宿主模式、工具栏显隐、倍速/清晰度等） */
     @NonNull
     private VideoPlayerConfig config = VideoPlayerConfig.embedDefaults();
 
+    /** 底部手动旋转按钮 */
     @Nullable
     private ShapeableImageView btnRotate;
+    /** 底部倍速 Chip（展示当前倍速文案，如 1.0x） */
     @Nullable
     private MaterialTextView btnSpeed;
+    /** 底部清晰度 Chip（展示当前清晰度名称） */
     @Nullable
     private MaterialTextView btnClarity;
+    /** 底部播放/暂停按钮（与中央大按钮相互独立） */
     @Nullable
     private ShapeableImageView btnBottomPlay;
 
-    /** Dialog 模式下由 {@link VideoPlayerDialog} 控制的全屏展开态（非 GSY Window 全屏） */
+    /** Dialog 模式下由 {@link io.coderf.arklab.common.widget.dialog.VideoPlayerDialog} 控制的全屏展开态（非 GSY Window 全屏） */
     private boolean externalExpanded;
-    /** 当前倍速，用于底部倍速 Chip 展示 */
+    /** 当前倍速数值，仅用于底部倍速 Chip 展示，不直接驱动播放器倍速 */
     private float speedLabel = 1f;
 
+    /** Dialog 宿主下全屏按钮的切换回调，由 {@link #bindDialogFullscreenToggle} 注入 */
     @Nullable
     private OnFullscreenToggleListener fullscreenToggleListener;
 
+    /**
+     * GSY 全屏克隆构造。
+     *
+     * @param context  上下文
+     * @param fullFlag 是否以全屏实例创建
+     */
     public ArkVideoPlayerView(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
+    /** 代码创建用构造 */
     public ArkVideoPlayerView(Context context) {
         super(context);
     }
 
+    /** XML 布局用构造 */
     public ArkVideoPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     * 定制播放器布局资源。
+     *
+     * @return {@code R.layout.video_layout_ark}
+     */
     @Override
     public int getLayoutId() {
         return R.layout.video_layout_ark;
     }
 
+    /**
+     * 初始化子控件引用，并应用默认 GSY 旋转/锁屏策略。
+     *
+     * @param context 上下文
+     */
     @Override
     protected void init(Context context) {
         ensureConfig();
@@ -107,12 +130,22 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         applyConfigInternal();
     }
 
+    /**
+     * 当前播放器配置；若尚未设置则返回嵌入模式默认配置。
+     *
+     * @return 非空配置实例
+     */
     @NonNull
     public VideoPlayerConfig getPlayerConfig() {
         ensureConfig();
         return config;
     }
 
+    /**
+     * 应用配置并立即刷新工具栏显隐、图标与圆角。
+     *
+     * @param config 新配置，不可为 null
+     */
     public void applyConfig(@NonNull VideoPlayerConfig config) {
         this.config = config;
         applyConfigInternal();
@@ -120,18 +153,25 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
 
     /**
      * Dialog 宿主下设置外部全屏展开态，并刷新工具栏。
+     *
+     * @param externalExpanded true 表示 Dialog 已展开为全屏样式
      */
     public void setExternalExpanded(boolean externalExpanded) {
         this.externalExpanded = externalExpanded;
         refreshToolbarVisibility();
     }
 
+    /**
+     * @return Dialog 是否处于外部展开态
+     */
     public boolean isExternalExpanded() {
         return externalExpanded;
     }
 
     /**
      * 是否处于「工具栏展开」态：Activity 恒为 true；Dialog 看 {@link #externalExpanded}；嵌入看 GSY 全屏。
+     *
+     * @return true 时展示完整底部工具栏（旋转/倍速/清晰度等）
      */
     public boolean isToolbarExpanded() {
         ensureConfig();
@@ -144,13 +184,20 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         return mIfCurrentIsFullscreen;
     }
 
+    /**
+     * 更新倍速 Chip 文案（如「1.0x」），不改变实际播放速度。
+     *
+     * @param speed 当前倍速值
+     */
     public void setSpeedLabel(float speed) {
         this.speedLabel = speed;
         updateSpeedChipText();
     }
 
     /**
-     * Dialog 模式绑定全屏按钮切换，由 {@link VideoPlayerDialog} 实现窗口尺寸变化。
+     * Dialog 模式绑定全屏按钮切换，由 {@link io.coderf.arklab.common.widget.dialog.VideoPlayerDialog} 实现窗口尺寸变化。
+     *
+     * @param listener 点击全屏按钮回调，null 表示解绑
      */
     public void bindDialogFullscreenToggle(@Nullable OnFullscreenToggleListener listener) {
         this.fullscreenToggleListener = listener;
@@ -190,12 +237,12 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         }
 
         boolean showFullscreenBtn = config.isShowFullscreen()
-            && config.getHostMode() != VideoPlayerHostMode.ACTIVITY;
+                && config.getHostMode() != VideoPlayerHostMode.ACTIVITY;
         if (mFullscreenButton != null) {
             mFullscreenButton.setVisibility(showFullscreenBtn ? VISIBLE : GONE);
             if (showFullscreenBtn) {
                 mFullscreenButton.setImageResource(expanded
-                    ? icons.getFullscreenExitIconRes() : icons.getFullscreenIconRes());
+                        ? icons.getFullscreenExitIconRes() : icons.getFullscreenIconRes());
             }
         }
 
@@ -322,7 +369,7 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
         }
         if (btnBottomPlay != null) {
             btnBottomPlay.setImageResource(mCurrentState == CURRENT_STATE_PLAYING
-                ? icons.getPauseIconRes() : icons.getPlayIconRes());
+                    ? icons.getPauseIconRes() : icons.getPlayIconRes());
         }
     }
 

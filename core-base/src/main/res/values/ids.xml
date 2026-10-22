@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="title_bar_right" type="id" />
+    <!-- CenteredIconContainer 内部图标，供 ConstraintSet 定位 -->
+    <item name="centered_icon_view" type="id" />
 </resources>

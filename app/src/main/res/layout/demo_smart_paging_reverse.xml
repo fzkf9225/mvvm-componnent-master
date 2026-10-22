@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  聊天式「最新在底部」列表用：不在顶部放 ClassicsHeader，改在底部放 ClassicsFooter。
+  reverseLayout 贴底后，在底部上拉可触发 Footer（业务可映射为全量 refresh）。
+  id 与 base_smart_paging 对齐，便于 BaseSmartPagingFragment findViewById。
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data />
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/smartFreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fl_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mRecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+            <io.coderf.arklab.common.widget.empty.EmptyLayout
+                android:id="@+id/mEmptyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center" />
+        </FrameLayout>
+
+        <!-- 底部刷新区：SmartRefresh 中 Footer 固定在内容下方 -->
+        <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:id="@+id/v_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+</layout>

@@ -75,24 +75,47 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
         setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
 
+    /**
+     * 组装 Header? + Live(最新)? + Paging(历史) + LoadState Footer。
+     * <p>无 Live 时保持原 {@code withLoadStateFooter}；有 Live 时挂在 Paging <b>之前</b>，
+     * 新消息插在列表最前（index 0），避免顶到 Paging append 边界误触发加载更多。</p>
+     */
     protected ConcatAdapter createdHeaderFootAdapter() {
-        ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(
-                new PagingFooterAdapter(() -> adapter.retry(), adapter,emptyLayout.getConfig()));
+        PagingFooterAdapter footer = new PagingFooterAdapter(
+                () -> adapter.retry(), adapter, emptyLayout.getConfig());
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
-        if (header != null) {
-            ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
-                    .setIsolateViewTypes(true)
-                    .build();
-            return new ConcatAdapter(config, header, mainWithFooter);
+        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> live = adapter.getPagingLiveAdapter();
+
+        if (live == null) {
+            ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
+            if (header != null) {
+                ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                        .setIsolateViewTypes(true)
+                        .build();
+                return new ConcatAdapter(config, header, mainWithFooter);
+            }
+            return mainWithFooter;
         }
-        return mainWithFooter;
+
+        // 有实时段：Header? → Live(最新) → Paging(历史) → Footer
+        adapter.addLoadStateListener(states -> {
+            footer.setLoadState(states.getAppend());
+            return Unit.INSTANCE;
+        });
+        ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                .setIsolateViewTypes(true)
+                .build();
+        if (header != null) {
+            return new ConcatAdapter(config, header, live, adapter, footer);
+        }
+        return new ConcatAdapter(config, live, adapter, footer);
     }
 
     protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {
         // 处理下拉刷新逻辑
         if (loadStates.getRefresh() instanceof LoadState.NotLoading) {
             refreshLayout.setRefreshing(false);
-            if (adapter.getItemCount() == 0) {
+            if (adapter.getContentItemCount() == 0) {
                 setViewState(EmptyLayout.State.NO_DATA);
             } else {
                 setViewState(EmptyLayout.State.HIDE_LAYOUT);
@@ -113,7 +136,7 @@ public abstract class BasePagingFragment<VM extends BasePagingViewModel, VDB ext
      */
     protected boolean shouldShowEmptyLayoutOnRefreshError() {
         return adapter != null
-                && adapter.getItemCount() == 0
+                && adapter.getContentItemCount() == 0
                 && isInitialLoadingVisible();
     }
 
