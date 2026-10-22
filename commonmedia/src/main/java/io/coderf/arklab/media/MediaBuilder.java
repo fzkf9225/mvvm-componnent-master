@@ -110,6 +110,12 @@ public class MediaBuilder {
      */
     private int videoSkipCompressUnderKb = 0;
     /**
+     * 单次视频压缩超时时间，单位毫秒。
+     * 默认 120秒 表示启用超时；
+     * 大于 0 时，超过该时间仍未完成会回调 {@link io.coderf.arklab.media.compressor.video.CompressListener#onResult(boolean, String)} 失败。
+     */
+    private long videoCompressTimeoutMs = 120_000L;
+    /**
      * FileProvider authority；为空时使用 {@code packageName + .FileProvider}
      */
     @Nullable
@@ -907,6 +913,18 @@ public class MediaBuilder {
     }
 
     /**
+     * 单次视频压缩超时（毫秒）。0 表示不超时；大于 0 时超时后回调压缩失败。
+     * 建议相册高分辨率/HEVC 场景设置 60_000～180_000。
+     *
+     * @param videoCompressTimeoutMs 超时毫秒，小于 0 按 0 处理
+     * @return this
+     */
+    public MediaBuilder setVideoCompressTimeoutMs(long videoCompressTimeoutMs) {
+        this.videoCompressTimeoutMs = Math.max(0L, videoCompressTimeoutMs);
+        return this;
+    }
+
+    /**
      * 自定义 FileProvider authority。空则使用 {@code packageName.FileProvider}。
      * 宿主 App 的 authority 不是默认值时需要设置，否则拍照/压缩 Uri 会失败。
      *
@@ -1037,6 +1055,13 @@ public class MediaBuilder {
      */
     public int getVideoSkipCompressUnderKb() {
         return videoSkipCompressUnderKb;
+    }
+
+    /**
+     * 单次视频压缩超时毫秒。0 表示不启用超时。
+     */
+    public long getVideoCompressTimeoutMs() {
+        return videoCompressTimeoutMs;
     }
 
     /**

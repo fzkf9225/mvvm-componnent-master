@@ -7,22 +7,12 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMuxer;
 import android.net.Uri;
 import android.util.Log;
 
-import com.coremedia.iso.boxes.Container;
-import com.googlecode.mp4parser.authoring.Movie;
-import com.googlecode.mp4parser.authoring.Track;
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
-import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
-import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
-
 import java.io.File;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.LinkedList;
-import java.util.List;
 
 import io.coderf.arklab.media.utils.LogUtil;
 
@@ -159,6 +149,23 @@ public class VideoController {
     }
 
     /**
+     * 将旋转角归一到 {0, 90, 180, 270}。
+     * 相册部分 HEVC 视频仅通过 display matrix 标记为 -90/-270，MediaMetadataRetriever 偶发直接给出负值。
+     */
+    private static int normalizeRotation(int rotation) {
+        int r = rotation % 360;
+        if (r < 0) {
+            r += 360;
+        }
+        // 四舍五入到最近的 90 度
+        int nearest = Math.round(r / 90f) * 90;
+        if (nearest == 360) {
+            nearest = 0;
+        }
+        return nearest;
+    }
+
+    /**
      * 执行视频压缩处理帧
      *
      * @param sourcePath      压缩前的文件
@@ -180,17 +187,14 @@ public class VideoController {
         }
 
         LogUtil.logger(TAG, "拷贝目标临时文件路径：" + tempFile.getAbsolutePath());
-        int rotationValue = videoInfo.rotation();
+        // 归一化旋转角：部分相册视频（尤其 display matrix）会给出 -90/-180/-270
+        int rotationValue = normalizeRotation(videoInfo.rotation());
 
         int resultWidth;
         int resultHeight;
         int bitrate = switch (quality) {
             case COMPRESS_QUALITY_HIGH -> {
-                if (rotationValue == 90) {
-                    resultHeight = videoInfo.width() * 2 / 3;
-                    resultWidth = videoInfo.height() * 2 / 3;
-                    rotationValue = 0;
-                } else if (rotationValue == 270) {
+                if (rotationValue == 90 || rotationValue == 270) {
                     resultHeight = videoInfo.width() * 2 / 3;
                     resultWidth = videoInfo.height() * 2 / 3;
                     rotationValue = 0;
@@ -202,11 +206,7 @@ public class VideoController {
                 yield resultWidth * resultHeight * 30;
             }
             case COMPRESS_QUALITY_MEDIUM -> {
-                if (rotationValue == 90) {
-                    resultHeight = videoInfo.width();
-                    resultWidth = videoInfo.height();
-                    rotationValue = 0;
-                } else if (rotationValue == 270) {
+                if (rotationValue == 90 || rotationValue == 270) {
                     resultHeight = videoInfo.width();
                     resultWidth = videoInfo.height();
                     rotationValue = 0;
@@ -218,11 +218,7 @@ public class VideoController {
                 yield resultWidth * resultHeight * 5;
             }
             default -> {
-                if (rotationValue == 90) {
-                    resultHeight = videoInfo.width() / 2;
-                    resultWidth = videoInfo.height() / 2;
-                    rotationValue = 0;
-                } else if (rotationValue == 270) {
+                if (rotationValue == 90 || rotationValue == 270) {
                     resultHeight = videoInfo.width() / 2;
                     resultWidth = videoInfo.height() / 2;
                     rotationValue = 0;
@@ -259,27 +255,136 @@ public class VideoController {
             LogUtil.logger(TAG, "压缩用时：" + (System.currentTimeMillis() - time));
         }
 
-        List<com.googlecode.mp4parser.authoring.Track> audioTracks = new LinkedList<>();// 音频通道集合
-        for (com.googlecode.mp4parser.authoring.Track inMovieTrack : MovieCreator.build(tempFile.getAbsolutePath()).getTracks()) {
-            if ("soun".equals(inMovieTrack.getHandler())) {// 从Movie对象中取出音频通道
-                audioTracks.add(inMovieTrack);
+        // 编码阶段结束后再合并音视频。旧实现用 mp4parser MovieCreator.build 解析原片/中间文件，
+        // 对部分相册 HEVC（高码率、旋转矩阵）会卡死，表现为进度停在 98%~99% 永不回调。
+        // 改为系统 MediaMuxer：视频轨来自压缩中间文件，音频轨从原片透传拷贝。
+        if (listener != null) {
+            listener.onProgress(100f);
+        }
+        long mergeStart = System.currentTimeMillis();
+        try {
+            muxVideoAndAudio(cacheFile.getAbsolutePath(), tempFile.getAbsolutePath(), destinationPath);
+            LogUtil.logger(TAG, "音视频合并用时：" + (System.currentTimeMillis() - mergeStart));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("合并音视频出错，" + e);
+        } finally {
+            // 清理中间无声视频与拷贝的临时源文件
+            try {
+                if (cacheFile.exists() && !cacheFile.delete()) {
+                    LogUtil.logger(TAG, "删除中间视频失败: " + cacheFile.getAbsolutePath());
+                }
+            } catch (Exception ignore) {
+            }
+            try {
+                if (tempFile.exists() && !tempFile.delete()) {
+                    LogUtil.logger(TAG, "删除临时源文件失败: " + tempFile.getAbsolutePath());
+                }
+            } catch (Exception ignore) {
             }
         }
-        //合并音视频，因为只是压缩，音频和视频的帧数是相同的，所以可以直接合并，并不需要额外处理
-        //这里并没有压缩音频，只是把音频通道追加到视频通道后面，这样在合并的时候，音频和视频的帧数是相同的
-        Movie resultMovie = new Movie();// 结果Movie对象[输出]
-        if (!audioTracks.isEmpty()) {// 将所有音频通道追加合并
-            resultMovie.addTrack(new AppendTrack(audioTracks.toArray(new Track[audioTracks.size()])));
-        }
-        List<Track> resultVideoTrack = MovieCreator.build(cacheFile.getAbsolutePath()).getTracks();
-        for (Track videoTrack : resultVideoTrack) {
-            resultMovie.addTrack(videoTrack);
-        }
-        Container outContainer = new DefaultMp4Builder().build(resultMovie);// 将结果Movie对象封装进容器
-        FileChannel fileChannel = new RandomAccessFile(destinationPath, "rw").getChannel();
-        outContainer.writeContainer(fileChannel);// 将容器内容写入磁盘
-        fileChannel.close();
         videoConvertFirstWrite = false;
+    }
+
+    /**
+     * 使用 MediaMuxer 将压缩后的视频轨与原片音频轨合并为最终文件。
+     * 不依赖 mp4parser，避免 MovieCreator 在部分 HEVC 文件上阻塞。
+     */
+    private void muxVideoAndAudio(String videoPath, String audioSourcePath, String outputPath) throws Exception {
+        MediaExtractor videoExtractor = new MediaExtractor();
+        MediaExtractor audioExtractor = null;
+        MediaMuxer muxer = null;
+        try {
+            videoExtractor.setDataSource(videoPath);
+            int videoTrackIndex = selectTrack(videoExtractor, false);
+            if (videoTrackIndex < 0) {
+                throw new IllegalStateException("压缩后的视频文件无视频轨道");
+            }
+            videoExtractor.selectTrack(videoTrackIndex);
+            MediaFormat videoFormat = videoExtractor.getTrackFormat(videoTrackIndex);
+
+            muxer = new MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+            int muxerVideoTrack = muxer.addTrack(videoFormat);
+
+            int muxerAudioTrack = -1;
+            int audioTrackIndex = -1;
+            audioExtractor = new MediaExtractor();
+            audioExtractor.setDataSource(audioSourcePath);
+            audioTrackIndex = selectTrack(audioExtractor, true);
+            if (audioTrackIndex >= 0) {
+                audioExtractor.selectTrack(audioTrackIndex);
+                MediaFormat audioFormat = audioExtractor.getTrackFormat(audioTrackIndex);
+                muxerAudioTrack = muxer.addTrack(audioFormat);
+            }
+
+            muxer.start();
+
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+            // 部分设备 KEY_MAX_INPUT_SIZE 缺失，给一个足够大的默认缓冲
+            int maxVideoSize = 1024 * 1024;
+            try {
+                maxVideoSize = videoFormat.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE);
+            } catch (Exception ignore) {
+            }
+            if (maxVideoSize <= 0) {
+                maxVideoSize = 1024 * 1024;
+            }
+            ByteBuffer videoBuffer = ByteBuffer.allocateDirect(Math.max(maxVideoSize, 256 * 1024));
+            copySamples(videoExtractor, muxer, muxerVideoTrack, videoBuffer, bufferInfo);
+
+            if (muxerAudioTrack >= 0 && audioTrackIndex >= 0) {
+                int maxAudioSize = 64 * 1024;
+                try {
+                    maxAudioSize = audioExtractor.getTrackFormat(audioTrackIndex)
+                            .getInteger(MediaFormat.KEY_MAX_INPUT_SIZE);
+                } catch (Exception ignore) {
+                }
+                if (maxAudioSize <= 0) {
+                    maxAudioSize = 64 * 1024;
+                }
+                ByteBuffer audioBuffer = ByteBuffer.allocateDirect(Math.max(maxAudioSize, 16 * 1024));
+                copySamples(audioExtractor, muxer, muxerAudioTrack, audioBuffer, bufferInfo);
+            }
+        } finally {
+            try {
+                if (muxer != null) {
+                    muxer.stop();
+                    muxer.release();
+                }
+            } catch (Exception e) {
+                LogUtil.logger(TAG, "MediaMuxer release 异常: " + e);
+            }
+            try {
+                videoExtractor.release();
+            } catch (Exception ignore) {
+            }
+            if (audioExtractor != null) {
+                try {
+                    audioExtractor.release();
+                } catch (Exception ignore) {
+                }
+            }
+        }
+    }
+
+    private void copySamples(MediaExtractor extractor, MediaMuxer muxer, int muxerTrackIndex,
+                             ByteBuffer buffer, MediaCodec.BufferInfo bufferInfo) {
+        extractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
+        while (true) {
+            buffer.clear();
+            int sampleSize = extractor.readSampleData(buffer, 0);
+            if (sampleSize < 0) {
+                break;
+            }
+            bufferInfo.offset = 0;
+            bufferInfo.size = sampleSize;
+            bufferInfo.presentationTimeUs = extractor.getSampleTime();
+            bufferInfo.flags = extractor.getSampleFlags();
+            muxer.writeSampleData(muxerTrackIndex, buffer, bufferInfo);
+            if (!extractor.advance()) {
+                break;
+            }
+        }
     }
 
     private void writeVideoFile(VideoInfo videoInfo, MediaExtractor extractor, MP4Writer mp4Writer, CompressListener listener) throws Exception {
@@ -404,7 +509,16 @@ public class VideoController {
                                     inputSurface.setPresentationTime(info.presentationTimeUs * 1000);
 
                                     if (listener != null) {
-                                        listener.onProgress((float) info.presentationTimeUs / (float) videoInfo.duration() * 100);
+                                        float percent = videoInfo.duration() > 0
+                                                ? (float) info.presentationTimeUs / (float) videoInfo.duration() * 100f
+                                                : 0f;
+                                        // 避免 PTS 与 duration 略有偏差时进度超过 100 或长期停在 99
+                                        if (percent > 99.5f && percent < 100f) {
+                                            percent = 99.5f;
+                                        } else if (percent >= 100f) {
+                                            percent = 99.9f;
+                                        }
+                                        listener.onProgress(percent);
                                     }
                                     inputSurface.swapBuffers();
                                 }

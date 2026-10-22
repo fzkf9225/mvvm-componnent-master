@@ -149,20 +149,22 @@ public class MediaCompressHandler extends Handler {
         if (quality == null) {
             quality = VideoQualityEnum.MEDIUM;
         }
+        long timeoutMs = mediaHelper.getMediaBuilder().getVideoCompressTimeoutMs();
+        VideoCompressListener listener = new VideoCompressListener(outputFile, currentIndex, srcUriList.size());
 
         switch (quality) {
             case HIGH:
                 VideoCompress.compressVideoHigh(mediaHelper.getMediaBuilder().getContext(),
-                        videoUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, currentIndex, srcUriList.size()));
+                        videoUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 break;
             case LOW:
                 VideoCompress.compressVideoLow(mediaHelper.getMediaBuilder().getContext(),
-                        videoUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, currentIndex, srcUriList.size()));
+                        videoUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 break;
             case MEDIUM:
             default:
                 VideoCompress.compressVideoMedium(mediaHelper.getMediaBuilder().getContext(),
-                        videoUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, currentIndex, srcUriList.size()));
+                        videoUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 break;
         }
     }

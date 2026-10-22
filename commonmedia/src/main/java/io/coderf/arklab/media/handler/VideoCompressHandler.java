@@ -79,18 +79,20 @@ public class VideoCompressHandler extends Handler {
                     }
                 }
                 File outputFile = mediaHelper.getMediaBuilder().buildVideoOutputFile("VIDEO_");
+                long timeoutMs = mediaHelper.getMediaBuilder().getVideoCompressTimeoutMs();
+                VideoCompressListener listener = new VideoCompressListener(outputFile, msg.what, uriList.size());
                 if (mediaHelper.getMediaBuilder().getVideoQuality() == VideoQualityEnum.HIGH) {
                     VideoCompress.compressVideoHigh(mediaHelper.getMediaBuilder().getContext(),
-                            currentUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
+                            currentUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 } else if (mediaHelper.getMediaBuilder().getVideoQuality() == VideoQualityEnum.MEDIUM) {
                     VideoCompress.compressVideoMedium(mediaHelper.getMediaBuilder().getContext(),
-                            currentUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
+                            currentUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 } else if (mediaHelper.getMediaBuilder().getVideoQuality() == VideoQualityEnum.LOW) {
                     VideoCompress.compressVideoLow(mediaHelper.getMediaBuilder().getContext(),
-                            currentUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
+                            currentUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 } else {
                     VideoCompress.compressVideoMedium(mediaHelper.getMediaBuilder().getContext(),
-                            currentUri, outputFile.getAbsolutePath(), new VideoCompressListener(outputFile, msg.what, uriList.size()));
+                            currentUri, outputFile.getAbsolutePath(), listener, timeoutMs);
                 }
             }
         } catch (Exception e) {
