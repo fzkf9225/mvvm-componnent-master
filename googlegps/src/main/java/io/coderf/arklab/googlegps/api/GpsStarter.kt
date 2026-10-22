@@ -269,7 +269,7 @@ class GpsStarter(
      * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param onResult 定位结果回调，定位失败时返回null
      */
-    fun startSingleLocation(gpsCallback: GpsCallback? = null, onResult: (Location?) -> Unit) {
+    fun startSingleLocation(gpsCallback: GpsCallback? = null, checkBackPermission: Boolean = false, onResult: (Location?) -> Unit) {
         if (isRunning) {
             onResult(null)
             return
@@ -278,7 +278,7 @@ class GpsStarter(
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
         // 触发权限和GPS检测
-        gpsObserver?.startCheck(permissionGpsCallback)
+        gpsObserver?.startCheck(checkBackPermission,permissionGpsCallback)
     }
 
     /**
