@@ -1,4 +1,5 @@
 package io.coderf.arklab.googlegps.api
+
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -78,6 +79,7 @@ class GpsStarter(
     companion object {
         private const val TAG = "GpsStarter"
     }
+
     /** GPS 生命周期观察者，负责权限和GPS状态检测 */
     private var gpsObserver: GpsLifecycleObserver? = null
 
@@ -87,6 +89,7 @@ class GpsStarter(
     /** GPS 服务实例 */
     private var gpsService: GpsService? = null
     private val starterScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     /** 位置观察者列表，用于接收位置更新 */
     private val locationObservers = mutableListOf<Observer<Location>>()
 
@@ -269,7 +272,11 @@ class GpsStarter(
      * @param gpsCallback GPS回调配置，可选，用于自定义通知栏和上传逻辑
      * @param onResult 定位结果回调，定位失败时返回null
      */
-    fun startSingleLocation(gpsCallback: GpsCallback? = null, checkBackPermission: Boolean = false, onResult: (Location?) -> Unit) {
+    fun startSingleLocation(
+        gpsCallback: GpsCallback? = null,
+        checkBackPermission: Boolean = false,
+        onResult: (Location?) -> Unit
+    ) {
         if (isRunning) {
             onResult(null)
             return
@@ -278,7 +285,7 @@ class GpsStarter(
         // 存储待执行的请求
         pendingRequest = PendingLocationRequest(once = true, onResult = onResult)
         // 触发权限和GPS检测
-        gpsObserver?.startCheck(checkBackPermission,permissionGpsCallback)
+        gpsObserver?.startCheck(checkBackPermission, permissionGpsCallback)
     }
 
     /**
@@ -291,7 +298,11 @@ class GpsStarter(
      * @param onEachLocation 每次定位更新的回调
      * @return 停止函数，调用后可停止定位服务
      */
-    fun startContinuousLocation(gpsCallback: GpsCallback? = null, onEachLocation: (Location) -> Unit): () -> Unit {
+    fun startContinuousLocation(
+        gpsCallback: GpsCallback? = null,
+        checkBackPermission: Boolean = true,
+        onEachLocation: (Location) -> Unit
+    ): () -> Unit {
         if (isRunning) {
             return {}
         }
@@ -303,7 +314,7 @@ class GpsStarter(
         }
 
         pendingRequest = PendingLocationRequest(once = false, onResult = onResult)
-        gpsObserver?.startCheck(permissionGpsCallback)
+        gpsObserver?.startCheck(checkBackPermission, permissionGpsCallback)
 
         return {
             if (isRunning) {
@@ -323,7 +334,11 @@ class GpsStarter(
      * @param once true: 单次定位，false: 持续定位
      * @return Location的Flow流
      */
-    fun locationFlow(gpsCallback: GpsCallback? = null, once: Boolean = false): Flow<Location> = callbackFlow {
+    fun locationFlow(
+        gpsCallback: GpsCallback? = null,
+        once: Boolean = false,
+        checkBackPermission: Boolean = true
+    ): Flow<Location> = callbackFlow {
         val observer = Observer<Location> { location ->
             trySend(location)
             if (once) {
@@ -342,7 +357,7 @@ class GpsStarter(
             observer = observer
         )
 
-        gpsObserver?.startCheck(permissionGpsCallback)
+        gpsObserver?.startCheck(checkBackPermission, permissionGpsCallback)
 
         awaitClose {
             cleanup()
@@ -427,6 +442,7 @@ class GpsStarter(
     public fun getGpsService(): GpsService? {
         return gpsService
     }
+
     /**
      * 启动前台Service并绑定
      *
@@ -473,6 +489,7 @@ class GpsStarter(
     fun startLocationFlow(
         gpsCallback: GpsCallback? = null,
         once: Boolean = false,
+        checkBackPermission: Boolean = true,
         onStart: (() -> Unit)? = null,
         onLocation: (Location) -> Unit
     ): Job {
@@ -483,7 +500,7 @@ class GpsStarter(
             // 如果有 onStart 回调，在这里触发
             onStart?.invoke()
 
-            locationFlow(gpsCallback, once).collect { location ->
+            locationFlow(gpsCallback, once, checkBackPermission).collect { location ->
                 onLocation(location)
             }
         }
