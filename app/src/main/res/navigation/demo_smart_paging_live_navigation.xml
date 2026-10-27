@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/demo_smart_paging_tail_layout_page"
         android:name="io.coderf.arklab.demo.fragment.DemoSmartPagingLiveFragment"
-        android:label="SmartPaging 实时尾追加示例"
-        tools:layout="@layout/base_smart_paging" />
+        android:label="SmartPaging 本地发消息示例"
+        tools:layout="@layout/demo_smart_paging_reverse" />
 </navigation>

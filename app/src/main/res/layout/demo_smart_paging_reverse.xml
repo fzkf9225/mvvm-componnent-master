@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   聊天式「最新在底部」列表用：不在顶部放 ClassicsHeader，改在底部放 ClassicsFooter。
-  reverseLayout 贴底后，在底部上拉可触发 Footer（业务可映射为全量 refresh）。
+  reverseLayout 贴底；底部上拉可映射为 Room 全量 refresh（本地数据不丢）。
   id 与 base_smart_paging 对齐，便于 BaseSmartPagingFragment findViewById。
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android">

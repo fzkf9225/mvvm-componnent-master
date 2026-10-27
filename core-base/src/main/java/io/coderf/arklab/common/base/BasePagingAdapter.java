@@ -17,16 +17,15 @@ import io.coderf.arklab.common.listener.PagingAdapterListener;
 import io.coderf.arklab.common.widget.recyclerview.SimpleItemTouchHelperCallback;
 
 /**
- * Paging 列表；可选 Concat 前置 Header / Live（见
- * {@link #setPagingHeaderAdapter} / {@link #setPagingLiveAdapter}）。
+ * Paging 列表；可选 Concat 前置业务 Header（见 {@link #setPagingHeaderAdapter}）。
  *
- * <p>历史由 {@link #submitData} 驱动；会话内动态数据用
- * {@link io.coderf.arklab.common.adapter.PagingLiveAdapter}，勿在本 Adapter 内伪造 itemCount。</p>
+ * <p>列表数据由 {@link #submitData} 驱动；单条增删请走数据源（如 Room insert 后
+ * {@code refreshData}/{@code adapter.refresh()}），勿在本 Adapter 内伪造 itemCount。</p>
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
- * @updated 2026/10/22 Live 命名与 Concat 前置
+ * @updated 2026/10/27 移除 Live 内存段，单条插入改由数据源驱动
  */
 public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends PagingDataAdapter<T, BaseViewHolder<VDB>> implements
         SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
@@ -35,9 +34,6 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
 
     @Nullable
     private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingHeaderAdapter;
-
-    @Nullable
-    private RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingLiveAdapter;
 
     public BasePagingAdapter(@NonNull DiffUtil.ItemCallback<T> diffCallback) {
         super(diffCallback);
@@ -53,45 +49,17 @@ public abstract class BasePagingAdapter<T, VDB extends ViewDataBinding> extends 
     }
 
     /**
-     * 会话内实时最新段，默认 null。
-     * 组装顺序：Header? → <b>Live</b> → Paging → LoadState；
-     * 新数据插在 Live 的 index 0（见 {@link io.coderf.arklab.common.adapter.PagingLiveAdapter#append}）。
-     */
-    public void setPagingLiveAdapter(@Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> pagingLiveAdapter) {
-        this.pagingLiveAdapter = pagingLiveAdapter;
-    }
-
-    @Nullable
-    public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> getPagingLiveAdapter() {
-        return pagingLiveAdapter;
-    }
-
-    /**
-     * Concat 中位于本 PagingAdapter 之前的条目数（业务 Header + Live）。
+     * Concat 中位于本 PagingAdapter 之前的条目数（业务 Header）。
      */
     public int getPagingLeadingExtraItemCount() {
-        int count = 0;
-        if (pagingHeaderAdapter != null) {
-            count += pagingHeaderAdapter.getItemCount();
-        }
-        if (pagingLiveAdapter != null) {
-            count += pagingLiveAdapter.getItemCount();
-        }
-        return count;
+        return pagingHeaderAdapter != null ? pagingHeaderAdapter.getItemCount() : 0;
     }
 
     /**
-     * 实时 Live 段条目数。
-     */
-    public int getPagingLiveItemCount() {
-        return pagingLiveAdapter != null ? pagingLiveAdapter.getItemCount() : 0;
-    }
-
-    /**
-     * 分页 + Live 总条数（不含业务 Header / LoadState），用于空态。
+     * 内容条数（不含业务 Header / LoadState），用于空态。
      */
     public int getContentItemCount() {
-        return getItemCount() + getPagingLiveItemCount();
+        return getItemCount();
     }
 
     @Override

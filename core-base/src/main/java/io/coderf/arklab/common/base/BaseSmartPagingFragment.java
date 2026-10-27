@@ -92,39 +92,20 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     }
 
     /**
-     * 组装 Header? + Live(最新)? + Paging(历史) + LoadState Footer。
-     * <p>无 Live 时保持原 {@code withLoadStateFooter}；有 Live 时挂在 Paging <b>之前</b>，
-     * 新消息插在列表最前（index 0），避免顶到 Paging append 边界误触发加载更多。</p>
+     * 组装 Header? + Paging + LoadState Footer（{@link BasePagingAdapter#withLoadStateFooter}）。
      */
     protected ConcatAdapter createdHeaderFootAdapter() {
         PagingFooterAdapter footer = new PagingFooterAdapter(
                 () -> adapter.retry(), adapter, emptyLayout.getConfig());
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
-        RecyclerView.Adapter<? extends RecyclerView.ViewHolder> live = adapter.getPagingLiveAdapter();
-
-        if (live == null) {
-            ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
-            if (header != null) {
-                ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
-                        .setIsolateViewTypes(true)
-                        .build();
-                return new ConcatAdapter(config, header, mainWithFooter);
-            }
-            return mainWithFooter;
-        }
-
-        // 有实时段：Header? → Live(最新) → Paging(历史) → Footer
-        adapter.addLoadStateListener(states -> {
-            footer.setLoadState(states.getAppend());
-            return Unit.INSTANCE;
-        });
-        ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
-                .setIsolateViewTypes(true)
-                .build();
+        ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
         if (header != null) {
-            return new ConcatAdapter(config, header, live, adapter, footer);
+            ConcatAdapter.Config config = new ConcatAdapter.Config.Builder()
+                    .setIsolateViewTypes(true)
+                    .build();
+            return new ConcatAdapter(config, header, mainWithFooter);
         }
-        return new ConcatAdapter(config, live, adapter, footer);
+        return mainWithFooter;
     }
 
     protected Function1<CombinedLoadStates, Unit> loadStateListener = loadStates -> {

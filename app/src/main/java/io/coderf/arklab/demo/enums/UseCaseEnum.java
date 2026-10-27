@@ -68,7 +68,7 @@ public enum UseCaseEnum {
     PAGING(DemoPagingActivity.class, "Paging列表示例", "Jetpack Paging3列表封装", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
     SMART_PAGING_HEADER(DemoSmartPagingHeaderActivity.class, "SmartPaging带头布局", "Paging3 + Smart + 可选列表头（示例 16:9 图）", null),
-    SMART_PAGING_TAIL(DemoSmartPagingLiveActivity.class, "SmartPaging实时Live追加", "Paging 历史 + Paging Live 同类型动态追加 + reverse 贴底（模拟发消息）", null),
+    SMART_PAGING_TAIL(DemoSmartPagingLiveActivity.class, "SmartPaging本地发消息", "Room + Paging3：历史分页 + 本地 insert 单条 + reverse 贴底（模拟发消息）", null),
     SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),
     ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3综合列表封装", null),
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),

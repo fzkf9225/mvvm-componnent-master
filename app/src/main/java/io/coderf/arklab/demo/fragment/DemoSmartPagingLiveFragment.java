@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.paging.LoadState;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,36 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
-
 import dagger.hilt.android.AndroidEntryPoint;
-import io.coderf.arklab.common.adapter.PagingLiveAdapter;
 import io.coderf.arklab.common.base.BasePagingAdapter;
 import io.coderf.arklab.common.base.BaseSmartPagingFragment;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.demo.R;
-import io.coderf.arklab.demo.adapter.PagingDemoAdapter;
-import io.coderf.arklab.demo.adapter.PagingLiveDemoAdapter;
-import io.coderf.arklab.demo.bean.NotificationMessageBean;
+import io.coderf.arklab.demo.adapter.PagingLocalChatAdapter;
+import io.coderf.arklab.demo.bean.LocalChatMessage;
 import io.coderf.arklab.demo.databinding.DemoSmartPagingReverseBinding;
-import io.coderf.arklab.demo.viewmodel.DemoPagingViewModel;
+import io.coderf.arklab.demo.viewmodel.DemoLocalChatPagingViewModel;
+import io.reactivex.rxjava3.disposables.Disposable;
 import kotlin.Unit;
 
 /**
- * 演示：最新在屏幕底部（仅 {@code reverseLayout}，不用 stackFromEnd）+ 底部上拉刷新。
+ * Room + Paging3 本地发消息演示：历史分页 + reverse 贴底；发送 = insert + refresh。
  * <p>
- * 布局：app 模块 {@link R.layout#demo_smart_paging_reverse}。
+ * 布局：{@link R.layout#demo_smart_paging_reverse}。
  */
 @AndroidEntryPoint
 public class DemoSmartPagingLiveFragment
-        extends BaseSmartPagingFragment<DemoPagingViewModel, DemoSmartPagingReverseBinding, NotificationMessageBean>
+        extends BaseSmartPagingFragment<DemoLocalChatPagingViewModel, DemoSmartPagingReverseBinding, LocalChatMessage>
         implements OnLoadMoreListener {
 
-    private PagingLiveDemoAdapter liveAdapter;
-    private int appendSeq = 0;
+    private boolean pendingScrollToNewest;
 
     @Override
     protected int getLayoutId() {
@@ -49,20 +41,21 @@ public class DemoSmartPagingLiveFragment
     }
 
     @Override
-    protected BasePagingAdapter<NotificationMessageBean, ?> getRecyclerAdapter() {
-        PagingDemoAdapter pagingDemoAdapter = new PagingDemoAdapter();
-        liveAdapter = new PagingLiveDemoAdapter();
-        liveAdapter.setOnPagingAdapterListener(this);
-        pagingDemoAdapter.setPagingLiveAdapter(liveAdapter);
-        return pagingDemoAdapter;
+    protected BasePagingAdapter<LocalChatMessage, ?> getRecyclerAdapter() {
+        return new PagingLocalChatAdapter();
     }
 
     @Override
     protected RecyclerView.LayoutManager createLayoutManager() {
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
-        // 仅 reverse：数据 index0=最新 → 视觉底部；不要 setStackFromEnd，否则首屏要对齐异常
+        // 仅 reverse：数据 index0=最新 → 视觉底部
         lm.setReverseLayout(true);
         return lm;
+    }
+
+    @Override
+    protected boolean hideRecycleViewDivider() {
+        return true;
     }
 
     @Override
@@ -76,8 +69,13 @@ public class DemoSmartPagingLiveFragment
         adapter.addLoadStateListener(states -> {
             if (states.getRefresh() instanceof LoadState.NotLoading) {
                 refreshLayout.finishLoadMore();
+                if (pendingScrollToNewest) {
+                    pendingScrollToNewest = false;
+                    scrollToNewest();
+                }
             } else if (states.getRefresh() instanceof LoadState.Error) {
                 refreshLayout.finishLoadMore(false);
+                pendingScrollToNewest = false;
             }
             return Unit.INSTANCE;
         });
@@ -87,8 +85,13 @@ public class DemoSmartPagingLiveFragment
     protected void initData(Bundle bundle) {
         super.initData(bundle);
         mViewModel.getItems().observe(this, observer);
-        mViewModel.refreshData();
-        adapter.refresh();
+        mViewModel.ensureSeedHistory(
+                () -> {
+                    mViewModel.refreshData();
+                    adapter.refresh();
+                },
+                e -> showToast("初始化本地消息失败")
+        );
     }
 
     /** 新消息后贴视觉底部（reverse 下 position 0）。 */
@@ -103,32 +106,19 @@ public class DemoSmartPagingLiveFragment
         });
     }
 
-    public void appendLiveItem() {
-        if (liveAdapter == null) {
-            return;
-        }
-        appendSeq++;
-        NotificationMessageBean bean = new NotificationMessageBean();
-        bean.setId("live-" + UUID.randomUUID());
-        bean.setTitle("[实时最新 #" + appendSeq + "] 模拟新消息");
-        bean.setContent("数据 index 0；reverseLayout 后在屏幕底部。");
-        bean.setPublishDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
-        liveAdapter.append(bean);
-        scrollToNewest();
-        showToast("已插入第 " + appendSeq + " 条（视觉底部）");
-    }
-
-    @Nullable
-    public PagingLiveAdapter<?, ?> getLiveAdapter() {
-        return liveAdapter;
+    /**
+     * 本地发送：Room insert → refreshData → adapter.refresh → 贴底。
+     */
+    public void sendLocalMessage(@NonNull String text) {
+        mViewModel.sendMessage(text, () -> {
+            pendingScrollToNewest = true;
+            adapter.refresh();
+        }, e -> showToast("发送失败"));
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        if (liveAdapter != null) {
-            liveAdapter.clearLive();
-        }
-        appendSeq = 0;
+        // Demo：底部上拉 = 从 Room 重新拉分页（本地数据不会丢）
         mViewModel.refreshData();
         adapter.refresh();
     }
@@ -139,29 +129,26 @@ public class DemoSmartPagingLiveFragment
     }
 
     @Override
-    public void onItemClick(View view, NotificationMessageBean item, int position) {
+    public void onItemClick(View view, LocalChatMessage item, int position) {
         super.onItemClick(view, item, position);
-        String tag = item.getId() != null && item.getId().startsWith("live-") ? "（实时最新）" : "（历史分页）";
-        showToast(tag + " 第" + position + "行：" + item.getTitle());
+        String side = item.isMine() ? "我" : "对方";
+        showToast(side + "：" + item.getContent());
     }
 
     @Override
-    public void onItemLongClick(View view, NotificationMessageBean item, int position) {
+    public void onItemLongClick(View view, LocalChatMessage item, int position) {
         super.onItemLongClick(view, item, position);
-        if (item.getId() != null && item.getId().startsWith("live-") && liveAdapter != null) {
-            new ConfirmDialog(requireContext())
-                    .setPositiveText("删除")
-                    .setMessage("删除这条实时消息？")
-                    .setOnPositiveClickListener(dialog -> {
-                        liveAdapter.removeIf(t -> item.getId().equals(t.getId()));
-                    })
-                    .builder()
-                    .show();
-            return;
-        }
         new ConfirmDialog(requireContext())
-                .setPositiveText("确认")
-                .setMessage("历史分页项请从数据源删除，这里仅演示点击。")
+                .setPositiveText("删除")
+                .setMessage("从本地 Room 删除这条消息？")
+                .setOnPositiveClickListener(dialog -> {
+                    Disposable ignored = mViewModel.getIRepository().delete(item, false)
+                            .subscribe(() -> {
+                                mViewModel.refreshData();
+                                adapter.refresh();
+                                showToast("已删除");
+                            }, e -> showToast("删除失败"));
+                })
                 .builder()
                 .show();
     }
