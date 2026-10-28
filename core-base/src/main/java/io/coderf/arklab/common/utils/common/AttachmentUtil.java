@@ -176,6 +176,27 @@ public class AttachmentUtil {
         return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, mainId, field);
     }
 
+    public static List<String> getIdList(List<AttachmentBean> attachmentList) {
+        if(CollectionUtil.isEmpty(attachmentList)){
+            return null;
+        }
+        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.toList());
+    }
+
+    public static String getIds(List<AttachmentBean> attachmentList,String delimiter) {
+        if(CollectionUtil.isEmpty(attachmentList)){
+            return null;
+        }
+        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.joining(delimiter));
+    }
+
+    public static String getIds(List<AttachmentBean> attachmentList) {
+        if(CollectionUtil.isEmpty(attachmentList)){
+            return null;
+        }
+        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.joining(","));
+    }
+
     @SuppressLint("Range")
     public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList, String mainId, String field) {
         if (uriList == null) {

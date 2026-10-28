@@ -91,8 +91,13 @@
     <attr name="unitTextColor" format="color" />
     <attr name="unitTextSize" format="dimension" />
     <declare-styleable name="ConfigurableWebView">
-
         <attr name="domain" format="string" />
+        <!-- 与 WebViewUtil.PROFILE_* 一致：base / spa / web_gis -->
+        <attr name="settingsProfile" format="enum">
+            <enum name="base" value="0" />
+            <enum name="spa" value="1" />
+            <enum name="web_gis" value="2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="CustomCameraView">

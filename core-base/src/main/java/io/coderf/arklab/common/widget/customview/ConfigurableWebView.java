@@ -27,11 +27,13 @@ import io.coderf.arklab.common.utils.common.WebViewUtil;
 /**
  * 可配置 URL 类型的 WebView：支持网络、APK assets、应用沙盒/下载目录本地文件。
  * <p>本地与 assets 均通过 {@link WebViewAssetLoader} 映射为 <b>https</b> 虚拟域名（安全源，支持 Geolocation 等 API）。</p>
+ * <p>默认 Web 设置为 {@link WebViewUtil#PROFILE_SPA}；WebGIS 页可用 XML {@code app:settingsProfile="web_gis"}
+ * 或 {@link #applySettingsProfile(int)}。</p>
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/28
  */
 public class ConfigurableWebView extends WebView {
 
@@ -48,6 +50,9 @@ public class ConfigurableWebView extends WebView {
 
     /** 与 WebViewAssetLoader 一致的虚拟域名 */
     private String domain = DEFAULT_DOMAIN;
+
+    /** 设置档，见 {@link WebViewUtil#PROFILE_SPA} 等 */
+    private int settingsProfile = WebViewUtil.PROFILE_SPA;
 
     public ConfigurableWebView(Context context) {
         super(context);
@@ -72,16 +77,17 @@ public class ConfigurableWebView extends WebView {
             if (TextUtils.isEmpty(domain)) {
                 domain = DEFAULT_DOMAIN;
             }
+            settingsProfile = ta.getInt(
+                    R.styleable.ConfigurableWebView_settingsProfile,
+                    WebViewUtil.PROFILE_SPA);
             ta.recycle();
         } else {
             domain = DEFAULT_DOMAIN;
+            settingsProfile = WebViewUtil.PROFILE_SPA;
         }
-        WebViewUtil.setDefaultSetting(this);
+        WebViewUtil.applyProfile(this, settingsProfile);
         rebuildAssetLoader(domain);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, true);
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             getSettings().setAllowUniversalAccessFromFileURLs(true);
             getSettings().setAllowFileAccessFromFileURLs(true);
@@ -91,8 +97,6 @@ public class ConfigurableWebView extends WebView {
         webViewClient.setLocalNavigationContext(getContext(), domain);
         setWebViewClient(webViewClient);
 
-        setInitialScale(1);
-        requestFocusFromTouch();
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
     }
 
@@ -130,6 +134,19 @@ public class ConfigurableWebView extends WebView {
      */
     public void setUrlType(int urlType) {
         this.urlType = urlType;
+    }
+
+    /**
+     * 应用 Web 设置档：{@link WebViewUtil#PROFILE_BASE} /
+     * {@link WebViewUtil#PROFILE_SPA} / {@link WebViewUtil#PROFILE_WEB_GIS}。
+     */
+    public void applySettingsProfile(int profile) {
+        this.settingsProfile = profile;
+        WebViewUtil.applyProfile(this, profile);
+    }
+
+    public int getSettingsProfile() {
+        return settingsProfile;
     }
 
     /**
