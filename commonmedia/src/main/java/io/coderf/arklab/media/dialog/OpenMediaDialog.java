@@ -117,37 +117,31 @@ public class OpenMediaDialog extends MediaBaseDialog implements View.OnClickList
                 Toast.makeText(getContext(), getContext().getString(R.string.media_album_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenMediaClickListener != null) {
-                onOpenMediaClickListener.mediaClick(ALBUM);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenMediaClickListener != null) {
+                    onOpenMediaClickListener.mediaClick(ALBUM);
+                }
+            });
         } else if (id == R.id.takePhoto) {
             if (mediaType == ALBUM || mediaType == SHOOT) {
                 Toast.makeText(getContext(), getContext().getString(R.string.media_camera_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenMediaClickListener != null) {
-                onOpenMediaClickListener.mediaClick(CAMERA);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenMediaClickListener != null) {
+                    onOpenMediaClickListener.mediaClick(CAMERA);
+                }
+            });
         } else if (id == R.id.shoot) {
             if (mediaType == ALBUM || mediaType == CAMERA) {
                 Toast.makeText(getContext(), getContext().getString(R.string.media_video_record_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenMediaClickListener != null) {
-                onOpenMediaClickListener.mediaClick(SHOOT);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenMediaClickListener != null) {
+                    onOpenMediaClickListener.mediaClick(SHOOT);
+                }
+            });
         }
     }
 

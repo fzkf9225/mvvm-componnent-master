@@ -260,6 +260,20 @@ public abstract class MediaBaseDialog extends Dialog {
         return this;
     }
 
+    /**
+     * ActionSheet 用户点了业务项：标记「非空白关闭」、关闭弹窗后再执行回调。
+     * 保持横屏/刘海 Window 逻辑不变，仅收敛 Open*Dialog 重复写法。
+     */
+    protected final void dismissAfterUserAction(@Nullable Runnable action) {
+        ActionSheetDismissTracker.markUserChoseAction(this);
+        if (isShowing()) {
+            dismiss();
+        }
+        if (action != null) {
+            action.run();
+        }
+    }
+
     @Override
     public void show() {
         if (!canShow(getContext())) {

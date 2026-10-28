@@ -219,13 +219,15 @@ public class MediaBuilder {
      */
     private OnDialogInterfaceClickListener onPermissionNegativeClickListener;
     /**
-     * 请求权限前的dialog确认按钮文字颜色
+     * 请求权限前的dialog确认按钮文字颜色；未通过 setter 设置时跟随布局/主题语义色
      */
-    private @ColorInt int permissionPositiveTextColor = 0xFF333333;
+    private @ColorInt int permissionPositiveTextColor;
+    private boolean hasPermissionPositiveTextColor;
     /**
-     * 请求权限前的dialog取消按钮文字颜色
+     * 请求权限前的dialog取消按钮文字颜色；未通过 setter 设置时跟随布局/主题语义色
      */
-    private @ColorInt int permissionNegativeTextColor = 0xFF666666;
+    private @ColorInt int permissionNegativeTextColor;
+    private boolean hasPermissionNegativeTextColor;
     /**
      * 选择器类型，默认为DEFAULT，枚举MediaPickerTypeEnum
      */
@@ -266,8 +268,10 @@ public class MediaBuilder {
     private boolean showCaptureExifPermissionDeniedTip = true;
     private OnDialogInterfaceClickListener onCaptureExifPermissionPositiveClickListener;
     private OnDialogInterfaceClickListener onCaptureExifPermissionNegativeClickListener;
-    private @ColorInt int captureExifPermissionPositiveTextColor = 0xFF333333;
-    private @ColorInt int captureExifPermissionNegativeTextColor = 0xFF666666;
+    private @ColorInt int captureExifPermissionPositiveTextColor;
+    private boolean hasCaptureExifPermissionPositiveTextColor;
+    private @ColorInt int captureExifPermissionNegativeTextColor;
+    private boolean hasCaptureExifPermissionNegativeTextColor;
 
     public MediaBuilder(@NotNull Context context) {
         this.mContext = context;
@@ -431,6 +435,13 @@ public class MediaBuilder {
     }
 
     /**
+     * 是否自定义了权限确认按钮文字颜色（未设置则走主题语义色）
+     */
+    public boolean hasPermissionPositiveTextColor() {
+        return hasPermissionPositiveTextColor;
+    }
+
+    /**
      * 获取请求权限前的dialog确认按钮文字颜色
      * @return 确认按钮文字颜色
      */
@@ -439,11 +450,19 @@ public class MediaBuilder {
     }
 
     /**
-     * 获取请求权限前的dialog确认按钮文字颜色
+     * 设置请求权限前的dialog确认按钮文字颜色
      */
     public MediaBuilder setPermissionPositiveTextColor(@ColorInt int permissionPositiveTextColor) {
         this.permissionPositiveTextColor = permissionPositiveTextColor;
+        this.hasPermissionPositiveTextColor = true;
         return this;
+    }
+
+    /**
+     * 是否自定义了权限取消按钮文字颜色（未设置则走主题语义色）
+     */
+    public boolean hasPermissionNegativeTextColor() {
+        return hasPermissionNegativeTextColor;
     }
 
     /**
@@ -456,11 +475,12 @@ public class MediaBuilder {
 
     /**
      * 设置请求权限前的dialog取消按钮文字颜色
-     * @param permissionNegativeTextColor 确认按钮文字颜色
+     * @param permissionNegativeTextColor 取消按钮文字颜色
      * @return this
      */
     public MediaBuilder setPermissionNegativeTextColor(@ColorInt int permissionNegativeTextColor) {
         this.permissionNegativeTextColor = permissionNegativeTextColor;
+        this.hasPermissionNegativeTextColor = true;
         return this;
     }
 
@@ -842,15 +862,15 @@ public class MediaBuilder {
     public String getVideoOutPutPath() {
         if (savePublicPath) {
             if (TextUtils.isEmpty(videoSubPath)) {
-                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mContext) + File.separator + "video";
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath() + File.separator + MediaUtil.getDefaultBasePath(mContext) + File.separator + "video";
             } else {
-                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + videoSubPath;
+                return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath() + File.separator + videoSubPath;
             }
         } else {
             if (TextUtils.isEmpty(videoSubPath)) {
-                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "video";
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_MOVIES) + File.separator + "video";
             } else {
-                return mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + videoSubPath;
+                return mContext.getExternalFilesDir(Environment.DIRECTORY_MOVIES) + File.separator + videoSubPath;
             }
         }
     }
@@ -1197,13 +1217,22 @@ public class MediaBuilder {
         return this;
     }
 
+    public boolean hasCaptureExifPermissionPositiveTextColor() {
+        return hasCaptureExifPermissionPositiveTextColor;
+    }
+
     public @ColorInt int getCaptureExifPermissionPositiveTextColor() {
         return captureExifPermissionPositiveTextColor;
     }
 
     public MediaBuilder setCaptureExifPermissionPositiveTextColor(@ColorInt int captureExifPermissionPositiveTextColor) {
         this.captureExifPermissionPositiveTextColor = captureExifPermissionPositiveTextColor;
+        this.hasCaptureExifPermissionPositiveTextColor = true;
         return this;
+    }
+
+    public boolean hasCaptureExifPermissionNegativeTextColor() {
+        return hasCaptureExifPermissionNegativeTextColor;
     }
 
     public @ColorInt int getCaptureExifPermissionNegativeTextColor() {
@@ -1212,6 +1241,7 @@ public class MediaBuilder {
 
     public MediaBuilder setCaptureExifPermissionNegativeTextColor(@ColorInt int captureExifPermissionNegativeTextColor) {
         this.captureExifPermissionNegativeTextColor = captureExifPermissionNegativeTextColor;
+        this.hasCaptureExifPermissionNegativeTextColor = true;
         return this;
     }
 

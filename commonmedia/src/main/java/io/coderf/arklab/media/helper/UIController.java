@@ -32,7 +32,9 @@ import io.coderf.arklab.media.dialog.MediaProgressDialog;
 public class UIController implements DefaultLifecycleObserver {
 
     private final Context context;
+    /** 媒体压缩/水印 Loading；单例式复用，避免 Activity 强引用泄漏 */
     private MediaProgressDialog loadingDialog;
+    /** 切主线程展示 Toast / Loading */
     private final Handler mainHandler;
 
     public UIController(Context context, Lifecycle lifecycle) {

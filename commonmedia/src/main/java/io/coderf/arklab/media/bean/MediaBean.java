@@ -7,17 +7,19 @@ import java.util.List;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
 
 /**
- * 媒体工具类
+ * 一次选择/压缩/水印的结果载体，经 LiveData 或 {@link MediaResult} 分发。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2021/2/5 15:48
+ * @updated 2026/10/28
  */
 public class MediaBean {
+    /** 选中或处理后的 Uri 列表 */
     private List<Uri> mediaList;
     /**
-     * 0-图片，1-视频，具体值参考枚举MediaType
+     * 媒体类型，见 {@link MediaTypeEnum}
      */
     private MediaTypeEnum mediaType;
 

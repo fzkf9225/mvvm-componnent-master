@@ -89,25 +89,21 @@ public class OpenShootDialog extends MediaBaseDialog implements View.OnClickList
                 Toast.makeText(getContext(), getContext().getString(R.string.media_album_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenVideoClickListener != null) {
-                onOpenVideoClickListener.shootClick(ALBUM);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenVideoClickListener != null) {
+                    onOpenVideoClickListener.shootClick(ALBUM);
+                }
+            });
         } else if (id == R.id.button_shoot) {
             if (mediaType == ALBUM) {
                 Toast.makeText(getContext(), getContext().getString(R.string.media_video_shoot_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenVideoClickListener != null) {
-                onOpenVideoClickListener.shootClick(CAMERA);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenVideoClickListener != null) {
+                    onOpenVideoClickListener.shootClick(CAMERA);
+                }
+            });
         }
     }
 

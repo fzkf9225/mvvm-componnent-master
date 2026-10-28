@@ -64,6 +64,10 @@ public class ImgCompressor {
         return instance;
     }
 
+    /**
+     * 绑定压缩回调。listener 在 {@link #starCompress} 时快照传入 {@link CompressRunnable}，
+     * 避免多任务并行时互相覆盖实例字段导致回调错乱。
+     */
     public ImgCompressor withListener(CompressListener compressListener) {
         this.compressListener = compressListener;
         return this;
@@ -480,22 +484,28 @@ public class ImgCompressor {
         @Override
         public void run() {
             CompressResult compressResult = new CompressResult();
+            compressResult.setSrcPath(srcPath);
             Uri outPutPath = null;
             try {
                 outPutPath = compressImage(srcPath, outPath, outWidth, outHeight, maxFileSize, fileExtension,
                         fileProviderAuthority);
             } catch (Exception e) {
                 e.printStackTrace();
+                compressResult.setStatus(CompressResult.RESULT_ERROR);
+                compressResult.setOutPath(null);
                 if (listener != null) {
                     listener.onCompressFail(e);
                 }
+                return;
             }
             if (outPutPath == null) {
+                compressResult.setStatus(CompressResult.RESULT_ERROR);
+                compressResult.setOutPath(null);
                 if (listener != null) {
                     listener.onCompressFail(new Exception("图片压缩异常！"));
                 }
+                return;
             }
-            compressResult.setSrcPath(srcPath);
             compressResult.setOutPath(outPutPath);
             compressResult.setStatus(CompressResult.RESULT_OK);
             if (listener != null) {

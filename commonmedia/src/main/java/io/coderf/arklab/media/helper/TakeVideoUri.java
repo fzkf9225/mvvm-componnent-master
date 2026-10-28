@@ -69,9 +69,9 @@ public class TakeVideoUri extends ActivityResultContract<MediaTypeEnum, Uri> {
                 values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
                 //如果没有设置子目录的话，则默认取包名
                 if (TextUtils.isEmpty(mediaBuilder.getVideoSubPath())) {
-                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + MediaUtil.getDefaultBasePath(context) + File.separator + "video");
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + File.separator + MediaUtil.getDefaultBasePath(context) + File.separator + "video");
                 } else {
-                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator +
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES + File.separator +
                             mediaBuilder.getVideoSubPath());
                 }
                 uri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);

@@ -84,25 +84,21 @@ public class OpenImageDialog extends MediaBaseDialog implements View.OnClickList
                 Toast.makeText(getContext(), getContext().getString(R.string.media_album_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenImageClickListener != null) {
-                onOpenImageClickListener.imageClick(ALBUM);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenImageClickListener != null) {
+                    onOpenImageClickListener.imageClick(ALBUM);
+                }
+            });
         } else if (id == R.id.takePhoto) {
             if (mediaType == ALBUM) {
                 Toast.makeText(getContext(), getContext().getString(R.string.media_camera_not_supported), Toast.LENGTH_SHORT).show();
                 return;
             }
-            ActionSheetDismissTracker.markUserChoseAction(this);
-            if (isShowing()) {
-                dismiss();
-            }
-            if (onOpenImageClickListener != null) {
-                onOpenImageClickListener.imageClick(CAMERA);
-            }
+            dismissAfterUserAction(() -> {
+                if (onOpenImageClickListener != null) {
+                    onOpenImageClickListener.imageClick(CAMERA);
+                }
+            });
         }
     }
 

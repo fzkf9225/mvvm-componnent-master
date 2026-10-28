@@ -22,9 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.coderf.arklab.media.R;
 
@@ -95,6 +98,10 @@ public class ImageCropActivity extends ComponentActivity {
      * 是否已回调结果，避免重复回调
      */
     private boolean resultDelivered;
+
+    /** 源图解码线程，onDestroy 时关闭 */
+    @Nullable
+    private ExecutorService decodeExecutor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,16 +199,30 @@ public class ImageCropActivity extends ComponentActivity {
         }
         applyButtonStyles();
 
-        sourceBitmap = CropUtil.loadBitmap(this, sourceUri, sourcePath);
-        if (sourceBitmap == null) {
-            deliverError(getString(R.string.media_crop_load_failed), null);
-            finish();
-            return;
-        }
-        cropImageView.setImageBitmap(sourceBitmap);
-        // 等待裁剪区域与遮罩同尺寸布局完成后再居中，避免初始化偏移
-        View container = findViewById(R.id.crop_content_container);
-        container.post(cropImageView::scheduleFitWhenReady);
+        // 大图解码放到后台，避免主线程 ANR；解码完成后回主线程展示
+        final Uri loadUri = sourceUri;
+        final String loadPath = sourcePath;
+        decodeExecutor = Executors.newSingleThreadExecutor();
+        decodeExecutor.execute(() -> {
+            Bitmap bitmap = CropUtil.loadBitmap(ImageCropActivity.this, loadUri, loadPath);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    if (bitmap != null && !bitmap.isRecycled()) {
+                        bitmap.recycle();
+                    }
+                    return;
+                }
+                if (bitmap == null) {
+                    deliverError(getString(R.string.media_crop_load_failed), null);
+                    finish();
+                    return;
+                }
+                sourceBitmap = bitmap;
+                cropImageView.setImageBitmap(sourceBitmap);
+                View container = findViewById(R.id.crop_content_container);
+                container.post(cropImageView::scheduleFitWhenReady);
+            });
+        });
     }
 
     /**
@@ -222,6 +243,10 @@ public class ImageCropActivity extends ComponentActivity {
                 ImageCropBuilder.DEFAULT_CANCEL_BG_COLOR);
         int confirmBg = getIntent().getIntExtra(ImageCropHelper.EXTRA_CONFIRM_BG_COLOR,
                 ImageCropBuilder.DEFAULT_CONFIRM_BG_COLOR);
+        // 未自定义确定按钮色时跟随宿主主题 colorPrimary（M3/AppCompat 均有）
+        if (confirmBg == ImageCropBuilder.DEFAULT_CONFIRM_BG_COLOR) {
+            confirmBg = MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary, confirmBg);
+        }
         float cancelWidthDp = getIntent().getFloatExtra(ImageCropHelper.EXTRA_CANCEL_BUTTON_WIDTH_DP,
                 ImageCropBuilder.DEFAULT_BUTTON_WIDTH_DP);
         float cancelHeightDp = getIntent().getFloatExtra(ImageCropHelper.EXTRA_CANCEL_BUTTON_HEIGHT_DP,
@@ -391,6 +416,10 @@ public class ImageCropActivity extends ComponentActivity {
 
     @Override
     protected void onDestroy() {
+        if (decodeExecutor != null) {
+            decodeExecutor.shutdownNow();
+            decodeExecutor = null;
+        }
         if (!resultDelivered) {
             // 异常退出时清理静态回调，避免泄漏
             ImageCropHelper.drainListener();

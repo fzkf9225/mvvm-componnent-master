@@ -32,42 +32,58 @@ import io.coderf.arklab.media.enums.MediaTypeEnum;
 import io.coderf.arklab.media.utils.LogUtil;
 
 /**
- * MediaLifecycleObserver 类。
+ * 绑定 Lifecycle，注册权限 / 相机 / 相册等 {@link ActivityResultLauncher}。
+ * ON_CREATE 注册，ON_DESTROY 注销并 {@link MediaHelper#release()}。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2025/7/30 9:35
+ * @updated 2026/10/28
  */
 public class MediaLifecycleObserver implements DefaultLifecycleObserver {
     private final MediaHelper mediaHelper;
 
+    /** 媒体读/相机等通用权限 */
     private ActivityResultLauncher<String[]> permissionLauncher = null;
+    /** 拍照 EXIF 定位权限（与通用权限独立） */
     private ActivityResultLauncher<String[]> captureExifPermissionLauncher = null;
 
+    /** 系统相机拍照 */
     private ActivityResultLauncher<MediaTypeEnum> cameraLauncher = null;
+    /** 系统相机录像 */
     private ActivityResultLauncher<MediaTypeEnum> shootLauncher = null;
 
+    /** 传统单选（GetContent） */
     private ActivityResultLauncher<SelectorOptions> singleLauncher = null;
+    /** 传统多选（GetMultipleContents） */
     private ActivityResultLauncher<SelectorOptions> multiLauncher = null;
 
+    /** Photo Picker：多图 / 单图 */
     private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiImageSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageSelectorLauncher = null;
 
+    /** Photo Picker：多图+视频 / 单路图+视频 */
     private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiMediaSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMediaSelectorLauncher = null;
 
+    /** Photo Picker：多视频 / 单视频 */
     private ActivityResultLauncher<PickVisualMediaRequest> pickMuLtiVideoSelectorLauncher = null;
     private ActivityResultLauncher<PickVisualMediaRequest> pickVideoSelectorLauncher = null;
 
+    /** 录像 Intent/输出 Uri 合约 */
     private TakeVideoUri takeVideoUri;
+    /** 拍照 Intent/输出 Uri 合约 */
     private TakeCameraUri takeCameraUri;
+    /** 拍照过程中采集姿态/GPS，供 EXIF 写入 */
     private CaptureMetadataHelper captureMetadataHelper;
 
+    /** Photo Picker 单选合约实例 */
     private OpenPickMediaSelector pickMediaSelector;
     private OpenPickMultipleMediaSelector pickMuLtiVideoSelector;
     private OpenPickMultipleMediaSelector pickMuLtiImageSelector;
     private OpenPickMultipleMediaSelector pickMuLtiImageAndViewSelector;
+    /** 传统多选 / 单选合约 */
     private OpenMultiSelector multiSelector;
     private OpenSingleSelector singleSelector;
 
@@ -192,30 +208,43 @@ public class MediaLifecycleObserver implements DefaultLifecycleObserver {
                 LogUtil.logger(MediaHelper.TAG, entry.getKey() + ":" + entry.getValue());
             }
             Runnable continuation = mediaHelper.drainPendingPermissionContinuation();
-            boolean allGranted = !result.containsValue(Boolean.FALSE);
+            // Android 14 可能只授予 READ_MEDIA_VISUAL_USER_SELECTED（部分授权），
+            // 不能要求 map 全 true；有任一授予则交给业务方法自行 hasXxxAccess 续传。
+            boolean anyGranted = result.containsValue(Boolean.TRUE);
             if (continuation != null) {
-                continuation.run();
+                if (anyGranted) {
+                    continuation.run();
+                } else {
+                    showPermissionDeniedTip();
+                }
                 return;
             }
-            if (!allGranted) {
-                Context context = mediaHelper.getMediaBuilder().getContext();
-                new TipDialog(context)
-                        .setMessage(context.getString(R.string.media_permission_denied_message))
-                        .setNegativeText(context.getString(R.string.media_cancel))
-                        .setPositiveText(context.getString(R.string.media_go_to_settings))
-                        .setOnPositiveClickListener(dialog -> {
-                            dialog.dismiss();
-                            Intent intent = new Intent();
-                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", mediaHelper.getMediaBuilder().getContext().getPackageName(), null);
-                            intent.setData(uri);
-                            mediaHelper.getMediaBuilder().getContext().startActivity(intent);
-                        })
-                        .builder()
-                        .show();
+            if (!anyGranted || result.containsValue(Boolean.FALSE)) {
+                // 无 continuation 的旧路径（如 openAudio 补全前）：部分拒绝也提示去设置
+                if (result.containsValue(Boolean.FALSE)) {
+                    showPermissionDeniedTip();
+                }
             }
         }
     };
+
+    private void showPermissionDeniedTip() {
+        Context context = mediaHelper.getMediaBuilder().getContext();
+        new TipDialog(context)
+                .setMessage(context.getString(R.string.media_permission_denied_message))
+                .setNegativeText(context.getString(R.string.media_cancel))
+                .setPositiveText(context.getString(R.string.media_go_to_settings))
+                .setOnPositiveClickListener(dialog -> {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package",
+                            mediaHelper.getMediaBuilder().getContext().getPackageName(), null);
+                    intent.setData(uri);
+                    mediaHelper.getMediaBuilder().getContext().startActivity(intent);
+                })
+                .builder()
+                .show();
+    }
 
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {

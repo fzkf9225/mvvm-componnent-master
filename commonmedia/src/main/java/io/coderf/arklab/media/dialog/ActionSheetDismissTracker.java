@@ -17,8 +17,10 @@ import java.util.WeakHashMap;
  */
 public final class ActionSheetDismissTracker {
 
+    /** Dialog → Tracker，弱引用避免泄漏 */
     private static final WeakHashMap<Dialog, ActionSheetDismissTracker> TRACKERS = new WeakHashMap<>();
 
+    /** true 表示用户点了业务项（相册/拍照等），关闭时不再触发「未选择」回调 */
     private boolean userChoseAction;
 
     private ActionSheetDismissTracker() {

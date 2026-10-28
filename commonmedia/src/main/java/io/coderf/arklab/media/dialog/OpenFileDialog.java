@@ -77,13 +77,11 @@ public class OpenFileDialog extends MediaBaseDialog {
                 binding.chooseFile.setText(getContext().getResources().getString(R.string.media_file));
             }
         }
-        binding.chooseFile.setOnClickListener(v -> {
-            ActionSheetDismissTracker.markUserChoseAction(OpenFileDialog.this);
-            dismiss();
+        binding.chooseFile.setOnClickListener(v -> dismissAfterUserAction(() -> {
             if (openFileClickListener != null) {
                 openFileClickListener.fileClick(chooseType);
             }
-        });
+        }));
         binding.chooseFileCancel.setOnClickListener(v -> dismiss());
         setContentView(binding.getRoot());
         applyBottomWindowLayout();
