@@ -1,15 +1,18 @@
 package io.coderf.arklab.core.db
 
 /**
- * core-db 模块占位与扩展点。
- * Room DAO / Database / RoomRepository* / RoomRequestOptions / RoomLog 已在本模块。
+ * core-db 模块说明。
  *
- * 新代码可依赖本模块命名空间，避免继续向 common 堆数据库工具。
+ * ## 两套并行栈（互不桥接）
+ * - **RxJava3**：`common.repository.RoomRepositoryImpl` + Dao 的 Completable / Flowable / Single
+ * - **协程**：本包 [RoomDataRepository] / [DefaultRoomRepository] + Dao 的 Room 原生 `*Suspend`
+ *
+ * 新 Kotlin 代码优先协程栈；存量 Java / Rx 继续用 RoomRepositoryImpl。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/28
  */
 object CoreDb {
     const val MODULE = "core-db"

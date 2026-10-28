@@ -14,8 +14,9 @@ import io.coderf.arklab.demo.bean.Person;
  *   <li>{@link RoomObservedEntity} 指定实体，KSP 生成 {@link PersonDaoRawQueryBridge}；</li>
  *   <li>本类继承 Bridge，只需实现 {@link #getTableName()}；</li>
  *   <li>CRUD / 动态查询 / 分页见 {@link io.coderf.arklab.common.dao.BaseRoomDao}；</li>
- *   <li>仓库层使用 {@link io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl}，
- *       分页列表使用 {@link io.coderf.arklab.common.datasource.RxRoomPagingSource}。</li>
+ *   <li>仓库层使用 {@link io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl}
+ *       （协程 {@link io.coderf.arklab.core.db.RoomDataRepository}），
+ *       分页列表使用 {@link io.coderf.arklab.core.db.RoomPagingSource}。</li>
  * </ul>
  *
  * <p>模块需配置：{@code ksp project(':room-processor')}</p>

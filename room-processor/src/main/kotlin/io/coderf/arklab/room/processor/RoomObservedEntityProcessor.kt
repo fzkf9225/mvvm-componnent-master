@@ -27,8 +27,9 @@ private const val BASE_DAO_NAME = "io.coderf.arklab.common.dao.BaseRoomDao"
  *
  * ## 生成内容
  * - 继承 `BaseRoomDao<Entity>`
- * - 实现 8 个 `@RawQuery(observedEntities = [Entity::class])` 的 `do*` 方法
- *   （含 doCount / doExecute，用于 count 与按条件删除返回行数）
+ * - 实现 `@RawQuery(observedEntities = [Entity::class])` 的 `do*` 方法
+ *   （Rx / sync / LiveData + 协程 suspend：doFindSuspend / doQueryListSuspend /
+ *   doCountSuspend / doExecuteSuspend）
  *
  * ## 开发者操作
  * 将手写 DAO 的父类从 `BaseRoomDao` 改为生成的 `XxxDaoRawQueryBridge` 即可。
@@ -106,6 +107,18 @@ class RoomObservedEntityProcessor(
 
                     @RawQuery(observedEntities = [$entityName::class])
                     protected abstract override fun doExecute(query: SupportSQLiteQuery): Int
+
+                    @RawQuery(observedEntities = [$entityName::class])
+                    protected abstract override suspend fun doFindSuspend(query: SupportSQLiteQuery): $entityName
+
+                    @RawQuery(observedEntities = [$entityName::class])
+                    protected abstract override suspend fun doQueryListSuspend(query: SupportSQLiteQuery): List<$entityName>
+
+                    @RawQuery(observedEntities = [$entityName::class])
+                    protected abstract override suspend fun doCountSuspend(query: SupportSQLiteQuery): Long
+
+                    @RawQuery(observedEntities = [$entityName::class])
+                    protected abstract override suspend fun doExecuteSuspend(query: SupportSQLiteQuery): Int
                 }
 
                 """.trimIndent()

@@ -47,7 +47,7 @@ public class RoomRequestOptions {
     private long timeoutSeconds = 15L;
     /**
      * 查询类 Flowable 在结果为空时是否抛出 {@link io.coderf.arklab.common.base.BaseException}
-     * （NOT_FOUND）；删除类使用 DELETE_SUCCESS，见仓库内部逻辑。
+     * （NOT_FOUND）。条件删除请使用返回影响行数的 {@code delete*Count} API。
      */
     private boolean throwOnEmptyList = false;
 
@@ -116,7 +116,7 @@ public class RoomRequestOptions {
     }
 
     /**
-     * 删除操作的默认配置；空结果会触发删除成功业务码。
+     * 删除操作的默认配置（配合 {@code delete*Count} 等返回影响行数的 API）。
      */
     public static RoomRequestOptions delete(boolean showLoading, boolean enableDynamicEllipsis) {
         if (!showLoading) {
@@ -126,7 +126,6 @@ public class RoomRequestOptions {
                 .setShowDialog(true)
                 .setDialogMessage("正在删除数据,请稍后...")
                 .setEnableDynamicEllipsis(enableDynamicEllipsis)
-                .setThrowOnEmptyList(true)
                 .build();
     }
 

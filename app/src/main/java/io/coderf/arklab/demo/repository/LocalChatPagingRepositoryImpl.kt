@@ -1,17 +1,18 @@
 package io.coderf.arklab.demo.repository
 
-import io.coderf.arklab.common.repository.RoomRepositoryImpl
+import io.coderf.arklab.core.db.RoomDataRepository
 import io.coderf.arklab.demo.bean.LocalChatMessage
 import io.coderf.arklab.demo.database.LocalChatMessageDao
 
 /**
- * Demo：本地聊天消息仓库，分页走 [io.coderf.arklab.common.datasource.RxRoomPagingSource]。
+ * Demo：本地聊天消息仓库（协程栈 [RoomDataRepository]）。
+ * 分页走 [io.coderf.arklab.core.db.RoomPagingSource]。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @created 2026/10/27
+ * @updated 2026/10/28
  */
 class LocalChatPagingRepositoryImpl(
     roomDao: LocalChatMessageDao
-) : RoomRepositoryImpl<LocalChatMessage, LocalChatMessageDao>(roomDao)
+) : RoomDataRepository<LocalChatMessage, LocalChatMessageDao>(roomDao)

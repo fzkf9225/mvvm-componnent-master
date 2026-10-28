@@ -12,11 +12,11 @@ import io.reactivex.rxjava3.core.Single
  * Room 本地数据仓库基类，在 [BaseRoomDao] 之上封装线程调度、超时与请求 UI。
  *
  * ## 设计说明
- * - **RxJava3** 为主：Completable / Single / Flowable 与老项目一致；
+ * - **RxJava3** 栈：Completable / Single / Flowable（本类）；
+ * - **协程**栈请用 [io.coderf.arklab.core.db.RoomDataRepository]（与本类并行、互不桥接）；
  * - **LiveData** 直接透传 Dao，不加 Loading（由页面 observe 处理）；
  * - **Loading** 仅通过 [getRequestUi]（[io.coderf.arklab.core.request.RequestUi]），
  *   由 [io.coderf.arklab.common.base.BaseViewModel] 注入，对齐 [RepositoryImpl]；
- * - **Flow / 协程**：见 [RoomRepositoryFlowExt]、[RoomRepositoryCoroutineExt]。
  * - **日志**：`Config.enableDebug(true)` 后由 [io.coderf.arklab.core.db.RoomLog] 打印操作/耗时/结果，
  *   数据库 Builder 再套 [io.coderf.arklab.core.db.RoomLog.attachTo] 可打印全部 SQL。
  *
@@ -36,7 +36,7 @@ import io.reactivex.rxjava3.core.Single
  * @param T 实体类型
  * @param DB 继承 [BaseRoomDao] 的 Dao
  * @see RoomRequestOptions
- * @see RxRoomPagingSource
+ * @see io.coderf.arklab.common.datasource.RxRoomPagingSource
  *
  * @author fz
  * @version 1.0
@@ -48,17 +48,10 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
 ) : BaseRepository() {
 
     /**
-     * 是否启用加载框动态省略号（全局默认）。
-     * 新代码请使用 [RoomRequestOptions.Builder.setEnableDynamicEllipsis]。
+     * boolean 重载默认不启用动态省略号。
+     * 需要自定义 Loading / 省略号时请传 [RoomRequestOptions]。
      */
-    @Deprecated("Use RoomRequestOptions.Builder.setEnableDynamicEllipsis")
-    var enableDynamicEllipsis: Boolean = false
-        set(value) {
-            field = value
-            defaultOptionsEllipsis = value
-        }
-
-    private var defaultOptionsEllipsis: Boolean = false
+    private val defaultOptionsEllipsis: Boolean = false
 
     /** 获取底层 Dao，便于子类增加自定义 @Query 方法 */
     fun getRoomDao() = roomDao
@@ -127,35 +120,6 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
 
     fun deleteByParamsCount(params: Map<String, Any>, options: RoomRequestOptions): Single<Int> =
         applyRead(roomDao.deleteByParamsCount(params), options, "DELETE_BY_PARAMS", params)
-
-    // ==================== 条件删除（Flowable，兼容老签名，已废弃） ====================
-
-    @Deprecated("Use deleteAllCount()", ReplaceWith("deleteAllCount(showLoading)"))
-    fun deleteAll(showLoading: Boolean = false): Flowable<List<T>> =
-        deleteAll(RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
-
-    @Deprecated("Use deleteAllCount(options)")
-    fun deleteAll(options: RoomRequestOptions): Flowable<List<T>> =
-        @Suppress("DEPRECATION")
-        applyDeleteList(roomDao.deleteAll(), options, "DELETE_ALL")
-
-    @Deprecated("Use deleteByParamsCount(column, value, showLoading)")
-    fun deleteByParams(params: String, value: String, showLoading: Boolean = false): Flowable<List<T>> =
-        deleteByParams(params, value, RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
-
-    @Deprecated("Use deleteByParamsCount(column, value, options)")
-    fun deleteByParams(params: String, value: String, options: RoomRequestOptions): Flowable<List<T>> =
-        @Suppress("DEPRECATION")
-        applyDeleteList(roomDao.deleteByParams(params, value), options, "DELETE_BY_PARAMS", mapOf(params to value))
-
-    @Deprecated("Use deleteByParamsCount(params, showLoading)")
-    fun deleteByParams(params: Map<String, Any>, showLoading: Boolean = false): Flowable<List<T>> =
-        deleteByParams(params, RoomRequestOptions.delete(showLoading, defaultOptionsEllipsis))
-
-    @Deprecated("Use deleteByParamsCount(params, options)")
-    fun deleteByParams(params: Map<String, Any>, options: RoomRequestOptions): Flowable<List<T>> =
-        @Suppress("DEPRECATION")
-        applyDeleteList(roomDao.deleteByParams(params), options, "DELETE_BY_PARAMS", params)
 
     // ==================== count / exists ====================
 
@@ -352,21 +316,6 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
 
     // ==================== LiveData ====================
 
-    @Deprecated("Use deleteAllCount(); LiveData after DELETE is not recommended")
-    fun deleteAllLiveData(): LiveData<List<T>> =
-        @Suppress("DEPRECATION")
-        roomDao.deleteAllLiveData()
-
-    @Deprecated("Use deleteByParamsCount")
-    fun deleteByParamsLiveData(params: String, value: String): LiveData<List<T>> =
-        @Suppress("DEPRECATION")
-        roomDao.deleteByParamsLiveData(params, value)
-
-    @Deprecated("Use deleteByParamsCount")
-    fun deleteByParamsLiveData(params: Map<String, Any>): LiveData<List<T>> =
-        @Suppress("DEPRECATION")
-        roomDao.deleteByParamsLiveData(params)
-
     fun findAllLiveData(): LiveData<List<T>> = roomDao.findAllLiveData()
 
     fun findInfoByIdLiveData(id: Long): LiveData<T> = roomDao.findInfoByIdLiveData(id)
@@ -428,15 +377,6 @@ open class RoomRepositoryImpl<T : Any, DB : BaseRoomDao<T>>(
         operation: String,
         payload: Any? = null
     ): Flowable<List<T>> = RoomRepositorySupport.applyListFlowable(
-        this, source, options, roomDao.getTableName(), operation, payload
-    )
-
-    private fun applyDeleteList(
-        source: Flowable<List<T>>,
-        options: RoomRequestOptions,
-        operation: String,
-        payload: Any? = null
-    ): Flowable<List<T>> = RoomRepositorySupport.applyDeleteFlowable(
         this, source, options, roomDao.getTableName(), operation, payload
     )
 }

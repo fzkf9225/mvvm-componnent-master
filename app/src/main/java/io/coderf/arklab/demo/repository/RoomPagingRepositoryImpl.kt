@@ -1,50 +1,34 @@
 package io.coderf.arklab.demo.repository
 
 import io.coderf.arklab.common.bean.AttachmentBean
+import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl
-import io.coderf.arklab.common.repository.RoomRepositoryImpl
+import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.db.RoomDataRepository
 import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.database.PersonDao
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 
 /**
- * Demo：人员表仓库，继承 [RoomRepositoryImpl] 并扩展「人员 + 附件」联合保存。
+ * Demo：人员表仓库（协程栈），可联合保存附件。
  *
- * ## 用法
- * ```java
- * RoomPagingRepositoryImpl repo = RepositoryFactory.create(
- *     RoomPagingRepositoryImpl.class,
- *     PersonDatabase.getInstance(context).getPersonDao()
- * );
- * // 分页
- * new RxRoomPagingSource<>(repo, "id");
- * // 保存
- * repo.saveOrUpdateInfo(person, attachments).subscribe(...);
+ * ```
+ * repository.saveOrUpdateInfo(person, attachments)
+ *     .collect { it.onSuccess { }.onError { } }
  * ```
  *
- * Loading 通过 [getRequestUi] 展示，由 ViewModel 注入。
- *
- * @see io.coderf.arklab.common.datasource.RxRoomPagingSource
+ * 分页走 [io.coderf.arklab.core.db.RoomPagingSource]。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/10/28
  */
-class RoomPagingRepositoryImpl :
-    RoomRepositoryImpl<Person, PersonDao> {
+class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
 
-    /** 可选：保存人员时同步写入附件表 */
-    var attachmentRepositoryImpl: AttachmentRepositoryImpl? = null
+    private var attachmentRepositoryImpl: AttachmentRepositoryImpl? = null
 
-    /**
-     * @param roomDao 人员 Dao
-     * @param attachmentRepositoryImpl 附件仓库
-     */
     constructor(
         roomDao: PersonDao,
         attachmentRepositoryImpl: AttachmentRepositoryImpl
@@ -52,44 +36,27 @@ class RoomPagingRepositoryImpl :
         this.attachmentRepositoryImpl = attachmentRepositoryImpl
     }
 
-    /** 仅人员表，不涉及附件 */
-    constructor(
-        roomDao: PersonDao
-    ) : super(roomDao)
+    constructor(roomDao: PersonDao) : super(roomDao)
 
     /**
-     * 保存或更新人员信息，并可选保存附件列表。
-     * 先 insert Person，再在同一事务链中调用附件仓库。
-     *
-     * @param person 人员实体
-     * @param imageList 附件列表，可为 null
-     * @return Completable 在主线程回调
+     * 保存人员，并可选同步写入附件表（附件仍用 [AttachmentRepositoryImpl] 同步 API，在 IO 上执行）。
      */
     fun saveOrUpdateInfo(
         person: Person,
         imageList: List<AttachmentBean>?
-    ): Completable {
-        return getRoomDao().insert(person)
-            .andThen(
-                Completable.fromAction {
-                    imageList?.forEach { item ->
-//                        item.mainId = person.mobile
-                    }
-                    attachmentRepositoryImpl!!.saveOrUpdate(
-                        imageList,
-                        UUID.randomUUID().toString().replace("-", "")
-                    )
-                }
+    ): Flow<RequestResult<Unit>> {
+        val options = RoomRequestOptions.Builder()
+            .setShowDialog(true)
+            .setDialogMessage("正在保存,请稍后...")
+            .setEnableDynamicEllipsis(true)
+            .setTimeoutSeconds(30)
+            .build()
+        return execute(options) {
+            getRoomDao().insertSuspend(person)
+            attachmentRepositoryImpl?.saveOrUpdate(
+                imageList,
+                UUID.randomUUID().toString().replace("-", "")
             )
-            .timeout(30, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { onSubscribe ->
-                addDisposable(onSubscribe)
-                getRequestUi()?.showLoading("正在保存,请稍后...", true)
-            }
-            .doFinally {
-                getRequestUi()?.hideLoading()
-            }
-            .observeOn(AndroidSchedulers.mainThread())
+        }
     }
 }

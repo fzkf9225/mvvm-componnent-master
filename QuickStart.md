@@ -38,12 +38,13 @@
 打开`libs.versions.toml`文件，添加基础库配置
 ```toml
 annotation = "3.3.1"
-roomProcessor = "1.1.0"
+roomProcessor = "1.2.0"
 commonui = "3.7.0"
 commongps = "3.2.1"
 commonmedia = "3.5.0"
 commonVersion = "4.6.0"
 coreVersion = "1.2.0"
+coreDb = "1.5.0"
 coreBase = "1.2.0"
 coreUtils = "1.1.1"
 coreAutosize = "1.0.1"
@@ -52,7 +53,7 @@ coreAutosize = "1.0.1"
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
 base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreBase" }
 base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreVersion" }
-base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreVersion" }
+base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreDb" }
 base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }
 base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreUtils" }
 base-core-autosize = { module = "io.coderf.arklab.core:autosize", version.ref = "coreAutosize" }
@@ -60,14 +61,14 @@ base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmed
 base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
 base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
-# Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（需已发布 room-processor）
+# Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（需已发布 room-processor 1.2.0，配套 db 1.5.0）
 room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref = "roomProcessor" }
 ```
 
 使用 `@RoomObservedEntity` 时，在 **app / 含 @Dao 的模块** 的 `build.gradle` 增加：
 
 ```groovy
-ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.1.0"
+ksp libs.room.processor   // 或 ksp "io.coderf.arklab.room:room-processor:1.2.0"
 ```
 
 并确保已依赖 `common`（注解包名仍为 `io.coderf.arklab.common.annotation`，实现在 core 分层中）。

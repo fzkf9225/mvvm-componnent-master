@@ -145,47 +145,6 @@ internal object RoomRepositorySupport {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    /**
-     * 包装条件删除类 [Flowable]&lt;List&gt;。
-     * 结果为空时抛出 [BaseException.ErrorType.DELETE_SUCCESS]（与老逻辑一致）。
-     */
-    fun <T : Any> applyDeleteFlowable(
-        repository: BaseRepository,
-        source: Flowable<List<T>>,
-        options: RoomRequestOptions,
-        tableName: String,
-        operation: String,
-        payload: Any? = null
-    ): Flowable<List<T>> {
-        var chain = source
-            .defaultIfEmpty(emptyList())
-            .subscribeOn(Schedulers.io())
-        if (options.timeoutSeconds > 0) {
-            chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
-        }
-        val session = arrayOfNulls<RoomLog.Session>(1)
-        return chain
-            .doOnNext { list ->
-                if (list.isEmpty()) {
-                    throw BaseException(BaseException.ErrorType.DELETE_SUCCESS)
-                }
-                if (options.isShowDialog) {
-                    hideLoading(repository, options)
-                }
-            }
-            .doOnSubscribe { repository.addSubscription(it) }
-            .doOnSubscribe { showLoading(repository, options) }
-            .doOnSubscribe {
-                session[0] = RoomLog.begin(
-                    repository.javaClass.simpleName, operation, tableName, options, payload
-                )
-            }
-            .doOnNext { session[0]?.success(it) }
-            .doOnError { session[0]?.error(it) }
-            .doFinally { hideLoading(repository, options) }
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
     /** 根据 options 显示 Loading（仅当 RequestUi 非空且 showDialog 为 true） */
     private fun showLoading(
         repository: BaseRepository,

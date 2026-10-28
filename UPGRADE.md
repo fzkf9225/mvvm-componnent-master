@@ -1,10 +1,28 @@
 # 升级与迁移说明
 
-> 当前主干：**core-base / core-network / core-db / core-ui `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`** + **commonmedia `3.5.0`**（common facade 仍为 **`4.6.0`**，主题仍为 Material3 DayNight）。  
-> **本次业务落地重点**：看下面 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)（去掉 `BaseView` / 页面泛型，真正 MVVM）。  
+> 当前主干：**core-base / network / ui `1.2.0`** + **core-db `1.5.0`** + **room-processor `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`** + **commonmedia `3.5.0`**（common facade 仍为 **`4.6.0`**，主题仍为 Material3 DayNight）。  
+> **Room 协程栈**：看 [§0](#0-core-db-150--room-processor-120)；BaseView 剔除仍见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)。  
 > 从 **AppCompat 主题线**（common 4.5.1 / core-base 1.0.9）升级：先看 [§1](#1-460appcompat-主题--material3)，再看 §2。  
 > 控件包装类删除见 §1.6。仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
-> 模块职责与日常用法见 [MODULES.md](./MODULES.md)；网络新 API 见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)。
+> 模块职责与日常用法见 [MODULES.md](./MODULES.md)；网络新 API 见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)；Room 详见 [core-db/README.md](./core-db/README.md)。
+
+---
+
+## 0. core-db 1.5.0 + room-processor 1.2.0
+
+Room 本地栈与网络层对齐：Rx / 协程 **并行独立**（无 blocking 桥接）。
+
+| 模块 | 坐标 | 要点 |
+|------|------|------|
+| core-db | `io.coderf.arklab.core:db:1.5.0` | `RoomDataRepository` / `RoomPagingSource`；Dao `*Suspend` |
+| room-processor | `io.coderf.arklab.room:room-processor:1.2.0` | Bridge 增加 suspend RawQuery（配套 db 1.5.0） |
+
+```gradle
+implementation 'io.coderf.arklab.core:db:1.5.0'
+ksp 'io.coderf.arklab.room:room-processor:1.2.0'
+```
+
+变更明细与迁移表见 [core-db/README.md](./core-db/README.md)、[room-processor/README.md](./room-processor/README.md)。
 
 ---
 
@@ -33,9 +51,10 @@ Maven 示例（推荐显式钉住本次升版模块，避免只升 `common:4.6.0
 implementation 'io.coderf.arklab.common:common:4.6.0'
 implementation 'io.coderf.arklab.core:base:1.2.0'
 implementation 'io.coderf.arklab.core:network:1.2.0'
-implementation 'io.coderf.arklab.core:db:1.2.0'
+implementation 'io.coderf.arklab.core:db:1.5.0'
 implementation 'io.coderf.arklab.core:ui:1.2.0'
 implementation 'io.coderf.arklab.core:utils:1.1.1'
+ksp 'io.coderf.arklab.room:room-processor:1.2.0'  // 使用 @RoomObservedEntity 时
 // 用到表单 / 媒体时：
 implementation 'io.coderf.arklab.ui:ui:3.7.0'
 implementation 'io.coderf.arklab.media:media:3.5.0'

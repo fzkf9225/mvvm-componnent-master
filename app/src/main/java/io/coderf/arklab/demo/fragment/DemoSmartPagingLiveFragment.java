@@ -19,8 +19,8 @@ import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.adapter.PagingLocalChatAdapter;
 import io.coderf.arklab.demo.bean.LocalChatMessage;
 import io.coderf.arklab.demo.databinding.DemoSmartPagingReverseBinding;
+import io.coderf.arklab.core.bean.RequestResult;
 import io.coderf.arklab.demo.viewmodel.DemoLocalChatPagingViewModel;
-import io.reactivex.rxjava3.disposables.Disposable;
 import kotlin.Unit;
 
 /**
@@ -89,8 +89,12 @@ public class DemoSmartPagingLiveFragment
                 () -> {
                     mViewModel.refreshData();
                     adapter.refresh();
+                    return Unit.INSTANCE;
                 },
-                e -> showToast("初始化本地消息失败")
+                e -> {
+                    showToast("初始化本地消息失败");
+                    return Unit.INSTANCE;
+                }
         );
     }
 
@@ -113,7 +117,11 @@ public class DemoSmartPagingLiveFragment
         mViewModel.sendMessage(text, () -> {
             pendingScrollToNewest = true;
             adapter.refresh();
-        }, e -> showToast("发送失败"));
+            return Unit.INSTANCE;
+        }, e -> {
+            showToast("发送失败");
+            return Unit.INSTANCE;
+        });
     }
 
     @Override
@@ -142,12 +150,16 @@ public class DemoSmartPagingLiveFragment
                 .setPositiveText("删除")
                 .setMessage("从本地 Room 删除这条消息？")
                 .setOnPositiveClickListener(dialog -> {
-                    Disposable ignored = mViewModel.getIRepository().delete(item, false)
-                            .subscribe(() -> {
-                                mViewModel.refreshData();
-                                adapter.refresh();
-                                showToast("已删除");
-                            }, e -> showToast("删除失败"));
+                    mViewModel.deleteMessage(item, result -> {
+                        if (result instanceof RequestResult.Success) {
+                            mViewModel.refreshData();
+                            adapter.refresh();
+                            showToast("已删除");
+                        } else {
+                            showToast("删除失败");
+                        }
+                        return Unit.INSTANCE;
+                    });
                 })
                 .builder()
                 .show();

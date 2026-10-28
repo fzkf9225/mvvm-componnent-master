@@ -75,23 +75,6 @@ class AttachmentRepositoryImpl(attachmentDao: AttachmentDao) :
         return getRoomDao().deleteByParamsCount(queryParams)
     }
 
-    @Deprecated("Use deleteByMainIdCount(mainId)", ReplaceWith("deleteByMainIdCount(mainId)"))
-    fun deleteByMainId(mainId: String): Flowable<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>("mainId" to mainId)
-        @Suppress("DEPRECATION")
-        return getRoomDao().deleteByParams(queryParams)
-    }
-
-    @Deprecated("Use deleteCount(mainId, fieldName)", ReplaceWith("deleteCount(mainId, fieldName)"))
-    fun delete(mainId: String, fieldName: String): Flowable<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>(
-            "mainId" to mainId,
-            "fieldName" to fieldName
-        )
-        @Suppress("DEPRECATION")
-        return getRoomDao().deleteByParams(queryParams)
-    }
-
     fun insert(dataList: List<AttachmentBean>?, mainId: String): Completable {
         if (dataList.isNullOrEmpty()) {
             return Completable.complete()

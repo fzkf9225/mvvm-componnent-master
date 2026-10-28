@@ -48,6 +48,9 @@ dependencies {
     ksp project(':room-processor')
     implementation libs.room.rxjava3
     implementation libs.room.paging
+    // RxRoomPagingSource 对外暴露 RxPagingSource，需 api 传递
+    implementation libs.androidx.paging.runtime
+    implementation libs.paging.rxjava3
     implementation libs.reactivex.rxandroid
     implementation libs.rxjava3.rxjava
     implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
@@ -67,7 +70,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'db'
-                version = '1.4.0'
+                version = '1.5.0'
             }
         }
         repositories {

@@ -34,8 +34,13 @@ import io.reactivex.rxjava3.core.Single
  * 2. **兼容老项目**：`extends BaseRoomDao<T>()` 并手动 override 底部 `do*` 方法
  *    （含 [doCount]、[doExecute]）。
  * ## 上层配合
- * - 业务仓库继承 [io.coderf.arklab.common.repository.RoomRepositoryImpl]；
+ * - **RxJava3**：继承 [io.coderf.arklab.common.repository.RoomRepositoryImpl]；
+ * - **协程**：继承 [io.coderf.arklab.core.db.RoomDataRepository]（Room 原生 suspend，无 blocking 桥接）；
  * - 分页列表可配合 [io.coderf.arklab.common.datasource.RxRoomPagingSource]。
+ *
+ * ## 主键策略
+ * 推荐业务侧使用客户端 UUID / 业务主键（如 [io.coderf.arklab.common.bean.AttachmentBean.mobileId]），
+ * 插入前赋值即可，无需依赖 `@Insert` 返回 rowId。
  *
  * @Dao
  * @RoomObservedEntity(YourEntity::class)  // 推荐：KSP 生成 XxxDaoRawQueryBridge
@@ -44,11 +49,12 @@ import io.reactivex.rxjava3.core.Single
  * @param T 表实体类型
  * @see RoomSqlHelper
  * @see io.coderf.arklab.common.annotation.RoomObservedEntity
+ * @see io.coderf.arklab.core.db.RoomDataRepository
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/28
  */
 abstract class BaseRoomDao<T : Any> {
 
@@ -124,11 +130,47 @@ abstract class BaseRoomDao<T : Any> {
     @Transaction
     abstract fun updateOnly(obj: List<T>): Int?
 
+    // ==================== Room 标准 CRUD（协程 suspend，Room 原生调度） ====================
+
+    /** 插入单条（suspend）；冲突策略 ABORT */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Transaction
+    abstract suspend fun insertSuspend(obj: T)
+
+    /** 批量插入（suspend） */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Transaction
+    abstract suspend fun insertSuspend(list: List<T>)
+
+    /** 插入或替换单条（suspend，冲突 REPLACE） */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Transaction
+    abstract suspend fun upsertSuspend(obj: T)
+
+    /** 批量插入或替换（suspend） */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Transaction
+    abstract suspend fun upsertSuspend(list: List<T>)
+
+    /** 按主键删除单条（suspend） */
+    @Delete
+    @Transaction
+    abstract suspend fun deleteSuspend(obj: T)
+
+    /** 按主键更新单条（suspend） */
+    @Update
+    @Transaction
+    abstract suspend fun updateSuspend(obj: T)
+
+    /** 按主键批量更新（suspend） */
+    @Update
+    @Transaction
+    abstract suspend fun updateSuspend(obj: List<T>)
+
     // ==================== 动态删除（返回影响行数，推荐） ====================
 
     /**
      * 删除全表，返回影响行数（同步）。
-     * 新代码优先使用本方法或 [deleteAllCount]；老 [deleteAll] Flowable 已标记废弃。
      */
     fun deleteAllRows(): Int {
         val query = RoomSqlHelper.delete(getTableName())
@@ -168,57 +210,27 @@ abstract class BaseRoomDao<T : Any> {
     fun deleteByParamsCount(params: Map<String, Any>): Single<Int> =
         Single.fromCallable { deleteByParamsRows(params) }
 
-    // ==================== 动态删除（Flowable，兼容老签名，已废弃） ====================
-
-    /**
-     * 删除全表数据。
-     * 返回 [Flowable] 以兼容老项目；内部执行 DELETE 语句。
-     *
-     * @deprecated 请改用 [deleteAllRows] / [deleteAllCount]，语义为影响行数，避免 DELETE 走查询式 Flowable。
-     */
-    @Deprecated(
-        message = "Use deleteAllRows() or deleteAllCount() instead",
-        replaceWith = ReplaceWith("deleteAllCount()")
-    )
-    fun deleteAll(): Flowable<List<T>> {
+    /** 删除全表（suspend），返回影响行数 */
+    suspend fun deleteAllRowsSuspend(): Int {
         val query = RoomSqlHelper.delete(getTableName())
         logSql(query)
-        return doQueryFlowable(query)
+        return doExecuteSuspend(query)
     }
 
-    /**
-     * 按单列等值删除。
-     *
-     * @param params 列名（会做标识符校验）
-     * @param value 列值（占位符绑定）
-     * @deprecated 请改用 [deleteByParamsRows] / [deleteByParamsCount]
-     */
-    @Deprecated(
-        message = "Use deleteByParamsRows(column, value) or deleteByParamsCount(column, value)",
-        replaceWith = ReplaceWith("deleteByParamsCount(params, value)")
-    )
-    fun deleteByParams(params: String, value: String): Flowable<List<T>> {
-        RoomSqlHelper.requireIdentifier(params)
-        val query = RoomSqlHelper.delete(getTableName(), " WHERE $params = ?", arrayOf(value))
+    /** 按单列等值删除（suspend），返回影响行数 */
+    suspend fun deleteByParamsRowsSuspend(column: String, value: Any): Int {
+        RoomSqlHelper.requireIdentifier(column)
+        val query = RoomSqlHelper.delete(getTableName(), " WHERE $column = ?", arrayOf(value))
         logSql(query)
-        return doQueryFlowable(query)
+        return doExecuteSuspend(query)
     }
 
-    /**
-     * 按多列等值 AND 删除。
-     *
-     * @param params 列名 -> 值
-     * @deprecated 请改用 [deleteByParamsRows] / [deleteByParamsCount]
-     */
-    @Deprecated(
-        message = "Use deleteByParamsRows(params) or deleteByParamsCount(params)",
-        replaceWith = ReplaceWith("deleteByParamsCount(params)")
-    )
-    fun deleteByParams(params: Map<String, Any>): Flowable<List<T>> {
+    /** 按多条件删除（suspend），返回影响行数 */
+    suspend fun deleteByParamsRowsSuspend(params: Map<String, Any>): Int {
         val (where, args) = RoomSqlHelper.buildWhereClause(params)
         val query = RoomSqlHelper.delete(getTableName(), where, args)
         logSql(query)
-        return doQueryFlowable(query)
+        return doExecuteSuspend(query)
     }
 
     // ==================== count / exists ====================
@@ -259,6 +271,24 @@ abstract class BaseRoomDao<T : Any> {
         RoomSqlHelper.requireIdentifier(primaryKey)
         return exists(mapOf(primaryKey to id))
     }
+
+    /** 全表行数（suspend） */
+    suspend fun countAllSuspend(): Long {
+        val query = RoomSqlHelper.count(getTableName())
+        logSql(query)
+        return doCountSuspend(query)
+    }
+
+    /** 按条件统计行数（suspend） */
+    suspend fun countSuspend(params: Map<String, Any>): Long {
+        val (where, args) = RoomSqlHelper.buildWhereClause(params)
+        val query = RoomSqlHelper.count(getTableName(), where, args)
+        logSql(query)
+        return doCountSuspend(query)
+    }
+
+    /** 按条件是否存在（suspend） */
+    suspend fun existsSuspend(params: Map<String, Any>): Boolean = countSuspend(params) > 0
 
     // ==================== 动态查询（Rx） ====================
 
@@ -431,35 +461,88 @@ abstract class BaseRoomDao<T : Any> {
         buildPagedSelectQuery(params, null, null, orderBy, descending = false, limit, offset).also { logSql(it) }
     )
 
+    // ==================== 动态查询（协程 suspend） ====================
+
+    /** 查询全表（suspend） */
+    suspend fun findAllSuspend(): List<T> {
+        val query = RoomSqlHelper.query(getTableName())
+        logSql(query)
+        return doQueryListSuspend(query)
+    }
+
+    /** 按列 `id` 查询单条（suspend，Long 主键） */
+    suspend fun findInfoByIdSuspend(id: Long): T {
+        val query = RoomSqlHelper.selectByColumn(getTableName(), "id", id)
+        logSql(query)
+        return doFindSuspend(query)
+    }
+
+    /** 按列 `id` 查询单条（suspend，String 主键） */
+    suspend fun findInfoByIdSuspend(id: String): T {
+        val query = RoomSqlHelper.selectByColumn(getTableName(), "id", id)
+        logSql(query)
+        return doFindSuspend(query)
+    }
+
+    /** 按指定主键列查询单条（suspend） */
+    suspend fun findInfoByIdSuspend(primaryKey: String, id: Long): T {
+        RoomSqlHelper.requireIdentifier(primaryKey)
+        val query = RoomSqlHelper.selectByColumn(getTableName(), primaryKey, id)
+        logSql(query)
+        return doFindSuspend(query)
+    }
+
+    /** 按指定主键列查询单条（suspend，String 值） */
+    suspend fun findInfoByIdSuspend(primaryKey: String, id: String): T {
+        RoomSqlHelper.requireIdentifier(primaryKey)
+        val query = RoomSqlHelper.selectByColumn(getTableName(), primaryKey, id)
+        logSql(query)
+        return doFindSuspend(query)
+    }
+
+    /** 按列 IN 查询列表（suspend） */
+    suspend fun findByInSuspend(column: String, values: Collection<*>): List<T> {
+        if (values.isEmpty()) return emptyList()
+        RoomSqlHelper.requireIdentifier(column)
+        val (where, args) = RoomSqlHelper.buildWhereClause(mapOf(column to (values as Any)))
+        val query = RoomSqlHelper.query(getTableName(), where, args)
+        logSql(query)
+        return doQueryListSuspend(query)
+    }
+
+    /** 同步分页降序（suspend） */
+    suspend fun findPageListSuspend(
+        params: Map<String, Any>,
+        keywordsKey: Set<String>?,
+        keywords: String?,
+        orderBy: String?,
+        limit: Int = 10,
+        offset: Int = 0
+    ): List<T> = doQueryListSuspend(
+        buildPagedSelectQuery(params, keywordsKey, keywords, orderBy, descending = true, limit, offset)
+            .also { logSql(it) }
+    )
+
+    /** 同步分页降序，无关键字（suspend） */
+    suspend fun findPageListSuspend(
+        params: Map<String, Any>,
+        orderBy: String?,
+        limit: Int = 10,
+        offset: Int = 0
+    ): List<T> = findPageListSuspend(params, null, null, orderBy, limit, offset)
+
+    /** 同步分页升序（suspend） */
+    suspend fun findPageListAscSuspend(
+        params: Map<String, Any>,
+        orderBy: String?,
+        limit: Int = 10,
+        offset: Int = 0
+    ): List<T> = doQueryListSuspend(
+        buildPagedSelectQuery(params, null, null, orderBy, descending = false, limit, offset)
+            .also { logSql(it) }
+    )
+
     // ==================== LiveData（页面观察，无 Repository Loading） ====================
-
-    @Deprecated(
-        message = "Use deleteAllRows() / deleteAllCount(); LiveData after DELETE is not recommended",
-        replaceWith = ReplaceWith("deleteAllRows()")
-    )
-    fun deleteAllLiveData(): LiveData<List<T>> =
-        doFindListLiveData(RoomSqlHelper.delete(getTableName()).also { logSql(it) })
-
-    @Deprecated(
-        message = "Use deleteByParamsRows / deleteByParamsCount",
-        replaceWith = ReplaceWith("deleteByParamsRows(params, value)")
-    )
-    fun deleteByParamsLiveData(params: String, value: String): LiveData<List<T>> {
-        RoomSqlHelper.requireIdentifier(params)
-        return doFindListLiveData(
-            RoomSqlHelper.delete(getTableName(), " WHERE $params = ?", arrayOf(value))
-                .also { logSql(it) }
-        )
-    }
-
-    @Deprecated(
-        message = "Use deleteByParamsRows / deleteByParamsCount",
-        replaceWith = ReplaceWith("deleteByParamsRows(params)")
-    )
-    fun deleteByParamsLiveData(params: Map<String, Any>): LiveData<List<T>> {
-        val (where, args) = RoomSqlHelper.buildWhereClause(params)
-        return doFindListLiveData(RoomSqlHelper.delete(getTableName(), where, args).also { logSql(it) })
-    }
 
     fun findAllLiveData(): LiveData<List<T>> =
         doFindListLiveData(RoomSqlHelper.query(getTableName()).also { logSql(it) })
@@ -601,4 +684,20 @@ abstract class BaseRoomDao<T : Any> {
      */
     @RawQuery(observedEntities = [BaseDaoBean::class])
     protected abstract fun doExecute(query: SupportSQLiteQuery): Int
+
+    /** 执行 RawQuery，返回单条（suspend） */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract suspend fun doFindSuspend(query: SupportSQLiteQuery): T
+
+    /** 执行 RawQuery，返回列表（suspend） */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract suspend fun doQueryListSuspend(query: SupportSQLiteQuery): List<T>
+
+    /** 执行 COUNT RawQuery（suspend） */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract suspend fun doCountSuspend(query: SupportSQLiteQuery): Long
+
+    /** 执行写操作 RawQuery，返回影响行数（suspend） */
+    @RawQuery(observedEntities = [BaseDaoBean::class])
+    protected abstract suspend fun doExecuteSuspend(query: SupportSQLiteQuery): Int
 }

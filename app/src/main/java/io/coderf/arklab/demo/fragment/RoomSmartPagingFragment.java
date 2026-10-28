@@ -1,6 +1,5 @@
 package io.coderf.arklab.demo.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,10 +9,10 @@ import io.coderf.arklab.common.base.BaseSmartPagingFragment;
 import io.coderf.arklab.common.databinding.BaseSmartPagingBinding;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
+import io.coderf.arklab.core.bean.RequestResult;
 import io.coderf.arklab.demo.adapter.PagingRoomAdapter;
 import io.coderf.arklab.demo.bean.Person;
 import io.coderf.arklab.demo.viewmodel.DemoRoomPagingViewModel;
-import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * RoomSmartPagingFragment 类。
@@ -57,15 +56,17 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
                 .setPositiveText("确认删除")
                 .setMessage("是否确认删除此行？")
                 .setOnPositiveClickListener(dialog -> {
-                    @SuppressLint("NotifyDataSetChanged") Disposable disposable = mViewModel.getIRepository().delete(item, true)
-                            .subscribe(() -> {
-                                LogUtil.logger(ApiRetrofit.TAG, "删除成功");
-                                showToast("删除成功！");
-                                mViewModel.refreshData();
-                                adapter.refresh();
-                            }, throwable -> {
-                                LogUtil.logger(ApiRetrofit.TAG, "删除失败：" + throwable);
-                            });
+                    mViewModel.deletePerson(item, result -> {
+                        if (result instanceof RequestResult.Success) {
+                            LogUtil.logger(ApiRetrofit.TAG, "删除成功");
+                            showToast("删除成功！");
+                            mViewModel.refreshData();
+                            adapter.refresh();
+                        } else if (result instanceof RequestResult.Error) {
+                            LogUtil.logger(ApiRetrofit.TAG, "删除失败：" + ((RequestResult.Error) result).getError());
+                        }
+                        return kotlin.Unit.INSTANCE;
+                    });
                 })
                 .builder()
                 .show();
