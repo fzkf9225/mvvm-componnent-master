@@ -18,7 +18,9 @@ namespace：`io.coderf.arklab.core.network`
 
 ## 依赖
 
-- `api` → `:core-base`、`:core-db`
+- `api` → `:core-base`
+
+**不依赖** `:core-db`（网络与 Room 分层独立；需要本地库时经 `:common` 或直接依赖 `core-db`）。
 
 通常经 `:common` 透出；也可在宿主中显式 `api` 本模块。
 

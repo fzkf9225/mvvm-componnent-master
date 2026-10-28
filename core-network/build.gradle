@@ -37,7 +37,6 @@ android {
 
 dependencies {
     api project(':core-base')
-    api project(':core-db')
 
     implementation platform(libs.kotlin.bom)
     implementation libs.androidx.core.ktx
@@ -57,10 +56,6 @@ dependencies {
     implementation libs.androidx.paging.runtime
     implementation libs.paging.rxjava3
     implementation libs.androidx.paging.runtime.ktx
-    implementation libs.androidx.room.ktx
-    implementation libs.androidx.room.runtime
-    implementation libs.room.rxjava3
-    implementation libs.room.paging
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
     implementation libs.logger
@@ -77,7 +72,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'network'
-                version = '1.5.0'
+                version = '1.5.1'
             }
         }
         repositories {
