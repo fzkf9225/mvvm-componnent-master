@@ -211,9 +211,17 @@ public class ApiRetrofit {
          */
         private final List<Interceptor> interceptorList = new ArrayList<>();
         /**
-         * 请求超时时间
+         * 连接超时（秒）：建立 TCP/TLS 的最长等待。网络不可达时应尽快失败。
          */
-        private long timeOut = 15;
+        private long connectTimeout = 10;
+        /**
+         * 读超时（秒）：两次读数据之间的空闲上限，覆盖服务端处理与响应下发。
+         */
+        private long readTimeout = 30;
+        /**
+         * 写超时（秒）：两次写数据之间的空闲上限，普通 JSON 请求够用；大文件上传请单独加大。
+         */
+        private long writeTimeout = 15;
         /**
          * 是否使用默认的加密签名的方式
          */
@@ -343,8 +351,32 @@ public class ApiRetrofit {
             return this;
         }
 
+        /**
+         * 统一设置连接 / 读 / 写超时（秒）。三者语义不同时请改用
+         * {@link #setConnectTimeout} / {@link #setReadTimeout} / {@link #setWriteTimeout}。
+         */
         public Builder setTimeOut(long timeOut) {
-            this.timeOut = timeOut;
+            this.connectTimeout = timeOut;
+            this.readTimeout = timeOut;
+            this.writeTimeout = timeOut;
+            return this;
+        }
+
+        /** @param connectTimeout 连接超时（秒） */
+        public Builder setConnectTimeout(long connectTimeout) {
+            this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        /** @param readTimeout 读超时（秒） */
+        public Builder setReadTimeout(long readTimeout) {
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
+        /** @param writeTimeout 写超时（秒） */
+        public Builder setWriteTimeout(long writeTimeout) {
+            this.writeTimeout = writeTimeout;
             return this;
         }
 
@@ -477,9 +509,9 @@ public class ApiRetrofit {
                             }
                             return response;
                         })
-                        .connectTimeout(timeOut, TimeUnit.SECONDS)
-                        .readTimeout(timeOut, TimeUnit.SECONDS)
-                        .writeTimeout(timeOut, TimeUnit.SECONDS);
+                        .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                        .readTimeout(readTimeout, TimeUnit.SECONDS)
+                        .writeTimeout(writeTimeout, TimeUnit.SECONDS);
                 if (!interceptorList.isEmpty()) {
                     for (Interceptor interceptor : interceptorList) {
                         build.addInterceptor(interceptor);
@@ -555,8 +587,25 @@ public class ApiRetrofit {
             return interceptorList;
         }
 
+        /**
+         * @deprecated 已拆分为三个超时，请使用 {@link #getConnectTimeout} /
+         * {@link #getReadTimeout} / {@link #getWriteTimeout}。返回值为三者中的最大值。
+         */
+        @Deprecated
         public long getTimeOut() {
-            return timeOut;
+            return Math.max(connectTimeout, Math.max(readTimeout, writeTimeout));
+        }
+
+        public long getConnectTimeout() {
+            return connectTimeout;
+        }
+
+        public long getReadTimeout() {
+            return readTimeout;
+        }
+
+        public long getWriteTimeout() {
+            return writeTimeout;
         }
 
         public boolean isUseDefaultSign() {
