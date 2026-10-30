@@ -2,27 +2,41 @@
 
 本地持久化：Room Database / DAO / Entity，以及 Rx / 协程两套 Repository。
 
-当前版本：**1.5.0**  
-Maven：`io.coderf.arklab.core:db:1.5.0`  
+当前版本：**1.6.0**  
+Maven：`io.coderf.arklab.core:db:1.6.0`  
 namespace：`io.coderf.arklab.core.db`  
 配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）
 
 ---
 
-## 1.5.0 变更摘要
+## 1.6.0 变更摘要
 
-相对此前 1.4.x / 过渡实现，本版重点：
+相对 **1.5.0**（协程栈落地），本版完善 `RoomRequestOptions` 与协程错误 UI，对齐网络侧 `RequestOptions` 习惯：
 
 | 项 | 说明 |
 |----|------|
-| 协程栈 | 新增 `io.coderf.arklab.core.db`：`DefaultRoomRepository` / `BaseRoomRepository` / `RoomDataRepository`，对齐网络层 `DefaultNetworkRepository` |
-| Dao | `BaseRoomDao` 增加 Room 原生 `*Suspend` CRUD / 查询 / 条件删除 |
-| 分页 | 新增协程 `RoomPagingSource`；Rx 侧保留 `RxRoomPagingSource` |
-| 结果类型 | 协程栈统一 `Flow<RequestResult<T>>`（`RequestResult` 已下沉 `core-base`） |
-| 清理 | 删除过渡用 `RoomRepositoryCoroutineExt`（blocking 桥接）；删除 DELETE→Flowable / DELETE LiveData 等过时 API |
-| 职责 | `RxRoomPagingSource` / `RoomPagingQuery` 归属本模块（不再挂在 `core-network`） |
+| Toast / 错误交付 | 新增 `deliverErrorToUi`、`showErrorToast`、`errorToastMessage`；工厂 `noToast()` |
+| `silent()` | 对齐网络：无 Loading，**且**协程栈不把错误交给 `RequestUi`（仍可 collect `RequestResult.Error`） |
+| 工厂补齐 | `defaults()`、`noTimeout()`（`timeoutSeconds=0`） |
+| Bug 修复 | `query(showLoading=false)` 不再误用 `silent()`，**仍保留** `throwOnEmptyList=true` |
+| 协程接线 | `DefaultRoomRepository` 按 Options 控制 `showError` / Toast 文案 |
+| 日志 | `RoomLog` 打印 `Deliver Error To Ui` / `Show Error Toast` |
 
-**升级注意：** 使用 `@RoomObservedEntity` 的工程请同步升到 **room-processor 1.2.0**（Bridge 需生成 suspend `do*`），否则协程 RawQuery 无法编译。
+**兼容说明：**
+
+- Loading / `timeoutSeconds` / `throwOnEmptyList` 语义不变；超时单位仍为**秒**。
+- Rx 栈（`RoomRepositorySupport`）**仍不读** Toast / `deliverErrorToUi`，错误由订阅方处理。
+- `RoomDataRepository` 等默认 `silent()` 的调用：升级后协程侧失败**不再自动 Toast**；需要提示时请用 `withLoading(...)` / `defaults()`，或显式 `setDeliverErrorToUi(true)`。
+- 无需升级 room-processor（本版未改 Bridge 生成）。
+
+### 1.5.0 回顾（协程栈落地）
+
+| 项 | 说明 |
+|----|------|
+| 协程栈 | `DefaultRoomRepository` / `BaseRoomRepository` / `RoomDataRepository` |
+| Dao | `BaseRoomDao` 增加 Room 原生 `*Suspend` |
+| 分页 | 协程 `RoomPagingSource`；Rx 保留 `RxRoomPagingSource` |
+| 清理 | 删除过渡 blocking 桥接与过时 DELETE API |
 
 ---
 
@@ -47,6 +61,7 @@ namespace：`io.coderf.arklab.core.db`
 | 结果形态 | Rx 类型 | `Flow<RequestResult<T>>` |
 | 分页 | `RxRoomPagingSource` | `RoomPagingSource` |
 | ViewModel | 继承即可（`IRepository`） | 继承 `BaseRoomRepository` / `RoomDataRepository` |
+| Options 错误 UI | 订阅方自行 `showError` | `deliverErrorToUi` / Toast 字段生效 |
 
 ```kotlin
 // 协程栈
@@ -75,6 +90,45 @@ Pager(pagingConfig) {
 
 ---
 
+## 1.6.0 RoomRequestOptions 用法
+
+```kotlin
+// 静默：无 Loading；协程栈也不交错误 UI
+execute(RoomRequestOptions.silent()) { dao.findAllSuspend() }
+
+// 有 Loading，不弹 Toast
+execute(
+    RoomRequestOptions.Builder()
+        .setShowDialog(true)
+        .setDialogMessage("保存中...")
+        .setShowErrorToast(false)
+        .build()
+) { dao.insertSuspend(entity) }
+
+// 或工厂：默认无 Loading + 关 Toast（需要 Loading 请用 Builder）
+execute(RoomRequestOptions.noToast()) { dao.countAllSuspend() }
+
+// 大批量：不超时
+execute(RoomRequestOptions.noTimeout()) { dao.insertAllSuspend(list) }
+
+// 查询：无 Loading 时仍空列表 → NOT_FOUND（1.6.0 已修复）
+repository.findAll(RoomRequestOptions.query(false, true))
+```
+
+| 字段 / 工厂 | 含义 |
+|-------------|------|
+| `showDialog` / `dialogMessage` / `enableDynamicEllipsis` | Loading |
+| `timeoutSeconds` | ≤0 不超时；默认 15 |
+| `throwOnEmptyList` | 空 `List` → `NOT_FOUND` |
+| `deliverErrorToUi` | 协程栈是否 `RequestUi.showError` |
+| `showErrorToast` / `errorToastMessage` | Toast 开关与覆盖文案 |
+| `silent()` / `noToast()` / `noTimeout()` / `defaults()` / `withLoading(msg)` | 常用工厂 |
+| `query` / `insert` / `update` / `delete` | 按操作类型的默认文案 |
+
+**不要硬塞进 Options：** 事务、Dispatcher、鉴权重试等——本地库无鉴权；事务放在 Dao / `block` 内。
+
+---
+
 ## 主键策略（推荐客户端赋值）
 
 本模块 **不提供** `@Insert` 返回 rowId 的通用封装。推荐客户端 UUID（如 `AttachmentBean.mobileId`）插入前赋值。
@@ -99,7 +153,7 @@ Pager(pagingConfig) {
 - `ksp` → `:room-processor` **1.2.0**（或同源工程 `project(':room-processor')`）
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.5.0'
+implementation 'io.coderf.arklab.core:db:1.6.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 // 或本仓库
 implementation project(':core-db')

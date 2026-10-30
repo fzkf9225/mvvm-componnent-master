@@ -1,72 +1,149 @@
 # 升级与迁移说明
 
-> 当前主干：**core-base / network / ui `1.2.0`** + **core-db `1.5.0`** + **room-processor `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`** + **commonmedia `3.5.0`**（common facade 仍为 **`4.6.0`**，主题仍为 Material3 DayNight）。  
-> **Room 协程栈**：看 [§0](#0-core-db-150--room-processor-120)；BaseView 剔除仍见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)。  
-> 从 **AppCompat 主题线**（common 4.5.1 / core-base 1.0.9）升级：先看 [§1](#1-460appcompat-主题--material3)，再看 §2。  
-> 控件包装类删除见 §1.6。仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
-> 模块职责与日常用法见 [MODULES.md](./MODULES.md)；网络新 API 见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)；Room 详见 [core-db/README.md](./core-db/README.md)。
+> **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
+> **common `4.7.0`** · **core-base `1.5.9`** · **core-network / core-db `1.6.0`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **commonui `3.7.3`** · **commonmedia `3.7.0`** · **googlegps `3.3.1`** · **annotation `3.3.1`**  
+>
+> **本轮重点：** [§0](#0-160network--db请求-options-完善)（network / db `1.6.0` Options 对齐）。  
+> Room 协程栈落地见 [§0.1](#01-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
+> 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
+> 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
 
 ---
 
-## 0. core-db 1.5.0 + room-processor 1.2.0
+## 当前推荐 Maven 钉版本
 
-Room 本地栈与网络层对齐：Rx / 协程 **并行独立**（无 blocking 桥接）。
-
-| 模块 | 坐标 | 要点 |
-|------|------|------|
-| core-db | `io.coderf.arklab.core:db:1.5.0` | `RoomDataRepository` / `RoomPagingSource`；Dao `*Suspend` |
-| room-processor | `io.coderf.arklab.room:room-processor:1.2.0` | Bridge 增加 suspend RawQuery（配套 db 1.5.0） |
+业务工程建议**显式**声明下表（勿只升 `common` 指望传递依赖一定最新）：
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.5.0'
+implementation 'io.coderf.arklab.common:common:4.7.0'
+implementation 'io.coderf.arklab.core:base:1.5.9'
+implementation 'io.coderf.arklab.core:network:1.6.0'
+implementation 'io.coderf.arklab.core:db:1.6.0'
+implementation 'io.coderf.arklab.core:ui:1.3.1'
+implementation 'io.coderf.arklab.core:utils:1.1.1'
+implementation 'io.coderf.arklab.core:log:1.2.0'
+ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity 时
+// 按需：
+implementation 'io.coderf.arklab.ui:ui:3.7.3'
+implementation 'io.coderf.arklab.media:media:3.7.0'
+implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
+implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
+```
+
+工程依赖 `implementation project(':common')` 时随源码即可。
+
+| 模块 | 坐标 |
+|------|------|
+| common | `io.coderf.arklab.common:common:4.7.0` |
+| core-base | `io.coderf.arklab.core:base:1.5.9` |
+| core-network | `io.coderf.arklab.core:network:1.6.0` |
+| core-db | `io.coderf.arklab.core:db:1.6.0` |
+| core-ui | `io.coderf.arklab.core:ui:1.3.1` |
+| core-utils | `io.coderf.arklab.core:utils:1.1.1` |
+| core-log | `io.coderf.arklab.core:log:1.2.0` |
+| core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
+| room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
+| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
+| commonui | `io.coderf.arklab.ui:ui:3.7.3` |
+| commonmedia | `io.coderf.arklab.media:media:3.7.0` |
+| googlegps | `io.coderf.arklab.googlegps:googlegps:3.3.1` |
+| annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0. 1.6.0：network / db 请求 Options 完善
+
+本轮 **不强制** 改业务调用点；以补齐 Options、对齐旧栈语义、修隐患为主。明细见各模块 README。
+
+### 0.1 core-network `1.6.0`
+
+| 项 | 说明 |
+|----|------|
+| Toast 对等 | `RequestOptions` 新增 `showErrorToast` / `errorToastMessage`；工厂 `noToast()` |
+| 通用重试 | `RetryPolicy` **仅瞬时网络失败**；业务 `BaseException` 不再误重试；鉴权仍走 `TokenRefresher` |
+| 异常转换 | 新栈 `.catch` 接入 `DefaultExceptionConverter`（HTTP errorBody） |
+| ApiRetrofit | `o-timestamp`（签名）、`addNetworkInterceptor`、`setLogBodyMaxBytes` |
+| 转换工厂 | null `data` 按 `actualType`；成功路径去掉多余序列化 |
+| 旧 Options | 修复 `ApiRequestOptions.Builder` 跨请求串实例 |
+
+```kotlin
+// 有 Loading，不弹 Toast
+request(RequestOptions.noToast()) { api.submit() }
+
+// 登录：关鉴权刷新 + 关通用退避
+request(
+    RequestOptions.builder()
+        .enableAuthRetry(false)
+        .retryPolicy(RetryPolicy.None)
+        .build()
+) { api.login(body) }
+```
+
+```gradle
+implementation 'io.coderf.arklab.core:network:1.6.0'
+```
+
+完整对照与迁移：[core-network/README.md](./core-network/README.md)、[core-network/MIGRATION.md](./core-network/MIGRATION.md)。
+
+### 0.2 core-db `1.6.0`
+
+| 项 | 说明 |
+|----|------|
+| Toast / 错误交付 | `RoomRequestOptions`：`deliverErrorToUi`、`showErrorToast`、`errorToastMessage`；`noToast()` |
+| `silent()` | 对齐网络：无 Loading + 协程栈不交错误 UI（仍可 collect `RequestResult.Error`） |
+| 工厂 | `defaults()`、`noTimeout()` |
+| Bug | `query(false, …)` 仍保留 `throwOnEmptyList=true`（不再误用 `silent()`） |
+
+```kotlin
+execute(RoomRequestOptions.withLoading("保存中...")) { dao.insertSuspend(e) }
+
+// 无 Loading，空列表仍 NOT_FOUND
+RoomRequestOptions.query(false, true)
+```
+
+```gradle
+implementation 'io.coderf.arklab.core:db:1.6.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 ```
 
-变更明细与迁移表见 [core-db/README.md](./core-db/README.md)、[room-processor/README.md](./room-processor/README.md)。
+**升级注意：** `RoomDataRepository` 等默认 `silent()` 时，协程失败**不再自动 Toast**；需要提示请用 `withLoading` / `defaults()` 或 `setDeliverErrorToUi(true)`。Rx 栈错误展示仍由订阅方负责。详见 [core-db/README.md](./core-db/README.md)。
+
+### 0.3 历史：core-db `1.5.0` 协程栈（若尚未跟上）
+
+若宿主仍停在 db `≤1.4.x`，请先升到至少 **1.5.0**（协程 `RoomDataRepository` / Dao `*Suspend` / `RoomPagingSource`），再升 **1.6.0**。  
+processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）。1.6.0 **未**改 Bridge，已用 1.2.0 的工程不必为 Options 再升 processor。
 
 ---
 
 ## 2. 1.2.0：彻底剔除 BaseView / MVP 页面绑定
 
-这是一次 **架构契约** 大版本（相对上一档 core-base **1.1.3** / commonui **3.6.2** / commonmedia **3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / 错误展示只走 **`RequestUi` + `NetworkRequestUiHost`**；业务导航用 LiveData / Flow。后续已进一步删除旧版 `RequestUiCallback`，全链路统一为 `RequestUi`。
+这是一次 **架构契约** 大版本（相对当时 core-base **1.1.3** / commonui **3.6.2** / commonmedia **3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / 错误展示只走 **`RequestUi` + `NetworkRequestUiHost`**；业务导航用 LiveData / Flow。后续已进一步删除旧版 `RequestUiCallback`，全链路统一为 `RequestUi`。
 
-### 2.1 版本号
+> **版本说明：** 下表「当时落点」描述的是 **BaseView 剔除当轮** 的发布号。当前主干已继续演进（见文首矩阵 / 文首 Maven 块），业务工程请钉**当前**坐标，不要只升到表中的 1.2.0。
 
-| 模块 | 上一档 | 现 |
-|------|--------|-----|
-| common（facade） | 4.6.0 | **4.6.0**（本轮未改发布号） |
-| core-base | 1.1.3 | **1.2.0** |
-| core-network | 1.1.0 | **1.2.0** |
-| core-db | 1.1.0 | **1.2.0** |
-| core-ui | 1.1.0 | **1.2.0** |
-| core-utils | 1.1.0 | **1.1.1**（仅注释，无 API 变更） |
-| commonui | 3.6.2 | **3.7.0** |
-| commonmedia | 3.4.1 | **3.5.0**（加载框样式兼容） |
+### 2.1 版本号（BaseView 剔除当轮 → 请再对齐文首当前矩阵）
 
-未在本表内的模块（core-log / room-processor / core-mqtt / googlegps / annotation 等）本轮**未**因 BaseView 剔除而升版，沿用既有坐标即可。
+| 模块 | 剔除前一档 | 剔除当轮落点 | 当前主干（请以此为准） |
+|------|------------|--------------|------------------------|
+| common（facade） | 4.6.0 | 4.6.0 | **4.7.0** |
+| core-base | 1.1.3 | 1.2.0 | **1.5.9** |
+| core-network | 1.1.0 | 1.2.0 | **1.6.0** |
+| core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.0** |
+| core-ui | 1.1.0 | 1.2.0 | **1.3.1** |
+| core-utils | 1.1.0 | 1.1.1 | **1.1.1** |
+| commonui | 3.6.2 | 3.7.0 | **3.7.3** |
+| commonmedia | 3.4.1 | 3.5.0 | **3.7.0** |
+| room-processor | — | 1.2.0（配套 db 1.5.0+） | **1.2.0** |
 
-Maven 示例（推荐显式钉住本次升版模块，避免只升 `common:4.6.0` 时传递依赖仍解析到旧 core）：
-
-```gradle
-implementation 'io.coderf.arklab.common:common:4.6.0'
-implementation 'io.coderf.arklab.core:base:1.2.0'
-implementation 'io.coderf.arklab.core:network:1.2.0'
-implementation 'io.coderf.arklab.core:db:1.5.0'
-implementation 'io.coderf.arklab.core:ui:1.2.0'
-implementation 'io.coderf.arklab.core:utils:1.1.1'
-ksp 'io.coderf.arklab.room:room-processor:1.2.0'  // 使用 @RoomObservedEntity 时
-// 用到表单 / 媒体时：
-implementation 'io.coderf.arklab.ui:ui:3.7.0'
-implementation 'io.coderf.arklab.media:media:3.5.0'
-```
+依赖坐标请直接复制文首「当前推荐 Maven 钉版本」。
 
 工程依赖 `implementation project(':common')` 时随源码即可，无需改坐标。
 
-> **说明**：`common` 本轮未升 4.7.0。若私服上仍是旧 POM 的 `common:4.6.0`，Gradle 可能继续解析到旧 `core-*`；业务工程请**显式**声明上表坐标，或重新 `publish` 各 `core-*` / `commonui` / `commonmedia` 后再 Sync。
+> **说明**：Maven 宿主若只升 `common`，Gradle 可能仍解析到旧 `core-*` POM；请**显式**声明文首坐标，或重新 `publish` 后再 Sync。
 
 ### 2.2 架构对照（必读）
 
-| | 旧（MVP 残存） | 现（1.2.0） |
+| | 旧（MVP 残存） | 现（1.2.0+） |
 |--|----------------|-------------|
 | 页面契约 | `BaseView` / 业务 `XxxView` | **已删除**；页面实现 `RequestUi`（`BaseActivity` / `BaseFragment` 已实现） |
 | ViewModel | `BaseViewModel<IR, BV>`，`createRepository(view)`，`unbindView()` | `BaseViewModel<IR>`，无参 `createRepository()`，`ensureRepository()` |
@@ -144,7 +221,7 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 
 ### 2.4 业务工程落地步骤（建议顺序）
 
-1. **升依赖**到 §2.1 坐标，Clean + Sync。
+1. **升依赖**到文首当前坐标（至少完成 BaseView 剔除当轮 API，再升 network/db 1.6.0），Clean + Sync。
 2. **全局搜**（业务工程）：`BaseView`、`setBaseView`、`getBaseView`、`unbindView`、`createRepository(this`、`UserView`、`baseView:`、`BaseViewModel<.+,`。
 3. **改签名**：所有 `BaseViewModel` / Repository / Factory / Room 构造按 §2.3 去掉页面类型与参数。
 4. **改调用**：`baseView?.…` → `getRequestUi()?.…`（错误用 `showError(AppError)`）；表单 `setRequestUi(host)`。
@@ -160,7 +237,7 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 - [ ] 配置变更（旋转）后请求 UI 仍正常（Host 在 VM，页面只重新 bind）
 - [ ] 登录或其它「跳转」不再通过 View 接口，而是 observe 事件
 - [ ] 使用 commonui `FormMedia` 的页面已改为 `setRequestUi`
-- [ ] 使用 commonmedia 时加载框样式正常（3.5.0）
+- [ ] 使用 commonmedia 时加载框样式正常
 
 ```bash
 ./gradlew :app:assembleDebug
@@ -195,6 +272,7 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 
 - 若宿主仍在 **AppCompat 主题线**，先完成 §1（升到 Material3 + 控件补丁），再做本节。
 - 旧 `RepositoryImpl.sendRequest` 仍可用但已 `@Deprecated`；新代码优先 `DefaultNetworkRepository`，见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)。**本节不强制迁网络栈**，只强制去掉页面绑定。
+- network / db Options 行为见 [§0](#0-160network--db请求-options-完善)。
 
 ---
 
@@ -202,33 +280,32 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 
 这是一次 **主题与控件风格** 的大版本，不是再拆模块。官方路线是 **Views + Material Components for Android**，不是 Jetpack Compose。业务 API、页面结构、自定义 Dialog 形态与 AppCompat 工程对齐，观感保持不变。
 
-> 若宿主已经在 Material3 + core-base **1.1.x**，可跳过本节，直接做 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)。
+> 若宿主已经在 Material3 + core-base **≥1.2.0**（无 `BaseView`），可跳过本节；版本请直接对齐文首矩阵，并视需要做 [§0](#0-160network--db请求-options-完善) / [§2](#2-120彻底剔除-baseview--mvp-页面绑定)。
 
 ### 1.1 版本号（相对 AppCompat 工程）
 
 中间位 +1、补丁归零。文档里的坐标以 **build.gradle 发布号** 为准（4.5.x 文档曾落后于实际 `core-base 1.0.9` 等）。
 
-| 模块 | AppCompat 线 | 4.6.0 落点（其后还有补丁，见 §1.6；当前主干见文首 / §2.1） |
-|------|----------------|--------------------------------------------------------------|
-| common | 4.5.1 | **4.6.0** |
-| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 **1.1.3**，现见 §2 → **1.2.0**） |
-| core-network | 1.0.3 | **1.1.0**（现 **1.2.0**） |
-| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db/ui 现 **1.2.0**；utils 现 **1.1.1**） |
-| core-log | 1.0.0 | **1.1.0**（现 **1.2.0**） |
-| room-processor | 1.0.1 | **1.1.0** |
-| core-mqtt | 1.5.1 | **1.6.0** |
-| commonui | 3.5.1 | **3.6.0**（补丁 **3.6.x**，现见 §2 → **3.7.0**） |
-| commonmedia | 3.3.2 | **3.4.0**（现 **3.5.0**） |
-| googlegps | 3.1.7 | **3.2.0** |
-| annotation | 3.2.0 | **3.3.0** |
+| 模块 | AppCompat 线 | 4.6.0 落点（其后继续演进，**当前见文首**） |
+|------|----------------|------------------------------------------------|
+| common | 4.5.1 | **4.6.0** → 现 **4.7.0** |
+| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 1.1.3；BaseView 剔除 → 1.2.0；现 **1.5.9**） |
+| core-network | 1.0.3 | **1.1.0** → 1.2.0 → 现 **1.6.0** |
+| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db 现 **1.6.0**；ui 现 **1.3.1**；utils **1.1.1**） |
+| core-log | 1.0.0 | **1.1.0** → 现 **1.2.0** |
+| room-processor | 1.0.1 | **1.1.0** → 现 **1.2.0** |
+| core-mqtt | 1.5.1 | **1.6.0** → 现 **1.6.2** |
+| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.3** |
+| commonmedia | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
+| googlegps | 3.1.7 | **3.2.0** → 现 **3.3.1** |
+| annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
 
-Maven 示例（仅升主题时；当前请以 §2.1 为准）：
+Maven 示例（仅升主题时的历史坐标；**当前请以文首为准**）：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.6.0'
-// 一般由 common POM 传递；解析不全时可显式：
-// implementation 'io.coderf.arklab.core:base:1.2.0'
-// implementation 'io.coderf.arklab.core:network:1.2.0'
+implementation 'io.coderf.arklab.common:common:4.7.0'
+implementation 'io.coderf.arklab.core:base:1.5.9'
+implementation 'io.coderf.arklab.core:network:1.6.0'
 ```
 
 ### 1.2 主题（必须知悉）
@@ -255,7 +332,7 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 
 ### 1.4 宿主要改的（通常很少）
 
-1. 依赖升到上表坐标，Clean 后重编译。
+1. 依赖升到文首当前坐标，Clean 后重编译。
 2. 自绘「品牌色底 + 写死白字」的地方，暗色下改成 `R.color.onPrimary` / `?attr/colorOnPrimary`（亮色 `onPrimary` 仍是白）。框架内 Tab 选中字、默认日历选中日、GPS 对话框 Primary 已按此处理。
 3. 不要把相机 / 视频 / 裁剪叠层上的白字改成语义色。
 4. Release 混淆：主题升级**不必改 ProGuard**；`material.**` 与 `io.coderf.arklab.common.**` 已 keep。minify 包请回归登录 JSON（`user.bean` 未单独 keep，属旧债）。
@@ -276,7 +353,7 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 
 ### 1.6 补丁：core-base 1.1.1 / commonui 3.6.1（历史）
 
-这是 4.6.0 主题之后的 **控件落地**，不是再改主题父类。详细对照见 [core-base/README.md](core-base/README.md)、[commonui/README.md](commonui/README.md)。当前主干版本以 §2.1 为准。
+这是 4.6.0 主题之后的 **控件落地**，不是再改主题父类。详细对照见 [core-base/README.md](core-base/README.md)、[commonui/README.md](commonui/README.md)。当前主干版本以文首为准。
 
 | 已删除 | 替代 |
 |--------|------|
@@ -292,7 +369,7 @@ implementation 'io.coderf.arklab.common:common:4.6.0'
 
 ## 附录 A：4.5.1（从 4.4.x 单体拆到 core）
 
-> 以下是 **4.4.x → 4.5.1** 的历史说明。若工程已经在 4.5.1 / AppCompat 主题线上，只需看上文 §1（主题）与 §2（MVVM），不必再做附录里的模块拆分。
+> 以下是 **4.4.x → 4.5.1** 的历史说明。若工程已经在 4.5.1 / AppCompat 主题线上，只需看上文 §1（主题）、§2（MVVM）、§0（Options），不必再做附录里的模块拆分。
 
 ### A.1 当时升级摘要
 
@@ -350,4 +427,4 @@ implementation 'io.coderf.arklab.common:common:4.5.1'
 | 旧网络 API | 仅 Deprecated，未删除 |
 | 库模块自身 R8 | library 仍 `minifyEnabled false`，靠宿主 + consumer-rules |
 | user Gson Bean keep | 开启 minify 时登录 JSON 需回归（见 §1.4） |
-| common 发布号 | 本轮 MVVM 剔除未升 common，Maven 宿主需显式钉 core-\*（见 §2.1） |
+| 版本文档漂移 | 请以各模块 `build.gradle` 与本文文首矩阵为准，勿死盯过期 README 号 |

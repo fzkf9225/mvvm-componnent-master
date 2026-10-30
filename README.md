@@ -69,20 +69,20 @@
 
 ## MVVM架构示例代码，重构版本
 
-### 业务侧依赖入口：继续用 `common`（4.6.0 facade）
+### 业务侧依赖入口：继续用 `common`（4.7.0 facade）
 
 #### 在线引用（Maven）
 
-仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标：
+仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标（完整矩阵见 [UPGRADE.md](UPGRADE.md) / [MODULES.md](MODULES.md)）：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.6.0'
-// 一般可由 common POM 传递；若解析不全可显式补：
-// implementation 'io.coderf.arklab.core:base:1.1.1'
-// implementation 'io.coderf.arklab.core:network:1.1.0'
-// implementation 'io.coderf.arklab.core:db:1.1.0'
-// implementation 'io.coderf.arklab.core:ui:1.1.0'
-// implementation 'io.coderf.arklab.core:utils:1.1.0'
+implementation 'io.coderf.arklab.common:common:4.7.0'
+// 一般可由 common POM 传递；Maven 宿主建议显式钉：
+// implementation 'io.coderf.arklab.core:base:1.5.9'
+// implementation 'io.coderf.arklab.core:network:1.6.0'
+// implementation 'io.coderf.arklab.core:db:1.6.0'
+// implementation 'io.coderf.arklab.core:ui:1.3.1'
+// implementation 'io.coderf.arklab.core:utils:1.1.1'
 ```
 
 本仓库发布：`./gradlew :common:publish` / `:core-*:publish`（详见 [MODULES.md](MODULES.md)）。
@@ -168,7 +168,7 @@ implementation project(':userapi')   // 需要用户契约时
 #### 数据存储和网络请求相关
 1. 网络请求：新代码推荐继承 / 使用 `DefaultNetworkRepository`（`core-network`，返回 `Flow<RequestResult<T>>`）。旧 `RepositoryImpl` / `FlowRepositoryImpl` 仍可用但已 `@Deprecated`，勿再新增调用。Demo 见 `SampleCoreNetworkRepository`
 2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
-3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `DefaultNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。主键推荐客户端 UUID（如 `AttachmentBean.mobileId`）。Maven：`core-db:1.5.0` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[room-processor/README.md](room-processor/README.md)
+3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `DefaultNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。主键推荐客户端 UUID（如 `AttachmentBean.mobileId`）。Maven：`core-db:1.6.0` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[room-processor/README.md](room-processor/README.md)、[UPGRADE.md](UPGRADE.md)
 4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
 5. 网络请求分页`PagingSource`继承`PagingSource`，协程`flow`方式继承`FlowPagingSource`（均在 `core-network`）；数据库存储分页继承`RxRoomPagingSource`（`core-db`，查询参数用 `RoomPagingQuery`）
 6. `RetryService`：封装了网络请求拦截重试机制，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
