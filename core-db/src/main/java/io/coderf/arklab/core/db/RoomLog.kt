@@ -145,6 +145,8 @@ object RoomLog {
                 log.append("Dialog Message：").append(options.dialogMessage).append('\n')
                 log.append("Timeout Seconds：").append(options.timeoutSeconds).append('\n')
                 log.append("Throw On Empty：").append(options.isThrowOnEmptyList).append('\n')
+                log.append("Deliver Error To Ui：").append(options.isDeliverErrorToUi).append('\n')
+                log.append("Show Error Toast：").append(options.isShowErrorToast).append('\n')
             }
             log.append("Payload：").append(formatValue(payload)).append('\n')
             log.append("Duration：").append(duration).append("ms\n")

@@ -23,7 +23,8 @@ import kotlin.time.Duration.Companion.seconds
  * Room 协程仓库默认实现，对齐 [io.coderf.arklab.core.network.DefaultNetworkRepository]。
  *
  * - 不依赖旧 [io.coderf.arklab.common.repository.RoomRepositoryImpl] / Rx blocking 桥接
- * - Loading / 错误仅经 [RequestUi]
+ * - Loading / 错误仅经 [RequestUi]（受 [RoomRequestOptions.isDeliverErrorToUi] /
+ *   [RoomRequestOptions.isShowErrorToast] 控制）
  * - [block] 内应调用 Dao 的 Room 原生 `suspend`（如 `insertSuspend`）
  *
  * ```
@@ -43,6 +44,7 @@ import kotlin.time.Duration.Companion.seconds
  * @version 1.0
  * @since 1.0
  * @created 2026/10/28
+ * @updated 2026/10/30
  */
 open class DefaultRoomRepository(
     requestUi: RequestUi = NoOpRequestUi
@@ -114,14 +116,29 @@ open class DefaultRoomRepository(
                 if (throwable is CancellationException) throw throwable
                 sessionHolder[0]?.error(throwable)
                 val error = AppError.from(throwable)
-                if (error !is AppError.Cancelled) {
+                if (options.isDeliverErrorToUi && error !is AppError.Cancelled) {
                     withContext(Dispatchers.Main.immediate) {
-                        activeRequestUi.showError(error)
+                        activeRequestUi.showError(applyToastPolicy(error, options))
                     }
                 }
                 emit(RequestResult.Error(error))
             }
             .flowOn(Dispatchers.IO)
+    }
+
+    /**
+     * 对齐网络栈 / ErrorConsumer：仅控制 Toast 文案，不影响 Business.code 等字段。
+     */
+    private fun applyToastPolicy(error: AppError, options: RoomRequestOptions): AppError {
+        if (error is AppError.Cancelled) {
+            return error
+        }
+        val messageForUi = when {
+            !options.isShowErrorToast -> ""
+            !options.errorToastMessage.isNullOrBlank() -> options.errorToastMessage
+            else -> error.message
+        }
+        return error.withMessage(messageForUi.orEmpty())
     }
 
     override fun <R> execute(

@@ -19,7 +19,7 @@ interface RoomRepository {
     /**
      * 执行一次本地数据库操作。
      *
-     * @param options Loading / 超时 / 空列表异常等配置
+     * @param options Loading / 超时 / 空列表 / 错误 UI（deliverErrorToUi、Toast）等配置
      * @param block   挂起代码块，通常直接调用 `dao.xxxSuspend`
      */
     fun <R> execute(
