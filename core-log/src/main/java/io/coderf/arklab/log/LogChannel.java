@@ -13,9 +13,10 @@ import com.orhanobut.logger.Logger;
  * 同一 {@code moduleId} 全局单例。
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  * @created 2026/8/21 8:53
+ * @updated 2026/10/30
  */
 public final class LogChannel {
     /** 模块唯一 id */
@@ -67,7 +68,7 @@ public final class LogChannel {
     public void loggerV(String tag, String str) {
         if (!enableDebug) return;
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).v(str);
+        Logger.t(resolveTag(tag)).v(resolveMsg(str));
     }
 
     /**
@@ -78,7 +79,7 @@ public final class LogChannel {
      */
     public void v(String tag, String str) {
         if (!enableDebug) return;
-        Log.v(resolveTag(tag), str);
+        Log.v(resolveTag(tag), resolveMsg(str));
     }
 
     // ==================== Debug ====================
@@ -92,7 +93,7 @@ public final class LogChannel {
     public void loggerD(String tag, String str) {
         if (!enableDebug) return;
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).d(str);
+        Logger.t(resolveTag(tag)).d(resolveMsg(str));
     }
 
     /**
@@ -103,7 +104,7 @@ public final class LogChannel {
      */
     public void d(String tag, String str) {
         if (!enableDebug) return;
-        Log.d(resolveTag(tag), str);
+        Log.d(resolveTag(tag), resolveMsg(str));
     }
 
     /**
@@ -115,7 +116,7 @@ public final class LogChannel {
     public void logger(String tag, String str) {
         if (!enableDebug) return;
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).d(str);
+        Logger.t(resolveTag(tag)).d(resolveMsg(str));
     }
 
     /**
@@ -126,7 +127,7 @@ public final class LogChannel {
      */
     public void show(String tag, String str) {
         if (!enableDebug) return;
-        Log.d(resolveTag(tag), str);
+        Log.d(resolveTag(tag), resolveMsg(str));
     }
 
     // ==================== Info ====================
@@ -140,7 +141,7 @@ public final class LogChannel {
     public void loggerI(String tag, String str) {
         if (!enableDebug) return;
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).i(str);
+        Logger.t(resolveTag(tag)).i(resolveMsg(str));
     }
 
     /**
@@ -151,7 +152,7 @@ public final class LogChannel {
      */
     public void i(String tag, String str) {
         if (!enableDebug) return;
-        Log.i(resolveTag(tag), str);
+        Log.i(resolveTag(tag), resolveMsg(str));
     }
 
     // ==================== Warn（始终记录） ====================
@@ -164,7 +165,7 @@ public final class LogChannel {
      */
     public void loggerW(String tag, String msg) {
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).w(msg);
+        Logger.t(resolveTag(tag)).w(resolveMsg(msg));
     }
 
     /**
@@ -174,7 +175,7 @@ public final class LogChannel {
      * @param msg 内容
      */
     public void w(String tag, String msg) {
-        Log.w(resolveTag(tag), msg);
+        Log.w(resolveTag(tag), resolveMsg(msg));
     }
 
     /**
@@ -186,7 +187,7 @@ public final class LogChannel {
      */
     public void loggerW(String tag, String msg, Throwable throwable) {
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).w(msg, throwable);
+        Logger.t(resolveTag(tag)).w(resolveMsg(msg), throwable);
     }
 
     /**
@@ -197,7 +198,7 @@ public final class LogChannel {
      * @param throwable 异常
      */
     public void w(String tag, String msg, Throwable throwable) {
-        Log.w(resolveTag(tag), msg, throwable);
+        Log.w(resolveTag(tag), resolveMsg(msg), throwable);
     }
 
     // ==================== Error（始终记录） ====================
@@ -209,7 +210,7 @@ public final class LogChannel {
      * @param error 内容
      */
     public void e(String tag, String error) {
-        Log.e(resolveTag(tag), error);
+        Log.e(resolveTag(tag), resolveMsg(error));
     }
 
     /**
@@ -220,7 +221,7 @@ public final class LogChannel {
      */
     public void loggerE(String tag, String error) {
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).e(error);
+        Logger.t(resolveTag(tag)).e(resolveMsg(error));
     }
 
     /**
@@ -231,7 +232,7 @@ public final class LogChannel {
     public void e(Throwable exception) {
         if (exception == null) return;
         ArkLog.ensureLoggerReady();
-        Logger.e(exception, exception.getMessage());
+        Logger.e(exception, resolveMsg(exception.getMessage()));
     }
 
     /**
@@ -243,7 +244,7 @@ public final class LogChannel {
      */
     public void loggerE(String tag, String msg, Throwable throwable) {
         ArkLog.ensureLoggerReady();
-        Logger.t(resolveTag(tag)).e(throwable, msg);
+        Logger.t(resolveTag(tag)).e(throwable, resolveMsg(msg));
     }
 
     /**
@@ -254,7 +255,7 @@ public final class LogChannel {
      * @param throwable 异常
      */
     public void e(String tag, String msg, Throwable throwable) {
-        Log.e(resolveTag(tag), msg, throwable);
+        Log.e(resolveTag(tag), resolveMsg(msg), throwable);
     }
 
     // ==================== JSON / XML ====================
@@ -266,6 +267,7 @@ public final class LogChannel {
      */
     public void json(String json) {
         if (!enableDebug) return;
+        if (json == null) return;
         ArkLog.ensureLoggerReady();
         Logger.json(json);
     }
@@ -278,6 +280,7 @@ public final class LogChannel {
      */
     public void json(String tag, String json) {
         if (!enableDebug) return;
+        if (json == null) return;
         ArkLog.ensureLoggerReady();
         Logger.t(resolveTag(tag)).json(json);
     }
@@ -289,6 +292,7 @@ public final class LogChannel {
      */
     public void xml(String xml) {
         if (!enableDebug) return;
+        if (xml == null) return;
         ArkLog.ensureLoggerReady();
         Logger.xml(xml);
     }
@@ -301,6 +305,7 @@ public final class LogChannel {
      */
     public void xml(String tag, String xml) {
         if (!enableDebug) return;
+        if (xml == null) return;
         ArkLog.ensureLoggerReady();
         Logger.t(resolveTag(tag)).xml(xml);
     }
@@ -314,5 +319,15 @@ public final class LogChannel {
             return tag;
         }
         return defaultTag;
+    }
+
+    /**
+     * 系统 {@link Log} 对 null msg 会 NPE；统一成空串。
+     *
+     * @param msg 原始内容
+     * @return 非 null 内容
+     */
+    private static String resolveMsg(@Nullable String msg) {
+        return msg == null ? "" : msg;
     }
 }

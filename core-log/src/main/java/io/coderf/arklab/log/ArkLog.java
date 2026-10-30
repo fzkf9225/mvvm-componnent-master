@@ -10,6 +10,7 @@ import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -31,9 +32,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * }</pre>
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  * @created 2026/8/21 8:52
+ * @updated 2026/10/30
  */
 public final class ArkLog {
     /** core-base 通道 id */
@@ -126,6 +128,9 @@ public final class ArkLog {
 
     /**
      * 获取模块通道，并指定该通道缺省 tag。
+     * <p>
+     * 同一 {@code moduleId} 全局单例：{@code defaultTag} <b>仅在首次创建时生效</b>，
+     * 后续再传不同 tag 不会覆盖已有通道。
      *
      * @param moduleId   模块唯一 id
      * @param defaultTag 缺省 tag，为空则用全局 tag
@@ -195,6 +200,25 @@ public final class ArkLog {
         if (appContext != null) {
             LogcatHelper.getInstance(appContext).stop();
         }
+    }
+
+    /**
+     * 当前本地日志目录（按 {@link LogConfig} 的 fileDirName 解析）。
+     * <p>
+     * 优先 {@code externalCacheDir}/{fileDirName}；无外置缓存时回落
+     * {@code cacheDir}/{fileDirName}。尚未 {@link #init} 时返回 {@code null}。
+     *
+     * @return 日志目录；未初始化时为 {@code null}
+     */
+    @Nullable
+    public static File getLogDir() {
+        Context ctx = appContext;
+        if (ctx == null) {
+            return null;
+        }
+        LogcatHelper helper = LogcatHelper.getInstance(ctx);
+        helper.configure(ctx, config.getFileDirName(), config.getFileNamePrefix());
+        return helper.getLogDir();
     }
 
     /** @return 当前落盘层级 */

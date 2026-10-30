@@ -5,20 +5,21 @@ package io.coderf.arklab.log;
  *
  * <ul>
  *   <li>{@link #NONE}：不读写本地日志</li>
- *   <li>{@link #DEBUG}：D / I / W / E</li>
+ *   <li>{@link #DEBUG}：D / I / W / E（不含 V；控制台 {@code loggerV} 不会进文件）</li>
  *   <li>{@link #TEST}：I / W / E</li>
  *   <li>{@link #RELEASE}：W / E</li>
  * </ul>
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  * @created 2026/8/21 8:53
+ * @updated 2026/10/30
  */
 public enum FileLogLevel {
     /** 不读写本地日志 */
     NONE,
-    /** 调试：D / I / W / E */
+    /** 调试：D / I / W / E（不含 V） */
     DEBUG,
     /** 测试：I / W / E */
     TEST,

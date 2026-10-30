@@ -9,9 +9,10 @@ import androidx.annotation.Nullable;
  * 各业务/框架模块只管理自己的 {@link LogChannel} debug 开关即可。
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  * @created 2026/8/21 8:52
+ * @updated 2026/10/30
  */
 public final class LogConfig {
     /** 是否显示线程信息 */
@@ -165,7 +166,8 @@ public final class LogConfig {
         }
 
         /**
-         * 相对 externalCacheDir 的子目录名，默认 {@code log}。
+         * 相对 cache 根目录的子目录名，默认 {@code log}。
+         * 优先写到 {@code externalCacheDir}；不可用时回落 {@code cacheDir}。
          *
          * @param fileDirName 子目录名，空则保持原值
          */
