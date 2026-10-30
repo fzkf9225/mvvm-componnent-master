@@ -200,7 +200,7 @@ class MqttSession @JvmOverloads constructor(
                 return
             }
             session.ensureManualBaseLocked()
-            session.cachedTopics = session.cachedTopics + toAdd
+            session.cachedTopics += toAdd
             applyIfOwnerContributesLocked(owner)
         }
     }
@@ -223,7 +223,7 @@ class MqttSession @JvmOverloads constructor(
                 return
             }
             session.ensureManualBaseLocked()
-            session.cachedTopics = session.cachedTopics - toRemove
+            session.cachedTopics -= toRemove
             applyIfOwnerContributesLocked(owner)
         }
     }
