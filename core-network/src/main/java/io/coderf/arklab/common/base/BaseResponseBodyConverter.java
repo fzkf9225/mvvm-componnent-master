@@ -26,7 +26,7 @@ import retrofit2.Converter;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/30
  */
 public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private final TypeAdapter<T> adapter;
@@ -73,56 +73,73 @@ public class BaseResponseBodyConverter<T> implements Converter<ResponseBody, T> 
         }
 
         if (baseModel.getData() == null) {
-            return adapter.fromJson(gson.toJson(responseConverterNull()));
+            return responseConverterNull();
         }
-        return adapter.fromJson(gson.toJson(baseModel.getData()));
+        // TypeToken 已按 actualType 解析 data，无需再 toJson/fromJson
+        return baseModel.getData();
     }
 
+    /**
+     * data 为 null 时按接口声明类型返回合理空壳，避免 Observable 直接收到 null。
+     * 优先使用构造传入的 {@link #actualType}，不再依赖 TypeAdapter 匿名类泛型反射。
+     */
+    @SuppressWarnings("unchecked")
     public T responseConverterNull() {
-        // Observable 不能直接返回 null，所以根据泛型创建一个空对象
         try {
-            Type rawType = ((ParameterizedType) adapter.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            // 判断类型是否为 String
-            if (String.class.equals(rawType)) {
+            Class<?> raw = rawClass(actualType);
+            if (raw == null) {
+                return null;
+            }
+            if (String.class.equals(raw)) {
                 return (T) "";
             }
-            // 判断类型是否为 Boolean
-            else if (Boolean.class.equals(rawType) || boolean.class.equals(rawType)) {
+            if (Boolean.class.equals(raw) || boolean.class.equals(raw)) {
                 return (T) Boolean.FALSE;
             }
-            // 判断类型是否为 Integer
-            else if (Integer.class.equals(rawType) || int.class.equals(rawType)) {
+            if (Integer.class.equals(raw) || int.class.equals(raw)) {
                 return (T) Integer.valueOf(0);
             }
-            // 判断类型是否为 Long
-            else if (Long.class.equals(rawType) || long.class.equals(rawType)) {
+            if (Long.class.equals(raw) || long.class.equals(raw)) {
                 return (T) Long.valueOf(0);
             }
-            // 判断类型是否为 Double
-            else if (Double.class.equals(rawType) || double.class.equals(rawType)) {
+            if (Double.class.equals(raw) || double.class.equals(raw)) {
                 return (T) Double.valueOf(0);
             }
-            // 判断类型是否为 Float
-            else if (Float.class.equals(rawType) || float.class.equals(rawType)) {
+            if (Float.class.equals(raw) || float.class.equals(raw)) {
                 return (T) Float.valueOf(0);
-            } else if (Array.class.equals(rawType)) {
-                return (T) new Object[0];
             }
-            // 判断是否为 Map 类型
-            else if (Map.class.equals(rawType)) {
+            if (raw.isArray()) {
+                return (T) Array.newInstance(raw.getComponentType(), 0);
+            }
+            if (Map.class.isAssignableFrom(raw)) {
                 return (T) new HashMap<>();
             }
-            // 判断是否为 Collection 类型
-            else if (Collection.class.equals(rawType)) {
+            if (Collection.class.isAssignableFrom(raw)) {
                 return (T) new ArrayList<>();
-            } else if (Object.class.equals(rawType)) {
-                return (T) new Object();
-            } else {
-                // 处理特殊的情况，若没有匹配到任何条件
+            }
+            if (Object.class.equals(raw)) {
                 return (T) new Object();
             }
+            // 业务 Bean：尝试空 JSON 对象
+            return gson.fromJson("{}", actualType);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static Class<?> rawClass(Type type) {
+        if (type == null) {
+            return null;
+        }
+        if (type instanceof Class<?>) {
+            return (Class<?>) type;
+        }
+        if (type instanceof ParameterizedType) {
+            Type raw = ((ParameterizedType) type).getRawType();
+            if (raw instanceof Class<?>) {
+                return (Class<?>) raw;
+            }
         }
         return null;
     }

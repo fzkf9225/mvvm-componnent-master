@@ -186,7 +186,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | core-db | `io.coderf.arklab.core:db:1.5.0`（协程栈见 [core-db/README.md](./core-db/README.md)） |
 | core-ui | `io.coderf.arklab.core:ui:1.2.0` |
 | core-utils | `io.coderf.arklab.core:utils:1.1.1` |
-| core-log | `io.coderf.arklab.core:log:1.1.0` |
+| core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.1` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（配套 db 1.5.0，见 [room-processor/README.md](./room-processor/README.md)） |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.1` |

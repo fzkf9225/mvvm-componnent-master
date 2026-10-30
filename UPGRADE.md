@@ -214,7 +214,7 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 | core-base | 1.0.9 | **1.1.0**（控件补丁曾至 **1.1.3**，现见 §2 → **1.2.0**） |
 | core-network | 1.0.3 | **1.1.0**（现 **1.2.0**） |
 | core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db/ui 现 **1.2.0**；utils 现 **1.1.1**） |
-| core-log | 1.0.0 | **1.1.0** |
+| core-log | 1.0.0 | **1.1.0**（现 **1.2.0**） |
 | room-processor | 1.0.1 | **1.1.0** |
 | core-mqtt | 1.5.1 | **1.6.0** |
 | commonui | 3.5.1 | **3.6.0**（补丁 **3.6.x**，现见 §2 → **3.7.0**） |

@@ -11,6 +11,7 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  * @created 2023/12/1 8:54
+ * @updated 2026/10/30
  */
 public class ApiRequestOptions {
     /**
@@ -90,16 +91,11 @@ public class ApiRequestOptions {
     }
 
     public static class Builder {
-        private volatile ApiRequestOptions apiRequestOptions;
+        private final ApiRequestOptions apiRequestOptions;
 
         public Builder() {
-            if (apiRequestOptions == null) {
-                synchronized (ApiRequestOptions.class) {
-                    if (apiRequestOptions == null) {
-                        apiRequestOptions = new ApiRequestOptions();
-                    }
-                }
-            }
+            // 每次 Builder 独立实例，避免多次 build / 多请求之间串改配置
+            apiRequestOptions = new ApiRequestOptions();
         }
 
         public Builder setShowDialog(boolean showDialog) {

@@ -44,7 +44,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/10/30
  */
 public class ApiRetrofit {
     public static final String TAG = ApiRetrofit.class.getSimpleName();
@@ -60,7 +60,15 @@ public class ApiRetrofit {
         return builder;
     }
 
+    /** 调试日志默认 peek 响应体上限（1MB） */
+    public static final long DEFAULT_LOG_BODY_MAX_BYTES = 1024L * 1024L;
+
     public static void printLog(final Request request, final Response response) {
+        printLog(request, response, DEFAULT_LOG_BODY_MAX_BYTES);
+    }
+
+    public static void printLog(final Request request, final Response response, long logBodyMaxBytes) {
+        long peekBytes = logBodyMaxBytes > 0 ? logBodyMaxBytes : DEFAULT_LOG_BODY_MAX_BYTES;
         String traceId = Integer.toHexString(System.identityHashCode(request));
         StringBuilder logBuilder = new StringBuilder();
         logBuilder.append("--------------------Request Start--------------------").append("\n");
@@ -121,11 +129,11 @@ public class ApiRetrofit {
         }
 
         try {
-            ResponseBody responseBody = response.peekBody(1024 * 1024);
+            ResponseBody responseBody = response.peekBody(peekBytes);
             String responseText = responseBody.string();
             logBuilder.append("Response Body：").append(responseText).append("\n");
             if (Config.getInstance().isResponseBodyLogConverterJson()) {
-                ResponseBody responseJsonBody = response.peekBody(1024 * 1024);
+                ResponseBody responseJsonBody = response.peekBody(peekBytes);
                 String jsonResponse = responseJsonBody.string();
                 LogUtil.json(TAG, jsonResponse);
             }
@@ -207,9 +215,17 @@ public class ApiRetrofit {
          */
         private Converter.Factory converterFactory = null;
         /**
-         * 拦截器
+         * 应用层拦截器（{@link OkHttpClient.Builder#addInterceptor}）
          */
         private final List<Interceptor> interceptorList = new ArrayList<>();
+        /**
+         * 网络层拦截器（{@link OkHttpClient.Builder#addNetworkInterceptor}）
+         */
+        private final List<Interceptor> networkInterceptorList = new ArrayList<>();
+        /**
+         * debug 下 printLog peek 响应体上限（字节），默认 1MB
+         */
+        private long logBodyMaxBytes = DEFAULT_LOG_BODY_MAX_BYTES;
         /**
          * 连接超时（秒）：建立 TCP/TLS 的最长等待。网络不可达时应尽快失败。
          */
@@ -391,7 +407,28 @@ public class ApiRetrofit {
         }
 
         public Builder addInterceptor(Interceptor interceptor) {
-            interceptorList.add(interceptor);
+            if (interceptor != null) {
+                interceptorList.add(interceptor);
+            }
+            return this;
+        }
+
+        /**
+         * 添加网络层拦截器（在连接建立之后、拿到原始字节流时执行），适合日志、证书诊断等。
+         * 不影响已有 {@link #addInterceptor} 的应用层顺序。
+         */
+        public Builder addNetworkInterceptor(Interceptor interceptor) {
+            if (interceptor != null) {
+                networkInterceptorList.add(interceptor);
+            }
+            return this;
+        }
+
+        /**
+         * debug 日志 peek 响应体上限（字节）。&lt;=0 时回退默认 1MB。
+         */
+        public Builder setLogBodyMaxBytes(long logBodyMaxBytes) {
+            this.logBodyMaxBytes = logBodyMaxBytes;
             return this;
         }
 
@@ -460,6 +497,7 @@ public class ApiRetrofit {
             }
 
             if (client == null) {
+                final long peekLogBytes = logBodyMaxBytes;
                 OkHttpClient.Builder build = new OkHttpClient.Builder()
                         .addInterceptor(chain -> {
                             String timeStamp = DateUtil.getTimestamp();
@@ -499,13 +537,15 @@ public class ApiRetrofit {
                             requestBuilder.headers(Headers.of(encodedHeaders));
 
                             if (useDefaultSign) {
+                                // 与 encodeSign 中的 o-timestamp 保持一致，供服务端验签
+                                requestBuilder.addHeader("o-timestamp", timeStamp);
                                 requestBuilder.addHeader("o-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
                             }
 
                             Request request = requestBuilder.build();
                             Response response = chain.proceed(request);
                             if (Config.enableDebug.get()) {
-                                printLog(request, response);
+                                printLog(request, response, peekLogBytes);
                             }
                             return response;
                         })
@@ -515,6 +555,11 @@ public class ApiRetrofit {
                 if (!interceptorList.isEmpty()) {
                     for (Interceptor interceptor : interceptorList) {
                         build.addInterceptor(interceptor);
+                    }
+                }
+                if (!networkInterceptorList.isEmpty()) {
+                    for (Interceptor interceptor : networkInterceptorList) {
+                        build.addNetworkInterceptor(interceptor);
                     }
                 }
                 client = build.build();
@@ -585,6 +630,14 @@ public class ApiRetrofit {
 
         public List<Interceptor> getInterceptorList() {
             return interceptorList;
+        }
+
+        public List<Interceptor> getNetworkInterceptorList() {
+            return networkInterceptorList;
+        }
+
+        public long getLogBodyMaxBytes() {
+            return logBodyMaxBytes;
         }
 
         /**

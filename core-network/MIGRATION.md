@@ -268,10 +268,10 @@ class PureRepo(
 | 显示 Loading | `setShowDialog(true)` | `showLoading(true)` |
 | Loading 文案 | `setDialogMessage("...")` | `loadingMessage("...")` |
 | 动态省略号 | `enableDynamicEllipsis(true)` | `enableDynamicEllipsis(true)` |
-| 错误 Toast / 交付 UI | `setShowToast(true)` 等 | `deliverErrorToUi(true)` |
+| 错误 Toast / 交付 UI | `setShowToast` / `toastMsg` | `deliverErrorToUi` + `showErrorToast` / `errorToastMessage`（`RequestOptions.noToast()`） |
 | 鉴权刷新 | 依赖是否挂了 RetryService | `enableAuthRetry(true/false)` |
 | 超时 | 多在 OkHttp 层 | `timeoutMs(10_000)`（可选） |
-| 通用重试次数/退避 | 较少统一建模 | `retryPolicy(RetryPolicy(...))` |
+| 通用重试次数/退避 | 较少统一建模（旧栈基本只鉴权） | `retryPolicy(RetryPolicy(...))`，**仅瞬时网络失败**；业务 `BaseException` 不重试 |
 
 ### 工厂方法（新）
 
