@@ -1,9 +1,9 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.5.9`** · **core-network / core-db `1.6.0`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **commonui `3.7.3`** · **commonmedia `3.7.0`** · **googlegps `3.3.1`** · **annotation `3.3.1`**  
+> **common `4.7.0`** · **core-base `1.5.9`** · **core-network / core-db `1.6.0`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.0`** · **commonui `3.7.3`** · **commonmedia `3.7.0`** · **googlegps `3.3.1`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** [§0](#0-160network--db请求-options-完善)（network / db `1.6.0` Options 对齐）。  
+> **本轮重点：** [§0.3](#03-core-ws-100取代-wscomponent)（新建 `core-ws`）；[§0](#0-160network--db请求-options-完善)（network / db Options）。  
 > Room 协程栈落地见 [§0.1](#01-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
 > 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
@@ -27,6 +27,7 @@ ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity
 implementation 'io.coderf.arklab.ui:ui:3.7.3'
 implementation 'io.coderf.arklab.media:media:3.7.0'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
+implementation 'io.coderf.arklab.ws:ws:1.0.0'
 implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
 ```
 
@@ -44,10 +45,36 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
+| core-ws | `io.coderf.arklab.ws:ws:1.0.0` |
 | commonui | `io.coderf.arklab.ui:ui:3.7.3` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
 | googlegps | `io.coderf.arklab.googlegps:googlegps:3.3.1` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0.3 core-ws `1.0.0`：取代 wscomponent
+
+新建与 **core-mqtt** 同构的 WebSocket 框架模块（OkHttp），并**删除**未投入生产的 `:wscomponent`。
+
+| 项 | 说明 |
+|----|------|
+| 坐标 | `io.coderf.arklab.ws:ws:1.0.0` |
+| 入口 | `Ws` / `WsClient` / `WsConfig` / `WsSession` |
+| 鉴权 | Header / Query / `requireAuth(false)` 匿名直连；可选 `WsAuthTokenProvider` |
+| 频道 | 逻辑频道 + `WsChannelBinder`（宿主编码订退帧）；`WsSession` Lifecycle / Overlay |
+| 重连 | 无限退避 **或** 有限固定间隔 + `WsReconnectDialog` |
+| Presence | 独立 `PresenceClient` + `HeartbeatScheduler`；宿主实现 `PresenceManager` |
+| 边界 | **禁止**业务信封 / bizCode / SubscribeEnum 进入框架 |
+| 日志 | `WsLog` → `ArkLog.ws()`（core-log 已加 `MODULE_WS`） |
+
+```gradle
+implementation 'io.coderf.arklab.ws:ws:1.0.0'
+// 或
+implementation project(':core-ws')
+```
+
+Demo：`WsDemoActivity`。明细见 [core-ws/README.md](./core-ws/README.md)。
 
 ---
 

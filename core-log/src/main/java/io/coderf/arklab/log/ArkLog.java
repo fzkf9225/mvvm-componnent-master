@@ -42,6 +42,8 @@ public final class ArkLog {
     public static final String MODULE_BASE = "base";
     /** core-mqtt 通道 id */
     public static final String MODULE_MQTT = "mqtt";
+    /** core-ws 通道 id */
+    public static final String MODULE_WS = "ws";
     /** googlegps 通道 id */
     public static final String MODULE_GPS = "gps";
     /** commonmedia 通道 id */
@@ -153,6 +155,11 @@ public final class ArkLog {
     /** @return core-mqtt 通道 */
     public static LogChannel mqtt() {
         return channel(MODULE_MQTT, "ArkLab-Mqtt");
+    }
+
+    /** @return core-ws 通道 */
+    public static LogChannel ws() {
+        return channel(MODULE_WS, "ArkLab-Ws");
     }
 
     /** @return googlegps 通道 */

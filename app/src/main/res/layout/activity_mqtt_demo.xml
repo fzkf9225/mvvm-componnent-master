@@ -290,7 +290,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/horizontal_margin_l"
-                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="@dimen/horizontal_margin_l"
                 android:background="?attr/colorSurface"
                 android:minHeight="180dp"

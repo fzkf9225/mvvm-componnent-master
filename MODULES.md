@@ -16,7 +16,7 @@ app（组装：Hilt / Demo）
   │                      │ 实现绑定在 app（适配 media / mqtt）
   ├─ mqttcomponent ──────┘ MessageGateway
   ├─ commonmedia ────────┘ MediaGateway
-  ├─ commonui / googlegps / wscomponent / …
+  ├─ commonui / googlegps / core-ws / …
   └─ common（facade）── api ──► core-network / core-db / core-ui
                                       │
                                       ▼
@@ -131,7 +131,7 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 | `commonmedia` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
 | `commonui` | 表单等通用 UI 组件 | 按需 |
 | `googlegps` | 定位能力 | 按需 |
-| `wscomponent` | WebSocket | 按需 |
+| `core-ws` | WebSocket（OkHttp，对齐 core-mqtt 分层） | 按需；业务信封勿写入框架 |
 | `annotation` / `room-processor` | 校验注解与 Room 处理器 | 按需 |
 | `app` | Demo 组装：Hilt Module、Gateway 适配与绑定 | 宿主样板 |
 
@@ -192,6 +192,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
+| core-ws | `io.coderf.arklab.ws:ws:1.0.0` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
 | commonui | `io.coderf.arklab.ui:ui:3.7.3`（`api` → core-base / core-network，另依赖 media） |
 | googlegps | `io.coderf.arklab.googlegps:googlegps:3.3.1` |

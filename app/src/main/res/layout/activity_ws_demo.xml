@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
+        android:fillViewport="true"
+        tools:context=".activity.WsDemoActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/vertical_margin_l">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_ws_hint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="演示 core-ws：鉴权/匿名直连、逻辑频道 binder、有限重连弹窗、Presence 心跳。业务信封由宿主自行编码。"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@drawable/bg_input_outlined"
+                android:hint="WebSocket URL（须可达的 ws:// 或 wss://）"
+                android:padding="@dimen/padding_m"
+                android:text="wss://ws.postman-echo.com/raw"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_ws_hint" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_token"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@drawable/bg_input_outlined"
+                android:hint="Auth Token（可空；空则匿名直连）"
+                android:padding="@dimen/padding_m"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_url" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_auth_query"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="Token 走 Query（兼容 Blade-Auth）"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_token" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_channels"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@drawable/bg_input_outlined"
+                android:hint="逻辑频道（逗号分隔，演示 binder 回调）"
+                android:padding="@dimen/padding_m"
+                android:text="demo_a,demo_b"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/switch_auth_query" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_max_reconnect_attempts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_s"
+                android:background="@drawable/bg_input_outlined"
+                android:hint="最大重连次数"
+                android:inputType="number"
+                android:padding="@dimen/padding_m"
+                android:text="20"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toStartOf="@id/edit_reconnect_interval_seconds"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_channels" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_reconnect_interval_seconds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@drawable/bg_input_outlined"
+                android:hint="重连间隔（秒）"
+                android:inputType="number"
+                android:padding="@dimen/padding_m"
+                android:text="5"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/edit_max_reconnect_attempts"
+                app:layout_constraintTop_toTopOf="@id/edit_max_reconnect_attempts" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_send_message"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="@drawable/bg_input_outlined"
+                android:gravity="top"
+                android:hint="发送文本（echo 服务会回显）"
+                android:padding="@dimen/padding_m"
+                android:text='{"hello":"core-ws"}'
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_max_reconnect_attempts" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:text="连接"
+                app:layout_constraintEnd_toStartOf="@id/btn_disconnect"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_send_message" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_disconnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="断开"
+                app:layout_constraintEnd_toStartOf="@id/btn_send"
+                app:layout_constraintStart_toEndOf="@id/btn_connect"
+                app:layout_constraintTop_toTopOf="@id/btn_connect" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_s"
+                android:text="发送"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_disconnect"
+                app:layout_constraintTop_toTopOf="@id/btn_connect" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_presence_heartbeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="Presence 心跳示例"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_connect" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_m"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="状态：未连接"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/font_size_m"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_presence_heartbeat" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_log_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="@dimen/vertical_margin_s"
+                android:text="运行日志"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/font_size_m"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_status" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_clear_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:text="清空"
+                app:layout_constraintBottom_toBottomOf="@id/tv_log_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_log_label" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_log"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/horizontal_margin_l"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/horizontal_margin_l"
+                android:background="?attr/colorSurface"
+                android:minHeight="180dp"
+                android:padding="@dimen/padding_m"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/font_size_s"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_log_label"
+                tools:text="[12:00:00] 等待连接..." />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

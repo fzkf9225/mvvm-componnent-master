@@ -58,7 +58,7 @@
     - base：Demo/case 基建（Gateway、AppPropertiesConfig、BaseAppActivity 等；**非框架**，勿与 core-base 混淆）
     - userapi：用户模块对外接口（UserService / UserInfo / Router）
     - user：示例业务 module（依赖 common + base + userapi）
-    - wscomponent：WebSocket最基础的封装示例
+    - core-ws：WebSocket 组件（OkHttp，对齐 core-mqtt）
     - room-processor：`@RoomObservedEntity` KSP 处理器
 
 全面使用``ksp``
@@ -322,7 +322,7 @@ TAG值为类名：`ApiRetrofit`
     implementation project(':commonmedia')
     implementation project(':mqttcomponent')
     implementation project(':user')
-    implementation project(':wscomponent')
+    implementation project(':core-ws')
 
     implementation project(':annotation')
     annotationProcessor project(':annotation')

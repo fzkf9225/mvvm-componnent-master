@@ -17,6 +17,7 @@ import io.coderf.arklab.log.ArkLog;
 import io.coderf.arklab.log.FileLogLevel;
 import io.coderf.arklab.log.LogConfig;
 import io.coderf.arklab.mqtt.Mqtt;
+import io.coderf.arklab.ws.Ws;
 import io.coderf.arklab.ui.api.FileApiService;
 import io.coderf.arklab.ui.api.MediaUploadConfig;
 import io.coderf.arklab.ui.helper.CalendarDataSource;
@@ -73,6 +74,7 @@ public class ApplicationHelper extends BaseApplication {
             DebugUtil.enableDebug(this, true);
             io.coderf.arklab.media.utils.DebugUtil.enableDebug(this, true);
             Mqtt.enableDebug(this, true);
+            Ws.enableDebug(this, true);
         }
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()

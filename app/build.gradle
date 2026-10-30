@@ -94,7 +94,7 @@ dependencies {
     implementation project(':commonmedia')
     implementation project(':user')
     implementation project(':core-mqtt')
-    implementation project(':wscomponent')
+    implementation project(':core-ws')
 
     implementation project(':annotation')
     annotationProcessor project(':annotation')

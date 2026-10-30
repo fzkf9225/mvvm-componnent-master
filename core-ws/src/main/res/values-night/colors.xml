@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ws_reconnect_track">#1F19CE58</color>
+    <color name="ws_text_secondary">#FFCAC4D0</color>
+    <color name="ws_text_hint">#FF938F99</color>
+</resources>
