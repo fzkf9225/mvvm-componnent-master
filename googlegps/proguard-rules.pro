@@ -69,24 +69,7 @@
 # track      IFileLogger / CsvFileLogger / GpxFileLogger / FileLoggerFactory / Files / GpsFileParser
 -keep class io.coderf.arklab.googlegps.track.** { *; }
 
-# socket     GPSSocketServer 及回调接口
--keep class io.coderf.arklab.googlegps.socket.** { *; }
-
-# utils      AppUtil / DebugUtil / DeviceIdUtil / EsriUtil / LogUtil
+# utils      AppUtil / DebugUtil / EsriUtil / LogUtil
 -keep class io.coderf.arklab.googlegps.utils.** { *; }
 
 # location / ui 为内部实现，允许混淆（不添加 keep）
-
-# ==================== 第三方：Netty ====================
--keep class io.netty.** { *; }
--dontwarn io.netty.**
--keepclassmembers class io.netty.channel.** {
-    public *;
-}
--keepclassmembers class io.netty.buffer.** {
-    public *;
-}
-
-# ==================== 第三方：Apache Commons Lang3 ====================
--keep class org.apache.commons.lang3.** { *; }
--dontwarn org.apache.commons.lang3.**

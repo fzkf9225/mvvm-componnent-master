@@ -106,7 +106,8 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
             };
 
     /**
-     * 默认主题色背景 + 白色返回/文字（浅色状态栏图标）。
+     * 默认主题色背景 + onPrimary 返回/文字。
+     * 状态栏图标由 {@link ToolbarConfig#applyStatusBar()} 按背景亮度自动决定。
      * 子类可 override 后链式改 hint、字号等，末尾保留 {@link ToolbarConfig#applyStatusBar()}。
      */
     @Override
@@ -117,7 +118,6 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
                 .setTextColor(R.color.onPrimary)
                 .setBackIconRes(R.drawable.icon_fh)
                 .setBgColor(R.color.themeColor)
-                .setLightMode(true)
                 .setShowBackButton(true)
                 .applyStatusBar();
     }

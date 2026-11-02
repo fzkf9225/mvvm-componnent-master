@@ -227,6 +227,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
     @Nullable
     private String errorTextPending;
 
+    /** dataSource 双向同步回调；成对 add/remove，避免泄漏。 */
+    @Nullable
+    private Observable.OnPropertyChangedCallback dataSourceCallback;
+
     public FormConstraintLayout(@NonNull Context context) {
         super(context);
         initAttr(null);
@@ -361,32 +365,7 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             setError(errorTextPending);
             errorTextPending = null;
         }
-        dataSource.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                String newValue = dataSource.get();
-                EditText boundEdit = resolveBoundEditText();
-                if (boundEdit != null) {
-                    String incoming = newValue == null ? "" : newValue;
-                    String current = boundEdit.getText() == null ? "" : boundEdit.getText().toString();
-                    if (!current.equals(incoming)) {
-                        if (boundEdit instanceof AutoCompleteTextView autoComplete) {
-                            autoComplete.setText(incoming, false);
-                        } else {
-                            boundEdit.setText(newValue);
-                        }
-                    }
-                    return;
-                }
-                if (tvSelection instanceof MaterialTextView textView) {
-                    if (textView.getText() == null) {
-                        textView.setText(newValue);
-                    } else if (!textView.getText().toString().equals(newValue)) {
-                        textView.setText(newValue);
-                    }
-                }
-            }
-        });
+        ensureDataSourceCallback();
     }
 
     @Nullable
@@ -411,6 +390,98 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         if (counterEnabled) {
             textInputLayout.setCounterEnabled(true);
         }
+    }
+
+    private void ensureDataSourceCallback() {
+        if (dataSourceCallback != null) {
+            return;
+        }
+        dataSourceCallback = new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                String newValue = dataSource.get();
+                EditText boundEdit = resolveBoundEditText();
+                if (boundEdit != null) {
+                    String incoming = newValue == null ? "" : newValue;
+                    String current = boundEdit.getText() == null ? "" : boundEdit.getText().toString();
+                    if (!current.equals(incoming)) {
+                        if (boundEdit instanceof AutoCompleteTextView autoComplete) {
+                            autoComplete.setText(incoming, false);
+                        } else {
+                            boundEdit.setText(newValue);
+                        }
+                    }
+                    return;
+                }
+                if (tvSelection instanceof MaterialTextView textView) {
+                    if (textView.getText() == null) {
+                        textView.setText(newValue);
+                    } else if (!textView.getText().toString().equals(newValue)) {
+                        textView.setText(newValue);
+                    }
+                }
+            }
+        };
+        dataSource.addOnPropertyChangedCallback(dataSourceCallback);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ensureDataSourceCallback();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (dataSourceCallback != null) {
+            dataSource.removeOnPropertyChangedCallback(dataSourceCallback);
+            dataSourceCallback = null;
+        }
+        super.onDetachedFromWindow();
+    }
+
+    /**
+     * 当前用于校验的字符串值：优先绑定 EditText，其次 dataSource，再次展示 TextView。
+     * 子类可 override（如媒体列表是否非空）。
+     */
+    @Nullable
+    protected CharSequence getValidationValue() {
+        EditText boundEdit = resolveBoundEditText();
+        if (boundEdit != null && boundEdit.getText() != null) {
+            return boundEdit.getText().toString();
+        }
+        String fromData = dataSource.get();
+        if (fromData != null) {
+            return fromData;
+        }
+        if (tvSelection instanceof MaterialTextView textView && textView.getText() != null) {
+            return textView.getText().toString();
+        }
+        return null;
+    }
+
+    /**
+     * 单行校验：{@code required} 且值为空时 {@link #setError} 并返回 false。
+     * 不依赖 annotation 反射；业务复杂规则请在调用方或子类 override。
+     */
+    public boolean validate() {
+        if (!required) {
+            setError(null);
+            return true;
+        }
+        CharSequence value = getValidationValue();
+        if (value == null || android.text.TextUtils.isEmpty(value.toString().trim())) {
+            String label = tvLabel != null && tvLabel.getText() != null
+                    ? tvLabel.getText().toString()
+                    : "";
+            String message = android.text.TextUtils.isEmpty(label)
+                    ? getContext().getString(io.coderf.arklab.common.R.string.please_enter)
+                    : label;
+            setError(message);
+            return false;
+        }
+        setError(null);
+        return true;
     }
 
     /**

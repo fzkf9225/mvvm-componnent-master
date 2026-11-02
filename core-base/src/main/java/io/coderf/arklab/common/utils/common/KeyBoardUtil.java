@@ -71,10 +71,16 @@ public class KeyBoardUtil {
         }
     }
 
-    public static void setListener(Activity activity,
+    /**
+     * 注册软键盘显隐监听。Activity 为 LifecycleOwner 时会在 onDestroy 自动 remove；
+     * 否则请保存返回值并在销毁时调用 {@link SoftKeyBoardListener#destroy()}。
+     */
+    @NonNull
+    public static SoftKeyBoardListener setListener(Activity activity,
                                    SoftKeyBoardListener.OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
         SoftKeyBoardListener softKeyBoardListener = new SoftKeyBoardListener(activity);
         softKeyBoardListener.setOnSoftKeyBoardChangeListener(onSoftKeyBoardChangeListener);
+        return softKeyBoardListener;
     }
 
     /**

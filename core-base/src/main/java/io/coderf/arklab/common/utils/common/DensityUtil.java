@@ -1,14 +1,12 @@
 package io.coderf.arklab.common.utils.common;
 
-import android.app.Activity;
-import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.util.DisplayMetrics;
-
-import androidx.annotation.NonNull;
+import android.util.TypedValue;
 
 /**
  * px与dp互转
@@ -19,61 +17,6 @@ import androidx.annotation.NonNull;
  * @created 2018/7/12
  */
 public class DensityUtil {
-    private final static String TAG = DensityUtil.class.getSimpleName();
-
-    private static float appScaledDensity;
-    private static DisplayMetrics appDisplayMetrics;
-    /**
-     * 用来参照的的width
-     */
-    private static float WIDTH;
-
-    public static void setDensity(Activity activity, float width) {
-        appDisplayMetrics = activity.getResources().getDisplayMetrics();
-        WIDTH = width;
-//        registerActivityLifecycleCallbacks(application);
-
-        //初始化的时候赋值
-        float appDensity = appDisplayMetrics.density;
-        appScaledDensity = appDisplayMetrics.scaledDensity;
-
-        //添加字体变化的监听
-        activity.registerComponentCallbacks(new ComponentCallbacks() {
-            @Override
-            public void onConfigurationChanged(@NonNull Configuration newConfig) {
-                //字体改变后,将appScaledDensity重新赋值
-                if (newConfig.fontScale > 0) {
-                    appScaledDensity = activity.getResources().getDisplayMetrics().scaledDensity;
-                }
-            }
-
-            @Override
-            public void onLowMemory() {
-            }
-        });
-        setDefault(activity, appDensity);
-    }
-
-    private static void setDefault(Activity activity, float appDensity) {
-
-        final float targetDensity = appDisplayMetrics.widthPixels / WIDTH;
-
-        float targetScaledDensity = targetDensity * (appScaledDensity / appDensity);
-        int targetDensityDpi = (int) (160 * targetDensity);
-
-        /*
-         * 最后在这里将修改过后的值赋给系统参数
-         * 只修改Activity的density值
-         */
-        appDisplayMetrics.density = targetDensity;
-        appDisplayMetrics.scaledDensity = targetScaledDensity;
-        appDisplayMetrics.densityDpi = targetDensityDpi;
-
-        DisplayMetrics activityDisplayMetrics = activity.getResources().getDisplayMetrics();
-        activityDisplayMetrics.density = targetDensity;
-        activityDisplayMetrics.scaledDensity = targetScaledDensity;
-        activityDisplayMetrics.densityDpi = targetDensityDpi;
-    }
 
     /**
      * 是否是平板
@@ -155,21 +98,32 @@ public class DensityUtil {
     /**
      * convert px to its equivalent sp
      * <p>
-     * 将px转换为sp
+     * 将px转换为sp。不使用已废弃的 {@link DisplayMetrics#scaledDensity}：
+     * API 34+ 走 {@link TypedValue#deriveDimension}，更低版本用 density × fontScale。
      */
     public static int px2sp(Context context, float pxValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return Math.round(TypedValue.deriveDimension(
+                    TypedValue.COMPLEX_UNIT_SP, pxValue, metrics));
+        }
+        float scaled = metrics.density * context.getResources().getConfiguration().fontScale;
+        if (scaled == 0f) {
+            return 0;
+        }
+        return Math.round(pxValue / scaled);
     }
 
 
     /**
      * convert sp to its equivalent px
      * <p>
-     * 将sp转换为px
+     * 将sp转换为px（{@link TypedValue#applyDimension}，兼容系统字体缩放）。
      */
     public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+        return Math.round(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                spValue,
+                context.getResources().getDisplayMetrics()));
     }
 }

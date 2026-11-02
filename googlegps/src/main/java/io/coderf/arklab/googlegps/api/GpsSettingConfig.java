@@ -74,7 +74,8 @@ public class GpsSettingConfig {
 
     // ========== 会话与扩展（默认关闭，保持现有行为） ==========
     /** 内存轨迹点上限，0 表示不限制（默认） */
-    private int maxLocationHistorySize = 0;
+    /** 轨迹内存上限；默认 1000，避免 0=不限制导致 Session 无限增长。传 0 仍表示不限制。 */
+    private int maxLocationHistorySize = 1000;
     /**
      * 启动后是否先向观察者补发 {@link android.location.LocationManager#getLastKnownLocation}。
      * 仅用于地图首帧等 UI，不写入轨迹文件、不计入里程。默认 false。

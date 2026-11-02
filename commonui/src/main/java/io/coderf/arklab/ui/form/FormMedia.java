@@ -310,7 +310,8 @@ public abstract class FormMedia extends CornerConstraintLayout {
         float defTextSize = ctx.getResources().getDimension(R.dimen.form_text_size);
         float defRequiredSize = ctx.getResources().getDimension(R.dimen.form_required_size);
 
-        itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor, 0xFFF1F3F2);
+        itemBgColor = typedArray.getColor(R.styleable.FormUI_itemBgColor,
+                ThemeAttrs.surfaceContainerHighest(ctx));
         if (typedArray.hasValue(R.styleable.FormUI_label)) {
             labelString = typedArray.getString(R.styleable.FormUI_label);
         }

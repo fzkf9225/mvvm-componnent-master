@@ -24,6 +24,31 @@ namespace：`io.coderf.arklab.ui`
 <item name="formStyle">@style/Widget.App.Form</item>
 ```
 
+### 样式优先级（只记这一条）
+
+```
+控件 XML app:*  >  Theme formStyle  >  Widget.App.Form  >  dimens / ThemeAttrs
+```
+
+运行时另有 `setFormStyleOverlay` / `applyFormConfig(FormUiConfig)`，**仅用于换肤或动态表单**；日常请：
+
+1. 在宿主 Theme 挂 `formStyle`（继承 `Widget.App.Form` 改默认）
+2. 单控件例外才写 XML attrs
+3. 不要四通道齐上
+
+### 校验
+
+- 单行：`form.validate()`（`required` 且空 → `setError`）
+- 整页：`FormHost.validateAll(root)`（遍历子树，失败聚焦并滚动）
+- **不**默认绑定 `annotation` 的 `EntityValidator`
+
+```java
+if (!FormHost.validateAll(binding.formContainer)) {
+    return;
+}
+// 提交
+```
+
 ### 3.7.2（相对 3.7.0）
 
 新增 `formStyle` 方式可全局配置默认样式能力，新增 `applyFormConfig` 配置方法和动态配置类文件 `FormUiConfig`,见 [FormUiConfig.java](../commonui/src/main/java/io/coderf/arklab/ui/api/FormUiConfig.java)

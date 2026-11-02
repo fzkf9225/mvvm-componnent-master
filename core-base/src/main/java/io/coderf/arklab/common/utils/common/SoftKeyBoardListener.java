@@ -3,28 +3,32 @@ package io.coderf.arklab.common.utils.common;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewTreeObserver;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 /**
- *  监听软键盘
+ * 监听软键盘显示/隐藏；成对注册与移除 GlobalLayoutListener，避免泄漏。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2017/9/6
  */
-
 public class SoftKeyBoardListener {
-    private final View rootView;//activity的根视图
-    int rootViewVisibleHeight;//纪录根视图的显示高度
+    private final View rootView;
+    private int rootViewVisibleHeight;
+    @Nullable
     private OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener;
+    @Nullable
+    private ViewTreeObserver.OnGlobalLayoutListener layoutListener;
 
     public SoftKeyBoardListener(Activity activity) {
-        //获取activity的根视图
         rootView = activity.getWindow().getDecorView();
-
-        //监听视图树中全局布局发生改变或者视图树中的某个视图的可视状态发生改变
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            //获取当前根视图在屏幕上显示的大小
+        layoutListener = () -> {
             Rect r = new Rect();
             rootView.getWindowVisibleDisplayFrame(r);
 
@@ -34,12 +38,10 @@ public class SoftKeyBoardListener {
                 return;
             }
 
-            //根视图显示高度没有变化，可以看作软键盘显示／隐藏状态没有改变
             if (rootViewVisibleHeight == visibleHeight) {
                 return;
             }
 
-            //根视图显示高度变小超过200，可以看作软键盘显示了
             if (rootViewVisibleHeight - visibleHeight > 200) {
                 if (onSoftKeyBoardChangeListener != null) {
                     onSoftKeyBoardChangeListener.keyBoardShow(rootViewVisibleHeight - visibleHeight);
@@ -48,26 +50,45 @@ public class SoftKeyBoardListener {
                 return;
             }
 
-            //根视图显示高度变大超过200，可以看作软键盘隐藏了
             if (visibleHeight - rootViewVisibleHeight > 200) {
                 if (onSoftKeyBoardChangeListener != null) {
                     onSoftKeyBoardChangeListener.keyBoardHide(visibleHeight - rootViewVisibleHeight);
                 }
                 rootViewVisibleHeight = visibleHeight;
-                return;
             }
+        };
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
-        });
+        if (activity instanceof LifecycleOwner owner) {
+            owner.getLifecycle().addObserver(new DefaultLifecycleObserver() {
+                @Override
+                public void onDestroy(@NonNull LifecycleOwner lifecycleOwner) {
+                    destroy();
+                    owner.getLifecycle().removeObserver(this);
+                }
+            });
+        }
     }
 
     public void setOnSoftKeyBoardChangeListener(OnSoftKeyBoardChangeListener onSoftKeyBoardChangeListener) {
         this.onSoftKeyBoardChangeListener = onSoftKeyBoardChangeListener;
     }
 
-    public interface OnSoftKeyBoardChangeListener {
-        void keyBoardShow(int height);
-        void keyBoardHide(int height);
+    /** 手动移除监听（Activity 非 LifecycleOwner 时务必在 onDestroy 调用）。 */
+    public void destroy() {
+        if (layoutListener != null) {
+            ViewTreeObserver observer = rootView.getViewTreeObserver();
+            if (observer.isAlive()) {
+                observer.removeOnGlobalLayoutListener(layoutListener);
+            }
+            layoutListener = null;
+        }
+        onSoftKeyBoardChangeListener = null;
     }
 
+    public interface OnSoftKeyBoardChangeListener {
+        void keyBoardShow(int height);
 
+        void keyBoardHide(int height);
+    }
 }

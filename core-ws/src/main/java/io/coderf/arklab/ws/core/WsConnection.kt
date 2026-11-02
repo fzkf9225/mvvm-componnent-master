@@ -386,7 +386,12 @@ class WsConnection @JvmOverloads constructor(
                 val reconnect: Boolean
                 synchronized(lock) {
                     if (manualDisconnect || currentConfig !== config && currentConfig?.url != config.url) {
-                        // 配置已替换或已手动断开
+                        // 配置已替换或已手动断开：丢弃过期回调，避免乱序 dispatchConnected
+                        try {
+                            webSocket.close(1000, "stale open")
+                        } catch (_: Exception) {
+                        }
+                        return
                     }
                     reconnect = hasConnectedOnce
                     hasConnectedOnce = true

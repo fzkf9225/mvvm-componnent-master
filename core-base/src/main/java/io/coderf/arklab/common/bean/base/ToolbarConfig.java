@@ -85,9 +85,16 @@ public class ToolbarConfig extends BaseObservable {
      */
     private @ColorRes Integer statusBarColor = null;
     /**
-     * 状态栏图标模式：false = 深色图标（黑字），true = 浅色图标（白字）
+     * @deprecated 不再生效；见 {@link #setStatusBarIconsLight(Boolean)}
      */
+    @Deprecated
     private boolean isLightMode = false;
+
+    /**
+     * 强制状态栏图标深浅；{@code null} 表示按背景亮度自动计算。
+     */
+    @Nullable
+    private Boolean statusBarIconsLightOverride = null;
 
     /**
      * 是否启用沉浸式（Edge-to-Edge 下与透明状态栏等价，保留字段兼容业务）
@@ -216,19 +223,38 @@ public class ToolbarConfig extends BaseObservable {
         return this;
     }
 
+    /**
+     * @deprecated {@link #applyStatusBar()} 已按背景亮度自动决定图标颜色，本字段不再生效。
+     */
+    @Deprecated
     @Bindable
     public boolean isLightMode() {
         return isLightMode;
     }
 
     /**
-     * 状态栏图标模式。
+     * @deprecated 无效。请依赖 {@link #applyStatusBar()} / {@link ThemeUtils#setupStatusBarAuto}；
+     * 若需强制浅/深图标，请使用 {@link #setStatusBarIconsLight(Boolean)}。
      *
-     * @param lightMode true：浅色图标（白字）；false：深色图标（黑字）
+     * @param lightMode 历史参数，已忽略
      */
+    @Deprecated
     public ToolbarConfig setLightMode(boolean lightMode) {
         isLightMode = lightMode;
         notifyPropertyChanged(BR.lightMode);
+        return this;
+    }
+
+    @Nullable
+    public Boolean getStatusBarIconsLightOverride() {
+        return statusBarIconsLightOverride;
+    }
+
+    /**
+     * 强制状态栏图标深浅；{@code null} 表示交给 {@link ThemeUtils#setupStatusBarAuto} 按背景亮度计算。
+     */
+    public ToolbarConfig setStatusBarIconsLight(@Nullable Boolean iconsLight) {
+        this.statusBarIconsLightOverride = iconsLight;
         return this;
     }
 
@@ -512,16 +538,22 @@ public class ToolbarConfig extends BaseObservable {
     }
 
     /**
-     * 应用状态栏：Edge-to-Edge 下状态栏透明，图标深浅跟 {@link #statusBarColor} /
-     * {@link #bgColor} 的实际亮度走（暗色表面用浅色图标）。
-     * {@link #isLightMode} 仅作历史兼容，不再单独决定图标颜色。
+     * 应用状态栏：Edge-to-Edge 下状态栏透明。
+     * 默认按 {@link #statusBarColor} / {@link #bgColor} 亮度自动选图标；
+     * 若设置了 {@link #setStatusBarIconsLight(Boolean)} 则强制覆盖。
+     * {@link #isLightMode} 已废弃，不参与决策。
      */
     public ToolbarConfig applyStatusBar() {
         if (activity == null || activity.isFinishing()) {
             return this;
         }
         int color = ContextCompat.getColor(activity, Objects.requireNonNullElseGet(statusBarColor, () -> bgColor));
-        ThemeUtils.setupStatusBarAuto(activity, color);
+        if (statusBarIconsLightOverride != null) {
+            // iconsLight=true → 浅色图标 → darkIcons=false
+            ThemeUtils.setupStatusBar(activity, color, !statusBarIconsLightOverride);
+        } else {
+            ThemeUtils.setupStatusBarAuto(activity, color);
+        }
         return this;
     }
 

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 /**
  * 新版分页仓库基类：用 [request] 拉一页数据，供 [NetworkPagingSource] 使用。
  *
- * 对齐旧 [io.coderf.arklab.common.repository.PagingFlowRepositoryImpl]：分页默认不弹 loading。
+ * 分页默认不弹 loading（与历史分页仓库行为一致）。
  *
  * 业务筛选条件通过 [Q] 从 ViewModel 经 PagingSource 快照传入 [fetchPage]，
  * **禁止**在 [fetchPage] 内强转 Fragment/Activity 取参。

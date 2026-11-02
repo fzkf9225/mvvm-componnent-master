@@ -1,11 +1,12 @@
 # googlegps
 
-可选定位能力库：GNSS / NMEA、Socket 定位客户端及 GPX/CSV 等记录辅助。
+可选定位能力库：GNSS / NMEA 及 GPX/CSV 等轨迹记录辅助。实时位置上报请由宿主接入 `core-ws` / HTTP 等通道，本库不再内置 Socket 上传。
 
-当前版本：**3.3.0**
-Maven：`io.coderf.arklab.googlegps:googlegps:3.3.0`
+当前版本：**3.3.2**
+Maven：`io.coderf.arklab.googlegps:googlegps:3.3.2`
 
-**3.3.0**：按职责重划包结构（`api` / `service` / `permission` / `location` / `track` / `socket` / `ui` / `utils`），旧 `common.*` 等路径废弃（见下方「包结构」）；同步精简 `consumer-rules.pro`。
+**3.3.2**：删除未完成的 Netty TCP `socket` 上传通道及 `DeviceIdUtil`；去掉 `netty` / `commons-lang3` 依赖。  
+**3.3.0**：按职责重划包结构（`api` / `service` / `permission` / `location` / `track` / `ui` / `utils`），旧 `common.*` 等路径废弃（见下方「包结构」）；同步精简 `consumer-rules.pro`。
 **3.2.0**：确认框 `colorPrimary` 在 `values-night` 对齐宿主浅色 Primary（`#A9C7FF`），避免深色表面上仍是亮色品牌蓝。
 namespace：`io.coderf.arklab.googlegps`
 
@@ -29,9 +30,8 @@ namespace：`io.coderf.arklab.googlegps`
 | `permission` | `GpsLifecycleObserver` / `PermissionsChecker` / `PermissionManager` | GPS 开关、前/后台定位权限引导流程 |
 | `location` | `GnssLocationListener` / `NmeaLocationListener` / `NmeaSentence` | 系统定位监听与 NMEA 解析（内部） |
 | `track` | `IFileLogger` / `CsvFileLogger` / `GpxFileLogger` / `FileLoggerFactory` / `Files` / `GpsFileParser` / `GpsLoggerThreadExecutor` | 轨迹文件记录与解析 |
-| `socket` | `GPSSocketServer` / `InboundClientHandler` / 回调接口 | Netty TCP 上传通道 |
 | `ui` | `GPSConfirmDialog` / `UiUtil` | 权限引导确认弹窗（内部） |
-| `utils` | `AppUtil` / `DebugUtil` / `DeviceIdUtil` / `EsriUtil` / `LogUtil` | 通用工具 |
+| `utils` | `AppUtil` / `DebugUtil` / `EsriUtil` / `LogUtil` | 通用工具 |
 
 > 自 3.3.0 起包路径调整，旧版 `common.*` / `listener.*` / `logger.*` / `dialog.*` 已废弃，升级时只需批量替换 import：
 > `common.GpsStarter|GpsCallback|GpsSettingConfig|LocationFilter` → `api.*`，`common.Session` → `service.Session`，
@@ -41,7 +41,7 @@ namespace：`io.coderf.arklab.googlegps`
 
 ## 混淆
 
-`consumer-rules.pro` 随 AAR 发布，宿主无需额外配置：`api` / `service` / `permission` / `track` / `socket` / `utils` 全量保留，
+`consumer-rules.pro` 随 AAR 发布，宿主无需额外配置：`api` / `service` / `permission` / `track` / `utils` 全量保留，
 `location` / `ui` 为内部实现允许混淆；`LocationFilter` 实现类保留类名（日志中的过滤器名称可读）。
 
 ---

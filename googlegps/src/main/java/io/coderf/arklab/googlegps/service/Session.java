@@ -148,7 +148,7 @@ public class Session {
      * @param location 要添加的位置点
      */
     public void addLocationToHistory(Location location) {
-        addLocationToHistory(location, 0);
+        addLocationToHistory(location, 1000);
     }
 
     /**

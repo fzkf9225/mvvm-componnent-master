@@ -112,6 +112,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
         if (retryService != null) {
             return observable.subscribeOn(Schedulers.io())
                     .retryWhen(retryService::handleObservableError)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -124,10 +125,10 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         } else {
             return observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -140,8 +141,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         }
     }
 
@@ -212,6 +212,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return flowable.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
                             retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         RequestUi ui = getRequestUi();
@@ -224,10 +225,10 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         } else {
             return flowable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addSubscription(disposable);
                         RequestUi ui = getRequestUi();
@@ -240,8 +241,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         }
     }
 
@@ -309,6 +309,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return single.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
                             retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -321,10 +322,10 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         } else {
             return single.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         addDisposable(disposable);
                         RequestUi ui = getRequestUi();
@@ -337,8 +338,7 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
                         if (ui != null && apiRequestOptions.isShowDialog()) {
                             ui.hideLoading();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread());
+                    });
         }
     }
 

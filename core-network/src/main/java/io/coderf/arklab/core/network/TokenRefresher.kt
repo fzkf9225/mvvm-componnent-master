@@ -11,14 +11,13 @@ import io.coderf.arklab.common.inter.FlowRetryService
  * 避免并发 401 时重复消费 refresh_token。
  *
  * **新业务接入只需实现本接口**，无需再实现 [FlowRetryService]：
- * 旧栈方法（[shouldRetry] / [refreshToken] / [setMaxRetryCount] / [getMaxRetryCount]）
- * 均提供默认实现并委托给新方法；[io.coderf.arklab.common.api.ApiRetrofit.Builder.setTokenRefresher]
- * 会经 [asFlowRetryService] 自动适配旧 Flow 栈（FlowRepositoryImpl），功能保持不变。
+ * 兼容方法（[shouldRetry] / [refreshToken] / [setMaxRetryCount] / [getMaxRetryCount]）
+ * 均有默认实现并委托给新方法；[io.coderf.arklab.common.api.ApiRetrofit.Builder.setTokenRefresher]
+ * 会经 [asFlowRetryService] 同步写入 Builder，供 [DefaultNetworkRepository] 解析。
  *
  * **作用域：按 ApiRetrofit / ApiService 实例，不是整个 App 进程全局。**
- * 在 Module 里对某个 Builder `setTokenRefresher` 或 `setFlowRetryService`（实现类同时是
- * TokenRefresher 时会自动挂上）后，只有使用该 ApiService 的 [DefaultNetworkRepository]
- * （构造传入 boundApiService）才会鉴权重试；另一个未配置的 ApiService 不受影响。
+ * 在 Module 里对某个 Builder `setTokenRefresher` 或 `setFlowRetryService` 后，只有使用该
+ * ApiService 的 [DefaultNetworkRepository]（构造传入 boundApiService）才会鉴权重试。
  *
  * 解析顺序见 [DefaultNetworkRepository.resolveTokenRefresher]：
  * 1. Repository 构造局部 TokenRefresher
@@ -72,9 +71,8 @@ interface TokenRefresher {
 
     companion object {
         /**
-         * 适配为旧 [FlowRetryService]，供旧 Flow 栈（[io.coderf.arklab.common.repository.FlowRepositoryImpl]）使用。
-         * 适配器无状态、全部委托底层刷新器，Single-Flight 状态仍在 [TokenRefresher] 实现内，
-         * 保证新旧两栈共享同一刷新实例。
+         * 适配为 [FlowRetryService]，写入 [io.coderf.arklab.common.api.ApiRetrofit.Builder]
+         * 供新栈解析；适配器无状态，Single-Flight 仍在 [TokenRefresher] 实现内。
          */
         @JvmStatic
         fun asFlowRetryService(refresher: TokenRefresher?): FlowRetryService? =
@@ -84,7 +82,6 @@ interface TokenRefresher {
 
 /**
  * [TokenRefresher] → [FlowRetryService] 无状态适配器。
- * 使只实现 [TokenRefresher] 的业务实现也能被旧 Flow 栈消费，免去业务侧双接口实现。
  */
 private class FlowRetryServiceAdapter(
     private val refresher: TokenRefresher

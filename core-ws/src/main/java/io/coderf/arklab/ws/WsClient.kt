@@ -74,6 +74,7 @@ class WsClient @JvmOverloads constructor(
             return
         }
         if (!connectInFlight.compareAndSet(false, true)) {
+            // 已有建连在飞：保留本次 onConnected，由 finishConnect 一并回调，勿静默丢弃
             return
         }
         val safeConfig = ensureMainThreadDispatch(config)

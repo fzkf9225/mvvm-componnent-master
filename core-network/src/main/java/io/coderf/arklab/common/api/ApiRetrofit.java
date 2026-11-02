@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import io.coderf.arklab.common.utils.encode.MD5Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -145,13 +147,37 @@ public class ApiRetrofit {
     }
 
     public static String bodyToString(final RequestBody request) throws IOException {
-        final Buffer buffer = new Buffer();
-        if (request != null) {
-            request.writeTo(buffer);
-        } else {
-            return "";
+        return readBodyForSign(request).bodyString;
+    }
+
+    /**
+     * 读取 body 供签名：对 one-shot / duplex 跳过内容；可复读 body 写入 Buffer 后重建，避免消耗原流。
+     */
+    static BodyReadResult readBodyForSign(final RequestBody request) throws IOException {
+        if (request == null) {
+            return new BodyReadResult("", null);
         }
-        return buffer.readUtf8();
+        if (request.isDuplex() || request.isOneShot()) {
+            return new BodyReadResult("", null);
+        }
+        final Buffer buffer = new Buffer();
+        request.writeTo(buffer);
+        byte[] bytes = buffer.readByteArray();
+        String bodyString = new String(bytes, StandardCharsets.UTF_8);
+        MediaType contentType = request.contentType();
+        RequestBody replacement = RequestBody.create(bytes, contentType);
+        return new BodyReadResult(bodyString, replacement);
+    }
+
+    static final class BodyReadResult {
+        final String bodyString;
+        @androidx.annotation.Nullable
+        final RequestBody replacementBody;
+
+        BodyReadResult(String bodyString, @androidx.annotation.Nullable RequestBody replacementBody) {
+            this.bodyString = bodyString;
+            this.replacementBody = replacementBody;
+        }
     }
 
     public Retrofit getRetrofit() {
@@ -190,6 +216,11 @@ public class ApiRetrofit {
          * 是否上传手机的基本信息作为请求头，默认为false
          */
         private boolean mobileInfo = false;
+        /**
+         * 是否写入已废弃的 o-appMac / o-mediaDrmId（隐私与可用性差）；默认 false。
+         * 老后端若仍依赖，请显式 {@link #setLegacyDeviceHeaders(boolean)}。
+         */
+        private boolean legacyDeviceHeaders = false;
         /**
          * 返回参数是否跳过默认的解析，默认为false，也就是默认解析最外层的code,msg，data结构，让各自接口自动只获取到data
          */
@@ -251,7 +282,7 @@ public class ApiRetrofit {
          */
         private RetryService retryService = null;
         /**
-         * 请求接口重试服务（旧 Flow 栈；setTokenRefresher 时会自动写入适配器）
+         * 协程鉴权重试服务（setTokenRefresher 时会自动写入适配器，供新栈解析）
          */
         private FlowRetryService flowRetryService = null;
         /**
@@ -307,14 +338,12 @@ public class ApiRetrofit {
 
         /**
          * 为当前 ApiRetrofit 实例设置新版鉴权刷新。未设置则新栈 request 不走鉴权重试。
-         * 会经 {@link TokenRefresher#asFlowRetryService} 自动适配写入 {@code flowRetryService}，
-         * 旧 Flow 栈（FlowRepositoryImpl）无需改动即可消费同一刷新实现。
+         * 会经 {@link TokenRefresher#asFlowRetryService} 同步写入 {@code flowRetryService}。
          * 与 {@link #setFlowRetryService} 独立；也可只设其一（setFlowRetryService 在实现类
          * 同时实现 TokenRefresher 时会自动写入本字段）。
          */
         public Builder setTokenRefresher(TokenRefresher tokenRefresher) {
             this.tokenRefresher = tokenRefresher;
-            // 自动适配旧 Flow 栈：业务实现只需 TokenRefresher，无需再实现 FlowRetryService
             this.flowRetryService = TokenRefresher.asFlowRetryService(tokenRefresher);
             return this;
         }
@@ -341,6 +370,15 @@ public class ApiRetrofit {
 
         public Builder setMobileInfo(boolean mobileInfo) {
             this.mobileInfo = mobileInfo;
+            return this;
+        }
+
+        /**
+         * 是否写入 {@code o-appMac} / {@code o-mediaDrmId}（默认 false）。
+         * 仅当后端仍依赖这些已废弃字段时开启。
+         */
+        public Builder setLegacyDeviceHeaders(boolean legacyDeviceHeaders) {
+            this.legacyDeviceHeaders = legacyDeviceHeaders;
             return this;
         }
 
@@ -482,10 +520,11 @@ public class ApiRetrofit {
                 headerMap.put("o-appIp", MobileHelper.getIp(mContext));
                 //app的唯一标识，可能为null或找不到
                 headerMap.put("o-appDeviceId", MobileHelper.getDeviceId(mContext));
-                //app的mac地址
-                headerMap.put("o-appMac", MobileHelper.getMacAddress());
-                //app的获取 MediaDrm（Widevine）设备唯一 ID
-                headerMap.put("o-mediaDrmId", MobileHelper.getMediaDrmId());
+                if (legacyDeviceHeaders) {
+                    // 已废弃：MAC / MediaDrm 标识，仅兼容老后端
+                    headerMap.put("o-appMac", MobileHelper.getMacAddress());
+                    headerMap.put("o-mediaDrmId", MobileHelper.getMediaDrmId());
+                }
                 // 设备的硬件型号（例如："Pixel 6"、"SM-G988B" 等）
                 headerMap.put("o-appModel", Build.MODEL);
                 // 设备的品牌/制造商（例如："Google"、"samsung"、"HUAWEI" 等）
@@ -496,21 +535,32 @@ public class ApiRetrofit {
                 headerMap.put("o-appMobileVersion", Build.VERSION.RELEASE);
             }
 
+            // 构建期快照：拦截器内禁止再 mutate 共享 headerMap
+            final Map<String, String> baseHeaders =
+                    Collections.unmodifiableMap(new HashMap<>(headerMap));
+            final ErrorService errorServiceRef = errorService;
+            final String systemRef = system;
+            final boolean useDefaultSignRef = useDefaultSign;
+            final String appSecretRef = appSecret;
+
             if (client == null) {
                 final long peekLogBytes = logBodyMaxBytes;
                 OkHttpClient.Builder build = new OkHttpClient.Builder()
                         .addInterceptor(chain -> {
                             String timeStamp = DateUtil.getTimestamp();
                             Request.Builder requestBuilder = chain.request().newBuilder();
-                            //判断errorService是否为空
-                            if (errorService != null) {
-                                headerMap.putAll(errorService.defaultRequestHeader(system));
+                            Map<String, String> requestHeaders = new HashMap<>(baseHeaders);
+                            if (errorServiceRef != null) {
+                                Map<String, String> dynamic = errorServiceRef.defaultRequestHeader(systemRef);
+                                if (dynamic != null && !dynamic.isEmpty()) {
+                                    requestHeaders.putAll(dynamic);
+                                }
                             }
 
                             //添加默认请求头
                             // 对头部值进行 URL 编码处理
                             Map<String, String> encodedHeaders = new HashMap<>();
-                            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                            for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
                                 String key = entry.getKey();
                                 String value = entry.getValue();
 
@@ -536,13 +586,20 @@ public class ApiRetrofit {
                             }
                             requestBuilder.headers(Headers.of(encodedHeaders));
 
-                            if (useDefaultSign) {
+                            Request pending = requestBuilder.build();
+                            if (useDefaultSignRef) {
+                                BodyReadResult bodyRead = readBodyForSign(pending.body());
+                                if (bodyRead.replacementBody != null) {
+                                    pending = pending.newBuilder().method(pending.method(), bodyRead.replacementBody).build();
+                                }
                                 // 与 encodeSign 中的 o-timestamp 保持一致，供服务端验签
-                                requestBuilder.addHeader("o-timestamp", timeStamp);
-                                requestBuilder.addHeader("o-sign", encodeSign(appSecret, bodyToString(chain.request().body()), timeStamp));
+                                pending = pending.newBuilder()
+                                        .header("o-timestamp", timeStamp)
+                                        .header("o-sign", encodeSign(appSecretRef, bodyRead.bodyString, timeStamp))
+                                        .build();
                             }
 
-                            Request request = requestBuilder.build();
+                            Request request = pending;
                             Response response = chain.proceed(request);
                             if (Config.enableDebug.get()) {
                                 printLog(request, response, peekLogBytes);

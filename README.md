@@ -30,7 +30,7 @@
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
 2. 自动集成`今日头条UI适配方案`（独立模块 `:core-autosize`，经 `core-base` 传递）
-3. 网络请求封装：`OkHttp`+`RxJava`+`Retrofit`，以及 `Flow`；**推荐**新 API `DefaultNetworkRepository`（旧 `RepositoryImpl` / `FlowRepositoryImpl` 已 `@Deprecated`）
+3. 网络请求封装：`OkHttp`+`RxJava`+`Retrofit`，以及协程 `Flow`；**推荐**新 API `DefaultNetworkRepository`（`core` 包）；旧 Rx `RepositoryImpl` 仍保留；过渡层 `FlowRepositoryImpl` 已删除
 4. 本地数据库封装，使用`Room`+`RxJava` / `Flow`（`core-db`）
 5. 轻量化存储框架，使用`MMKV`，替换自带的`SharedPreferences`
 6. 集成`Paging3`分页，更加智能化的分页列表，同时也提供原始的分页功能
@@ -166,7 +166,7 @@ implementation project(':userapi')   // 需要用户契约时
 13. 自定义相机可以直接调用`CameraActivity`，视频播放可以直接调用`VideoPlayerActivity`，二维码扫描可以直接调用`CaptureActivity`，WebView可以直接调用`WebViewActivity`
 
 #### 数据存储和网络请求相关
-1. 网络请求：新代码推荐继承 / 使用 `DefaultNetworkRepository`（`core-network`，返回 `Flow<RequestResult<T>>`）。旧 `RepositoryImpl` / `FlowRepositoryImpl` 仍可用但已 `@Deprecated`，勿再新增调用。Demo 见 `SampleCoreNetworkRepository`
+1. 网络请求：新代码推荐 `DefaultNetworkRepository`（`core` 包，`Flow<RequestResult<T>>`）。旧 Rx `RepositoryImpl` 仍保留；过渡层 `FlowRepositoryImpl` 已删除。Demo 见 `SampleCoreNetworkRepository`
 2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
 3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `DefaultNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。主键推荐客户端 UUID（如 `AttachmentBean.mobileId`）。Maven：`core-db:1.6.0` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[room-processor/README.md](room-processor/README.md)、[UPGRADE.md](UPGRADE.md)
 4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
@@ -175,8 +175,8 @@ implementation project(':userapi')   // 需要用户契约时
 7. `FlowRetryService`：协程方式的网络请求重试，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
 8. `RoomRepositoryImpl`：数据库的一些常用方法
 9. `PagingRepositoryImpl`：`paging3`分页的`Repository`层封装
-10. `PagingFlowRepositoryImpl`：关于协程的`paging3``Repository`层封装
-11. `FlowRepositoryImpl`：协程方式`Repository`封装（已 Deprecated，优先新 API）
+10. 协程分页：`NetworkPagingRepository` + `NetworkFlowPagingViewModel`（`core` 包）
+11. Rx 分页：`PagingRepositoryImpl` + `PagingViewModel`（`common.repository`，仍保留）
 #### 常用工具类
 1. `AppManager`：获取`Activity`栈信息和获取App版本号、版本名称、App是否在前台运行等API
 2. `AppSettingHelper`：可以设置基础的app是否首次运行等方法
@@ -475,7 +475,7 @@ TAG值为类名：`ApiRetrofit`
 # ==================== Google GPS Library ====================
 # 以下规则已内置在 googlegps 的 consumer-rules.pro 中，随 AAR 自动生效，宿主无需重复声明。
 # 包结构：api(对外 API) / service(服务+Session) / permission(权限引导) / track(轨迹文件)
-#          / socket(上传通道) / utils(工具)  —— 均保留；location / ui 为内部实现，允许混淆
+#          / utils(工具)  —— 均保留；location / ui 为内部实现，允许混淆（原 socket 上传已移除）
 -dontwarn io.coderf.arklab.googlegps.**
 
 # 对外 API：GpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
@@ -490,9 +490,6 @@ TAG值为类名：`ApiRetrofit`
 
 # 轨迹文件 IFileLogger / Files / GpsFileParser
 -keep class io.coderf.arklab.googlegps.track.** { *; }
-
-# Socket 通道及回调接口
--keep class io.coderf.arklab.googlegps.socket.** { *; }
 
 # 工具类 DebugUtil / LogUtil / EsriUtil
 -keep class io.coderf.arklab.googlegps.utils.** { *; }

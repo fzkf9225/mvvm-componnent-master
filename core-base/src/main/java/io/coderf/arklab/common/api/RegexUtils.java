@@ -4,7 +4,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 正则工具类
+ * 正则工具类。
+ * <p>
+ * 与 {@code annotation} 模块内 {@code io.coderf.arklab.annotation.utils.RegexUtils} 内容大致同源；
+ * 表单/实体校验场景多用 annotation 包，业务通用校验可继续使用本类。
+ * </p>
  *
  * @author fz
  * @version 1.0

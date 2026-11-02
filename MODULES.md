@@ -64,7 +64,7 @@ implementation project(':userapi')  // 仅需要用户契约时
 | 职责 | Retrofit / OkHttp 封装、旧 `RepositoryImpl*`、新 `DefaultNetworkRepository` |
 | 依赖 | `api` → `core-base`；**不依赖** `core-db`（网络与 Room 分层独立） |
 | 新 API | `RequestOptions` / `RequestResult` / `AppError` / `RequestUi` |
-| 旧 API | `RepositoryImpl` / `FlowRepositoryImpl` 已 `@Deprecated`，可编译但勿新增调用 |
+| 旧 API | `RepositoryImpl`（Rx）仍保留；过渡层 `FlowRepositoryImpl` **已删除**，协程请用 `DefaultNetworkRepository` |
 
 **新请求示例（Kotlin）：**
 
@@ -107,6 +107,15 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 | 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
 | 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
 
+#### util 说明（暂缓整批迁入 core-utils）
+
+整库工具迁 `core-utils` 暂不划算（`annotation` 为纯 Java，`core-utils` 为 Android Library；收益低于改包成本）。  
+当前约定：
+
+- 新 Kotlin 扩展可选用 `core-utils` `ext.*`；历史 Java 工具仍在 `core-base`
+- `DensityUtil.setDensity` 已废弃为空操作（防泄漏），屏幕适配走 AutoSize
+- `RegexUtils`：`core-base` 与 `annotation` 各有一份，**均正常可用**；双份收敛以后再说，不预标 `@Deprecated`
+
 ### `core-autosize`
 
 | 项 | 说明 |
@@ -129,8 +138,26 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 | `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
 | `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
 | `commonmedia` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
-| `commonui` | 表单等通用 UI 组件 | 按需 |
-| `googlegps` | 定位能力 | 按需 |
+| `commonui` | 表单等通用 UI 组件 | 按需；`FormHost.validateAll` / `formStyle` 见 commonui README |
+| `googlegps` | 定位能力 | 按需；见下方边界 |
+
+#### googlegps 能力边界
+
+| 能力 | 建议 |
+|------|------|
+| FusedLocation + 权限 + GPS 开关检测 | **默认核心**，多数宿主只需这些 |
+| Session 轨迹缓冲 / GPX·CSV | 可选；`GpsSettingConfig.maxLocationHistorySize` 默认 **1000**（`0`=不限制） |
+| 实时位置上报 | **不在本库**；宿主自行接 `core-ws` / MQTT / HTTP（原 Netty `socket` 包已删除） |
+| 进程级 `getInstance()` 单例 | 注意跨会话串扰；停止定位时调用 Session `clear` |
+
+#### commonmedia 能力边界
+
+| 能力 | 建议 |
+|------|------|
+| `MediaHelper` 选图/拍照/预览 + app 侧 `MediaGateway` | **保留**（组件化主路径） |
+| 自研 `ImgCompressor` / `VideoCompress` / Crop | 评估替换成熟库或拆 `commonmedia-compress`；仅 Demo 使用则优先外置 |
+| 平行 `UIController` / `DebugUtil` / `LogUtil` | 计划删除，收敛到 core |
+| `commonui` → `implementation commonmedia` | 已知耦合；表单媒体行需要时再引，长期应改为 Gateway/可选依赖 |
 | `core-ws` | WebSocket（OkHttp，对齐 core-mqtt 分层） | 按需；业务信封勿写入框架 |
 | `annotation` / `room-processor` | 校验注解与 Room 处理器 | 按需 |
 | `app` | Demo 组装：Hilt Module、Gateway 适配与绑定 | 宿主样板 |

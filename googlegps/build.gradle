@@ -74,8 +74,6 @@ dependencies {
     implementation libs.material
     api project(':core-log')
     testImplementation libs.junit
-    implementation libs.netty.all
-    implementation libs.org.apache.commons.commons.lang3
     implementation libs.gson
 }
 //执行以下命令完成制品推送
@@ -104,7 +102,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/${artifactId}-release.aar")
                 groupId = 'io.coderf.arklab.googlegps'
                 artifactId = 'googlegps'
-                version = '3.3.1'
+                version = '3.4.0'
             }
         }
         repositories {

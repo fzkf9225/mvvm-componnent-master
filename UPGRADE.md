@@ -225,10 +225,10 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 
 分页 / Flow / Room 同理：类型参数里的「页面」位全部去掉，例如：
 
-- `RepositoryImpl<API>` / `FlowRepositoryImpl<API>`
-- `PagingRepositoryImpl<API, T, Q>` / `PagingFlowRepositoryImpl<API, T, Q>`
+- `RepositoryImpl<API>`（Rx，保留）/ ~~`FlowRepositoryImpl`~~（过渡层已删除 → `DefaultNetworkRepository`）
+- `PagingRepositoryImpl<API, T, Q>`（Rx，保留）/ ~~`PagingFlowRepositoryImpl`~~（已删除 → `NetworkPagingRepository`）
 - `NetworkPagingRepository<T, Q>`
-- `PagingViewModel<IR, T, Q>` / `FlowPagingViewModel` / `NetworkFlowPagingViewModel`（不再带 View 泛型）
+- `PagingViewModel`（Rx）/ ~~`FlowPagingViewModel`~~（已删除）/ `NetworkFlowPagingViewModel`（新栈）
 - `RoomRepositoryImpl(dao)`、`AttachmentRepositoryImpl(dao)` —— **不要再传 view**
 
 #### 页面

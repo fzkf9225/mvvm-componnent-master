@@ -7,6 +7,13 @@
     -->
 
     <color name="themeColor">#FFA9C7FF</color>
+    <!-- 状态色：暗色表面上升亮度，避免亮色状态色过刺眼 -->
+    <color name="theme_red">#FFFFB4AB</color>
+    <color name="theme_green">#FF6FDB8F</color>
+    <color name="theme_orange">#FFFFB68A</color>
+    <color name="theme_yellow">#FFE9C400</color>
+    <color name="green">#FF81C995</color>
+    <color name="scrim">#FF000000</color>
 
     <color name="default_background">#FF121212</color>
     <color name="background">#FF121212</color>

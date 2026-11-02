@@ -59,7 +59,6 @@ internal object RoomRepositorySupport {
         val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addDisposable(it) }
-            .doOnSubscribe { showLoading(repository, options) }
             .doOnSubscribe {
                 session[0] = RoomLog.begin(
                     repository.javaClass.simpleName, operation, tableName, options, payload
@@ -67,8 +66,9 @@ internal object RoomRepositorySupport {
             }
             .doOnComplete { session[0]?.success("complete") }
             .doOnError { session[0]?.error(it) }
-            .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading(repository, options) }
+            .doFinally { hideLoading(repository, options) }
     }
 
     /**
@@ -89,7 +89,6 @@ internal object RoomRepositorySupport {
         val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addDisposable(it) }
-            .doOnSubscribe { showLoading(repository, options) }
             .doOnSubscribe {
                 session[0] = RoomLog.begin(
                     repository.javaClass.simpleName, operation, tableName, options, payload
@@ -97,8 +96,9 @@ internal object RoomRepositorySupport {
             }
             .doOnSuccess { session[0]?.success(it) }
             .doOnError { session[0]?.error(it) }
-            .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading(repository, options) }
+            .doFinally { hideLoading(repository, options) }
     }
 
     /**
@@ -133,7 +133,6 @@ internal object RoomRepositorySupport {
         val session = arrayOfNulls<RoomLog.Session>(1)
         return chain
             .doOnSubscribe { repository.addSubscription(it) }
-            .doOnSubscribe { showLoading(repository, options) }
             .doOnSubscribe {
                 session[0] = RoomLog.begin(
                     repository.javaClass.simpleName, operation, tableName, options, payload
@@ -141,8 +140,9 @@ internal object RoomRepositorySupport {
             }
             .doOnNext { session[0]?.success(it) }
             .doOnError { session[0]?.error(it) }
-            .doFinally { hideLoading(repository, options) }
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading(repository, options) }
+            .doFinally { hideLoading(repository, options) }
     }
 
     /** 根据 options 显示 Loading（仅当 RequestUi 非空且 showDialog 为 true） */

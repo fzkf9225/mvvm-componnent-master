@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  历史 Material 色阶调色板（无 values-night）。
+  新布局请使用 ?attr/color* 或 values/colors.xml 语义色；勿将本文件色阶当表面/正文。
+-->
 <resources>
     <color name="amber_100">#ffecb3</color>
     <color name="amber_200">#ffe082</color>

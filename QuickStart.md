@@ -370,7 +370,7 @@ class BusinessApiModule {
     ): Observable<BasePage<EventReportingBean>> //
 ```
 #### 新建respository
-新建一个类`EventRepositoryImpl`，继承`RepositoryImpl`，具体实现参考项目实例代码，普通请求集成`RepositoryImpl`,paging分页请求集成`PagingRepositoryImpl`，协程请求继承`FlowRepositoryImpl`和`PagingFlowRepositoryImpl`
+新建一个类`EventRepositoryImpl`：Rx 普通请求继承 `RepositoryImpl`，Rx 分页继承 `PagingRepositoryImpl`；协程请继承 `DefaultNetworkRepository` / `NetworkPagingRepository`（`core` 包）。过渡层 `FlowRepositoryImpl` 已删除。
 ```kotlin
 class EventRepositoryImpl(
     eventApiService: EventApiService

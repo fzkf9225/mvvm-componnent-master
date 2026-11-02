@@ -31,7 +31,7 @@
 | 栈 | 入口 | 状态 | 适用 |
 |----|------|------|------|
 | **RxJava3** | `RepositoryImpl` + `Observable` / `Flowable` | `@Deprecated`，仍可用 | 存量 Java / Rx 代码 |
-| **旧 Flow 中间层** | `FlowRepositoryImpl` + `sendRequest { }` | `@Deprecated`，仍可用 | 早期协程迁移 |
+| **旧 Flow 中间层** | `FlowRepositoryImpl` + `sendRequest { }` | **已删除** | 请迁 `DefaultNetworkRepository` |
 | **新版 Flow（推荐）** | `DefaultNetworkRepository` / `BaseNetworkRepository` + `request { }` | **推荐** | 所有新功能 |
 
 ### 能力对照
@@ -78,7 +78,7 @@
 ```text
 io.coderf.arklab.core.network.*          // 新栈
 io.coderf.arklab.core.request.*           // RequestOptions / RequestResult / TokenRefresher
-io.coderf.arklab.common.repository.*      // 旧 RepositoryImpl / FlowRepositoryImpl（Deprecated）
+io.coderf.arklab.common.repository.*      // Rx：RepositoryImpl / PagingRepositoryImpl（保留）
 io.coderf.arklab.common.api.ApiRetrofit   // 仍负责创建 Retrofit / 旧全局 Retry
 ```
 
@@ -763,7 +763,7 @@ val silent = DefaultNetworkRepository(requestUi = NoOpRequestUi)
 
 | 点 | 说明 |
 |----|------|
-| 旧类未删除 | `RepositoryImpl` / `FlowRepositoryImpl` 仍可编译，标记 `@Deprecated` |
+| Rx 旧栈保留 | `RepositoryImpl` 仍可编译；过渡层 `FlowRepositoryImpl` 已删除 |
 | 按实例 Retry | 旧栈与新栈都读各自使用的 `ApiRetrofit.Builder`；未 set 的 ApiService 不鉴权重试 |
 | 不要在 VM 重复注入 | 新栈默认全局即可 |
 | `RequestResult` 必处理 | 即使 UI 已 Toast，业务若依赖成功数据需 `onSuccess` |

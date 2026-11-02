@@ -6,7 +6,6 @@
 #   service    前台定位服务 GpsService（Manifest 注册）+ 会话运行态 Session
 #   permission GPS 开关 / 前后台定位权限引导（GpsLifecycleObserver 可被宿主直接使用）
 #   track      轨迹文件读写：IFileLogger / Csv / Gpx / Files / GpsFileParser
-#   socket     Netty TCP 上传通道及其回调接口
 #   utils      通用工具（DebugUtil / LogUtil / EsriUtil 等，宿主会直接调用）
 #   location   [内部] 系统定位监听与 NMEA 解析 —— 允许混淆
 #   ui         [内部] 确认弹窗 —— 允许混淆
@@ -31,22 +30,5 @@
 # ---------- 轨迹文件：宿主读取 / 解析日志文件 ----------
 -keep class io.coderf.arklab.googlegps.track.** { *; }
 
-# ---------- Socket 通道：回调接口由宿主实现 ----------
--keep class io.coderf.arklab.googlegps.socket.** { *; }
-
 # ---------- 通用工具 ----------
 -keep class io.coderf.arklab.googlegps.utils.** { *; }
-
-# ---------- Netty（GPSSocketServer / InboundClientHandler 运行时依赖，内部大量反射） ----------
--keep class io.netty.** { *; }
--dontwarn io.netty.**
--keepclassmembers class io.netty.channel.** {
-    public *;
-}
--keepclassmembers class io.netty.buffer.** {
-    public *;
-}
-
-# ---------- Apache Commons Lang3（GPSSocketServer 依赖） ----------
--keep class org.apache.commons.lang3.** { *; }
--dontwarn org.apache.commons.lang3.**
