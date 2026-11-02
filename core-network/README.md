@@ -2,9 +2,23 @@
 
 网络层：Retrofit / OkHttp、Repository 基类，以及推荐使用的请求 API（`RequestOptions` / `RequestResult` / `RequestUi` 等）。
 
-当前版本：**1.6.0**  
-Maven：`io.coderf.arklab.core:network:1.6.0`  
+当前版本：**1.7.0**  
+Maven：`io.coderf.arklab.core:network:1.7.0`  
 namespace：`io.coderf.arklab.core.network`
+
+---
+
+## 1.7.0 变更摘要
+
+| 项 | 说明 |
+|----|------|
+| 删除过渡层 | **删除** `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`；协程请用 `DefaultNetworkRepository` / `NetworkPagingRepository` |
+| 保留 | Rx `RepositoryImpl` / `PagingRepositoryImpl` |
+| 并发 / body | 拦截器 header 快照；签名 body one-shot 安全 |
+| 设备头 | 默认不写 `o-appMac` / `o-mediaDrmId`（`setLegacyDeviceHeaders(true)` 兼容旧行为） |
+| Rx Loading | 改主线程投递（与 db 对齐） |
+
+迁移见 [MIGRATION.md](./MIGRATION.md)、[UPGRADE.md §0.4](../UPGRADE.md#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。
 
 ---
 
@@ -25,7 +39,7 @@ namespace：`io.coderf.arklab.core.network`
 
 - 默认值未改：`showLoading=true`、`deliverErrorToUi=true`、`enableAuthRetry=true`、`RetryPolicy.Default` 数值不变。
 - **行为收紧：** 业务码失败不再被通用重试「连打」——这是修隐患，写入类请求更安全。
-- Rx / 旧 Flow 栈继续可用；完整迁移见 [MIGRATION.md](./MIGRATION.md)。
+- Rx 栈继续可用；旧 Flow 过渡层已在 **1.7.0** 删除；完整迁移见 [MIGRATION.md](./MIGRATION.md)。
 
 ---
 
@@ -52,7 +66,7 @@ namespace：`io.coderf.arklab.core.network`
 需要 HTTP / Repository 网络栈时：
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.6.0'
+implementation 'io.coderf.arklab.core:network:1.7.0'
 // 或
 implementation project(':core-network')
 ```

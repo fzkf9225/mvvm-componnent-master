@@ -2,8 +2,10 @@
 
 可复用的 Android WebSocket 组件库（OkHttp），面向多通道、可配置、Java / Kotlin 双友好。
 
-当前版本：**1.0.0**  
-Maven 坐标：`io.coderf.arklab.ws:ws:1.0.0`
+当前版本：**1.0.1**  
+Maven 坐标：`io.coderf.arklab.ws:ws:1.0.1`
+
+**1.0.1**：`onOpen` 对过期连接 early-return，避免乱序回调。
 
 > **边界**：本库只提供连接 / 逻辑频道编排 / Presence / Lifecycle / 重连 UX 等基础能力。  
 > 业务信封、bizCode、设备 SN、订退 JSON 格式等请在宿主项目二次扩展（通过 [WsChannelBinder] 发帧），不要写进框架。

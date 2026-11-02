@@ -1,6 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本（以各模块 `build.gradle` 为准）：**common `4.7.0`** · **core-base `1.5.9`** · **network / db `1.6.0`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **commonui `3.7.3`** · **commonmedia `3.7.0`**  
+> 对应版本（以各模块 `build.gradle` 为准）：**common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **googlegps `3.4.0`**  
 > Options 完善见 [UPGRADE.md §0](./UPGRADE.md#0-160network--db请求-options-完善)；剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。  
 > 本文说明各模块职责、依赖关系与日常用法。升级请看 [UPGRADE.md](./UPGRADE.md)。
 
@@ -26,7 +26,7 @@ app（组装：Hilt / Demo）
 **业务侧推荐入口：**
 
 ```gradle
-implementation project(':common')   // 或 Maven: common:4.7.0；建议显式钉 network/db 1.6.0、base 1.5.9 等（见 UPGRADE 文首）
+implementation project(':common')   // 或 Maven: common:4.7.0；建议显式钉 network 1.7.0、db 1.6.1、base 1.6.0 等（见 UPGRADE 文首）
 implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
 implementation project(':userapi')  // 仅需要用户契约时
 ```
@@ -121,7 +121,7 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 | 项 | 说明 |
 |----|------|
 | 职责 | 今日头条密度适配（AndroidAutoSize）：`AutoSize` / `AutoSizeConfig` / `InitProvider` |
-| Maven | `io.coderf.arklab.core:autosize:1.0.1` |
+| Maven | `io.coderf.arklab.core:autosize:1.0.0` |
 | namespace | `io.coderf.arklab.core.autosize` |
 | Java 包 | `io.coderf.arklab.core.autosize`（与 namespace / Maven 对齐；子包 `strategy` / `lifecycle` / `external` / `unit` / `util`） |
 | 何时用 | 一般经 `core-base` / `common` 间接依赖；仅需适配时可显式依赖本模块 |
@@ -210,19 +210,19 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.7.0` |
-| core-base | `io.coderf.arklab.core:base:1.5.9` |
-| core-network | `io.coderf.arklab.core:network:1.6.0`（Options 见 [core-network/README.md](./core-network/README.md)） |
-| core-db | `io.coderf.arklab.core:db:1.6.0`（见 [core-db/README.md](./core-db/README.md)） |
+| core-base | `io.coderf.arklab.core:base:1.6.0` |
+| core-network | `io.coderf.arklab.core:network:1.7.0`（见 [core-network/README.md](./core-network/README.md)） |
+| core-db | `io.coderf.arklab.core:db:1.6.1`（见 [core-db/README.md](./core-db/README.md)） |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
 | core-utils | `io.coderf.arklab.core:utils:1.1.1` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
-| core-ws | `io.coderf.arklab.ws:ws:1.0.0` |
+| core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
-| commonui | `io.coderf.arklab.ui:ui:3.7.3`（`api` → core-base / core-network，另依赖 media） |
-| googlegps | `io.coderf.arklab.googlegps:googlegps:3.3.1` |
+| commonui | `io.coderf.arklab.ui:ui:3.7.4`（`api` → core-base / core-network，另依赖 media） |
+| googlegps | `io.coderf.arklab.googlegps:googlegps:3.4.0` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
 宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。Maven 工程请按 [UPGRADE.md 文首](./UPGRADE.md) **显式钉版本**，避免传递依赖解析到旧 POM。

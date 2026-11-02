@@ -2,10 +2,16 @@
 
 本地持久化：Room Database / DAO / Entity，以及 Rx / 协程两套 Repository。
 
-当前版本：**1.6.0**  
-Maven：`io.coderf.arklab.core:db:1.6.0`  
+当前版本：**1.6.1**  
+Maven：`io.coderf.arklab.core:db:1.6.1`  
 namespace：`io.coderf.arklab.core.db`  
 配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）
+
+---
+
+## 1.6.1 变更摘要
+
+- Room Rx Loading 改主线程投递（与 core-network 对齐）
 
 ---
 
@@ -153,7 +159,7 @@ repository.findAll(RoomRequestOptions.query(false, true))
 - `ksp` → `:room-processor` **1.2.0**（或同源工程 `project(':room-processor')`）
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.6.0'
+implementation 'io.coderf.arklab.core:db:1.6.1'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 // 或本仓库
 implementation project(':core-db')

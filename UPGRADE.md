@@ -1,10 +1,10 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.5.9`** · **core-network / core-db `1.6.0`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.0`** · **commonui `3.7.3`** · **commonmedia `3.7.0`** · **googlegps `3.3.1`** · **annotation `3.3.1`**  
+> **common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **googlegps `3.4.0`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** [§0.3](#03-core-ws-100取代-wscomponent)（新建 `core-ws`）；[§0](#0-160network--db请求-options-完善)（network / db Options）。  
-> Room 协程栈落地见 [§0.1](#01-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
+> **本轮重点：** [§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)；历史见 [§0.3](#03-core-ws-100取代-wscomponent)、[§0](#0-160network--db请求-options-完善)。  
+> Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
 > 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
 
@@ -16,19 +16,19 @@
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-implementation 'io.coderf.arklab.core:base:1.5.9'
-implementation 'io.coderf.arklab.core:network:1.6.0'
-implementation 'io.coderf.arklab.core:db:1.6.0'
+implementation 'io.coderf.arklab.core:base:1.6.0'
+implementation 'io.coderf.arklab.core:network:1.7.0'
+implementation 'io.coderf.arklab.core:db:1.6.1'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
 implementation 'io.coderf.arklab.core:utils:1.1.1'
 implementation 'io.coderf.arklab.core:log:1.2.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity 时
 // 按需：
-implementation 'io.coderf.arklab.ui:ui:3.7.3'
+implementation 'io.coderf.arklab.ui:ui:3.7.4'
 implementation 'io.coderf.arklab.media:media:3.7.0'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
-implementation 'io.coderf.arklab.ws:ws:1.0.0'
-implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
+implementation 'io.coderf.arklab.ws:ws:1.0.1'
+implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 ```
 
 工程依赖 `implementation project(':common')` 时随源码即可。
@@ -36,20 +36,42 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.7.0` |
-| core-base | `io.coderf.arklab.core:base:1.5.9` |
-| core-network | `io.coderf.arklab.core:network:1.6.0` |
-| core-db | `io.coderf.arklab.core:db:1.6.0` |
+| core-base | `io.coderf.arklab.core:base:1.6.0` |
+| core-network | `io.coderf.arklab.core:network:1.7.0` |
+| core-db | `io.coderf.arklab.core:db:1.6.1` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
 | core-utils | `io.coderf.arklab.core:utils:1.1.1` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
-| core-ws | `io.coderf.arklab.ws:ws:1.0.0` |
-| commonui | `io.coderf.arklab.ui:ui:3.7.3` |
+| core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
+| commonui | `io.coderf.arklab.ui:ui:3.7.4` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
-| googlegps | `io.coderf.arklab.googlegps:googlegps:3.3.1` |
+| googlegps | `io.coderf.arklab.googlegps:googlegps:3.4.0` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0.4 本轮补丁：base `1.6.0` · network `1.7.0` · db `1.6.1` · ws `1.0.1` · ui `3.7.4` · gps `3.4.0`
+
+相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui `3.7.3` / googlegps `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **1.6.0** | M3 night 状态色；Dialog 按钮 style 与页面对齐；`ToolbarConfig.setLightMode` 废弃（新增 `setStatusBarIconsLight`）；`DensityUtil` 弃用 `scaledDensity`；软键盘监听可销毁；删除死代码 `SoftHideKeyBoardUtil` |
+| core-network | **1.7.0** | **删除**过渡层 `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`（协程请用 `DefaultNetworkRepository`）；保留 Rx `RepositoryImpl`；拦截器 header 快照防并发；签名 body one-shot 安全；`o-appMac`/`o-mediaDrmId` 默认不写（`setLegacyDeviceHeaders(true)` 兼容）；Rx Loading 改主线程 |
+| core-db | **1.6.1** | Room Rx Loading 改主线程（与 network 对齐） |
+| core-ws | **1.0.1** | `onOpen` 过期连接 early-return，避免乱序回调 |
+| commonui | **3.7.4** | `FormHost.validateAll` / `validate()`；Form dataSource 回调防泄漏；`FormMedia.itemBg` 走主题色 |
+| googlegps | **3.4.0** | **删除**未完成的 Netty `socket` 上传与 `DeviceIdUtil`；去掉 netty / commons-lang3；实时上报请宿主自接 `core-ws` 等 |
+
+`common` facade 仍为 **4.7.0**（未改发布号）；Maven 宿主请**显式钉**上表 core / ui / gps，勿只升 common。
+
+迁移提示：
+
+- 仍继承 `FlowRepositoryImpl` 的工程 → 改 `DefaultNetworkRepository` / `NetworkPagingRepository`（见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)）。
+- 引用 `googlegps.socket.*` → 删除调用；定位能力不受影响。
 
 ---
 
@@ -59,7 +81,7 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
 
 | 项 | 说明 |
 |----|------|
-| 坐标 | `io.coderf.arklab.ws:ws:1.0.0` |
+| 坐标 | `io.coderf.arklab.ws:ws:1.0.1`（首发为 1.0.0，见 [§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)） |
 | 入口 | `Ws` / `WsClient` / `WsConfig` / `WsSession` |
 | 鉴权 | Header / Query / `requireAuth(false)` 匿名直连；可选 `WsAuthTokenProvider` |
 | 频道 | 逻辑频道 + `WsChannelBinder`（宿主编码订退帧）；`WsSession` Lifecycle / Overlay |
@@ -69,7 +91,7 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.3.1'
 | 日志 | `WsLog` → `ArkLog.ws()`（core-log 已加 `MODULE_WS`） |
 
 ```gradle
-implementation 'io.coderf.arklab.ws:ws:1.0.0'
+implementation 'io.coderf.arklab.ws:ws:1.0.1'
 // 或
 implementation project(':core-ws')
 ```
@@ -107,7 +129,7 @@ request(
 ```
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.6.0'
+implementation 'io.coderf.arklab.core:network:1.7.0'   // Options 自 1.6.0；当前见文首
 ```
 
 完整对照与迁移：[core-network/README.md](./core-network/README.md)、[core-network/MIGRATION.md](./core-network/MIGRATION.md)。
@@ -129,16 +151,16 @@ RoomRequestOptions.query(false, true)
 ```
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.6.0'
+implementation 'io.coderf.arklab.core:db:1.6.1'   // Options 自 1.6.0；当前见文首
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 ```
 
 **升级注意：** `RoomDataRepository` 等默认 `silent()` 时，协程失败**不再自动 Toast**；需要提示请用 `withLoading` / `defaults()` 或 `setDeliverErrorToUi(true)`。Rx 栈错误展示仍由订阅方负责。详见 [core-db/README.md](./core-db/README.md)。
 
-### 0.3 历史：core-db `1.5.0` 协程栈（若尚未跟上）
+### 0.5 历史：core-db `1.5.0` 协程栈（若尚未跟上）
 
-若宿主仍停在 db `≤1.4.x`，请先升到至少 **1.5.0**（协程 `RoomDataRepository` / Dao `*Suspend` / `RoomPagingSource`），再升 **1.6.0**。  
-processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）。1.6.0 **未**改 Bridge，已用 1.2.0 的工程不必为 Options 再升 processor。
+若宿主仍停在 db `≤1.4.x`，请先升到至少 **1.5.0**（协程 `RoomDataRepository` / Dao `*Suspend` / `RoomPagingSource`），再升 **1.6.0** / 当前 **1.6.1**。  
+processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）。1.6.x **未**改 Bridge，已用 1.2.0 的工程不必为 Options 再升 processor。
 
 ---
 
@@ -153,12 +175,12 @@ processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）�
 | 模块 | 剔除前一档 | 剔除当轮落点 | 当前主干（请以此为准） |
 |------|------------|--------------|------------------------|
 | common（facade） | 4.6.0 | 4.6.0 | **4.7.0** |
-| core-base | 1.1.3 | 1.2.0 | **1.5.9** |
-| core-network | 1.1.0 | 1.2.0 | **1.6.0** |
-| core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.0** |
+| core-base | 1.1.3 | 1.2.0 | **1.6.0** |
+| core-network | 1.1.0 | 1.2.0 | **1.7.0** |
+| core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.1** |
 | core-ui | 1.1.0 | 1.2.0 | **1.3.1** |
 | core-utils | 1.1.0 | 1.1.1 | **1.1.1** |
-| commonui | 3.6.2 | 3.7.0 | **3.7.3** |
+| commonui | 3.6.2 | 3.7.0 | **3.7.4** |
 | commonmedia | 3.4.1 | 3.5.0 | **3.7.0** |
 | room-processor | — | 1.2.0（配套 db 1.5.0+） | **1.2.0** |
 
@@ -248,7 +270,7 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 
 ### 2.4 业务工程落地步骤（建议顺序）
 
-1. **升依赖**到文首当前坐标（至少完成 BaseView 剔除当轮 API，再升 network/db 1.6.0），Clean + Sync。
+1. **升依赖**到文首当前坐标（至少完成 BaseView 剔除当轮 API，再对齐 network `1.7.0` / db `1.6.1`），Clean + Sync。
 2. **全局搜**（业务工程）：`BaseView`、`setBaseView`、`getBaseView`、`unbindView`、`createRepository(this`、`UserView`、`baseView:`、`BaseViewModel<.+,`。
 3. **改签名**：所有 `BaseViewModel` / Repository / Factory / Room 构造按 §2.3 去掉页面类型与参数。
 4. **改调用**：`baseView?.…` → `getRequestUi()?.…`（错误用 `showError(AppError)`）；表单 `setRequestUi(host)`。
@@ -316,23 +338,24 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 | 模块 | AppCompat 线 | 4.6.0 落点（其后继续演进，**当前见文首**） |
 |------|----------------|------------------------------------------------|
 | common | 4.5.1 | **4.6.0** → 现 **4.7.0** |
-| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 1.1.3；BaseView 剔除 → 1.2.0；现 **1.5.9**） |
-| core-network | 1.0.3 | **1.1.0** → 1.2.0 → 现 **1.6.0** |
-| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db 现 **1.6.0**；ui 现 **1.3.1**；utils **1.1.1**） |
+| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 1.1.3；BaseView 剔除 → 1.2.0；现 **1.6.0**） |
+| core-network | 1.0.3 | **1.1.0** → 1.2.0 → 1.6.0 → 现 **1.7.0** |
+| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db 现 **1.6.1**；ui 现 **1.3.1**；utils **1.1.1**） |
 | core-log | 1.0.0 | **1.1.0** → 现 **1.2.0** |
 | room-processor | 1.0.1 | **1.1.0** → 现 **1.2.0** |
 | core-mqtt | 1.5.1 | **1.6.0** → 现 **1.6.2** |
-| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.3** |
+| core-ws | — | **1.0.0** → 现 **1.0.1** |
+| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.4** |
 | commonmedia | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
-| googlegps | 3.1.7 | **3.2.0** → 现 **3.3.1** |
+| googlegps | 3.1.7 | **3.2.0** → 3.3.x → 现 **3.4.0** |
 | annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
 
 Maven 示例（仅升主题时的历史坐标；**当前请以文首为准**）：
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-implementation 'io.coderf.arklab.core:base:1.5.9'
-implementation 'io.coderf.arklab.core:network:1.6.0'
+implementation 'io.coderf.arklab.core:base:1.6.0'
+implementation 'io.coderf.arklab.core:network:1.7.0'
 ```
 
 ### 1.2 主题（必须知悉）

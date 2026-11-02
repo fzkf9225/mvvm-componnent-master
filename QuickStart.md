@@ -1,7 +1,7 @@
 # 五分钟快速入门
 
-> 对应框架 **common 4.6.0** + **core-base/network/db/ui `1.2.0`** + **core-utils `1.1.1`** + **commonui `3.7.0`**，主题为 **Material3 DayNight**。  
-> 模块说明见 [MODULES.md](MODULES.md)。升级（含剔除 `BaseView`）见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
+> 对应框架 **common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **core-ws `1.0.1`** · **googlegps `3.4.0`**，主题为 **Material3 DayNight**。  
+> 模块说明见 [MODULES.md](MODULES.md)。升级见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
 
 ## 创建项目
 直接打开`Android Studio`，选择`File->New->New Project`，选择最低`SDK 版本26` ，最高建议对齐框架 `targetSdk`（当前 Demo 为 35），然后等待同步完成
@@ -39,29 +39,34 @@
 ```toml
 annotation = "3.3.1"
 roomProcessor = "1.2.0"
-commonui = "3.7.0"
-commongps = "3.2.1"
-commonmedia = "3.5.0"
-commonVersion = "4.6.0"
-coreVersion = "1.2.0"
-coreDb = "1.5.0"
-coreBase = "1.2.0"
+commonui = "3.7.4"
+commongps = "3.4.0"
+commonmedia = "3.7.0"
+commonVersion = "4.7.0"
+coreNetwork = "1.7.0"
+coreDb = "1.6.1"
+coreBase = "1.6.0"
+coreUi = "1.3.1"
 coreUtils = "1.1.1"
-coreAutosize = "1.0.1"
+coreAutosize = "1.0.0"
+coreWs = "1.0.1"
+coreMqtt = "1.6.2"
 [libraries]
-# 基础：common 为 facade；本轮 common 未升版号，请显式钉 core-*（见 UPGRADE §2.1）
+# 基础：common 为 facade；Maven 宿主请显式钉 core-*（见 UPGRADE 文首 / §0.4）
 base-common = { module = "io.coderf.arklab.common:common", version.ref = "commonVersion" }
 base-core-base = { module = "io.coderf.arklab.core:base", version.ref = "coreBase" }
-base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreVersion" }
+base-core-network = { module = "io.coderf.arklab.core:network", version.ref = "coreNetwork" }
 base-core-db = { module = "io.coderf.arklab.core:db", version.ref = "coreDb" }
-base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreVersion" }
+base-core-ui = { module = "io.coderf.arklab.core:ui", version.ref = "coreUi" }
 base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreUtils" }
 base-core-autosize = { module = "io.coderf.arklab.core:autosize", version.ref = "coreAutosize" }
+base-core-ws = { module = "io.coderf.arklab.ws:ws", version.ref = "coreWs" }
+base-core-mqtt = { module = "io.coderf.arklab.mqtt:mqtt", version.ref = "coreMqtt" }
 base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
 base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
 base-googlegps = { module = "io.coderf.arklab.googlegps:googlegps", version.ref = "commongps" }
 base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
-# Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（需已发布 room-processor 1.2.0，配套 db 1.5.0）
+# Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（配套 db ≥1.6.0）
 room-processor = { module = "io.coderf.arklab.room:room-processor", version.ref = "roomProcessor" }
 ```
 

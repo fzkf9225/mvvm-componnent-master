@@ -2,13 +2,13 @@
 
 可选定位能力库：GNSS / NMEA 及 GPX/CSV 等轨迹记录辅助。实时位置上报请由宿主接入 `core-ws` / HTTP 等通道，本库不再内置 Socket 上传。
 
-当前版本：**3.3.2**
-Maven：`io.coderf.arklab.googlegps:googlegps:3.3.2`
-
-**3.3.2**：删除未完成的 Netty TCP `socket` 上传通道及 `DeviceIdUtil`；去掉 `netty` / `commons-lang3` 依赖。  
-**3.3.0**：按职责重划包结构（`api` / `service` / `permission` / `location` / `track` / `ui` / `utils`），旧 `common.*` 等路径废弃（见下方「包结构」）；同步精简 `consumer-rules.pro`。
-**3.2.0**：确认框 `colorPrimary` 在 `values-night` 对齐宿主浅色 Primary（`#A9C7FF`），避免深色表面上仍是亮色品牌蓝。
+当前版本：**3.4.0**  
+Maven：`io.coderf.arklab.googlegps:googlegps:3.4.0`  
 namespace：`io.coderf.arklab.googlegps`
+
+**3.4.0**：删除未完成的 Netty TCP `socket` 上传通道及 `DeviceIdUtil`；去掉 `netty` / `commons-lang3` 依赖；实时上报请宿主自接 `core-ws` / HTTP 等。  
+**3.3.0**：按职责重划包结构（`api` / `service` / `permission` / `location` / `track` / `ui` / `utils`），旧 `common.*` 等路径废弃（见下方「包结构」）；同步精简 `consumer-rules.pro`。  
+**3.2.0**：确认框 `colorPrimary` 在 `values-night` 对齐宿主浅色 Primary（`#A9C7FF`），避免深色表面上仍是亮色品牌蓝。
 
 ---
 
@@ -57,7 +57,7 @@ namespace：`io.coderf.arklab.googlegps`
 App 需要定位能力时按需引入：
 
 ```gradle
-implementation 'io.coderf.arklab.googlegps:googlegps:3.3.0'
+implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 // 或
 implementation project(':googlegps')
 ```

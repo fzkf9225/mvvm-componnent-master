@@ -2,8 +2,8 @@
 
 今日头条密度适配（JessYan AndroidAutoSize）独立模块：通过 `InitProvider` 自动初始化，改写 `DisplayMetrics` 实现全局 dp/sp 等比缩放。
 
-当前版本：**1.0.1**  
-Maven：`io.coderf.arklab.core:autosize:1.0.1`  
+当前版本：**1.0.0**  
+Maven：`io.coderf.arklab.core:autosize:1.0.0`  
 namespace / Java 包：`io.coderf.arklab.core.autosize`  
 子包：`strategy` / `lifecycle` / `external` / `unit` / `util`；公开 API：`CustomAdapt` / `CancelAdapt` / `OnAdaptListener` 在根包
 
@@ -18,7 +18,7 @@ namespace / Java 包：`io.coderf.arklab.core.autosize`
 
 ---
 
-## 1.0.1 兼容调优（非换方案）
+## 兼容调优（当前 `1.0.0` 已含；非换方案）
 
 针对 targetSdk 35 / Android 14+ / Edge-to-Edge 的点状修复：
 
@@ -45,7 +45,7 @@ namespace / Java 包：`io.coderf.arklab.core.autosize`
 一般经 `core-base` / `common` 间接使用；仅需屏幕适配、避免拉基座时可显式：
 
 ```gradle
-implementation 'io.coderf.arklab.core:autosize:1.0.1'
+implementation 'io.coderf.arklab.core:autosize:1.0.0'
 // 或
 implementation project(':core-autosize')
 ```
