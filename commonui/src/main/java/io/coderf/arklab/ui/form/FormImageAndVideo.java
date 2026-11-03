@@ -341,6 +341,14 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
         return mediaAddAdapter.getList();
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        if (mediaAddAdapter == null || mediaAddAdapter.getList() == null) {
+            return 0;
+        }
+        return mediaAddAdapter.getList().size();
+    }
+
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     public void setUriMedia(List<Uri> mediaList) {
         if (mediaList == null) {

@@ -97,7 +97,7 @@ public class FormDateRange extends FormSelection {
         String negativeText = null;
 
         if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+            TypedArray typedArray = obtainFormUi(attrs);
             separator = typedArray.getString(R.styleable.FormUI_separator);
             startFormat = typedArray.getString(R.styleable.FormUI_startFormat);
             endFormat = typedArray.getString(R.styleable.FormUI_endFormat);
@@ -270,17 +270,17 @@ public class FormDateRange extends FormSelection {
                     if (TextUtils.isEmpty(startDate) || TextUtils.isEmpty(endDate)) {
                         FormDateRange.this.selectableStartDate = null;
                         FormDateRange.this.selectableEndDate = null;
-                        ((MaterialTextView) tvSelection).setText(null);
+                        commitSelectionText(null);
                         return;
                     }
                     FormDateRange.this.selectableStartDate = DateUtil.dateFormat(startDate, startFormat);
                     FormDateRange.this.selectableEndDate = DateUtil.dateFormat(endDate, endFormat);
-                    ((MaterialTextView) tvSelection).setText(FormDateRange.this.selectableStartDate + " ~ " + FormDateRange.this.selectableEndDate);
+                    commitSelectionText(FormDateRange.this.selectableStartDate + " ~ " + FormDateRange.this.selectableEndDate);
                 })
                 .setOnClearClickListener(dialog -> {
                     FormDateRange.this.selectableStartDate = null;
                     FormDateRange.this.selectableEndDate = null;
-                    ((MaterialTextView) tvSelection).setText(null);
+                    commitSelectionText(null);
                 })
                 .builder(fragmentManager, lifecycle);
     }

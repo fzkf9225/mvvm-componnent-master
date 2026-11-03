@@ -88,22 +88,50 @@ public class FormEditArea extends FormConstraintLayout {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
-        if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            inputType = typedArray.getInt(R.styleable.FormUI_formInputType, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-            imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+        int multiLineDefault = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
+            if (typedArray.hasValue(R.styleable.FormUI_formInputType)) {
+                inputType = typedArray.getInt(R.styleable.FormUI_formInputType, multiLineDefault);
+            } else {
+                inputType = resolveAndroidInputType(attrs, multiLineDefault);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_formImeOptions)) {
+                imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+            } else {
+                imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
+            }
             formatText = typedArray.getInt(R.styleable.FormUI_formatText, 0);
             maxLength = typedArray.getInt(R.styleable.FormUI_maxLength, -1);
             inputDrawable = typedArray.getDrawable(R.styleable.FormUI_inputDrawable);
-
             inputHeight = typedArray.getDimension(R.styleable.FormUI_inputHeight, DensityUtil.dp2px(getContext(), 120f));
             editAreaPadding = typedArray.getDimension(R.styleable.FormUI_editAreaPadding, DensityUtil.dp2px(getContext(), 8f));
+        } finally {
             typedArray.recycle();
-        } else {
-            inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-            inputDrawable = null;
-            inputHeight = DensityUtil.dp2px(getContext(), 120f);
-            editAreaPadding = DensityUtil.dp2px(getContext(), 8f);
+        }
+    }
+
+    private int resolveAndroidInputType(@Nullable AttributeSet attrs, int fallback) {
+        if (attrs == null) {
+            return fallback;
+        }
+        TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.inputType});
+        try {
+            return a.getInt(0, fallback);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    private int resolveAndroidImeOptions(@Nullable AttributeSet attrs, int fallback) {
+        if (attrs == null) {
+            return fallback;
+        }
+        TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.imeOptions});
+        try {
+            return a.getInt(0, fallback);
+        } finally {
+            a.recycle();
         }
     }
 

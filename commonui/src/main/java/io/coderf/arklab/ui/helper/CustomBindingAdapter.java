@@ -2,13 +2,18 @@ package io.coderf.arklab.ui.helper;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
+import androidx.databinding.Observable;
 
+import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.form.FormEditArea;
 import io.coderf.arklab.ui.form.FormEditText;
 import io.coderf.arklab.ui.form.FormRadio;
@@ -36,41 +41,38 @@ public class CustomBindingAdapter {
         view.dataSource.set(text == null ? null : text.toString());
     }
 
-    // 添加InverseBindingAdapter用于从视图中获取文本值
     @InverseBindingAdapter(attribute = "text")
     public static String getText(FormEditText view) {
         return view.dataSource.get();
     }
 
-    /**
-     * 添加InverseBindingListener用于在文本更改时通知数据绑定系统
-     */
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditText view, final InverseBindingListener textAttrChanged) {
-        if (textAttrChanged != null) {
-            TextInputEditText editText = view.getEditText();
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if (view.formTextWatcher != null) {
-                        view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (view.formTextWatcherAfter != null) {
-                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
-                    }
-                    view.dataSource.set(editable == null ? null : editable.toString());
-                    textAttrChanged.onChange();
-                }
-            });
+        if (textAttrChanged == null) {
+            return;
         }
+        TextInputEditText editText = view.getEditText();
+        replaceTextWatcher(editText, new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (view.formTextWatcher != null) {
+                    view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (view.formTextWatcherAfter != null) {
+                    view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                }
+                view.dataSource.set(editable == null ? null : editable.toString());
+                textAttrChanged.onChange();
+            }
+        });
     }
 
 
@@ -79,43 +81,38 @@ public class CustomBindingAdapter {
         view.dataSource.set(text == null ? null : text.toString());
     }
 
-    // 添加InverseBindingAdapter用于从视图中获取文本值
     @InverseBindingAdapter(attribute = "text")
     public static String getText(FormSelection view) {
         return view.dataSource.get();
     }
 
-    /**
-     * 添加InverseBindingListener用于在文本更改时通知数据绑定系统
-     */
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormSelection view, final InverseBindingListener textAttrChanged) {
-        if (textAttrChanged != null) {
-
-            MaterialTextView textView = (MaterialTextView) view.getTvSelection();
-            // 在文本更改时通知数据绑定系统
-            textView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if (view.formTextWatcher != null) {
-                        view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (view.formTextWatcherAfter != null) {
-                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
-                    }
-                    view.dataSource.set(editable == null ? null : editable.toString());
-                    textAttrChanged.onChange();
-                }
-            });
+        if (textAttrChanged == null) {
+            return;
         }
+        MaterialTextView textView = (MaterialTextView) view.getTvSelection();
+        replaceTextWatcher(textView, new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (view.formTextWatcher != null) {
+                    view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (view.formTextWatcherAfter != null) {
+                    view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                }
+                view.dataSource.set(editable == null ? null : editable.toString());
+                textAttrChanged.onChange();
+            }
+        });
     }
 
     @BindingAdapter("text")
@@ -123,41 +120,38 @@ public class CustomBindingAdapter {
         view.dataSource.set(text == null ? null : text.toString());
     }
 
-    // 添加InverseBindingAdapter用于从视图中获取文本值
     @InverseBindingAdapter(attribute = "text")
     public static String getText(FormEditArea view) {
         return view.dataSource.get();
     }
 
-    /**
-     * 添加InverseBindingListener用于在文本更改时通知数据绑定系统
-     */
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormEditArea view, final InverseBindingListener textAttrChanged) {
-        if (textAttrChanged != null) {
-            TextInputEditText editText = view.getEditText();
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if (view.formTextWatcher != null) {
-                        view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (view.formTextWatcherAfter != null) {
-                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
-                    }
-                    view.dataSource.set(editable == null ? null : editable.toString());
-                    textAttrChanged.onChange();
-                }
-            });
+        if (textAttrChanged == null) {
+            return;
         }
+        TextInputEditText editText = view.getEditText();
+        replaceTextWatcher(editText, new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (view.formTextWatcher != null) {
+                    view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (view.formTextWatcherAfter != null) {
+                    view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                }
+                view.dataSource.set(editable == null ? null : editable.toString());
+                textAttrChanged.onChange();
+            }
+        });
     }
 
     @BindingAdapter("text")
@@ -165,43 +159,38 @@ public class CustomBindingAdapter {
         view.dataSource.set(text == null ? null : text.toString());
     }
 
-    // 添加InverseBindingAdapter用于从视图中获取文本值
     @InverseBindingAdapter(attribute = "text")
     public static String getText(FormRichText view) {
         return view.dataSource.get();
     }
 
-    /**
-     * 添加InverseBindingListener用于在文本更改时通知数据绑定系统
-     */
     @BindingAdapter(value = {"textAttrChanged"})
     public static void setListeners(FormRichText view, final InverseBindingListener textAttrChanged) {
-        if (textAttrChanged != null) {
-
-            MaterialTextView textView = (MaterialTextView) view.getTvSelection();
-            // 在文本更改时通知数据绑定系统
-            textView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if (view.formTextWatcher != null) {
-                        view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (view.formTextWatcherAfter != null) {
-                        view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
-                    }
-                    view.dataSource.set(editable == null ? null : editable.toString());
-                    textAttrChanged.onChange();
-                }
-            });
+        if (textAttrChanged == null) {
+            return;
         }
+        MaterialTextView textView = (MaterialTextView) view.getTvSelection();
+        replaceTextWatcher(textView, new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (view.formTextWatcher != null) {
+                    view.formTextWatcher.onTextChanged(charSequence, i, i1, i2);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (view.formTextWatcherAfter != null) {
+                    view.formTextWatcherAfter.onTextAfterChanged(editable == null ? null : editable.toString());
+                }
+                view.dataSource.set(editable == null ? null : editable.toString());
+                textAttrChanged.onChange();
+            }
+        });
     }
 
     @BindingAdapter("text")
@@ -234,14 +223,15 @@ public class CustomBindingAdapter {
 
     @BindingAdapter(value = {"checkedAttrChanged"})
     public static void setSwitchCheckedListener(FormSwitch view, final InverseBindingListener listener) {
-        if (listener != null) {
-            view.checkedSource.addOnPropertyChangedCallback(new androidx.databinding.Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(androidx.databinding.Observable sender, int propertyId) {
-                    listener.onChange();
-                }
-            });
+        if (listener == null) {
+            return;
         }
+        replacePropCallback(view, view.checkedSource, new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                listener.onChange();
+            }
+        });
     }
 
     @BindingAdapter("checked")
@@ -257,14 +247,15 @@ public class CustomBindingAdapter {
 
     @BindingAdapter(value = {"checkedAttrChanged"})
     public static void setCheckboxCheckedListener(FormCheckbox view, final InverseBindingListener listener) {
-        if (listener != null) {
-            view.checkedSource.addOnPropertyChangedCallback(new androidx.databinding.Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(androidx.databinding.Observable sender, int propertyId) {
-                    listener.onChange();
-                }
-            });
+        if (listener == null) {
+            return;
         }
+        replacePropCallback(view, view.checkedSource, new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                listener.onChange();
+            }
+        });
     }
 
     @BindingAdapter("text")
@@ -296,14 +287,15 @@ public class CustomBindingAdapter {
 
     @BindingAdapter(value = {"stepperValueAttrChanged"})
     public static void setStepperListener(FormStepper view, final InverseBindingListener listener) {
-        if (listener != null) {
-            view.stepperValue.addOnPropertyChangedCallback(new androidx.databinding.Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(androidx.databinding.Observable sender, int propertyId) {
-                    listener.onChange();
-                }
-            });
+        if (listener == null) {
+            return;
         }
+        replacePropCallback(view, view.stepperValue, new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                listener.onChange();
+            }
+        });
     }
 
     @BindingAdapter("ratingValue")
@@ -318,15 +310,34 @@ public class CustomBindingAdapter {
 
     @BindingAdapter(value = {"ratingValueAttrChanged"})
     public static void setRatingListener(FormRating view, final InverseBindingListener listener) {
-        if (listener != null) {
-            view.ratingValue.addOnPropertyChangedCallback(new androidx.databinding.Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(androidx.databinding.Observable sender, int propertyId) {
-                    listener.onChange();
-                }
-            });
+        if (listener == null) {
+            return;
         }
+        replacePropCallback(view, view.ratingValue, new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                listener.onChange();
+            }
+        });
+    }
+
+    private static void replaceTextWatcher(TextView target, TextWatcher watcher) {
+        Object old = target.getTag(R.id.form_binding_text_watcher);
+        if (old instanceof TextWatcher) {
+            target.removeTextChangedListener((TextWatcher) old);
+        }
+        target.addTextChangedListener(watcher);
+        target.setTag(R.id.form_binding_text_watcher, watcher);
+    }
+
+    private static void replacePropCallback(View host, Observable observable,
+                                            Observable.OnPropertyChangedCallback callback) {
+        Object old = host.getTag(R.id.form_binding_prop_callback);
+        if (old instanceof Observable.OnPropertyChangedCallback) {
+            observable.removeOnPropertyChangedCallback((Observable.OnPropertyChangedCallback) old);
+        }
+        observable.addOnPropertyChangedCallback(callback);
+        host.setTag(R.id.form_binding_prop_callback, callback);
     }
 
 }
-

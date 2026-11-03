@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
-import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -65,48 +64,44 @@ public class FormTime extends FormSelection {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
-        TypedArray typedArray = null;
         boolean showClearButton;
-        if (attrs != null) {
-            typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.HOUR_MINUTE_SECOND.model);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
             datePickerUi = typedArray.getInt(R.styleable.FormUI_datePickerUi, FormMaterialPickers.UI_WHEEL);
-        } else {
-            datePickModel = DateMode.HOUR_MINUTE_SECOND.model;
-            confirmTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
-            datePickerUi = FormMaterialPickers.UI_WHEEL;
-            showClearButton = true;
-        }
-        if (TextUtils.isEmpty(separator)) {
-            separator = ":";
-        }
-        if (TextUtils.isEmpty(format)) {
-            format = DateUtil.DEFAULT_FORMAT_TIME;
-        }
-        datePickDialog = new DatePickDialog(getContext())
-                .setPositiveTextColor(this.confirmTextColor)
-                .setTodayTextColor(this.confirmTextColor)
-                .setDateMode(DateMode.getMode(this.datePickModel))
-                .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                    String text = NumberUtil.formatMonthOrDay(hour) + separator + NumberUtil.formatMonthOrDay(minute) + separator + NumberUtil.formatMonthOrDay(second);
-                    if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
-                        ((MaterialTextView) tvSelection).setText(text);
-                        return;
-                    }
-                    ((MaterialTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
-                })
-                .setOnClearClickListener(dialog -> ((MaterialTextView) tvSelection).setText(null));
-        if (typedArray != null) {
-            FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
+
+            if (TextUtils.isEmpty(separator)) {
+                separator = ":";
+            }
+            if (TextUtils.isEmpty(format)) {
+                format = DateUtil.DEFAULT_FORMAT_TIME;
+            }
+            datePickDialog = new DatePickDialog(getContext())
+                    .setPositiveTextColor(this.confirmTextColor)
+                    .setTodayTextColor(this.confirmTextColor)
+                    .setDateMode(DateMode.getMode(this.datePickModel))
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = NumberUtil.formatMonthOrDay(hour) + separator
+                                + NumberUtil.formatMonthOrDay(minute) + separator
+                                + NumberUtil.formatMonthOrDay(second);
+                        if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
+                            commitSelectionText(text);
+                            return;
+                        }
+                        commitSelectionText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                    })
+                    .setOnClearClickListener(dialog -> commitSelectionText(null));
+            FormDatePickDialogHelper.applyFormStyleOrDefault(
+                    getContext(), attrs, typedArray, confirmTextColor, showClearButton, datePickDialog);
+            datePickDialog.builder();
+        } finally {
             typedArray.recycle();
-        } else {
-            FormDatePickDialogHelper.applyDefaultStyle(getContext(), confirmTextColor, showClearButton, datePickDialog);
         }
-        datePickDialog.builder();
     }
 
     public DatePickDialog getDatePickDialog() {
@@ -125,7 +120,7 @@ public class FormTime extends FormSelection {
                     calendar.setTime(date);
                     datePickDialog.setDefaultHour(calendar.get(Calendar.HOUR_OF_DAY));
                     datePickDialog.setDefaultMinute(calendar.get(Calendar.MINUTE));
-                    datePickDialog.setDefaultMinute(calendar.get(Calendar.SECOND));
+                    datePickDialog.setDefaultSecond(calendar.get(Calendar.SECOND));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -145,9 +140,9 @@ public class FormTime extends FormSelection {
                             + separator + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MINUTE))
                             + separator + NumberUtil.formatMonthOrDay(calendar.get(Calendar.SECOND));
                     if (DateUtil.DEFAULT_FORMAT_TIME.equals(this.format)) {
-                        textView.setText(text);
+                        commitSelectionText(text);
                     } else {
-                        textView.setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
+                        commitSelectionText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_TIME));
                     }
                 });
                 return;
@@ -155,7 +150,4 @@ public class FormTime extends FormSelection {
             datePickDialog.show();
         });
     }
-
-
 }
-

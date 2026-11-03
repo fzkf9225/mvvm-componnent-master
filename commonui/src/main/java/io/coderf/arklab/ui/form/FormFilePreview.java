@@ -194,6 +194,11 @@ public class FormFilePreview extends FormMedia {
         return adapter;
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        return adapter == null ? 0 : adapter.getItemCount();
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public <T extends AttachmentBean> void setFiles(List<AttachmentBean> images) {
         if (adapter instanceof FileShowAdapter fileShowAdapter) {

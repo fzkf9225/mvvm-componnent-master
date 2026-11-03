@@ -90,21 +90,49 @@ public class FormEditText extends FormConstraintLayout {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
-        if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
-            inputType = typedArray.getInt(R.styleable.FormUI_formInputType, InputType.TYPE_CLASS_TEXT);
-            imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
+            if (typedArray.hasValue(R.styleable.FormUI_formInputType)) {
+                inputType = typedArray.getInt(R.styleable.FormUI_formInputType, InputType.TYPE_CLASS_TEXT);
+            } else {
+                inputType = resolveAndroidInputType(attrs, InputType.TYPE_CLASS_TEXT);
+            }
+            if (typedArray.hasValue(R.styleable.FormUI_formImeOptions)) {
+                imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
+            } else {
+                imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
+            }
             formatText = typedArray.getInt(R.styleable.FormUI_formatText, 0);
             maxLength = typedArray.getInt(R.styleable.FormUI_maxLength, -1);
             digits = typedArray.getInt(R.styleable.FormUI_digits, -1);
             inputDrawable = typedArray.getDrawable(R.styleable.FormUI_inputDrawable);
             inputHeight = typedArray.getDimension(R.styleable.FormUI_inputHeight, DensityUtil.dp2px(getContext(), 35f));
+        } finally {
             typedArray.recycle();
-        } else {
-            digits = -1;
-            inputType = InputType.TYPE_CLASS_TEXT;
-            inputDrawable = null;
-            inputHeight = DensityUtil.dp2px(getContext(), 35f);
+        }
+    }
+
+    private int resolveAndroidInputType(@Nullable AttributeSet attrs, int fallback) {
+        if (attrs == null) {
+            return fallback;
+        }
+        TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.inputType});
+        try {
+            return a.getInt(0, fallback);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    private int resolveAndroidImeOptions(@Nullable AttributeSet attrs, int fallback) {
+        if (attrs == null) {
+            return fallback;
+        }
+        TypedArray a = getContext().obtainStyledAttributes(attrs, new int[]{android.R.attr.imeOptions});
+        try {
+            return a.getInt(0, fallback);
+        } finally {
+            a.recycle();
         }
     }
 

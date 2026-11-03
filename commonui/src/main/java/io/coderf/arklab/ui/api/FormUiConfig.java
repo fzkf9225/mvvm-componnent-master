@@ -60,6 +60,12 @@ public final class FormUiConfig {
     public Boolean bottomBorder;
     @Nullable
     public Boolean required;
+    /** false 时等同 setEnabled(false)；未设置不改动 */
+    @Nullable
+    public Boolean formEditable;
+    /** FormMedia required 校验最少条数 */
+    @Nullable
+    public Integer minCount;
     @Nullable
     public String requiredText;
     @Nullable
@@ -150,6 +156,16 @@ public final class FormUiConfig {
 
     public FormUiConfig required(boolean required) {
         this.required = required;
+        return this;
+    }
+
+    public FormUiConfig formEditable(boolean editable) {
+        this.formEditable = editable;
+        return this;
+    }
+
+    public FormUiConfig minCount(int minCount) {
+        this.minCount = minCount;
         return this;
     }
 

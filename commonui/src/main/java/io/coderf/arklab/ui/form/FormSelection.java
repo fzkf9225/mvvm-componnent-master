@@ -55,8 +55,8 @@ public class FormSelection extends FormConstraintLayout {
     @Override
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
-        if (attrs != null) {
-            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
             selectionIcon = typedArray.getDrawable(R.styleable.FormUI_selectionIcon);
             if (selectionIcon == null) {
                 selectionIcon = ContextCompat.getDrawable(getContext(), R.mipmap.icon_down);
@@ -65,10 +65,8 @@ public class FormSelection extends FormConstraintLayout {
             selectionIconHeight = typedArray.getDimension(R.styleable.FormUI_selectionIconHeight, 0);
             selectionIconPadding = (int) typedArray.getDimension(
                     R.styleable.FormUI_selectionIconPadding, DensityUtil.dp2px(getContext(), 8f));
+        } finally {
             typedArray.recycle();
-        } else {
-            selectionIcon = ContextCompat.getDrawable(getContext(), R.mipmap.icon_down);
-            selectionIconPadding = DensityUtil.dp2px(getContext(), 8f);
         }
     }
 
@@ -115,4 +113,3 @@ public class FormSelection extends FormConstraintLayout {
         textView.setCompoundDrawablePadding(selectionIconPadding);
     }
 }
-

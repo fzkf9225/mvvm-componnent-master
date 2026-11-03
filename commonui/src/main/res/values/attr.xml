@@ -157,6 +157,10 @@
         <attr name="compressImageSize" format="integer" />
         <!--最大可选数量-->
         <attr name="maxCount" format="integer"/>
+        <!-- required 校验时最少条数，默认 1；仅 FormMedia.validate 使用 -->
+        <attr name="minCount" format="integer"/>
+        <!-- false 时等同 setEnabled(false)；未设置保持现状 -->
+        <attr name="formEditable" format="boolean"/>
         <!--拍摄视频最大时长，单位：秒，默认为30秒-->
         <attr name="maxVideoDuration" format="integer"/>
         <!--一列显示几个-->
@@ -390,7 +394,7 @@
             <!--时分-->
             <enum name="HOUR_MINUTE" value="7" />
         </attr>
-        <!--输入框输入的样式，可以自动格式化，但是目前未实现次功能-->
+        <!--输入框失焦/提交时自动格式化，见 FormTextFormatter-->
         <attr name="formatText" format="enum">
             <enum name="normal" value="0" />
             <enum name="Integer" value="1" />

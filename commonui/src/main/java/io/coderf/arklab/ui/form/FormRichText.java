@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
 import androidx.core.text.HtmlCompat;
-import androidx.databinding.Observable;
 
 import com.bumptech.glide.Glide;
 
@@ -52,26 +51,7 @@ public class FormRichText extends FormTextView {
     @Override
     protected void init() {
         defaultDrawable = Config.getInstance().getDefaultPlaceholderDrawable(getContext());
-        createLabel();
-        createRequired();
-        createText();
-        createBottomLine();
-        layoutLabel();
-        layoutRequired();
-        layoutText();
-        dataSource.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                String newValue = dataSource.get();
-                if (tvSelection instanceof MaterialTextView textView) {
-                    if (textView.getText() == null) {
-                        setRichText(newValue);
-                    } else if (!textView.getText().toString().equals(newValue)) {
-                        setRichText(newValue);
-                    }
-                }
-            }
-        });
+        super.init();
     }
 
     @Override
@@ -83,13 +63,31 @@ public class FormRichText extends FormTextView {
     }
 
     @Override
-    public void setText(String text) {
-        dataSource.set(text);
-        setRichText(text);
+    protected void applyDataSourceToView(@Nullable String newValue) {
+        if (tvSelection instanceof MaterialTextView textView) {
+            CharSequence current = textView.getText();
+            String currentPlain = current == null ? null : current.toString();
+            if (currentPlain == null && newValue == null) {
+                return;
+            }
+            if (currentPlain != null && currentPlain.equals(newValue)) {
+                return;
+            }
+            setRichText(newValue);
+        }
     }
 
-    public void setRichText(String text){
+    @Override
+    public void setText(String text) {
+        // 经 dataSource 回调走 applyDataSourceToView → setRichText
+        dataSource.set(text);
+    }
+
+    public void setRichText(String text) {
         MaterialTextView tvRichText = (MaterialTextView) tvSelection;
+        if (tvRichText == null) {
+            return;
+        }
         if (TextUtils.isEmpty(text)) {
             tvRichText.setText(null);
             return;
@@ -117,8 +115,12 @@ public class FormRichText extends FormTextView {
             }, (b, s, editable, xmlReader) -> {
 
             });
-            mainHandler.post(() -> tvRichText.setText(spanned));
+            mainHandler.post(() -> {
+                if (!isAttachedToWindow() || tvSelection == null) {
+                    return;
+                }
+                ((MaterialTextView) tvSelection).setText(spanned);
+            });
         });
     }
 }
-

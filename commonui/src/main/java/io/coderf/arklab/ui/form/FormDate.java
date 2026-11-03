@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
-import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -75,52 +74,44 @@ public class FormDate extends FormSelection {
     protected void initAttr(AttributeSet attrs) {
         super.initAttr(attrs);
         boolean showClearButton;
-        TypedArray typedArray = null;
-        if (attrs != null) {
-            typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);
+        TypedArray typedArray = obtainFormUi(attrs);
+        try {
             separator = typedArray.getString(R.styleable.FormUI_separator);
             format = typedArray.getString(R.styleable.FormUI_format);
             datePickModel = typedArray.getInt(R.styleable.FormUI_datePickModel, DateMode.YEAR_MONTH_DAY.model);
             startYear = typedArray.getInteger(R.styleable.FormUI_startYear, Calendar.getInstance().get(Calendar.YEAR) - 1);
             endYear = typedArray.getInteger(R.styleable.FormUI_endYear, Calendar.getInstance().get(Calendar.YEAR) + 1);
-            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor, io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
+            confirmTextColor = typedArray.getColor(R.styleable.FormUI_confirmTextColor,
+                    io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext()));
             showClearButton = typedArray.getBoolean(R.styleable.FormUI_showClearButton, true);
             datePickerUi = typedArray.getInt(R.styleable.FormUI_datePickerUi, FormMaterialPickers.UI_WHEEL);
-        } else {
-            datePickModel = DateMode.YEAR_MONTH_DAY.model;
-            confirmTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
-            datePickerUi = FormMaterialPickers.UI_WHEEL;
-            startYear = Calendar.getInstance().get(Calendar.YEAR) - 1;
-            endYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
-            showClearButton = true;
-        }
 
-        if (TextUtils.isEmpty(separator)) {
-            separator = "-";
-        }
-        if (TextUtils.isEmpty(format)) {
-            format = DateUtil.DEFAULT_FORMAT_DATE;
-        }
-        datePickDialog = new DatePickDialog(getContext())
-                .setStartYear(this.startYear)
-                .setEndYear(this.endYear)
-                .setDateMode(DateMode.getMode(this.datePickModel))
-                .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
-                    String text = year + separator + NumberUtil.formatMonthOrDay(month) + separator + NumberUtil.formatMonthOrDay(day);
-                    if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
-                        ((MaterialTextView) tvSelection).setText(text);
-                        return;
-                    }
-                    ((MaterialTextView) tvSelection).setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
-                })
-                .setOnClearClickListener(dialog -> ((MaterialTextView) tvSelection).setText(null));
-        if (typedArray != null) {
-            FormDatePickDialogHelper.applyFormStyle(getContext(), typedArray, datePickDialog);
+            if (TextUtils.isEmpty(separator)) {
+                separator = "-";
+            }
+            if (TextUtils.isEmpty(format)) {
+                format = DateUtil.DEFAULT_FORMAT_DATE;
+            }
+            datePickDialog = new DatePickDialog(getContext())
+                    .setStartYear(this.startYear)
+                    .setEndYear(this.endYear)
+                    .setDateMode(DateMode.getMode(this.datePickModel))
+                    .setOnPositiveClickListener((dialog, year, month, day, hour, minute, second) -> {
+                        String text = year + separator + NumberUtil.formatMonthOrDay(month)
+                                + separator + NumberUtil.formatMonthOrDay(day);
+                        if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
+                            commitSelectionText(text);
+                            return;
+                        }
+                        commitSelectionText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
+                    })
+                    .setOnClearClickListener(dialog -> commitSelectionText(null));
+            FormDatePickDialogHelper.applyFormStyleOrDefault(
+                    getContext(), attrs, typedArray, confirmTextColor, showClearButton, datePickDialog);
+            datePickDialog.builder();
+        } finally {
             typedArray.recycle();
-        } else {
-            FormDatePickDialogHelper.applyDefaultStyle(getContext(), confirmTextColor, showClearButton, datePickDialog);
         }
-        datePickDialog.builder();
     }
 
     public DatePickDialog getDatePickDialog() {
@@ -159,9 +150,9 @@ public class FormDate extends FormSelection {
                             + NumberUtil.formatMonthOrDay(calendar.get(Calendar.MONTH) + 1) + separator
                             + NumberUtil.formatMonthOrDay(calendar.get(Calendar.DAY_OF_MONTH));
                     if (DateUtil.DEFAULT_FORMAT_DATE.equals(this.format)) {
-                        textView.setText(text);
+                        commitSelectionText(text);
                     } else {
-                        textView.setText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
+                        commitSelectionText(DateUtil.dateFormat(text, DateUtil.DEFAULT_FORMAT_DATE));
                     }
                 });
                 return;
@@ -170,4 +161,3 @@ public class FormDate extends FormSelection {
         });
     }
 }
-

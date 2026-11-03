@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="form_binding_text_watcher" type="id" />
+    <item name="form_binding_prop_callback" type="id" />
+</resources>

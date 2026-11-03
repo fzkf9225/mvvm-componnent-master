@@ -42,7 +42,7 @@ import io.coderf.arklab.ui.inter.FormTextWatcherAfter;
  * @since 1.0
  * @updated 2026/9/17 formStyle / FormUiConfig / dimens 默认
  */
-public class FormConstraintLayout extends CornerConstraintLayout {
+public class FormConstraintLayout extends CornerConstraintLayout implements FormValidatable {
     public static final String TAG = "FormUi";
     /**
      * label文字内容
@@ -56,6 +56,11 @@ public class FormConstraintLayout extends CornerConstraintLayout {
      * 是否必填，也就是是否显示*号
      */
     protected boolean required;
+    /**
+     * null 表示未设置 formEditable；false 时在 init 末尾 {@link #setEnabled(false)}。
+     */
+    @Nullable
+    protected Boolean formEditable;
     /**
      * 是否展示底部边框
      */
@@ -331,6 +336,9 @@ public class FormConstraintLayout extends CornerConstraintLayout {
             errorTextPending = typedArray.getString(R.styleable.FormUI_formErrorText);
         }
         required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+        if (typedArray.hasValue(R.styleable.FormUI_formEditable)) {
+            formEditable = typedArray.getBoolean(R.styleable.FormUI_formEditable, true);
+        }
         bottomBorder = typedArray.getBoolean(R.styleable.FormUI_bottomBorder, true);
         line = typedArray.getInteger(R.styleable.FormUI_line, 1);
         labelAlign = typedArray.getInt(R.styleable.FormUI_labelAlign, LabelAlignEnum.LEFT.value);
@@ -364,6 +372,9 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         if (!android.text.TextUtils.isEmpty(errorTextPending)) {
             setError(errorTextPending);
             errorTextPending = null;
+        }
+        if (Boolean.FALSE.equals(formEditable)) {
+            setEnabled(false);
         }
         ensureDataSourceCallback();
     }
@@ -399,30 +410,36 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         dataSourceCallback = new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                String newValue = dataSource.get();
-                EditText boundEdit = resolveBoundEditText();
-                if (boundEdit != null) {
-                    String incoming = newValue == null ? "" : newValue;
-                    String current = boundEdit.getText() == null ? "" : boundEdit.getText().toString();
-                    if (!current.equals(incoming)) {
-                        if (boundEdit instanceof AutoCompleteTextView autoComplete) {
-                            autoComplete.setText(incoming, false);
-                        } else {
-                            boundEdit.setText(newValue);
-                        }
-                    }
-                    return;
-                }
-                if (tvSelection instanceof MaterialTextView textView) {
-                    if (textView.getText() == null) {
-                        textView.setText(newValue);
-                    } else if (!textView.getText().toString().equals(newValue)) {
-                        textView.setText(newValue);
-                    }
-                }
+                applyDataSourceToView(dataSource.get());
             }
         };
         dataSource.addOnPropertyChangedCallback(dataSourceCallback);
+    }
+
+    /**
+     * 将 {@link #dataSource} 同步到展示控件。子类（如富文本）可 override。
+     */
+    protected void applyDataSourceToView(@Nullable String newValue) {
+        EditText boundEdit = resolveBoundEditText();
+        if (boundEdit != null) {
+            String incoming = newValue == null ? "" : newValue;
+            String current = boundEdit.getText() == null ? "" : boundEdit.getText().toString();
+            if (!current.equals(incoming)) {
+                if (boundEdit instanceof AutoCompleteTextView autoComplete) {
+                    autoComplete.setText(incoming, false);
+                } else {
+                    boundEdit.setText(newValue);
+                }
+            }
+            return;
+        }
+        if (tvSelection instanceof MaterialTextView textView) {
+            if (textView.getText() == null) {
+                textView.setText(newValue);
+            } else if (!textView.getText().toString().equals(newValue)) {
+                textView.setText(newValue);
+            }
+        }
     }
 
     @Override
@@ -900,6 +917,10 @@ public class FormConstraintLayout extends CornerConstraintLayout {
         if (config.required != null) {
             required = config.required;
         }
+        if (config.formEditable != null) {
+            formEditable = config.formEditable;
+            setEnabled(config.formEditable);
+        }
         if (config.requiredText != null) {
             requiredText = config.requiredText;
         }
@@ -1014,6 +1035,13 @@ public class FormConstraintLayout extends CornerConstraintLayout {
 
     public void setText(String text) {
         dataSource.set(text);
+    }
+
+    /**
+     * 选择确认/清空时写回 {@link #dataSource}，由回调刷到展示控件。
+     */
+    protected void commitSelectionText(@Nullable String text) {
+        setText(text);
     }
 
     public void setLabel(String text) {

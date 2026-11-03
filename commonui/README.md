@@ -2,8 +2,8 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.7.4**  
-Maven：`io.coderf.arklab.ui:ui:3.7.4`  
+当前版本：**3.7.5**  
+Maven：`io.coderf.arklab.ui:ui:3.7.5`  
 namespace：`io.coderf.arklab.ui`
 
 需要与 **core-base ≥1.2.0** 一起使用（`api` 传递；当前配套 **1.6.0**）。升级说明见 [UPGRADE.md](../UPGRADE.md)。
@@ -11,6 +11,15 @@ namespace：`io.coderf.arklab.ui`
 ---
 
 ## 版本
+
+### 3.7.5
+
+- `FormHost.validateAll` 覆盖 `FormConstraintLayout` 与 `FormMedia`（`FormValidatable`）
+- 媒体 `required` + `minCount`（默认 1）参与整页校验；`setError` 仅底线变色
+- 日期/时间选择确认写回 `dataSource`；子类读属性统一走 `obtainFormUi`（formStyle 生效）
+- `formEditable`：显式 false 等同 `setEnabled(false)`；未设置不改变现状
+- FormRichText 走基类 dataSource 生命周期；Binding AttrChanged / TextWatcher 防重复注册
+- 保留 `app:formInputType` / `app:formImeOptions`；未写时可回落 `android:inputType` / `imeOptions`
 
 ### 3.7.4
 
@@ -44,8 +53,8 @@ namespace：`io.coderf.arklab.ui`
 
 ### 校验
 
-- 单行：`form.validate()`（`required` 且空 → `setError`）
-- 整页：`FormHost.validateAll(root)`（遍历子树，失败聚焦并滚动）
+- 单行：`form.validate()`（`required` 且空 → `setError`）；媒体看条数是否 ≥ `minCount`（默认 1）
+- 整页：`FormHost.validateAll(root)`（遍历 `FormValidatable`：输入行 + 媒体行，失败聚焦并滚动）
 - **不**默认绑定 `annotation` 的 `EntityValidator`
 
 ```java
@@ -100,7 +109,7 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.7.4'
+implementation 'io.coderf.arklab.ui:ui:3.7.5'
 // 或
 implementation project(':commonui')
 ```

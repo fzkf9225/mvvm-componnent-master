@@ -328,6 +328,14 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
         return videoAddAdapter.getList();
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        if (videoAddAdapter == null || videoAddAdapter.getList() == null) {
+            return 0;
+        }
+        return videoAddAdapter.getList().size();
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     public void setUriVideos(List<Uri> videos) {

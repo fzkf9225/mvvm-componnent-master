@@ -158,6 +158,11 @@ public class FormVideoPreview extends FormMedia {
         return adapter;
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        return adapter == null ? 0 : adapter.getItemCount();
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public <T extends AttachmentBean> void setVideos(List<T> images) {
         if (adapter instanceof VideoShowAdapter formVideoShowAdapter) {

@@ -159,6 +159,11 @@ public class FormImagePreview extends FormMedia {
         return adapter;
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        return adapter == null ? 0 : adapter.getItemCount();
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public <T extends AttachmentBean> void setImages(List<T> images) {
         if (adapter instanceof ImageShowAdapter imageShowAdapter) {

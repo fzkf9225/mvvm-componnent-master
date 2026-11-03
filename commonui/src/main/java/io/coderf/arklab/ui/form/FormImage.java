@@ -255,6 +255,14 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
         return imageAddAdapter.getList();
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        if (imageAddAdapter == null || imageAddAdapter.getList() == null) {
+            return 0;
+        }
+        return imageAddAdapter.getList().size();
+    }
+
     public ImageAddAdapter getAdapter() {
         return imageAddAdapter;
     }

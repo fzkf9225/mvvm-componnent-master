@@ -3,7 +3,9 @@ package io.coderf.arklab.ui.form;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.widget.dialog.DatePickDialog;
@@ -137,5 +139,17 @@ final class FormDatePickDialogHelper {
                 .setTodayTextColor(resolvedConfirmColor)
                 .setClearTextColor(resolvedConfirmColor)
                 .setShowClearView(showClearButton);
+    }
+
+    /**
+     * 先套 FormUI/formStyle，纯代码构造（attrs==null）时再补默认确认色与清空按钮。
+     */
+    static void applyFormStyleOrDefault(Context context, @Nullable AttributeSet attrs,
+                                        TypedArray typedArray, int confirmTextColor,
+                                        boolean showClearButton, DatePickDialog dialog) {
+        applyFormStyle(context, typedArray, dialog);
+        if (attrs == null) {
+            applyDefaultStyle(context, confirmTextColor, showClearButton, dialog);
+        }
     }
 }

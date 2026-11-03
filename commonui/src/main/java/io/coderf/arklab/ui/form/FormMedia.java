@@ -46,12 +46,21 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @since 1.0
  * @updated 2026/9/17 formStyle / dimens / FormUiConfig 与 FormConstraintLayout 对齐
  */
-public abstract class FormMedia extends CornerConstraintLayout {
+public abstract class FormMedia extends CornerConstraintLayout implements FormValidatable {
     public static final String TAG = "FormUi";
     /**
      * 主要用于适配器中图片item、视频item等背景颜色
      */
     protected int itemBgColor;
+    /**
+     * required 校验时最少条数，默认 1
+     */
+    protected int minCount = 1;
+    /**
+     * null 表示未设置 formEditable；false 时在 init 末尾禁用交互。
+     */
+    @Nullable
+    protected Boolean formEditable;
     /**
      * label文字内容
      */
@@ -319,6 +328,13 @@ public abstract class FormMedia extends CornerConstraintLayout {
             saveSubPath = typedArray.getString(R.styleable.FormUI_saveSubPath);
         }
         required = typedArray.getBoolean(R.styleable.FormUI_required, false);
+        minCount = typedArray.getInt(R.styleable.FormUI_minCount, 1);
+        if (minCount < 1) {
+            minCount = 1;
+        }
+        if (typedArray.hasValue(R.styleable.FormUI_formEditable)) {
+            formEditable = typedArray.getBoolean(R.styleable.FormUI_formEditable, true);
+        }
         writeCaptureExifMetadata = typedArray.getBoolean(R.styleable.FormUI_writeCaptureExifMetadata, true);
         requireUriPermission = typedArray.getBoolean(R.styleable.FormUI_requireUriPermission, true);
         protocolDialog = typedArray.getBoolean(R.styleable.FormUI_protocolDialog, true);
@@ -448,6 +464,19 @@ public abstract class FormMedia extends CornerConstraintLayout {
         layoutRequired();
         layoutRecyclerView();
         applyShowTopLayout();
+        if (Boolean.FALSE.equals(formEditable)) {
+            setEnabled(false);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setAlpha(enabled ? 1f : 0.38f);
+        if (mediaRecyclerView != null) {
+            mediaRecyclerView.setEnabled(enabled);
+            mediaRecyclerView.setClickable(enabled);
+        }
     }
 
     public void applyShowTopLayout() {
@@ -649,6 +678,54 @@ public abstract class FormMedia extends CornerConstraintLayout {
         }
     }
 
+    public int getMinCount() {
+        return minCount;
+    }
+
+    public void setMinCount(int minCount) {
+        this.minCount = Math.max(1, minCount);
+    }
+
+    /**
+     * 当前用于校验的媒体条数。子类返回 adapter 列表 size。
+     */
+    protected abstract int getValidationItemCount();
+
+    /**
+     * 单行校验：{@code required} 且条数不足 {@link #minCount} 时 {@link #setError} 并返回 false。
+     */
+    @Override
+    public boolean validate() {
+        if (!required) {
+            setError(null);
+            return true;
+        }
+        if (getValidationItemCount() < minCount) {
+            String label = tvLabel != null && tvLabel.getText() != null
+                    ? tvLabel.getText().toString()
+                    : "";
+            String message = TextUtils.isEmpty(label)
+                    ? getContext().getString(io.coderf.arklab.common.R.string.please_enter)
+                    : label;
+            setError(message);
+            return false;
+        }
+        setError(null);
+        return true;
+    }
+
+    /**
+     * 校验失败：底线变色（不新建 error 文本控件，避免撑高行高）。
+     */
+    public void setError(@Nullable CharSequence error) {
+        boolean hasError = !TextUtils.isEmpty(error);
+        if (vBorderBottom != null) {
+            vBorderBottom.setBackgroundColor(hasError
+                    ? ThemeAttrs.error(getContext())
+                    : borderBottomColor);
+        }
+    }
+
     /**
      * 运行时套一层 FormUI style，立即刷新 label / required / 底线外观。
      */
@@ -727,6 +804,13 @@ public abstract class FormMedia extends CornerConstraintLayout {
         }
         if (config.required != null) {
             required = config.required;
+        }
+        if (config.minCount != null) {
+            minCount = Math.max(1, config.minCount);
+        }
+        if (config.formEditable != null) {
+            formEditable = config.formEditable;
+            setEnabled(config.formEditable);
         }
         if (config.requiredText != null) {
             requiredText = config.requiredText;

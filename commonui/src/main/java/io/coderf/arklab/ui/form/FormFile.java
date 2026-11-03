@@ -245,6 +245,14 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         return fileAddAdapter.getList();
     }
 
+    @Override
+    protected int getValidationItemCount() {
+        if (fileAddAdapter == null || fileAddAdapter.getList() == null) {
+            return 0;
+        }
+        return fileAddAdapter.getList().size();
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void setFiles(List<AttachmentBean> files) {
         if (files == null) {
