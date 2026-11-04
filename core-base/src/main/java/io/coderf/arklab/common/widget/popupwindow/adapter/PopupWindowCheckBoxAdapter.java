@@ -15,7 +15,7 @@ import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionCheckboxViewBinding;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 
 /**

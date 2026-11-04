@@ -20,7 +20,7 @@ import io.coderf.arklab.common.bean.GridMenuBean
 import io.coderf.arklab.common.listener.CustomGridMenuAdapterCallback
 import io.coderf.arklab.common.listener.OnMenuClickListener
 import io.coderf.arklab.common.listener.PagingAdapterListener
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
 
 /**

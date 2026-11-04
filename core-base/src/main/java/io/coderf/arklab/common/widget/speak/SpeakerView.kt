@@ -12,8 +12,8 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import io.coderf.arklab.common.utils.common.DensityUtil
-import io.coderf.arklab.common.utils.encode.Base64Util
+import io.coderf.arklab.core.utils.DensityUtil
+import io.coderf.arklab.core.utils.encode.Base64Util
 import io.coderf.arklab.common.utils.log.LogUtil
 import java.io.File
 import java.io.FileOutputStream

@@ -36,6 +36,9 @@ import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
+import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.FileUtil;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * AttachmentUtil 类。
@@ -563,7 +566,7 @@ public class AttachmentUtil {
                             if (host == null || host.isFinishing() || host.isDestroyed()) {
                                 return;
                             }
-                            DownloadManager.getInstance().download(host, url)
+                          Disposable disposable =DownloadManager.getInstance().download(host, url)
                                     .subscribe(file -> {
                                         if (!isContextAlive(mContext)) {
                                             return;

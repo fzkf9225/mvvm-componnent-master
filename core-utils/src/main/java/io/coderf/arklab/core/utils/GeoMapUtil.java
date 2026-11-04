@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.common;
+package io.coderf.arklab.core.utils;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import io.coderf.arklab.common.bean.Gps;
+import io.coderf.arklab.core.utils.bean.Gps;
 
 /**
  * :经纬度格式转换工具类，坐标系转换

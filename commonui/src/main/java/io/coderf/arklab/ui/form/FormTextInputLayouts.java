@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
  * 给 Form 行内输入套 TextInputLayout，关闭描边/上浮 hint，保持原排版。

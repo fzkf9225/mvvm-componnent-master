@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.repository.IRepository;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;

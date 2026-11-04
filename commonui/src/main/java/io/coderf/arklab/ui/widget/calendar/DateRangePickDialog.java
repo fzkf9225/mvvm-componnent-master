@@ -27,9 +27,9 @@ import androidx.lifecycle.LifecycleOwner;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.utils.common.NumberUtil;
+import io.coderf.arklab.core.utils.NumberUtil;
 import io.coderf.arklab.common.widget.dialog.BaseDialog;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;

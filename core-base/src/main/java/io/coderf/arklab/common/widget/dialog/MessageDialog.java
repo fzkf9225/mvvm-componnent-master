@@ -17,8 +17,8 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogMessageBinding;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.StringUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
+import io.coderf.arklab.core.utils.StringUtil;
 
 /**
  * 单按钮提示弹框，支持标题类型区与富文本内容。

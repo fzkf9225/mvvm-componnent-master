@@ -43,8 +43,8 @@ import io.coderf.arklab.common.databinding.CameraViewBinding
 import io.coderf.arklab.common.listener.CameraResultListener
 import io.coderf.arklab.common.listener.CaptureListener
 import io.coderf.arklab.common.listener.TypeListener
-import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.FileUtil
+import io.coderf.arklab.core.utils.DateUtil
+import io.coderf.arklab.core.utils.FileUtil
 import io.coderf.arklab.common.utils.log.LogUtil
 import java.io.File
 import java.util.Objects
@@ -335,7 +335,8 @@ class CameraView @JvmOverloads constructor(
                 MediaStore.MediaColumns.RELATIVE_PATH,
                 videoOutPutPath
                     ?: (Environment.DIRECTORY_DCIM + File.separator + FileUtil.getDefaultBasePath(
-                        context
+                        context,
+                        Config.getInstance().folderName
                     ) + File.separator + "video")
             )
         }

@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.encode;
+package io.coderf.arklab.core.utils.encode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;

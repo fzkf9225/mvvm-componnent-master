@@ -22,7 +22,7 @@ import io.coderf.arklab.common.databinding.DialogDatePickBinding;
 import io.coderf.arklab.common.enums.DateMode;
 import io.coderf.arklab.common.listener.OnDatePickSelectedListener;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 
 /**

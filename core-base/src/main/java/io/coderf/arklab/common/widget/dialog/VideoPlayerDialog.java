@@ -28,7 +28,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnDialogInterfaceClickListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.dialog.bean.VideoPlayerDialogIconConfig;
 import io.coderf.arklab.common.widget.video.ArkVideoPlayerView;

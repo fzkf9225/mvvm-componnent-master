@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textview.MaterialTextView;
 import androidx.core.content.ContextCompat;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.ui.R;
 
 

@@ -16,8 +16,8 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.google.android.material.textview.MaterialTextView
 import io.coderf.arklab.common.R
-import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.FileUtil
+import io.coderf.arklab.core.utils.DateUtil
+import io.coderf.arklab.core.utils.FileUtil
 import io.coderf.arklab.common.utils.log.LogUtil
 import java.io.File
 import kotlin.concurrent.Volatile

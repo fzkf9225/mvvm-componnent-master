@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import io.coderf.arklab.common.api.BaseApplication;
-import io.coderf.arklab.common.utils.common.FileUtil;
-import io.coderf.arklab.common.utils.common.MapUtil;
+import io.coderf.arklab.core.utils.FileUtil;
+import io.coderf.arklab.core.utils.MapUtil;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
 import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;

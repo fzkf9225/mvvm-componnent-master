@@ -11,8 +11,8 @@ import java.util.Locale;
 
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
-import io.coderf.arklab.common.utils.common.DateUtil;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.DateUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 
 /**
  * 信息大图预览条目：在 {@link AttachmentBean} 之上补充标题、时间、定位文案。

@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.coderf.arklab.common.api.BaseApplication;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.reactivex.rxjava3.core.ObservableEmitter;

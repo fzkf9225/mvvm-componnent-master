@@ -22,8 +22,8 @@ import java.util.List;
 
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.bean.AttachmentBean;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.widget.recyclerview.FullyLinearLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import io.coderf.arklab.ui.R;

@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.common;
+package io.coderf.arklab.core.utils;
 
 
 import java.util.Collections;
@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-
-import dagger.internal.MapBuilder;
 
 
 /**
@@ -328,46 +326,6 @@ public class MapUtil {
      */
     public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
         return Collections.unmodifiableMap(map);
-    }
-
-    // ----------------------------------------------------------------------------------------------- builder
-
-    /**
-     * 创建链接调用map
-     *
-     * @param <K> Key类型
-     * @param <V> Value类型
-     * @return map创建类
-     */
-    public static <K, V> MapBuilder<K, V> builder() {
-        return builder(new HashMap<>());
-    }
-
-    /**
-     * 创建链接调用map
-     *
-     * @param <K> Key类型
-     * @param <V> Value类型
-     * @param map 实际使用的map
-     * @return map创建类
-     */
-    public static <K, V> MapBuilder<K, V> builder(Map<K, V> map) {
-        MapBuilder<K, V> mapBuilder = MapBuilder.newMapBuilder(map.size());
-        mapBuilder.putAll(map);
-        return mapBuilder;
-    }
-
-    /**
-     * 创建链接调用map
-     *
-     * @param <K> Key类型
-     * @param <V> Value类型
-     * @param k   key
-     * @param v   value
-     * @return map创建类
-     */
-    public static <K, V> MapBuilder<K, V> builder(K k, V v) {
-        return (builder(new HashMap<K, V>())).put(k, v);
     }
 
     /**

@@ -11,14 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.coderf.arklab.common.api.AppManager;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.api.Config;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 
 /**
  * 单文件下载配置（不可变对象，通过 {@link Builder} 构建）。
  * <p>
  * 未指定 {@code saveBasePath} 时，{@link Builder#build()} 自动使用
- * {@link io.coderf.arklab.common.utils.common.FileUtil#getDefaultDownloadDir}。
+ * {@link io.coderf.arklab.core.utils.FileUtil#getDefaultDownloadDir}。
  * APK 更新请使用 {@link UpdateConfig}，其默认开启防重复下载并提供默认 APK 文件名。
  *
  * @see DownloadManager#download(DownloadConfig)
@@ -189,7 +190,8 @@ public class DownloadConfig {
         /** 填充默认保存目录 */
         protected void applyDefaults() {
             if (TextUtils.isEmpty(saveBasePath)) {
-                saveBasePath = FileUtil.getDefaultDownloadDir(appContext);
+                saveBasePath = FileUtil.getDefaultDownloadDir(
+                        appContext, Config.getInstance().getFolderName());
             }
         }
 

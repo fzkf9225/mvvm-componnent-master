@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
  * 骨架屏占位面板（Shimmer 扫光 + 多行圆角块）。

@@ -6,7 +6,7 @@ import io.coderf.arklab.common.R as CommonR
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.base.BaseViewModel
 import io.coderf.arklab.common.bean.base.ToolbarConfig
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 
 /**
  * 宿主/业务 Activity 通用基类：统一 MaterialToolbar / 状态栏样式。

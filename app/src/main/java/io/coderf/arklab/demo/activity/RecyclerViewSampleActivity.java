@@ -12,7 +12,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.bean.PopupWindowBean;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.common.widget.popupwindow.MultiPopupView;

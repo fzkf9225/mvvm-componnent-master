@@ -12,7 +12,7 @@ import io.coderf.arklab.common.R
 import io.coderf.arklab.common.base.BaseViewHolder
 import io.coderf.arklab.common.bean.GridMenuBean
 import io.coderf.arklab.common.databinding.AdapterGridMenuItemBinding
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.widget.customview.GridMenuView
 
 /**

@@ -23,7 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.FormTextFormatEnum;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseFragment;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import io.coderf.arklab.demo.R;

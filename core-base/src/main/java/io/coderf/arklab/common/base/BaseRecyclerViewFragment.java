@@ -23,9 +23,9 @@ import java.util.Objects;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.base.PageBean;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.utils.network.NetworkStateUtil;
+import io.coderf.arklab.core.utils.network.NetworkStateUtil;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;

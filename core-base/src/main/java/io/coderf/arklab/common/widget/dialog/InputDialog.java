@@ -18,8 +18,8 @@ import androidx.core.content.ContextCompat;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.DialogInputBinding;
 import io.coderf.arklab.common.listener.OnInputDialogInterfaceListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
-import io.coderf.arklab.common.utils.common.StringUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
+import io.coderf.arklab.core.utils.StringUtil;
 
 /**
  * 单行文本输入弹窗（内部已是 {@link com.google.android.material.textfield.TextInputLayout}）。

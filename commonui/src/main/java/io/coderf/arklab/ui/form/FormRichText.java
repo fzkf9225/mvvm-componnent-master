@@ -16,7 +16,7 @@ import androidx.core.text.HtmlCompat;
 import com.bumptech.glide.Glide;
 
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.utils.common.ThreadExecutor;
+import io.coderf.arklab.core.utils.ThreadExecutor;
 
 /**
  * 富文本

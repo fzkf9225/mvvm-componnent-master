@@ -22,7 +22,7 @@ import io.coderf.arklab.common.helper.JavaScriptAssetsPathHandler;
 import io.coderf.arklab.common.helper.StoragePathHandler;
 import io.coderf.arklab.common.helper.WebViewLocalUrlResolver;
 import io.coderf.arklab.common.utils.common.ConfigurableWebViewClient;
-import io.coderf.arklab.common.utils.common.WebViewUtil;
+import io.coderf.arklab.core.utils.WebViewUtil;
 
 /**
  * 可配置 URL 类型的 WebView：支持网络、APK assets、应用沙盒/下载目录本地文件。

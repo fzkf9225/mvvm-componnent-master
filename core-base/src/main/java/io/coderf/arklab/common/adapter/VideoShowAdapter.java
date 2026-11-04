@@ -17,7 +17,7 @@ import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterVideoShowItemBinding;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
 

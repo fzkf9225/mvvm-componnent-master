@@ -22,7 +22,7 @@ import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionTextViewBinding;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 
 /**
  * 文本选项Adapter - 支持单选/多选，支持自定义样式

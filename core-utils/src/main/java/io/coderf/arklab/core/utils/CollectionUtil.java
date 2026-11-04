@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.common;
+package io.coderf.arklab.core.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

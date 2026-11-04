@@ -28,7 +28,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
  * 可配置的空白占位 View，支持加载中、加载失败、无数据等状态。

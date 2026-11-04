@@ -1,6 +1,6 @@
 package io.coderf.arklab.user.domain.usecase
 
-import io.coderf.arklab.common.utils.encode.SM3Utils
+import io.coderf.arklab.core.utils.encode.SM3Utils
 import javax.inject.Inject
 
 /**

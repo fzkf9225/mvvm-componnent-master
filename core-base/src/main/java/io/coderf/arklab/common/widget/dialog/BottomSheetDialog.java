@@ -22,7 +22,7 @@ import io.coderf.arklab.common.adapter.MenuListAdapter;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.OptionBottomMenuDialogBinding;
 import io.coderf.arklab.common.listener.OnOptionBottomMenuClickListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;

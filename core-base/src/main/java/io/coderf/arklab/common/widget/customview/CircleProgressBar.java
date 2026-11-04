@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.listener.OnProgressEndListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
  * 自定义圆形进度条。

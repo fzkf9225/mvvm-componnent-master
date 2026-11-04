@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.common.api.Config;
+import io.coderf.arklab.core.utils.FileUtil;
 
 /**
  * 批量下载配置（不可变对象，通过 {@link Builder} 构建）。
@@ -158,7 +159,8 @@ public class BatchDownloadConfig {
 
         public BatchDownloadConfig build() {
             if (TextUtils.isEmpty(saveBasePath)) {
-                saveBasePath = FileUtil.getDefaultDownloadDir(appContext);
+                saveBasePath = FileUtil.getDefaultDownloadDir(
+                        appContext, Config.getInstance().getFolderName());
             }
             return new BatchDownloadConfig(this);
         }

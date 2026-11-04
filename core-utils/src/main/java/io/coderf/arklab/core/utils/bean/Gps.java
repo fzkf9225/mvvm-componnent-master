@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.bean;
+package io.coderf.arklab.core.utils.bean;
 
 /**
  * Gps 类。

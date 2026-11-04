@@ -24,7 +24,7 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.AdapterCheckBoxItemBinding;
 import io.coderf.arklab.common.listener.OnHeaderViewClickListener;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 
 /**
  * 复选框adapter - 支持单选/多选，支持头布局全选

@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
 import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
@@ -87,7 +88,8 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
 
     /** 权限就绪后的更新流程：缓存 APK 检测 → 防重复 → 下载 */
     private void proceedUpdate() {
-        String saveBasePath = FileUtil.getDefaultDownloadDir(mContext.getApplicationContext());
+        String saveBasePath = FileUtil.getDefaultDownloadDir(
+                mContext.getApplicationContext(), Config.getInstance().getFolderName());
         if (!TextUtils.isEmpty(saveFileName)) {
             File targetFile = new File(saveBasePath, saveFileName);
             if (targetFile.exists() && targetFile.isFile()) {
@@ -115,7 +117,8 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
         DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
         DownloadRetrofitFactory.enqueue(
                         apkUrl,
-                        FileUtil.getDefaultDownloadDir(mContext.getApplicationContext()),
+                        FileUtil.getDefaultDownloadDir(
+                                mContext.getApplicationContext(), Config.getInstance().getFolderName()),
                         saveFileName,
                         headers,
                         downloadListener,

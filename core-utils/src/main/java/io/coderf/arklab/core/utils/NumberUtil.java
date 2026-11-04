@@ -1,11 +1,9 @@
-package io.coderf.arklab.common.utils.common;
+package io.coderf.arklab.core.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
-
-import io.coderf.arklab.common.api.RegexUtils;
 
 /**
  * 数字工具类，提供金额大写、小数格式化、科学计数法转换等常用能力。
@@ -22,6 +20,7 @@ public final class NumberUtil {
 
     private static final int DEFAULT_DECIMAL_PLACES = 2;
     private static final RoundingMode DEFAULT_ROUNDING = RoundingMode.HALF_UP;
+    private static final Pattern INTEGER_PATTERN = Pattern.compile("^-?(([1-9]\\d*)|0)$");
 
     /** 金额大写单位串（从分到最高位，与数值从低到高对齐）。 */
     private static final String UNIT = "万千佰拾亿千佰拾万千佰拾元角分";
@@ -347,7 +346,7 @@ public final class NumberUtil {
             return null;
         }
         try {
-            if (RegexUtils.isInteger(data) || isEndsWithZeroDecimal(data)) {
+            if (INTEGER_PATTERN.matcher(data).matches() || isEndsWithZeroDecimal(data)) {
                 return formatInteger(data);
             }
             return decimalFormat(data, decimalPlaces);

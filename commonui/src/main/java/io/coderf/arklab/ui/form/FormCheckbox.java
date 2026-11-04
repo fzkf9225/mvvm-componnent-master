@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.LabelAlignEnum;

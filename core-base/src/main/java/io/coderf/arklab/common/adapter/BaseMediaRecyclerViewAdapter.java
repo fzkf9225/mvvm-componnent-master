@@ -16,7 +16,7 @@ import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.bean.AttachmentBean;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 
 /**

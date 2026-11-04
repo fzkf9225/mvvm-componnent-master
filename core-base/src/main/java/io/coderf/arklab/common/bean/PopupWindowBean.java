@@ -6,7 +6,7 @@ import androidx.databinding.BaseObservable;
 
 import java.util.List;
 
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 
 
 /**

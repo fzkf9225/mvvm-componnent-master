@@ -15,7 +15,7 @@ import com.google.android.material.textview.MaterialTextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
 import io.coderf.arklab.common.R
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
 
 /**

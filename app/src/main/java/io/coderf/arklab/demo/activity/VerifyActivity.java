@@ -23,7 +23,7 @@ import io.coderf.arklab.annotation.verify.EntityValidator;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.utils.common.StringUtil;
+import io.coderf.arklab.core.utils.StringUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled;

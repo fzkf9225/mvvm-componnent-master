@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.network;
+package io.coderf.arklab.core.utils.network;
 
 import android.content.Context;
 import android.content.Intent;

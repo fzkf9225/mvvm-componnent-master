@@ -22,8 +22,8 @@ import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
 import io.coderf.arklab.common.adapter.VideoShowAdapter;
 import io.coderf.arklab.common.base.BaseRecyclerViewAdapter;
 import io.coderf.arklab.common.bean.AttachmentBean;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 

@@ -12,8 +12,8 @@ import android.os.Build
 import android.text.Html
 import androidx.core.app.NotificationCompat
 import io.coderf.arklab.common.api.AppManager
-import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.MathUtil
+import io.coderf.arklab.core.utils.DateUtil
+import io.coderf.arklab.core.utils.MathUtil
 import io.coderf.arklab.demo.activity.GoogleGPSActivity
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION_REQUEST_CODE

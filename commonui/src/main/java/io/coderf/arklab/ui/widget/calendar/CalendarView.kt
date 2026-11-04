@@ -21,8 +21,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.google.gson.Gson
-import io.coderf.arklab.common.utils.common.DateUtil
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DateUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.utils.log.LogUtil
 import io.coderf.arklab.common.widget.empty.EmptyLayout
 import io.coderf.arklab.ui.R

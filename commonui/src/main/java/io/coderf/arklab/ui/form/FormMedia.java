@@ -26,7 +26,7 @@ import com.google.android.material.textview.MaterialTextView;
 import io.coderf.arklab.common.adapter.BaseMediaRecyclerViewAdapter;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.core.request.RequestUi;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.widget.customview.CornerConstraintLayout;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;

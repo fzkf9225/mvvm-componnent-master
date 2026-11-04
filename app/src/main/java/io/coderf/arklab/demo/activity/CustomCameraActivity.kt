@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
 import io.coderf.arklab.common.helper.CameraHelper
 import io.coderf.arklab.common.helper.CornerShapeHelper
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.utils.permission.PermissionManager
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.camera.CameraView

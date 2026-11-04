@@ -12,7 +12,7 @@ import io.coderf.arklab.common.base.BasePagingAdapter
 import io.coderf.arklab.common.bean.GridMenuBean
 import io.coderf.arklab.common.databinding.FragmentGridMenuBinding
 import io.coderf.arklab.common.listener.PagingAdapterListener
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.common.widget.customview.GridMenuView
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager

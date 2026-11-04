@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import io.coderf.arklab.common.R;import io.coderf.arklab.common.databinding.LoadingDialogBinding;
-import io.coderf.arklab.common.utils.common.ScreenUtil;
+import io.coderf.arklab.core.utils.ScreenUtil;
 
 /**
  * 全局加载进度弹窗（单例）。

@@ -14,7 +14,7 @@ import androidx.navigation.Navigation;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseFragment;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.config.TabLayoutDemoColorPresets;

@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.download.core.DownloadConfig;
 import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
 import io.coderf.arklab.common.utils.download.core.UpdateConfig;
@@ -251,7 +252,8 @@ public class UpdateManager {
         final String fileName = saveFileName != null ? saveFileName : UpdateConfig.DEFAULT_APK_FILE_NAME;
         final String basePath = saveBasePath != null
                 ? saveBasePath
-                : FileUtil.getDefaultDownloadDir(context.getApplicationContext());
+                : FileUtil.getDefaultDownloadDir(
+                        context.getApplicationContext(), Config.getInstance().getFolderName());
 
         return DownloadPermissionHelper.deferWithStoragePermission(
                 context,

@@ -31,7 +31,7 @@ import java.util.List;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 /**

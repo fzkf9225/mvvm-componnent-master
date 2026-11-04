@@ -15,9 +15,10 @@ import com.bumptech.glide.request.target.Target;
 import java.io.File;
 import java.io.IOException;
 
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
-import io.coderf.arklab.common.utils.common.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 
 /**
  * Glide缓存照片到本地
@@ -67,7 +68,8 @@ public class DownLoadImageService implements Runnable {
             }
         }
         String name = FileUtil.getNoRepeatFileName(fileType, !TextUtils.isEmpty(fileType) && "video".equalsIgnoreCase(fileType) ? "VIDEO_" : "IMG_", "." + extension);
-        this.filePath = FileUtil.getDefaultBasePath(context) + File.separator + name + "." + extension;
+        this.filePath = FileUtil.getDefaultBasePath(context, Config.getInstance().getFolderName())
+                + File.separator + name + "." + extension;
     }
 
     @Override

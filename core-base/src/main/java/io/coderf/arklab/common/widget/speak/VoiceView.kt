@@ -12,8 +12,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.BounceInterpolator
 import android.view.animation.Interpolator
-import io.coderf.arklab.common.utils.common.DensityUtil
-import io.coderf.arklab.common.utils.common.ThreadExecutor
+import io.coderf.arklab.core.utils.DensityUtil
+import io.coderf.arklab.core.utils.ThreadExecutor
 import java.util.Random
 import kotlin.concurrent.Volatile
 import kotlin.math.max

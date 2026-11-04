@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.databinding.ImageSaveDialogBinding;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;

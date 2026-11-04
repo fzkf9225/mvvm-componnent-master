@@ -23,7 +23,7 @@ import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.DialogChoiceSelectBinding;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.listener.OnChoiceSelectListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
 import com.google.android.material.button.MaterialButton;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;

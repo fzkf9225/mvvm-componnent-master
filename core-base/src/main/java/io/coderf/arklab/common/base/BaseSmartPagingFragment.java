@@ -22,7 +22,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.adapter.PagingFooterAdapter;
 import io.coderf.arklab.common.listener.PagingAdapterListener;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.viewmodel.BasePagingViewModel;
 import io.coderf.arklab.common.widget.empty.EmptyLayout;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;

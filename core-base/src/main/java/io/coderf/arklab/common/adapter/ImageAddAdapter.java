@@ -25,7 +25,7 @@ import io.coderf.arklab.common.databinding.AdapterImageAddItemBinding;
 import io.coderf.arklab.common.enums.UploadStatusEnum;
 import io.coderf.arklab.common.listener.OnUploadRetryClickListener;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 

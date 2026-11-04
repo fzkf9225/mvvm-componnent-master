@@ -1,4 +1,4 @@
-package io.coderf.arklab.common.utils.common;
+package io.coderf.arklab.core.utils;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -12,6 +12,7 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -34,20 +35,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.utils.encode.MD5Util;
-import io.coderf.arklab.common.utils.log.LogUtil;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import io.coderf.arklab.core.utils.encode.MD5Util;
 
 
 /**
  * 文件工具类，提供文件读写、复制、删除、大小格式化等能力。
- * <p>上传相关方法已迁移至 {@link FileUploadUtil}，此处保留委托以兼容旧调用。
+ * <p>上传相关请使用 core-base 的 {@code FileUploadUtil}。
  *
  * @author fz
  * @version 1.0
@@ -178,18 +173,17 @@ public final class FileUtil {
     }
 
     /**
-     * 将网络响应体保存到指定路径（从头写入）。
+     * 将输入流保存到指定路径（从头写入）。
      *
-     * @param filePath 目标文件路径
-     * @param body     响应体
+     * @param filePath    目标文件路径
+     * @param inputStream 数据流（方法内会关闭）
      * @return 保存后的文件；失败返回 null
      */
-    public static File saveFile(String filePath, ResponseBody body) {
-        InputStream inputStream = null;
+    public static File saveFile(String filePath, InputStream inputStream) {
         OutputStream outputStream = null;
         File file = null;
         try {
-            if (filePath == null) {
+            if (filePath == null || inputStream == null) {
                 return null;
             }
             file = new File(filePath);
@@ -198,8 +192,6 @@ public final class FileUtil {
                 file.createNewFile();
             }
             byte[] fileReader = new byte[BUFFER_SIZE];
-
-            inputStream = body.byteStream();
             outputStream = new FileOutputStream(file);
 
             while (true) {
@@ -214,14 +206,10 @@ public final class FileUtil {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                inputStream.close();
+            } catch (Exception ignored) {
             }
-
             if (outputStream != null) {
                 try {
                     outputStream.close();
@@ -235,22 +223,23 @@ public final class FileUtil {
     }
 
     /**
-     * 断点续传：从指定偏移位置写入响应体内容。
+     * 断点续传：从指定偏移位置写入输入流内容。
      *
-     * @param filePath 目标文件路径
-     * @param start    起始写入位置（字节偏移）
-     * @param body     响应体
+     * @param filePath    目标文件路径
+     * @param start       起始写入位置（字节偏移）
+     * @param inputStream 数据流（方法内会关闭）
      * @return 保存后的文件；失败返回 null
      */
-    public static File saveFile(String filePath, long start, ResponseBody body) {
-        InputStream inputStream = null;
+    public static File saveFile(String filePath, long start, InputStream inputStream) {
         RandomAccessFile raf = null;
         File file = null;
         try {
+            if (filePath == null || inputStream == null) {
+                return null;
+            }
             file = new File(filePath);
 
             raf = new RandomAccessFile(filePath, "rw");
-            inputStream = body.byteStream();
             byte[] fileReader = new byte[BUFFER_SIZE];
 
             raf.seek(start);
@@ -263,16 +252,12 @@ public final class FileUtil {
                 raf.write(fileReader, 0, read);
             }
 
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                inputStream.close();
+            } catch (Exception ignored) {
             }
 
             if (raf != null) {
@@ -285,7 +270,6 @@ public final class FileUtil {
         }
 
         return file;
-
     }
 
     /**
@@ -849,8 +833,19 @@ public final class FileUtil {
      * @return 应用标识
      */
     public static String getDefaultBasePath(Context context) {
-        if (!TextUtils.isEmpty(Config.getInstance().getFolderName())) {
-            return Config.getInstance().getFolderName();
+        return getDefaultBasePath(context, null);
+    }
+
+    /**
+     * 优先使用业务指定的目录名；为空时从包名提取应用标识。
+     *
+     * @param context             上下文
+     * @param preferredFolderName 业务目录名（如 Config.folderName），可为 null
+     * @return 应用标识
+     */
+    public static String getDefaultBasePath(Context context, @Nullable String preferredFolderName) {
+        if (!TextUtils.isEmpty(preferredFolderName)) {
+            return preferredFolderName;
         }
         String packageName = context.getPackageName();
         String[] packageArr = packageName.split("\\.");
@@ -874,7 +869,7 @@ public final class FileUtil {
         MediaScannerConnection.scanFile(context,
                 new String[]{file.getAbsolutePath()},
                 null,
-                (path, uri) -> LogUtil.logger(TAG, "相册扫描完成：" + path));
+                (path, uri) -> CoreLogger.d(TAG, "相册扫描完成：" + path));
     }
 
     /**
@@ -882,11 +877,19 @@ public final class FileUtil {
      */
     @NonNull
     public static String getDefaultDownloadDir(@NonNull Context context) {
+        return getDefaultDownloadDir(context, null);
+    }
+
+    /**
+     * 应用专属下载目录；可传入业务目录名覆盖默认包名片段。
+     */
+    @NonNull
+    public static String getDefaultDownloadDir(@NonNull Context context, @Nullable String preferredFolderName) {
         File baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
         if (baseDir == null) {
             baseDir = new File(context.getFilesDir(), Environment.DIRECTORY_DOWNLOADS);
         }
-        File appDir = new File(baseDir, getDefaultBasePath(context));
+        File appDir = new File(baseDir, getDefaultBasePath(context, preferredFolderName));
         if (!appDir.exists()) {
             //noinspection ResultOfMethodCallIgnored
             appDir.mkdirs();
@@ -1197,7 +1200,7 @@ public final class FileUtil {
                 int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
                 if (sizeIndex >= 0) {
                     long size = cursor.getLong(sizeIndex);
-                    LogUtil.logger(TAG, "size:" + size);
+                    CoreLogger.d(TAG, "size:" + size);
                     return size;
                 }
             }
@@ -1278,95 +1281,6 @@ public final class FileUtil {
             fileSizeStr = df.format((double) fileSize / G_SIZE) + G;
         }
         return fileSizeStr;
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createFormDataRequestBody(Context, Uri)}
-     */
-    @Deprecated
-    public static Map<String, RequestBody> createFormDataRequestBody(Context context, Uri uri) {
-        return FileUploadUtil.createFormDataRequestBody(context, uri);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static List<MultipartBody.Part> createFilePart(Context context, List<Uri> uriList,
-                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createFilePart(context, uriList, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createFilePart(Context context, Uri uri,
-                                                    io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createFilePart(context, uri, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createFilePart(Context context, Uri uri, int currentPos, int totalCount,
-                                                    io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createFilePart(context, uri, currentPos, totalCount, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static List<MultipartBody.Part> createAssetsFilePart(Context context, List<Uri> uriList,
-                                                                io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createAssetsFilePart(context, uriList, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createAssetsFilePart(Context context, Uri uri,
-                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createAssetsFilePart(context, uri, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createAssetsFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createAssetsFilePart(Context context, Uri uri, int currentPos, int totalCount,
-                                                          io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createAssetsFilePart(context, uri, currentPos, totalCount, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, List, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static List<MultipartBody.Part> createTempFilePart(Context context, List<Uri> uriList,
-                                                              io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createTempFilePart(context, uriList, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, Uri, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createTempFilePart(Context context, Uri uri,
-                                                        io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createTempFilePart(context, uri, uploadListener);
-    }
-
-    /**
-     * @deprecated 请使用 {@link FileUploadUtil#createTempFilePart(Context, Uri, int, int, io.coderf.arklab.common.listener.FileUploadProgressListener)}
-     */
-    @Deprecated
-    public static MultipartBody.Part createTempFilePart(Context context, Uri uri, int currentPos, int totalCount,
-                                                        io.coderf.arklab.common.listener.FileUploadProgressListener uploadListener) {
-        return FileUploadUtil.createTempFilePart(context, uri, currentPos, totalCount, uploadListener);
     }
 
     @SuppressLint("Range")

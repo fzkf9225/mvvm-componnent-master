@@ -20,7 +20,7 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterMediaShowItemBinding;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
 

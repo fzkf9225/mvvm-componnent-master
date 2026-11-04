@@ -20,8 +20,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
-import io.coderf.arklab.common.utils.common.DateUtil;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DateUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.widget.calendar.DateRangePickDialog;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;

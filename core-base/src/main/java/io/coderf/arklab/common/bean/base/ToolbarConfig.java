@@ -27,7 +27,7 @@ import java.util.Objects;
 
 import io.coderf.arklab.common.BR;
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 
 /**

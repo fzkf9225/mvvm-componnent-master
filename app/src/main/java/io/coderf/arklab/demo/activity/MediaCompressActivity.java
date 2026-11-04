@@ -18,7 +18,7 @@ import io.coderf.arklab.common.adapter.MediaAddAdapter;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
-import io.coderf.arklab.common.utils.common.CollectionUtil;
+import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.demo.R;

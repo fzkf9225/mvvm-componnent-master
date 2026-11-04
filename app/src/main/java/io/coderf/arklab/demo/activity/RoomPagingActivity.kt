@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseSearchActivity
-import io.coderf.arklab.common.utils.common.DensityUtil
+import io.coderf.arklab.core.utils.DensityUtil
 import io.coderf.arklab.common.utils.common.DrawableUtil
 import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.demo.bean.UseCase

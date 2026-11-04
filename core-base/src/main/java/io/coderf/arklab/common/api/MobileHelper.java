@@ -20,9 +20,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import io.coderf.arklab.common.utils.encode.Base64Util;
+import io.coderf.arklab.core.utils.encode.Base64Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.common.utils.network.NetworkStateUtil;
+import io.coderf.arklab.core.utils.network.NetworkStateUtil;
 
 /**
  * 存放应用相关常见

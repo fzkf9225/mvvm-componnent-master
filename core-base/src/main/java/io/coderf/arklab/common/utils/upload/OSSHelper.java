@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.coderf.arklab.common.api.BaseApplication;
 import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.common.utils.common.FileUtil;
+import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
 /**

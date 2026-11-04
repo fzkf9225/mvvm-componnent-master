@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
-import io.coderf.arklab.common.utils.common.DateUtil
+import io.coderf.arklab.core.utils.DateUtil
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.bean.UseCase
 import io.coderf.arklab.demo.databinding.ActivityGoogleGpsBinding

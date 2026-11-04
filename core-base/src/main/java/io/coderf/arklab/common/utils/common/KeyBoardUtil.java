@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import io.coderf.arklab.core.utils.SoftKeyBoardListener;
+
 /**
  * 打开或关闭软键盘。
  * <p>

@@ -14,7 +14,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableFloat;
 
-import io.coderf.arklab.common.utils.common.DensityUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.widget.customview.StarBar;
 import io.coderf.arklab.ui.R;
 import io.coderf.arklab.ui.enums.FormRatingStepEnum;
