@@ -91,16 +91,8 @@ public class FormEditArea extends FormConstraintLayout {
         int multiLineDefault = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
         TypedArray typedArray = obtainFormUi(attrs);
         try {
-            if (typedArray.hasValue(R.styleable.FormUI_formInputType)) {
-                inputType = typedArray.getInt(R.styleable.FormUI_formInputType, multiLineDefault);
-            } else {
-                inputType = resolveAndroidInputType(attrs, multiLineDefault);
-            }
-            if (typedArray.hasValue(R.styleable.FormUI_formImeOptions)) {
-                imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
-            } else {
-                imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
-            }
+            inputType = resolveAndroidInputType(attrs, multiLineDefault);
+            imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
             formatText = typedArray.getInt(R.styleable.FormUI_formatText, 0);
             maxLength = typedArray.getInt(R.styleable.FormUI_maxLength, -1);
             inputDrawable = typedArray.getDrawable(R.styleable.FormUI_inputDrawable);

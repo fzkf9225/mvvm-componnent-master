@@ -53,6 +53,19 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 
 ---
 
+## 0.4.1 commonui `3.7.6`：移除 formInputType / formImeOptions
+
+**破坏性**（仅影响 `FormEditText` / `FormEditArea` 布局）：
+
+```xml
+app:formInputType="number"     →  android:inputType="number"
+app:formImeOptions="actionNext" →  android:imeOptions="actionNext"
+```
+
+flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `formImeOptions` 本就无效，可直接删除。
+
+---
+
 ## 0.4 本轮补丁：base `1.6.0` · network `1.7.0` · db `1.6.1` · ws `1.0.1` · ui `3.7.4` · gps `3.4.0`
 
 相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui `3.7.3` / googlegps `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。

@@ -92,16 +92,8 @@ public class FormEditText extends FormConstraintLayout {
         super.initAttr(attrs);
         TypedArray typedArray = obtainFormUi(attrs);
         try {
-            if (typedArray.hasValue(R.styleable.FormUI_formInputType)) {
-                inputType = typedArray.getInt(R.styleable.FormUI_formInputType, InputType.TYPE_CLASS_TEXT);
-            } else {
-                inputType = resolveAndroidInputType(attrs, InputType.TYPE_CLASS_TEXT);
-            }
-            if (typedArray.hasValue(R.styleable.FormUI_formImeOptions)) {
-                imeOptions = typedArray.getInt(R.styleable.FormUI_formImeOptions, EditorInfo.IME_ACTION_NEXT);
-            } else {
-                imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
-            }
+            inputType = resolveAndroidInputType(attrs, InputType.TYPE_CLASS_TEXT);
+            imeOptions = resolveAndroidImeOptions(attrs, EditorInfo.IME_ACTION_NEXT);
             formatText = typedArray.getInt(R.styleable.FormUI_formatText, 0);
             maxLength = typedArray.getInt(R.styleable.FormUI_maxLength, -1);
             digits = typedArray.getInt(R.styleable.FormUI_digits, -1);

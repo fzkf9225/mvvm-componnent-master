@@ -2,8 +2,8 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.7.5**  
-Maven：`io.coderf.arklab.ui:ui:3.7.5`  
+当前版本：**3.7.6**  
+Maven：`io.coderf.arklab.ui:ui:3.7.6`  
 namespace：`io.coderf.arklab.ui`
 
 需要与 **core-base ≥1.2.0** 一起使用（`api` 传递；当前配套 **1.6.0**）。升级说明见 [UPGRADE.md](../UPGRADE.md)。
@@ -12,6 +12,11 @@ namespace：`io.coderf.arklab.ui`
 
 ## 版本
 
+### 3.7.6
+
+- **破坏性**：移除 `app:formInputType` / `app:formImeOptions`，请改用 `android:inputType` / `android:imeOptions`（由 `FormEditText` / `FormEditArea` 读取并应用到内部 EditText）
+- 删除 `attr.xml` 中对系统 inputType/imeOptions flag 的冗余拷贝
+
 ### 3.7.5
 
 - `FormHost.validateAll` 覆盖 `FormConstraintLayout` 与 `FormMedia`（`FormValidatable`）
@@ -19,7 +24,6 @@ namespace：`io.coderf.arklab.ui`
 - 日期/时间选择确认写回 `dataSource`；子类读属性统一走 `obtainFormUi`（formStyle 生效）
 - `formEditable`：显式 false 等同 `setEnabled(false)`；未设置不改变现状
 - FormRichText 走基类 dataSource 生命周期；Binding AttrChanged / TextWatcher 防重复注册
-- 保留 `app:formInputType` / `app:formImeOptions`；未写时可回落 `android:inputType` / `imeOptions`
 
 ### 3.7.4
 
@@ -109,7 +113,7 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.7.5'
+implementation 'io.coderf.arklab.ui:ui:3.7.6'
 // 或
 implementation project(':commonui')
 ```
