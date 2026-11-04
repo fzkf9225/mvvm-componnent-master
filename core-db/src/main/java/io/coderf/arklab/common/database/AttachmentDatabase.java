@@ -26,8 +26,9 @@ import io.coderf.arklab.core.db.RoomLog;
  * @version 1.0
  * @since 1.0
  * @created 2024/11/6 10:44
+ * @updated 2026/11/4
  */
-@Database(entities = {AttachmentBean.class}, version = 2, exportSchema = false)
+@Database(entities = {AttachmentBean.class}, version = 3, exportSchema = false)
 @TypeConverters({RoomJsonConverters.class, RoomEnumConverters.class,
         RoomJavaTimeConverters.class, RoomScalarConverters.class})
 public abstract class AttachmentDatabase extends RoomDatabase {
@@ -64,31 +65,76 @@ public abstract class AttachmentDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN height REAL");
             }
         }
+    };
 
-        /**
-         * 使用 PRAGMA table_info 判断列是否需要添加。
-         *
-         * @return true 表示列尚不存在，应执行 ADD COLUMN
-         */
-        private boolean shouldAddColumn(@NonNull SupportSQLiteDatabase database,
-                                        @NonNull String tableName,
-                                        @NonNull String columnName) {
-            try (android.database.Cursor cursor =
-                         database.query("PRAGMA table_info(`" + tableName + "`)")) {
-                int nameIndex = cursor.getColumnIndex("name");
-                if (nameIndex < 0) {
-                    return true;
-                }
-                while (cursor.moveToNext()) {
-                    String name = cursor.getString(nameIndex);
-                    if (columnName.equalsIgnoreCase(name)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
+    /**
+     * 版本 2 → 3：移除反向业务关联字段 mainId、fieldName。
+     * SQLite 通过重建表删除列。
+     */
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `AttachmentBean_new` (" +
+                            "`mobileId` TEXT NOT NULL, " +
+                            "`fileId` TEXT, " +
+                            "`path` TEXT, " +
+                            "`relativePath` TEXT, " +
+                            "`thumbnailPath` TEXT, " +
+                            "`fileName` TEXT, " +
+                            "`fileSize` TEXT, " +
+                            "`fileType` TEXT, " +
+                            "`createTime` INTEGER NOT NULL, " +
+                            "`createUser` TEXT, " +
+                            "`otherInfo` TEXT, " +
+                            "`pitch` REAL, " +
+                            "`yaw` REAL, " +
+                            "`roll` REAL, " +
+                            "`longitude` REAL, " +
+                            "`latitude` REAL, " +
+                            "`height` REAL, " +
+                            "PRIMARY KEY(`mobileId`)" +
+                            ")"
+            );
+            database.execSQL(
+                    "INSERT INTO `AttachmentBean_new` (" +
+                            "`mobileId`, `fileId`, `path`, `relativePath`, `thumbnailPath`, " +
+                            "`fileName`, `fileSize`, `fileType`, `createTime`, `createUser`, " +
+                            "`otherInfo`, `pitch`, `yaw`, `roll`, `longitude`, `latitude`, `height`" +
+                            ") SELECT " +
+                            "`mobileId`, `fileId`, `path`, `relativePath`, `thumbnailPath`, " +
+                            "`fileName`, `fileSize`, `fileType`, `createTime`, `createUser`, " +
+                            "`otherInfo`, `pitch`, `yaw`, `roll`, `longitude`, `latitude`, `height` " +
+                            "FROM `AttachmentBean`"
+            );
+            database.execSQL("DROP TABLE `AttachmentBean`");
+            database.execSQL("ALTER TABLE `AttachmentBean_new` RENAME TO `AttachmentBean`");
         }
     };
+
+    /**
+     * 使用 PRAGMA table_info 判断列是否需要添加。
+     *
+     * @return true 表示列尚不存在，应执行 ADD COLUMN
+     */
+    private static boolean shouldAddColumn(@NonNull SupportSQLiteDatabase database,
+                                           @NonNull String tableName,
+                                           @NonNull String columnName) {
+        try (android.database.Cursor cursor =
+                     database.query("PRAGMA table_info(`" + tableName + "`)")) {
+            int nameIndex = cursor.getColumnIndex("name");
+            if (nameIndex < 0) {
+                return true;
+            }
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(nameIndex);
+                if (columnName.equalsIgnoreCase(name)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 
     /// 写法和SQLiteOpenHelper一致，用单例模式
     // room默认不能在主线程中操作数据库，因为数据库是一个耗时操作
@@ -104,7 +150,7 @@ public abstract class AttachmentDatabase extends RoomDatabase {
                     Room.databaseBuilder(context.getApplicationContext(),
                                     AttachmentDatabase.class, attachmentDatabaseName)
                             // 添加迁移策略
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                             // 强制开启在主线程中操作数据库
                             .allowMainThreadQueries()
             ).build();

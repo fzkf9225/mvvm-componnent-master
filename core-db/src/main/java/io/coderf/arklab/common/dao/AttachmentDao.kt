@@ -1,17 +1,19 @@
 package io.coderf.arklab.common.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import io.coderf.arklab.common.annotation.RoomObservedEntity
 import io.coderf.arklab.common.bean.AttachmentBean
+import io.reactivex.rxjava3.core.Flowable
 
 /**
- * 附件表 Room Dao 示例。
+ * 附件表 Room Dao。
  *
  * ## 说明
- * - 使用 [@RoomObservedEntity] + [AttachmentDaoRawQueryBridge]（KSP 生成），无需手写 6 个 RawQuery；
- * - 通用增删改查、动态条件查询继承自 [BaseRoomDao]；
- * - 本类仅补充附件业务相关的固定 [@Query] 方法。
+ * - 附件表只存文件实体，不反向关联业务；
+ * - 业务侧通过持有 [AttachmentBean.mobileId]（或逗号拼接串）查询/更新附件；
+ * - 服务端对接使用 [AttachmentBean.fileId]。
  *
  * ## 仓库层
  * 配合 [io.coderf.arklab.common.repository.AttachmentRepositoryImpl] 与
@@ -22,7 +24,7 @@ import io.coderf.arklab.common.bean.AttachmentBean
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/4
  */
 @Dao
 @RoomObservedEntity(AttachmentBean::class)
@@ -31,39 +33,51 @@ abstract class AttachmentDao : AttachmentDaoRawQueryBridge() {
     /** @return 表名，与 @Entity 默认表名一致 */
     override fun getTableName(): String = AttachmentBean::class.java.simpleName
 
-    /** 按 mobileId 删除附件 */
-    @Query("Delete FROM AttachmentBean WHERE mobileId = :mobileId")
-    abstract fun deleteByMobileId(mobileId: String)
+    // ==================== 按 mobileId ====================
 
-    /** 按 mainId 删除附件 */
-    @Query("Delete FROM AttachmentBean WHERE mainId = :mainId")
-    abstract fun deleteByMainId(mainId: String)
+    @Query("SELECT * FROM AttachmentBean WHERE mobileId = :mobileId LIMIT 1")
+    abstract fun queryByMobileId(mobileId: String): AttachmentBean?
 
-    /** 按 mainId + fieldName 删除 */
-    @Query("Delete FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName")
-    abstract fun delete(mainId: String, fieldName: String)
+    @Query("SELECT * FROM AttachmentBean WHERE mobileId IN (:ids)")
+    abstract fun queryByMobileIds(ids: List<String>): List<AttachmentBean>
 
-    /** 查询全部附件 */
-    @Query("Select * FROM AttachmentBean")
+    @Query("SELECT * FROM AttachmentBean WHERE mobileId IN (:ids)")
+    abstract fun queryFlowByMobileIds(ids: List<String>): Flowable<List<AttachmentBean>>
+
+    @Query("SELECT * FROM AttachmentBean WHERE mobileId IN (:ids)")
+    abstract fun queryLiveDataByMobileIds(ids: List<String>): LiveData<List<AttachmentBean>>
+
+    @Query("DELETE FROM AttachmentBean WHERE mobileId = :mobileId")
+    abstract fun deleteByMobileId(mobileId: String): Int
+
+    @Query("DELETE FROM AttachmentBean WHERE mobileId IN (:ids)")
+    abstract fun deleteByMobileIds(ids: List<String>): Int
+
+    // ==================== 按 fileId（服务端 ID） ====================
+
+    @Query("SELECT * FROM AttachmentBean WHERE fileId = :fileId LIMIT 1")
+    abstract fun queryByFileId(fileId: String): AttachmentBean?
+
+    @Query("SELECT * FROM AttachmentBean WHERE fileId IN (:ids)")
+    abstract fun queryByFileIds(ids: List<String>): List<AttachmentBean>
+
+    @Query("SELECT * FROM AttachmentBean WHERE fileId IN (:ids)")
+    abstract fun queryFlowByFileIds(ids: List<String>): Flowable<List<AttachmentBean>>
+
+    @Query("SELECT * FROM AttachmentBean WHERE fileId IN (:ids)")
+    abstract fun queryLiveDataByFileIds(ids: List<String>): LiveData<List<AttachmentBean>>
+
+    @Query("DELETE FROM AttachmentBean WHERE fileId = :fileId")
+    abstract fun deleteByFileId(fileId: String): Int
+
+    @Query("DELETE FROM AttachmentBean WHERE fileId IN (:ids)")
+    abstract fun deleteByFileIds(ids: List<String>): Int
+
+    // ==================== 其它 ====================
+
+    @Query("SELECT * FROM AttachmentBean")
     abstract fun queryAll(): List<AttachmentBean>
 
-    /** 按创建人查询 */
-    @Query("Select * FROM AttachmentBean where createUser = :createUser")
+    @Query("SELECT * FROM AttachmentBean WHERE createUser = :createUser")
     abstract fun queryAllByUser(createUser: String?): List<AttachmentBean>
-
-    /** 按 mainId 查询列表 */
-    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId")
-    abstract fun queryByMainId(mainId: String): List<AttachmentBean>
-
-    /** 按 mainId、fieldName 查询 */
-    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName")
-    abstract fun queryList(mainId: String, fieldName: String): List<AttachmentBean>
-
-    /** 按 mainId、createUser 查询 */
-    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and createUser = :createUser")
-    abstract fun queryByMainId(mainId: String, createUser: String?): List<AttachmentBean>
-
-    /** 按 mainId、fieldName、createUser 查询 */
-    @Query("Select * FROM AttachmentBean WHERE mainId = :mainId and fieldName = :fieldName and createUser = :createUser")
-    abstract fun queryList(mainId: String, fieldName: String, createUser: String?): List<AttachmentBean>
 }

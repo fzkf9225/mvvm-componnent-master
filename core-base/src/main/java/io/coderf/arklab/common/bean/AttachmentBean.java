@@ -9,10 +9,10 @@ import androidx.room.PrimaryKey;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.enums.UploadStatusEnum;
+import io.coderf.arklab.core.utils.StringUtil;
 
 /**
  * 附件表
@@ -21,18 +21,18 @@ import io.coderf.arklab.common.enums.UploadStatusEnum;
  * @version 1.0
  * @since 1.0
  * @created 2023/12/28 17:00
- * @updated 2026/4/9 0:03
+ * @updated 2026/11/4
  */
 @Entity
 public class AttachmentBean extends BaseObservable {
     /**
-     * 移动端主键
+     * 移动端主键；业务侧应持有该 ID（或逗号拼接串）关联附件，而非反向写入业务外键。
      */
     @PrimaryKey
     @NonNull
-    private String mobileId = UUID.randomUUID().toString().replace("-", "");
+    private String mobileId = StringUtil.getUUID();
     /**
-     * 文件id
+     * 服务端附件 ID；上传/同步后端后回写，用于与网络附件对接。
      */
     private String fileId = "";
     /**
@@ -48,10 +48,6 @@ public class AttachmentBean extends BaseObservable {
      */
     private String thumbnailPath = "";
     /**
-     * 关联业务表id
-     */
-    private String mainId = "";
-    /**
      * 附件名称
      */
     private String fileName = "";
@@ -63,11 +59,6 @@ public class AttachmentBean extends BaseObservable {
      * 附件类型，参考枚举值AttachmentTypeEnum，image-图片，video-视频，audio-音频，file-附件
      */
     private String fileType;
-    /**
-     * 字段id，对应业务表的字段名，默认为空，也就是这个业务表只有一个类型的附件这个就不用赋值
-     * 如果多个的话就赋值这个字段，区分各自的附件
-     */
-    private String fieldName = "";
     /**
      * 插入数据的时间
      */
@@ -167,15 +158,6 @@ public class AttachmentBean extends BaseObservable {
     }
 
     @Bindable
-    public String getMainId() {
-        return mainId;
-    }
-
-    public void setMainId(String mainId) {
-        this.mainId = mainId == null ? "" : mainId;
-    }
-
-    @Bindable
     public String getFileName() {
         return fileName;
     }
@@ -200,15 +182,6 @@ public class AttachmentBean extends BaseObservable {
 
     public void setThumbnailPath(String thumbnailPath) {
         this.thumbnailPath = thumbnailPath == null ? "" : thumbnailPath;
-    }
-
-    @Bindable
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName == null ? "" : fieldName;
     }
 
     @Bindable
@@ -337,11 +310,9 @@ public class AttachmentBean extends BaseObservable {
                 ", path='" + path + '\'' +
                 ", relativePath='" + relativePath + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +
-                ", mainId='" + mainId + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSize='" + fileSize + '\'' +
                 ", fileType='" + fileType + '\'' +
-                ", fieldName='" + fieldName + '\'' +
                 ", createTime=" + createTime +
                 ", createUser='" + createUser + '\'' +
                 ", otherInfo='" + otherInfo + '\'' +

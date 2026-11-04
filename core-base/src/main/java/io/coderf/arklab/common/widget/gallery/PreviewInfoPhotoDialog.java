@@ -226,7 +226,7 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     public PreviewInfoPhotoDialog createImageResInfo(@DrawableRes List<Integer> imageResList) {
-        return setImages(AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList, null, null));
+        return setImages(AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList));
     }
 
     public PreviewInfoPhotoDialog createImageInfo(String... image) {

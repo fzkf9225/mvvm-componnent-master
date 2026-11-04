@@ -242,7 +242,7 @@ public class PreviewPhotoDialog extends Dialog {
      * @param imageResList 本地图片资源列表
      */
     public PreviewPhotoDialog createImageResInfo(@DrawableRes List<Integer> imageResList) {
-        imageInfos = AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList,null,null);
+        imageInfos = AttachmentUtil.drawableResToAttachmentList(getContext(), imageResList);
         return this;
     }
 

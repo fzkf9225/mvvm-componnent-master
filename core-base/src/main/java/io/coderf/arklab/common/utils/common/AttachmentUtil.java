@@ -19,11 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.FileProvider;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.coderf.arklab.common.activity.VideoPlayerActivity;
@@ -89,44 +91,18 @@ public class AttachmentUtil {
     }
 
     /**
-     * 本地文件绝对地址转  List<AttachmentBean>
+     * 本地文件绝对地址转 List&lt;AttachmentBean&gt;
      *
      * @param stringList 本地绝对地址集合
-     * @return
      */
     public static List<AttachmentBean> toAttachmentList(List<String> stringList) {
-        return toAttachmentList(stringList, null, null);
-    }
-
-    /**
-     * 本地文件绝对地址转  List<AttachmentBean>
-     *
-     * @param stringList 本地绝对地址集合
-     * @param mainId     主键Id
-     * @return
-     */
-    public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId) {
-        return toAttachmentList(stringList, mainId, null);
-    }
-
-    /**
-     * 本地文件绝对地址转  List<AttachmentBean>
-     *
-     * @param stringList 本地绝对地址集合
-     * @param mainId     主键Id
-     * @param field      字段名称
-     * @return
-     */
-    public static List<AttachmentBean> toAttachmentList(List<String> stringList, String mainId, String field) {
         if (stringList == null) {
             return null;
         }
         Context appContext = Config.getInstance().getApplication();
         return stringList.stream().map(str -> {
             AttachmentBean attachment = new AttachmentBean();
-            attachment.setMainId(mainId);
             attachment.setPath(str);
-            attachment.setFieldName(field);
             attachment.setFileName(FileUtil.getFileName(str));
             if (!TextUtils.isEmpty(str)) {
                 File file = new File(str);
@@ -142,66 +118,13 @@ public class AttachmentUtil {
         }).collect(Collectors.toList());
     }
 
-    public static List<AttachmentBean> coverAttachmentList(List<AttachmentBean> attachmentBeanList, String mainId, @NotNull String field) {
-        if (attachmentBeanList == null) {
-            return null;
-        }
-        for (AttachmentBean attachmentBean : attachmentBeanList) {
-            attachmentBean.setMainId(mainId);
-            attachmentBean.setFieldName(field);
-        }
-        return attachmentBeanList;
+    @SuppressLint("Range")
+    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList) {
+        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList);
     }
 
     @SuppressLint("Range")
     public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList) {
-        return uriListToAttachmentList(context, uriList, null, null);
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList) {
-        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, null, null);
-    }
-
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList, String mainId) {
-        return uriListToAttachmentList(context, uriList, mainId, null);
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId) {
-        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, mainId, null);
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList, String mainId, String field) {
-        return uriListToAttachmentList(Config.getInstance().getApplication(), uriList, mainId, field);
-    }
-
-    public static List<String> getIdList(List<AttachmentBean> attachmentList) {
-        if(CollectionUtil.isEmpty(attachmentList)){
-            return null;
-        }
-        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.toList());
-    }
-
-    public static String getIds(List<AttachmentBean> attachmentList,String delimiter) {
-        if(CollectionUtil.isEmpty(attachmentList)){
-            return null;
-        }
-        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.joining(delimiter));
-    }
-
-    public static String getIds(List<AttachmentBean> attachmentList) {
-        if(CollectionUtil.isEmpty(attachmentList)){
-            return null;
-        }
-        return attachmentList.stream().map(AttachmentBean::getMobileId).collect(Collectors.joining(","));
-    }
-
-    @SuppressLint("Range")
-    public static List<AttachmentBean> uriListToAttachmentList(Context context, List<Uri> uriList, String mainId, String field) {
         if (uriList == null) {
             return null;
         }
@@ -209,16 +132,13 @@ public class AttachmentUtil {
             return null;
         }
         ContentResolver contentResolver = context.getContentResolver();
-
         if (contentResolver == null) {
             return null;
         }
 
         return uriList.stream().map(uri -> {
             AttachmentBean attachment = new AttachmentBean();
-            attachment.setMainId(mainId);
             attachment.setPath(uri.toString());
-            attachment.setFieldName(field);
             try {
                 attachment.setFileType(getAttachmentTypeByUri(context, uri).typeValue);
             } catch (Exception e) {
@@ -244,7 +164,10 @@ public class AttachmentUtil {
         }).collect(Collectors.toList());
     }
 
-    public static List<AttachmentBean> drawableResToAttachmentList(Context context, @DrawableRes List<Integer> drawableResList, String mainId, String field) {
+    public static List<AttachmentBean> drawableResToAttachmentList(
+            Context context,
+            @DrawableRes List<Integer> drawableResList
+    ) {
         if (CollectionUtil.isEmpty(drawableResList)) {
             return null;
         }
@@ -253,9 +176,7 @@ public class AttachmentUtil {
         }
         return drawableResList.stream().map(resId -> {
             AttachmentBean attachment = new AttachmentBean();
-            attachment.setMainId(mainId);
             attachment.setPath(DrawableUtil.resourceToBase64(context, resId));
-            attachment.setFieldName(field);
             try {
                 attachment.setFileName(context.getResources().getResourceEntryName(resId));
                 String extension = FileUtil.getUrlFileExtensionName(attachment.getFileName());
@@ -275,8 +196,94 @@ public class AttachmentUtil {
         }).collect(Collectors.toList());
     }
 
-    public static List<AttachmentBean> drawableResToAttachmentList(@DrawableRes List<Integer> drawableResList, String mainId, String field) {
-        return drawableResToAttachmentList(Config.getInstance().getApplication(), drawableResList, mainId, field);
+    public static List<AttachmentBean> drawableResToAttachmentList(@DrawableRes List<Integer> drawableResList) {
+        return drawableResToAttachmentList(Config.getInstance().getApplication(), drawableResList);
+    }
+
+    /**
+     * 解析逗号拼接的 ID 串（忽略空白与空段）。
+     */
+    public static List<String> parseIds(String idsCsv) {
+        if (TextUtils.isEmpty(idsCsv)) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(idsCsv.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 规范化 ID 集合：去空、去空白；保持顺序去重。
+     */
+    public static List<String> normalizeIds(List<String> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        List<String> result = new ArrayList<>(ids.size());
+        for (String id : ids) {
+            if (id == null) {
+                continue;
+            }
+            String trimmed = id.trim();
+            if (trimmed.isEmpty() || result.contains(trimmed)) {
+                continue;
+            }
+            result.add(trimmed);
+        }
+        return result;
+    }
+
+    /** 附件本地主键集合；空列表返回 emptyList，便于业务直接存库。 */
+    public static List<String> getIdList(List<AttachmentBean> attachmentList) {
+        if (CollectionUtil.isEmpty(attachmentList)) {
+            return Collections.emptyList();
+        }
+        return attachmentList.stream()
+                .map(AttachmentBean::getMobileId)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    public static String getIds(List<AttachmentBean> attachmentList, String delimiter) {
+        List<String> ids = getIdList(attachmentList);
+        if (ids.isEmpty()) {
+            return "";
+        }
+        String sep = TextUtils.isEmpty(delimiter) ? "," : delimiter;
+        return String.join(sep, ids);
+    }
+
+    public static String getIds(List<AttachmentBean> attachmentList) {
+        return getIds(attachmentList, ",");
+    }
+
+    /** 服务端 fileId 集合 */
+    public static List<String> getFileIdList(List<AttachmentBean> attachmentList) {
+        if (CollectionUtil.isEmpty(attachmentList)) {
+            return Collections.emptyList();
+        }
+        return attachmentList.stream()
+                .map(AttachmentBean::getFileId)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    public static String getFileIds(List<AttachmentBean> attachmentList, String delimiter) {
+        List<String> ids = getFileIdList(attachmentList);
+        if (ids.isEmpty()) {
+            return "";
+        }
+        String sep = TextUtils.isEmpty(delimiter) ? "," : delimiter;
+        return String.join(sep, ids);
+    }
+
+    public static String getFileIds(List<AttachmentBean> attachmentList) {
+        return getFileIds(attachmentList, ",");
     }
 
     /**

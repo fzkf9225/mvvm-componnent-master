@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.UUID;
 
+import io.coderf.arklab.core.utils.StringUtil;
+
 /**
  * BaseDaoBean 类。
  *
@@ -21,7 +23,7 @@ public abstract class BaseDaoBean extends BaseObservable {
     // 用于标识表中的主键以及主键自增
     @PrimaryKey
     @NonNull
-    private String id = UUID.randomUUID().toString().replace("-", "");
+    private String id = StringUtil.getUUID();
 
     @NonNull
     public String getId() {

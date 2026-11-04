@@ -1,147 +1,241 @@
 package io.coderf.arklab.common.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.coderf.arklab.common.bean.AttachmentBean
 import io.coderf.arklab.common.dao.AttachmentDao
+import io.coderf.arklab.common.utils.common.AttachmentUtil
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.UUID
 
 /**
- * AttachmentRepositoryImpl 类。
+ * 附件仓库：按本地 [AttachmentBean.mobileId] / 服务端 [AttachmentBean.fileId] 增删查改。
+ *
+ * 业务侧应持有附件 ID（集合或逗号拼接串），附件表不再反向关联业务。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2023/12/1 15:25
+ * @updated 2026/11/4
  */
 class AttachmentRepositoryImpl(attachmentDao: AttachmentDao) :
     RoomRepositoryImpl<AttachmentBean, AttachmentDao>(attachmentDao) {
 
-    fun queryFlowListByMainId(mainId: String): Flowable<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>("mainId" to mainId)
-        return getRoomDao().doQueryByLimit(queryParams, null, Int.MAX_VALUE, 0)
+    // ==================== 查询：mobileId ====================
+
+    fun queryByMobileId(mobileId: String?): AttachmentBean? {
+        if (mobileId.isNullOrBlank()) {
+            return null
+        }
+        return getRoomDao().queryByMobileId(mobileId)
     }
 
-    fun queryFlowList(mainId: String, fieldName: String): Flowable<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>(
-            "mainId" to mainId,
-            "fieldName" to fieldName
-        )
-        return getRoomDao().doQueryByLimit(queryParams, null, Int.MAX_VALUE, 0)
+    fun queryListByMobileIds(ids: List<String>?): List<AttachmentBean> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return emptyList()
+        }
+        return getRoomDao().queryByMobileIds(normalized)
     }
 
-    fun queryLiveDataListByMainId(mainId: String): LiveData<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>("mainId" to mainId)
-        return getRoomDao().doQueryByLimitLiveData(queryParams, null, Int.MAX_VALUE, 0)
+    fun queryListByMobileIds(idsCsv: String?): List<AttachmentBean> {
+        return queryListByMobileIds(AttachmentUtil.parseIds(idsCsv))
     }
 
-    fun queryFlowLiveDataList(mainId: String, fieldName: String): LiveData<List<AttachmentBean>> {
-        val queryParams = mapOf<String, Any>(
-            "mainId" to mainId,
-            "fieldName" to fieldName
-        )
-        return getRoomDao().doQueryByLimitLiveData(queryParams, null, Int.MAX_VALUE, 0)
+    fun queryFlowListByMobileIds(ids: List<String>?): Flowable<List<AttachmentBean>> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return Flowable.just(emptyList())
+        }
+        return getRoomDao().queryFlowByMobileIds(normalized)
     }
 
-    fun queryListByMainId(mainId: String): List<AttachmentBean> {
-        val queryParams = mapOf<String, Any>("mainId" to mainId)
-        return getRoomDao().findPageList(queryParams, null, Int.MAX_VALUE, 0)
+    fun queryFlowListByMobileIds(idsCsv: String?): Flowable<List<AttachmentBean>> {
+        return queryFlowListByMobileIds(AttachmentUtil.parseIds(idsCsv))
     }
 
-    fun queryList(mainId: String, fieldName: String): List<AttachmentBean> {
-        val queryParams = mapOf<String, Any>(
-            "mainId" to mainId,
-            "fieldName" to fieldName
-        )
-        return getRoomDao().findPageList(queryParams, null, Int.MAX_VALUE, 0)
+    fun queryLiveDataListByMobileIds(ids: List<String>?): LiveData<List<AttachmentBean>> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return MutableLiveData(emptyList())
+        }
+        return getRoomDao().queryLiveDataByMobileIds(normalized)
     }
 
-    /** 按 mainId 删除，返回影响行数 */
-    fun deleteByMainIdCount(mainId: String): Single<Int> {
-        val queryParams = mapOf<String, Any>("mainId" to mainId)
-        return getRoomDao().deleteByParamsCount(queryParams)
+    fun queryLiveDataListByMobileIds(idsCsv: String?): LiveData<List<AttachmentBean>> {
+        return queryLiveDataListByMobileIds(AttachmentUtil.parseIds(idsCsv))
     }
 
-    /** 按 mainId + fieldName 删除，返回影响行数 */
-    fun deleteCount(mainId: String, fieldName: String): Single<Int> {
-        val queryParams = mapOf<String, Any>(
-            "mainId" to mainId,
-            "fieldName" to fieldName
-        )
-        return getRoomDao().deleteByParamsCount(queryParams)
+    // ==================== 查询：fileId ====================
+
+    fun queryByFileId(fileId: String?): AttachmentBean? {
+        if (fileId.isNullOrBlank()) {
+            return null
+        }
+        return getRoomDao().queryByFileId(fileId)
     }
 
-    fun insert(dataList: List<AttachmentBean>?, mainId: String): Completable {
+    fun queryListByFileIds(ids: List<String>?): List<AttachmentBean> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return emptyList()
+        }
+        return getRoomDao().queryByFileIds(normalized)
+    }
+
+    fun queryListByFileIds(idsCsv: String?): List<AttachmentBean> {
+        return queryListByFileIds(AttachmentUtil.parseIds(idsCsv))
+    }
+
+    fun queryFlowListByFileIds(ids: List<String>?): Flowable<List<AttachmentBean>> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return Flowable.just(emptyList())
+        }
+        return getRoomDao().queryFlowByFileIds(normalized)
+    }
+
+    fun queryFlowListByFileIds(idsCsv: String?): Flowable<List<AttachmentBean>> {
+        return queryFlowListByFileIds(AttachmentUtil.parseIds(idsCsv))
+    }
+
+    fun queryLiveDataListByFileIds(ids: List<String>?): LiveData<List<AttachmentBean>> {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return MutableLiveData(emptyList())
+        }
+        return getRoomDao().queryLiveDataByFileIds(normalized)
+    }
+
+    fun queryLiveDataListByFileIds(idsCsv: String?): LiveData<List<AttachmentBean>> {
+        return queryLiveDataListByFileIds(AttachmentUtil.parseIds(idsCsv))
+    }
+
+    // ==================== 删除 ====================
+
+    fun deleteByMobileId(mobileId: String?): Int {
+        if (mobileId.isNullOrBlank()) {
+            return 0
+        }
+        return getRoomDao().deleteByMobileId(mobileId)
+    }
+
+    fun deleteByMobileIds(ids: List<String>?): Int {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return 0
+        }
+        return getRoomDao().deleteByMobileIds(normalized)
+    }
+
+    fun deleteByMobileIds(idsCsv: String?): Int {
+        return deleteByMobileIds(AttachmentUtil.parseIds(idsCsv))
+    }
+
+    fun deleteByMobileIdsCount(ids: List<String>?): Single<Int> {
+        return Single.fromCallable { deleteByMobileIds(ids) }
+    }
+
+    fun deleteByMobileIdsCount(idsCsv: String?): Single<Int> {
+        return Single.fromCallable { deleteByMobileIds(idsCsv) }
+    }
+
+    fun deleteByFileId(fileId: String?): Int {
+        if (fileId.isNullOrBlank()) {
+            return 0
+        }
+        return getRoomDao().deleteByFileId(fileId)
+    }
+
+    fun deleteByFileIds(ids: List<String>?): Int {
+        val normalized = AttachmentUtil.normalizeIds(ids)
+        if (normalized.isEmpty()) {
+            return 0
+        }
+        return getRoomDao().deleteByFileIds(normalized)
+    }
+
+    fun deleteByFileIds(idsCsv: String?): Int {
+        return deleteByFileIds(AttachmentUtil.parseIds(idsCsv))
+    }
+
+    // ==================== 写入（保留 mobileId，不再重建） ====================
+
+    fun insert(dataList: List<AttachmentBean>?): Completable {
         if (dataList.isNullOrEmpty()) {
             return Completable.complete()
-        }
-        dataList.forEach { item ->
-            item.mainId = mainId
-        }
-        return getRoomDao().insert(dataList.toList())
-    }
-
-    fun insert(dataList: List<AttachmentBean>?, mainId: String, fieldName: String): Completable {
-        if (dataList.isNullOrEmpty()) {
-            return Completable.complete()
-        }
-        dataList.forEach { item ->
-            item.mainId = mainId
-            item.fieldName = fieldName
         }
         return getRoomDao().insert(dataList)
     }
 
-    fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String) {
-        getRoomDao().deleteByMainId(mainId)
+    /**
+     * 按主键 upsert；保留已有 [AttachmentBean.mobileId]，不强制重建。
+     */
+    fun saveOrUpdate(dataList: List<AttachmentBean>?) {
         if (dataList.isNullOrEmpty()) {
             return
         }
-        dataList.forEach { item ->
-            item.mainId = mainId
-            item.mobileId = UUID.randomUUID().toString().replace("-", "")
-        }
-        getRoomDao().insertOnly(dataList)
+        getRoomDao().upsertOnly(dataList)
     }
 
-    fun saveOrUpdate(dataList: List<AttachmentBean>?, mainId: String, fieldName: String) {
-        getRoomDao().delete(mainId, fieldName)
-        if (dataList.isNullOrEmpty()) {
-            return
-        }
-        dataList.forEach { item ->
-            item.mainId = mainId
-            item.fieldName = fieldName
-            item.mobileId = UUID.randomUUID().toString().replace("-", "")
-        }
-        getRoomDao().insertOnly(dataList)
-    }
-
-    suspend fun saveOrUpdateSuspend(
-        dataList: List<AttachmentBean>?,
-        mainId: String,
-        fieldName: String?
-    ) {
+    suspend fun saveOrUpdateSuspend(dataList: List<AttachmentBean>?) {
         withContext(Dispatchers.IO) {
-            if (fieldName.isNullOrEmpty()) {
-                getRoomDao().deleteByMobileId(mainId)
-            } else {
-                getRoomDao().delete(mainId, fieldName)
-            }
             if (dataList.isNullOrEmpty()) {
                 return@withContext
             }
-            dataList.forEach { item ->
-                item.mainId = mainId
-                item.fieldName = fieldName
-                item.mobileId = UUID.randomUUID().toString().replace("-", "")
-            }
-            getRoomDao().insertOnly(dataList)
+            getRoomDao().upsertOnly(dataList)
         }
     }
 
+    /**
+     * 用新列表整体替换旧 ID 集合：删除不在新列表中的旧附件，再 upsert 新列表。
+     *
+     * @param dataList 最新附件列表（其 mobileId 将作为业务侧应保存的 ID）
+     * @param previousIds 业务侧原先持有的 mobileId 集合（可为逗号串解析结果）
+     * @return 最新列表的 mobileId 逗号拼接串，便于回写业务字段
+     */
+    fun replaceByMobileIds(
+        dataList: List<AttachmentBean>?,
+        previousIds: List<String>?
+    ): String {
+        val newIds = AttachmentUtil.normalizeIds(AttachmentUtil.getIdList(dataList))
+        val oldIds = AttachmentUtil.normalizeIds(previousIds)
+        val removed = oldIds.filterNot { newIds.contains(it) }
+        if (removed.isNotEmpty()) {
+            getRoomDao().deleteByMobileIds(removed)
+        }
+        if (!dataList.isNullOrEmpty()) {
+            getRoomDao().upsertOnly(dataList)
+        }
+        return AttachmentUtil.getIds(dataList).orEmpty()
+    }
+
+    fun replaceByMobileIds(
+        dataList: List<AttachmentBean>?,
+        previousIdsCsv: String?
+    ): String {
+        return replaceByMobileIds(dataList, AttachmentUtil.parseIds(previousIdsCsv))
+    }
+
+    suspend fun replaceByMobileIdsSuspend(
+        dataList: List<AttachmentBean>?,
+        previousIds: List<String>?
+    ): String {
+        return withContext(Dispatchers.IO) {
+            replaceByMobileIds(dataList, previousIds)
+        }
+    }
+
+    suspend fun replaceByMobileIdsSuspend(
+        dataList: List<AttachmentBean>?,
+        previousIdsCsv: String?
+    ): String {
+        return withContext(Dispatchers.IO) {
+            replaceByMobileIds(dataList, previousIdsCsv)
+        }
+    }
 }
