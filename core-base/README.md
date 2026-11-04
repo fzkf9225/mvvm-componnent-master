@@ -13,6 +13,10 @@ namespace：`io.coderf.arklab.common`
 
 ## 版本
 
+### 1.7.0
+
+- 迁移部分工具类至 `core-utils`
+
 ### 1.6.0
 
 - M3 night 状态色对齐；Dialog 按钮 style 与页面对齐
