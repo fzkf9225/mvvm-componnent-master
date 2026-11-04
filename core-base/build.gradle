@@ -6,7 +6,6 @@ plugins {
 }
 
 android {
-    // ?? R / BuildConfig / databinding ????????? import ??
     namespace = 'io.coderf.arklab.common'
     compileSdk = libs.versions.compileSdkVersion.get().toInteger()
     defaultConfig {
