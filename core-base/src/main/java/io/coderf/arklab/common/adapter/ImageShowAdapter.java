@@ -38,7 +38,7 @@ public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
     @Override
     public void onBindHolder(BaseViewHolder<AdapterImageShowItemBinding> holder, int pos) {
         Glide.with(holder.getBinding().cornerImage.getContext())
-                .load(mList.get(pos).getPath())
+                .load(getDisplayPath(mList.get(pos)))
                 .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                         .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().cornerImage);

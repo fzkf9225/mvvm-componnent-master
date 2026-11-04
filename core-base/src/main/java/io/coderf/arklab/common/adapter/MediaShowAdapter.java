@@ -55,7 +55,7 @@ public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
             holder.getBinding().mediaPlay.setVisibility(View.GONE);
         }
         Glide.with(holder.getBinding().imageVideo.getContext())
-                .load(mList.get(pos).getPath())
+                .load(getDisplayPath(mList.get(pos)))
                 .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                         .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().imageVideo);

@@ -69,7 +69,7 @@ public class ImageAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             holder.getBinding().ivImageShow.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivImageShow.getContext())
-                    .load(mList.get(pos).getPath())
+                    .load(getDisplayPath(mList.get(pos)))
                     .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                             .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivImageShow);

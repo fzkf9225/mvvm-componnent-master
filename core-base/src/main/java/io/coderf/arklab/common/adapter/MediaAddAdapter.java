@@ -83,7 +83,7 @@ public class MediaAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
                 holder.getBinding().ivPlayer.setVisibility(View.GONE);
             }
             Glide.with(holder.getBinding().ivMediaShow.getContext())
-                    .load(mList.get(pos).getPath())
+                    .load(getDisplayPath(mList.get(pos)))
                     .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                             .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivMediaShow);

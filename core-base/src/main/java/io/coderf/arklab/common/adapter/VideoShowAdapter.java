@@ -43,7 +43,7 @@ public class VideoShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
     @Override
     public void onBindHolder(BaseViewHolder<AdapterVideoShowItemBinding> holder, int pos) {
         Glide.with(holder.getBinding().imageVideo.getContext())
-                .load(mList.get(pos).getPath())
+                .load(getDisplayPath(mList.get(pos)))
                 .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                         .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().imageVideo);

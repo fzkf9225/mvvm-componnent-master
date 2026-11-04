@@ -2,10 +2,25 @@
 
 本地持久化：Room Database / DAO / Entity，以及 Rx / 协程两套 Repository。
 
-当前版本：**1.6.1**  
-Maven：`io.coderf.arklab.core:db:1.6.1`  
+当前版本：**1.6.2**  
+Maven：`io.coderf.arklab.core:db:1.6.2`  
 namespace：`io.coderf.arklab.core.db`  
-配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）
+配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）  
+升级说明：[UPGRADE.md §0.4.2](../UPGRADE.md#042-附件模型简化base-171--db-162)
+
+---
+
+## 1.6.2 变更摘要
+
+附件模型简化（**破坏性**，需配合 **core-base ≥1.7.1**）：
+
+- 删除按 `mainId` / `fieldName` 反向关联业务的 Dao / Repo API
+- 按 `mobileId` / `fileId`（单值、`List`、逗号串）查询 / 删除；`Flowable` / `LiveData` 重载齐全
+- `saveOrUpdate(list)`：upsert，**保留**已有 `mobileId`（不再整组删建）
+- `replaceByMobileIds(list, previousIds)`：替换旧 ID 集合并返回最新 csv，便于回写业务字段
+- `AttachmentDatabase` version **3**（`MIGRATION_2_3` 去掉 `mainId`/`fieldName` 列）
+
+业务侧持有附件 `mobileId`；服务端 ID 写 `AttachmentBean.fileId`。详见文末「附件」一节。
 
 ---
 
@@ -141,6 +156,32 @@ repository.findAll(RoomRequestOptions.query(false, true))
 
 ---
 
+## 附件（Attachment）
+
+附件表只存文件，不反向挂业务。
+
+| 字段 | 含义 |
+|------|------|
+| `mobileId` | 本地主键；业务表存其 csv / 列表 |
+| `fileId` | 服务端附件 ID；上传成功后回写 |
+
+```kotlin
+val repo = AttachmentRepositoryImpl(AttachmentDatabase.getInstance(app, dbName).attachmentDao)
+
+// 草稿保存：替换旧附件并回写业务字段
+bean.attachIds = repo.replaceByMobileIds(images, bean.attachIds)
+
+// 加载
+val list = repo.queryListByMobileIds(bean.attachIds)
+
+// 删除业务时一并清附件
+repo.deleteByMobileIds(bean.attachIds)
+```
+
+`AttachmentUtil.getIds` / `parseIds` / `getFileIds` 用于 csv 与集合互转。
+
+---
+
 ## API 演进：及时清理过时方法
 
 `@Deprecated` 只作短期迁移窗口，落地后删除。本模块已移除：DELETE 返回 `Flowable<List>` / DELETE LiveData、过渡用 `RoomRepositoryCoroutineExt`（blocking 桥接）等。
@@ -159,7 +200,7 @@ repository.findAll(RoomRequestOptions.query(false, true))
 - `ksp` → `:room-processor` **1.2.0**（或同源工程 `project(':room-processor')`）
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.6.1'
+implementation 'io.coderf.arklab.core:db:1.6.2'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 // 或本仓库
 implementation project(':core-db')

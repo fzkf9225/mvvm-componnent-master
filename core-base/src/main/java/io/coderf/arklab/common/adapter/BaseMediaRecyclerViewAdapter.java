@@ -85,6 +85,11 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
      * 大图预览弹出前的配置，未设置时仍使用对话框默认值
      */
     protected PreviewPhotoDialog.OnConfigureListener previewConfigureListener;
+    /**
+     * 列表/宫格小图是否优先加载缩略图，默认为 true；无缩略图时回退 path。
+     * 大图预览仍走 {@link AttachmentBean#getPath()}。
+     */
+    protected boolean preferThumbnail = true;
 
     public BaseMediaRecyclerViewAdapter() {
         initArguments();
@@ -226,6 +231,29 @@ public abstract class BaseMediaRecyclerViewAdapter<T, VDB extends ViewDataBindin
      */
     public void setOnPreviewPhotoConfigure(PreviewPhotoDialog.OnConfigureListener previewConfigureListener) {
         this.previewConfigureListener = previewConfigureListener;
+    }
+
+    public boolean isPreferThumbnail() {
+        return preferThumbnail;
+    }
+
+    /**
+     * 设置列表/宫格小图是否优先加载缩略图。
+     *
+     * @param preferThumbnail true：有 thumbnailPath 时优先；false：始终用 path
+     */
+    public void setPreferThumbnail(boolean preferThumbnail) {
+        this.preferThumbnail = preferThumbnail;
+    }
+
+    /**
+     * 按 {@link #preferThumbnail} 取列表展示地址；bean 为空时返回空串。
+     */
+    protected String getDisplayPath(AttachmentBean bean) {
+        if (bean == null) {
+            return "";
+        }
+        return bean.getDisplayPath(preferThumbnail);
     }
 
     /**

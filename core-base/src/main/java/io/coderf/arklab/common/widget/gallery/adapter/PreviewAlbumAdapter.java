@@ -68,7 +68,7 @@ public class PreviewAlbumAdapter extends BaseRecyclerViewAdapter<PreviewInfoBean
     public void onBindHolder(BaseViewHolder<ItemPreviewAlbumBinding> holder, int pos) {
         PreviewInfoBean item = mList.get(pos);
         Glide.with(holder.itemView.getContext())
-                .load(item.getPath())
+                .load(item.getDisplayPath(true))
                 .apply(new RequestOptions()
                         .placeholder(previewAlbumDialog.getPlaceholderImage() == null
                                 ? Config.getInstance().getDefaultPlaceholderDrawable(holder.itemView.getContext())

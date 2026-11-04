@@ -214,6 +214,11 @@ public abstract class FormMedia extends CornerConstraintLayout implements FormVa
      */
     protected PreviewPhotoDialog.OnConfigureListener previewConfigureListener;
     /**
+     * 列表/宫格小图是否优先加载缩略图，默认为 true；无缩略图时回退 path。
+     * 大图预览、上传等仍使用原图 path。
+     */
+    protected boolean preferThumbnail = true;
+    /**
      * 主要是适配器item的圆角
      */
     protected float radius;
@@ -377,6 +382,7 @@ public abstract class FormMedia extends CornerConstraintLayout implements FormVa
                 ctx.getResources().getDimension(R.dimen.form_required_start_margin));
         labelTextStyle = typedArray.getInt(R.styleable.FormUI_labelTextStyle, LabelTextStyleEnum.NORMAL.value);
 
+        preferThumbnail = typedArray.getBoolean(R.styleable.FormUI_preferThumbnail, true);
         if (typedArray.hasValue(R.styleable.FormUI_placeholderImage)) {
             placeholderImage = typedArray.getDrawable(R.styleable.FormUI_placeholderImage);
         }
@@ -896,6 +902,20 @@ public abstract class FormMedia extends CornerConstraintLayout implements FormVa
         return previewConfigureListener;
     }
 
+    public boolean isPreferThumbnail() {
+        return preferThumbnail;
+    }
+
+    /**
+     * 设置列表/宫格小图是否优先加载缩略图，并同步到当前媒体适配器。
+     *
+     * @param preferThumbnail true：有 thumbnailPath 时优先；false：始终用 path
+     */
+    public void setPreferThumbnail(boolean preferThumbnail) {
+        this.preferThumbnail = preferThumbnail;
+        bindPreviewPhotoConfigure();
+    }
+
     /**
      * 子类把配置写到自己的媒体适配器上。
      */
@@ -904,6 +924,7 @@ public abstract class FormMedia extends CornerConstraintLayout implements FormVa
 
     protected void applyPreviewPhotoConfigure(@Nullable BaseMediaRecyclerViewAdapter<?, ?> adapter) {
         if (adapter != null) {
+            adapter.setPreferThumbnail(preferThumbnail);
             adapter.setOnPreviewPhotoConfigure(previewConfigureListener);
         }
     }

@@ -75,7 +75,7 @@ public class VideoAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             holder.getBinding().videoAdd.setVisibility(View.GONE);
             holder.getBinding().ivVideoShow.setVisibility(View.VISIBLE);
             Glide.with(holder.getBinding().ivVideoShow.getContext())
-                    .load(mList.get(pos).getPath())
+                    .load(getDisplayPath(mList.get(pos)))
                     .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                             .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivVideoShow);

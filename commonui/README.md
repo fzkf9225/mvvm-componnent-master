@@ -2,15 +2,23 @@
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.7.6**  
-Maven：`io.coderf.arklab.ui:ui:3.7.6`  
+当前版本：**3.7.7**  
+Maven：`io.coderf.arklab.ui:ui:3.7.7`  
 namespace：`io.coderf.arklab.ui`
 
-需要与 **core-base ≥1.2.0** 一起使用（`api` 传递；当前配套 **1.6.0**）。升级说明见 [UPGRADE.md](../UPGRADE.md)。
+需要与 **core-base ≥1.7.2** 一起使用（`api` 传递；当前配套 **1.7.2**）。升级说明见 [UPGRADE.md](../UPGRADE.md)。
 
 ---
 
 ## 版本
+
+### 3.7.7
+
+- `FormMedia` 新增 `app:preferThumbnail`（默认 `true`）与 `setPreferThumbnail(boolean)`：列表/宫格小图优先 `AttachmentBean.thumbnailPath`，无则回退 `path`
+- 经已有 `applyPreviewPhotoConfigure` 下发到媒体 Adapter；大图预览、上传仍用 `path`
+- 需配合 **core-base ≥1.7.2**
+
+详见 [UPGRADE.md §0.4.3](../UPGRADE.md#043-附件小图优先缩略图base-172--ui-377)。
 
 ### 3.7.6
 
@@ -113,7 +121,7 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 需要表单 / 通用 UI、超出 `core-base` 内置 widget 时：
 
 ```gradle
-implementation 'io.coderf.arklab.ui:ui:3.7.6'
+implementation 'io.coderf.arklab.ui:ui:3.7.7'
 // 或
 implementation project(':commonui')
 ```

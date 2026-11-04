@@ -61,6 +61,20 @@ public class AttachmentUtil {
         return attachmentList.stream().map(AttachmentBean::getPath).collect(Collectors.toList());
     }
 
+    /**
+     * 列表/宫格等小图展示地址。preferThumbnail 为 true 且缩略图非空时优先 thumbnailPath，否则回退 path。
+     *
+     * @param attachment      附件，可为空
+     * @param preferThumbnail 是否优先缩略图
+     * @return 展示地址；attachment 为空时返回空串
+     */
+    public static String getDisplayPath(AttachmentBean attachment, boolean preferThumbnail) {
+        if (attachment == null) {
+            return "";
+        }
+        return attachment.getDisplayPath(preferThumbnail);
+    }
+
     public static List<Uri> toUriList(List<AttachmentBean> attachmentList) {
         if (attachmentList == null) {
             return null;

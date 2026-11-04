@@ -1,9 +1,9 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **googlegps `3.4.0`** · **annotation `3.3.1`**  
+> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **googlegps `3.4.0`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** [§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)；历史见 [§0.3](#03-core-ws-100取代-wscomponent)、[§0](#0-160network--db请求-options-完善)。  
+> **本轮重点：** [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)；近期见 [§0.4.2](#042-附件模型简化base-171--db-162)、[§0.4.1](#041-commonui-376移除-forminputtype--formimeoptions)、[§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。  
 > Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
 > 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
@@ -16,15 +16,15 @@
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-implementation 'io.coderf.arklab.core:base:1.6.0'
-implementation 'io.coderf.arklab.core:network:1.7.0'
-implementation 'io.coderf.arklab.core:db:1.6.1'
+implementation 'io.coderf.arklab.core:base:1.7.2'
+implementation 'io.coderf.arklab.core:network:1.7.1'
+implementation 'io.coderf.arklab.core:db:1.6.2'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
-implementation 'io.coderf.arklab.core:utils:1.1.1'
+implementation 'io.coderf.arklab.core:utils:1.2.0'
 implementation 'io.coderf.arklab.core:log:1.2.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity 时
 // 按需：
-implementation 'io.coderf.arklab.ui:ui:3.7.4'
+implementation 'io.coderf.arklab.ui:ui:3.7.7'
 implementation 'io.coderf.arklab.media:media:3.7.0'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
 implementation 'io.coderf.arklab.ws:ws:1.0.1'
@@ -36,20 +36,93 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.7.0` |
-| core-base | `io.coderf.arklab.core:base:1.6.0` |
-| core-network | `io.coderf.arklab.core:network:1.7.0` |
-| core-db | `io.coderf.arklab.core:db:1.6.1` |
+| core-base | `io.coderf.arklab.core:base:1.7.2` |
+| core-network | `io.coderf.arklab.core:network:1.7.1` |
+| core-db | `io.coderf.arklab.core:db:1.6.2` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.1.1` |
+| core-utils | `io.coderf.arklab.core:utils:1.2.0` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| commonui | `io.coderf.arklab.ui:ui:3.7.4` |
+| commonui | `io.coderf.arklab.ui:ui:3.7.7` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
 | googlegps | `io.coderf.arklab.googlegps:googlegps:3.4.0` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0.4.3 附件小图优先缩略图：base `1.7.2` · ui `3.7.7`
+
+**兼容性**：默认开启后，若 `thumbnailPath` 为空仍回退 `path`，与旧行为一致；有缩略图地址时列表/宫格会改加载缩略图。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **1.7.2** | `AttachmentBean.getDisplayPath(preferThumbnail)`；`AttachmentUtil.getDisplayPath`；媒体列表 Adapter（`Image*` / `Media*` / `Video*` Add/Show）小图走展示地址；大图 `Preview*ViewPager` 仍用 `path`；相册条 `PreviewAlbumAdapter` 优先缩略图 |
+| commonui | **3.7.7** | `FormMedia` / `FormUI` 新增 `app:preferThumbnail`（默认 `true`），经 `applyPreviewPhotoConfigure` 下发到 Adapter；`setPreferThumbnail(boolean)` |
+
+### 字段约定
+
+| 字段 | 用途 |
+|------|------|
+| `path` | 原图/原文件；**大图预览、上传、打开/播放**必须用它 |
+| `thumbnailPath` | 缩略图/封面；**列表、宫格、相册条**在 `preferThumbnail=true` 时优先 |
+| `relativePath` | 相对路径语义，**不要**再用来存缩略图 |
+
+### 业务侧接入
+
+```kotlin
+attachment.path = fileUrl
+attachment.thumbnailPath = thumbnailUrl.orEmpty() // 无缩略图保持空串即可
+```
+
+```xml
+<!-- 默认 true，可省略；强制小图也走原图时再关 -->
+<io.coderf.arklab.ui.form.FormImage
+    ...
+    app:preferThumbnail="true" />
+```
+
+```java
+formImage.setPreferThumbnail(true);
+imageShowAdapter.setPreferThumbnail(false); // 仅该 Adapter
+String url = bean.getDisplayPath(true);     // 自定义 Glide 加载
+```
+
+### 注意
+
+- 本地刚选图、未写 `thumbnailPath` 时自动回退 `path`，无需特殊处理。
+- 若业务曾把缩略图写在 `relativePath`，请改为写 `thumbnailPath`（可读旧数据时自行回填），否则框架默认选址读不到缩略图。
+
+---
+
+## 0.4.2 附件模型简化：base `1.7.1` · db `1.6.2`
+
+**破坏性**（附件本地关联）：去掉 `AttachmentBean.mainId` / `fieldName` 反向挂业务；附件表只存文件，业务侧持有 `mobileId`（集合或逗号串），服务端对接用 `fileId`。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **1.7.1** | `AttachmentBean` 删除 `mainId`/`fieldName`；`AttachmentUtil` 去掉对应参数，新增 `parseIds` / `normalizeIds` / `getFileIds` |
+| core-db | **1.6.2** | Dao/Repo 改为按 `mobileId`/`fileId`（单值、集合、逗号串）查删；`saveOrUpdate` upsert **保留** `mobileId`；新增 `replaceByMobileIds`；`AttachmentDatabase` 2→3 删列 |
+
+```kotlin
+// 保存并回写业务字段
+bean.attachIds = attachmentRepo.replaceByMobileIds(images, bean.attachIds)
+// 加载
+val list = attachmentRepo.queryListByMobileIds(bean.attachIds)
+// 上传后回写服务端 ID
+item.fileId = serverId
+attachmentRepo.saveOrUpdate(listOf(item))
+```
+
+| 已删除 | 请改用 |
+|--------|--------|
+| `mainId` / `fieldName` 及按二者查删 | 业务存 `mobileId` csv/`List` + `query*ByMobileIds` / `deleteByMobileIds` |
+| `saveOrUpdate(list, mainId[, fieldName])` | `saveOrUpdate(list)` 或 `replaceByMobileIds(list, previousIds)` |
+| `AttachmentUtil.*(…, mainId, field)` / `coverAttachmentList` | 去掉业务外键参数 |
+
+业务工程若曾按 `mainId` 反查，改为持有附件 ID 即可；本地历史草稿可接受丢弃时直接升依赖版本。
 
 ---
 
@@ -142,7 +215,7 @@ request(
 ```
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.7.0'   // Options 自 1.6.0；当前见文首
+implementation 'io.coderf.arklab.core:network:1.7.1'   // Options 自 1.6.0；当前见文首
 ```
 
 完整对照与迁移：[core-network/README.md](./core-network/README.md)、[core-network/MIGRATION.md](./core-network/MIGRATION.md)。
@@ -164,7 +237,7 @@ RoomRequestOptions.query(false, true)
 ```
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.6.1'   // Options 自 1.6.0；当前见文首
+implementation 'io.coderf.arklab.core:db:1.6.2'   // Options 自 1.6.0；附件模型见 §0.4.2；当前见文首
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 ```
 
@@ -172,7 +245,7 @@ ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 
 ### 0.5 历史：core-db `1.5.0` 协程栈（若尚未跟上）
 
-若宿主仍停在 db `≤1.4.x`，请先升到至少 **1.5.0**（协程 `RoomDataRepository` / Dao `*Suspend` / `RoomPagingSource`），再升 **1.6.0** / 当前 **1.6.1**。  
+若宿主仍停在 db `≤1.4.x`，请先升到至少 **1.5.0**（协程 `RoomDataRepository` / Dao `*Suspend` / `RoomPagingSource`），再升 **1.6.0+** / 当前 **1.6.2**。  
 processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）。1.6.x **未**改 Bridge，已用 1.2.0 的工程不必为 Options 再升 processor。
 
 ---
@@ -188,9 +261,9 @@ processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）�
 | 模块 | 剔除前一档 | 剔除当轮落点 | 当前主干（请以此为准） |
 |------|------------|--------------|------------------------|
 | common（facade） | 4.6.0 | 4.6.0 | **4.7.0** |
-| core-base | 1.1.3 | 1.2.0 | **1.6.0** |
-| core-network | 1.1.0 | 1.2.0 | **1.7.0** |
-| core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.1** |
+| core-base | 1.1.3 | 1.2.0 | **1.7.1** |
+| core-network | 1.1.0 | 1.2.0 | **1.7.1** |
+| core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.2** |
 | core-ui | 1.1.0 | 1.2.0 | **1.3.1** |
 | core-utils | 1.1.0 | 1.1.1 | **1.1.1** |
 | commonui | 3.6.2 | 3.7.0 | **3.7.4** |
@@ -283,7 +356,7 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 
 ### 2.4 业务工程落地步骤（建议顺序）
 
-1. **升依赖**到文首当前坐标（至少完成 BaseView 剔除当轮 API，再对齐 network `1.7.0` / db `1.6.1`），Clean + Sync。
+1. **升依赖**到文首当前坐标（至少完成 BaseView 剔除当轮 API，再对齐 network `1.7.1` / db `1.6.2` / base `1.7.1`），Clean + Sync。
 2. **全局搜**（业务工程）：`BaseView`、`setBaseView`、`getBaseView`、`unbindView`、`createRepository(this`、`UserView`、`baseView:`、`BaseViewModel<.+,`。
 3. **改签名**：所有 `BaseViewModel` / Repository / Factory / Room 构造按 §2.3 去掉页面类型与参数。
 4. **改调用**：`baseView?.…` → `getRequestUi()?.…`（错误用 `showError(AppError)`）；表单 `setRequestUi(host)`。
@@ -351,14 +424,14 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 | 模块 | AppCompat 线 | 4.6.0 落点（其后继续演进，**当前见文首**） |
 |------|----------------|------------------------------------------------|
 | common | 4.5.1 | **4.6.0** → 现 **4.7.0** |
-| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 1.1.3；BaseView 剔除 → 1.2.0；现 **1.6.0**） |
-| core-network | 1.0.3 | **1.1.0** → 1.2.0 → 1.6.0 → 现 **1.7.0** |
-| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db 现 **1.6.1**；ui 现 **1.3.1**；utils **1.1.1**） |
+| core-base | 1.0.9 | **1.1.0**（控件补丁曾至 1.1.3；BaseView 剔除 → 1.2.0；现 **1.7.1**） |
+| core-network | 1.0.3 | **1.1.0** → 1.2.0 → 1.6.0 → 现 **1.7.1** |
+| core-db / core-ui / core-utils | 1.0.2 | **1.1.0**（db 现 **1.6.2**；ui 现 **1.3.1**；utils **1.2.0**） |
 | core-log | 1.0.0 | **1.1.0** → 现 **1.2.0** |
 | room-processor | 1.0.1 | **1.1.0** → 现 **1.2.0** |
 | core-mqtt | 1.5.1 | **1.6.0** → 现 **1.6.2** |
 | core-ws | — | **1.0.0** → 现 **1.0.1** |
-| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.4** |
+| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.6** |
 | commonmedia | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
 | googlegps | 3.1.7 | **3.2.0** → 3.3.x → 现 **3.4.0** |
 | annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
@@ -367,8 +440,8 @@ Maven 示例（仅升主题时的历史坐标；**当前请以文首为准**）�
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-implementation 'io.coderf.arklab.core:base:1.6.0'
-implementation 'io.coderf.arklab.core:network:1.7.0'
+implementation 'io.coderf.arklab.core:base:1.7.1'
+implementation 'io.coderf.arklab.core:network:1.7.1'
 ```
 
 ### 1.2 主题（必须知悉）

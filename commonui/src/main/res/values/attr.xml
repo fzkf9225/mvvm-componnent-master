@@ -155,6 +155,8 @@
         <attr name="compress" format="boolean"/>
         <!--压缩图片大小，单位kb-->
         <attr name="compressImageSize" format="integer" />
+        <!--列表/宫格小图是否优先加载缩略图，默认为true；无缩略图时回退原图。大图预览不受影响-->
+        <attr name="preferThumbnail" format="boolean"/>
         <!--最大可选数量-->
         <attr name="maxCount" format="integer"/>
         <!-- required 校验时最少条数，默认 1；仅 FormMedia.validate 使用 -->

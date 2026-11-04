@@ -11,7 +11,7 @@
 | [room-processor/README.md](room-processor/README.md) | KSP Bridge：**1.2.0**（含 suspend RawQuery） |
 | [commonui/README.md](commonui/README.md) | 表单 / 日历等 |
 
-当前主干版本：**common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **core-ws `1.0.1`** · **googlegps `3.4.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)。
+当前主干版本：**common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **core-ws `1.0.1`** · **googlegps `3.4.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)（附件缩略图见 §0.4.3，附件模型见 §0.4.2）。
 
 **1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + **`RequestUi`**（已删除旧版 `RequestUiCallback`）；业务导航用 LiveData/Flow。
 
@@ -78,9 +78,9 @@
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
 // 一般可由 common POM 传递；Maven 宿主建议显式钉：
-// implementation 'io.coderf.arklab.core:base:1.6.0'
+// implementation 'io.coderf.arklab.core:base:1.7.2'
 // implementation 'io.coderf.arklab.core:network:1.7.0'
-// implementation 'io.coderf.arklab.core:db:1.6.1'
+// implementation 'io.coderf.arklab.core:db:1.6.2'
 // implementation 'io.coderf.arklab.core:ui:1.3.1'
 // implementation 'io.coderf.arklab.core:utils:1.1.1'
 ```
@@ -168,7 +168,7 @@ implementation project(':userapi')   // 需要用户契约时
 #### 数据存储和网络请求相关
 1. 网络请求：新代码推荐 `DefaultNetworkRepository`（`core` 包，`Flow<RequestResult<T>>`）。旧 Rx `RepositoryImpl` 仍保留；过渡层 `FlowRepositoryImpl` 已删除。Demo 见 `SampleCoreNetworkRepository`
 2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
-3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `DefaultNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。主键推荐客户端 UUID（如 `AttachmentBean.mobileId`）。Maven：`core-db:1.6.1` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[room-processor/README.md](room-processor/README.md)、[UPGRADE.md](UPGRADE.md)
+3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `DefaultNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`：业务持有 `mobileId`，服务端用 `fileId`，不再用 `mainId`/`fieldName` 反查。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。Maven：`core-base:1.7.2` + `core-db:1.6.2` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[UPGRADE.md §0.4.2](UPGRADE.md#042-附件模型简化base-171--db-162) / [§0.4.3](UPGRADE.md#043-附件小图优先缩略图base-172--ui-377)
 4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
 5. 网络请求分页`PagingSource`继承`PagingSource`，协程`flow`方式继承`FlowPagingSource`（均在 `core-network`）；数据库存储分页继承`RxRoomPagingSource`（`core-db`，查询参数用 `RoomPagingQuery`）
 6. `RetryService`：封装了网络请求拦截重试机制，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置

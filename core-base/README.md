@@ -2,16 +2,35 @@
 
 框架核心 UI / MVVM 基座：Activity / Fragment / ViewModel、历史 widget、helper，以及 **common 体系的资源与 DataBinding**（R 包名保持 `io.coderf.arklab.common`）。
 
-当前版本：**1.6.0**  
-Maven：`io.coderf.arklab.core:base:1.6.0`  
+当前版本：**1.7.2**  
+Maven：`io.coderf.arklab.core:base:1.7.2`  
 namespace：`io.coderf.arklab.common`
 
 > 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。  
-> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)（含 §0.4 / §2）。
+> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)（含 §0.4.3 缩略图展示 / §0.4.2 附件模型 / §2）。
 
 ---
 
 ## 版本
+
+### 1.7.2
+
+附件列表小图优先缩略图（配合 **commonui ≥3.7.7**）：
+
+- `AttachmentBean.getDisplayPath(preferThumbnail)` / `AttachmentUtil.getDisplayPath`
+- `BaseMediaRecyclerViewAdapter.preferThumbnail`（默认 `true`）；列表 Add/Show Adapter 的 Glide 改走展示地址
+- 大图 ViewPager 仍加载 `path`；底部相册条优先 `thumbnailPath`
+
+详见 [UPGRADE.md §0.4.3](../UPGRADE.md#043-附件小图优先缩略图base-172--ui-377)。
+
+### 1.7.1
+
+附件实体简化（**破坏性**，需配合 **core-db ≥1.6.2**）：
+
+- `AttachmentBean` 删除 `mainId` / `fieldName`（业务侧持有 `mobileId`，服务端用 `fileId`）
+- `AttachmentUtil` 去掉 `mainId`/`field` 参数与 `coverAttachmentList`；新增 `parseIds` / `normalizeIds` / `getFileIds`
+
+详见 [UPGRADE.md §0.4.2](../UPGRADE.md#042-附件模型简化base-171--db-162)、[core-db/README.md](../core-db/README.md)。
 
 ### 1.7.0
 
@@ -96,7 +115,7 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 需要基类 / 通用 UI / DataBinding 资源时（推荐经 `common`）：
 
 ```gradle
-implementation 'io.coderf.arklab.core:base:1.6.0'
+implementation 'io.coderf.arklab.core:base:1.7.1'
 // 或
 implementation project(':core-base')
 ```

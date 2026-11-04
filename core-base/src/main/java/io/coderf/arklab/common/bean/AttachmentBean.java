@@ -184,6 +184,21 @@ public class AttachmentBean extends BaseObservable {
         this.thumbnailPath = thumbnailPath == null ? "" : thumbnailPath;
     }
 
+    /**
+     * 列表/宫格等小图展示地址。
+     * preferThumbnail 为 true 且 thumbnailPath 非空时优先缩略图，否则回退 path。
+     * 大图预览、上传、打开文件等应继续使用 {@link #getPath()}。
+     *
+     * @param preferThumbnail 是否优先缩略图
+     * @return 展示用地址
+     */
+    public String getDisplayPath(boolean preferThumbnail) {
+        if (preferThumbnail && !StringUtil.isEmpty(thumbnailPath)) {
+            return thumbnailPath;
+        }
+        return path;
+    }
+
     @Bindable
     public long getCreateTime() {
         return createTime;

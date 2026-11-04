@@ -204,6 +204,7 @@ public class PreviewInfoBean {
 
     /**
      * 实际加载路径：优先附件 path，其次自身 path。
+     * 大图预览、播放、下载等应使用本方法。
      */
     @NonNull
     public String getPath() {
@@ -211,6 +212,21 @@ public class PreviewInfoBean {
             return attachment.getPath();
         }
         return path == null ? "" : path;
+    }
+
+    /**
+     * 列表/相册条等小图展示地址。
+     * preferThumbnail 为 true 时优先附件缩略图，无缩略图则回退 {@link #getPath()}。
+     */
+    @NonNull
+    public String getDisplayPath(boolean preferThumbnail) {
+        if (attachment != null) {
+            String displayPath = attachment.getDisplayPath(preferThumbnail);
+            if (!TextUtils.isEmpty(displayPath)) {
+                return displayPath;
+            }
+        }
+        return getPath();
     }
 
     /**
